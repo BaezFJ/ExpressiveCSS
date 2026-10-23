@@ -396,7 +396,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:open`, `expressive:close` | Tooltip, Snackbar, Tour | Tour's close: `{ completed }` |
 | `expressive:action`, `expressive:closed` | Snackbar | none |
 | `expressive:copy` | Copy buttons | `{ text, copied }` |
-| `expressive:change`, `expressive:sort` | Data tables, from the wrapper | `{ selected }`, `{ header, column, direction }`; `sort` is cancelable |
+| `expressive:change`, `expressive:sort`, `expressive:resize` | Data tables, from the wrapper | `{ selected }`, `{ header, column, direction }`, `{ header, column, width }`; `sort` is cancelable |
 
 An Autocomplete or Select input hosts a Menu, so it also fires that Menu's `expressive:open`, `expressive:close` and `expressive:select`. A callback that changes the choice again, such as an `onShow` that selects another tab, leaves only the event for the final choice.
 
@@ -3245,7 +3245,7 @@ The bar that makes something legible as draggable: a bottom sheet's grabber, the
 
 Which element you write *is* the semantic. A `<span class="drag-handle" aria-hidden="true">` is decoration and is the usual case — the handle draws a bar and contains no text, so exposed it arrives in the reading order as an unlabelled blank. A `<button class="drag-handle">` with an `aria-label` is a control, written only when activating it does something — inside a bottom sheet it always does, and everywhere else that is the page's to arrange. Never `aria-hidden` a button: that hides it from assistive technology without taking it out of the tab order. The hover, focus and pressed states are scoped to the button spelling, so a decorative handle does not light up under a passing pointer.
 
-**Nothing here drags on its own.** Three places wire it: the bottom sheet below, the pane layouts, where a `<button class="drag-handle">` between two panes resizes them (see Panes, "Resizing"), and sortable lists, where a decorative handle drags its row and Move up and Move down buttons cover keyboard and single-pointer use (see Lists, "Sortable"). Anywhere else the page supplies reordering. Provide both keyboard operation and a single-pointer alternative without dragging, such as clickable "Move up" / "Move down" buttons or a position input. Arrow keys alone cover only the keyboard path. [WCAG 2.2 SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) requires the pointer alternative unless dragging is essential or the unmodified user agent owns the functionality. Verify the alternatives independently; the handle does not implement either one.
+**Nothing here drags on its own.** Four places wire it: the bottom sheet below, the pane layouts, where a `<button class="drag-handle">` between two panes resizes them (see Panes, "Resizing"), data tables, where one ending a header cell resizes its column (see Data table, "Column resize"), and sortable lists, where a decorative handle drags its row and Move up and Move down buttons cover keyboard and single-pointer use (see Lists, "Sortable"). Anywhere else the page supplies reordering. Provide both keyboard operation and a single-pointer alternative without dragging, such as clickable "Move up" / "Move down" buttons or a position input. Arrow keys alone cover only the keyboard path. [WCAG 2.2 SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) requires the pointer alternative unless dragging is essential or the unmodified user agent owns the functionality. Verify the alternatives independently; the handle does not implement either one.
 
 The two-column layout is the page's own — a flex or grid row, or a pane layout. The handle is what sits between the columns and needs no wrapper class of its own.
 
@@ -3719,6 +3719,40 @@ Add `sticky-column` to the wrapper of a wide table to keep its first column in v
 </div>
 ```
 
+### Column resize
+
+End a header cell in the first header row with a `<button type="button" class="drag-handle">` named after its column, and people can resize that column. They drag the handle, or focus it and press the arrow toward the column's end edge to widen it by 16px (64px with Shift) and the other arrow to narrow it. The keys mirror in a right-to-left page. Home and End jump to the narrowest and widest width, and a click, Enter or Space steps through narrow, middle and wide, the single-pointer alternative to dragging. A column is never narrower than `--md-comp-data-table-column-min-width` (48px) or wider than the wrapper's inner width. The first resize holds every column at its current width, so the others keep theirs, and the table scrolls sideways once its columns outgrow the wrapper. The handle is not a sort control, so a header cell can hold both.
+
+Each change fires `expressive:resize` from the wrapper with `{ header, column, width }`, the width in pixels. The framework stores nothing: save widths from the event and restore them with `Expressive.DataTables.setWidth(header, px)`, which fires no event. `Expressive.DataTables.width(header)` reads a column's width. Put a handle only in a cell that spans one column. Under `sticky-column`, leave the checkbox column without a handle, because the pinned name cell sits at the checkbox column token's offset.
+
+```html
+<div id="orders" class="data-table" data-sort>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col"><button type="button">Customer</button><button type="button" class="drag-handle" aria-label="Resize Customer"></button></th>
+        <th scope="col">Status<button type="button" class="drag-handle" aria-label="Resize Status"></button></th>
+        <th scope="col" class="numeric">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">Alvin</th><td>Shipped</td><td class="numeric">$87.00</td></tr>
+    </tbody>
+  </table>
+</div>
+```
+
+```js
+const wrapper = document.getElementById('orders');
+const headers = wrapper.querySelectorAll('thead th');
+const saved = JSON.parse(localStorage.getItem('order-widths') ?? '{}');
+for (const [column, width] of Object.entries(saved)) Expressive.DataTables.setWidth(headers[column], width);
+wrapper.addEventListener('expressive:resize', ({ detail }) => {
+  saved[detail.column] = detail.width;
+  localStorage.setItem('order-widths', JSON.stringify(saved));
+});
+```
+
 ### Tokens
 
 | Token | Default |
@@ -3732,6 +3766,7 @@ Add `sticky-column` to the wrapper of a wide table to keep its first column in v
 | `--md-comp-data-table-selected-container-color` | `secondary-container` |
 | `--md-comp-data-table-detail-container-color` | `surface-container-low` |
 | `--md-comp-data-table-checkbox-column-width` | cell padding + 18px; used by `sticky-column` |
+| `--md-comp-data-table-column-min-width` | 48px; the narrowest a resized column gets |
 
 ---
 

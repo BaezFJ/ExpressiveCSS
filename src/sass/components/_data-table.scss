@@ -28,6 +28,10 @@
 // checkbox column takes a fixed width that offsets the second cell. Detail
 // rows and the caption scroll with the table.
 //
+// A <button class="drag-handle"> ending a header cell resizes its column by
+// pointer, keyboard or click (behaviors/dataTables.ts). It sits on the cell's
+// inline-end edge and is not a sort control.
+//
 // Tokens:
 //   --md-comp-data-table-container-color           surface
 //   --md-comp-data-table-shape                     12px
@@ -38,6 +42,7 @@
 //   --md-comp-data-table-selected-container-color  secondary-container
 //   --md-comp-data-table-detail-container-color    surface-container-low
 //   --md-comp-data-table-checkbox-column-width     cell padding + 18px box
+//   --md-comp-data-table-column-min-width          48px, the narrowest resize
 
 .data-table {
   --md-comp-data-table-container-color: var(--md-sys-color-surface);
@@ -49,6 +54,7 @@
   --md-comp-data-table-selected-container-color: var(--md-sys-color-secondary-container);
   --md-comp-data-table-detail-container-color: var(--md-sys-color-surface-container-low);
   --md-comp-data-table-checkbox-column-width: calc(var(--md-comp-data-table-cell-padding) + 18px);
+  --md-comp-data-table-column-min-width: #{rem(48px)};
 
   box-sizing: border-box;
   max-width: 100%;
@@ -199,8 +205,25 @@
     }
   }
 
+  // A resizable column's handle. Header cells are sticky, so they hold it.
+  // The end padding clears the handle's 24px hit area, so end-aligned
+  // text never runs under it.
+  th:has(> button.drag-handle:last-child) {
+    min-inline-size: var(--md-comp-data-table-column-min-width);
+    padding-inline-end: max(var(--md-comp-data-table-cell-padding), 24px);
+  }
+
+  th > button.drag-handle:last-child {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    block-size: auto;
+    cursor: col-resize;
+    touch-action: none;
+  }
+
   // The sort control fills the header text and carries a trailing arrow.
-  th > button {
+  th > button:where(:not(.drag-handle)) {
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -230,24 +253,24 @@
   }
 
   // Numbers line up on their end edge, so the arrow leads their label.
-  th.numeric > button {
+  th.numeric > button:where(:not(.drag-handle)) {
     flex-direction: row-reverse;
   }
 
   th:is([aria-sort="ascending"], [aria-sort="descending"]) {
     color: var(--md-sys-color-on-surface);
 
-    > button::after {
+    > button:where(:not(.drag-handle))::after {
       opacity: 1;
     }
   }
 
-  th[aria-sort="descending"] > button::after {
+  th[aria-sort="descending"] > button:where(:not(.drag-handle))::after {
     transform: rotate(180deg);
   }
 }
 
-.data-table th > button::after {
+.data-table th > button:where(:not(.drag-handle))::after {
   @include forced-colors-fill;
 }
 

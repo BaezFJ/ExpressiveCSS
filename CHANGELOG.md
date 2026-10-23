@@ -36,6 +36,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `--grid-column-min` wide (15rem by default). Set the property on the grid or
   an ancestor. A container narrower than the minimum gets one column, and the
   last row keeps the column width. Pair it with `.gap-*`.
+- Data table column resize. A `<button class="drag-handle">` ending a
+  header cell lets people resize its column by dragging, with the arrow
+  keys (16px, 64px with Shift), Home and End, or a click, Enter or Space
+  that steps through narrow, middle and wide. Each change fires
+  `expressive:resize` from the wrapper with `{ header, column, width }`,
+  and `DataTables.setWidth()` restores saved widths without firing it. The
+  new `--md-comp-data-table-column-min-width` token sets the narrowest
+  width.
 - `.sticky-column` on a `.data-table` keeps the first column in view while
   the other columns scroll sideways, in both writing directions. When the
   first column holds row checkboxes, the name cell after it stays pinned

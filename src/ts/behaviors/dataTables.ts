@@ -1,10 +1,17 @@
 import { numberValue } from '../components/lineChart';
-import { Utils } from '../core/utils';
+import { Utils, controllerFor } from '../core/utils';
 
 /** The rows of a table's bodies that hold records, not a row's detail. */
 const ROWS = ':scope > tbody > tr:not(.data-table-detail)';
 /** A checkbox in a row's first cell, which selects the row. */
 const BOX = ':scope > :first-child input[type="checkbox"]';
+/**
+ * A column's resize handle: a drag-handle button ending a cell of the first
+ * header row, the row whose cells set the widths of a fixed table layout.
+ */
+const HANDLE = '.data-table > table > thead > tr:first-child > th > button.drag-handle:last-child';
+/** How far an arrow key resizes a column; Shift moves four times as far. */
+const STEP = 16;
 /** How each sort direction orders the rows. */
 const ORDER = { ascending: 1, descending: -1 };
 
@@ -49,6 +56,56 @@ function headerColumns(head: HTMLTableSectionElement) {
   return columns;
 }
 
+/** The cells of a table's first row, which set its column widths under the fixed layout. */
+function firstCells(table: HTMLTableElement) {
+  return Array.from(table.rows[0]?.cells ?? []);
+}
+
+/** Sizes a table to the sum of its columns, so it scrolls once they outgrow the wrapper. */
+function fit(table: HTMLTableElement) {
+  table.style.width = `${firstCells(table).reduce((sum, cell) => sum + parseFloat(cell.style.width), 0)}px`;
+}
+
+/**
+ * Holds every column at its current width under the fixed table layout, so
+ * resizing one column leaves the others alone. The automatic layout shares a
+ * change among all of them.
+ */
+function freeze(table: HTMLTableElement) {
+  if (table.style.tableLayout === 'fixed') return;
+  const cells = firstCells(table);
+  // Measure every cell before writing any, so no write reflows a later read.
+  const sizes = cells.map((cell) => cell.getBoundingClientRect().width);
+  cells.forEach((cell, i) => (cell.style.width = `${sizes[i]}px`));
+  table.style.tableLayout = 'fixed';
+  fit(table);
+}
+
+/** The narrowest and widest a column may get: its minimum token, and the wrapper's inner width. */
+function bounds(header: HTMLTableCellElement): [number, number] {
+  const min = parseFloat(getComputedStyle(header).minWidth) || 0;
+  return [min, Math.max(min, header.closest('.data-table').clientWidth)];
+}
+
+/** The next of a column's narrow, middle and wide widths, wrapping to narrow. */
+function nextStep(header: HTMLTableCellElement) {
+  const [min, max] = bounds(header);
+  const current = header.getBoundingClientRect().width;
+  return [min, (min + max) / 2, max].find((width) => width > current + 1) ?? min;
+}
+
+/**
+ * The width a key asks for, or undefined for another key. The arrow toward
+ * the column's inline-end edge widens it; Home and End jump to the bounds.
+ */
+function keyWidth(header: HTMLTableCellElement, e: KeyboardEvent) {
+  const [min, max] = bounds(header);
+  const amount = (e.shiftKey ? 4 : 1) * STEP * (getComputedStyle(header).direction === 'rtl' ? -1 : 1);
+  const current = header.getBoundingClientRect().width;
+  const widths: Record<string, number> = { ArrowRight: current + amount, ArrowLeft: current - amount, Home: min, End: max };
+  return widths[e.key];
+}
+
 /**
  * Data tables. In a `.data-table`, a checkbox in the first header cell
  * selects every row, and shows mixed while only some are selected. With
@@ -56,10 +113,12 @@ function headerColumns(head: HTMLTableSectionElement) {
  * that column and moves `aria-sort`. Both fire events from the wrapper:
  * `expressive:change` with the selected rows, and a cancelable
  * `expressive:sort`, which a server-sorted table cancels to sort the rows
- * itself.
+ * itself. A `.drag-handle` button ending a header cell resizes its column
+ * and fires `expressive:resize` with `{ header, column, width }`.
  */
 export class DataTables {
   private static _initialized = false;
+  private static _dragged = false;
 
   static Init() {
     if (DataTables._initialized || typeof document === 'undefined') return;
@@ -67,6 +126,9 @@ export class DataTables {
     // A checkbox's input event crosses shadow roots; its change event does not.
     document.addEventListener('input', DataTables._onChange);
     document.addEventListener('click', DataTables._onClick);
+    document.addEventListener('pointerdown', DataTables._onPointerDown);
+    document.addEventListener('click', DataTables._onHandleClick);
+    document.addEventListener('keydown', DataTables._onKeyDown);
     Utils.onDocumentReady(() => document.querySelectorAll('.data-table').forEach(DataTables.sync));
   }
 
@@ -79,6 +141,24 @@ export class DataTables {
   static sync(wrapper: Element) {
     const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
     if (table) DataTables._select(DataTables._all(table), DataTables._enabled(table), false);
+  }
+
+  /** A column's width in pixels, read from its header cell. */
+  static width(header: Element) {
+    return header.getBoundingClientRect().width;
+  }
+
+  /**
+   * Sets a column's width from its header cell, between the
+   * `--md-comp-data-table-column-min-width` token and the wrapper's inner
+   * width. It fires no event, so a page can restore saved widths with it.
+   */
+  static setWidth(header: HTMLTableCellElement, width: number) {
+    const table = header.closest('table');
+    const [min, max] = bounds(header);
+    freeze(table);
+    header.style.width = `${Math.round(Math.min(Math.max(width, min), max))}px`;
+    fit(table);
   }
 
   /**
@@ -130,7 +210,7 @@ export class DataTables {
   }
 
   private static _onClick = (e: MouseEvent) => {
-    const button = Utils.closestInPath(e, '.data-table[data-sort] > table > thead > tr > th > button:not([aria-haspopup], :disabled, [aria-disabled="true"])');
+    const button = Utils.closestInPath(e, '.data-table[data-sort] > table > thead > tr > th > button:not([aria-haspopup], :disabled, [aria-disabled="true"], .drag-handle)');
     if (!button) return;
     const header = button.parentElement as HTMLTableCellElement;
     const wrapper = header.closest('.data-table');
@@ -142,6 +222,74 @@ export class DataTables {
       DataTables._sort(header.closest('table'), header, column, ORDER[direction]);
     }
   };
+
+  private static _onPointerDown = (e: PointerEvent) => {
+    const handle = Utils.closestInPath(e, HANDLE) as HTMLElement;
+    if (handle && e.button === 0) DataTables._drag(handle, e);
+  };
+
+  /**
+   * Moves a column's inline-end edge with the pointer. A few pixels of
+   * travel is still a click.
+   */
+  private static _drag(handle: HTMLElement, start: PointerEvent) {
+    const header = handle.parentElement as HTMLTableCellElement;
+    const from = DataTables.width(header);
+    const sign = getComputedStyle(header).direction === 'rtl' ? -1 : 1;
+    DataTables._dragged = false;
+    handle.setPointerCapture(start.pointerId);
+    const drag = controllerFor(handle);
+    const { signal } = drag;
+    handle.addEventListener('pointermove', (e) => {
+      const delta = e.clientX - start.clientX;
+      if (Math.abs(delta) < 4 && !DataTables._dragged) return;
+      DataTables._dragged = true;
+      DataTables.setWidth(header, from + sign * delta);
+    }, { signal });
+    const end = () => {
+      drag.abort();
+      if (DataTables._dragged) DataTables._resized(header, from);
+    };
+    handle.addEventListener('pointerup', end, { signal });
+    handle.addEventListener('pointercancel', end, { signal });
+  }
+
+  /**
+   * Steps a column through narrow, middle and wide: the single-pointer
+   * alternative to dragging. The click that ends a mouse drag is not a
+   * request to step; a keyboard click (detail 0) always is.
+   */
+  private static _onHandleClick = (e: MouseEvent) => {
+    const handle = Utils.closestInPath(e, HANDLE);
+    if (!handle || (e.detail !== 0 && DataTables._dragged)) return;
+    const header = handle.parentElement as HTMLTableCellElement;
+    DataTables._resizeTo(header, nextStep(header));
+  };
+
+  private static _onKeyDown = (e: KeyboardEvent) => {
+    const handle = Utils.closestInPath(e, HANDLE);
+    if (!handle || !Utils.plainKey(e)) return;
+    const header = handle.parentElement as HTMLTableCellElement;
+    const width = keyWidth(header, e);
+    if (width === undefined) return;
+    e.preventDefault();
+    DataTables._resizeTo(header, width);
+  };
+
+  /** Sets a column's width and fires `expressive:resize` if it changed. */
+  private static _resizeTo(header: HTMLTableCellElement, width: number) {
+    const from = DataTables.width(header);
+    DataTables.setWidth(header, width);
+    DataTables._resized(header, from);
+  }
+
+  /** Fires `expressive:resize` from the wrapper when a column's width moved off `from`. */
+  private static _resized(header: HTMLTableCellElement, from: number) {
+    const width = DataTables.width(header);
+    if (Math.abs(width - from) < 0.5) return;
+    const column = headerColumns(header.closest('thead')).get(header);
+    Utils.emit(header.closest('.data-table'), 'resize', { header, column, width });
+  }
 
   /**
    * Reorders each body's rows by one column. A detail row moves with the

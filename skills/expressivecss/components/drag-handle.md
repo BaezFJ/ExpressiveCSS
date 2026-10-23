@@ -9,7 +9,7 @@ Component ID: `drag-handle`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `fe6b53ede6adb5b481ce1608a1626ae44e56d9bc8711721f02aff032deb6791b`
+Contract SHA-256: `422574d94f8898f5ae4dbb2e70404bec9b179815d10e2225a6c1ea1eb41668ee`
 
 #### Selection and adaptation
 
@@ -43,7 +43,7 @@ The bar that makes something legible as draggable: a bottom sheet's grabber, the
 
 Which element you write *is* the semantic. A `<span class="drag-handle" aria-hidden="true">` is decoration and is the usual case — the handle draws a bar and contains no text, so exposed it arrives in the reading order as an unlabelled blank. A `<button class="drag-handle">` with an `aria-label` is a control, written only when activating it does something — inside a bottom sheet it always does, and everywhere else that is the page's to arrange. Never `aria-hidden` a button: that hides it from assistive technology without taking it out of the tab order. The hover, focus and pressed states are scoped to the button spelling, so a decorative handle does not light up under a passing pointer.
 
-**Nothing here drags on its own.** Three places wire it: the bottom sheet below, the pane layouts, where a `<button class="drag-handle">` between two panes resizes them (see Panes, "Resizing"), and sortable lists, where a decorative handle drags its row and Move up and Move down buttons cover keyboard and single-pointer use (see Lists, "Sortable"). Anywhere else the page supplies reordering. Provide both keyboard operation and a single-pointer alternative without dragging, such as clickable "Move up" / "Move down" buttons or a position input. Arrow keys alone cover only the keyboard path. [WCAG 2.2 SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) requires the pointer alternative unless dragging is essential or the unmodified user agent owns the functionality. Verify the alternatives independently; the handle does not implement either one.
+**Nothing here drags on its own.** Four places wire it: the bottom sheet below, the pane layouts, where a `<button class="drag-handle">` between two panes resizes them (see Panes, "Resizing"), data tables, where one ending a header cell resizes its column (see Data table, "Column resize"), and sortable lists, where a decorative handle drags its row and Move up and Move down buttons cover keyboard and single-pointer use (see Lists, "Sortable"). Anywhere else the page supplies reordering. Provide both keyboard operation and a single-pointer alternative without dragging, such as clickable "Move up" / "Move down" buttons or a position input. Arrow keys alone cover only the keyboard path. [WCAG 2.2 SC 2.5.7](https://www.w3.org/WAI/WCAG22/Understanding/dragging-movements.html) requires the pointer alternative unless dragging is essential or the unmodified user agent owns the functionality. Verify the alternatives independently; the handle does not implement either one.
 
 #### Syntax
 

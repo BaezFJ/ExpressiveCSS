@@ -223,7 +223,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the lightbox shown as manual popovers instead of clearing ancestor overflow: 89,011 gzip bytes (-268).
   // Reviewed measured menus keeping their scroll position and identity transforms leaving menus anchored: 89,099 gzip bytes (+88).
   // Reviewed the audit fixes: Autocomplete ids stay text, questionnaires skip password and hidden inputs, and the label split into helpers for the complexity gate: 89,154 gzip bytes (+55).
-  assert.ok(sizes(js).gzip <= 89154, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed data table column resize by pointer drag, with the fixed-layout width model and setWidth: 89,569 gzip bytes (+415).
+  // Reviewed column resize arrow keys, Home and End, and click steps through narrow, middle and wide: 89,737 gzip bytes (+168).
+  assert.ok(sizes(js).gzip <= 89737, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -363,5 +365,7 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed position and inset helpers with logical edge pins: 85,161 gzip bytes (+64).
   // Reviewed the .grid-auto-fill utility: 85,232 gzip bytes (+71).
   // Reviewed the .sticky-column data table pinning and its row-state fill: 85,400 gzip bytes (+168).
-  assert.ok(sizes(css).gzip <= 85400, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the data table column resize handle and the sort rules that skip it: 85,475 gzip bytes (+75).
+  // Reviewed end padding on resizable header cells that clears the handle's hit area: 85,486 gzip bytes (+11).
+  assert.ok(sizes(css).gzip <= 85486, `CSS gzip: ${sizes(css).gzip}`);
 });
