@@ -4,7 +4,7 @@ Date: 2026-10-23
 Roadmap phase: Phase 30, unstyled lists
 Branch: `feature/2026-10-23-unstyled-lists`
 Base: `origin/master` at `3ef49121a981a0ff664578ed425dbe8dee457d80`
-Status: specified, not implemented
+Status: implemented and locally verified 2026-10-23; CI and review pending
 
 Follow the [mission's agreed scope for utilities](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 30](../../../../roadmap.md#phase-30-unstyled-lists). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 

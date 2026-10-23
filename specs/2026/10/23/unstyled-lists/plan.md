@@ -4,16 +4,18 @@ Roadmap phase: Phase 30, unstyled lists. Branch `feature/2026-10-23-unstyled-lis
 
 The groups run in order. Each one ends in a state that can be committed.
 
+All three groups were implemented on 2026-10-23. The CSS budget line moved into group 1, because without it `tests/selective-builds.test.js` fails and the commit would not pass `npm test`.
+
 ## 1. Utility class and browser test
 
 Outcome: `.list-unstyled` removes markers and inline-start padding in all three engines, and a browser test proves it.
 
 Prerequisites: none.
 
-- [ ] Add the V1 to V3 cases to `tests/helpers-browser.test.js` inside the existing `for (const [engine, browserType, utilityTest] of engines)` loop.
-- [ ] Run `npm run build:css` and `node --test tests/helpers-browser.test.js`. Confirm the new cases fail and the existing ones pass.
-- [ ] Add the "Lists" comment and `.list-unstyled { list-style: none; padding-inline-start: 0; }` to `src/sass/utilities/_helpers.scss`.
-- [ ] Rebuild and rerun the file until it passes.
+- [x] Add the V1 to V3 cases to `tests/helpers-browser.test.js` inside the existing `for (const [engine, browserType, utilityTest] of engines)` loop.
+- [x] Run `npm run build:css` and `node --test tests/helpers-browser.test.js`. Confirm the new cases fail and the existing ones pass.
+- [x] Add the "Lists" comment and `.list-unstyled { list-style: none; padding-inline-start: 0; }` to `src/sass/utilities/_helpers.scss`.
+- [x] Rebuild and rerun the file until it passes.
 
 Completion check: `node --test tests/helpers-browser.test.js` passes in Chromium, Firefox and WebKit.
 
@@ -25,11 +27,11 @@ Outcome: the semantics checks require `role="list"` on unstyled lists, and the d
 
 Prerequisites: group 1.
 
-- [ ] Add the `list-unstyled-has-list-role` rule to `semantics.json` as proposed in requirements.md, then run `npm run build:semantics`.
-- [ ] Add the "Unstyled lists" subsection to `llm.md` under "Helpers" > "Formatting", with an example on `<ul class="list-unstyled" role="list">` and the reason for the role.
-- [ ] Add the same subsection to `docs/src/pages/helpers.astro`.
-- [ ] Add an Added entry to the Unreleased section of `CHANGELOG.md`.
-- [ ] Run `node --test tests/semantics.test.js` and the V4 negative check.
+- [x] Add the `list-unstyled-has-list-role` rule to `semantics.json` as proposed in requirements.md, then run `npm run build:semantics`.
+- [x] Add the "Unstyled lists" subsection to `llm.md` under "Helpers" > "Formatting", with an example on `<ul class="list-unstyled" role="list">` and the reason for the role.
+- [x] Add the same subsection to `docs/src/pages/helpers.astro`.
+- [x] Add an Added entry to the Unreleased section of `CHANGELOG.md`.
+- [x] Run `node --test tests/semantics.test.js` and the V4 negative check.
 
 Completion check: `node --test tests/semantics.test.js` passes, and the V4 negative check fails on markup without the role.
 
@@ -41,10 +43,10 @@ Outcome: the change has a reviewed size, fresh generated files and passing contr
 
 Prerequisites: group 2.
 
-- [ ] Run `npm run build`, then `node --test tests/selective-builds.test.js`. Add a reviewed CSS budget line and raise the CSS gzip bound to the measured size.
-- [ ] Run `npm run build:skill` as the last generation step, then `npm run check:generated`.
-- [ ] Run `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`, one at a time. Rerun a failure alone before debugging it.
-- [ ] Record each result in validation.md.
+- [x] Run `npm run build`, then `node --test tests/selective-builds.test.js`. Add a reviewed CSS budget line and raise the CSS gzip bound to the measured size. Done in group 1.
+- [x] Run `npm run build:skill` as the last generation step, then `npm run check:generated`.
+- [x] Run `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`, one at a time. Rerun a failure alone before debugging it.
+- [x] Record each result in validation.md.
 
 Completion check: every check in validation.md shows a result, and none failed for a reason this change causes.
 
