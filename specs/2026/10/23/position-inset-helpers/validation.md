@@ -67,7 +67,7 @@ Covers R11.
 
 - Action: `npm run build`, then `node --test tests/selective-builds.test.js`; then `npm run build:skill` and `npm run check:generated`.
 - Expected: the budget test passes with a new reviewed line whose delta is measured from the merge base, and `check:generated` reports no drift.
-- Result: Pass, 2026-10-23. CSS gzip went from 84,819 at `3ef49121a` to 84,884 (+65). `check:generated` is clean.
+- Result: Pass, 2026-10-23. CSS gzip went from 84,819 at `3ef49121a` to 84,884 (+65). After the rebase onto `eca05ec03` it went from 85,005 to 85,071 (+66). `check:generated` is clean.
 
 ### V9. Contributor checks
 

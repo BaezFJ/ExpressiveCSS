@@ -45,7 +45,7 @@ Prerequisites: groups 1 and 2.
 - [x] Build, read the new CSS gzip size, and add a "Reviewed position and inset helpers" line with the delta to the CSS budget in `tests/selective-builds.test.js`. Take the base size from the merge base, not from a moved `origin/master`.
 - [x] Run `npm run build:skill` after the last edit, then `npm run check:generated`.
 - [x] Run `npm run verify`, then `npm test --prefix mcp/expressivecss`, one suite at a time.
-- [ ] If Phase 25 has merged first, rebase, rebuild, and recompute the budget line from the new base. Not needed yet: Phase 25 had not merged on 2026-10-23.
+- [x] If Phase 25 has merged first, rebase, rebuild, and recompute the budget line from the new base. Phase 25 merged as #406; the branch was rebased onto `eca05ec03` on 2026-10-23.
 
 Completion check: `npm run verify` and the MCP tests pass with no unexpected generated changes.
 
