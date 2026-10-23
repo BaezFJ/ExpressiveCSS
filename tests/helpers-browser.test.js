@@ -236,6 +236,39 @@ for (const [engine, browserType, utilityTest] of engines) {
       await browser.close();
     }
   });
+
+  utilityTest(`pointer helpers pass clicks through an overlay to what lies beneath (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<style>${css}</style>
+        <div class="relative" style="width: 300px; height: 120px">
+          <button id="target" type="button" style="position: absolute; top: 10px; left: 10px; width: 100px; height: 40px">Beneath</button>
+          <div id="overlay" class="pointer-events-none" style="position: absolute; inset: 0">
+            <button id="child" type="button" class="pointer-events-auto" style="position: absolute; bottom: 10px; right: 10px; width: 100px; height: 40px">Close</button>
+          </div>
+        </div>`);
+      await page.evaluate(() => {
+        window.clicks = { target: 0, overlay: 0, child: 0 };
+        document.getElementById('target').addEventListener('click', () => window.clicks.target++);
+        document.getElementById('child').addEventListener('click', () => window.clicks.child++);
+        // Only clicks aimed at the overlay itself; the child's bubble up to it.
+        document.getElementById('overlay').addEventListener('click', (event) => {
+          if (event.target.id === 'overlay') window.clicks.overlay++;
+        });
+      });
+      // locator.click() refuses a covered element, so click at its center.
+      const center = async (id) => {
+        const box = await page.locator(`#${id}`).boundingBox();
+        return [box.x + box.width / 2, box.y + box.height / 2];
+      };
+      await page.mouse.click(...await center('target'));
+      await page.mouse.click(...await center('child'));
+      assert.deepEqual(await page.evaluate(() => window.clicks), { target: 1, overlay: 0, child: 1 });
+    } finally {
+      await browser.close();
+    }
+  });
 }
 
 test('line clamp classes come with every window-size prefix', () => {

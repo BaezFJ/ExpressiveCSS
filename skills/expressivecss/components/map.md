@@ -9,7 +9,7 @@ Component ID: `map`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `c253dbca285c8f8e80ca31e9bcfcdffb5ba679caf2da3a2a4943641ad2fe90fc`
+Contract SHA-256: `e5dd1a4db23ab13469c122ac02c5db683b0f2536ace6e97dcbd504f592aa70ec`
 
 #### Selection and adaptation
 
