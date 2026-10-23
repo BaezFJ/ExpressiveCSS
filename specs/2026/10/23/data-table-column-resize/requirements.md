@@ -4,7 +4,7 @@ Date: 2026-10-23
 Roadmap phase: Phase 32, data table column resize
 Branch: `feature/2026-10-23-data-table-column-resize`
 Base: `origin/master` at `ddc223f6d`
-Status: specified 2026-10-23; not implemented
+Status: implemented and locally verified 2026-10-23; CI and review pending
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 32](../../../../roadmap.md#phase-32-data-table-column-resize). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -29,7 +29,7 @@ People can resize a data table column by pointer, keyboard or a single click, an
 
 ### Expected behavior
 
-- **R1.** A `<button type="button" class="drag-handle" aria-label="…">` as the last child of a header cell makes that cell's column resizable. Columns without a handle, and tables without any handle, render and behave exactly as on the base commit.
+- **R1.** A `<button type="button" class="drag-handle" aria-label="…">` as the last child of a cell in the first header row makes that cell's column resizable. Columns without a handle, and tables without any handle, render and behave exactly as on the base commit.
 - **R2.** Dragging a handle with a pointer moves its column's inline-end edge with the pointer, in left-to-right and right-to-left pages. The page does not scroll or select text during the drag, including on touch. A few pixels of travel still counts as a click.
 - **R3.** With the handle focused, the arrow key that points toward the column's inline-end edge widens the column by 16px and the other narrows it, 64px with Shift. In left-to-right pages Right widens; in right-to-left pages Left widens. Home sets the narrowest width and End the widest.
 - **R4.** A click on the handle, or Enter or Space, steps the column through narrow, middle and wide widths and wraps back to narrow. This is the single-pointer alternative to dragging that WCAG 2.5.7 asks for. The click that ends a drag does not step.
@@ -40,14 +40,14 @@ People can resize a data table column by pointer, keyboard or a single click, an
 - **R9.** A handle never sorts. Pressing or dragging it in a `data-sort` table leaves the rows, `aria-sort` and the sort arrow alone and fires no `expressive:sort`. The handle is not drawn as a sort control.
 - **R10.** Under `.sticky-column`, resizing a pinned column keeps it pinned, and the name cell after a checkbox column keeps its offset. The checkbox column takes no handle, and the docs say so.
 - **R11.** The handle sits at the header cell's inline-end edge, shows `cursor: col-resize` and a visible focus indicator, and stays visible in forced colors.
-- **R12.** `llm.md` and the data table docs page document the handle, keys, click steps, minimum token, event, script methods, the checkbox column limit and how a page saves and restores widths. The events table in llm.md lists `expressive:resize`. A `semantics.json` rule flags a handle with no accessible name. The changelog's Unreleased section lists the addition.
+- **R12.** `llm.md` and the data table docs page document the handle, keys, click steps, minimum token, event, script methods, the checkbox column limit and how a page saves and restores widths. The events table in llm.md lists `expressive:resize`. An unnamed handle is flagged by the existing `drag-handle-button-is-named` rule in `semantics.json`. The changelog's Unreleased section lists the addition.
 - **R13.** The CSS and JavaScript gzip budgets in `tests/selective-builds.test.js` have reviewed lines for this change.
 
 ### Exclusions
 
 - The framework does not store widths. The page saves them from the event and restores them with `setWidth`.
 - No double-click to fit content, no row resizing and no column reordering.
-- No resizing from header cells that span several columns. A handle belongs in a cell with `colspan` 1.
+- No resizing from header cells that span several columns, or from a later row of a grouped header. A handle belongs in a first-row cell with `colspan` 1, because the fixed table layout takes column widths from the first row.
 - No `role="separator"` with `aria-valuenow`. The handle is a plain button, as in panes.
 - No manual visual or screen reader check. The user left them out of the merge conditions.
 
@@ -64,13 +64,13 @@ People can resize a data table column by pointer, keyboard or a single click, an
 
 ### Proposals for implementation
 
-- Selector: `.data-table > table > thead > tr > th > button.drag-handle:last-child`. Add `:not(.drag-handle)` to the sort click selector in `dataTables.ts` and to the `th > button` sort rules in `_data-table.scss`.
-- Width model: on the first resize or `setWidth`, write every header cell's measured width to its style, set the table to `table-layout: fixed` and set its width to the sum of the columns. Measuring first keeps R8 true, because under the automatic layout and `width: 100%` the browser shares any change among all columns. Write the state to the table's inline style, which is framework state under the product rules. Confirm in group 1 that all three engines hold the widths this way; if not, record what was used instead.
+- Selector: `.data-table > table > thead > tr:first-child > th > button.drag-handle:last-child`, limited to the first row during implementation because the fixed layout reads widths from it. Add `:not(.drag-handle)` to the sort click selector in `dataTables.ts` and to the `th > button` sort rules in `_data-table.scss`.
+- Width model: on the first resize or `setWidth`, write every header cell's measured width to its style, set the table to `table-layout: fixed` and set its width to the sum of the columns. Measuring first keeps R8 true, because under the automatic layout and `width: 100%` the browser shares any change among all columns. Write the state to the table's inline style, which is framework state under the product rules. Implemented as proposed: all three engines hold the widths, and V1 confirms the other columns stay within 1px. The sort exclusion in the Sass uses `:where(:not(.drag-handle))`, so the sort rules keep their specificity.
 - Minimum: the token is sized with `rem()` per the rem sizing rule, since a column holds text. The Sass sets `min-inline-size: var(--md-comp-data-table-column-min-width)` on resizable header cells, and the script reads the computed `min-width`, which the browser resolves to pixels.
 - Click steps: narrow is the minimum, wide is the wrapper's inner width, middle is halfway between, as PaneResize computes them.
 - Code home: keep the handlers in `dataTables.ts` next to sorting, reusing `headerColumns`, `Utils.emit`, `Utils.plainKey`, `Utils.closestInPath` and `controllerFor`. Move them to a helper module in `behaviors/` only if the class gets hard to read. Every new function stays below cyclomatic complexity 5.
-- Handle drawing: reuse `.drag-handle` and place it at the cell's inline-end edge with logical properties, with `touch-action: none` and `cursor: col-resize`.
-- Semantics rule: `data-table-resize-handle-is-named`, matching `.data-table th > button.drag-handle:not([aria-label], [aria-labelledby])`.
+- Handle drawing: reuse `.drag-handle` and place it at the cell's inline-end edge with logical properties, with `touch-action: none` and `cursor: col-resize`. Implemented that way. A screenshot showed the handle's 24px hit area overlapping the end of a numeric column's sort button, so resizable header cells take `max(cell padding, 24px)` of end padding. `tests/drag-handle.test.js` treated the sort rules' `:not(.drag-handle)` as styling a handle, so its selector filter now ignores that exclusion.
+- Semantics rule: dropped during implementation. `drag-handle-button-is-named` already requires an accessible name on every `button.drag-handle`, and a probe showed it flags an unnamed handle in a header cell and passes a named one.
 
 ## Technical constraints
 

@@ -366,5 +366,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the .grid-auto-fill utility: 85,232 gzip bytes (+71).
   // Reviewed the .sticky-column data table pinning and its row-state fill: 85,400 gzip bytes (+168).
   // Reviewed the data table column resize handle and the sort rules that skip it: 85,475 gzip bytes (+75).
-  assert.ok(sizes(css).gzip <= 85475, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed end padding on resizable header cells that clears the handle's hit area: 85,486 gzip bytes (+11).
+  assert.ok(sizes(css).gzip <= 85486, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -71,8 +71,10 @@ describe('Drag handle tokens', () => {
 describe('Decorative and interactive are told apart by the element', () => {
   // The states must be reachable only through `button`. A decorative <span>
   // that lit up on hover would claim to be a control it is not.
+  // A selector that only excludes the handle, as the data table's sort
+  // button does with :not(.drag-handle), never styles one.
   const stateSelectors = rules
-    .filter((r) => /\.drag-handle/.test(r.selector))
+    .filter((r) => /\.drag-handle/.test(r.selector.replace(/:not\(\.drag-handle\)/g, '')))
     .filter((r) => /:hover|:focus-visible|:active/.test(r.selector))
     .map((r) => r.selector);
 

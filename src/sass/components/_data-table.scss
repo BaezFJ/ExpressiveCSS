@@ -206,8 +206,11 @@
   }
 
   // A resizable column's handle. Header cells are sticky, so they hold it.
+  // The end padding clears the handle's 24px hit area, so end-aligned
+  // text never runs under it.
   th:has(> button.drag-handle:last-child) {
     min-inline-size: var(--md-comp-data-table-column-min-width);
+    padding-inline-end: max(var(--md-comp-data-table-cell-padding), 24px);
   }
 
   th > button.drag-handle:last-child {

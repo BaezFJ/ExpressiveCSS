@@ -14,6 +14,7 @@ const S = defineSections([
   { id: "expansion", label: "Row expansion" },
   { id: "scrolling", label: "Scrolling" },
   { id: "sticky-column", label: "Sticky first column" },
+  { id: "column-resize", label: "Column resize" },
   { id: "dense", label: "Dense" },
   { id: "tokens", label: "Tokens" },
 ]);
@@ -309,6 +310,61 @@ toggle.addEventListener('click', () => {
 </div>
 `} />
   </Section>
+  <Section {...S["column-resize"]}>
+        <p>
+          End a header cell in the first header row with a
+          <code>&lt;button type="button" class="drag-handle"&gt;</code> named
+          after its column, and people can resize that column. They drag the
+          handle, or focus it and press the arrow toward the column's end edge
+          to widen it by 16px (64px with Shift) and the other arrow to narrow
+          it. Home and End jump to the narrowest and widest width, and a click,
+          Enter or Space steps through narrow, middle and wide, the
+          single-pointer alternative to dragging. The keys mirror in a
+          right-to-left page.
+        </p>
+        <p>
+          A column stays between
+          <code>--md-comp-data-table-column-min-width</code> and the wrapper's
+          inner width. The first resize holds every column at its current
+          width, and the table scrolls sideways once its columns outgrow the
+          wrapper. The handle is not a sort control, so a header cell can hold
+          both. Put a handle only in a cell that spans one column, and under
+          <code>sticky-column</code> leave the checkbox column without one.
+        </p>
+        <p>
+          Each change fires <code>expressive:resize</code> from the wrapper
+          with <code>{"{ header, column, width }"}</code>. The framework stores
+          nothing: save widths from the event and restore them with
+          <code>Expressive.DataTables.setWidth(header, px)</code>, which fires
+          no event.
+        </p>
+        <div class="data-table" data-sort>
+          <table>
+            <thead>
+              <tr><th scope="col" aria-sort="ascending"><button type="button">Customer</button><button type="button" class="drag-handle" aria-label="Resize Customer"></button></th><th scope="col">Status<button type="button" class="drag-handle" aria-label="Resize Status"></button></th><th scope="col" class="numeric">Total</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Alan</th><td>Pending</td><td class="numeric">$3.76</td></tr>
+              <tr><th scope="row">Alvin</th><td>Shipped</td><td class="numeric">$87.00</td></tr>
+              <tr><th scope="row">Jonathan</th><td>Shipped</td><td class="numeric">$142.50</td></tr>
+            </tbody>
+          </table>
+        </div>
+<Code code={`
+<div class="data-table" data-sort>
+  <table>
+    <thead>
+      <tr>
+        <th scope="col"><button type="button">Customer</button><button type="button" class="drag-handle" aria-label="Resize Customer"></button></th>
+        <th scope="col">Status<button type="button" class="drag-handle" aria-label="Resize Status"></button></th>
+        <th scope="col" class="numeric">Total</th>
+      </tr>
+    </thead>
+    …
+  </table>
+</div>
+`} />
+  </Section>
   <Section {...S.dense}>
         <p>
           Add <code>dense</code> to the wrapper to shorten rows to 40px and the
@@ -370,6 +426,10 @@ toggle.addEventListener('click', () => {
           <tr>
             <td><code>--md-comp-data-table-checkbox-column-width</code></td>
             <td>Cell padding + 18px; used by <code>sticky-column</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-data-table-column-min-width</code></td>
+            <td>48px; the narrowest a resized column gets</td>
           </tr>
         </TokenTable>
   </Section>
