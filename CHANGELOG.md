@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Line clamp utilities. `.line-clamp-1`, `.line-clamp-2` and
+  `.line-clamp-3` cut text to that many lines and end the last one in an
+  ellipsis, and `.line-clamp-none` shows every line again. All four take
+  the `medium:`, `expanded:`, `large:` and `extra-large:` prefixes.
 - `.grid-auto-fill` lays out as many columns as fit, each at least
   `--grid-column-min` wide (15rem by default). Set the property on the grid or
   an ancestor. A container narrower than the minimum gets one column, and the

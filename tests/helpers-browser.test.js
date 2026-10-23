@@ -157,6 +157,30 @@ for (const [engine, browserType, utilityTest] of engines) {
     }
   });
 
+  utilityTest(`line clamp classes cut text to whole lines and line-clamp-none restores it (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      const classes = ['line-clamp-1', 'line-clamp-2', 'line-clamp-3', 'line-clamp-2 line-clamp-none', ''];
+      await page.setContent(`<style>${css} .clamp-fixture { width: 240px; margin: 0; font: 16px/20px sans-serif; }</style>
+        ${classes.map(name => `<p class="clamp-fixture ${name}">${'A paragraph long enough to wrap onto many lines. '.repeat(12)}</p>`).join('')}`);
+      const [one, two, three, none, full] = await page.locator('p').evaluateAll(els => els.map(el => {
+        const style = getComputedStyle(el);
+        // The height alone can't tell: without hidden overflow the cut lines
+        // still paint below the clamped box.
+        return { height: el.getBoundingClientRect().height, clamp: style.getPropertyValue('-webkit-line-clamp'), overflow: style.overflow };
+      }));
+      for (const [lines, { height, clamp, overflow }] of [one, two, three].entries()) {
+        assert.ok(Math.abs(height - 20 * (lines + 1)) <= 1, `line-clamp-${lines + 1} height ${height}`);
+        assert.deepEqual([clamp, overflow], [String(lines + 1), 'hidden']);
+      }
+      assert.ok(full.height > 60, `unclamped height ${full.height}`);
+      assert.deepEqual(none, full);
+    } finally {
+      await browser.close();
+    }
+  });
+
   utilityTest(`focusable hidden content reveals for keyboard and descendant focus (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
@@ -228,6 +252,14 @@ for (const [engine, browserType, utilityTest] of engines) {
     }
   });
 }
+
+test('line clamp classes come with every window-size prefix', () => {
+  for (const size of ['medium', 'expanded', 'large', 'extra-large']) {
+    for (const name of ['line-clamp-1', 'line-clamp-2', 'line-clamp-3', 'line-clamp-none']) {
+      assert.match(css, new RegExp(`@media \\(width >= \\d+px\\) \\{[^@]*\\.${size}\\\\:${name} \\{`), `${size}:${name}`);
+    }
+  }
+});
 
 browserTest('window-size prefixes switch layout from their size class up', async () => {
   const browser = await leaseBrowser(chromium);
