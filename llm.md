@@ -3689,6 +3689,36 @@ A wrapper that scrolls must be reachable from the keyboard. Give it `tabindex="0
 </div>
 ```
 
+### Sticky first column
+
+Add `sticky-column` to the wrapper of a wide table to keep its first column in view while the other columns scroll sideways. When the first column holds row checkboxes, the name cell after it stays pinned too, and the checkbox column takes the fixed width of `--md-comp-data-table-checkbox-column-width`; change that token, not the cell, if you restyle the column. Pinned cells keep their row's hover and selected colors, and a divider marks their edge. Give each row one cell in the pinned column, because a first cell that spans several columns pins its whole width. Detail rows and the caption scroll with the table.
+
+```html
+<div class="data-table sticky-column" tabindex="0" role="region" aria-labelledby="accounts-caption">
+  <table>
+    <caption id="accounts-caption">Accounts</caption>
+    <thead>
+      <tr>
+        <th scope="col"><label><input type="checkbox" aria-label="Select all accounts"></label></th>
+        <th scope="col">Account</th>
+        <th scope="col">Plan</th>
+        <th scope="col">Region</th>
+        <th scope="col">Owner</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><label><input type="checkbox" aria-label="Select Northwind"></label></td>
+        <th scope="row">Northwind</th>
+        <td>Business</td>
+        <td>eu-west</td>
+        <td>Ada Lovelace</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
 ### Tokens
 
 | Token | Default |
@@ -3701,6 +3731,7 @@ A wrapper that scrolls must be reachable from the keyboard. Give it `tabindex="0
 | `--md-comp-data-table-cell-padding` | 16px |
 | `--md-comp-data-table-selected-container-color` | `secondary-container` |
 | `--md-comp-data-table-detail-container-color` | `surface-container-low` |
+| `--md-comp-data-table-checkbox-column-width` | cell padding + 18px; used by `sticky-column` |
 
 ---
 

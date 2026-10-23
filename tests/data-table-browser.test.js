@@ -149,6 +149,42 @@ async function checkDividers(page, dir) {
   near(dir, hug, 16, 'an unmodified checkbox cell still hugs its box');
 }
 
+// The color of one screen pixel 4px inside a cell's top-left corner, clear of
+// its text and borders. The page decodes the screenshot through a canvas.
+const pixel = async (page, selector) => {
+  const box = await page.locator(selector).boundingBox();
+  const png = await page.screenshot({ clip: { x: Math.round(box.x) + 4, y: Math.round(box.y) + 4, width: 1, height: 1 } });
+  return page.evaluate(async (src) => {
+    const image = new Image();
+    image.src = src;
+    await image.decode();
+    const context = document.createElement('canvas').getContext('2d');
+    context.drawImage(image, 0, 0);
+    return [...context.getImageData(0, 0, 1, 1).data].slice(0, 3);
+  }, `data:image/png;base64,${png.toString('base64')}`);
+};
+
+// Engines round layered colors differently, so channels may differ by one or two.
+const distance = (a, b) => Math.max(...a.map((channel, i) => Math.abs(channel - b[i])));
+
+// V4 and V5: pinned cells are opaque and take their row's selected and hover
+// colors, so they match the scrolled cells of the same row.
+async function checkRowStates(page, dir) {
+  await scrollAcross(page, '#wide');
+  await page.locator('#w0 input').evaluate((el) => { el.checked = true; });
+  await page.hover('#w1 > :nth-child(8)');
+  await page.waitForTimeout(400);
+  const fill = await style(page, '#w2 > :nth-child(2)', 'background-color');
+  // An alpha part shows as rgba() or a slash in the computed color.
+  assert.match(fill, /^(?:rgb|oklch|oklab|lab|lch|color)\([^/]*\)$/, `${dir}: a pinned cell is opaque, got ${fill}`);
+  for (const row of ['#w0', '#w1', '#w2']) {
+    const gap = distance(await pixel(page, `${row} > :nth-child(2)`), await pixel(page, `${row} > :nth-child(8)`));
+    assert.ok(gap <= 2, `${dir}: ${row} pinned cell matches its scrolled cells, off by ${gap}`);
+  }
+  const hover = distance(await pixel(page, '#w1 > :nth-child(2)'), await pixel(page, '#w2 > :nth-child(2)'));
+  assert.ok(hover > 6, `${dir}: the hovered row's pinned cell shows the state layer, off by ${hover}`);
+}
+
 for (const [name, engine, test] of engines) {
   test(`${name}: a sticky-column data table pins its first column, and the name after a checkbox`, { timeout: 30000 }, async () => {
     const browser = await leaseBrowser(engine);
@@ -160,6 +196,7 @@ for (const [name, engine, test] of engines) {
         await checkPaired(page, dir);
         await checkStacking(page, dir);
         await checkDividers(page, dir);
+        await checkRowStates(page, dir);
       }
     } finally {
       await browser.close();

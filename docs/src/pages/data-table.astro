@@ -13,6 +13,7 @@ const S = defineSections([
   { id: "bulk-actions", label: "Bulk actions" },
   { id: "expansion", label: "Row expansion" },
   { id: "scrolling", label: "Scrolling" },
+  { id: "sticky-column", label: "Sticky first column" },
   { id: "dense", label: "Dense" },
   { id: "tokens", label: "Tokens" },
 ]);
@@ -255,6 +256,59 @@ toggle.addEventListener('click', () => {
 </div>
 `} />
   </Section>
+  <Section {...S["sticky-column"]}>
+        <p>
+          Add <code>sticky-column</code> to the wrapper of a wide table to keep
+          its first column in view while the other columns scroll sideways.
+          When the first column holds row checkboxes, the name cell after it
+          stays pinned too, and the checkbox column takes the fixed width of
+          <code>--md-comp-data-table-checkbox-column-width</code>. Change that
+          token, not the cell, if you restyle the checkbox column. Pinned cells
+          keep their row's hover and selected colors, and a divider marks
+          their edge.
+        </p>
+        <p>
+          Give each row one cell in the pinned column: a first cell that spans
+          several columns pins its whole width. Detail rows and the caption
+          scroll with the table.
+        </p>
+        <div class="data-table sticky-column" tabindex="0" role="region" aria-labelledby="accounts-caption">
+          <table style="min-inline-size: 960px;">
+            <caption id="accounts-caption">Accounts</caption>
+            <thead>
+              <tr><th scope="col"><label><input type="checkbox" aria-label="Select all accounts"></label></th><th scope="col">Account</th><th scope="col">Plan</th><th scope="col" class="numeric">Seats</th><th scope="col">Region</th><th scope="col">Renews</th><th scope="col">Owner</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><label><input type="checkbox" aria-label="Select Northwind"></label></td><th scope="row">Northwind</th><td>Business</td><td class="numeric">120</td><td>eu-west</td><td>2027-03-01</td><td>Ada Lovelace</td></tr>
+              <tr><td><label><input type="checkbox" aria-label="Select Contoso"></label></td><th scope="row">Contoso</th><td>Enterprise</td><td class="numeric">860</td><td>us-east</td><td>2026-12-15</td><td>Grace Hopper</td></tr>
+              <tr><td><label><input type="checkbox" aria-label="Select Fabrikam"></label></td><th scope="row">Fabrikam</th><td>Team</td><td class="numeric">24</td><td>ap-south</td><td>2027-06-30</td><td>Edsger Dijkstra</td></tr>
+            </tbody>
+          </table>
+        </div>
+<Code code={`
+<div class="data-table sticky-column" tabindex="0" role="region" aria-labelledby="accounts-caption">
+  <table>
+    <caption id="accounts-caption">Accounts</caption>
+    <thead>
+      <tr>
+        <th scope="col"><label><input type="checkbox" aria-label="Select all accounts"></label></th>
+        <th scope="col">Account</th>
+        <th scope="col">Plan</th>
+        …
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><label><input type="checkbox" aria-label="Select Northwind"></label></td>
+        <th scope="row">Northwind</th>
+        <td>Business</td>
+        …
+      </tr>
+    </tbody>
+  </table>
+</div>
+`} />
+  </Section>
   <Section {...S.dense}>
         <p>
           Add <code>dense</code> to the wrapper to shorten rows to 40px and the
@@ -312,6 +366,10 @@ toggle.addEventListener('click', () => {
           <tr>
             <td><code>--md-comp-data-table-detail-container-color</code></td>
             <td><code>--md-sys-color-surface-container-low</code></td>
+          </tr>
+          <tr>
+            <td><code>--md-comp-data-table-checkbox-column-width</code></td>
+            <td>Cell padding + 18px; used by <code>sticky-column</code></td>
           </tr>
         </TokenTable>
   </Section>

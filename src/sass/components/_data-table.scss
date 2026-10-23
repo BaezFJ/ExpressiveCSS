@@ -120,15 +120,18 @@
     font-variant-numeric: tabular-nums;
   }
 
+  // --_row carries the row's state color to its cells, so a pinned cell can
+  // paint it over its own opaque fill.
   > table > tbody > tr {
+    background-color: var(--_row, transparent);
     transition: background-color var(--md-sys-motion-duration-short4) ease-out;
 
     &:hover {
-      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
+      --_row: #{state-layer(var(--md-sys-color-on-surface), "hover")};
     }
 
     &:has(> :first-child input[type="checkbox"]:checked) {
-      background-color: var(--md-comp-data-table-selected-container-color);
+      --_row: var(--md-comp-data-table-selected-container-color);
       color: var(--md-sys-color-on-secondary-container);
     }
   }
@@ -166,6 +169,9 @@
       inset-inline-start: 0;
       z-index: 1;
       border-inline-end: 1px solid var(--md-comp-data-table-outline-color);
+      // ponytail: the row color jumps here while the rest of the row fades;
+      // a registered @property would let it transition too.
+      background: linear-gradient(var(--_row, transparent), var(--_row, transparent)) var(--md-comp-data-table-container-color);
     }
 
     > table > thead > tr > :first-child {
@@ -185,6 +191,7 @@
       inset-inline-start: var(--md-comp-data-table-checkbox-column-width);
       z-index: 1;
       border-inline-end: 1px solid var(--md-comp-data-table-outline-color);
+      background: linear-gradient(var(--_row, transparent), var(--_row, transparent)) var(--md-comp-data-table-container-color);
     }
 
     > table > thead > tr > :nth-child(2) {

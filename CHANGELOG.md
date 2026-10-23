@@ -36,6 +36,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `--grid-column-min` wide (15rem by default). Set the property on the grid or
   an ancestor. A container narrower than the minimum gets one column, and the
   last row keeps the column width. Pair it with `.gap-*`.
+- `.sticky-column` on a `.data-table` keeps the first column in view while
+  the other columns scroll sideways, in both writing directions. When the
+  first column holds row checkboxes, the name cell after it stays pinned
+  too, and the checkbox column takes the width of the new
+  `--md-comp-data-table-checkbox-column-width` token. Pinned cells keep
+  their row's hover and selected colors, and a divider marks their edge.
 - Calendar week, day and year views. `table.calendar.week` and
   `table.calendar.day` are hourly grids: a row per hour named by a
   `<th scope="row">`, and a column per day whose header can carry

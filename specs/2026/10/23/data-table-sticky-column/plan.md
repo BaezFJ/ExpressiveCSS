@@ -26,12 +26,12 @@ Outcome: pinned cells are opaque and follow their row's hover and selected state
 
 Prerequisites: group 1.
 
-- [ ] Add the V4 and V5 cases to the same test file and confirm they fail.
-- [ ] Give pinned cells the container color with the row's state layered on top, through a private custom property set by the existing hover and selected row rules.
-- [ ] Rebuild, rerun the file until it passes, and update the budget line.
-- [ ] Add a "Sticky first column" subsection to the "Data table" section of `llm.md`, with an example that has a checkbox column, and add the token to its token table. Mention the `colspan` limit and the checkbox width token.
-- [ ] Add the same subsection and a live example to `docs/src/pages/data-table.astro`.
-- [ ] Add an Added entry to the Unreleased section of `CHANGELOG.md`.
+- [x] Add the V4 and V5 cases to the same test file and confirm they fail.
+- [x] Give pinned cells the container color with the row's state layered on top, through a private custom property set by the existing hover and selected row rules.
+- [x] Rebuild, rerun the file until it passes, and update the budget line.
+- [x] Add a "Sticky first column" subsection to the "Data table" section of `llm.md`, with an example that has a checkbox column, and add the token to its token table. Mention the `colspan` limit and the checkbox width token.
+- [x] Add the same subsection and a live example to `docs/src/pages/data-table.astro`.
+- [x] Add an Added entry to the Unreleased section of `CHANGELOG.md`.
 
 Completion check: `node --test tests/data-table-browser.test.js` passes, and `node --test tests/semantics.test.js` passes on the new examples.
 
