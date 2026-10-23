@@ -297,6 +297,22 @@ describe("FormSelect", () => {
     }
   });
 
+  test("clicking the selected option of a single select keeps it selected and fires no change", () => {
+    document.body.innerHTML = `<select><option value="1">One</option><option value="2" selected>Two</option></select>`;
+    const select = document.querySelector("select");
+    const instance = Expressive.FormSelect.init(select);
+    let changes = 0;
+    select.addEventListener("change", () => changes++);
+    try {
+      fire([...instance.menuEl.querySelectorAll("li")].find((li) => li.textContent.includes("Two")), "click");
+      assert.equal(select.value, "2");
+      assert.equal(select.options[1].selected, true);
+      assert.equal(changes, 0);
+    } finally {
+      instance.destroy();
+    }
+  });
+
   test("clicking a disabled option keeps a single select open", () => {
     document.body.innerHTML = fieldHtml;
     const instance = Expressive.FormSelect.init(document.querySelector("select"));

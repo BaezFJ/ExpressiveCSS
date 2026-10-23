@@ -1,3 +1,4 @@
+import { Utils } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 import { Menu, MenuOptions } from './menu';
 
@@ -30,37 +31,32 @@ export class Menubar extends Component<MenubarOptions> {
 
   constructor(el: HTMLElement, options: Partial<MenubarOptions>) {
     super(el, options);
-    this.el['Expressive_Menubar'] = this;
     this._setAttribute(this.el, 'role', 'menubar');
     this._items.forEach((item, index) => {
       Menu.init(item, this.options.menuOptions);
       this._setAttribute(item, 'role', 'menuitem');
       item.tabIndex = index === 0 ? 0 : -1;
     });
-    this.el.addEventListener('keydown', this._onBarKeydown);
-    this.el.addEventListener('focusin', this._onFocusin);
-    document.addEventListener('keydown', this._onMenuKeydown);
+    const { signal } = this._events;
+    this.el.addEventListener('keydown', this._onBarKeydown, { signal });
+    this.el.addEventListener('focusin', this._onFocusin, { signal });
+    document.addEventListener('keydown', this._onMenuKeydown, { signal });
   }
 
   static get defaults(): MenubarOptions {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Menubar {
-    return el['Expressive_Menubar'];
-  }
+  static key = 'Expressive_Menubar';
 
   destroy() {
-    this.el.removeEventListener('keydown', this._onBarKeydown);
-    this.el.removeEventListener('focusin', this._onFocusin);
-    document.removeEventListener('keydown', this._onMenuKeydown);
     this._items.forEach((item) => {
       Menu.getInstance(item)?.destroy();
       item.removeAttribute('tabindex');
     });
     this._added.forEach(({ el, name }) => el.removeAttribute(name));
     this._added = [];
-    this.el['Expressive_Menubar'] = undefined;
+    super.destroy();
   }
 
   private get _items(): HTMLElement[] {
@@ -106,7 +102,7 @@ export class Menubar extends Component<MenubarOptions> {
   };
 
   private _onBarKeydown = (e: KeyboardEvent) => {
-    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (!Utils.plainKey(e)) return;
     const items = this._items;
     const index = items.indexOf(e.target as HTMLElement);
     if (index < 0) return;
@@ -123,7 +119,7 @@ export class Menubar extends Component<MenubarOptions> {
   // Right only for submenus; whatever it leaves moves along the bar.
   private _onMenuKeydown = (e: KeyboardEvent) => {
     const step = this._step(e.key);
-    if (!step || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (!step || e.defaultPrevented || !Utils.plainKey(e)) return;
     const items = this._items;
     const path = e.composedPath();
     const index = items.findIndex((item) => {

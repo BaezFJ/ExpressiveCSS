@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, controllerFor } from '../core/utils';
 
 const container = ':is(.panes, .pane-layout, .list-detail, .supporting-pane-layout):not(.equal, .three-pane)';
 const handleSelector = `${container} > button.drag-handle`;
@@ -90,14 +90,12 @@ export class PaneResize {
       PaneResize._dragged = true;
       PaneResize.setWidth(handle, startWidth + sign * delta);
     };
-    const end = () => {
-      handle.removeEventListener('pointermove', move);
-      handle.removeEventListener('pointerup', end);
-      handle.removeEventListener('pointercancel', end);
-    };
-    handle.addEventListener('pointermove', move);
-    handle.addEventListener('pointerup', end);
-    handle.addEventListener('pointercancel', end);
+    const drag = controllerFor(handle);
+    const end = () => drag.abort();
+    const { signal } = drag;
+    handle.addEventListener('pointermove', move, { signal });
+    handle.addEventListener('pointerup', end, { signal });
+    handle.addEventListener('pointercancel', end, { signal });
   }
 
   private static _onClick(e: MouseEvent) {
@@ -115,7 +113,7 @@ export class PaneResize {
 
   private static _onKeyDown(e: KeyboardEvent) {
     const handle = Utils.closestInPath(e, handleSelector);
-    if (!handle || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (!handle || !Utils.plainKey(e)) return;
     const current = PaneResize.width(handle);
     const [min, max] = PaneResize._bounds(handle);
     const amount = e.shiftKey ? step * 4 : step;

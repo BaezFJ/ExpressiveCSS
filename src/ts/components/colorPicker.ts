@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { Utils } from '../core/utils';
+import { Utils, controllerFor } from '../core/utils';
 
 export interface ColorPickerOptions extends BaseOptions {
   /**
@@ -79,12 +79,11 @@ export class ColorPicker extends Component<ColorPickerOptions> {
 
   constructor(el: HTMLElement, options: Partial<ColorPickerOptions>) {
     super(el, options);
-    this.el['Expressive_ColorPicker'] = this;
     this.input = el.querySelector<HTMLInputElement>(':scope > input[type="color"]');
     if (!this.input) return;
     this._hsv = toHsv(this.input.value) ?? this._hsv;
     this._build();
-    this.input.addEventListener('input', this._onNativeInput);
+    this.input.addEventListener('input', this._onNativeInput, { signal: this._events.signal });
     this._render();
   }
 
@@ -92,16 +91,13 @@ export class ColorPicker extends Component<ColorPickerOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): ColorPicker {
-    return el['Expressive_ColorPicker'];
-  }
+  static key = 'Expressive_ColorPicker';
 
   destroy() {
-    this.input?.removeEventListener('input', this._onNativeInput);
     for (const part of [this._area, this._hue, this._hex]) part?.remove();
     this._area = this._thumb = this._hue = this._hex = null;
     this.el.style.removeProperty('--_color-picker-hue');
-    this.el['Expressive_ColorPicker'] = undefined;
+    super.destroy();
   }
 
   /** The current color as `#rrggbb`. Setting it fires no events, as with a native input. */
@@ -243,15 +239,15 @@ export class ColorPicker extends Component<ColorPickerOptions> {
     area.setPointerCapture(e.pointerId);
     this._fromPoint(e, false);
     const move = (ev: PointerEvent) => this._fromPoint(ev, false);
+    const drag = controllerFor(area);
     const up = (ev: PointerEvent) => {
-      area.removeEventListener('pointermove', move);
-      area.removeEventListener('pointerup', up);
-      area.removeEventListener('pointercancel', up);
+      drag.abort();
       this._fromPoint(ev, true);
     };
-    area.addEventListener('pointermove', move);
-    area.addEventListener('pointerup', up);
-    area.addEventListener('pointercancel', up);
+    const { signal } = drag;
+    area.addEventListener('pointermove', move, { signal });
+    area.addEventListener('pointerup', up, { signal });
+    area.addEventListener('pointercancel', up, { signal });
   };
 
   // Left and right change saturation, up and down brightness; see KEY_STEPS.

@@ -79,7 +79,6 @@ export class MessageScroller extends Component<MessageScrollerOptions> {
 
   constructor(el: HTMLElement, options: Partial<MessageScrollerOptions>) {
     super(el, options);
-    this.el['Expressive_MessageScroller'] = this;
     this.viewport = el.querySelector(':scope > .message-scroller-viewport');
     this.button = el.querySelector(':scope > .message-scroller-button');
     if (!this.viewport) {
@@ -90,45 +89,34 @@ export class MessageScroller extends Component<MessageScrollerOptions> {
     // A viewport that is not rendered yet (a closed dialog, a hidden tab)
     // has no size to position against; it opens on its first resize.
     if (this.viewport.clientHeight > 0) this._open();
-    if (typeof ResizeObserver !== 'undefined') {
-      this._resizeObserver = new ResizeObserver(this._handleResize);
-      // Border box: the spacer changes the padding, which must not count.
-      this._resizeObserver.observe(this.viewport, { box: 'border-box' });
-      for (const item of Array.from(this.viewport.children)) this._resizeObserver.observe(item);
-    }
+    this._resizeObserver = new ResizeObserver(this._handleResize);
+    // Border box: the spacer changes the padding, which must not count.
+    this._resizeObserver.observe(this.viewport, { box: 'border-box' });
+    for (const item of Array.from(this.viewport.children)) this._resizeObserver.observe(item);
     this._mutationObserver = new MutationObserver(this._handleMutations);
     this._mutationObserver.observe(this.viewport, { childList: true });
-    this.viewport.addEventListener('scroll', this._handleScroll, { passive: true });
+    const { signal } = this._events;
+    this.viewport.addEventListener('scroll', this._handleScroll, { passive: true, signal });
     for (const type of ['wheel', 'touchstart', 'pointerdown', 'keydown']) {
-      this.viewport.addEventListener(type, this._handleUserScroll, { passive: true });
+      this.viewport.addEventListener(type, this._handleUserScroll, { passive: true, signal });
     }
-    for (const type of RELEASE_EVENTS) document.addEventListener(type, this._handleRelease);
-    this.button?.addEventListener('click', this._handleButtonClick);
+    for (const type of RELEASE_EVENTS) document.addEventListener(type, this._handleRelease, { signal });
+    this.button?.addEventListener('click', this._handleButtonClick, { signal });
   }
 
   static get defaults(): MessageScrollerOptions {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): MessageScroller {
-    return el['Expressive_MessageScroller'];
-  }
+  static key = 'Expressive_MessageScroller';
 
   destroy() {
-    this.el['Expressive_MessageScroller'] = undefined;
+    super.destroy();
     if (!this.viewport) return;
     this._resizeObserver?.disconnect();
     this._mutationObserver?.disconnect();
-    this.viewport.removeEventListener('scroll', this._handleScroll);
-    for (const type of ['wheel', 'touchstart', 'pointerdown', 'keydown']) {
-      this.viewport.removeEventListener(type, this._handleUserScroll);
-    }
-    for (const type of RELEASE_EVENTS) document.removeEventListener(type, this._handleRelease);
     this.viewport.style.removeProperty('--md-comp-message-scroller-spacer');
-    if (this.button) {
-      this.button.removeEventListener('click', this._handleButtonClick);
-      this.button.inert = false;
-    }
+    if (this.button) this.button.inert = false;
   }
 
   /** Scrolls to the latest message and resumes following. */
@@ -220,10 +208,10 @@ export class MessageScroller extends Component<MessageScrollerOptions> {
   private _handleMutations = (records: MutationRecord[]) => {
     for (const record of records) {
       record.addedNodes.forEach((node) => {
-        if (node instanceof Element) this._resizeObserver?.observe(node);
+        if (node instanceof Element) this._resizeObserver.observe(node);
       });
       record.removedNodes.forEach((node) => {
-        if (node instanceof Element) this._resizeObserver?.unobserve(node);
+        if (node instanceof Element) this._resizeObserver.unobserve(node);
       });
     }
     const previous = this._last;
@@ -274,7 +262,7 @@ export class MessageScroller extends Component<MessageScrollerOptions> {
     }
     this._target = target;
     this._distance = Infinity;
-    const reduce = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     v.scrollTo({
       top: target === 'end' ? v.scrollHeight : target,
       behavior: reduce ? 'auto' : 'smooth'

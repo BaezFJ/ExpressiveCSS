@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, pickerFooter } from '../core/utils';
 import { FormSelect } from './select';
 import { BaseOptions, Component, I18nOptions } from '../core/component';
 import { DisplayPlugin, ModalDisplayPlugin, createDisplayPlugin, hideModal } from '../plugins/modalDisplayPlugin';
@@ -70,6 +70,21 @@ const READERS: Record<string, (i18n: Partial<DateI18nOptions>) => Reader> = {
   // As Date.parse reads them: 00 to 49 in this century, 50 to 99 in the last.
   yy: () => ['(\\d{2})', (parts, text) => (parts.year = +text + (+text < 50 ? 2000 : 1900))],
   yyyy: () => ['(\\d{4})', (parts, text) => (parts.year = +text)]
+};
+
+const pad = (n: number) => String(n).padStart(2, '0');
+/** What each `format` token writes for a date. */
+const FORMATS: Record<string, (date: Date, i18n: Partial<DateI18nOptions>) => string | number> = {
+  d: (date) => date.getDate(),
+  dd: (date) => pad(date.getDate()),
+  ddd: (date, i18n) => i18n.weekdaysShort[date.getDay()],
+  dddd: (date, i18n) => i18n.weekdays[date.getDay()],
+  m: (date) => date.getMonth() + 1,
+  mm: (date) => pad(date.getMonth() + 1),
+  mmm: (date, i18n) => i18n.monthsShort[date.getMonth()],
+  mmmm: (date, i18n) => i18n.months[date.getMonth()],
+  yy: (date) => String(date.getFullYear()).slice(2),
+  yyyy: (date) => date.getFullYear()
 };
 
 /**
@@ -397,7 +412,6 @@ export class Datepicker extends Component<DatepickerOptions> {
   date: Date;
   endDate: null | Date;
   dates: Date[];
-  formats: object;
   calendars: [{ month: number; year: number }];
   private displayPlugin: DisplayPlugin;
   /** What setInputValue last wrote, so reading it back does not depend on the parser. */
@@ -422,12 +436,6 @@ export class Datepicker extends Component<DatepickerOptions> {
   constructor(el: HTMLInputElement, options: Partial<DatepickerOptions>) {
     options = withLocale(el, options);
     super(el, options);
-    this.el['Expressive_Datepicker'] = this;
-
-    // make sure i18n defaults are not lost when only few i18n option properties are passed
-    if (!!options && options.hasOwnProperty('i18n') && typeof options.i18n === 'object') {
-      this.options.i18n = { ...Datepicker.defaults.i18n, ...options.i18n };
-    }
 
     // A modal calendar is always open in its dialog and writes on Ok.
     if (this.options.displayPlugin === 'modal') Object.assign(this.options, { openByDefault: true, autoSubmit: false });
@@ -546,11 +554,6 @@ export class Datepicker extends Component<DatepickerOptions> {
     );
   }
 
-  static _isWeekend(date) {
-    const day = date.getDay();
-    return day === 0 || day === 6;
-  }
-
   /**
    * @deprecated as this function has no effect without any return statement or global parameter setter.
    */
@@ -563,27 +566,18 @@ export class Datepicker extends Component<DatepickerOptions> {
     return a.getTime() === b.getTime();
   }
 
-  static _compareWithinRange(day: Date, date: Date, dateEnd: Date) {
-    return day.getTime() > date.getTime() && day.getTime() < dateEnd.getTime();
-  }
-
-  static _comparePastDate(a: Date, b: Date) {
-    return a.getTime() < b.getTime();
-  }
-
-  static getInstance(el: HTMLElement): Datepicker {
-    return el['Expressive_Datepicker'];
-  }
+  static key = 'Expressive_Datepicker';
 
   destroy() {
-    this._removeEventHandlers();
+    this._events.abort();
+    clearTimeout(this._resetTimer);
     this.dateEls?.slice(1).forEach(input => this._removeDateInput(input));
     if (!this.options.dateRangeEndEl && this.endDateEl) this._removeDateInput(this.endDateEl);
     this.displayPlugin?.destroy();
     this.containerEl.remove();
     this.destroySelects();
     this._removeDateOverlay();
-    this.el['Expressive_Datepicker'] = undefined;
+    super.destroy();
   }
 
   // CSS paints data-date over a native date input's own text.
@@ -625,11 +619,7 @@ export class Datepicker extends Component<DatepickerOptions> {
       }
     }
 
-    Utils.createButton(this.footer, this.options.i18n.clear, ['datepicker-clear'], this.options.showClearBtn, this._handleClearClick);
-
-    if (!this.options.autoSubmit) {
-      Utils.createConfirmationContainer(this.footer, this.options.i18n.done, this.options.i18n.cancel, this._confirm, this._cancel);
-    }
+    pickerFooter(this.footer, this.options, 'datepicker-clear', this._handleClearClick, this._confirm, this._cancel);
 
     if (this.options.container) {
       const optEl = this.options.container;
@@ -674,7 +664,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   formatDate(date: Date, format: string) {
     const formatArray = format.split(/(d{1,4}|m{1,4}|y{4}|yy|!.)/g);
     return formatArray
-      .map((label) => (this.formats[label] ? this.formats[label](date) : label))
+      .map((label) => (FORMATS[label] ? FORMATS[label](date, this.options.i18n) : label))
       .join('');
   }
 
@@ -802,7 +792,7 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   _isRefusedDay(day: Date): boolean {
     const { disableWeekends, disableDayFn } = this.options;
-    return (disableWeekends && Datepicker._isWeekend(day)) || !!disableDayFn?.(day);
+    return (disableWeekends && [0, 6].includes(day.getDay())) || !!disableDayFn?.(day);
   }
 
   /**
@@ -990,9 +980,9 @@ export class Datepicker extends Component<DatepickerOptions> {
         isDateRangeEnd = this.options.isDateRange && this.endDate && Datepicker._compareDates(this.endDate, day),
         isDateRange =
           this.options.isDateRange &&
-          Datepicker._isDate(this.date) &&
-          Datepicker._isDate(this.endDate) &&
-          Datepicker._compareWithinRange(day, this.date, this.endDate);
+          [this.date, this.endDate].every(Datepicker._isDate) &&
+          day > this.date &&
+          day < this.endDate;
       let dayNumber = 1 + (i - before),
         monthNumber = month,
         yearNumber = year;
@@ -1417,10 +1407,11 @@ export class Datepicker extends Component<DatepickerOptions> {
     this._addInputEventHandlers(this.el);
     if (this.endDateEl) this._addInputEventHandlers(this.endDateEl);
     this._form = this.el.form;
-    this._form?.addEventListener('reset', this._handleFormReset);
-    this.calendarEl.addEventListener('click', this._handleCalendarClick);
-    this.calendarEl.addEventListener('keydown', this._handleCalendarKeydown);
-    this.calendarEl.addEventListener('focusin', this._handleCalendarFocus);
+    const { signal } = this._events;
+    this._form?.addEventListener('reset', this._handleFormReset, { signal });
+    this.calendarEl.addEventListener('click', this._handleCalendarClick, { signal });
+    this.calendarEl.addEventListener('keydown', this._handleCalendarKeydown, { signal });
+    this.calendarEl.addEventListener('focusin', this._handleCalendarFocus, { signal });
   }
 
   _setupVariables() {
@@ -1432,70 +1423,18 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.calendarEl = this.containerEl.querySelector('.datepicker-calendar');
     this.dateTextEl = this.containerEl.querySelector('.date-text');
     this.footer = this.containerEl.querySelector('.datepicker-footer');
-
-    this.formats = {
-      d: (date: Date) => {
-        return date.getDate();
-      },
-      dd: (date: Date) => {
-        const d = date.getDate();
-        return (d < 10 ? '0' : '') + d;
-      },
-      ddd: (date: Date) => {
-        return this.options.i18n.weekdaysShort[date.getDay()];
-      },
-      dddd: (date: Date) => {
-        return this.options.i18n.weekdays[date.getDay()];
-      },
-      m: (date: Date) => {
-        return date.getMonth() + 1;
-      },
-      mm: (date: Date) => {
-        const m = date.getMonth() + 1;
-        return (m < 10 ? '0' : '') + m;
-      },
-      mmm: (date: Date) => {
-        return this.options.i18n.monthsShort[date.getMonth()];
-      },
-      mmmm: (date: Date) => {
-        return this.options.i18n.months[date.getMonth()];
-      },
-      yy: (date: Date) => {
-        return ('' + date.getFullYear()).slice(2);
-      },
-      yyyy: (date: Date) => {
-        return date.getFullYear();
-      }
-    };
   }
 
-  _removeEventHandlers() {
-    this._form?.removeEventListener('reset', this._handleFormReset);
-    clearTimeout(this._resetTimer);
-    for (const input of this.dateEls ?? [this.el]) this._removeInputEventHandlers(input);
-    this.calendarEl.removeEventListener('click', this._handleCalendarClick);
-    this.calendarEl.removeEventListener('keydown', this._handleCalendarKeydown);
-    this.calendarEl.removeEventListener('focusin', this._handleCalendarFocus);
-    if (this.options.isDateRange && this.endDateEl) {
-      this._removeInputEventHandlers(this.endDateEl);
-    }
-  }
-
+  /** A date input's listeners. An input the picker removes keeps them, but no event reaches it then. */
   private _addInputEventHandlers(input: HTMLInputElement) {
-    input.addEventListener('click', this._handleInputClick);
-    input.addEventListener('keydown', this._handleInputKeydown);
-    input.addEventListener('change', this._handleInputChange);
-  }
-
-  private _removeInputEventHandlers(input: HTMLInputElement) {
-    input.removeEventListener('click', this._handleInputClick);
-    input.removeEventListener('keydown', this._handleInputKeydown);
-    input.removeEventListener('change', this._handleInputChange);
+    const { signal } = this._events;
+    input.addEventListener('click', this._handleInputClick, { signal });
+    input.addEventListener('keydown', this._handleInputKeydown, { signal });
+    input.addEventListener('change', this._handleInputChange, { signal });
   }
 
   private _removeDateInput(input: HTMLInputElement) {
     const focused = (input.getRootNode() as Document | ShadowRoot).activeElement === input;
-    this._removeInputEventHandlers(input);
     input.remove();
     if (focused && document.activeElement === document.body) this.el.focus();
   }
@@ -1566,7 +1505,7 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   private _handleCalendarKeydown = (event: KeyboardEvent) => {
     const button = event.target as HTMLElement;
-    if (!button.matches('.datepicker-day-button') || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (!button.matches('.datepicker-day-button') || !Utils.plainKey(event)) return;
     const date = this._dayDate(button);
     const weekday = (date.getDay() - this.options.firstDay + 7) % 7;
     const offsets = { ArrowLeft: this.options.isRTL ? 1 : -1, ArrowRight: this.options.isRTL ? -1 : 1,
@@ -1632,7 +1571,7 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   _handleDateRangeCalendarClick = (date: Date) => {
     if (this.endDate == null || !Datepicker._compareDates(date, this.endDate)) {
-      if (Datepicker._isDate(this.date) && Datepicker._comparePastDate(date, this.date)) {
+      if (Datepicker._isDate(this.date) && date < this.date) {
         return;
       }
 

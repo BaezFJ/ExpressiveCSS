@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { svgNode } from '../core/utils';
+import { Utils, svgNode } from '../core/utils';
 
 export interface LineChartOptions extends BaseOptions {
   /**
@@ -133,7 +133,7 @@ let _gradientId = 0;
 
 /** The series update() moves the marks from: none when the reader asked for less motion. */
 const startsFrom = (series: Series[]) =>
-  typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches ? [] : series;
+  matchMedia('(prefers-reduced-motion: reduce)').matches ? [] : series;
 
 /** A cubic-bezier() easing's four numbers, or the standard curve's for any other easing. */
 const splines = (easing: string) => /cubic-bezier\(([^)]*)\)/.exec(easing)?.[1] ?? '0.2, 0, 0, 1';
@@ -204,11 +204,7 @@ export function steps(low: number, high: number, step: number) {
 
 /** A number format in the element's language, or the browser's for an invalid lang attribute. */
 export function numberFormat(el: Element, options: Intl.NumberFormatOptions) {
-  try {
-    return new Intl.NumberFormat(el.closest<HTMLElement>('[lang]')?.lang || undefined, options);
-  } catch {
-    return new Intl.NumberFormat(undefined, options);
-  }
+  return new Intl.NumberFormat(Utils.locale(el), options);
 }
 
 /** A y scale's ends, and with .axis the values its labels mark. */
@@ -395,13 +391,8 @@ export class LineChart extends Component<LineChartOptions> {
     return this.labels.length;
   }
 
-  protected get _key() {
-    return 'Expressive_LineChart';
-  }
-
   constructor(el: HTMLElement, options: Partial<LineChartOptions>) {
     super(el, options);
-    this.el[this._key] = this;
 
     this._build();
     this._listen();
@@ -462,9 +453,7 @@ export class LineChart extends Component<LineChartOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): LineChart {
-    return el['Expressive_LineChart'];
-  }
+  static key = 'Expressive_LineChart';
 
   destroy() {
     // The listeners live on the plot, which goes with the generated nodes.
@@ -472,7 +461,7 @@ export class LineChart extends Component<LineChartOptions> {
     this._generated = [];
     this._labelSizes?.disconnect();
     this._tableWatch?.disconnect();
-    this.el[this._key] = undefined;
+    super.destroy();
   }
 
   /**
@@ -481,7 +470,7 @@ export class LineChart extends Component<LineChartOptions> {
    * where the table still has it.
    */
   update() {
-    if (this.el[this._key] !== this) return;
+    if ((this.constructor as typeof LineChart).getInstance(this.el) !== this) return;
     const old = this._generated;
     // Inside a shadow root, the document's active element is the host.
     const active = (this.el.getRootNode() as Document | ShadowRoot).activeElement;
@@ -745,7 +734,7 @@ export class LineChart extends Component<LineChartOptions> {
    */
   protected _observeLabels(container: HTMLElement, items: Element[]) {
     this._labelSizes?.disconnect();
-    if (this._horizontal || !items.length || typeof ResizeObserver === 'undefined') return;
+    if (this._horizontal || !items.length) return;
     this._labelSizes = new ResizeObserver(() => thinLabels(container, items));
     this._labelSizes.observe(container);
   }

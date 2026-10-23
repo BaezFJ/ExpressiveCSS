@@ -1,8 +1,53 @@
-/** The part of a `DOMRect` the positioning helpers below actually read. */
-type Bounding = Pick<DOMRect, 'left' | 'top' | 'width' | 'height'>;
+/** One axis of a viewport clamp: `start` moved so `size` fits in `view`. */
+const fit = (start: number, size: number, view: number, offset: number) =>
+  start < offset ? offset : start + size > view - offset ? view - size : start;
 
-/** Which edges of a container a box has crossed. */
-type Edges = { top: boolean; right: boolean; bottom: boolean; left: boolean };
+/** Sets an attribute, or removes it for null, as when restoring a value read with getAttribute. */
+export function restoreAttribute(el: Element, name: string, value: string | null) {
+  if (value === null) el.removeAttribute(name);
+  else el.setAttribute(name, value);
+}
+
+/** A picker footer text button; a hidden one is also out of the tab order. */
+function footerButton(parent: HTMLElement, text: string, className: string, onClick: () => void, visible = true) {
+  const button = document.createElement('button');
+  button.className = `${className} text`;
+  button.style.visibility = visible ? 'visible' : 'hidden';
+  button.type = 'button';
+  button.tabIndex = visible ? 0 : -1;
+  button.innerText = text;
+  button.addEventListener('click', onClick);
+  parent.append(button);
+}
+
+/**
+ * Fills a picker's footer: a Clear button, hidden unless `showClearBtn`,
+ * then Cancel and Done unless the picker writes its value without them.
+ */
+export function pickerFooter(
+  footer: HTMLElement,
+  { i18n, showClearBtn, autoSubmit }: { i18n: Partial<Record<'clear' | 'cancel' | 'done', string>>; showClearBtn: boolean; autoSubmit: boolean },
+  clearClass: string,
+  onClear: () => void,
+  onConfirm: () => void,
+  onCancel: () => void
+) {
+  footerButton(footer, i18n.clear, clearClass, onClear, showClearBtn);
+  if (autoSubmit) return;
+  const buttons = document.createElement('div');
+  buttons.classList.add('confirmation-btns');
+  footer.append(buttons);
+  footerButton(buttons, i18n.cancel, 'btn-cancel', onCancel);
+  footerButton(buttons, i18n.done, 'btn-confirm', onConfirm);
+}
+
+/**
+ * An AbortController from the window `node` is in. Its signal removes
+ * listeners added there, and jsdom rejects a signal from another window.
+ */
+export function controllerFor(node: Node): AbortController {
+  return new (node.ownerDocument?.defaultView ?? window).AbortController();
+}
 
 /** An SVG element with its attributes. */
 export function svgNode(name: string, attributes: Record<string, string> = {}): SVGElement {
@@ -206,269 +251,11 @@ export class Utils {
   }
 
   /**
-   * Checks for exceeded edges
-   * @param container Container element.
-   * @param bounding Bounding rect.
-   * @param offset Element offset.
-   */
-  static checkWithinContainer(container: HTMLElement, bounding: Bounding, offset: number): Edges {
-    const edges = {
-      top: false,
-      right: false,
-      bottom: false,
-      left: false
-    };
-
-    const containerRect = container.getBoundingClientRect();
-    // If body element is smaller than viewport, use viewport height instead.
-    const containerBottom =
-      container === document.body
-        ? Math.max(containerRect.bottom, window.innerHeight)
-        : containerRect.bottom;
-
-    const scrollLeft = container.scrollLeft;
-    const scrollTop = container.scrollTop;
-
-    const scrolledX = bounding.left - scrollLeft;
-    const scrolledY = bounding.top - scrollTop;
-
-    // Check for container and viewport for each edge
-    if (scrolledX < containerRect.left + offset || scrolledX < offset) {
-      edges.left = true;
-    }
-
-    if (
-      scrolledX + bounding.width > containerRect.right - offset ||
-      scrolledX + bounding.width > window.innerWidth - offset
-    ) {
-      edges.right = true;
-    }
-
-    if (scrolledY < containerRect.top + offset || scrolledY < offset) {
-      edges.top = true;
-    }
-
-    if (
-      scrolledY + bounding.height > containerBottom - offset ||
-      scrolledY + bounding.height > window.innerHeight - offset
-    ) {
-      edges.bottom = true;
-    }
-
-    return edges;
-  }
-
-  /**
-   * Checks if element can be aligned in multiple directions.
-   * @param el Element to be inspected.
-   * @param container Container element.
-   * @param bounding Bounding rect.
-   * @param offset Element offset.
-   */
-  static checkPossibleAlignments(
-    el: HTMLElement,
-    container: HTMLElement,
-    bounding: Bounding,
-    offset: number
-  ) {
-    const canAlign: {
-      top: boolean;
-      right: boolean;
-      bottom: boolean;
-      left: boolean;
-      spaceOnTop: number;
-      spaceOnRight: number;
-      spaceOnBottom: number;
-      spaceOnLeft: number;
-    } = {
-      top: true,
-      right: true,
-      bottom: true,
-      left: true,
-      spaceOnTop: null,
-      spaceOnRight: null,
-      spaceOnBottom: null,
-      spaceOnLeft: null
-    };
-
-    const containerAllowsOverflow = getComputedStyle(container).overflow === 'visible';
-    const containerRect = container.getBoundingClientRect();
-    const containerHeight = Math.min(containerRect.height, window.innerHeight);
-    const containerWidth = Math.min(containerRect.width, window.innerWidth);
-    const elOffsetRect = el.getBoundingClientRect();
-
-    const scrollLeft = container.scrollLeft;
-    const scrollTop = container.scrollTop;
-
-    const scrolledX = bounding.left - scrollLeft;
-    const scrolledYTopEdge = bounding.top - scrollTop;
-    const scrolledYBottomEdge = bounding.top + elOffsetRect.height - scrollTop;
-
-    // Check for container and viewport for left
-    canAlign.spaceOnRight = !containerAllowsOverflow
-      ? containerWidth - (scrolledX + bounding.width)
-      : window.innerWidth - (elOffsetRect.left + bounding.width);
-    if (canAlign.spaceOnRight < 0) {
-      canAlign.left = false;
-    }
-
-    // Check for container and viewport for Right
-    canAlign.spaceOnLeft = !containerAllowsOverflow
-      ? scrolledX - bounding.width + elOffsetRect.width
-      : elOffsetRect.right - bounding.width;
-    if (canAlign.spaceOnLeft < 0) {
-      canAlign.right = false;
-    }
-
-    // Check for container and viewport for Top
-    canAlign.spaceOnBottom = !containerAllowsOverflow
-      ? containerHeight - (scrolledYTopEdge + bounding.height + offset)
-      : window.innerHeight - (elOffsetRect.top + bounding.height + offset);
-    if (canAlign.spaceOnBottom < 0) {
-      canAlign.top = false;
-    }
-
-    // Check for container and viewport for Bottom
-    // The menu ends `offset` above the element's bottom, in a clipped
-    // container as in the viewport.
-    canAlign.spaceOnTop = !containerAllowsOverflow
-      ? scrolledYBottomEdge - (bounding.height + offset)
-      : elOffsetRect.bottom - (bounding.height + offset);
-    if (canAlign.spaceOnTop < 0) {
-      canAlign.bottom = false;
-    }
-
-    return canAlign;
-  }
-
-  /**
    * Retrieves target element id from trigger.
    * @param trigger Trigger element.
    */
   static getIdFromTrigger(trigger: HTMLElement): string {
     return trigger.dataset.target || (trigger.getAttribute('href')?.slice(1) ?? '');
-  }
-
-  /**
-   * Trailing-edge throttle: run `func` now, then at most once per `wait` ms
-   * with the most recent arguments.
-   *
-   * This used to carry its underscore ancestor's whole configuration - leading
-   * and trailing switches, a result passthrough - and both call sites are
-   * resize handlers passing nothing but a function and a delay.
-   *
-   * Assign the return value once. `x = Utils.throttle(fn, 200)` is right;
-   * wrapping it in an arrow builds a fresh closure per event and never calls
-   * it, which is how resize handling was dead in three components.
-   */
-  static throttle(func: (...args: unknown[]) => void, wait: number) {
-    let timeout: ReturnType<typeof setTimeout> = null;
-    let lastArgs: unknown[] = null;
-    let previous = -Infinity;
-
-    return (...args: unknown[]) => {
-      // performance.now() is monotonic; Date.now() follows the system clock
-      // and a backward jump would hold the trailing call for as long as it jumped.
-      const now = performance.now();
-      const remaining = wait - (now - previous);
-      if (remaining <= 0) {
-        clearTimeout(timeout);
-        timeout = null;
-        previous = now;
-        lastArgs = null;
-        func(...args);
-      } else if (!timeout) {
-        // The trailing call replays the most recent arguments; without this it
-        // used to fire with none at all.
-        lastArgs = args;
-        timeout = setTimeout(() => {
-          previous = performance.now();
-          timeout = null;
-          func(...(lastArgs ?? []));
-          lastArgs = null;
-        }, remaining);
-      } else {
-        lastArgs = args;
-      }
-    };
-  }
-
-  /**
-   * Renders confirm/close buttons with callback function
-   */
-  static createConfirmationContainer(
-    container: HTMLElement,
-    confirmText: string,
-    cancelText: string,
-    onConfirm: (Function: object) => void,
-    onCancel: (Function: object) => void
-  ): void {
-    const confirmationButtonsContainer = document.createElement('div');
-    confirmationButtonsContainer.classList.add('confirmation-btns');
-    container.append(confirmationButtonsContainer);
-
-    this.createButton(confirmationButtonsContainer, cancelText, ['btn-cancel'], true, onCancel);
-    this.createButton(confirmationButtonsContainer, confirmText, ['btn-confirm'], true, onConfirm);
-  }
-
-  /**
-   * Renders a button with optional callback function
-   */
-  static createButton(
-    container: HTMLElement,
-    text: string,
-    className: string[] = [],
-    visibility: boolean = true,
-    callback: (Function: object) => void = null
-  ): void {
-    const button = document.createElement('button');
-    button.className = className.concat(['text']).join(' ');
-    button.style.visibility = visibility ? 'visible' : 'hidden';
-    button.type = 'button';
-    button.tabIndex = visibility ? 0 : -1;
-    button.innerText = text;
-    if (typeof callback === 'function') button.addEventListener('click', callback);
-    container.append(button);
-  }
-
-  /**
-   * Places `container` below `origin`, kept on screen, and returns the offset
-   * it should transition in from.
-   */
-  static _setAbsolutePosition(
-    origin: HTMLElement,
-    container: HTMLElement,
-    margin: number,
-    transitionMovement: number,
-    align: string = 'center'
-  ) {
-    const originHeight = origin.offsetHeight,
-      originWidth = origin.offsetWidth,
-      containerHeight = container.offsetHeight,
-      containerWidth = container.offsetWidth,
-      originRect = origin.getBoundingClientRect();
-    const targetTop = originRect.top + window.scrollY + originHeight + margin;
-    let targetLeft = originRect.left + window.scrollX;
-
-    if (align === 'center') {
-      targetLeft += originWidth / 2 - containerWidth / 2;
-    } else if (align === 'right') {
-      targetLeft += originWidth - containerWidth - margin;
-    }
-
-    const newCoordinates = Utils._repositionWithinScreen(
-      targetLeft,
-      targetTop,
-      containerWidth,
-      containerHeight,
-      margin,
-      transitionMovement,
-      align
-    );
-
-    Utils._placeInOffsetParent(container, newCoordinates);
-
-    return {x: 0, y: transitionMovement};
   }
 
   /**
@@ -490,6 +277,13 @@ export class Utils {
     el.style.left = x + 'px';
   }
 
+  /**
+   * Moves document coordinates so a `width` by `height` box stays in the
+   * viewport. A box past the left or top edge, or within `offset` of it,
+   * starts `offset` in; a box past the right or bottom edge, or within
+   * `offset` of it, ends at that edge. `offset` is the margin plus the slide
+   * distance, or minus it for right alignment.
+   */
   static _repositionWithinScreen(
     x: number,
     y: number,
@@ -499,38 +293,10 @@ export class Utils {
     transitionMovement: number,
     align: string
   ) {
-    const scrollLeft = window.scrollX;
-    const scrollTop = window.scrollY;
-    let newX = x - scrollLeft;
-    let newY = y - scrollTop;
-
-    const bounding: Bounding = {
-      left: newX,
-      top: newY,
-      width: width,
-      height: height
-    };
-    let offset: number;
-    if (align === 'left' || align == 'center') {
-      offset = margin + transitionMovement;
-    } else if (align === 'right') {
-      offset = margin - transitionMovement;
-    }
-    const edges = Utils.checkWithinContainer(document.body, bounding, offset);
-
-    if (edges.left) {
-      newX = offset;
-    } else if (edges.right) {
-      newX -= newX + width - window.innerWidth;
-    }
-    if (edges.top) {
-      newY = offset;
-    } else if (edges.bottom) {
-      newY -= newY + height - window.innerHeight;
-    }
+    const offset = margin + (align === 'right' ? -transitionMovement : transitionMovement);
     return {
-      x: newX + scrollLeft,
-      y: newY + scrollTop
+      x: window.scrollX + fit(x - window.scrollX, width, window.innerWidth, offset),
+      y: window.scrollY + fit(y - window.scrollY, height, window.innerHeight, offset)
     };
   }
 }

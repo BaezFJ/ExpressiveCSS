@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, controllerFor, restoreAttribute } from '../core/utils';
 import { BaseOptions, Component } from '../core/component';
 
 export interface LightboxOptions extends BaseOptions {
@@ -56,9 +56,6 @@ export class Lightbox extends Component<LightboxOptions> {
   originalHeight: number;
   private originInlineStyles: string;
   private placeholder: HTMLElement;
-  /** Ancestors forced to `overflow: visible`, with the inline value to put back. */
-  private _changedAncestorList: HTMLElement[] = [];
-  private static _overflow = new WeakMap<HTMLElement, { count: number; value: string; priority: string }>();
   private newHeight: number;
   private newWidth: number;
   private windowWidth: number;
@@ -73,6 +70,8 @@ export class Lightbox extends Component<LightboxOptions> {
   private _motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   private _isOpen = false;
   private _destroyed = false;
+  /** Removes the listeners that close an open lightbox. */
+  private _windowEvents: AbortController | undefined;
   private _revision = 0;
   // Counts opens and closes only. _revision also moves when reduced motion
   // flushes a transition, which must still report its end.
@@ -80,7 +79,6 @@ export class Lightbox extends Component<LightboxOptions> {
 
   constructor(el: HTMLElement, options: Partial<LightboxOptions>) {
     super(el, options);
-    this.el['Expressive_Lightbox'] = this;
 
     this.overlayActive = false;
     this.doneAnimating = true;
@@ -103,22 +101,18 @@ export class Lightbox extends Component<LightboxOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Lightbox {
-    return el['Expressive_Lightbox'];
-  }
+  static key = 'Expressive_Lightbox';
 
   destroy() {
     if (this._destroyed) return;
     this._destroyed = true;
     const focused = (this.el.getRootNode() as Document | ShadowRoot).activeElement === this.el;
-    this._removeEventHandlers();
     this._cancel();
     this._reset();
     this.placeholder.replaceWith(this.el);
     if (focused) this._restoreFocus();
-    if (this._tabindex === null) this.el.removeAttribute('tabindex');
-    else this.el.setAttribute('tabindex', this._tabindex);
-    this.el['Expressive_Lightbox'] = undefined;
+    restoreAttribute(this.el, 'tabindex', this._tabindex);
+    super.destroy();
   }
 
   // Back to the trigger when focus fell to the body (or the shadow host), as
@@ -131,26 +125,16 @@ export class Lightbox extends Component<LightboxOptions> {
   }
 
   private _reset() {
-    window.removeEventListener('scroll', this._handleWindowChange);
-    window.removeEventListener('resize', this._handleWindowChange);
-    window.removeEventListener('keyup', this._handleWindowEscape);
-    window.removeEventListener('keydown', this._handleWindowTab);
+    this._windowEvents?.abort();
+    // Removing a popover, or its attribute, takes it out of the top layer.
     this._overlay?.remove();
     this._photoCaption?.remove();
-    for (const ancestor of this._changedAncestorList) {
-      const saved = Lightbox._overflow.get(ancestor);
-      if (--saved.count === 0) {
-        ancestor.style.setProperty('overflow', saved.value, saved.priority);
-        Lightbox._overflow.delete(ancestor);
-      }
-    }
-    this._changedAncestorList = [];
+    this.el.removeAttribute('popover');
     if (this.attrWidth != null) this.el.setAttribute('width', this.attrWidth);
     if (this.attrHeight != null) this.el.setAttribute('height', this.attrHeight);
     this.el.classList.remove('active');
     this.placeholder.removeAttribute('style');
-    if (this.originInlineStyles === null) this.el.removeAttribute('style');
-    else this.el.setAttribute('style', this.originInlineStyles);
+    restoreAttribute(this.el, 'style', this.originInlineStyles);
     this.overlayActive = false;
     this._isOpen = false;
     this.doneAnimating = true;
@@ -182,15 +166,10 @@ export class Lightbox extends Component<LightboxOptions> {
   };
 
   private _setupEventHandlers() {
-    this._motion.addEventListener('change', this._handleMotionChange);
-    this._trigger.addEventListener('click', this._handleLightboxToggle);
-    this.el.addEventListener('keydown', this._handleLightboxKeypress);
-  }
-
-  private _removeEventHandlers() {
-    this._motion.removeEventListener('change', this._handleMotionChange);
-    this._trigger.removeEventListener('click', this._handleLightboxToggle);
-    this.el.removeEventListener('keydown', this._handleLightboxKeypress);
+    const { signal } = this._events;
+    this._motion.addEventListener('change', this._handleMotionChange, { signal });
+    this._trigger.addEventListener('click', this._handleLightboxToggle, { signal });
+    this.el.addEventListener('keydown', this._handleLightboxKeypress, { signal });
   }
 
   private _handleLightboxKeypress = (e: KeyboardEvent) => {
@@ -220,33 +199,21 @@ export class Lightbox extends Component<LightboxOptions> {
     if (e.key === 'Tab') this.close();
   };
 
-  private _makeAncestorsOverflowVisible() {
-    this._changedAncestorList = [];
-    let ancestor: Node = this.placeholder.parentNode;
-    while (ancestor != null && ancestor !== document) {
-      const curr = <HTMLElement>ancestor;
-      // A shadow root has no style; the clipping ancestors are above its host.
-      if (curr.style && (curr.style.overflow !== 'visible' || Lightbox._overflow.has(curr))) {
-        // Read before the write: an author's inline `overflow` has to come
-        // back on close, and restoring '' would silently discard it.
-        const saved = Lightbox._overflow.get(curr) ?? { count: 0, value: curr.style.overflow, priority: curr.style.getPropertyPriority('overflow') };
-        saved.count++;
-        Lightbox._overflow.set(curr, saved);
-        this._changedAncestorList.push(curr);
-        curr.style.overflow = 'visible';
-      }
-      ancestor = ancestor.parentNode ?? (<ShadowRoot>ancestor).host;
-    }
+  /**
+   * Shows `el` as a manual popover, so it is in the top layer: no ancestor
+   * clips or covers it, and it stacks above what was shown before it.
+   */
+  private _showOnTop(el: HTMLElement) {
+    el.setAttribute('popover', 'manual');
+    el.showPopover();
   }
 
-  private _offset(el: HTMLElement) {
-    const box = el.getBoundingClientRect();
-    const docElem = document.documentElement;
-    return {
-      top: box.top + window.scrollY - docElem.clientTop,
-      left: box.left + window.scrollX - docElem.clientLeft
-    };
+  /** The placeholder's document position, where the image rests. */
+  private _restingPlace() {
+    const box = this.placeholder.getBoundingClientRect();
+    return { left: box.left + window.scrollX + 'px', top: box.top + window.scrollY + 'px' };
   }
+
   private _updateVars(): void {
     this.windowWidth = window.innerWidth;
     this.windowHeight = window.innerHeight;
@@ -264,8 +231,6 @@ export class Lightbox extends Component<LightboxOptions> {
     this.el.style.height = this.originalHeight + 'px';
     this.el.style.width = this.originalWidth + 'px';
     this._schedule(() => {
-      // One offset for both axes, read before any of the writes below.
-      const placeholderOffset = this._offset(this.placeholder);
       // easeOutQuad
       this.el.style.transition = `height ${duration}ms ease,
         width ${duration}ms ease,
@@ -275,19 +240,8 @@ export class Lightbox extends Component<LightboxOptions> {
       // to
       this.el.style.height = this.newHeight + 'px';
       this.el.style.width = this.newWidth + 'px';
-      this.el.style.left =
-        window.scrollX +
-        this.windowWidth / 2 -
-        placeholderOffset.left -
-        this.newWidth / 2 +
-        'px';
-
-      this.el.style.top =
-        window.scrollY +
-        this.windowHeight / 2 -
-        placeholderOffset.top -
-        this.newHeight / 2 +
-        'px';
+      this.el.style.left = window.scrollX + (this.windowWidth - this.newWidth) / 2 + 'px';
+      this.el.style.top = window.scrollY + (this.windowHeight - this.newHeight) / 2 + 'px';
     }, 1);
 
     this._schedule(() => {
@@ -308,8 +262,7 @@ export class Lightbox extends Component<LightboxOptions> {
     // to
     this.el.style.height = this.originalHeight + 'px'; // was originalWidth
     this.el.style.width = this.originalWidth + 'px';
-    this.el.style.left = '0';
-    this.el.style.top = '0';
+    Object.assign(this.el.style, this._restingPlace());
     this._schedule(() => {
       this._reset();
       // onCloseEnd callback
@@ -324,6 +277,7 @@ export class Lightbox extends Component<LightboxOptions> {
     this._photoCaption.innerText = this.caption;
     Utils.portalRoot(this.el).append(this._photoCaption);
     this._photoCaption.style.display = 'inline';
+    this._showOnTop(this._photoCaption);
     this._fadeIn(this._photoCaption);
   }
 
@@ -340,16 +294,8 @@ export class Lightbox extends Component<LightboxOptions> {
       { once: true }
     );
 
-    // Put before in origin image to preserve z-index layering.
     this.el.before(this._overlay);
-
-    // Set dimensions if needed
-    const overlayOffset = this._overlay.getBoundingClientRect();
-    this._overlay.style.width = this.windowWidth + 'px';
-    this._overlay.style.height = this.windowHeight + 'px';
-    this._overlay.style.left = -1 * overlayOffset.left + 'px';
-    this._overlay.style.top = -1 * overlayOffset.top + 'px';
-
+    this._showOnTop(this._overlay);
     this._fadeIn(this._overlay);
   }
 
@@ -397,13 +343,12 @@ export class Lightbox extends Component<LightboxOptions> {
     // Set positioning for placeholder
     this.placeholder.style.width = placeholderRect.width + 'px';
     this.placeholder.style.height = placeholderRect.height + 'px';
-    this.placeholder.style.position = 'relative';
-    this.placeholder.style.top = '0';
-    this.placeholder.style.left = '0';
-    this._makeAncestorsOverflowVisible();
-    // Set css on origin
+    // In the top layer the image is positioned in the document, starting
+    // where the placeholder holds its place.
     this.el.style.position = 'absolute';
-    this.el.style.zIndex = 'var(--expressive-z-lightbox)';
+    this.el.style.inset = 'auto';
+    this.el.style.left = placeholderRect.left + window.scrollX + 'px';
+    this.el.style.top = placeholderRect.top + window.scrollY + 'px';
     this.el.style.willChange = 'left, top, width, height';
     // Change from width or height attribute to css
     this.attrWidth = this.el.getAttribute('width');
@@ -416,8 +361,10 @@ export class Lightbox extends Component<LightboxOptions> {
       this.el.style.height = this.attrHeight + 'px'; // was width, from the height attribute
       this.el.removeAttribute('height');
     }
+    // The overlay, the image and the caption go into the top layer in that
+    // order, so each stacks above the one before.
     this._addOverlay();
-    // Add and animate caption if it exists
+    this._showOnTop(this.el);
     if (this.caption !== '') this._addCaption();
     // Resize Image
     const widthPercent = this.originalWidth / this.windowWidth;
@@ -434,10 +381,13 @@ export class Lightbox extends Component<LightboxOptions> {
       this.newHeight = this.windowHeight * 0.9;
     }
     // Handle Exit triggers
-    window.addEventListener('scroll', this._handleWindowChange, { passive: true });
-    window.addEventListener('resize', this._handleWindowChange, { passive: true });
-    window.addEventListener('keyup', this._handleWindowEscape);
-    window.addEventListener('keydown', this._handleWindowTab);
+    this._windowEvents?.abort();
+    this._windowEvents = controllerFor(this.el);
+    const { signal } = this._windowEvents;
+    window.addEventListener('scroll', this._handleWindowChange, { passive: true, signal });
+    window.addEventListener('resize', this._handleWindowChange, { passive: true, signal });
+    window.addEventListener('keyup', this._handleWindowEscape, { signal });
+    window.addEventListener('keydown', this._handleWindowTab, { signal });
     this._animateImageIn();
   };
 
@@ -453,10 +403,7 @@ export class Lightbox extends Component<LightboxOptions> {
     // onCloseStart callback
     if (!this._notify('close', this.options.onCloseStart, { current: () => revision === this._revision })) return;
     // disable exit handlers
-    window.removeEventListener('scroll', this._handleWindowChange);
-    window.removeEventListener('resize', this._handleWindowChange);
-    window.removeEventListener('keyup', this._handleWindowEscape);
-    window.removeEventListener('keydown', this._handleWindowTab);
+    this._windowEvents?.abort();
     this._restoreFocus();
     if (this._overlay) this._fadeOut(this._overlay);
     if (this._photoCaption) this._fadeOut(this._photoCaption);

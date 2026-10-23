@@ -479,6 +479,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A docked date or time picker, and a tooltip placed without CSS anchor
+  positioning, stay beside their trigger on a page scrolled sideways and
+  inside the body's margin. They used to be kept inside the body's box,
+  which scrolls with the page, so a picker that fit the viewport could jump
+  to its right edge. They are now kept inside the viewport only, and a
+  docked picker with an `align` other than `left`, `center` or `right` is
+  kept in view like a left-aligned one.
 - `@use "expressive" with ($text-color: …)` colors the page text. The
   variable was written on `html`, where the `body` rule's own on-surface
   color covered it, so it only took effect inside a shadow root. `body`
@@ -839,6 +846,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `skillContractVersion` and `matchingCommit`. The first two copied
   `declaredRange` and `contractVersion`, which remain; `matchingCommit`
   was always `null`. Read `declaredRange` and `contractVersion` instead.
+- Datepicker's undocumented `formats` property, the table of format
+  functions. The `format` option and its tokens are unchanged.
 - **Breaking (1.0).** Most names kept for markup written before 0.8.0 are
   gone. Each one has a replacement that has been documented since 0.8.0;
   see Migration below. A few stay: `.breadcrumb` and `.breadcrumb-wrapper`,
@@ -868,6 +877,32 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- An open menu is a popover in the browser's top layer. This covers Menu,
+  Select, Autocomplete, the menubar, Chips suggestions and the date
+  picker's menus. A container that clips or scrolls no longer cuts a menu
+  off, a modal dialog or sheet no longer covers it, and it draws above
+  every `z-index`, so `--expressive-z-menu` now only orders the docked date
+  and time pickers. Menu no longer sets `position: relative` on the
+  nearest clipping ancestor. The menu's `popover` attribute is `manual`,
+  and Menu still handles outside clicks and Escape itself. A context menu
+  is kept inside the window rather than its scrolling container, and stays
+  where it opened when that container scrolls. A `coverTrigger: true`
+  menu, or a menu whose trigger sits under a transformed ancestor, is
+  placed by measurement and follows its trigger when the page or a
+  container scrolls. Firefox would anchor a top-layer menu to the
+  trigger's box before transforms, which puts it beside a floating toolbar
+  centred with `translateX(-50%)` instead of under its button. Migration:
+  tests that run Menu in jsdom need `showPopover` and `hidePopover` stubs,
+  and CSS or script that read an open menu's inline `display: block`
+  should use `menu[id]:popover-open` or the instance's `isOpen`.
+- An open Lightbox shows its overlay, image and caption as manual popovers
+  in the browser's top layer. The image still zooms from its thumbnail
+  and back, and Tab, Escape, a click and scrolling still close it; focus is
+  not trapped. Lightbox no longer sets `overflow: visible` on every
+  ancestor of the image while it is open, which let a scrolling container
+  lose its clipping. `--expressive-z-lightbox` no longer applies to it. The
+  image carries `popover="manual"` only while open. Migration: tests that
+  run Lightbox in jsdom need `showPopover` and `hidePopover` stubs.
 - The `.mx-*`, `.my-*`, `.px-*` and `.py-*` helpers set `margin-inline`,
   `margin-block`, `padding-inline` and `padding-block`. Horizontal text
   renders as before. In a vertical writing mode, `.mx-*` and `.px-*` now
@@ -882,6 +917,20 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   unchanged. The `CommandPalette` and `Questionnaire` constructors accept
   any `HTMLElement`, which their `init` already took, and a subclass that
   overrides `defaults` now gets its own defaults merged.
+- Every component inherits one `getInstance` from `Component`, which also
+  sets and clears the `el.Expressive_<Name>` property. The types are
+  unchanged, except that `Slider` and `CharacterCounter` accept any
+  `HTMLElement`. A subclass that overrides `getInstance` with its own return
+  type no longer compiles (TS2417); delete the override, because the inherited
+  one already returns the subclass.
+- The bundle uses `ResizeObserver` and `IntersectionObserver` without
+  checking that they exist. Every supported browser has both, but tests that
+  run components in jsdom need stubs for them, as they already need one for
+  `matchMedia`.
+- A click in a Select sets `selected` on the option clicked and leaves the
+  others alone. It used to write every option.
+- Data tables and line charts inside a shadow root sort and format numbers
+  in the host's `lang`, as the date and time pickers already do.
 - The MCP package ships `scripts/bounded-file.mjs` and
   `scripts/semantics-rules.mjs`. Inspection read errors use new wording,
   such as "inspected file exceeds N bytes".

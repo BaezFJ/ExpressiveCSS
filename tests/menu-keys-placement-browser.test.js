@@ -58,7 +58,7 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 
-  for (const transform of ['transform: translateZ(0)', 'translate: 0px']) browserTest(`${engine}: a long menu in a container with ${transform} measures room in the container, not the viewport`, async () => {
+  for (const transform of ['transform: translateZ(0)', 'translate: 0px']) browserTest(`${engine}: a long menu in a container with ${transform} leaves it for the top layer and measures room in the viewport`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage({ viewport: { width: 600, height: 600 } });
@@ -72,16 +72,16 @@ for (const [engine, browserType, browserTest] of engines) {
         Expressive.Menu.init(document.getElementById('t'), { inDuration: 0 }).open();
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         const [t, m] = [document.getElementById('t').getBoundingClientRect(), document.getElementById('m').getBoundingClientRect()];
-        return { below: m.top >= t.top - 1, height: Math.round(m.height) };
+        return { above: m.bottom <= t.top + 1, top: Math.round(m.top) };
       });
-      assert.equal(placed.below, true, 'the viewport has more room above, the container below');
-      assert.ok(placed.height > 150, `the menu keeps the room below: ${placed.height}px`);
+      assert.equal(placed.above, true, 'the viewport has more room above');
+      assert.ok(placed.top < 300, `the container does not hold it: top ${placed.top}px`);
     } finally {
       await browser.close();
     }
   });
 
-  browserTest(`${engine}: a long menu in a transformed shadow host measures room in the host`, async () => {
+  browserTest(`${engine}: a long menu in a transformed shadow host measures room in the viewport`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage({ viewport: { width: 600, height: 600 } });
@@ -95,10 +95,10 @@ for (const [engine, browserType, browserTest] of engines) {
         Expressive.Menu.init(root.getElementById('t'), { inDuration: 0 }).open();
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         const [t, m] = [root.getElementById('t').getBoundingClientRect(), root.getElementById('m').getBoundingClientRect()];
-        return { below: m.top >= t.top - 1, height: Math.round(m.height) };
+        return { above: m.bottom <= t.top + 1, top: Math.round(m.top) };
       }, css);
-      assert.equal(placed.below, true);
-      assert.ok(placed.height > 150, `the menu keeps the room below: ${placed.height}px`);
+      assert.equal(placed.above, true);
+      assert.ok(placed.top < 300, `the host does not hold it: top ${placed.top}px`);
     } finally {
       await browser.close();
     }

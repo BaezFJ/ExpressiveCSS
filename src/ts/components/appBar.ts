@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { Utils } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 
 const _defaults: BaseOptions = {};
 // Keys that open a full-screen search view from its field.
@@ -22,7 +22,6 @@ export class AppBar extends Component<BaseOptions> {
 
   constructor(el: HTMLElement, options: Partial<BaseOptions>) {
     super(el, options);
-    this.el['Expressive_AppBar'] = this;
     this._setupCollapse();
     this._setupSearch();
   }
@@ -31,34 +30,26 @@ export class AppBar extends Component<BaseOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): AppBar {
-    return el['Expressive_AppBar'];
-  }
+  static key = 'Expressive_AppBar';
 
   destroy() {
     this._observer?.disconnect();
     this._observer = null;
     this._sentinel?.remove();
     this._sentinel = null;
-    this._input?.removeEventListener('focus', this._onSearchFocus);
-    this._input?.removeEventListener('click', this._openSearch);
-    this._input?.removeEventListener('keydown', this._onSearchKeydown);
     if (this._restore) {
       this._view.hidden = this._restore.hidden;
-      if (this._restore.expanded === null) this._input.removeAttribute('aria-expanded');
-      else this._input.setAttribute('aria-expanded', this._restore.expanded);
+      restoreAttribute(this._input, 'aria-expanded', this._restore.expanded);
       this._restore = null;
     }
     this.el.classList.remove('collapsed');
-    this.el['Expressive_AppBar'] = undefined;
+    super.destroy();
   }
 
   private _setupCollapse() {
     if (!this.el.classList.contains('medium') && !this.el.classList.contains('large')) {
       return;
     }
-    if (typeof IntersectionObserver === 'undefined') return;
-
     // Collapsing shrinks the header, and scroll anchoring then scrolls the page
     // back by the height it lost. The sentinel follows the header, so it moves
     // with the page and that correction cannot bring it back into view. It sits
@@ -95,9 +86,10 @@ export class AppBar extends Component<BaseOptions> {
     this._view = (id && Utils.getElementById(this.el, id)) || this.el.querySelector('.search-view');
     if (!this._view) return;
 
-    this._input.addEventListener('focus', this._onSearchFocus);
-    this._input.addEventListener('click', this._openSearch);
-    this._input.addEventListener('keydown', this._onSearchKeydown);
+    const { signal } = this._events;
+    this._input.addEventListener('focus', this._onSearchFocus, { signal });
+    this._input.addEventListener('click', this._openSearch, { signal });
+    this._input.addEventListener('keydown', this._onSearchKeydown, { signal });
   }
 
   // A docked view opens on focus, like a combobox popup. A full-screen

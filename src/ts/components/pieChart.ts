@@ -71,10 +71,6 @@ export class PieChart extends LineChart {
     return false;
   }
 
-  protected get _key() {
-    return 'Expressive_PieChart';
-  }
-
   protected get _points() {
     return false;
   }
@@ -130,9 +126,7 @@ export class PieChart extends LineChart {
     return small.filter(Boolean).length > 1 ? small : null;
   }
 
-  static getInstance(el: HTMLElement): PieChart {
-    return el['Expressive_PieChart'];
-  }
+  static key = 'Expressive_PieChart';
 
   show(index: number) {
     if (!this._tooltip || index === this.activeIndex) return;

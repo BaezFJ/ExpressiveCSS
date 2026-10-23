@@ -2615,12 +2615,16 @@ describe('Particles', () => {
     globalThis.matchMedia = (query) => (queries[query] ??= {
       matches: query.includes('reduced-motion') && reduce,
       listeners: new Set(),
-      addEventListener(type, fn) { this.listeners.add(fn); },
+      addEventListener(type, fn, options) {
+        this.listeners.add(fn);
+        options?.signal?.addEventListener('abort', () => this.listeners.delete(fn));
+      },
       removeEventListener(type, fn) { this.listeners.delete(fn); },
       change(matches = this.matches) { this.matches = matches; this.listeners.forEach((fn) => fn()); }
     });
     let visibility;
     globalThis.devicePixelRatio = 1;
+    const { IntersectionObserver } = globalThis;
     globalThis.IntersectionObserver = class {
       constructor(callback) { visibility = callback; }
       observe() {}
@@ -2628,7 +2632,7 @@ describe('Particles', () => {
     };
     const restore = () => {
       globalThis.matchMedia = matchMedia;
-      delete globalThis.IntersectionObserver;
+      globalThis.IntersectionObserver = IntersectionObserver;
       delete globalThis.devicePixelRatio;
       document.documentElement.removeAttribute('theme');
     };

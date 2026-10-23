@@ -54,33 +54,27 @@ export class NavigationRail extends Component<NavigationRailOptions> {
 
   constructor(el: HTMLElement, options: Partial<NavigationRailOptions>) {
     super(el, options);
-    this.el['Expressive_NavigationRail'] = this;
 
     this._toggle = this._findToggle();
     this._mql = window.matchMedia(COMPACT);
     this.isExpanded = this.el.classList.contains('expanded');
     this._sync();
-    this.el.addEventListener('click', this._onClick);
-    this.el.addEventListener('pointerover', this._onPointerOver);
-    this.el.addEventListener('pointerleave', this._onPointerLeave);
-    document.addEventListener('keydown', this._onKeyDown);
+    const { signal } = this._events;
+    this.el.addEventListener('click', this._onClick, { signal });
+    this.el.addEventListener('pointerover', this._onPointerOver, { signal });
+    this.el.addEventListener('pointerleave', this._onPointerLeave, { signal });
+    document.addEventListener('keydown', this._onKeyDown, { signal });
   }
 
   static get defaults(): NavigationRailOptions {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): NavigationRail {
-    return el['Expressive_NavigationRail'];
-  }
+  static key = 'Expressive_NavigationRail';
 
   destroy() {
-    this.el.removeEventListener('click', this._onClick);
-    this.el.removeEventListener('pointerover', this._onPointerOver);
-    this.el.removeEventListener('pointerleave', this._onPointerLeave);
-    document.removeEventListener('keydown', this._onKeyDown);
     clearTimeout(this._hoverTimer);
-    this.el['Expressive_NavigationRail'] = undefined;
+    super.destroy();
   }
 
   /**

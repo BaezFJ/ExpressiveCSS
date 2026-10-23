@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 import { Component, BaseOptions, } from '../core/component';
 
 export interface CardsOptions extends BaseOptions {
@@ -76,7 +76,6 @@ export class Cards extends Component<CardsOptions> {
 
   constructor(el: HTMLElement, options: Partial<CardsOptions> = {}) {
     super(el, options);
-    this.el['Expressive_Cards'] = this;
 
     const cardReveals = this.el.querySelectorAll<HTMLElement>(':scope > aside');
     const cardReveal = cardReveals.length === 1 ? cardReveals[0] : null;
@@ -112,15 +111,12 @@ export class Cards extends Component<CardsOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Cards {
-    return el['Expressive_Cards'];
-  }
+  static key = 'Expressive_Cards';
 
   /**
    * {@inheritDoc}
    */
   destroy() {
-    this._removeEventHandlers();
     if (this.cardReveal) {
       this.cardReveal.classList.remove('open');
       this.cardReveal.inert = false;
@@ -129,30 +125,19 @@ export class Cards extends Component<CardsOptions> {
     this._activators.forEach((activator) => {
       activator.removeAttribute('aria-expanded');
       const initialAriaControls = this._initialAriaControls.get(activator);
-      if (initialAriaControls === null) activator.removeAttribute('aria-controls');
-      else if (initialAriaControls !== undefined) {
-        activator.setAttribute('aria-controls', initialAriaControls);
-      }
+      if (initialAriaControls !== undefined) restoreAttribute(activator, 'aria-controls', initialAriaControls);
     });
     this.isOpen = false;
     this._activators = [];
     this._initialAriaControls.clear();
     this._lastActivator = null;
-    this.el['Expressive_Cards'] = undefined;
+    super.destroy();
   }
 
   _setupEventHandlers = () => {
-    this._activators.forEach((activator) => {
-      activator.addEventListener('click', this._handleClickInteraction);
-    });
-    this.el.addEventListener('keydown', this._handleKeydownEvent);
-  };
-
-  _removeEventHandlers = () => {
-    this._activators.forEach((activator) => {
-      activator.removeEventListener('click', this._handleClickInteraction);
-    });
-    this.el.removeEventListener('keydown', this._handleKeydownEvent);
+    const { signal } = this._events;
+    this._activators.forEach((activator) => activator.addEventListener('click', this._handleClickInteraction, { signal }));
+    this.el.addEventListener('keydown', this._handleKeydownEvent, { signal });
   };
 
   _handleClickInteraction = (event: MouseEvent) => {

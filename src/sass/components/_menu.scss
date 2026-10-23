@@ -457,11 +457,15 @@ menu[id] {
   inset: auto;
   left: 0;
   top: 0;
-  z-index: var(--expressive-z-menu);
   overflow-y: auto;
   opacity: 0;
   user-select: none;
   transform-origin: 0 0;
+
+  // Menu opens the surface as a manual popover, in the top layer.
+  &:popover-open {
+    display: block;
+  }
 
   // Nested flyouts sit outside the list box; do not clip them.
   &:has(> li > menu) {

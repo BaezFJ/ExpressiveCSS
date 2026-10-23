@@ -177,12 +177,11 @@ describe('Portals inside a shadow root stay in that root', () => {
   });
 });
 
-// Widened by the shadow-boundary hop above, but wrong before it: the walk
-// restored every ancestor to '' rather than to the value it found, so an
-// author's inline overflow was discarded the first time a lightbox opened
-// under it.
-describe('Lightbox puts back the overflow it found', () => {
-  test('an inline overflow on an ancestor survives open/close', async () => {
+// The open image is a popover in the top layer, which no ancestor clips, so
+// Lightbox no longer clears an ancestor's overflow. It used to set every
+// ancestor to visible and put the author's inline value back on close.
+describe('Lightbox leaves ancestor overflow alone', () => {
+  test('an inline overflow on an ancestor stays through open/close', async () => {
     const wrapper = document.createElement('div');
     wrapper.style.overflow = 'hidden';
     wrapper.innerHTML = '<img class="lightboxed" src="a.png">';
@@ -192,10 +191,12 @@ describe('Lightbox puts back the overflow it found', () => {
     const instance = Expressive.Lightbox.init(img);
     try {
       instance.open();
-      assert.equal(wrapper.style.overflow, 'visible', 'cleared while open');
+      assert.equal(wrapper.style.overflow, 'hidden', 'kept while open');
+      assert.equal(img.getAttribute('popover'), 'manual', 'the image is a manual popover while open');
       instance.close();
       await new Promise((r) => setTimeout(r, instance.options.outDuration + 20));
-      assert.equal(wrapper.style.overflow, 'hidden', 'and put back on close');
+      assert.equal(wrapper.style.overflow, 'hidden', 'and after close');
+      assert.equal(img.hasAttribute('popover'), false, 'which it is not once closed');
     } finally {
       instance.destroy();
     }

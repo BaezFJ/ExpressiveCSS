@@ -1,5 +1,5 @@
 import { BaseOptions } from '../core/component';
-import { Utils } from '../core/utils';
+import { Utils, controllerFor, restoreAttribute } from '../core/utils';
 
 export interface SnackbarOptions extends BaseOptions {
   /**
@@ -422,15 +422,12 @@ export class Snackbar {
         .map(name => [name, snackbar.getAttribute(name)]);
       this._restoreElement = () => {
         snackbar.replaceChildren(...children);
-        for (const [name, value] of attributes) {
-          if (value === null) snackbar.removeAttribute(name);
-          else snackbar.setAttribute(name, value);
-        }
+        for (const [name, value] of attributes) restoreAttribute(snackbar, name, value);
         placeholder.replaceWith(snackbar);
       };
     }
     if (!snackbar) throw new Error('Snackbar body not found');
-    this._events = new (snackbar.ownerDocument.defaultView ?? window).AbortController();
+    this._events = controllerFor(snackbar);
     const listenerOptions = { signal: this._events.signal };
     snackbar.classList.add('snackbar');
     snackbar.setAttribute('role', 'status');

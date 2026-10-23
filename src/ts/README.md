@@ -3,7 +3,7 @@
 ```
 index.ts        public entry: re-exports, version, import-time side effects
 modular.ts      optional public entry: exports only, explicit initialization
-core/           Component base class, Utils, Bounding/Edges types
+core/           Component base class, Utils
 components/     per-element widgets, + index.ts (barrel) and registry.ts
 behaviors/      document-level enhancers (Forms, Dialogs) - no per-element instances
 plugins/        helpers that are not Components (DockedDisplayPlugin)
@@ -35,22 +35,29 @@ export interface ThingOptions extends BaseOptions { /* … */ }
 const _defaults = { /* … */ };
 
 export class Thing extends Component<ThingOptions> {
+  static key = 'Expressive_Thing';                            // instance lookup key
   constructor(el: HTMLElement, options: Partial<ThingOptions>) {
-    super(el, options);                                       // sets this.options
-    this.el['Expressive_Thing'] = this;                       // instance lookup key
+    super(el, options);                                       // sets this.options and el.Expressive_Thing
+    this.el.addEventListener('click', this._onClick, { signal: this._events.signal });
   }
   static get defaults() { return _defaults; }
-  static getInstance(el: HTMLElement): Thing { return el['Expressive_Thing']; }
-  destroy() { this.el['Expressive_Thing'] = undefined; /* remove handlers */ }
+  destroy() { /* undo DOM changes */ super.destroy(); }       // aborts _events, clears el.Expressive_Thing
 }
 ```
 
-`getInstance` and `destroy` throw in the base class — a subclass that omits
-them is broken, not defaulted. The base constructor destroys any existing
+Listeners that last as long as the instance take `this._events.signal`, so
+destroy() needs no removeEventListener calls. Listeners that come and go while
+the instance lives, such as an open menu's document handlers or a drag, get
+their own `controllerFor(el)` from `core/utils`. It builds the AbortController
+from the element's window, because jsdom rejects a signal from another one.
+
+The base class reads `key` to set, look up and clear the instance:
+`Thing.getInstance(el)` is inherited and typed on `this`, so it returns a
+`Thing`. The base constructor destroys any existing
 instance first, so re-initializing an element is safe, then spreads `options`
-over `new.target.defaults`. Nested options (`i18n`) are the subclass's to
-deep-merge after `super()`; options read from markup go into the object passed
-to `super()`.
+over `new.target.defaults`. It also spreads `options.i18n` over the default
+`i18n`, so passing one string keeps the others. Options read from markup go
+into the object passed to `super()`.
 
 `Thing.init(el | els, options)` is inherited. The base `init` is typed on
 `this`, so `Thing.init(el)` returns a `Thing`, a list returns `Thing[]`, and the
@@ -60,9 +67,8 @@ constructor's `el` as the widest element `init` should accept.
 The `el['Expressive_Thing']` stashing backs `Expressive.Thing.getInstance(el)`,
 and page code can read `el.Expressive_Thing` directly. The key was `M_Thing`
 in older versions, so anything written against the old
-property name needs updating. It is duplicated in every component; replacing it
-with a WeakMap in the base class would be cleaner, but would drop the
-read-it-off-the-element access that key provides.
+property name needs updating. A WeakMap in the base class would hide it, but
+would drop the read-it-off-the-element access that key provides.
 
 ## Gotchas
 

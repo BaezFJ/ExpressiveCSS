@@ -15,7 +15,6 @@ export class CharacterCounter extends Component<BaseOptions> {
 
   constructor(el: HTMLInputElement | HTMLTextAreaElement, options: Partial<BaseOptions>) {
     super(el, options);
-    this.el['Expressive_CharacterCounter'] = this;
 
     this.isInvalid = false;
     this.isValidLength = false;
@@ -30,25 +29,18 @@ export class CharacterCounter extends Component<BaseOptions> {
     return _defaults;
   }
 
-  static getInstance(el: InputElement): CharacterCounter {
-    return el['Expressive_CharacterCounter'];
-  }
+  static key = 'Expressive_CharacterCounter';
 
   destroy() {
-    this._removeEventHandlers();
-    this.el['Expressive_CharacterCounter'] = undefined;
+    super.destroy();
     this._removeCounter();
     if (this.isInvalid) this.el.classList.remove('invalid');
   }
 
   _setupEventHandlers() {
-    this.el.addEventListener('focus', this.updateCounter, true);
-    this.el.addEventListener('input', this.updateCounter, true);
-  }
-
-  _removeEventHandlers() {
-    this.el.removeEventListener('focus', this.updateCounter, true);
-    this.el.removeEventListener('input', this.updateCounter, true);
+    const options = { capture: true, signal: this._events.signal };
+    this.el.addEventListener('focus', this.updateCounter, options);
+    this.el.addEventListener('input', this.updateCounter, options);
   }
 
   _setupCounter() {

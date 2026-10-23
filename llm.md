@@ -1665,7 +1665,7 @@ Each level is also a custom property, `--md-sys-elevation-level0` to `--md-sys-e
 
 #### Stacking order
 
-A shadow does not decide what sits on top. Surfaces that float over the page take their `z-index` from these properties, lowest first. Dialogs, modal sheets and open popovers are in the browser's top layer, above all of them.
+A shadow does not decide what sits on top. Surfaces that float over the page take their `z-index` from these properties, lowest first. Dialogs, modal sheets, open menus, an open lightbox and open popovers are in the browser’s top layer, above all of them.
 
 | Property | Value | Used by |
 | --- | --- | --- |
@@ -1673,9 +1673,9 @@ A shadow does not decide what sits on top. Surfaces that float over the page tak
 | `--expressive-z-app-bar` | 997 | A pinned top app bar and a fixed navigation bar. |
 | `--expressive-z-modal-rail` | 998 | An expanded navigation rail over the page. |
 | `--expressive-z-sheet` | 1100 | A bottom or side sheet opened without `showModal()`. |
-| `--expressive-z-lightbox` | 1200 | The lightbox overlay and its zoomed image. |
+| `--expressive-z-lightbox` | 1200 | Nothing. An open lightbox is in the top layer. |
 | `--expressive-z-tooltip` | 2000 | Tooltips. |
-| `--expressive-z-menu` | 9999 | Menus and the docked date and time pickers. |
+| `--expressive-z-menu` | 9999 | The docked date and time pickers. Open menus are in the top layer. |
 | `--expressive-z-snackbar` | 10000 | Snackbars. |
 | `--expressive-z-confetti` | 10001 | The confetti overlay, in browsers without popovers. |
 
@@ -5692,7 +5692,7 @@ A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by de
 
 This is the M3 Expressive vertical menu. Tokens follow the [M3 menu spec](https://m3.material.io/components/menus/specs). The container is `surface-container-low`, large (16dp) corners, elevation 2, 2dp group padding, 112–280dp wide. Items are 44dp with extra-small (4dp) corners, `label-large` / `on-surface`; the first and last item round their outer corners to 12dp. Icons are 20dp `on-surface-variant`. Selected items use medium (12dp) corners and `tertiary-container` / `on-tertiary-container`. Hover is an 8% state layer, focus and press 10%, none of which span the container. Dividers are inset. Add `.vibrant` for the tertiary mapping. Submenus fade and scale in; the open flyout rounds up and the parent rounds down.
 
-`AutoInit()` starts every `.menu-trigger` except those marked `no-autoinit`. Menus open on click, below the trigger. Pass `coverTrigger: true` to cover the trigger. Pass `constrainWidth: false` so the menu sizes independently of the trigger. In browsers with CSS anchor positioning, a menu opened from its trigger is anchored there in CSS: it stays under the trigger while the page or a container scrolls, opens above it when the whole menu does not fit below and there is more room above, flips to the other side at the viewport edge, and scrolls when it is taller than the room on the side it opens on. `placement: 'top'` opens it above the trigger when it fits there, as for a trigger in a bottom bar. Up and Down move between rows, and Home and End jump to the first and last. Context menus and `coverTrigger: true` keep the measured placement, as do browsers without anchor positioning.
+`AutoInit()` starts every `.menu-trigger` except those marked `no-autoinit`. Menus open on click, below the trigger. Pass `coverTrigger: true` to cover the trigger. Pass `constrainWidth: false` so the menu sizes independently of the trigger. In browsers with CSS anchor positioning, a menu opened from its trigger is anchored there in CSS: it stays under the trigger while the page or a container scrolls, opens above it when the whole menu does not fit below and there is more room above, flips to the other side at the viewport edge, and scrolls when it is taller than the room on the side it opens on. `placement: 'top'` opens it above the trigger when it fits there, as for a trigger in a bottom bar. Up and Down move between rows, and Home and End jump to the first and last. Context menus and `coverTrigger: true` keep the measured placement, as do menus under a transformed ancestor and browsers without anchor positioning. A measured menu follows its trigger when something scrolls. An open menu is a popover in the browser's top layer, so a container that clips or scrolls does not cut it off, a modal dialog does not cover it, and Menu writes no styles on the menu's ancestors.
 
 ```html
 <button class="menu-trigger" data-target="menu1">Drop me</button>
@@ -5735,7 +5735,7 @@ A radio item checks itself and unchecks the other radio items in its group. A cl
 
 ### Context menu
 
-Add `data-context-menu` to a `.menu-trigger` that is a region of content, such as a file list or a card, and its menu replaces the browser's context menu there. Right-click opens it at the pointer, and it flips to stay on screen. The menu key and Shift+F10 open it at the region's start corner, so give the region `tabindex="0"` when it holds nothing focusable. Enter and Space stay with the region's own content. Closing the menu returns focus to whatever had it before the menu opened. In nested regions only the innermost menu opens, and a right-click on an open menu keeps it open. The menu stays inside the window and any scrolling container it sits in, and scrolls when it is taller than either; `open()` without a right-click places it at the region's start corner.
+Add `data-context-menu` to a `.menu-trigger` that is a region of content, such as a file list or a card, and its menu replaces the browser's context menu there. Right-click opens it at the pointer, and it flips to stay on screen. The menu key and Shift+F10 open it at the region's start corner, so give the region `tabindex="0"` when it holds nothing focusable. Enter and Space stay with the region's own content. Closing the menu returns focus to whatever had it before the menu opened. In nested regions only the innermost menu opens, and a right-click on an open menu keeps it open. The menu stays inside the window, and scrolls when it is taller than the window. It stays where it opened when a container around it scrolls; `open()` without a right-click places it at the region's start corner.
 
 The region gets no `aria-expanded` or `aria-haspopup`, which belong to buttons. Every action in a context menu also needs another way in, such as a toolbar or an item's own menu button. Touch browsers that do not fire `contextmenu` on long-press, such as iOS Safari, never show it.
 
@@ -5952,7 +5952,7 @@ Media components handle large objects such as images. For responsive images and 
 
 ### Lightbox
 
-Lightbox supports Space and native button activation. Repeated open or close requests are ignored; reopening during closing cancels the old transition. Canceled transitions do not report completion. Reduced motion skips animation and finishes pending transitions when enabled while mounted. Destroy cancels pending work, retains the original image, restores owned attributes and styles, and preserves trigger focus without overriding application focus. Shared ancestor overflow remains visible until the last open Lightbox releases it. This does not supply a modal-gallery focus contract.
+Lightbox supports Space and native button activation. Repeated open or close requests are ignored; reopening during closing cancels the old transition. Canceled transitions do not report completion. Reduced motion skips animation and finishes pending transitions when enabled while mounted. Destroy cancels pending work, retains the original image, restores owned attributes and styles, and preserves trigger focus without overriding application focus. The open image, its overlay and its caption are manual popovers in the browser's top layer, so a clipping or transformed ancestor does not cut the image off, and Lightbox leaves its ancestors' styles alone. Tab still closes it rather than being trapped: this does not supply a modal-gallery focus contract.
 
 Lightbox is Expressive’s material-style enlarge-on-click image. Click an image with `lightboxed` and it centers and grows. Click it again, scroll, or press Escape to dismiss. `AutoInit()` starts every `.lightboxed` image except those marked `no-autoinit`.
 

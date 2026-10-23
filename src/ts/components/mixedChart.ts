@@ -31,17 +31,11 @@ export class MixedChart extends ColumnChart {
     return 'mixed-chart';
   }
 
-  protected get _key() {
-    return 'Expressive_MixedChart';
-  }
-
   protected get _points() {
     return true;
   }
 
-  static getInstance(el: HTMLElement): MixedChart {
-    return el['Expressive_MixedChart'];
-  }
+  static key = 'Expressive_MixedChart';
 
   /**
    * With .stacked, the columns on each scale stack on the ones before them;

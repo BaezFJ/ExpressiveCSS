@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 export type TooltipPosition = 'top' | 'right' | 'bottom' | 'left';
@@ -166,7 +166,6 @@ export class Tooltip extends Component<TooltipOptions> {
 
   constructor(el: HTMLElement, options: Partial<TooltipOptions>) {
     super(el, options);
-    this.el['Expressive_Tooltip'] = this;
 
     // Again, so the data-* options sit between the defaults and the options.
     this.options = {
@@ -186,9 +185,7 @@ export class Tooltip extends Component<TooltipOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Tooltip {
-    return el['Expressive_Tooltip'];
-  }
+  static key = 'Expressive_Tooltip';
 
   destroy() {
     clearTimeout(this._enterDelayTimeout);
@@ -209,8 +206,7 @@ export class Tooltip extends Component<TooltipOptions> {
     if (this._originalContent) {
       const { el, marker, display, priority, hidden, contentClass } = this._originalContent;
       el.style.setProperty('display', display, priority);
-      if (hidden === null) el.removeAttribute('hidden');
-      else el.setAttribute('hidden', hidden);
+      restoreAttribute(el, 'hidden', hidden);
       el.classList.toggle('tooltip-content', contentClass);
       if (!el.className) el.removeAttribute('class');
       marker.replaceWith(el);
@@ -218,8 +214,7 @@ export class Tooltip extends Component<TooltipOptions> {
     }
     this.tooltipEl.remove();
     Utils.setAnchorName(this.el, `--${this.tooltipEl.id}`, false);
-    this._removeEventHandlers();
-    this.el['Expressive_Tooltip'] = undefined;
+    super.destroy();
   }
 
   _appendTooltipEl() {
@@ -266,36 +261,20 @@ export class Tooltip extends Component<TooltipOptions> {
   }
 
   _setupEventHandlers() {
+    const { signal } = this._events;
+    const capture = { capture: true, signal };
     for (const el of [this.el, this.tooltipEl]) {
-      el.addEventListener('mouseenter', this._handleMouseEnter);
-      el.addEventListener('mouseleave', this._handleMouseLeave);
-      el.addEventListener('focus', this._handleFocus, true);
-      el.addEventListener('blur', this._handleBlur, true);
+      el.addEventListener('mouseenter', this._handleMouseEnter, { signal });
+      el.addEventListener('mouseleave', this._handleMouseLeave, { signal });
+      el.addEventListener('focus', this._handleFocus, capture);
+      el.addEventListener('blur', this._handleBlur, capture);
     }
-    this.el.addEventListener('pointerenter', this._handlePointerEnter);
-    this.el.addEventListener('pointerdown', this._handlePointerDown);
-    this.el.addEventListener('pointerup', this._handlePointerEnd);
-    this.el.addEventListener('pointercancel', this._handlePointerCancel);
-    this.el.addEventListener('click', this._handleClick, true);
-    this.tooltipEl.addEventListener('click', this._handleTooltipClick, true);
-  }
-
-  _removeEventHandlers() {
-    for (const el of [this.el, this.tooltipEl]) {
-      el.removeEventListener('mouseenter', this._handleMouseEnter);
-      el.removeEventListener('mouseleave', this._handleMouseLeave);
-      el.removeEventListener('focus', this._handleFocus, true);
-      el.removeEventListener('blur', this._handleBlur, true);
-    }
-    this.el.removeEventListener('pointerenter', this._handlePointerEnter);
-    this.el.removeEventListener('pointerdown', this._handlePointerDown);
-    this.el.removeEventListener('pointerup', this._handlePointerEnd);
-    this.el.removeEventListener('pointercancel', this._handlePointerCancel);
-    this.el.removeEventListener('click', this._handleClick, true);
-    this.tooltipEl.removeEventListener('click', this._handleTooltipClick, true);
-    // Escape and outside clicks are only listened for while open; see open() and close().
-    this.el.ownerDocument.removeEventListener('keydown', this._handleKeydown, true);
-    this.el.ownerDocument.removeEventListener('click', this._handleDocumentClick);
+    this.el.addEventListener('pointerenter', this._handlePointerEnter, { signal });
+    this.el.addEventListener('pointerdown', this._handlePointerDown, { signal });
+    this.el.addEventListener('pointerup', this._handlePointerEnd, { signal });
+    this.el.addEventListener('pointercancel', this._handlePointerCancel, { signal });
+    this.el.addEventListener('click', this._handleClick, capture);
+    this.tooltipEl.addEventListener('click', this._handleTooltipClick, capture);
   }
 
   /**
@@ -306,11 +285,14 @@ export class Tooltip extends Component<TooltipOptions> {
     clearTimeout(this._exitDelayTimeout);
     clearTimeout(this._animationTimeout);
     this.isOpen = true;
-    this.el.ownerDocument.addEventListener('keydown', this._handleKeydown, true);
+    // Escape and outside clicks are only listened for while open. close()
+    // removes them, and destroy() through the signal.
+    const { signal } = this._events;
+    this.el.ownerDocument.addEventListener('keydown', this._handleKeydown, { capture: true, signal });
     // A task later, so the click that opened it, on the trigger or on a page
     // button that called open(), does not reach the listener and close it.
     if (this.options.openOnClick) {
-      this._outsideTimeout = setTimeout(() => this.el.ownerDocument.addEventListener('click', this._handleDocumentClick));
+      this._outsideTimeout = setTimeout(() => this.el.ownerDocument.addEventListener('click', this._handleDocumentClick, { signal }));
     }
     // Update tooltip content with HTML attribute options
     this.options = { ...this.options, ...this._getAttributeOptions() };

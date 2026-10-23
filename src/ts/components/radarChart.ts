@@ -37,10 +37,6 @@ export class RadarChart extends LineChart {
     return 'radar-chart';
   }
 
-  protected get _key() {
-    return 'Expressive_RadarChart';
-  }
-
   /** The scale starts at zero, the middle, so shapes compare by size. */
   protected get _fromZero() {
     return true;
@@ -50,9 +46,7 @@ export class RadarChart extends LineChart {
     return true;
   }
 
-  static getInstance(el: HTMLElement): RadarChart {
-    return el['Expressive_RadarChart'];
-  }
+  static key = 'Expressive_RadarChart';
 
   /**
    * The cursor is a spoke turned by --turn, and the tooltip sits past its

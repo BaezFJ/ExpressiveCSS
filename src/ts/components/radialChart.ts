@@ -47,10 +47,6 @@ export class RadialChart extends LineChart {
     return false;
   }
 
-  protected get _key() {
-    return 'Expressive_RadialChart';
-  }
-
   protected get _points() {
     return false;
   }
@@ -110,9 +106,7 @@ export class RadialChart extends LineChart {
     return this._radii.length > 1 ? this._radii[0] - this._radii[1] : this._width;
   }
 
-  static getInstance(el: HTMLElement): RadialChart {
-    return el['Expressive_RadialChart'];
-  }
+  static key = 'Expressive_RadialChart';
 
   show(index: number) {
     if (!this._tooltip || index === this.activeIndex) return;

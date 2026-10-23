@@ -54,9 +54,9 @@ describe('AppBar collapse', () => {
     observers = installIO();
   });
 
+  const { IntersectionObserver } = window;
   afterEach(() => {
-    delete window.IntersectionObserver;
-    delete globalThis.IntersectionObserver;
+    window.IntersectionObserver = globalThis.IntersectionObserver = IntersectionObserver;
   });
 
   test('leaving the sentinel collapses a medium bar', () => {

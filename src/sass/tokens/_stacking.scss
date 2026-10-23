@@ -2,14 +2,16 @@
 // z-index tokens, so these are ours.
 //
 // Lowest to highest: fixed toolbars, top app bars and fixed navigation bars,
-// the modal navigation rail, non-modal sheets, the lightbox, tooltips, menus
-// and pickers, snackbars, then the confetti overlay where it cannot use the
-// top layer. Dialogs, modal sheets and open popovers sit in
-// the top layer, above all of these, whatever their z-index.
+// the modal navigation rail, non-modal sheets, tooltips, docked pickers,
+// snackbars, then the confetti overlay where it cannot use the top layer.
+// Dialogs, modal sheets, open menus, an open lightbox and open popovers sit
+// in the top layer, above all of these, whatever their z-index.
+// --expressive-z-lightbox is kept for pages that read it; the lightbox no
+// longer uses it.
 //
 // Override one to slot an application layer between two of them:
 //
-//   :root { --expressive-z-lightbox: 1500; }
+//   :root { --expressive-z-tooltip: 1500; }
 
 :root,
 :host {

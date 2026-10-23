@@ -586,14 +586,14 @@ Other things worth knowing:
 export interface XOptions extends BaseOptions { /* … */ }
 const _defaults = { /* … */ };
 export class X extends Component<XOptions> {
-  constructor(el, options) { super(el, options); this.el['Expressive_X'] = this; }   // super merges X.defaults
+  static key = 'Expressive_X';
+  constructor(el, options) { super(el, options); }   // super merges X.defaults and sets el.Expressive_X
   static get defaults() { return _defaults; }
-  static getInstance(el) { return el['Expressive_X']; }
-  destroy() { this.el['Expressive_X'] = undefined; /* remove handlers */ }
+  destroy() { /* remove handlers */ super.destroy(); }   // super clears el.Expressive_X
 }
 ```
 
-The base constructor destroys any pre-existing instance found via `getInstance`, so re-initializing an element is safe, then spreads `options` over `new.target.defaults`. `getInstance`/`destroy` throw by default — a subclass that omits them is broken. `X.init(el | els, options)` is inherited: the base `init` is typed on `this`, so it returns `X` or `X[]` and takes its element and options types from X's constructor and `options`.
+The base constructor destroys any pre-existing instance found via `getInstance`, so re-initializing an element is safe, then spreads `options` over `new.target.defaults` and stores the instance under `X.key`. `X.getInstance(el)` is inherited and typed on `this`, and the base `destroy()` clears the key. `X.init(el | els, options)` is inherited: the base `init` is typed on `this`, so it returns `X` or `X[]` and takes its element and options types from X's constructor and `options`.
 
 `src/ts/components/registry.ts` holds `AUTO_INIT_COMPONENTS`, a table of `{ component, selector }` keyed by name. It is the single source of truth: the exported `AutoInitOptions` type is a mapped type over it, and `AutoInit(context, options)` loops it (each entry gets a `.no-autoinit` opt-out). Components absent from the table are never auto-started (`Snackbar`, `CharacterCounter`).
 
@@ -601,7 +601,7 @@ The base constructor destroys any pre-existing instance found via `getInstance`,
 
 **Adding a component** touches: the new `src/ts/components/<name>.ts`, one export line in `components/index.ts`, one line in `components/registry.ts` if it auto-inits, and a `src/sass/components/_<name>.scss` partial `@forward`ed from `components/_index.scss`.
 
-Supporting files: `core/utils.ts` (shared `Utils` statics — `_setAbsolutePosition`, `checkPossibleAlignments`, `_repositionWithinScreen`, `throttle`, `guid`, `onDocumentReady`, global key/focus state); `core/bounding.ts` and `core/edges.ts` are type-only; `plugins/dockedDisplayPlugin.ts` wraps an element in a `.display-docked` container and positions/animates it (used for picker-style popovers). Dialogs are native `<dialog>` plus `behaviors/dialogs.ts` for light-dismiss — there is no `Modal` plugin.
+Supporting files: `core/utils.ts` (shared `Utils` statics — `_repositionWithinScreen`, `guid`, `onDocumentReady`, global key/focus state); `core/bounding.ts` and `core/edges.ts` are type-only; `plugins/dockedDisplayPlugin.ts` wraps an element in a `.display-docked` container and positions/animates it (used for picker-style popovers). Dialogs are native `<dialog>` plus `behaviors/dialogs.ts` for light-dismiss — there is no `Modal` plugin.
 
 ### Cross-cutting invariants
 
@@ -611,7 +611,7 @@ These were all learned from bugs in the vendored source:
 - **`Utils.onDocumentReady(fn)`, never a bare `DOMContentLoaded` listener** — the event has already fired when the bundle is loaded async or by dynamic import, and the listener then never runs. All eight `Init()` entry points (`Forms`, `Chips`, `Slider`, `Cards`, `ExpandingCard`, `Dialogs`, `BottomSheets`, `SideSheets`) go through it.
 - **Never build markup out of values the page author controls.** `optgroup` labels, option text, ids and i18n strings reach the DOM as nodes (`textContent`, `setAttribute`, `getElementById`) — not via `innerHTML` or an interpolated `#${…}` selector, which also throws on any id that is not a bare identifier. `Datepicker.draw()` is the exception: it still assembles an HTML string, so every i18n value it splices in goes through `Datepicker._escape()`.
 - **`Datepicker.draw()` is batchable.** One input click legitimately reaches it three times (through `setDate`, directly for the unparseable-input case, and through the trailing `gotoDate`), and each draw destroys and rebuilds two `FormSelect`s. `_batchDraws()` collapses them to one. It is deliberately synchronous — callers read `calendarEl` immediately after `init()`.
-- **`Utils.throttle` returns the throttled function; assign it once.** `x = Utils.throttle(fn, 200)` is right; `x = () => Utils.throttle(fn, 200)` builds a fresh closure per event and never calls it, which is how resize handling was dead in three components.
+- **Resize handlers are stable per-instance functions.** Carousel's `_handleThrottledResize` measures at once, then once more 200ms later, and ignores events in between. Register that field itself; wrapping a throttle in an arrow per event (`x = () => throttle(fn, 200)`) builds a fresh closure each time and never calls it, which is how resize handling was dead in three components.
 - Scroll and touch handlers that never call `preventDefault()` are registered `{ passive: true }`, and anything running per pointer-move or per scroll reads layout before it writes style.
 
 ## docs/
@@ -879,6 +879,24 @@ Focus can synchronously invoke application handlers that replace that lifecycle,
 so check generation again after initial-item focus and set closed ARIA before
 returning focus to a trigger that could reopen it. FormSelect and Autocomplete
 share this Menu implementation; keep their callback semantics intact.
+
+An open menu is a manual popover in the top layer, so it needs no clipping
+ancestor walk and its bounds are the viewport. Menu keeps its own outside
+click and Escape handling: an auto popover would close an Autocomplete list
+when its input is clicked, close any other open popover, and leave the top
+layer before the exit fade, since Firefox and WebKit lack `overlay`.
+Firefox anchors a top-layer element to its anchor's box before transforms,
+so a trigger under a transformed ancestor, such as a `.toolbar.fixed`
+centred with `translateX(-50%)`, gets the measured placement, which
+re-places on scroll. Anchored tooltips appended to the body have the same
+Firefox offset and no such fallback yet.
+
+Lightbox shows its overlay, image and caption as manual popovers, in that
+order, so each stacks above the one before. The image gets `popover` only
+while open, because the UA hides a closed `[popover]`, which would hide the
+thumbnail. In the top layer it is absolutely positioned in the document, so
+it scrolls with the page while it zooms back to its placeholder. It is not a
+modal `<dialog>`: Tab closes it rather than being trapped.
 
 Filled enhanced selects always float their associated label. A real label row
 lets translations wrap and text grow without colliding with the value. Keep

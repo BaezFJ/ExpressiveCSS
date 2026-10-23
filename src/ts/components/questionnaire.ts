@@ -96,14 +96,13 @@ function restoreControl(control: Control, saved: Saved) {
  * letter. Keys typed into a text field, or with a modifier, pick nothing.
  */
 function shortcut(e: KeyboardEvent) {
-  if (typingIn(e.target) || modified(e)) return -1;
+  if (typingIn(e.target) || !Utils.plainKey(e)) return -1;
   const digit = '123456789'.indexOf(e.key);
   return digit >= 0 ? digit : letterIndex(e.key);
 }
 
 const TYPING = 'textarea, select, [contenteditable], input:not([type="radio"], [type="checkbox"], [type="button"], [type="submit"], [type="reset"])';
 const typingIn = (target: EventTarget | null) => !!(target as Element).matches?.(TYPING);
-const modified = (e: KeyboardEvent) => e.ctrlKey || e.metaKey || e.altKey;
 
 const letterIndex = (key: string) => (key.length === 1 ? LETTERS.indexOf(key.toLowerCase()) : -1);
 
@@ -149,7 +148,6 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
   constructor(el: HTMLElement, options: Partial<QuestionnaireOptions>) {
     const progressLabel = el.dataset.progressLabel;
     super(el, { ...(progressLabel ? { progressLabel } : {}), ...options });
-    this.el['Expressive_Questionnaire'] = this;
 
     this._progress = document.createElement('div');
     this._progress.className = 'questionnaire-progress';
@@ -182,22 +180,21 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
       this._render();
     });
     this._observer.observe(this.el, { attributes: true, subtree: true, attributeFilter: ['disabled'] });
-    this.el.addEventListener('click', this._handleClick);
-    this.el.addEventListener('keydown', this._handleKeydown);
-    this.el.addEventListener('input', this._handleInput);
-    this.el.addEventListener('change', this._save);
-    this.el.addEventListener('submit', this._forget);
+    const { signal } = this._events;
+    this.el.addEventListener('click', this._handleClick, { signal });
+    this.el.addEventListener('keydown', this._handleKeydown, { signal });
+    this.el.addEventListener('input', this._handleInput, { signal });
+    this.el.addEventListener('change', this._save, { signal });
+    this.el.addEventListener('submit', this._forget, { signal });
     // invalid does not bubble.
-    this.el.addEventListener('invalid', this._handleInvalid, true);
+    this.el.addEventListener('invalid', this._handleInvalid, { capture: true, signal });
   }
 
   static get defaults(): QuestionnaireOptions {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Questionnaire {
-    return el['Expressive_Questionnaire'];
-  }
+  static key = 'Expressive_Questionnaire';
 
   /** The questions that apply: every fieldset child that is not disabled. */
   get items(): HTMLFieldSetElement[] {
@@ -262,12 +259,6 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
 
   destroy() {
     this._observer.disconnect();
-    this.el.removeEventListener('click', this._handleClick);
-    this.el.removeEventListener('keydown', this._handleKeydown);
-    this.el.removeEventListener('input', this._handleInput);
-    this.el.removeEventListener('change', this._save);
-    this.el.removeEventListener('submit', this._forget);
-    this.el.removeEventListener('invalid', this._handleInvalid, true);
     this._summary?.remove();
     for (const item of this._fieldsets()) {
       if (item.hasAttribute('data-required')) for (const control of this._controls(item)) control.setCustomValidity('');
@@ -280,7 +271,7 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
     for (const el of this._generatedIds) {
       el.removeAttribute(el instanceof HTMLFieldSetElement ? 'aria-describedby' : 'id');
     }
-    this.el['Expressive_Questionnaire'] = undefined;
+    super.destroy();
   }
 
   private _fieldsets() {

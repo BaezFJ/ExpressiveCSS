@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { Utils } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 
 export interface TabsOptions extends BaseOptions {
   /**
@@ -51,12 +51,6 @@ const isShown = (a: Element) => a.checkVisibility?.() ?? true;
 /** A tab the keyboard can reach: enabled and shown. */
 const isUsable = (a: Element) => !isDisabled(a) && isShown(a);
 
-/** Puts back an attribute as the page wrote it; null means it was absent. */
-const restoreAttribute = (el: Element, name: string, value: string | null) => {
-  if (value === null) el.removeAttribute(name);
-  else el.setAttribute(name, value);
-};
-
 export class Tabs extends Component<TabsOptions> {
   _tabLinks: NodeListOf<HTMLAnchorElement>;
   _index: number;
@@ -88,7 +82,6 @@ export class Tabs extends Component<TabsOptions> {
 
   constructor(el: HTMLElement, options: Partial<TabsOptions>) {
     super(el, options);
-    this.el['Expressive_Tabs'] = this;
 
     this._tabLinks = this._queryTabLinks();
     if (!this._tabLinks.length) {
@@ -139,7 +132,6 @@ export class Tabs extends Component<TabsOptions> {
     // breakpoint they switch between equal and intrinsic widths inside a
     // strip that may keep its size. Each change re-measures the indicator,
     // and a tablist chooses its Tab stop again.
-    if (typeof ResizeObserver === 'undefined') return;
     this._stripObserver = new ResizeObserver(() => {
       if (this._tablist) this._refreshTabStop();
       this._remeasure();
@@ -152,14 +144,11 @@ export class Tabs extends Component<TabsOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Tabs {
-    return el['Expressive_Tabs'];
-  }
+  static key = 'Expressive_Tabs';
 
   destroy() {
     this._stripObserver?.disconnect();
     this._stripObserver = null;
-    this._removeEventHandlers();
     this._indicator?.remove();
     if (this._track) {
       this._teardownSwipeableTabs();
@@ -177,7 +166,7 @@ export class Tabs extends Component<TabsOptions> {
       restoreAttribute(link, 'tabindex', original.tabindex);
     });
     restoreAttribute(this.el, 'tabindex', this._barTabindex);
-    this.el['Expressive_Tabs'] = undefined;
+    super.destroy();
   }
 
   /**
@@ -188,13 +177,8 @@ export class Tabs extends Component<TabsOptions> {
   }
 
   _setupEventHandlers() {
-    this.el.addEventListener('click', this._handleTabClick);
-    this.el.addEventListener('keydown', this._handleKeydown);
-  }
-
-  _removeEventHandlers() {
-    this.el.removeEventListener('click', this._handleTabClick);
-    this.el.removeEventListener('keydown', this._handleKeydown);
+    this.el.addEventListener('click', this._handleTabClick, { signal: this._events.signal });
+    this.el.addEventListener('keydown', this._handleKeydown, { signal: this._events.signal });
   }
 
   /**
@@ -412,22 +396,21 @@ export class Tabs extends Component<TabsOptions> {
     });
     this._track = track;
     this._syncPanels();
-    track.addEventListener('scroll', this._handleTrackScroll, { passive: true });
+    const options = { passive: true, signal: this._events.signal };
+    track.addEventListener('scroll', this._handleTrackScroll, options);
     // A swipe or wheel that interrupts a programmatic scroll takes over from it.
-    track.addEventListener('pointerdown', this._releaseScrollTarget, { passive: true });
-    track.addEventListener('wheel', this._releaseScrollTarget, { passive: true });
+    track.addEventListener('pointerdown', this._releaseScrollTarget, options);
+    track.addEventListener('wheel', this._releaseScrollTarget, options);
     // A track that starts hidden (in a closed dialog or sheet) is 0px wide, so
     // the scroll below cannot reach the active panel. Re-align whenever the
     // track's width changes, which also covers window resizes. Only the width:
     // a panel growing taller mid-swipe must not pull the track back.
-    if (typeof ResizeObserver !== 'undefined') {
-      this._trackObserver = new ResizeObserver(() => {
-        if (track.clientWidth === this._trackWidth) return;
-        this._trackWidth = track.clientWidth;
-        this._scrollToActivePanel('instant');
-      });
-      this._trackObserver.observe(track);
-    }
+    this._trackObserver = new ResizeObserver(() => {
+      if (track.clientWidth === this._trackWidth) return;
+      this._trackWidth = track.clientWidth;
+      this._scrollToActivePanel('instant');
+    });
+    this._trackObserver.observe(track);
     this._scrollToActivePanel('instant');
   }
 
@@ -436,9 +419,6 @@ export class Tabs extends Component<TabsOptions> {
     this._trackObserver?.disconnect();
     this._trackObserver = null;
     this._releaseScrollTarget();
-    track.removeEventListener('scroll', this._handleTrackScroll);
-    track.removeEventListener('pointerdown', this._releaseScrollTarget);
-    track.removeEventListener('wheel', this._releaseScrollTarget);
     this._originalPanels.forEach((original, panel) => original.marker?.replaceWith(panel));
     track.remove();
     this._track = undefined;

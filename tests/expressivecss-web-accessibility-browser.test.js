@@ -1528,9 +1528,16 @@ for (const action of ['interrupt', 'reopen', 'motion', 'focus', 'isolation', 'tr
   } else if (action === 'isolation') {
     await page.evaluate(() => { window.instances[0].open(); window.instances[1].open(); });
     await page.waitForTimeout(150);
+    // The open images are in the top layer, so the clipping container is
+    // left alone and does not clip them.
+    await expect(page.locator('#clip')).toHaveCSS('overflow', 'hidden');
+    assert.equal(await page.evaluate(() => {
+      const box = document.querySelector('#second').getBoundingClientRect();
+      return document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)?.id;
+    }), 'second');
     await page.evaluate(() => window.instances[0].close());
     await page.waitForTimeout(150);
-    await expect(page.locator('#clip')).toHaveCSS('overflow', 'visible');
+    await expect(page.locator('#clip')).toHaveCSS('overflow', 'hidden');
     await expect(page.locator('.lightbox-caption')).toHaveText('Forest');
     await page.evaluate(() => window.instances[1].close());
     await page.waitForTimeout(150);

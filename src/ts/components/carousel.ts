@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { restoreAttribute } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 export interface CarouselI18nOptions {
@@ -101,7 +101,6 @@ export class Carousel extends Component<CarouselOptions> {
   private _vertical: boolean = false;
   private _resizeObserver: ResizeObserver | null = null;
   private _resizeTimeout: ReturnType<typeof setTimeout> = null;
-  private _usesWindowResize: boolean = false;
   private _dragPointerId: number | null = null;
   private _dragStartX: number = 0;
   private _dragStartY: number = 0;
@@ -134,19 +133,8 @@ export class Carousel extends Component<CarouselOptions> {
     return this._trackEl ?? this.el;
   }
 
-  private static _live = new Set<Carousel>();
-  private static _resizeListening = false;
-  private static _onResize = Utils.throttle(() => {
-    Carousel._live.forEach((c) => c._handleResize());
-  }, 200);
-
   constructor(el: HTMLElement, options: Partial<CarouselOptions>) {
     super(el, options);
-    this.el['Expressive_Carousel'] = this;
-
-    if (options?.i18n) {
-      this.options.i18n = { ...Carousel.defaults.i18n, ...options.i18n };
-    }
 
     this._vertical = this.el.classList.contains('full-screen');
 
@@ -204,13 +192,11 @@ export class Carousel extends Component<CarouselOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Carousel {
-    return el['Expressive_Carousel'];
-  }
+  static key = 'Expressive_Carousel';
 
   destroy() {
     if (this._started) this._teardown();
-    this.el['Expressive_Carousel'] = undefined;
+    super.destroy();
   }
 
   private _collectItems(): HTMLElement[] {
@@ -285,83 +271,44 @@ export class Carousel extends Component<CarouselOptions> {
   }
 
   _setupEventHandlers() {
-    this.el.addEventListener('keydown', this._handleKeydown);
-    this._motion.addEventListener('change', this._handleMotionChange);
+    const { signal } = this._events;
+    this.el.addEventListener('keydown', this._handleKeydown, { signal });
+    this._motion.addEventListener('change', this._handleMotionChange, { signal });
     if (this._autoAdvances) {
-      this.el.addEventListener('mouseenter', this._handleAutoAdvanceState);
-      this.el.addEventListener('mouseleave', this._handleAutoAdvanceState);
-      this.el.addEventListener('focusin', this._handleAutoAdvanceState);
-      this.el.addEventListener('focusout', this._handleAutoAdvanceState);
+      this.el.addEventListener('mouseenter', this._handleAutoAdvanceState, { signal });
+      this.el.addEventListener('mouseleave', this._handleAutoAdvanceState, { signal });
+      this.el.addEventListener('focusin', this._handleAutoAdvanceState, { signal });
+      this.el.addEventListener('focusout', this._handleAutoAdvanceState, { signal });
       // Browsers clamp a background tab's timers rather than stopping them, so
       // without this the track keeps cycling out of sight.
-      document.addEventListener('visibilitychange', this._handleAutoAdvanceState);
+      document.addEventListener('visibilitychange', this._handleAutoAdvanceState, { signal });
     }
     if (this.showIndicators && this._indicators) {
-      this._indicators.addEventListener('click', this._handleIndicatorClick);
+      this._indicators.addEventListener('click', this._handleIndicatorClick, { signal });
     }
-    if (typeof ResizeObserver !== 'undefined') {
-      this._resizeObserver = new ResizeObserver(() => this._handleThrottledResize());
-      this._resizeObserver.observe(this.el);
-    }
+    this._resizeObserver = new ResizeObserver(() => this._handleThrottledResize());
+    this._resizeObserver.observe(this.el);
 
     // Full-screen needs a window signal when orientation changes without
     // changing the container width. ResizeObserver handles every other track,
     // including pane resizes.
-    this._usesWindowResize =
-      !this._resizeObserver || this.el.classList.contains('full-screen');
-    if (this._usesWindowResize) {
-      Carousel._live.add(this);
-      if (!Carousel._resizeListening) {
-        window.addEventListener('resize', Carousel._onResize, {
-          passive: true
-        });
-        Carousel._resizeListening = true;
-      }
+    if (this.el.classList.contains('full-screen')) {
+      window.addEventListener('resize', this._handleThrottledResize, { passive: true, signal });
     }
 
-    this._scroller.addEventListener('scroll', this._handleTrackScroll, {
-      passive: true
-    });
-    this._scroller.addEventListener('pointerdown', this._handleTrackPointerDown);
-    this._scroller.addEventListener('wheel', this._handleNativeScroll, { passive: true });
-    this._scroller.addEventListener('click', this._handleTrackClick, true);
-    this._scroller.addEventListener('dragstart', this._handleTrackDragStart);
-    this._scroller.addEventListener('transitionend', this._handleItemResize);
-  }
-
-  _removeEventHandlers() {
-    this.el.removeEventListener('keydown', this._handleKeydown);
-    this._motion.removeEventListener('change', this._handleMotionChange);
-    this.el.removeEventListener('mouseenter', this._handleAutoAdvanceState);
-    this.el.removeEventListener('mouseleave', this._handleAutoAdvanceState);
-    this.el.removeEventListener('focusin', this._handleAutoAdvanceState);
-    this.el.removeEventListener('focusout', this._handleAutoAdvanceState);
-    document.removeEventListener('visibilitychange', this._handleAutoAdvanceState);
-    if (this._indicators) {
-      this._indicators.removeEventListener('click', this._handleIndicatorClick);
-    }
-    this._scroller.removeEventListener('scroll', this._handleTrackScroll);
-    this._scroller.removeEventListener('pointerdown', this._handleTrackPointerDown);
-    this._scroller.removeEventListener('wheel', this._handleNativeScroll);
-    this._setDragListeners(false);
-    this._scroller.removeEventListener('click', this._handleTrackClick, true);
-    this._scroller.removeEventListener('dragstart', this._handleTrackDragStart);
-    this._scroller.removeEventListener('transitionend', this._handleItemResize);
-
-    this._resizeObserver?.disconnect();
-    this._resizeObserver = null;
-    if (this._usesWindowResize) {
-      Carousel._live.delete(this);
-      if (Carousel._live.size === 0 && Carousel._resizeListening) {
-        window.removeEventListener('resize', Carousel._onResize);
-        Carousel._resizeListening = false;
-      }
-    }
+    this._scroller.addEventListener('scroll', this._handleTrackScroll, { passive: true, signal });
+    this._scroller.addEventListener('pointerdown', this._handleTrackPointerDown, { signal });
+    this._scroller.addEventListener('wheel', this._handleNativeScroll, { passive: true, signal });
+    this._scroller.addEventListener('click', this._handleTrackClick, { capture: true, signal });
+    this._scroller.addEventListener('dragstart', this._handleTrackDragStart, { signal });
+    this._scroller.addEventListener('transitionend', this._handleItemResize, { signal });
   }
 
   private _teardown() {
     this._started = false;
-    this._removeEventHandlers();
+    this._events.abort();
+    this._resizeObserver?.disconnect();
+    this._resizeObserver = null;
     this._finishScroll();
     this._autoAdvances = false;
     this._syncAutoAdvance();
@@ -377,10 +324,10 @@ export class Carousel extends Component<CarouselOptions> {
       if (this._generatedItemDescriptions.has(el)) el.removeAttribute('aria-roledescription');
       if (this._generatedItemSizes.has(el)) el.removeAttribute('data-carousel-size');
       const original = this._itemA11yOriginal.get(el);
-      if (original?.ariaHidden === null) el.removeAttribute('aria-hidden');
-      else if (original) el.setAttribute('aria-hidden', original.ariaHidden);
-      if (original?.tabIndex === null) el.removeAttribute('tabindex');
-      else if (original) el.setAttribute('tabindex', original.tabIndex);
+      if (original) {
+        restoreAttribute(el, 'aria-hidden', original.ariaHidden);
+        restoreAttribute(el, 'tabindex', original.tabIndex);
+      }
     });
     if (this._generatedContainerRole) this.el.removeAttribute('role');
     if (this._generatedContainerLabel) this.el.removeAttribute('aria-label');
@@ -480,9 +427,11 @@ export class Carousel extends Component<CarouselOptions> {
   /** The document only hears from a carousel while a mouse press is down on its track. */
   private _setDragListeners(on: boolean) {
     const method = on ? 'addEventListener' : 'removeEventListener';
-    document[method]('pointermove', this._handleTrackPointerMove);
-    document[method]('pointerup', this._handleTrackPointerUp);
-    document[method]('pointercancel', this._handleTrackPointerUp);
+    // The signal also removes them when the carousel is destroyed mid-drag.
+    const options = { signal: this._events.signal };
+    document[method]('pointermove', this._handleTrackPointerMove, options);
+    document[method]('pointerup', this._handleTrackPointerUp, options);
+    document[method]('pointercancel', this._handleTrackPointerUp, options);
   }
 
   _handleTrackPointerDown = (e: PointerEvent) => {

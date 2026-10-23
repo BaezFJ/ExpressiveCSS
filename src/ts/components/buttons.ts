@@ -1,3 +1,4 @@
+import { restoreAttribute } from '../core/utils';
 import { Component, BaseOptions } from "../core/component";
 
 export type FloatingActionButtonOptions = BaseOptions;
@@ -14,7 +15,6 @@ export class FloatingActionButton extends Component<FloatingActionButtonOptions>
 
   constructor(el: HTMLElement, options: Partial<FloatingActionButtonOptions>) {
     super(el, options);
-    this.el['Expressive_FloatingActionButton'] = this;
     this.isOpen = false;
     this._anchor = this.el.querySelector(':scope > a, :scope > button');
     this._list = this.el.querySelector(':scope > ul, :scope > menu');
@@ -30,28 +30,23 @@ export class FloatingActionButton extends Component<FloatingActionButtonOptions>
         this._anchorTabIndex = this._anchor.getAttribute('tabindex');
         this._anchor.tabIndex = 0;
       }
-      this._anchor.addEventListener('keydown', this._handleAnchorKeydown);
+      this._anchor.addEventListener('keydown', this._handleAnchorKeydown, { signal: this._events.signal });
     }
-    this.el.addEventListener('click', this._handleFABClick);
+    this.el.addEventListener('click', this._handleFABClick, { signal: this._events.signal });
   }
 
   static get defaults() {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): FloatingActionButton {
-    return el['Expressive_FloatingActionButton'];
-  }
+  static key = 'Expressive_FloatingActionButton';
 
   destroy() {
     this.close();
     if (this._list) this._list.inert = this._listWasInert;
-    this.el.removeEventListener('click', this._handleFABClick);
-    this._anchor?.removeEventListener('keydown', this._handleAnchorKeydown);
     if (this._addedExpanded) this._anchor.removeAttribute('aria-expanded');
-    if (this._anchorTabIndex === null) this._anchor.removeAttribute('tabindex');
-    else if (this._anchorTabIndex !== undefined) this._anchor.setAttribute('tabindex', this._anchorTabIndex);
-    this.el['Expressive_FloatingActionButton'] = undefined;
+    if (this._anchorTabIndex !== undefined) restoreAttribute(this._anchor, 'tabindex', this._anchorTabIndex);
+    super.destroy();
   }
 
   open = (): void => {

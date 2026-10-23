@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 import { Autocomplete, AutocompleteOptions } from './autocomplete';
 import { Component, BaseOptions } from '../core/component';
 
@@ -187,11 +187,6 @@ export class Chips extends Component<ChipsOptions> {
 
   constructor(el: HTMLElement, options: Partial<ChipsOptions>) {
     super(el, options);
-    this.el['Expressive_Chips'] = this;
-
-    // Spreading options over the defaults replaces the i18n object wholesale,
-    // so passing one string would drop the rest. Same fix as Datepicker.
-    if (options?.i18n) this.options.i18n = { ...Chips.defaults.i18n, ...options.i18n };
 
     this.el.classList.add('chips');
     this.chipsData = [];
@@ -226,9 +221,7 @@ export class Chips extends Component<ChipsOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Chips {
-    return el['Expressive_Chips'];
-  }
+  static key = 'Expressive_Chips';
 
   getData() {
     return this.chipsData;
@@ -238,35 +231,23 @@ export class Chips extends Component<ChipsOptions> {
     if (this.autocomplete && Autocomplete.getInstance(this._input) === this.autocomplete) {
       this.autocomplete.destroy();
     }
-    if (this.options.allowUserInput) {
-      this._removeEventHandlers();
-    }
+    this._events.abort();
     this._chips.forEach((c) => c.remove());
     this._chips = [];
     this._giveNameBack();
-    this.el['Expressive_Chips'] = undefined;
+    super.destroy();
   }
 
   _setupEventHandlers() {
-    this.el.addEventListener('click', this._handleChipClick);
-    this.el.addEventListener('keydown', Chips._handleChipsKeydown);
-    this.el.addEventListener('focusin', this._handleFocusIn);
-    this.el.addEventListener('focusout', this._handleFocusOut);
-    this._input.addEventListener('focus', this._handleInputFocus);
-    this._input.addEventListener('blur', this._handleInputBlur);
-    this._input.addEventListener('keydown', this._handleInputKeydown);
-    this._input.addEventListener('paste', this._handleInputPaste);
-  }
-
-  _removeEventHandlers() {
-    this.el.removeEventListener('click', this._handleChipClick);
-    this.el.removeEventListener('keydown', Chips._handleChipsKeydown);
-    this.el.removeEventListener('focusin', this._handleFocusIn);
-    this.el.removeEventListener('focusout', this._handleFocusOut);
-    this._input.removeEventListener('focus', this._handleInputFocus);
-    this._input.removeEventListener('blur', this._handleInputBlur);
-    this._input.removeEventListener('keydown', this._handleInputKeydown);
-    this._input.removeEventListener('paste', this._handleInputPaste);
+    const { signal } = this._events;
+    this.el.addEventListener('click', this._handleChipClick, { signal });
+    this.el.addEventListener('keydown', Chips._handleChipsKeydown, { signal });
+    this.el.addEventListener('focusin', this._handleFocusIn, { signal });
+    this.el.addEventListener('focusout', this._handleFocusOut, { signal });
+    this._input.addEventListener('focus', this._handleInputFocus, { signal });
+    this._input.addEventListener('blur', this._handleInputBlur, { signal });
+    this._input.addEventListener('keydown', this._handleInputKeydown, { signal });
+    this._input.addEventListener('paste', this._handleInputPaste, { signal });
   }
 
   /**
@@ -326,9 +307,7 @@ export class Chips extends Component<ChipsOptions> {
   }
 
   private _copyAttribute(name: string) {
-    const value = this._source.getAttribute(name);
-    if (value === null) this._control.removeAttribute(name);
-    else this._control.setAttribute(name, value);
+    restoreAttribute(this._control, name, this._source.getAttribute(name));
   }
 
   /** After the chips change: give the form one value per chip and update a required field's validity. */
@@ -393,8 +372,7 @@ export class Chips extends Component<ChipsOptions> {
     this._source.setAttribute('name', this._name);
     if (!this._required) return;
     this._source.required = true;
-    if (this._ariaRequired === null) this._source.removeAttribute('aria-required');
-    else this._source.setAttribute('aria-required', this._ariaRequired);
+    restoreAttribute(this._source, 'aria-required', this._ariaRequired);
   }
 
   /** Whether only an autocomplete suggestion can become a chip. */

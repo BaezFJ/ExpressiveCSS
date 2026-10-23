@@ -58,12 +58,28 @@ export class DockedDisplayPlugin {
     if (![...this.triggers, this.container].some((inside) => path.includes(inside))) this.hide();
   };
 
-  // @todo move to Util? -> duplicate code fragment with tooltip
-  // easeOutCubic
-  private get _transition() {
-    return `
-      transform ${this.options.duration}ms ease-out,
-      opacity ${this.options.duration}ms ease-out`;
+  /** Eases the container to `y` pixels down and to `opacity`. */
+  private _animate(y: number, opacity: string) {
+    const { duration } = this.options;
+    this.container.style.transition = `transform ${duration}ms ease-out, opacity ${duration}ms ease-out`;
+    setTimeout(() => {
+      this.container.style.transform = `translateX(0px) translateY(${y}px)`;
+      this.container.style.opacity = opacity;
+    }, 1);
+  }
+
+  /** Places the container below the element, kept on screen. */
+  private _place() {
+    const { margin, transition, align } = this.options;
+    const { offsetHeight, offsetWidth } = this.el;
+    const width = this.container.offsetWidth;
+    const rect = this.el.getBoundingClientRect();
+    let left = rect.left + window.scrollX;
+    if (align === 'center') left += offsetWidth / 2 - width / 2;
+    else if (align === 'right') left += offsetWidth - width - margin;
+    const top = rect.top + window.scrollY + offsetHeight + margin;
+    const coordinates = Utils._repositionWithinScreen(left, top, width, this.container.offsetHeight, margin, transition, align);
+    Utils._placeInOffsetParent(this.container, coordinates);
   }
 
   /**
@@ -80,14 +96,9 @@ export class DockedDisplayPlugin {
     if (this.visible) return;
     this.visible = true;
     document.addEventListener('click', this._handleDocumentClick);
-    const coordinates = Utils._setAbsolutePosition(this.el, this.container, this.options.margin, this.options.transition, this.options.align);
-
+    this._place();
     this.container.style.visibility = 'visible';
-    this.container.style.transition = this._transition;
-    setTimeout(() => {
-      this.container.style.transform = `translateX(${coordinates.x}px) translateY(${coordinates.y}px)`;
-      this.container.style.opacity = '1';
-    }, 1);
+    this._animate(this.options.transition, '1');
   };
 
   hide = () => {
@@ -95,10 +106,6 @@ export class DockedDisplayPlugin {
     this.visible = false;
     document.removeEventListener('click', this._handleDocumentClick);
     this.container.removeAttribute('style');
-    this.container.style.transition = this._transition;
-    setTimeout(() => {
-      this.container.style.transform = `translateX(0px) translateY(0px)`;
-      this.container.style.opacity = '0';
-    }, 1);
+    this._animate(0, '0');
   };
 }

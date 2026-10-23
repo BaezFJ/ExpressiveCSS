@@ -162,7 +162,7 @@ export class DataTables {
    * the page's language, with digit runs as numbers.
    */
   private static _compare(table: HTMLTableElement, header: HTMLTableCellElement) {
-    if (!header.classList.contains('numeric')) return DataTables._collator(table).compare;
+    if (!header.classList.contains('numeric')) return new Intl.Collator(Utils.locale(table), { numeric: true, sensitivity: 'base' }).compare;
     const number = (text: string) => numberValue(text) ?? -Infinity;
     return (a: string, b: string) => number(a) - number(b);
   }
@@ -175,15 +175,5 @@ export class DataTables {
       else groups.push([row]);
     }
     return groups;
-  }
-
-  /** A collator in the table's language, or the browser's for an invalid lang attribute. */
-  private static _collator(table: HTMLTableElement) {
-    const options = { numeric: true, sensitivity: 'base' } as const;
-    try {
-      return new Intl.Collator(table.closest<HTMLElement>('[lang]')?.lang || undefined, options);
-    } catch {
-      return new Intl.Collator(undefined, options);
-    }
   }
 }

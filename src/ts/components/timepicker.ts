@@ -1,4 +1,4 @@
-import { Utils, svgNode } from '../core/utils';
+import { Utils, controllerFor, pickerFooter, svgNode } from '../core/utils';
 import { Component, BaseOptions, I18nOptions } from '../core/component';
 import { DisplayPlugin, createDisplayPlugin, hideModal } from '../plugins/modalDisplayPlugin';
 
@@ -32,9 +32,6 @@ const DAY_END = 24 * 3600 - 1;
 /** A clock number as two digits. */
 const pad2 = (n: number) => String(n).padStart(2, '0');
 
-/** An hour on the 24-hour clock, from one written with AM or PM. */
-const hour24 = (hours: number, period?: string) => (period ? (hours % 12) + (period === 'PM' ? 12 : 0) : hours);
-
 /**
  * The hour on the 24-hour clock, minute and second of a written time such as
  * '14:30', '02:30:45 PM' or 'now'. A missing part reads as 0.
@@ -50,7 +47,7 @@ function readTime(text: string, fromNow: number): [number, number, number] {
   const [hours, minutes, seconds] = [0, 1, 2].map((i) => +parts[i] || 0);
   // A written AM or PM fixes the hour on either clock: "03:30 PM" is 15:30
   // on a 24-hour clock too.
-  return [hour24(hours, period), minutes, seconds];
+  return [period ? dayHour(hours, period === 'PM') : hours, minutes, seconds];
 }
 
 /** Seconds since midnight for an hour, minute and second. */
@@ -232,6 +229,8 @@ export class Timepicker extends Component<TimepickerOptions> {
   moved: boolean;
   /** Which pointer is dragging the clock hand; a second finger is ignored. */
   private _dragPointerId: number | null = null;
+  /** Removes the document listeners of the drag in progress. */
+  private _drag: AbortController | null = null;
   dx: number;
   dy: number;
   /**
@@ -275,8 +274,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   private _limits: [number, number] = [0, DAY_END];
 
   constructor(el: HTMLInputElement, options: Partial<TimepickerOptions>) {
-    super(el, { ...localeClock(el), ...options, i18n: { ...Timepicker.defaults.i18n, ...options?.i18n } });
-    this.el['Expressive_Timepicker'] = this;
+    super(el, { ...localeClock(el), ...options });
     // A modal clock writes on Ok, so it has the buttons.
     this.options.autoSubmit &&= this.options.displayPlugin !== 'modal';
     this.id = Utils.guid();
@@ -296,48 +294,33 @@ export class Timepicker extends Component<TimepickerOptions> {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Timepicker {
-    return el['Expressive_Timepicker'];
-  }
+  static key = 'Expressive_Timepicker';
 
   destroy() {
     clearTimeout(this._autoSubmitTimer);
     clearTimeout(this.toggleViewTimer);
     clearTimeout(this.vibrateTimer);
     this._cancelClockReset();
-    this._removeEventHandlers();
+    // Drag handlers live on the document while the clock hand is held; if the
+    // component is destroyed mid-drag they would otherwise outlive it.
+    this._drag?.abort();
     this.displayPlugin?.destroy();
     this.containerEl.remove();
-    this.el['Expressive_Timepicker'] = undefined;
+    super.destroy();
   }
 
   _setupEventHandlers() {
-    this.el.addEventListener('click', this._handleInputClick);
-    this.el.addEventListener('keydown', this._handleInputKeydown);
+    const { signal } = this._events;
+    this.el.addEventListener('click', this._handleInputClick, { signal });
+    this.el.addEventListener('keydown', this._handleInputKeydown, { signal });
     this.plate.addEventListener('pointerdown', this._handleClockClickStart);
-    this.digitalClock.addEventListener('input', this._inputFromTextField);
-    this.digitalClock.addEventListener('keydown', this._handleDigitalKeydown);
+    this.digitalClock.addEventListener('input', this._inputFromTextField, { signal });
+    this.digitalClock.addEventListener('keydown', this._handleDigitalKeydown, { signal });
     this.inputHours.addEventListener('focus', () => this.showView('hours'));
     this.inputHours.addEventListener('focusout', () => this.formatHours());
     this.inputMinutes.addEventListener('focus', () => this.showView('minutes'));
     this.inputMinutes.addEventListener('focusout', () => this.formatMinutes());
     this.inputSeconds?.addEventListener('focusout', () => this.formatSeconds());
-  }
-
-  _removeEventHandlers() {
-    this.digitalClock.removeEventListener('input', this._inputFromTextField);
-    this.digitalClock.removeEventListener('keydown', this._handleDigitalKeydown);
-    this.el.removeEventListener('click', this._handleInputClick);
-    this.el.removeEventListener('keydown', this._handleInputKeydown);
-    // Drag handlers live on the document while the clock hand is held; if the
-    // component is destroyed mid-drag they would otherwise outlive it.
-    this._removeDragListeners();
-  }
-
-  private _removeDragListeners() {
-    document.removeEventListener('pointermove', this._handleDocumentClickMove);
-    document.removeEventListener('pointerup', this._handleDocumentClickEnd);
-    document.removeEventListener('pointercancel', this._handleDocumentClickCancel);
   }
 
   _handleInputClick = () => {
@@ -378,9 +361,12 @@ export class Timepicker extends Component<TimepickerOptions> {
     // `pointercancel` ends the drag the same way `pointerup` does: without it
     // these document listeners outlived a cancelled touch, because the
     // `touchend` pair this replaced had no `touchcancel` companion.
-    document.addEventListener('pointermove', this._handleDocumentClickMove);
-    document.addEventListener('pointerup', this._handleDocumentClickEnd);
-    document.addEventListener('pointercancel', this._handleDocumentClickCancel);
+    this._drag?.abort();
+    this._drag = controllerFor(this.el);
+    const { signal } = this._drag;
+    document.addEventListener('pointermove', this._handleDocumentClickMove, { signal });
+    document.addEventListener('pointerup', this._handleDocumentClickEnd, { signal });
+    document.addEventListener('pointercancel', this._handleDocumentClickCancel, { signal });
   };
 
   _handleDocumentClickMove = (e: PointerEvent) => {
@@ -396,7 +382,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     if (e.pointerId !== this._dragPointerId) return;
     this._dragPointerId = null;
     e.preventDefault();
-    this._removeDragListeners();
+    this._drag.abort();
     const x = e.clientX - this.x0;
     const y = e.clientY - this.y0;
     if (this.moved && x === this.dx && y === this.dy) {
@@ -433,7 +419,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     if (e.pointerId !== this._dragPointerId) return;
     this._dragPointerId = null;
     this.moved = false;
-    this._removeDragListeners();
+    this._drag.abort();
   };
 
   /**
@@ -515,23 +501,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   _pickerSetup() {
-    Utils.createButton(
-      this.footer,
-      this.options.i18n.clear,
-      ['timepicker-clear'],
-      this.options.showClearBtn,
-      this.clear
-    );
-
-    if (!this.options.autoSubmit) {
-      Utils.createConfirmationContainer(
-        this.footer,
-        this.options.i18n.done,
-        this.options.i18n.cancel,
-        this.confirm,
-        this.cancel
-      );
-    }
+    pickerFooter(this.footer, this.options, 'timepicker-clear', this.clear, this.confirm, this.cancel);
 
     this._updateTimeFromInput();
 
@@ -728,7 +698,7 @@ export class Timepicker extends Component<TimepickerOptions> {
 
   /** The time as seconds of the day. */
   private _time() {
-    return daySeconds([this._hours24(), this.minutes, this.seconds]);
+    return daySeconds([this._dayValue('hours', this.hours), this.minutes, this.seconds]);
   }
 
   /** Move the time to the nearest allowed time, and say whether it moved. */
@@ -1036,13 +1006,8 @@ export class Timepicker extends Component<TimepickerOptions> {
   // A time input accepts only 24-hour HH:mm or HH:mm:ss and empties itself
   // on anything else, so it never gets the AM/PM a text input shows.
   private _inputValue(time: string) {
-    if (this.el.type === 'time') return this._clockTime(this._hours24());
+    if (this.el.type === 'time') return this._clockTime(this._dayValue('hours', this.hours));
     return this.options.twelveHour ? `${time} ${this.amOrPm}` : time;
-  }
-
-  private _hours24() {
-    if (!this.options.twelveHour) return this.hours;
-    return (this.hours % 12) + (this.amOrPm === 'PM' ? 12 : 0);
   }
 
   confirm = () => {

@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, controllerFor } from '../core/utils';
 
 const itemSelector = '.sortable > li';
 
@@ -7,6 +7,8 @@ interface Drag {
   list: HTMLElement;
   from: number;
   pointerId: number;
+  /** Removes the document listeners of this drag. */
+  events: AbortController;
 }
 
 /**
@@ -78,14 +80,16 @@ export class Sortable {
     if (!item || e.button !== 0 || Sortable._drag) return;
     e.preventDefault();
     const list = item.parentElement;
-    Sortable._drag = { item, list, from: [...list.children].indexOf(item), pointerId: e.pointerId };
+    const events = controllerFor(item);
+    Sortable._drag = { item, list, from: [...list.children].indexOf(item), pointerId: e.pointerId, events };
     item.classList.add('dragged');
     // On the document, not the handle: each swap moves the item in the DOM,
     // which releases any pointer capture the handle held.
-    document.addEventListener('pointermove', Sortable._onPointerMove);
-    document.addEventListener('pointerup', Sortable._onPointerEnd);
-    document.addEventListener('pointercancel', Sortable._onPointerEnd);
-    document.addEventListener('keydown', Sortable._onKeyDown);
+    const { signal } = events;
+    document.addEventListener('pointermove', Sortable._onPointerMove, { signal });
+    document.addEventListener('pointerup', Sortable._onPointerEnd, { signal });
+    document.addEventListener('pointercancel', Sortable._onPointerEnd, { signal });
+    document.addEventListener('keydown', Sortable._onKeyDown, { signal });
   }
 
   private static _onPointerMove(e: PointerEvent) {
@@ -118,10 +122,7 @@ export class Sortable {
     const drag = Sortable._drag;
     if (!drag) return;
     Sortable._drag = null;
-    document.removeEventListener('pointermove', Sortable._onPointerMove);
-    document.removeEventListener('pointerup', Sortable._onPointerEnd);
-    document.removeEventListener('pointercancel', Sortable._onPointerEnd);
-    document.removeEventListener('keydown', Sortable._onKeyDown);
+    drag.events.abort();
     drag.item.classList.remove('dragged');
     const to = [...drag.list.children].indexOf(drag.item);
     if (cancel) {

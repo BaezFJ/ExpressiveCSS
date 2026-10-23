@@ -51,7 +51,6 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
 
   constructor(el: HTMLElement, options: Partial<ScrollSpyOptions>) {
     super(el, options);
-    this.el['Expressive_ScrollSpy'] = this;
 
     this._offset = this.el.style.getPropertyValue('--md-comp-scrollspy-offset');
     this._offsetPriority = this.el.style.getPropertyPriority('--md-comp-scrollspy-offset');
@@ -61,26 +60,22 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
     );
 
     ScrollSpy._elements.push(this);
-    if (typeof IntersectionObserver !== 'undefined') {
-      this._observer = new IntersectionObserver((entries) => {
-        if (ScrollSpy.getInstance(this.el) !== this) return;
-        for (const entry of entries) this._ratio = entry.isIntersecting ? entry.intersectionRatio : 0;
-        ScrollSpy._syncActive(this.options.getActiveElement);
-      }, {
-        rootMargin: `-${this.options.scrollOffset}px 0px -45% 0px`,
-        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1]
-      });
-      this._observer.observe(this.el);
-    }
+    this._observer = new IntersectionObserver((entries) => {
+      if (ScrollSpy.getInstance(this.el) !== this) return;
+      for (const entry of entries) this._ratio = entry.isIntersecting ? entry.intersectionRatio : 0;
+      ScrollSpy._syncActive(this.options.getActiveElement);
+    }, {
+      rootMargin: `-${this.options.scrollOffset}px 0px -45% 0px`,
+      threshold: [0, 0.1, 0.25, 0.5, 0.75, 1]
+    });
+    this._observer.observe(this.el);
   }
 
   static get defaults(): ScrollSpyOptions {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): ScrollSpy {
-    return el['Expressive_ScrollSpy'];
-  }
+  static key = 'Expressive_ScrollSpy';
 
   destroy() {
     const index = ScrollSpy._elements.indexOf(this);
@@ -90,7 +85,7 @@ export class ScrollSpy extends Component<ScrollSpyOptions> {
     const resolver = this.options.getActiveElement;
     if (ScrollSpy._active.get(resolver) === this) ScrollSpy._clearActive(resolver);
     this.el.style.setProperty('--md-comp-scrollspy-offset', this._offset, this._offsetPriority);
-    this.el['Expressive_ScrollSpy'] = undefined;
+    super.destroy();
     ScrollSpy._syncActive(resolver);
   }
 

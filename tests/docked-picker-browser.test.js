@@ -107,7 +107,9 @@ for (const [engine, type, browserTest] of engines) {
             });
             assert.ok(geometry.popup.width > 0 && geometry.popup.height > 0, `${scenario}: popup has dimensions`);
             assert.equal(geometry.sameParent && geometry.sameRoot, true, scenario);
-            const expectedLeft = scenario === 'viewport-edge' ? 1280 - geometry.popup.width : geometry.input.left;
+            // At the edge it shifts in only as far as the viewport needs: Firefox
+            // scrolls the clicked input into view, so there it already fits.
+            const expectedLeft = scenario === 'viewport-edge' ? Math.min(geometry.input.left, 1280 - geometry.popup.width) : geometry.input.left;
             const expectedTop = scenario === 'viewport-edge' ? 1200 - geometry.popup.height : geometry.input.bottom + 18;
             assert.ok(Math.abs(geometry.popup.left - expectedLeft) < 1, `${scenario}: left ${geometry.popup.left}, expected ${expectedLeft}`);
             assert.ok(Math.abs(geometry.popup.top - expectedTop) < 1, `${scenario}: top ${geometry.popup.top}, expected ${expectedTop}`);
