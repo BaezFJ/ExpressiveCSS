@@ -361,5 +361,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the pointer-events and cursor-pointer helpers: 85,077 gzip bytes (+28).
   // Reviewed the .list-unstyled helper: 85,097 gzip bytes (+20).
   // Reviewed position and inset helpers with logical edge pins: 85,161 gzip bytes (+64).
-  assert.ok(sizes(css).gzip <= 85161, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the .grid-auto-fill utility: 85,232 gzip bytes (+71).
+  assert.ok(sizes(css).gzip <= 85232, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -73,6 +73,7 @@ const S = defineSections([
           <tbody>
             <tr><td><code>.block</code>, <code>.inline-block</code></td><td><code>display: block</code>, <code>display: inline-block</code></td></tr>
             <tr><td><code>.grid</code>, <code>.inline-grid</code></td><td><code>display: grid</code>, <code>display: inline-grid</code></td></tr>
+            <tr><td><code>.grid-auto-fill</code></td><td>A grid with as many columns as fit, each at least <code>--grid-column-min</code> wide (240px by default)</td></tr>
             <tr><td><code>.contents</code></td><td><code>display: contents</code>; the element's box goes away and its children join the parent's layout</td></tr>
             <tr><td><code>.relative</code></td><td><code>position: relative</code></td></tr>
             <tr><td><code>.sticky-top</code></td><td><code>position: sticky; top: 0</code></td></tr>
@@ -114,6 +115,28 @@ const S = defineSections([
           A <code>.query-container</code> can no longer size itself from its content. Put it on
           a wrapper that fills its parent, such as a sidebar column, not on an inline or
           shrink-to-fit box.
+        </p>
+        <div class="grid-auto-fill gap-3" style="--grid-column-min: 10rem">
+          <div class="surface-container p-4">Orders</div>
+          <div class="surface-container p-4">Returns</div>
+          <div class="surface-container p-4">Refunds</div>
+          <div class="surface-container p-4">Payouts</div>
+          <div class="surface-container p-4">Disputes</div>
+        </div>
+<Code code={`
+<div class="grid-auto-fill gap-3" style="--grid-column-min: 10rem">
+  <article class="outlined">…</article>
+  <article class="outlined">…</article>
+  <article class="outlined">…</article>
+</div>
+`} />
+        <p>
+          <code>.grid-auto-fill</code> adds a column whenever another one of the minimum width
+          fits, and the columns share what is left. Set <code>--grid-column-min</code> on the
+          grid or on an ancestor. The last row keeps the same column width when it has fewer
+          items. A container narrower than the minimum gets one column as wide as itself. The
+          class sets no gap, so pair it with <code>.gap-*</code>. It has no window-size prefixes,
+          because the column count already follows the container's width.
         </p>
   </Section>
   <Section {...S.flex}>
