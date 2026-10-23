@@ -55,6 +55,16 @@ $_layout: (
 }
 
 .inline-grid { display: inline-grid; }
+
+// As many columns as fit, each at least --grid-column-min wide (set it here or
+// on an ancestor). Empty tracks stay, so a short last row keeps the column
+// width, and a container narrower than the minimum gets one column. The
+// column count follows the container, so there are no prefixed copies; pair
+// with .gap-*.
+.grid-auto-fill {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--grid-column-min, #{rem(240px)})), 1fr));
+}
 .contents { display: contents; }
 
 // On a flex or grid child.

@@ -191,6 +191,42 @@ for (const [engine, browserType, utilityTest] of engines) {
       await browser.close();
     }
   });
+
+  utilityTest(`grid-auto-fill fits as many columns as the container allows (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      const cells = (n) => '<div></div>'.repeat(n);
+      await page.setContent(`<style>${css} html { font-size: 16px; }</style>
+        <div id="grid" class="grid-auto-fill" style="--grid-column-min: 100px">${cells(8)}</div>
+        <div style="--grid-column-min: 200px"><div id="inherited" class="grid-auto-fill">${cells(4)}</div></div>
+        <div id="short" class="grid-auto-fill" style="--grid-column-min: 100px">${cells(2)}</div>
+        <div id="fallback" class="grid-auto-fill">${cells(4)}</div>`);
+      const layout = (id, width) => page.locator(`#${id}`).evaluate((el, width) => {
+        el.style.width = `${width}px`;
+        const boxes = [...el.children].map((child) => child.getBoundingClientRect());
+        return {
+          columns: new Set(boxes.map((box) => box.left)).size,
+          widths: boxes.map((box) => box.width),
+          overflows: el.scrollWidth > el.clientWidth,
+          tracks: getComputedStyle(el).gridTemplateColumns
+        };
+      }, width);
+      for (const [width, columns] of [[250, 2], [400, 4], [820, 8]]) {
+        assert.equal((await layout('grid', width)).columns, columns, `${width}px wide`);
+      }
+      // Four 100px columns and three 12px gaps need 436px.
+      await page.locator('#grid').evaluate((el) => el.classList.add('gap-3'));
+      assert.equal((await layout('grid', 400)).columns, 3, 'the gap counts');
+      assert.equal((await layout('inherited', 450)).columns, 2, 'an ancestor sets the minimum');
+      assert.deepEqual((await layout('short', 450)).widths, [112.5, 112.5], 'empty tracks keep their width');
+      assert.equal((await layout('fallback', 960)).tracks, '240px 240px 240px 240px');
+      const narrow = await layout('fallback', 180);
+      assert.deepEqual([narrow.columns, narrow.widths[0], narrow.overflows], [1, 180, false], 'a narrow container gets one column');
+    } finally {
+      await browser.close();
+    }
+  });
 }
 
 browserTest('window-size prefixes switch layout from their size class up', async () => {
