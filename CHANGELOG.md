@@ -44,6 +44,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   and `DataTables.setWidth()` restores saved widths without firing it. The
   new `--md-comp-data-table-column-min-width` token sets the narrowest
   width.
+- Data table column visibility. A menu checkbox item with `data-column`
+  set to a first-row header cell's `id` hides that column's header and
+  cells while it is unchecked, and an item unchecked at load starts its
+  column hidden. Cells that span several columns stay, and resized columns
+  keep their widths. `DataTables.sync()` applies the toggles for markup
+  rendered later. The framework stores nothing; save the choice from the
+  menu's `expressive:change`.
 - `.sticky-column` on a `.data-table` keeps the first column in view while
   the other columns scroll sideways, in both writing directions. When the
   first column holds row checkboxes, the name cell after it stays pinned
@@ -522,6 +529,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A table cell with the `hidden` attribute is hidden. The global `td, th`
+  rule set `display: table-cell`, which overrode the browser's
+  `[hidden]` rule.
 - Security: Autocomplete with `allowUnsafeHTML` renders only a script-supplied
   `text` as HTML. A `selected` id that has no data entry, which
   `data-autocomplete-options` can set, used to become HTML too, so sanitized

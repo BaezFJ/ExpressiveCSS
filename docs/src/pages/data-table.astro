@@ -15,6 +15,7 @@ const S = defineSections([
   { id: "scrolling", label: "Scrolling" },
   { id: "sticky-column", label: "Sticky first column" },
   { id: "column-resize", label: "Column resize" },
+  { id: "column-visibility", label: "Column visibility" },
   { id: "dense", label: "Dense" },
   { id: "tokens", label: "Tokens" },
 ]);
@@ -363,6 +364,68 @@ toggle.addEventListener('click', () => {
     …
   </table>
 </div>
+`} />
+  </Section>
+  <Section {...S["column-visibility"]}>
+        <p>
+          Give a menu checkbox item <code>data-column</code> set to the
+          <code>id</code> of a header cell in the table's first header row,
+          and the item shows and hides that column. While the item is
+          unchecked, the header cell and the column's cell in every body and
+          footer row are hidden, and they leave the accessibility tree. A cell
+          that spans several columns, such as a detail row's cell, stays. An
+          item unchecked when the page loads starts its column hidden.
+        </p>
+        <p>
+          The framework fires no event of its own. To keep the choice across
+          visits, save it from the menu's <code>expressive:change</code>,
+          which carries <code>{"{ item, checked }"}</code>, and render each
+          item's <code>aria-checked</code> from what you saved. After changing
+          <code>aria-checked</code> from script, or for a table rendered
+          later, call <code>Expressive.DataTables.sync(wrapper)</code>. Name
+          only header cells that span one column. Leave the row header column
+          out of the menu, and under <code>sticky-column</code> the pinned
+          columns too.
+        </p>
+        <div class="data-table-actions">
+          <button type="button" class="button text menu-trigger" data-target="visibility-columns">Columns</button>
+        </div>
+        <div class="data-table">
+          <table>
+            <thead>
+              <tr><th scope="col">Customer</th><th scope="col" id="visibility-status">Status</th><th scope="col">Region</th><th scope="col" id="visibility-total" class="numeric">Total</th></tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Alan</th><td>Pending</td><td>eu-west</td><td class="numeric">$3.76</td></tr>
+              <tr><th scope="row">Alvin</th><td>Shipped</td><td>us-east</td><td class="numeric">$87.00</td></tr>
+              <tr><th scope="row">Jonathan</th><td>Shipped</td><td>ap-south</td><td class="numeric">$142.50</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <menu id="visibility-columns">
+          <li role="menuitemcheckbox" aria-checked="true" data-column="visibility-status"><button type="button">Status</button></li>
+          <li role="menuitemcheckbox" aria-checked="false" data-column="visibility-total"><button type="button">Total</button></li>
+        </menu>
+<Code code={`
+<div class="data-table-actions">
+  <button type="button" class="button text menu-trigger" data-target="order-columns">Columns</button>
+</div>
+<div class="data-table">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Customer</th>
+        <th scope="col" id="order-status">Status</th>
+        <th scope="col" id="order-total" class="numeric">Total</th>
+      </tr>
+    </thead>
+    …
+  </table>
+</div>
+<menu id="order-columns">
+  <li role="menuitemcheckbox" aria-checked="true" data-column="order-status"><button type="button">Status</button></li>
+  <li role="menuitemcheckbox" aria-checked="false" data-column="order-total"><button type="button">Total</button></li>
+</menu>
 `} />
   </Section>
   <Section {...S.dense}>
