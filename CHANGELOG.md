@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.grid-auto-fill` lays out as many columns as fit, each at least
+  `--grid-column-min` wide (15rem by default). Set the property on the grid or
+  an ancestor. A container narrower than the minimum gets one column, and the
+  last row keeps the column width. Pair it with `.gap-*`.
 - Calendar week, day and year views. `table.calendar.week` and
   `table.calendar.day` are hourly grids: a row per hour named by a
   `<th scope="row">`, and a column per day whose header can carry

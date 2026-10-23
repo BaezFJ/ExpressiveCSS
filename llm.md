@@ -1198,12 +1198,23 @@ To center text on mobile only, add `center-on-small-only`.
 | --- | --- |
 | `.block`, `.inline-block` | `display: block`, `display: inline-block` |
 | `.grid`, `.inline-grid` | `display: grid`, `display: inline-grid` |
+| `.grid-auto-fill` | A grid with as many columns as fit, each at least `--grid-column-min` wide (240px by default) |
 | `.contents` | `display: contents`; the element's box goes away and its children join the parent's layout |
 | `.relative` | `position: relative` |
 | `.sticky-top` | `position: sticky; top: 0` |
 | `.query-container` | `container-type: inline-size`. Horizontal cards and description lists inside it stack when it is narrower than 600px, on any window. |
 
 `.inline` is the row of checkboxes or radios, so there is no `display: inline` class. A `.sticky-top` element sticks inside its nearest scrolling ancestor; an ancestor with `overflow: hidden` stops it. Browsers have dropped the semantics of elements with `display: contents`, so put `.contents` on plain wrappers, not on buttons, lists, tables or headings. A `.query-container` can no longer size itself from its content, so put it on a wrapper that fills its parent, such as a sidebar column, not on an inline or shrink-to-fit box.
+
+`.grid-auto-fill` is `repeat(auto-fill, minmax(min(100%, var(--grid-column-min, 15rem)), 1fr))`. It adds a column whenever another one of the minimum width fits, and the columns share what is left. Set `--grid-column-min` on the grid or on an ancestor. The last row keeps the same column width when it has fewer items. A container narrower than the minimum gets one column as wide as itself. The class sets no gap, so pair it with `.gap-*`, and it has no window-size prefixes, because the column count already follows the container's width.
+
+```html
+<div class="grid-auto-fill gap-3" style="--grid-column-min: 10rem">
+  <article class="outlined">…</article>
+  <article class="outlined">…</article>
+  <article class="outlined">…</article>
+</div>
+```
 
 ### Flex
 
