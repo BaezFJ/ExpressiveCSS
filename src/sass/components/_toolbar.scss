@@ -124,11 +124,11 @@ $_vibrant: "#{$_toolbar}.vibrant";
     // The state layer is the content color in both color sets, which is
     // what currentColor already is on an action that has not been filled.
     &:hover:not(.active, .filled) {
-      background-color: color-mix(in oklab, currentColor state-opacity("hover"), transparent);
+      background-color: state-layer(currentColor, "hover");
     }
 
     &:active:not(.active, .filled) {
-      background-color: color-mix(in oklab, currentColor state-opacity("pressed"), transparent);
+      background-color: state-layer(currentColor, "pressed");
     }
 
     &.active {
@@ -162,19 +162,11 @@ $_vibrant: "#{$_toolbar}.vibrant";
     box-shadow: none;
 
     &:hover {
-      background-color: color-mix(
-        in oklab,
-        var(--md-sys-color-on-primary) state-opacity("hover"),
-        var(--md-sys-color-primary)
-      );
+      background-color: state-layer(var(--md-sys-color-on-primary), "hover", var(--md-sys-color-primary));
     }
 
     &:active {
-      background-color: color-mix(
-        in oklab,
-        var(--md-sys-color-on-primary) state-opacity("pressed"),
-        var(--md-sys-color-primary)
-      );
+      background-color: state-layer(var(--md-sys-color-on-primary), "pressed", var(--md-sys-color-primary));
     }
   }
 
@@ -319,28 +311,16 @@ $_vibrant: "#{$_toolbar}.vibrant";
     // primary-container, and leaving either uncovered would flash the FAB's
     // default colour through a click on this one.
     &:hover:not(:where(#{$expressive-disabled})) {
-      background-color: color-mix(
-        in oklab,
-        var(--md-comp-toolbar-floating-fab-icon-color) state-opacity("hover"),
-        var(--md-comp-toolbar-floating-fab-container-color)
-      );
+      background-color: state-layer(var(--md-comp-toolbar-floating-fab-icon-color), "hover", var(--md-comp-toolbar-floating-fab-container-color));
       @include z-depth("2");
     }
 
     &:focus:not(:where(#{$expressive-disabled})) {
-      background-color: color-mix(
-        in oklab,
-        var(--md-comp-toolbar-floating-fab-icon-color) state-opacity("focus"),
-        var(--md-comp-toolbar-floating-fab-container-color)
-      );
+      background-color: state-layer(var(--md-comp-toolbar-floating-fab-icon-color), "focus", var(--md-comp-toolbar-floating-fab-container-color));
     }
 
     &:active:not(:where(#{$expressive-disabled})) {
-      background-color: color-mix(
-        in oklab,
-        var(--md-comp-toolbar-floating-fab-icon-color) state-opacity("pressed"),
-        var(--md-comp-toolbar-floating-fab-container-color)
-      );
+      background-color: state-layer(var(--md-comp-toolbar-floating-fab-icon-color), "pressed", var(--md-comp-toolbar-floating-fab-container-color));
     }
   }
 }

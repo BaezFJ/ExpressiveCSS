@@ -207,27 +207,15 @@ $_connected-corners: (
   }
 
   > #{$_toggle-item}[aria-pressed]:hover {
-    background-color: color-mix(
-      in oklab,
-      var(--_toggle-state-color) state-opacity("hover"),
-      var(--_toggle-container-color)
-    );
+    background-color: state-layer(var(--_toggle-state-color), "hover", var(--_toggle-container-color));
   }
 
   > #{$_toggle-item}[aria-pressed]:focus {
-    background-color: color-mix(
-      in oklab,
-      var(--_toggle-state-color) state-opacity("focus"),
-      var(--_toggle-container-color)
-    );
+    background-color: state-layer(var(--_toggle-state-color), "focus", var(--_toggle-container-color));
   }
 
   > #{$_toggle-item}[aria-pressed]:is(:active, .button-group-pressed) {
-    background-color: color-mix(
-      in oklab,
-      var(--_toggle-state-color) state-opacity("pressed"),
-      var(--_toggle-container-color)
-    );
+    background-color: state-layer(var(--_toggle-state-color), "pressed", var(--_toggle-container-color));
   }
 
   > #{$_label-item}#{$_filled-item}[aria-pressed]:is(:disabled, [disabled], .disabled),

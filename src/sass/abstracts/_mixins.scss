@@ -33,6 +33,11 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   @return calc(var(--md-sys-state-#{$state}-state-layer-opacity) * 100%);
 }
 
+/// `$color` at the `$state` layer's opacity, mixed over `$base`.
+@function state-layer($color, $state, $base: transparent) {
+  @return color-mix(in oklab, $color state-opacity($state), $base);
+}
+
 
 // Common-button geometry. M3 Expressive's default size is small: 40dp,
 // label-large, corner.full, 16dp inset, 8dp icon gap. The size axis moves
@@ -76,13 +81,13 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 @mixin _btn-states($on, $base, $hover-depth: null, $press-depth: null) {
   &:hover {
     @if $hover-depth { @include z-depth($hover-depth); }
-    background-color: color-mix(in oklab, #{$on} state-opacity("hover"), #{$base});
+    background-color: state-layer($on, "hover", $base);
   }
 
   &:active,
   &:focus {
     @if $press-depth { @include z-depth($press-depth); }
-    background-color: color-mix(in oklab, #{$on} state-opacity("focus"), #{$base});
+    background-color: state-layer($on, "focus", $base);
   }
 
   @include focus-visible();
@@ -212,7 +217,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   }
 
   &:hover {
-    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+    background-color: state-layer(var(--md-sys-color-on-surface), "hover");
   }
 
   @include focus-visible;
@@ -234,6 +239,126 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   @media (forced-colors: active) {
     forced-color-adjust: none;
     background-color: $color;
+  }
+}
+
+// A fieldset of round, labeled choices (color swatches, rating): no fieldset
+// chrome, a body-medium legend, and labels whose 4px of padding makes the
+// 48px target. $control is the input the label's focus and disabled states
+// follow.
+@mixin choice-fieldset($radius, $control) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  > legend {
+    margin-block-end: 4px;
+    padding: 0;
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-medium");
+  }
+
+  > label {
+    display: inline-flex;
+    gap: 0;
+    min-height: 0;
+    padding: 4px;
+    border-radius: $radius;
+    cursor: pointer;
+
+    &:has(> #{$control}:focus-visible) {
+      @include focus-ring;
+    }
+
+    &:has(> #{$control}:disabled) {
+      opacity: 0.38;
+      cursor: default;
+    }
+  }
+}
+
+// A navigation bar or rail destination stacked over its label: the indicator
+// behind the icon, its hover layer, the active state, and a sibling badge on
+// the upper trailing corner of the 24dp glyph. $prefix names the component
+// tokens (nav-bar, nav-rail); $inset is the destination's top padding. Rules
+// passed as content land between the active state and the badge.
+@mixin nav-destination($prefix, $inset, $transition) {
+  > #{$icon} {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: var(--md-comp-#{$prefix}-indicator-width);
+    height: var(--md-comp-#{$prefix}-indicator-height);
+    border-radius: var(--md-comp-#{$prefix}-indicator-shape);
+    font-size: var(--md-comp-#{$prefix}-icon-size);
+    color: inherit;
+    transition: $transition;
+  }
+
+  &:hover:not(.active, [aria-current]) > #{$icon} {
+    background-color: state-layer(var(--md-sys-color-on-surface), "hover");
+  }
+
+  &.active,
+  &[aria-current] {
+    color: var(--md-sys-color-on-surface);
+
+    > #{$icon} {
+      background-color: var(--md-comp-#{$prefix}-active-indicator-color);
+      color: var(--md-comp-#{$prefix}-active-color);
+      --md-icon-fill: 1;
+      @include forced-colors-selected;
+    }
+  }
+
+  @content;
+
+  > .badge {
+    position: absolute;
+    z-index: 1;
+    top: calc(#{$inset} + (var(--md-comp-#{$prefix}-indicator-height) - 24px) / 2);
+    inset-inline-start: calc(50% + 12px);
+    transform: translate(-50%, -50%);
+
+    &:dir(rtl) {
+      transform: translate(50%, -50%);
+    }
+  }
+}
+
+// The same destination laid out as a row (bar .horizontal, rail .expanded):
+// the indicator moves from the icon to the whole destination.
+@mixin nav-destination-row($prefix) {
+  > #{$icon} {
+    width: var(--md-comp-#{$prefix}-icon-size);
+    height: var(--md-comp-#{$prefix}-icon-size);
+    border-radius: 0;
+  }
+
+  &:hover:not(.active, [aria-current]) {
+    background-color: state-layer(var(--md-sys-color-on-surface), "hover");
+
+    > #{$icon} {
+      background-color: transparent;
+    }
+  }
+
+  &.active,
+  &[aria-current] {
+    background-color: var(--md-comp-#{$prefix}-active-indicator-color);
+    color: var(--md-comp-#{$prefix}-active-color);
+    @include forced-colors-selected;
+
+    > #{$icon} {
+      background-color: transparent;
+      color: inherit;
+      outline: none;
+    }
   }
 }
 
@@ -272,12 +397,8 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 /// they grow a `box-shadow` from the control's edge out to the state layer
 /// size.
 @mixin state-layer-ring($outer, $inner, $color, $state) {
-  box-shadow: 0 0 0 calc((#{$outer} - #{$inner}) / 2)
-    color-mix(
-      in oklab,
-      #{$color} state-opacity($state),
-      transparent
-    );
+  // Interpolated so a quoted color, such as "var(--c)", is written unquoted.
+  box-shadow: 0 0 0 calc((#{$outer} - #{$inner}) / 2) state-layer(#{$color}, $state);
 }
 
 /// The button size tokens for one rung of `$button-sizes`.

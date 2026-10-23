@@ -24,9 +24,10 @@
   color: var(--md-sys-color-on-surface-variant);
 }
 
-$_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.browser-default), input[type=password]:not(.browser-default), input[type=email]:not(.browser-default), input[type=url]:not(.browser-default), input[type=time]:not(.browser-default), input[type=date]:not(.browser-default), input[type=datetime]:not(.browser-default), input[type=datetime-local]:not(.browser-default), input[type=month]:not(.browser-default), input[type=tel]:not(.browser-default), input[type=number]:not(.browser-default), input[type=search]:not(.browser-default), textarea.expressive-textarea";
-
-#{$_text-inputs} {
+// :is() takes its most specific argument, (0,1,0) for each one here, so every
+// input keeps the (0,2,1) a per-type :not(.browser-default) list gave it.
+input:is(:not([type]), [type=text], [type=password], [type=email], [type=url], [type=time], [type=date], [type=datetime], [type=datetime-local], [type=month], [type=tel], [type=number], [type=search]):not(.browser-default),
+textarea.expressive-textarea {
   outline: none;
   color: var(--md-sys-color-on-surface);
   width: 100%;
@@ -45,6 +46,10 @@ $_text-inputs: "input:not([type]):not(.browser-default), input[type=text]:not(.b
 // leading icon inherited the label's position and sat at 16px with
 // pointer-events: none.
 $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix, .suffix, .chip";
+
+// The label, or the span standing in for it, floats while the control is
+// focused or holds a value. Nested under the control, so & is the control.
+$_floated: '&:focus + label, &:not([placeholder=" "]) + label, &:not(:placeholder-shown) + label, &:focus + span:not(#{$_not-label}), &:not([placeholder=" "]) + span:not(#{$_not-label}), &:not(:placeholder-shown) + span:not(#{$_not-label})';
 
 .field {
   --md-comp-filled-text-field-container-color: var(--md-sys-color-surface-container-highest);
@@ -105,12 +110,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
       color: var(--input-color);
     }
 
-    &:focus + label,
-    &:not([placeholder=" "]) + label,
-    &:not(:placeholder-shown) + label,
-    &:focus + span:not(#{$_not-label}),
-    &:not([placeholder=" "]) + span:not(#{$_not-label}),
-    &:not(:placeholder-shown) + span:not(#{$_not-label}) {
+    #{$_floated} {
       transform: scale(calc(12 / 16));
       top: rem(8px);
     }
@@ -313,12 +313,7 @@ $_not-label: ".supporting-text, .character-counter, .file-path, .caret, .prefix,
         padding-bottom: calc(#{rem(8px)} - 1px);
       }
 
-      &:focus + label,
-      &:not([placeholder=" "]) + label,
-      &:not(:placeholder-shown) + label,
-      &:focus + span:not(#{$_not-label}),
-      &:not([placeholder=" "]) + span:not(#{$_not-label}),
-      &:not(:placeholder-shown) + span:not(#{$_not-label}) {
+      #{$_floated} {
         top: rem(-8px);
         left: 16px;
         margin-left: -4px;

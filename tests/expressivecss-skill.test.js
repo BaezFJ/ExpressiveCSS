@@ -422,7 +422,7 @@ describe('the ExpressiveCSS agent skill', () => {
       assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
     }
     assert.match(compiledCss, /\.visually-hidden-focusable:not\(:focus-within\)/);
-    for (const className of [...new Set([...visibilitySass.matchAll(/\.([a-z][\w-]+)/g)].map((match) => match[1]))]) {
+    for (const className of [...new Set([...visibilitySass.matchAll(/\.([a-z][\w-]+)|^\s+\("([a-z][\w-]+)",/gm)].map((match) => match[1] ?? match[2]))]) {
       assert.ok(helpers.includes(`\`.${className}\``), `helpers reference omits .${className}`);
       assert.match(compiledCss, new RegExp(`\\.${className}(?![\\w-])`), `compiled CSS omits .${className}`);
     }
@@ -460,7 +460,7 @@ describe('the ExpressiveCSS agent skill', () => {
     }
     assert.match(globalSass, /@include bp-down\("expanded"\)[\s\S]*table\.responsive-table/);
     assert.match(globalSass, /tbody > tr:nth-child\(odd\)\s*\{\s*background-color:\s*var\(--md-sys-color-surface-container-high\)/);
-    assert.match(globalSass, /&\.highlight > tbody > tr[\s\S]*&:hover[\s\S]*var\(--md-sys-color-on-surface\) state-opacity\("hover"\)/);
+    assert.match(globalSass, /&\.highlight > tbody > tr[\s\S]*&:hover[\s\S]*state-layer\(var\(--md-sys-color-on-surface\), "hover"\)/);
     assert.match(references.table, /`--md-sys-color-surface-container-high`[\s\S]*on-surface hover state layer/i);
     assert.match(globalSass, /&\.centered\s*\{[\s\S]*thead tr th, tbody tr td\s*\{[\s\S]*text-align:\s*center/);
     assert.match(references.table, /`\.centered` \| Centers column headers and body data cells\.[\s\S]*Body row headers[\s\S]*stay start-aligned/i);
@@ -570,9 +570,9 @@ describe('the ExpressiveCSS agent skill', () => {
     for (const role of typeRoles) {
       assert.ok(references.typography.includes(`\`.${role}\``), `typography reference omits .${role}`);
       assert.match(compiledCss, new RegExp(`\\.${role}(?![\\w-])`), `compiled CSS omits .${role}`);
-      const metric = (property) => referenceSass.match(new RegExp(`--md-sys-typescale-${role}-${property}:\\s*([^;]+);`))?.[1];
+      const metric = (property) => compiledCss.match(new RegExp(`--md-sys-typescale-${role}-${property}:\\s*([^;]+);`))?.[1];
       const values = ['font-size', 'line-height', 'font-weight', 'letter-spacing'].map(metric);
-      assert.ok(values.every(Boolean), `typography source omits metrics for ${role}`);
+      assert.ok(values.every(Boolean), `compiled CSS omits metrics for ${role}`);
       assert.ok(
         references.typography.includes(`| \`.${role}\` | ${values.map((value) => `\`${value}\``).join(' | ')} |`),
         `typography reference has the wrong metrics for .${role}`,

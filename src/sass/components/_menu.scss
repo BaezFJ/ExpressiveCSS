@@ -267,19 +267,11 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     // Hover / press sit on extra-small corners and do not span the container.
     &#{$_enabled}:hover,
     &.active#{$_unselected} {
-      background-color: color-mix(
-        in oklab,
-        var(--md-comp-menu-item-label-text-color) state-opacity("hover"),
-        transparent
-      );
+      background-color: state-layer(var(--md-comp-menu-item-label-text-color), "hover");
     }
 
     &#{$_enabled}:active {
-      background-color: color-mix(
-        in oklab,
-        var(--md-comp-menu-item-label-text-color) state-opacity("pressed"),
-        transparent
-      );
+      background-color: state-layer(var(--md-comp-menu-item-label-text-color), "pressed");
     }
 
     // :not(.divider) only buys specificity: menu-item.selected.shape is 12dp
@@ -306,19 +298,11 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     }
 
     &#{$_selected}:hover {
-      background-color: color-mix(
-        in oklab,
-        var(--md-comp-menu-item-selected-label-text-color) state-opacity("hover"),
-        var(--md-comp-menu-item-selected-container-color)
-      );
+      background-color: state-layer(var(--md-comp-menu-item-selected-label-text-color), "hover", var(--md-comp-menu-item-selected-container-color));
     }
 
     &#{$_selected}:is(:focus, :focus-visible, :active) {
-      background-color: color-mix(
-        in oklab,
-        var(--md-comp-menu-item-selected-label-text-color) state-opacity("pressed"),
-        var(--md-comp-menu-item-selected-container-color)
-      );
+      background-color: state-layer(var(--md-comp-menu-item-selected-label-text-color), "pressed", var(--md-comp-menu-item-selected-container-color));
     }
 
     &:focus-visible {
@@ -422,20 +406,12 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
     > li.active#{$_unselected}
       > :is(a, button, #{$icon-label}) {
       border-radius: var(--md-comp-menu-item-container-shape);
-      background-color: color-mix(
-        in oklab,
-        var(--md-comp-menu-item-label-text-color) state-opacity("hover"),
-        transparent
-      );
+      background-color: state-layer(var(--md-comp-menu-item-label-text-color), "hover");
     }
 
     > li#{$_enabled}:active
       > :is(a, button, #{$icon-label}) {
-      background-color: color-mix(
-        in oklab,
-        var(--md-comp-menu-item-label-text-color) state-opacity("pressed"),
-        transparent
-      );
+      background-color: state-layer(var(--md-comp-menu-item-label-text-color), "pressed");
     }
 
     > li#{$_selected}
@@ -446,20 +422,12 @@ $_unselected: ':not(.selected, [aria-selected="true"], [aria-checked="true"])';
 
     > li#{$_selected}:hover
       > :is(a, button, #{$icon-label}) {
-      background-color: color-mix(
-        in oklab,
-        var(--md-comp-menu-item-selected-label-text-color) state-opacity("hover"),
-        var(--md-comp-menu-item-selected-container-color)
-      );
+      background-color: state-layer(var(--md-comp-menu-item-selected-label-text-color), "hover", var(--md-comp-menu-item-selected-container-color));
     }
 
     > li#{$_selected}:is(:focus, :focus-visible, :active)
       > :is(a, button, #{$icon-label}) {
-      background-color: color-mix(
-        in oklab,
-        var(--md-comp-menu-item-selected-label-text-color) state-opacity("pressed"),
-        var(--md-comp-menu-item-selected-container-color)
-      );
+      background-color: state-layer(var(--md-comp-menu-item-selected-label-text-color), "pressed", var(--md-comp-menu-item-selected-container-color));
     }
   }
 
@@ -583,11 +551,7 @@ menu[id] li.submenu-start:is(:hover, :focus-within, .open) > menu {
 // pointer still does not.
 menu[id] > li:focus-visible,
 menu[id] > li > ul[role="group"] > li:focus-visible {
-  background-color: color-mix(
-    in oklab,
-    var(--md-comp-menu-item-label-text-color) state-opacity("focus"),
-    transparent
-  );
+  background-color: state-layer(var(--md-comp-menu-item-label-text-color), "focus");
 }
 
 menu[id].grouped > li:focus-visible {
@@ -598,11 +562,7 @@ menu[id].grouped
   > li:focus-visible#{$_unselected}
   > :is(a, button, span:not(.material-symbols, .badge, .supporting-text)) {
   border-radius: var(--md-comp-menu-item-container-shape);
-  background-color: color-mix(
-    in oklab,
-    var(--md-comp-menu-item-label-text-color) state-opacity("focus"),
-    transparent
-  );
+  background-color: state-layer(var(--md-comp-menu-item-label-text-color), "focus");
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -626,8 +586,8 @@ menu[id].grouped
   // The trigger stays in its pressed state for as long as its menu is open.
   &[aria-expanded="true"] {
     background-image: linear-gradient(
-      color-mix(in oklab, currentcolor state-opacity("pressed"), transparent),
-      color-mix(in oklab, currentcolor state-opacity("pressed"), transparent)
+      state-layer(currentcolor, "pressed"),
+      state-layer(currentcolor, "pressed")
     );
   }
 }

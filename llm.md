@@ -1470,8 +1470,8 @@ Margin helpers
 | `**margin-right**` | `**mr**` | `**mr-0**` | `**mr-1**` | `**mr-2**` | `**mr-3**` | `**mr-4**` | `**mr-5**` | `**mr-6**` | `**mr-auto**` |
 | `**margin-bottom**` | `**mb**` | `**mb-0**` | `**mb-1**` | `**mb-2**` | `**mb-3**` | `**mb-4**` | `**mb-5**` | `**mb-6**` | `**mb-auto**` |
 | `**margin-left**` | `**ml**` | `**ml-0**` | `**ml-1**` | `**ml-2**` | `**ml-3**` | `**ml-4**` | `**ml-5**` | `**ml-6**` | `**ml-auto**` |
-| `**margin-top**` and `**margin-bottom**` | `**my**` | `**my-0**` | `**my-1**` | `**my-2**` | `**my-3**` | `**my-4**` | `**my-5**` | `**my-6**` | `**my-auto**` |
-| `**margin-left**` and `**margin-right**` | `**mx**` | `**mx-0**` | `**mx-1**` | `**mx-2**` | `**mx-3**` | `**mx-4**` | `**mx-5**` | `**mx-6**` | `**mx-auto**` |
+| `**margin-block**` | `**my**` | `**my-0**` | `**my-1**` | `**my-2**` | `**my-3**` | `**my-4**` | `**my-5**` | `**my-6**` | `**my-auto**` |
+| `**margin-inline**` | `**mx**` | `**mx-0**` | `**mx-1**` | `**mx-2**` | `**mx-3**` | `**mx-4**` | `**mx-5**` | `**mx-6**` | `**mx-auto**` |
 | Values |  | 0 | 0.25rem | 0.5rem | 0.75rem | 1rem | 1.5rem | 3rem | auto |
 
 Padding helpers
@@ -1483,8 +1483,8 @@ Padding helpers
 | `**padding-right**` | `**pr**` | `**pr-0**` | `**pr-1**` | `**pr-2**` | `**pr-3**` | `**pr-4**` | `**pr-5**` | `**pr-6**` |
 | `**padding-bottom**` | `**pb**` | `**pb-0**` | `**pb-1**` | `**pb-2**` | `**pb-3**` | `**pb-4**` | `**pb-5**` | `**pb-6**` |
 | `**padding-left**` | `**pl**` | `**pl-0**` | `**pl-1**` | `**pl-2**` | `**pl-3**` | `**pl-4**` | `**pl-5**` | `**pl-6**` |
-| `**padding-top**` and `**padding-bottom**` | `**py**` | `**py-0**` | `**py-1**` | `**py-2**` | `**py-3**` | `**py-4**` | `**py-5**` | `**py-6**` |
-| `**padding-left**` and `**padding-right**` | `**px**` | `**px-0**` | `**px-1**` | `**px-2**` | `**px-3**` | `**px-4**` | `**px-5**` | `**px-6**` |
+| `**padding-block**` | `**py**` | `**py-0**` | `**py-1**` | `**py-2**` | `**py-3**` | `**py-4**` | `**py-5**` | `**py-6**` |
+| `**padding-inline**` | `**px**` | `**px-0**` | `**px-1**` | `**px-2**` | `**px-3**` | `**px-4**` | `**px-5**` | `**px-6**` |
 | Values |  | 0 | 0.25rem | 0.5rem | 0.75rem | 1rem | 1.5rem | 3rem |
 
 #### Usage

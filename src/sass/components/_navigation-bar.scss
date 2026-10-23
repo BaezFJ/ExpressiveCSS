@@ -70,52 +70,12 @@
     @include typescale("label-medium");
     @include focus-visible;
 
-    > #{$icon} {
-      display: flex;
-      flex-shrink: 0;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      width: var(--md-comp-nav-bar-indicator-width);
-      height: var(--md-comp-nav-bar-indicator-height);
-      border-radius: var(--md-comp-nav-bar-indicator-shape);
-      font-size: var(--md-comp-nav-bar-icon-size);
-      color: inherit;
-      transition: background-color var(--md-sys-motion-duration-short4) ease-out;
-    }
-
-    &:hover:not(.active, [aria-current]) > #{$icon} {
-      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
-    }
-
-    &.active,
-    &[aria-current] {
-      color: var(--md-sys-color-on-surface);
-
-      > #{$icon} {
-        background-color: var(--md-comp-nav-bar-active-indicator-color);
-        color: var(--md-comp-nav-bar-active-color);
-        --md-icon-fill: 1;
-        @include forced-colors-selected;
-      }
-    }
-
-    &.disabled,
-    &[aria-disabled="true"] {
-      pointer-events: none;
-      color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
-    }
-
     // Sibling badge. Child-of-icon is handled in _badges.scss.
-    > .badge {
-      position: absolute;
-      z-index: 1;
-      top: calc(4px + (var(--md-comp-nav-bar-indicator-height) - 24px) / 2);
-      inset-inline-start: calc(50% + 12px);
-      transform: translate(-50%, -50%);
-
-      &:dir(rtl) {
-        transform: translate(50%, -50%);
+    @include nav-destination("nav-bar", 4px, background-color var(--md-sys-motion-duration-short4) ease-out) {
+      &.disabled,
+      &[aria-disabled="true"] {
+        pointer-events: none;
+        color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
       }
     }
   }
@@ -132,42 +92,11 @@
       padding: 8px 16px;
       border-radius: var(--md-comp-nav-bar-indicator-shape);
 
-      > #{$icon} {
-        width: var(--md-comp-nav-bar-icon-size);
-        height: var(--md-comp-nav-bar-icon-size);
-        border-radius: 0;
-      }
+      @include nav-destination-row("nav-bar");
 
       > .badge {
         top: calc(50% - 12px);
-        left: auto;
         inset-inline-start: calc(16px + 24px);
-        transform: translate(-50%, -50%);
-
-        &:dir(rtl) {
-          transform: translate(50%, -50%);
-        }
-      }
-
-      &:hover:not(.active, [aria-current]) {
-        background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
-
-        > #{$icon} {
-          background-color: transparent;
-        }
-      }
-
-      &.active,
-      &[aria-current] {
-        background-color: var(--md-comp-nav-bar-active-indicator-color);
-        color: var(--md-comp-nav-bar-active-color);
-        @include forced-colors-selected;
-
-        > #{$icon} {
-          background-color: transparent;
-          color: inherit;
-          outline: none;
-        }
       }
     }
   }

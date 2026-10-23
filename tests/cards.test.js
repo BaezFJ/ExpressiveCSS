@@ -110,21 +110,23 @@ describe('Cards CSS', () => {
     assert.match(css, /--md-comp-card-horizontal-min-height:\s*15rem/);
     assert.match(
       css,
-      /article\.horizontal\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:[^}]*var\(--md-comp-card-horizontal-media-width\)/s
+      /article\.horizontal,\s*article\.horizontal\s*>\s*\.primary-action\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:[^}]*var\(--md-comp-card-horizontal-media-width\)/s
     );
     assert.match(
       css,
-      /article\.horizontal\s*>\s*img,[^{]+article\.horizontal\s*>\s*figure:where\(:not\(\.line-chart,\s*\.column-chart,\s*\.bar-chart,\s*\.pie-chart,\s*\.heatmap-chart,\s*\.radar-chart,\s*\.radial-chart,\s*\.mixed-chart\)\)\s*\{[^}]*grid-column:\s*1[^}]*grid-row:\s*1\s*\/\s*-1/s
+      /article\.horizontal\s*>\s*img,[^{]+article\.horizontal\s*>\s*figure:where\(:not\(\.line-chart,\s*\.column-chart,\s*\.bar-chart,\s*\.pie-chart,\s*\.heatmap-chart,\s*\.radar-chart,\s*\.radial-chart,\s*\.mixed-chart\)\),[^{]+article\.horizontal\s*>\s*\.primary-action\s*>\s*figure:where\([^{]+\{[^}]*grid-column:\s*1[^}]*grid-row:\s*1\s*\/\s*-1/s
     );
     assert.match(
       css,
       /article\.horizontal\s*>\s*\.actions\s*\{[^}]*grid-column:\s*2[^}]*grid-row:\s*4[^}]*align-self:\s*end[^}]*justify-content:\s*flex-end/s
     );
     assert.doesNotMatch(css, /article\.horizontal\s*>\s*div\s*\{/);
+    // The primary action takes the same slots, apart from the actions row.
     assert.match(
       css,
-      /article\.horizontal\s*>\s*\.primary-action\s*\{[^}]*display:\s*grid[^}]*grid-template-columns:[^}]*var\(--md-comp-card-horizontal-media-width\)/s
+      /article\.horizontal\s*>\s*p:not\(\.subhead\),\s*article\.horizontal\s*>\s*\.primary-action\s*>\s*p:not\(\.subhead\)\s*\{[^}]*grid-row:\s*3/s
     );
+    assert.doesNotMatch(css, /\.primary-action\s*>\s*\.actions/);
     assert.match(
       css,
       /article\.horizontal:is\(\.small, \.medium, \.large\):has\(> \.primary-action\)\s*\{[^}]*display:\s*block/s

@@ -128,7 +128,7 @@
 
     &:hover {
       background-image: linear-gradient(
-        color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent) 0 0
+        state-layer(var(--md-sys-color-on-surface), "hover") 0 0
       );
     }
   }

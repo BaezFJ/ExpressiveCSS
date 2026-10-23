@@ -29,80 +29,39 @@
 .visually-hidden,
 .visually-hidden-focusable:not(:focus-within) { @include visually-hidden(true); }
 
-.hide-on-compact-only {
-  @include bp-down("medium") { display: none !important; }
-}
-
-.hide-on-med-and-down {
-  @include bp-down("expanded") { display: none !important; }
-}
-
-.hide-on-med-and-up {
-  @include bp-up("medium") { display: none !important; }
-}
-
-.hide-on-medium-only {
-  @include bp-between("medium", "expanded") {
-    display: none !important;
+// From the $from window size up to, not including, $to. A null end is open.
+@mixin _window($from, $to) {
+  @if not $from {
+    @include bp-down($to) { @content; }
+  } @else if not $to {
+    @include bp-up($from) { @content; }
+  } @else {
+    @include bp-between($from, $to) { @content; }
   }
 }
 
-.hide-on-expanded-only {
-  @include bp-between("expanded", "large") {
-    display: none !important;
+// Class, first window size, first size past the range, display.
+@each $class, $from, $to, $display in (
+  ("hide-on-compact-only",     null,          "medium",      none),
+  ("hide-on-med-and-down",     null,          "expanded",    none),
+  ("hide-on-med-and-up",       "medium",      null,          none),
+  ("hide-on-medium-only",      "medium",      "expanded",    none),
+  ("hide-on-expanded-only",    "expanded",    "large",       none),
+  ("hide-on-expanded-and-up",  "expanded",    null,          none),
+  ("hide-on-large-only",       "large",       "extra-large", none),
+  ("hide-on-extra-large-only", "extra-large", null,          none),
+  ("show-on-compact",          null,          "medium",      block),
+  ("show-on-medium",           "medium",      "expanded",    block),
+  ("show-on-expanded",         "expanded",    "large",       block),
+  ("show-on-expanded-and-up",  "expanded",    null,          block),
+  ("show-on-large",            "large",       "extra-large", block),
+  ("show-on-extra-large",      "extra-large", null,          block),
+  ("show-on-medium-and-up",    "medium",      null,          block),
+  ("show-on-medium-and-down",  null,          "expanded",    block),
+) {
+  .#{$class} {
+    @include _window($from, $to) { display: $display !important; }
   }
-}
-
-.hide-on-expanded-and-up {
-  @include bp-up("expanded") { display: none !important; }
-}
-
-.hide-on-large-only {
-  @include bp-between("large", "extra-large") {
-    display: none !important;
-  }
-}
-
-.hide-on-extra-large-only {
-  @include bp-up("extra-large") { display: none !important; }
-}
-
-.show-on-compact {
-  @include bp-down("medium") { display: block !important; }
-}
-
-.show-on-medium {
-  @include bp-between("medium", "expanded") {
-    display: block !important;
-  }
-}
-
-.show-on-expanded {
-  @include bp-between("expanded", "large") {
-    display: block !important;
-  }
-}
-
-.show-on-expanded-and-up {
-  @include bp-up("expanded") { display: block !important; }
-}
-
-.show-on-large {
-  @include bp-between("large", "extra-large") {
-    display: block !important;
-  }
-}
-
-.show-on-extra-large {
-  @include bp-up("extra-large") { display: block !important; }
-}
-
-.show-on-medium-and-up {
-  @include bp-up("medium") { display: block !important; }
-}
-
-.show-on-medium-and-down {
-  @include bp-down("expanded") { display: block !important; }
 }
 
 // Center text on Compact windows.

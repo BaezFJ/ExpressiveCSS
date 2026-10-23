@@ -132,9 +132,6 @@ dialog.command-palette {
   }
 }
 
-@media (forced-colors: active) {
-  dialog.command-palette > :is(ul, ol) > li.active {
-    outline: 2px solid Highlight;
-    outline-offset: -2px;
-  }
+dialog.command-palette > :is(ul, ol) > li.active {
+  @include forced-colors-selected;
 }

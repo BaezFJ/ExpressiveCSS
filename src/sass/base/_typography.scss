@@ -17,8 +17,6 @@
 html,
 :host {
   font-family: $font-stack;
-  font-weight: var(--md-sys-typescale-body-medium-font-weight);
-  color: $text-color;
 }
 
 body,
@@ -61,7 +59,6 @@ figcaption {
   @include typescale("body-small");
 }
 
-em { font-style: italic; }
 strong, b { font-weight: 500; }
 
 // Flow text: font-size scales with the viewport between two bounds.

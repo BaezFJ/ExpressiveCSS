@@ -419,7 +419,8 @@ article > .primary-action > #{$_media-figure} > figcaption > svg {
 
 // Horizontal uses the same semantic slots as the vertical card. They may be
 // direct children or children of the direct primary-action link.
-@mixin horizontal-card-layout($with-actions: true) {
+article.horizontal,
+article.horizontal > .primary-action {
   display: grid;
   grid-template-columns:
     minmax(0, var(--md-comp-card-horizontal-media-width))
@@ -460,19 +461,13 @@ article > .primary-action > #{$_media-figure} > figcaption > svg {
     grid-column: 2;
     grid-row: 3;
   }
-
-  @if $with-actions {
-    > .actions {
-      grid-column: 2;
-      grid-row: 4;
-      align-self: end;
-      justify-content: flex-end;
-    }
-  }
 }
 
-article.horizontal {
-  @include horizontal-card-layout;
+article.horizontal > .actions {
+  grid-column: 2;
+  grid-row: 4;
+  align-self: end;
+  justify-content: flex-end;
 }
 
 article.horizontal:has(> .primary-action) {
@@ -480,8 +475,6 @@ article.horizontal:has(> .primary-action) {
 }
 
 article.horizontal > .primary-action {
-  @include horizontal-card-layout(false);
-
   width: 100%;
   min-height: inherit;
 }
@@ -649,11 +642,7 @@ article > aside > .reveal-actions > .reveal-action {
 }
 
 article > aside > .reveal-actions > .reveal-action:hover {
-  background-color: color-mix(
-    in oklab,
-    var(--md-sys-color-on-surface) state-opacity("hover"),
-    transparent
-  );
+  background-color: state-layer(var(--md-sys-color-on-surface), "hover");
 }
 
 article > aside > .reveal-actions > .reveal-action > :is(.material-symbols, .card-icon, svg) {

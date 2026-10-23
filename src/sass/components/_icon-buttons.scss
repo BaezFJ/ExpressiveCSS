@@ -86,11 +86,7 @@
   // icon button gets a translucent tint instead of an opaque one.
   @each $state, $selector in ("hover": "&:hover", "focus": "&:focus", "pressed": "&:active") {
     #{$selector} {
-      background-color: color-mix(
-        in oklab,
-        var(--md-comp-icon-button-color) state-opacity($state),
-        var(--md-comp-icon-button-container-color)
-      );
+      background-color: state-layer(var(--md-comp-icon-button-color), $state, var(--md-comp-icon-button-container-color));
     }
   }
 

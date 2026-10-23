@@ -5,7 +5,8 @@
 // abstracts emits no CSS and is forwarded for the Sass API. @forward cannot
 // appear inside @layer, so each layer is loaded with meta.load-css().
 @use "sass:meta";
-@forward "abstracts";
+// The destination and fieldset mixins only serve the partials that share them.
+@forward "abstracts" hide nav-destination, nav-destination-row, choice-fieldset;
 
 $components: null !default;
 $utilities: null !default;

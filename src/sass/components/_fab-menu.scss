@@ -154,21 +154,13 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
       // Enabled is elevation 0; only the states lift, and only when enabled.
       &:hover:not(:where(#{$expressive-disabled})) {
         @include z-depth("4");
-        background-color: color-mix(
-          in oklab,
-          var(--md-comp-fab-menu-menu-item-label-text-color) state-opacity("hover"),
-          var(--md-comp-fab-menu-menu-item-container-color)
-        );
+        background-color: state-layer(var(--md-comp-fab-menu-menu-item-label-text-color), "hover", var(--md-comp-fab-menu-menu-item-container-color));
       }
 
       &:active:not(:where(#{$expressive-disabled})),
       &:focus:not(:where(#{$expressive-disabled})) {
         @include z-depth("3");
-        background-color: color-mix(
-          in oklab,
-          var(--md-comp-fab-menu-menu-item-label-text-color) state-opacity("focus"),
-          var(--md-comp-fab-menu-menu-item-container-color)
-        );
+        background-color: state-layer(var(--md-comp-fab-menu-menu-item-label-text-color), "focus", var(--md-comp-fab-menu-menu-item-container-color));
       }
     }
   }
@@ -210,20 +202,12 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
     }
 
     &:hover {
-      background-color: color-mix(
-        in oklab,
-        var(--md-comp-fab-menu-close-button-icon-color) state-opacity("hover"),
-        var(--md-comp-fab-menu-close-button-container-color)
-      );
+      background-color: state-layer(var(--md-comp-fab-menu-close-button-icon-color), "hover", var(--md-comp-fab-menu-close-button-container-color));
     }
 
     &:active,
     &:focus {
-      background-color: color-mix(
-        in oklab,
-        var(--md-comp-fab-menu-close-button-icon-color) state-opacity("focus"),
-        var(--md-comp-fab-menu-close-button-container-color)
-      );
+      background-color: state-layer(var(--md-comp-fab-menu-close-button-icon-color), "focus", var(--md-comp-fab-menu-close-button-container-color));
     }
   }
 

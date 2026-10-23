@@ -76,7 +76,7 @@ describe('Material 3 state layers', () => {
     assert.deepEqual(
       offenders,
       [],
-      `use state-opacity("hover"|"focus"|"pressed") instead:\n${offenders.join('\n')}`
+      `use state-layer() or state-opacity("hover"|"focus"|"pressed") instead:\n${offenders.join('\n')}`
     );
   });
 });

@@ -61,11 +61,7 @@
     }
 
     &:hover {
-      background-color: color-mix(
-        in oklab,
-        var(--md-sys-color-on-surface) state-opacity("hover"),
-        transparent
-      );
+      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
     }
 
     &:has(> input:focus-visible) {

@@ -83,15 +83,15 @@
   }
 
   &:hover {
-    box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+    box-shadow: 0 0 0 8px state-layer(var(--md-sys-color-on-surface), "hover");
   }
 
   &:checked:hover {
-    box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) state-opacity("hover"), transparent);
+    box-shadow: 0 0 0 8px state-layer(var(--md-sys-color-primary), "hover");
   }
 
   &:focus-visible {
-    box-shadow: 0 0 0 8px color-mix(in oklab, var(--md-sys-color-primary) state-opacity("focus"), transparent);
+    box-shadow: 0 0 0 8px state-layer(var(--md-sys-color-primary), "focus");
     outline: none;
   }
 

@@ -116,11 +116,7 @@
     transition: background-color var(--md-sys-motion-duration-short4) ease-out;
 
     &:hover {
-      background-color: color-mix(
-        in oklab,
-        var(--md-sys-color-on-surface) state-opacity("hover"),
-        transparent
-      );
+      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
     }
 
     &:has(> :first-child input[type="checkbox"]:checked) {
@@ -202,11 +198,8 @@
   }
 }
 
-@media (forced-colors: active) {
-  .data-table th > button::after {
-    forced-color-adjust: none;
-    background-color: CanvasText;
-  }
+.data-table th > button::after {
+  @include forced-colors-fill;
 }
 
 // Bulk actions. A bar of buttons for the selected rows, written just before

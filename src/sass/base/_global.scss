@@ -1,6 +1,6 @@
 @use "../abstracts" as *;
 
-// Element-level defaults only: box-sizing, links, blockquotes, icons, tables.
+// Element-level defaults only: box-sizing, links, blockquotes, tables, meters.
 //
 // Helper classes belong in utilities/, and anything that serves a single widget
 // belongs in that widget's partial - nothing here should name a component.
@@ -23,7 +23,7 @@ body {
 
 body,
 :host {
-  color: var(--md-sys-color-on-surface);
+  color: $text-color;
 }
 
 button,
@@ -52,15 +52,6 @@ a {
 //  Blockquote
 blockquote { margin: 20px 0; padding-inline-start: 1.5rem; border-inline-start: 5px solid var(--md-sys-color-primary); }
 
-// <i> as an element - italics. The icon modifiers (.left, .right, .tiny ..)
-// used to live here, keyed on `i`, which silently tied them to one element:
-// writing an icon as the canonical <span class="material-symbols"> dropped
-// them. They now hang off the icon class list in components/_icons-material-design,
-// where the size modifiers already were, so they follow the class instead.
-i {
-  line-height: inherit;
-}
-
 // Tables
 table, th, td {
   border: none;
@@ -85,7 +76,7 @@ table {
     transition: background-color var(--md-sys-motion-duration-medium1) ease;
 
     &:hover {
-      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) state-opacity("hover"), transparent);
+      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
     }
   }
 
@@ -109,7 +100,6 @@ td, th {
   display: table-cell;
   text-align: start;
   vertical-align: middle;
-  border-radius: 0;
 }
 
 // Responsive Table
