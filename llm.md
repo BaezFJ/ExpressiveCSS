@@ -1240,7 +1240,7 @@ One class per declaration, applied to the container. Row direction and start ali
 
 ### Window-size prefixes
 
-The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`), `.gap-*`, margin and padding classes, and `.hide`, also come with a window-size prefix. Prefixed margin and padding cover all sides, `x`, `y`, top, bottom, start and end; use start and end rather than left and right. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
+The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`), `.line-clamp-*`, `.gap-*`, margin and padding classes, and `.hide`, also come with a window-size prefix. Prefixed margin and padding cover all sides, `x`, `y`, top, bottom, start and end; use start and end rather than left and right. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
 
 | Prefix | Applies from |
 | --- | --- |
@@ -1505,6 +1505,14 @@ To truncate long lines of text in an ellipsis, add the class `truncate` to the t
 
 ```html
 <h4 class="truncate">This is an extremely long title that will be truncated</h4>
+```
+
+#### Line clamp
+
+To cut text to a few lines and end it in an ellipsis, add `line-clamp-1`, `line-clamp-2` or `line-clamp-3`. `line-clamp-none` shows every line again, so `line-clamp-2 expanded:line-clamp-none` clamps on compact and medium windows only. The classes set `display`, so put them on a child of a flex or grid container, not on the container. Pad a wrapper rather than the clamped element, because block-end padding shows the top of the next line.
+
+```html
+<p class="line-clamp-2">This card description runs on for several lines…</p>
 ```
 
 #### Text wrapping

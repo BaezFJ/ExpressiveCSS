@@ -145,8 +145,8 @@ const S = defineSections([
         <p>
           These classes also come with a window-size prefix: display, flex direction, wrap,
           <code>justify-*</code>, <code>align-*</code>, text alignment (<code>.start-align</code>,
-          <code>.center-align</code>, <code>.end-align</code>), <code>.gap-*</code>, margin,
-          padding and <code>.hide</code>. Prefixed margin and padding cover all sides,
+          <code>.center-align</code>, <code>.end-align</code>), <code>.line-clamp-*</code>,
+          <code>.gap-*</code>, margin, padding and <code>.hide</code>. Prefixed margin and padding cover all sides,
           <code>x</code>, <code>y</code>, top, bottom, start and end. Use start and end, not left
           and right. A prefixed class applies from that size class up and overrides the unprefixed
           one, the same way the grid's <code>m6</code> and <code>l4</code> do.
@@ -747,6 +747,26 @@ const S = defineSections([
         </div>
 <Code code={`
 <h4 class="truncate">This is an extremely long title that will be truncated</h4>
+`} />
+
+        <h5>Line clamp</h5>
+        <p>
+          To cut text to a few lines and end it in an ellipsis, add <code>line-clamp-1</code>,
+          <code>line-clamp-2</code> or <code>line-clamp-3</code>. <code>line-clamp-none</code> shows every line
+          again, so <code>line-clamp-2 expanded:line-clamp-none</code> clamps on compact and medium windows only.
+          The classes set <code>display</code>, so put them on a child of a flex or grid container, not on the
+          container. Pad a wrapper rather than the clamped element, because block-end padding shows the top of the
+          next line.
+        </p>
+        <div class="row">
+          <div class="s6 offset-s3">
+            <article>
+              <p class="line-clamp-2">This card description runs on for several lines, but the class cuts it after the second line and ends that line in an ellipsis, so cards in a row keep the same height.</p>
+            </article>
+          </div>
+        </div>
+<Code code={`
+<p class="line-clamp-2">This card description runs on for several lines…</p>
 `} />
 
         <h5>Text wrapping</h5>

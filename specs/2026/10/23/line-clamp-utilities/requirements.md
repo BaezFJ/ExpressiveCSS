@@ -4,7 +4,7 @@ Date: 2026-10-23
 Roadmap phase: Phase 25, line clamp utilities
 Branch: `feature/2026-10-23-line-clamp-utilities`
 Base: `origin/master` at `3ef49121a981a0ff664578ed425dbe8dee457d80` (#405)
-Status: specified 2026-10-23; not implemented
+Status: implemented and locally verified 2026-10-23; required CI and review pending
 
 Follow the [mission's agreed scope for utilities](../../../../mission.md#agreed-scope), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 25](../../../../roadmap.md#phase-25-line-clamp-utilities). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 

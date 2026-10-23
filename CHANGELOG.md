@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Line clamp utilities. `.line-clamp-1`, `.line-clamp-2` and
+  `.line-clamp-3` cut text to that many lines and end the last one in an
+  ellipsis, and `.line-clamp-none` shows every line again. All four take
+  the `medium:`, `expanded:`, `large:` and `extra-large:` prefixes.
 - Calendar week, day and year views. `table.calendar.week` and
   `table.calendar.day` are hourly grids: a row per hour named by a
   `<th scope="row">`, and a column per day whose header can carry
