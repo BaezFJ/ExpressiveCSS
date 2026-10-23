@@ -588,39 +588,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       item.appendChild(img);
     }
 
-    // Text
-    const inputText = this.el.value.toLocaleLowerCase();
-    const label = (entry.text || entry.id).toString();
-    const parts = this._highlightPartialText(inputText, label);
-    const div = document.createElement('div');
-    div.setAttribute('style', 'line-height:1.2;font-weight:500;');
-    if (this.options.allowUnsafeHTML) {
-      // Highlight inside a parsed text node. Splicing the span into the HTML
-      // string put its quotes inside any attribute the match landed in, which
-      // closed that attribute and let the rest of it become markup.
-      div.innerHTML = label;
-      const walker = document.createTreeWalker(div, NodeFilter.SHOW_TEXT);
-      for (let node = walker.nextNode() as Text; node; node = walker.nextNode() as Text) {
-        const [before, match] = this._highlightPartialText(inputText, node.data);
-        if (!match) continue;
-        const matched = node.splitText(before.length);
-        matched.splitText(match.length);
-        const highlight = document.createElement('span');
-        highlight.classList.add('highlight');
-        matched.replaceWith(highlight);
-        highlight.append(matched);
-        break;
-      }
-    } else {
-      div.appendChild(document.createTextNode(parts[0]));
-      if (parts[1]) {
-        const highlight = document.createElement('span');
-        highlight.textContent = parts[1];
-        highlight.classList.add('highlight');
-        div.appendChild(highlight);
-        div.appendChild(document.createTextNode(parts[2]));
-      }
-    }
+    const div = this._createLabel(entry);
 
     const itemText = document.createElement('div');
     itemText.classList.add('item-text');
@@ -651,6 +619,48 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     };
     item.style.gridTemplateColumns = getGridConfig();
     return item;
+  }
+
+  _createLabel(entry: AutocompleteData) {
+    const inputText = this.el.value.toLocaleLowerCase();
+    const label = (entry.text || entry.id).toString();
+    const div = document.createElement('div');
+    div.setAttribute('style', 'line-height:1.2;font-weight:500;');
+    // Only a script-supplied text is HTML. An id can come from markup's
+    // `selected`, which AutoInit treats as untrusted, so it stays text.
+    if (this.options.allowUnsafeHTML && entry.text) this._highlightHTML(div, label, inputText);
+    else this._highlightText(div, this._highlightPartialText(inputText, label));
+    return div;
+  }
+
+  _highlightHTML(div: HTMLElement, label: string, inputText: string) {
+    // Highlight inside a parsed text node. Splicing the span into the HTML
+    // string put its quotes inside any attribute the match landed in, which
+    // closed that attribute and let the rest of it become markup.
+    div.innerHTML = label;
+    const walker = document.createTreeWalker(div, NodeFilter.SHOW_TEXT);
+    for (let node = walker.nextNode() as Text; node; node = walker.nextNode() as Text) {
+      const [before, match] = this._highlightPartialText(inputText, node.data);
+      if (!match) continue;
+      const matched = node.splitText(before.length);
+      matched.splitText(match.length);
+      const highlight = document.createElement('span');
+      highlight.classList.add('highlight');
+      matched.replaceWith(highlight);
+      highlight.append(matched);
+      break;
+    }
+  }
+
+  _highlightText(div: HTMLElement, parts: string[]) {
+    div.appendChild(document.createTextNode(parts[0]));
+    if (parts[1]) {
+      const highlight = document.createElement('span');
+      highlight.textContent = parts[1];
+      highlight.classList.add('highlight');
+      div.appendChild(highlight);
+      div.appendChild(document.createTextNode(parts[2]));
+    }
   }
 
   _renderMenu() {

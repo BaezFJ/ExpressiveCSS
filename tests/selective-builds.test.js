@@ -222,7 +222,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed menus opened as manual popovers in the top layer, without the clipping-ancestor walk: 89,279 gzip bytes (-366).
   // Reviewed the lightbox shown as manual popovers instead of clearing ancestor overflow: 89,011 gzip bytes (-268).
   // Reviewed measured menus keeping their scroll position and identity transforms leaving menus anchored: 89,099 gzip bytes (+88).
-  assert.ok(sizes(js).gzip <= 89099, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the audit fixes: Autocomplete ids stay text, questionnaires skip password and hidden inputs, and the label split into helpers for the complexity gate: 89,154 gzip bytes (+55).
+  assert.ok(sizes(js).gzip <= 89154, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -355,5 +356,11 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed row badges that restated the navigation badge transform and a left lost to inset-inline-start: 84,778 gzip bytes (-43).
   // Reviewed the open menu shown by :popover-open in place of an inline display: 84,789 gzip bytes (+11).
   // Reviewed the lightbox resets for the UA popover box: 84,819 gzip bytes (+30).
-  assert.ok(sizes(css).gzip <= 84819, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the line clamp utilities and their window-size prefixes: 85,005 gzip bytes (+186).
+  // Reviewed the .opacity-0 to .opacity-100 helpers: 85,049 gzip bytes (+44).
+  // Reviewed the pointer-events and cursor-pointer helpers: 85,077 gzip bytes (+28).
+  // Reviewed the .list-unstyled helper: 85,097 gzip bytes (+20).
+  // Reviewed position and inset helpers with logical edge pins: 85,161 gzip bytes (+64).
+  // Reviewed the .grid-auto-fill utility: 85,232 gzip bytes (+71).
+  assert.ok(sizes(css).gzip <= 85232, `CSS gzip: ${sizes(css).gzip}`);
 });

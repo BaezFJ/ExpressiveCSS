@@ -942,6 +942,13 @@
           "kind": "forbid",
           "selector": ".sortable > li:not(:has([data-move=\"up\"]):has([data-move=\"down\"]))",
           "message": "Give each .sortable item a [data-move=\"up\"] and a [data-move=\"down\"] button, in the row or in a menu. Dragging is a pointer gesture; the buttons are the keyboard path and the single-pointer alternative WCAG 2.5.7 requires."
+        },
+        {
+          "id": "list-unstyled-has-list-role",
+          "kind": "forbid",
+          "selector": ":is(ul, ol).list-unstyled:not([role])",
+          "fragmentSafe": true,
+          "message": "WebKit drops the list role from a list with no markers, so screen readers stop announcing it as a list. Give a .list-unstyled list role=\"list\", or the role it should have instead."
         }
       ]
     },

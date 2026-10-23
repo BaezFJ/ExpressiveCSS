@@ -450,13 +450,23 @@ function projectRootPolicy() {
 
 // The operator's default root is trusted. A client-supplied root must sit inside an allowed root.
 function authorizedProjectRoot(projectRoot) {
-  const resolved = path.resolve(projectRoot);
   const policy = projectRootPolicy();
-  let canonical = null;
-  try { canonical = realpathSync(resolved); } catch {}
+  const canonical = canonicalPath(path.resolve(projectRoot), policy.roots);
   if (!canonical || !matchingRoot(policy.roots, canonical)) throw new Error(policy.denial);
   // The checked path, so a symlink swapped after the check cannot move later reads.
   return canonical;
+}
+
+// Resolving a Windows network path (\\host\share) contacts that host, so only
+// one under a root the operator listed is resolved.
+function isUnlistedNetworkPath(resolved, roots) {
+  return process.platform === 'win32' && /^[\\/]{2}/u.test(resolved)
+    && !roots.some((root) => isPathInside(path.resolve(root), resolved));
+}
+
+function canonicalPath(resolved, roots) {
+  if (isUnlistedNetworkPath(resolved, roots)) return null;
+  try { return realpathSync(resolved); } catch { return null; }
 }
 
 function matchingRoot(configuredRoots, candidate) {
@@ -1554,10 +1564,15 @@ function summarizeGuide(guide, { sections, detail, includeCapabilities }) {
 
 function summarizeProjectFiles(files, projectRoot) {
   const resolvedRoot = realpathSync(path.resolve(projectRoot));
+  const roots = [resolvedRoot, path.resolve(projectRoot)];
   const absoluteFiles = files.map((filePath) => {
     const requestedPath = path.isAbsolute(filePath)
       ? path.resolve(filePath)
       : path.resolve(resolvedRoot, filePath);
+    // Touch nothing outside the root, so the reply cannot say whether a host path exists.
+    if (!roots.some((root) => isPathInside(root, requestedPath))) {
+      return { requested: filePath, absolute: requestedPath, exists: false, insideProject: false };
+    }
     const exists = existsSync(requestedPath);
     const absolute = exists ? realpathSync(requestedPath) : requestedPath;
     return {
@@ -1576,12 +1591,12 @@ function summarizeProjectFiles(files, projectRoot) {
       skipped.push({ ...item, reason: 'file limit reached' });
       continue;
     }
-    if (!item.exists) {
-      skipped.push({ ...item, reason: 'file does not exist' });
-      continue;
-    }
     if (!item.insideProject) {
       skipped.push({ ...item, reason: 'file is outside projectRoot' });
+      continue;
+    }
+    if (!item.exists) {
+      skipped.push({ ...item, reason: 'file does not exist' });
       continue;
     }
     if (path.relative(resolvedRoot, item.absolute).split(path.sep).includes('node_modules')) {

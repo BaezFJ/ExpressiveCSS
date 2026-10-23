@@ -206,6 +206,35 @@ describe('ExpressiveCSS version resolution', () => {
     assert.deepEqual(result.conflicts, []);
   });
 
+  test('crafted lockfiles resolve in linear time', async () => {
+    // Both shapes took seconds at this size when a regex backtracked across them.
+    const fixtures = {
+      'blank lines in a pnpm entry': {
+        'package.json': '{"packageManager":"pnpm@9.15.0","dependencies":{"@expressivecss/expressive":"^0.7.0"}}',
+        'pnpm-lock.yaml': `lockfileVersion: '9.0'\nimporters:\n  .:\n    dependencies:\n      '@expressivecss/expressive':\n${'\n'.repeat(100000)}        specifier: ^0.7.0\n        version: 0.7.1\n`,
+      },
+      'a run of parentheses as a yarn version': {
+        'package.json': '{"packageManager":"yarn@1.22.22","dependencies":{"@expressivecss/expressive":"^0.7.0"}}',
+        'yarn.lock': `# yarn lockfile v1\n\n"@expressivecss/expressive@^0.7.0":\n  version "${'('.repeat(100000)}"\n`,
+      },
+    };
+    for (const [name, files] of Object.entries(fixtures)) {
+      const projectRoot = await materialize(files);
+      const started = performance.now();
+      await resolveExpressiveVersion({ projectRoot, contractVersion: '0.7.1' });
+      assert.ok(performance.now() - started < 1000, name);
+    }
+  });
+
+  test('peer suffixes are stripped from lockfile versions', async () => {
+    const projectRoot = await materialize({
+      'package.json': '{"packageManager":"pnpm@9.15.0","dependencies":{"@expressivecss/expressive":"^0.7.0"}}',
+      'pnpm-lock.yaml': "lockfileVersion: '9.0'\nimporters:\n  .:\n    dependencies:\n      '@expressivecss/expressive':\n        specifier: ^0.7.0\n        version: 0.7.1(react@18.0.0)(typescript@5.0.0)\n",
+    });
+    const result = await resolveExpressiveVersion({ projectRoot, contractVersion: '0.7.1' });
+    assert.equal(result.resolvedVersion, '0.7.1');
+  });
+
   test('supported lockfiles reject resolved versions outside the direct manifest range', async () => {
     const fixtures = [
       {
