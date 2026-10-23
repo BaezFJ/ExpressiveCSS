@@ -1,14 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit, expect } from '@playwright/test';
+import { readFileSync } from 'node:fs';
+import { expect } from '@playwright/test';
+import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 
-for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
-  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
-  const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+for (const [engine, type, browserTest] of engines) {
 
   browserTest(`Carousel keeps child clicks and mouse dragging distinct (${engine})`, async () => {
     const browser = await type.launch();

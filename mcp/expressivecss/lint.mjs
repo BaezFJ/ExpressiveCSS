@@ -9,9 +9,8 @@
  *                                    it is a markup file, exit 2 on findings
  *                                    so the message goes back to the agent.
  */
-import { readFileSync, realpathSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { inspectAuthoringRules, readInspectionFile } from './server.js';
 
 // Markdown is left out: a doc concatenates many independent examples, so page-level rules misfire.
@@ -68,6 +67,6 @@ async function main(argv) {
   return total ? 1 : 0;
 }
 
-if (process.argv[1] && pathToFileURL(realpathSync(process.argv[1])).href === import.meta.url) {
+if (import.meta.main) {
   process.exitCode = await main(process.argv.slice(2));
 }

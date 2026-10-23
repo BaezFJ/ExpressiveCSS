@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import InstanceNote from "../components/api/InstanceNote.astro";
@@ -19,8 +18,7 @@ const S = defineSections([
   { id: "properties", label: "Properties" },
 ]);
 ---
-<DocsLayout page="chips">
-<PageBody sections={S}>
+<DocsLayout page="chips" sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
           Add <code>.chip</code> to an element to make a chip. The element you pick
@@ -243,11 +241,11 @@ const S = defineSections([
 <!-- Submits tags=red&tags=blue -->
 `} />
         <p>An empty field. Type a tag and press Enter:</p>
-        <div id="chips-empty" class="chips no-autoinit mb-5"></div>
+        <div id="chips-empty" data-chips-options='{"allowUserInput": true}' class="chips mb-5"></div>
         <p>Initial tags from the <code>data</code> option:</p>
         <div id="chips-initial" class="chips no-autoinit mb-5"></div>
         <p>Placeholders when the field is empty and after the first tag:</p>
-        <div id="chips-placeholder" class="chips no-autoinit mb-5"></div>
+        <div id="chips-placeholder" data-chips-options='{"allowUserInput": true, "placeholder": "Enter a tag", "secondaryPlaceholder": "+Tag"}' class="chips mb-5"></div>
         <p>Autocomplete suggestions while typing:</p>
         <div id="chips-autocomplete" class="chips no-autoinit mb-5"></div>
 <Code code={`
@@ -436,5 +434,4 @@ instance.destroy();
         </PropertiesTable>
   </Section>
 
-</PageBody>
 </DocsLayout>

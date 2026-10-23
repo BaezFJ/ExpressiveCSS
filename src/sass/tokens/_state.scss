@@ -13,8 +13,6 @@
 // `opacity` directly; a `color-mix()` tint needs a percentage, which
 // `state-opacity()` in abstracts supplies.
 
-@use "../abstracts" as *;
-
 :root,
 :host {
   --md-sys-state-hover-state-layer-opacity: 0.08;

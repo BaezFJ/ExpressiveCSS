@@ -1,8 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
-import { leaseBrowser } from './browser.js';
+import { readFileSync } from 'node:fs';
+import { leaseBrowser, engines } from './browser.js';
 
 // The x-expressive directive documented on the Auto Init page, run against
 // real Alpine: elements Alpine renders later get an instance, x-model stays in
@@ -10,7 +9,6 @@ import { leaseBrowser } from './browser.js';
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 const alpine = readFileSync(new URL('../node_modules/alpinejs/dist/cdn.min.js', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head><body>
 <main x-data="{ show: true, letter: 'b' }">
@@ -42,9 +40,8 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
 <script>${alpine}</script>
 </body></html>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: an Alpine directive starts, syncs and destroys a Select inside x-if`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();

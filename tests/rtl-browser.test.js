@@ -12,22 +12,20 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, existsSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
-import { leaseBrowser } from './browser.js';
+import { chromium } from 'playwright';
+import { leaseBrowser, engines } from './browser.js';
 
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 const field = (inputDir) => `<div class="field" style="width:320px">
   <span class="material-symbols prefix" aria-hidden="true">search</span>
   <input id="q" type="text" placeholder=" " ${inputDir ? `dir="${inputDir}"` : ''}><label for="q">Search</label>
   <span class="material-symbols suffix" aria-hidden="true">mic</span></div>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: field icons and input padding share the field's direction`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
@@ -69,9 +67,8 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
   });
 }
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: a date range band faces the rest of the range`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 900, height: 800 } });

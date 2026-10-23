@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -33,8 +32,7 @@ const margin = [18, 19, 21, 20, 22, 24, 23, 25, 27, 26, 28, 30];
 const growth = [4, 5, 6, 5, 7, 8, 7, 9, 10, 9, 11, 13];
 const online = [38, 44, 41, 52, 49, 58];
 ---
-<DocsLayout page="mixed-chart">
-<PageBody sections={S}>
+<DocsLayout page="mixed-chart" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Wrap a <code>&lt;table&gt;</code> in a
@@ -318,5 +316,4 @@ chart.destroy(); // remove the drawing and show the table again
         </TokenTable>
         <p>For a selective Sass build, include <code>"mixed-chart"</code> in <code>$components</code>.</p>
   </Section>
-</PageBody>
 </DocsLayout>

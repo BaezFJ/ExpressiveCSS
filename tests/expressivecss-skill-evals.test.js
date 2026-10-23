@@ -148,12 +148,6 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     }
 
     for (const item of cases) {
-      assert.ok(item.expectedCriticalInvariantIds.length, `${item.id} has no stable invariant inventory`);
-      assert.deepEqual(
-        item.criticalInvariants.map(({ id }) => id),
-        item.expectedCriticalInvariantIds,
-        `${item.id} invariant inventory differs from its definitions`,
-      );
       assert.ok(responses[item.id], `${item.id} has no replay response`);
       const result = evaluateCase(item, responses[item.id], executionEvidence[item.id]);
       assert.equal(result.status, 'pass', JSON.stringify(result, null, 2));
@@ -539,36 +533,19 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
     }
   });
 
-  test('rejects executable regular-expression assertions', () => {
-    const mutated = clone(caseData);
-    mutated.cases[0].criticalInvariants[0].operator = 'matches';
-    mutated.cases[0].criticalInvariants[0].value = '(a+)+$';
-    const validation = validateCaseDefinitions(mutated);
-    assert.equal(validation.status, 'fail');
-    assert.ok(validation.errors.some((error) => error.includes('unknown operator matches')));
-  });
-
-  test('fails closed for missing, duplicate, unknown, and unevaluated critical invariants', () => {
+  test('fails closed when the case contract is unevaluated', () => {
     const original = caseById('critique-no-edit');
-
-    const missing = clone(original);
-    missing.criticalInvariants.pop();
-    assert.equal(evaluateCase(missing, responses[original.id], executionEvidence[original.id]).status, 'fail');
-
-    const duplicate = clone(original);
-    duplicate.criticalInvariants.push(clone(duplicate.criticalInvariants[0]));
-    assert.equal(evaluateCase(duplicate, responses[original.id], executionEvidence[original.id]).status, 'fail');
-
-    const unknown = clone(original);
-    unknown.criticalInvariants[0].id = 'UNKNOWN-CRITICAL-INVARIANT';
-    unknown.expectedCriticalInvariantIds[0] = 'UNKNOWN-CRITICAL-INVARIANT';
-    assert.equal(evaluateCase(unknown, responses[original.id], executionEvidence[original.id]).status, 'fail');
-
     const unevaluated = clone(responses[original.id]);
     delete unevaluated.mode;
     const result = evaluateCase(original, unevaluated, executionEvidence[original.id]);
     assert.equal(result.status, 'fail');
-    assert.ok(result.invariants.some((item) => item.status === 'unevaluated'));
+    assert.equal(result.invariants.find((item) => item.id === 'critique-no-edit/contract')?.status, 'unevaluated');
+
+    // A case with no contract in the evaluator cannot pass its own invariant.
+    const unknown = { ...clone(original), id: 'unknown-case' };
+    const unknownResult = evaluateCase(unknown, { ...clone(responses[original.id]), caseId: 'unknown-case' }, executionEvidence[original.id]);
+    assert.equal(unknownResult.status, 'fail');
+    assert.equal(unknownResult.invariants.find((item) => item.id === 'unknown-case/contract')?.status, 'unevaluated');
   });
 
   test('rejects candidate-authored guide reads and filesystem hashes without trusted execution evidence', () => {
@@ -1123,7 +1100,7 @@ describe('ExpressiveCSS behavioral evaluation runner', () => {
         if (typeof payload.rootSkill !== 'string' || !payload.rootSkill.includes('# ExpressiveCSS')) process.exit(21);
         if (Object.hasOwn(payload, 'skillBundle')) process.exit(22);
         if (process.argv[2] !== 'argument with spaces;$HOME') process.exit(23);
-        if (Object.hasOwn(payload, 'testCase') || Object.hasOwn(payload.task, 'expectedOperatingMode') || Object.hasOwn(payload.task, 'criticalInvariants')) process.exit(24);
+        if (Object.hasOwn(payload, 'testCase') || Object.hasOwn(payload.task, 'expectedOperatingMode')) process.exit(24);
         if (payload.task.id !== 'css-only-markup-routing' || typeof payload.task.request !== 'string') process.exit(25);
         if (payload.task.projectFixture !== 'consumer-current') process.exit(26);
         if (!readFileSync(new URL('package.json', 'file://' + payload.projectRoot + '/'), 'utf8').includes('@expressivecss/expressive')) process.exit(27);

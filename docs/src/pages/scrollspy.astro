@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import OptionsTable from "../components/api/OptionsTable.astro";
@@ -16,8 +15,7 @@ const S = defineSections([
   { id: "properties", label: "Properties" },
 ]);
 ---
-<DocsLayout page="scrollspy">
-<PageBody sections={S}>
+<DocsLayout page="scrollspy" sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
           Scrollspy watches a set of sections and tracks which one is in view.
@@ -154,5 +152,4 @@ instance.destroy();
   <Section {...S.properties}>
         <PropertiesTable el="The DOM element the plugin was initialized with (the <code>.scrollspy</code> section)." />
   </Section>
-</PageBody>
 </DocsLayout>

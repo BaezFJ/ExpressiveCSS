@@ -255,8 +255,17 @@ for (const page of pages) {
 const semantics = JSON.parse(readFileSync(new URL('semantics.json', root), 'utf8'));
 const rules = enforcedRules(semantics);
 
+// Code samples are highlighted at build time with Shiki's css-variables theme,
+// whose colors docs.css maps to the color roles. Each sample must use that
+// theme and name its language, and the site must have colored tokens.
+let highlightedTokens = 0;
+
 for (const page of pages) {
   const html = readFileSync(join(site, page), 'utf8');
+  for (const [pre] of html.matchAll(/<pre class="astro-code[^>]*>/g)) {
+    if (!pre.includes('css-variables') || !/data-language="[a-z]+"/.test(pre)) fail(`${page}: a code sample is not highlighted with the css-variables theme\n    ${pre}`);
+  }
+  highlightedTokens += html.match(/var\(--astro-code-token-/g)?.length ?? 0;
   const { violations, duplicateNames } = checkPage(html, rules, semantics.compositeRoles);
   for (const v of violations) {
     fail(`${page}: [${v.rule.id}] ${v.rule.message}\n    ${v.tag}`);
@@ -265,6 +274,8 @@ for (const page of pages) {
     fail(`${page}: two landmarks named "${name}"`);
   }
 }
+
+if (!highlightedTokens) fail('no code sample has a highlighted token');
 
 // --- Result ----------------------------------------------------------------
 

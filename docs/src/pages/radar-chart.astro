@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -24,8 +23,7 @@ const satisfaction: [string, number, number][] = [["Communication", 92, 80], ["Q
 const quarters: [string, number, number][] = [["Q1", 820, 700], ["Q2", 940, 780], ["Q3", 1080, 860], ["Q4", 1260, 960]];
 const average = (values: number[]) => (values.reduce((total, value) => total + value, 0) / values.length).toFixed(1);
 ---
-<DocsLayout page="radar-chart">
-<PageBody sections={S}>
+<DocsLayout page="radar-chart" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>&lt;figure class="radar-chart"&gt;</code> draws a
@@ -270,5 +268,4 @@ chart.destroy(); // remove the drawing and show the table again
         </TokenTable>
         <p>For a selective Sass build, include <code>"radar-chart"</code> in <code>$components</code>.</p>
   </Section>
-</PageBody>
 </DocsLayout>

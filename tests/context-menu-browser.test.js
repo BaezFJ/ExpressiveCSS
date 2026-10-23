@@ -1,12 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
-import { leaseBrowser } from './browser.js';
+import { readFileSync } from 'node:fs';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 const markup = `<!doctype html><html lang="en"><head><style>${css} body { margin: 0 }</style></head><body>
 <main>
@@ -19,9 +17,8 @@ const markup = `<!doctype html><html lang="en"><head><style>${css} body { margin
   <button id="outside" style="position:absolute; left:740px; top:560px">Outside</button>
 </main></body></html>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: context menu opens at the pointer, flips at the viewport edge and closes from outside`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
@@ -100,9 +97,8 @@ const regions = `<!doctype html><html lang="en"><head><style>${css} body { margi
   <menu id="outer-menu"><li><button type="button" id="outer-item">Outer action</button></li></menu>
 </main></body></html>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: context menus return focus to its owner, keep nested regions apart and stay open for their own right-click`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
@@ -151,9 +147,8 @@ const bounded = `<!doctype html><html lang="en"><head><style>${css} body { margi
   <menu id="tall-menu">${items(20)}</menu>
 </main></body></html>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: context menus stay inside their container and the window, scroll when tall and open at the corner without a pointer`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 600 } });

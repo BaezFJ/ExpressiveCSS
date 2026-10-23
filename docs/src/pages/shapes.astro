@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -25,8 +24,7 @@ const shapes = [
   "scallop-12", "bloom-4", "bloom-8", "spike", "flare",
 ];
 ---
-<DocsLayout page="shapes">
-<PageBody sections={S}>
+<DocsLayout page="shapes" sections={S}>
   <Section {...S.gallery}>
     <p>Add a <code>.shape-*</code> class to cut an element to one of twenty rounded shapes.
       The set follows the Material 3 Expressive shape library. The shape is a mask, so it
@@ -124,7 +122,6 @@ const shapes = [
 <div class="bordered corner-large corner-cut">One cut panel</div>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>
 
 <style>

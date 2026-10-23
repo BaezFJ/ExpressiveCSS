@@ -169,9 +169,9 @@ function renderComponent(name, c) {
 // Only when run as a command. Without this guard, `import { render }` from the
 // test would rewrite SEMANTICS.md on import - and the drift test would then
 // compare the file against the copy it had just written, and always pass.
-const isMain = process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1];
-
-if (isMain) {
+// Node 20 has no import.meta.main, and a check that silently did nothing there
+// would pass, so it falls back to comparing paths.
+if (import.meta.main ?? process.argv[1] === fileURLToPath(import.meta.url)) {
   const out = render(JSON.parse(readFileSync(DATA, 'utf8')));
   if (process.argv.includes('--check')) {
     let current = '';

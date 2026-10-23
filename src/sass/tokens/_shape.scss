@@ -10,8 +10,6 @@
 // A component token still wins for one component. `full` is a pill at any
 // height the framework draws; a true circle on a square box is `.circle`.
 
-@use "../abstracts" as *;
-
 :root,
 :host {
   --md-sys-shape-corner-none: 0px;

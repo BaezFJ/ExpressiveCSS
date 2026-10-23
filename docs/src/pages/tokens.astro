@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -11,8 +10,7 @@ const S = defineSections([
   { id: "overriding", label: "Overriding" },
 ]);
 ---
-<DocsLayout page="tokens">
-<PageBody sections={S}>
+<DocsLayout page="tokens" sections={S}>
   <Section {...S.about}>
         <p class="flow-text">
           Every design decision in the framework is a CSS custom property, so you can override it at runtime without a rebuild. System tokens use Material 3 names (<code>--md-sys-*</code> and <code>--md-ref-*</code>). Components read them through their own <code>--md-comp-*</code> tokens, which you set to change one component at a time.
@@ -52,5 +50,4 @@ const S = defineSections([
 </style>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

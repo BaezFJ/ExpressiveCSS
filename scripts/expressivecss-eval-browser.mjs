@@ -1,5 +1,5 @@
 import { createBrowserSession } from './lib/consumer-browser.mjs';
-import { createHash, randomBytes } from 'node:crypto';
+import { randomBytes, hash } from 'node:crypto';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { createServer } from 'node:http';
 import { createRequire } from 'node:module';
@@ -76,7 +76,7 @@ export async function captureFixtureScreenshot(page, directory, id, limits) {
   if (bytes.byteLength > limits.screenshot) throw new Error('Capture exceeds screenshot byte limit');
   const file = path.resolve(directory, `${id}.png`);
   await writeFile(file, bytes, { flag: 'wx' });
-  return { path: file, sha256: createHash('sha256').update(bytes).digest('hex'), bytes: bytes.byteLength };
+  return { path: file, sha256: hash('sha256', bytes), bytes: bytes.byteLength };
 }
 
 /** The evaluator owns the browser and records. Candidate responses are never verification evidence. */
@@ -138,7 +138,7 @@ export async function startEvaluationBrowser({ projectRoot, artifactDirectory })
           if (screenshot.byteLength > LIMITS.image) throw new Error('Browser screenshot exceeds output limit');
           const screenshotFile = path.resolve(artifactDirectory, `${id}.png`);
           await writeFile(screenshotFile, screenshot, { flag: 'wx' });
-          return { ...data, fullPage: input.fullPage ?? false, remainingCalls: Math.max(0, LIMITS.calls - calls), screenshot: screenshotFile, screenshotSha256: createHash('sha256').update(screenshot).digest('hex') };
+          return { ...data, fullPage: input.fullPage ?? false, remainingCalls: Math.max(0, LIMITS.calls - calls), screenshot: screenshotFile, screenshotSha256: hash('sha256', screenshot) };
         })(), new Promise((_, reject) => { timer = setTimeout(() => { capability.status = 'unavailable'; capability.error = `Browser action timed out after ${LIMITS.timeout} ms; browser closed`; void browser.close().catch(() => {}); reject(new Error(capability.error)); }, LIMITS.timeout); })]);
         record.status = 'success'; record.result = result;
         return { content: [{ type: 'text', text: JSON.stringify(result) }] };

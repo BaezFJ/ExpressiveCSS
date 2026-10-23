@@ -1,19 +1,18 @@
 #!/usr/bin/env node
 // Operator evidence only. Candidate verification claims never establish acceptance.
-import { createHash } from 'node:crypto';
+import { hash } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { parseArgs, promisify } from 'node:util';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { pathToFileURL } from 'node:url';
 import { snapshotProject } from './expressivecss-codex-adapter.mjs';
 import { assertSameProvenance, validateRetainedResults } from './expressivecss-eval-provenance.mjs';
 import { readBoundedRegularFile } from './lib/bounded-file.mjs';
 import { saveJson } from './lib/save-json.mjs';
 import { statistics } from './benchmark-expressivecss-skill.mjs';
 
-const sha256 = value => createHash('sha256').update(value).digest('hex');
+const sha256 = value => hash('sha256', value);
 const save = (filename, value) => saveJson(filename, value, 'wx');
 const readJson = async filename => JSON.parse(await readBoundedRegularFile(filename, 16 * 1024 * 1024, 'operator cost evidence'));
 const runId = row => `eval-${row.eval_name}-${row.configuration}-run-${row.run_number}`;
@@ -117,7 +116,7 @@ export async function exportAssistanceEvidence({ source, output, reviews = null 
   return report;
 }
 
-if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url) {
+if (import.meta.main) {
   const { values: args } = parseArgs({ options: { source: { type: 'string' }, output: { type: 'string' }, reviews: { type: 'string' } } });
   if (!args.source || !args.output) throw new Error('--source and --output are required; --reviews is optional');
   const report = await exportAssistanceEvidence(args);

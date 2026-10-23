@@ -1,11 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
+import { readFileSync } from 'node:fs';
+import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 const keys = (letters) => [...letters].map((c) => `<button type="button" value="${c}">${c}</button>`).join('');
 const digits = keys('123456789');
@@ -57,9 +56,8 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
 </div>
 </body></html>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: keypad and keyboard type at the caret, edit, submit, shift and lay out their keys`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     let page;
     try {
@@ -290,7 +288,6 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
   });
 
   test(`${name}: keyboard caps lock, symbol layers, hardware key highlight and minlength`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage();

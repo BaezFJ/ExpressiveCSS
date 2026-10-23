@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -12,8 +11,7 @@ const S = defineSections([
   { id: "alias", label: "List alias" },
 ]);
 ---
-<DocsLayout page="pagination">
-<PageBody sections={S}>
+<DocsLayout page="pagination" sections={S}>
   <Section {...S.basic}>
         <p class="flow-text">
           Build pagination as a <code>nav.pagination</code> whose child is an
@@ -166,5 +164,4 @@ const S = defineSections([
 </ul>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

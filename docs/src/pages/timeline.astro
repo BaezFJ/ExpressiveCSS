@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -12,8 +11,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="timeline">
-<PageBody sections={S}>
+<DocsLayout page="timeline" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           An <code>&lt;ol class="timeline"&gt;</code> lists events in order.
@@ -93,5 +91,4 @@ const S = defineSections([
           <tr><td><code>--md-comp-timeline-gap</code></td><td>24px</td></tr>
         </TokenTable>
   </Section>
-</PageBody>
 </DocsLayout>

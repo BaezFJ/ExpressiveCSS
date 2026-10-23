@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import InstanceNote from "../components/api/InstanceNote.astro";
@@ -23,8 +22,7 @@ const S = defineSections([
   { id: "icons", label: "Inline icons" },
 ]);
 ---
-<DocsLayout page="tabs">
-<PageBody sections={S}>
+<DocsLayout page="tabs" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Build the bar from a <code>&lt;nav class="tabs"&gt;</code> of
@@ -285,7 +283,7 @@ instance.destroy();
           panel positions and the state owned by Tabs.
         </p>
         <p>This demo is marked <code>no-autoinit</code> and started with <code>swipeable: true</code>.</p>
-        <nav id="tabs-swipe" class="tabs no-autoinit" aria-label="Swipe demo">
+        <nav id="tabs-swipe" data-tabs-options='{"swipeable": true}' class="tabs" aria-label="Swipe demo">
           <a href="#tabs-swipe-1">Test 1</a>
           <a class="active" aria-current="page" href="#tabs-swipe-2">Test 2</a>
           <a href="#tabs-swipe-3">Test 3</a>
@@ -361,5 +359,4 @@ Expressive.Tabs.init(document.querySelector('#tabs-swipe-demo'), {
 </nav>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import OptionsTable from "../components/api/OptionsTable.astro";
@@ -13,10 +12,9 @@ const S = defineSections([
   { id: "lightbox", label: "Lightbox", heading: false },
 ]);
 ---
-<DocsLayout page="media">
+<DocsLayout page="media" sections={S}>
 <p>Lightbox supports Space and native button activation. On destroy it cancels pending animation callbacks and keeps the original image. It does not supply a modal-gallery focus contract.</p>
 
-<PageBody sections={S}>
   <Section {...S.lightbox}>
         <p class="flow-text">
           Media components handle large objects such as images. For responsive images and videos without JavaScript, see
@@ -149,5 +147,4 @@ instance.destroy();
      src="images/sample-2.jpg">
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

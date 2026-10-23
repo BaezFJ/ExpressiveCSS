@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import OptionsTable from "../components/api/OptionsTable.astro";
@@ -52,8 +51,7 @@ for (const delay of [0, 100, 200]) {
   }, delay);
 }`;
 ---
-<DocsLayout page="confetti">
-<PageBody sections={S}>
+<DocsLayout page="confetti" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Confetti marks a moment worth celebrating, such as a finished order
@@ -169,7 +167,6 @@ confetti.fire({ spread: 90 });       // this canvas, or from this button's cente
 confetti.destroy();                  // removes the click handler, or clears the canvas
 `} />
   </Section>
-</PageBody>
 <script is:inline>
 // The bundle loads after the page body.
 document.addEventListener('DOMContentLoaded', () => {

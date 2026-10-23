@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -13,8 +12,7 @@ const S = defineSections([
   { id: "sizes", label: "Sizes" },
 ]);
 ---
-<DocsLayout page="icons">
-<PageBody sections={S}>
+<DocsLayout page="icons" sections={S}>
   <li slot="toc-extra"><a href="https://fonts.google.com/icons?icon.set=Material+Symbols" target="_blank" rel="noopener">Catalog</a></li>
   <Section {...S.usage}>
         <p class="flow-text">
@@ -194,5 +192,4 @@ const S = defineSections([
 <span class="material-symbols large" aria-hidden="true">insert_chart</span>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -28,8 +27,7 @@ const actions = [
   ["toggleBlockquote", "", "Quote", "format_quote"],
 ];
 ---
-<DocsLayout page="rich_text_editor">
-<PageBody sections={S}>
+<DocsLayout page="rich_text_editor" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>.rich-text-editor</code> turns a <code>&lt;textarea&gt;</code>
@@ -173,7 +171,6 @@ instance.destroy(); // removes the editor and shows the textarea again
           <tr><td><code>--md-comp-rich-text-editor-shape</code></td><td>16px</td></tr>
         </TokenTable>
   </Section>
-</PageBody>
 <script is:inline type="module">
 // ExpressiveCSS does not bundle Tiptap; the docs load a pinned copy.
 import { Editor } from 'https://esm.sh/@tiptap/core@3.31.4';

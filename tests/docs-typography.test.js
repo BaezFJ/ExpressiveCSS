@@ -53,7 +53,7 @@ describe('Documentation typography', () => {
 
   test('keeps the wide Panes page on the shared content and TOC scaffold', () => {
     assert.match(pageBody, /class:list=\{\["docs-page-content", \{ wide \}\]\}/);
-    assert.match(panes, /<PageBody sections=\{S\} wide>/);
+    assert.match(panes, /<DocsLayout page="panes" sections=\{S\} wide>/);
     assert.match(docsCss, /\.docs-page:has\(> \.docs-page-content\.wide\)/);
     assert.doesNotMatch(panes, /panes-page-(?:body|toc)/);
   });

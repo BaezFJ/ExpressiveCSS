@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -16,8 +15,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="navigation_rail">
-<PageBody sections={S}>
+<DocsLayout page="navigation_rail" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>nav.navigation-rail</code> holds 3 to 7 destinations plus an
@@ -253,5 +251,4 @@ const S = defineSections([
             <tr><td><code>--md-comp-nav-rail-panel-width</code></td><td>256px</td></tr>
         </TokenTable>
   </Section>
-</PageBody>
 </DocsLayout>

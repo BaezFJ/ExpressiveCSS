@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -12,8 +11,7 @@ const S = defineSections([
   { id: "shapes", label: "Two shapes" },
 ]);
 ---
-<DocsLayout page="state_layers">
-<PageBody sections={S}>
+<DocsLayout page="state_layers" sections={S}>
   <Section {...S.about}>
     <p class="flow-text">
       A state layer is the translucent wash a component paints over itself to show that you are
@@ -67,5 +65,5 @@ const S = defineSections([
       buttons have no room for one, so they draw it as a ring growing out from the control's edge
       to the state layer size. Both read the same opacity, so they stay in step.
     </p>
-  </Section></PageBody>
+  </Section>
 </DocsLayout>

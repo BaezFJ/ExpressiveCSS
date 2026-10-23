@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -13,8 +12,7 @@ const S = defineSections([
   { id: "responsive", label: "Responsive", heading: "Responsive table" },
 ]);
 ---
-<DocsLayout page="table">
-<PageBody sections={S}>
+<DocsLayout page="table" sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
           Use a table to organize a lot of data. A few utility classes change how it looks.
@@ -217,5 +215,4 @@ const S = defineSections([
           </tbody>
         </table>
   </Section>
-</PageBody>
 </DocsLayout>

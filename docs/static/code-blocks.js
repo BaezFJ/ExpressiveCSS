@@ -1,4 +1,4 @@
-// Syntax highlighting and copy controls for documentation samples.
+// Language labels and copy controls for documentation samples.
 (function enhanceCodeBlocks() {
   const LANGUAGE_LABELS = {
     bash: 'Shell',
@@ -7,44 +7,6 @@
     javascript: 'JavaScript',
     plaintext: 'Text',
     scss: 'SCSS',
-  };
-
-  const detectLanguage = (source) => {
-    const text = source.trim();
-    if (/^<[!/a-z]/i.test(text)) return 'html';
-    if (/^@use\b/.test(text)) return 'scss';
-    if (
-      /^(?:@media\b|:root\b|(?:html|body)(?:\s|,|\{)|[.#][\w-]+[\s:{.#>[+~])/i.test(text)
-    ) {
-      return 'css';
-    }
-    if (/^(?:npm|npx|pnpm|yarn)\s/.test(text)) return 'bash';
-    if (
-      /\b(?:const|let|var|function|import|new|document|Expressive)\b|^(?:instance|dialog|list)\./m.test(
-        text
-      )
-    ) {
-      return 'javascript';
-    }
-    return 'plaintext';
-  };
-
-  const copyText = async (source) => {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(source);
-      return;
-    }
-
-    const textarea = document.createElement('textarea');
-    textarea.value = source;
-    textarea.setAttribute('readonly', '');
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
-    document.body.append(textarea);
-    textarea.select();
-    const copied = document.execCommand?.('copy');
-    textarea.remove();
-    if (!copied) throw new Error('Copy is not available');
   };
 
   const setCopyState = (button, state) => {
@@ -81,7 +43,7 @@
     button.addEventListener('click', async () => {
       window.clearTimeout(resetTimer);
       try {
-        await copyText(source);
+        await navigator.clipboard.writeText(source);
         setCopyState(button, 'copied');
       } catch {
         setCopyState(button, 'error');
@@ -92,12 +54,6 @@
     return button;
   };
 
-  if (window.hljs) {
-    window.hljs.configure({
-      languages: ['xml', 'css', 'scss', 'javascript', 'bash', 'plaintext'],
-    });
-  }
-
   // A sample wider than its block scrolls sideways. Chromium and Firefox put
   // such a scroller in the Tab order on their own; WebKit does not, so the
   // keyboard could never reach the hidden part. Only overflowing blocks get
@@ -106,29 +62,26 @@
     if (pre.scrollWidth > pre.clientWidth) pre.tabIndex = 0;
     else pre.removeAttribute('tabindex');
   };
-  const scrollStops = window.ResizeObserver
-    ? new ResizeObserver((entries) => entries.forEach((entry) => syncScrollStop(entry.target)))
-    : null;
+  const scrollStops = new ResizeObserver((entries) =>
+    entries.forEach((entry) => syncScrollStop(entry.target))
+  );
 
-  document.querySelectorAll('pre > code').forEach((code) => {
+  // Code.astro highlights each sample at build time and records its language.
+  document.querySelectorAll('pre[data-language] > code').forEach((code) => {
     const pre = code.parentElement;
-    if (!pre || pre.parentElement?.classList.contains('code-block')) return;
+    if (pre.parentElement?.classList.contains('code-block')) return;
 
     const source = code.textContent;
-    const language = detectLanguage(source);
-    code.classList.add(`language-${language}`);
-    window.hljs?.highlightElement(code);
-
     const wrapper = document.createElement('div');
     const languageLabel = document.createElement('span');
     wrapper.className = 'code-block';
     languageLabel.className = 'code-language';
-    languageLabel.textContent = LANGUAGE_LABELS[language];
+    languageLabel.textContent = LANGUAGE_LABELS[pre.dataset.language];
     languageLabel.setAttribute('aria-hidden', 'true');
 
     pre.before(wrapper);
     wrapper.append(languageLabel, makeCopyButton(source), pre);
     syncScrollStop(pre);
-    scrollStops?.observe(pre);
+    scrollStops.observe(pre);
   });
 })();

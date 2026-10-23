@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -61,9 +60,8 @@ const controls = `
     </div>
   </div>`;
 ---
-<DocsLayout page="map">
+<DocsLayout page="map" sections={S}>
 <link slot="head" rel="stylesheet" href={`${MAPLIBRE}/maplibre-gl.css`}>
-<PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>.map</code> is an interactive map built on
@@ -339,7 +337,6 @@ instance.destroy(); // removes the map and puts the markup back
           <tr><td><code>--md-comp-map-control-offset</code></td><td>12px</td></tr>
         </TokenTable>
   </Section>
-</PageBody>
 <script is:inline type="module">
 // ExpressiveCSS does not bundle MapLibre; the docs load a pinned copy.
 import * as maplibregl from 'https://unpkg.com/maplibre-gl@6.13.0/dist/maplibre-gl.mjs';

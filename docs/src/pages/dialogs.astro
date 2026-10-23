@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -15,8 +14,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="dialogs">
-<PageBody sections={S}>
+<DocsLayout page="dialogs" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Use a dialog when people need to act on information: to confirm a
@@ -254,5 +252,4 @@ dialog.close();
               <td><code>--md-sys-color-scrim</code> at 32%</td>
             </tr>
   </TokenTable>  </Section>
-</PageBody>
 </DocsLayout>

@@ -48,9 +48,9 @@ describe('ExpressiveCSS version resolution', () => {
           assert.deepEqual(result[key], expected, `${fixture.name}: ${key}`);
         }
       }
-      assert.equal(result.declaredRange, result.declaredVersion);
+      for (const removed of ['declaredVersion', 'skillContractVersion', 'matchingCommit']) assert.equal(removed in result, false, removed);
       assert.equal(result.exactInstalledVersion, result.resolutionSource === 'installed-package' ? result.resolvedVersion : null);
-      assert.equal(result.skillContractVersion, fixture.contractVersion);
+      assert.equal(result.contractVersion, fixture.contractVersion);
       assert.equal(result.currentDocsSafe, false);
       assert.equal(result.documentationSources.current.available, false);
       assert.equal(result.bundledContractSafe, fixture.expected.bundledContractSafe ?? false);
@@ -555,7 +555,7 @@ describe('ExpressiveCSS version resolution', () => {
     ], { encoding: 'utf8' });
     assert.equal(result.status, 0, result.stderr);
     const output = JSON.parse(result.stdout);
-    assert.equal(output.skillContractVersion, frameworkVersion);
+    assert.equal(output.contractVersion, frameworkVersion);
     assert.equal(output.contractSourceHash, contracts[0].sourceHash);
     assert.equal(output.contractStatus, 'match');
     assert.equal(output.documentationMode, 'bundled');
@@ -655,22 +655,22 @@ describe('ExpressiveCSS version resolution', () => {
       );
     }
 
-    for (const [outputs, diagnostic] of [
-      [['skills/expressivecss/scripts/resolve-version.mjs', 'mcp/expressivecss/scripts/resolve-version.mjs'], 'Generated version resolver is stale:'],
-      [['skills/expressivecss/scripts/verify-consumer.mjs'], 'Generated consumer tool is stale: verify-consumer.mjs'],
-      [['skills/expressivecss/references/component-decisions.md'], 'Generated component decision index is stale.'],
-      [['skills/expressivecss/references/contract.json', 'mcp/expressivecss/contract.json'], 'Generated contract manifest is stale:'],
-      [['skills/expressivecss/references/capability-roadmap.json'], 'Generated capability roadmap is stale: capability-roadmap.json'],
+    for (const outputs of [
+      ['skills/expressivecss/scripts/resolve-version.mjs', 'mcp/expressivecss/scripts/resolve-version.mjs'],
+      ['skills/expressivecss/scripts/verify-consumer.mjs'],
+      ['skills/expressivecss/references/component-decisions.md'],
+      ['skills/expressivecss/references/contract.json', 'mcp/expressivecss/contract.json'],
+      ['skills/expressivecss/references/capability-roadmap.json'],
     ]) {
       const originals = await Promise.all(outputs.map(output => readFile(path.join(projectRoot, output), 'utf8')));
       try {
         for (const output of outputs) await writeFile(path.join(projectRoot, output), 'stale');
         const checked = spawnSync(process.execPath, ['scripts/gen-expressivecss-skill.mjs', '--check'], { cwd: projectRoot, encoding: 'utf8' });
         assert.notEqual(checked.status, 0);
-        assert.ok(checked.stderr.includes(diagnostic), checked.stderr);
+        assert.ok(checked.stderr.includes('Generated files are stale:'), checked.stderr);
         for (const output of outputs) {
           assert.equal(await readFile(path.join(projectRoot, output), 'utf8'), 'stale', '--check must not repair files');
-          if (outputs.length > 1) assert.ok(checked.stderr.includes(path.join(projectRoot, output)), 'report every stale copy');
+          assert.ok(checked.stderr.includes(path.join(projectRoot, output)), 'report every stale copy');
         }
       } finally {
         for (const [index, output] of outputs.entries()) await writeFile(path.join(projectRoot, output), originals[index]);

@@ -1,10 +1,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
+import { readFileSync } from 'node:fs';
+import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><style>${css} body { margin: 0 }</style></head><body>
 <main>
@@ -22,9 +21,8 @@ const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><styl
   <div id="cp" class="popover" popover>Flipped into the viewport</div>
 </main></body></html>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: popover anchors to its button, flips at the edge and stays open while used`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 600 }, reducedMotion: 'reduce' });
@@ -100,9 +98,8 @@ for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filte
 // position-area turned off, as an engine without the feature would.
 const fallback = css.match(/@supports not \(anchor-name: --a\) \{([^]*?\})\s*\}/)?.[1];
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: without anchor positioning a popover is centered in the viewport, not left in its corner`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     assert.ok(fallback, 'the stylesheet has an @supports not (anchor-name) fallback');
     const browser = await engine.launch({ headless: true });
     try {

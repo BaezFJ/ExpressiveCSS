@@ -30,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const navigationDialog = document.getElementById("docs-navigation-dialog");
   const navigationTrigger = document.getElementById("docs-navigation-trigger");
-  navigationTrigger?.addEventListener("click", () => navigationDialog?.showModal());
   // Return focus to the menu button, or to the current group in the rail
   // when the window has grown past the button's range.
   navigationDialog?.addEventListener("close", () => {
@@ -254,54 +253,6 @@ document.addEventListener("DOMContentLoaded", () => {
     flowDemo?.classList.toggle("flow-text");
   });
 
-  const menuLeft = document.getElementById("menu-left-trigger");
-  if (menuLeft) {
-    Expressive.Menu.init(menuLeft, {
-      alignment: "left",
-      constrainWidth: false,
-    });
-  }
-
-  ["menu-standard-trigger", "menu-grouped-trigger"].forEach((id) => {
-    const trigger = document.getElementById(id);
-    if (trigger) {
-      Expressive.Menu.init(trigger, { constrainWidth: false });
-    }
-  });
-
-  const menuRight = document.getElementById("menu-right-trigger");
-  if (menuRight) {
-    Expressive.Menu.init(menuRight, {
-      alignment: "right",
-      constrainWidth: false,
-    });
-  }
-
-  const menuHover = document.getElementById("menu-hover-trigger");
-  if (menuHover) {
-    Expressive.Menu.init(menuHover, {
-      hover: true,
-      constrainWidth: false,
-    });
-  }
-
-  const menuNested = document.getElementById("menu-nested-trigger");
-  if (menuNested) {
-    Expressive.Menu.init(menuNested, {
-      constrainWidth: false,
-      coverTrigger: false,
-    });
-  }
-
-  document.querySelectorAll("#menu-rich-trigger, #menu-radio-trigger").forEach((trigger) => {
-    Expressive.Menu.init(trigger, { constrainWidth: false });
-  });
-
-  const menuVibrant = document.getElementById("menu-vibrant-trigger");
-  if (menuVibrant) {
-    Expressive.Menu.init(menuVibrant, { constrainWidth: false });
-  }
-
   const carouselMotion = document.getElementById("carousel-motion");
   if (carouselMotion) {
     const carousel = Expressive.Carousel.init(carouselMotion, { interval: 4000, height: 200 });
@@ -315,115 +266,51 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const swipeTabs = document.getElementById("tabs-swipe");
-  if (swipeTabs) {
-    Expressive.Tabs.init(swipeTabs, { swipeable: true });
-  }
-
-  document.getElementById("snackbar-basic")?.addEventListener("click", () => {
-    new Expressive.Snackbar({ text: "Photo saved to album" });
-  });
-
-  document.getElementById("snackbar-action")?.addEventListener("click", () => {
-    new Expressive.Snackbar({
-      text: "Item archived",
-      action: "Undo",
-      onAction: () => {
-        new Expressive.Snackbar({ text: "Item restored" });
-      },
-    });
-  });
-
-  document.getElementById("snackbar-close")?.addEventListener("click", () => {
-    new Expressive.Snackbar({
-      text: "Can't send photo. Retry in 5 seconds.",
-      action: "Retry",
-      dismissible: true,
-    });
-  });
-
-  document.getElementById("snackbar-static")?.addEventListener("click", () => {
-    const el = document.getElementById("static-snackbar");
-    if (!el) return;
-    el.classList.add("active");
-    window.clearTimeout(el._hideTimer);
-    el._hideTimer = window.setTimeout(
-      () => el.classList.remove("active"),
-      4000,
-    );
-  });
-
-  document.getElementById("snackbar-html-1")?.addEventListener("click", () => {
-    new Expressive.Snackbar({ snackbarId: "my-snackbar-1", displayLength: Infinity, dismissible: true });
-  });
-
-  document.getElementById("snackbar-html-2")?.addEventListener("click", () => {
-    new Expressive.Snackbar({ snackbarId: "my-snackbar-2" });
-  });
-
-  document
-    .getElementById("snackbar-callback")
-    ?.addEventListener("click", () => {
+  // Each snackbar demo button and what it does.
+  Object.entries({
+    "snackbar-basic": () => new Expressive.Snackbar({ text: "Photo saved to album" }),
+    "snackbar-action": () =>
+      new Expressive.Snackbar({
+        text: "Item archived",
+        action: "Undo",
+        onAction: () => new Expressive.Snackbar({ text: "Item restored" }),
+      }),
+    "snackbar-close": () =>
+      new Expressive.Snackbar({ text: "Can't send photo. Retry in 5 seconds.", action: "Retry", dismissible: true }),
+    "snackbar-static": () => {
+      const el = document.getElementById("static-snackbar");
+      el.classList.add("active");
+      window.clearTimeout(el._hideTimer);
+      el._hideTimer = window.setTimeout(() => el.classList.remove("active"), 4000);
+    },
+    "snackbar-html-1": () =>
+      new Expressive.Snackbar({ snackbarId: "my-snackbar-1", displayLength: Infinity, dismissible: true }),
+    "snackbar-html-2": () => new Expressive.Snackbar({ snackbarId: "my-snackbar-2" }),
+    "snackbar-callback": () =>
       new Expressive.Snackbar({
         text: "I will call back when dismissed",
-        completeCallback: () => {
-          new Expressive.Snackbar({ text: "Your snackbar was dismissed" });
-        },
-      });
+        completeCallback: () => new Expressive.Snackbar({ text: "Your snackbar was dismissed" }),
+      }),
+    "snackbar-rounded": () => new Expressive.Snackbar({ text: "I am a snackbar!", classes: "rounded" }),
+    "snackbar-top": () => new Expressive.Snackbar({ text: "Posted from the top", classes: "top" }),
+    "snackbar-dismiss-show": () => new Expressive.Snackbar({ text: "I am a snackbar!" }),
+    "snackbar-dismiss-one": () =>
+      Expressive.Snackbar.getInstance(document.querySelector("#snackbar-container .snackbar"))?.dismiss(),
+    "snackbar-dismiss-all": () => Expressive.Snackbar.dismissAll(),
+  }).forEach(([id, show]) => document.getElementById(id)?.addEventListener("click", show));
+
+  // Markup sets the other pickers' options; these take values it cannot.
+  const datepickerRange = document.getElementById("datepicker-range");
+  if (datepickerRange) {
+    Expressive.Datepicker.init(datepickerRange, {
+      openByDefault: true,
+      isDateRange: true,
+      dateRangeEndEl: "#datepicker-range-end",
     });
+  }
 
-  document.getElementById("snackbar-rounded")?.addEventListener("click", () => {
-    new Expressive.Snackbar({ text: "I am a snackbar!", classes: "rounded" });
-  });
-
-  document.getElementById("snackbar-top")?.addEventListener("click", () => {
-    new Expressive.Snackbar({ text: "Posted from the top", classes: "top" });
-  });
-
-  document
-    .getElementById("snackbar-dismiss-show")
-    ?.addEventListener("click", () => {
-      new Expressive.Snackbar({ text: "I am a snackbar!" });
-    });
-
-  document
-    .getElementById("snackbar-dismiss-one")
-    ?.addEventListener("click", () => {
-      const snackbarElement = document.querySelector(
-        "#snackbar-container .snackbar",
-      );
-      Expressive.Snackbar.getInstance(snackbarElement)?.dismiss();
-    });
-
-  document
-    .getElementById("snackbar-dismiss-all")
-    ?.addEventListener("click", () => {
-      Expressive.Snackbar.dismissAll();
-    });
-
-  const initDatepicker = (id, options) => {
-    const el = document.getElementById(id);
-    if (el) Expressive.Datepicker.init(el, options);
-  };
-  initDatepicker("datepicker-intro", { openByDefault: true });
-  initDatepicker("datepicker-range", {
-    openByDefault: true,
-    isDateRange: true,
-    dateRangeEndEl: "#datepicker-range-end",
-  });
-  initDatepicker("datepicker-multi", {
-    openByDefault: true,
-    isMultipleSelection: true,
-  });
-
-  Object.entries({
-    "timepicker-24": { twelveHour: false },
-    "timepicker-seconds": { showSeconds: true },
-    "timepicker-range": { minTime: "09:00", maxTime: "17:30" },
-  }).forEach(([id, options]) => {
-    const el = document.getElementById(id);
-    if (el) Expressive.Timepicker.init(el, options);
-  });
+  const timepickerRange = document.getElementById("timepicker-range");
+  if (timepickerRange) Expressive.Timepicker.init(timepickerRange, { minTime: "09:00", maxTime: "17:30" });
 
   document
     .querySelectorAll("#input_text_counter, #textarea_counter")
@@ -455,10 +342,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  const chipsEmpty = document.getElementById("chips-empty");
-  if (chipsEmpty) {
-    Expressive.Chips.init(chipsEmpty, { allowUserInput: true });
-  }
   const chipsInitial = document.getElementById("chips-initial");
   if (chipsInitial) {
     Expressive.Chips.init(chipsInitial, {
@@ -466,29 +349,11 @@ document.addEventListener("DOMContentLoaded", () => {
       data: [{ id: "Apple" }, { id: "Microsoft" }, { id: "Google" }],
     });
   }
-  const chipsPlaceholder = document.getElementById("chips-placeholder");
-  if (chipsPlaceholder) {
-    Expressive.Chips.init(chipsPlaceholder, {
-      allowUserInput: true,
-      placeholder: "Enter a tag",
-      secondaryPlaceholder: "+Tag",
-    });
-  }
   const chipsAutocomplete = document.getElementById("chips-autocomplete");
   if (chipsAutocomplete) {
     Expressive.Chips.init(chipsAutocomplete, {
       allowUserInput: true,
-      autocompleteOptions: {
-        data: [
-          { id: 12, text: "Apple" },
-          { id: 13, text: "Microsoft" },
-          {
-            id: 42,
-            text: "Google",
-            image: "https://picsum.photos/id/64/250/250",
-          },
-        ],
-      },
+      autocompleteOptions: { data: autocompleteData },
     });
   }
 

@@ -8,7 +8,7 @@ const script = readFileSync(
   'utf8'
 );
 
-function docsPage(markup, { clipboard = true, highlighter = true, scrollWidth = 0 } = {}) {
+function docsPage(markup, { scrollWidth = 0 } = {}) {
   const dom = new JSDOM(`<!doctype html><body>${markup}</body>`, {
     runScripts: 'dangerously',
     url: 'https://docs.example.test/',
@@ -18,54 +18,36 @@ function docsPage(markup, { clipboard = true, highlighter = true, scrollWidth = 
     configurable: true,
     get: () => scrollWidth,
   });
+  // Nor a ResizeObserver; the width never changes here anyway.
+  dom.window.ResizeObserver = class { observe() {} };
   const writes = [];
-  const highlighted = [];
-
-  if (clipboard) {
-    Object.defineProperty(dom.window.navigator, 'clipboard', {
-      configurable: true,
-      value: { writeText: async (value) => writes.push(value) },
-    });
-  }
-  if (highlighter) {
-    dom.window.hljs = {
-      configure() {},
-      highlightElement(code) {
-        highlighted.push(code.className);
-        code.innerHTML = `<span class="hljs-tag">${code.innerHTML}</span>`;
-      },
-    };
-  }
-
+  Object.defineProperty(dom.window.navigator, 'clipboard', {
+    configurable: true,
+    value: { writeText: async (value) => writes.push(value) },
+  });
   dom.window.eval(script);
-  return { dom, highlighted, writes };
+  return { dom, writes };
 }
 
 describe('documentation code blocks', () => {
-  test('adds a language label, highlighting, and one copy control', () => {
-    const { dom, highlighted } = docsPage(
-      '<pre><code>&lt;button&gt;Save&lt;/button&gt;</code></pre>'
+  test('adds a language label and one copy control', () => {
+    const { dom } = docsPage(
+      '<pre data-language="html"><code>&lt;button&gt;Save&lt;/button&gt;</code></pre>'
     );
     const { document } = dom.window;
 
     assert.equal(document.querySelectorAll('.code-block').length, 1);
     assert.equal(document.querySelector('.code-language').textContent, 'HTML');
-    assert.equal(
-      document.querySelector('code').classList.contains('language-html'),
-      true
-    );
-    assert.deepEqual(highlighted, ['language-html']);
     assert.equal(document.querySelectorAll('.code-copy-button').length, 1);
 
-    // Re-running the enhancer must not duplicate controls or re-highlight markup.
+    // Re-running the enhancer must not duplicate controls.
     dom.window.eval(script);
     assert.equal(document.querySelectorAll('.code-copy-button').length, 1);
-    assert.deepEqual(highlighted, ['language-html']);
   });
 
   test('copies the original source rather than highlighted markup', async () => {
     const source = "const saved = true;\nconsole.log(saved);";
-    const { dom, writes } = docsPage(`<pre><code>${source}</code></pre>`);
+    const { dom, writes } = docsPage(`<pre data-language="javascript"><code><span>${source}</span></code></pre>`);
     const button = dom.window.document.querySelector('.code-copy-button');
 
     button.click();
@@ -76,20 +58,16 @@ describe('documentation code blocks', () => {
     assert.equal(button.querySelector('.code-copy-label').textContent, 'Copied');
   });
 
-  test('keeps readable controls when highlighting is unavailable', () => {
-    const { dom } = docsPage('<pre><code>npm install</code></pre>', { highlighter: false });
-    const { document } = dom.window;
-
-    assert.equal(document.querySelector('.code-language').textContent, 'Shell');
-    assert.equal(document.querySelector('code').textContent, 'npm install');
-    assert.ok(document.querySelector('.code-copy-button'));
+  test('leaves a pre that Code.astro did not render alone', () => {
+    const { dom } = docsPage('<pre><code>npm run build</code></pre>');
+    assert.equal(dom.window.document.querySelector('.code-block'), null);
   });
 
   test('puts only an overflowing sample in the Tab order', () => {
-    const narrow = docsPage('<pre><code>npm install</code></pre>');
+    const narrow = docsPage('<pre data-language="bash"><code>npm install</code></pre>');
     assert.equal(narrow.dom.window.document.querySelector('pre').hasAttribute('tabindex'), false);
 
-    const wide = docsPage('<pre><code>npm install</code></pre>', { scrollWidth: 900 });
+    const wide = docsPage('<pre data-language="bash"><code>npm install</code></pre>', { scrollWidth: 900 });
     assert.equal(wide.dom.window.document.querySelector('pre').tabIndex, 0);
   });
 });

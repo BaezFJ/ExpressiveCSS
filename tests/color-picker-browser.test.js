@@ -1,11 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
+import { readFileSync } from 'node:fs';
+import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
 const markup = `<!doctype html><html lang="en" dir="rtl"><head><style>${css}</style></head><body style="padding: 80px">
 <form id="form" onsubmit="window.submitted = true; return false">
@@ -22,9 +21,8 @@ const markup = `<!doctype html><html lang="en" dir="rtl"><head><style>${css}</st
   window.picker = Expressive.ColorPicker.init(document.getElementById('picker'), { onChange: (v) => log.push('onChange ' + v) });
 </script></body></html>`;
 
-for (const [name, engine] of Object.entries({ chromium, firefox, webkit }).filter(([n]) => !requested || requested === n)) {
+for (const [name, engine, test] of engines) {
   test(`${name}: color picker drives the native input from the area, hue and hex field`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage();

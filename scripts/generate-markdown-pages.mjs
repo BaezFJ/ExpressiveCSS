@@ -9,8 +9,6 @@ import { gfm } from 'turndown-plugin-gfm';
 import { PAGES } from '../docs/src/data/nav.ts';
 import { aliases, markdownRoute, route } from '../docs/src/lib/catalogue.ts';
 
-const root = new URL('../', import.meta.url);
-
 /** The file inside a static-site directory that serves a root-absolute route. */
 function fileFor(site, path) {
   return join(site, path === '/' ? 'index.html' : path.replace(/^\//, ''));

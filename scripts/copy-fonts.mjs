@@ -1,4 +1,4 @@
-import { copyFileSync, existsSync, mkdirSync } from 'node:fs';
+import { copyFileSync, mkdirSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -59,11 +59,7 @@ const licenses = [
 mkdirSync(destDir, { recursive: true });
 
 for (const [pkg, rel, dest] of [...copies, ...licenses]) {
-  const src = pkgPath(pkg, rel);
-  if (!existsSync(src)) {
-    throw new Error(`missing font source ${src}`);
-  }
-  copyFileSync(src, join(destDir, dest));
+  copyFileSync(pkgPath(pkg, rel), join(destDir, dest));
 }
 
 console.log(`Copied ${copies.length} font files to dist/fonts/`);

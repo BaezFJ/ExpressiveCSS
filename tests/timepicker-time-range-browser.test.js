@@ -4,9 +4,9 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit, expect } from '@playwright/test';
-import { leaseBrowser } from './browser.js';
+import { readFileSync } from 'node:fs';
+import { expect } from '@playwright/test';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -59,9 +59,7 @@ async function refuseTicks(page, texts, hours) {
   assert.deepEqual(await page.evaluate(() => window.selected), []);
 }
 
-for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
-  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
-  const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+for (const [engine, type, browserTest] of engines) {
 
   browserTest(`Timepicker keeps 09:00 to 17:30 by dial, field and typing (${engine})`, async () => {
     const browser = await leaseBrowser(type);

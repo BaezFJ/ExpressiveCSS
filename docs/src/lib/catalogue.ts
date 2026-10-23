@@ -13,17 +13,9 @@ export function page(id: string): DocsPage {
   return entry;
 }
 
-/**
- * Where Astro publishes a documented page.
- *
- * The catalogue keeps the landing page's historic `/getting-started.html`
- * route for compatibility, while Astro publishes it canonically at the site
- * root (ADR 0003). Resolve that one exception here rather than hand-writing it
- * into every link.
- */
+/** Where Astro publishes a documented page. */
 export function route(id: string): string {
-  const entry = page(id);
-  return entry.id === "index" ? "/" : entry.route;
+  return page(id).route;
 }
 
 /** The clean Markdown counterpart published beside a canonical HTML page. */
@@ -34,21 +26,11 @@ export function markdownRoute(id: string): string {
 
 /**
  * Every legacy path this site publishes a redirect for, and where it points.
- *
- * Not `ALIASES` from the catalogue directly, because the landing page's two
- * compatibility paths swap roles under Astro: `/index.html` stops being an
- * alias (`build.format: 'file'` writes the root document there, so a redirect
- * would point the site root at itself) and `/getting-started.html` starts
- * being one, since the root took over as canonical.
+ * `/index.html` is not one: `build.format: 'file'` writes the root document
+ * there, so a redirect would point the site root at itself.
  */
 export function aliases(): { from: string; to: string }[] {
-  return PAGES.flatMap((entry) => {
-    const from =
-      entry.id === "index"
-        ? [entry.route]
-        : (entry.aliases ?? []);
-    return from.map((path) => ({ from: path, to: route(entry.id) }));
-  });
+  return PAGES.flatMap((entry) => (entry.aliases ?? []).map((from) => ({ from, to: entry.route })));
 }
 
 /** The group a page belongs to. */

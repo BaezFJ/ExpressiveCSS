@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import OptionsTable from "../components/api/OptionsTable.astro";
@@ -15,8 +14,7 @@ const S = defineSections([
   { id: "methods", label: "Methods" },
 ]);
 ---
-<DocsLayout page="particles">
-<PageBody sections={S}>
+<DocsLayout page="particles" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Particles fill the background of a section with drifting dots that
@@ -100,7 +98,6 @@ const particles = Expressive.Particles.getInstance(canvas);
 particles.destroy();   // stops drawing and clears the canvas
 `} />
   </Section>
-</PageBody>
 <script is:inline>
 // The bundle loads after the page body.
 document.addEventListener('DOMContentLoaded', () => {

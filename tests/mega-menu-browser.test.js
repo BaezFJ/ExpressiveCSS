@@ -1,12 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
+import { readFileSync } from 'node:fs';
+import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
-const engines = Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name);
 const markup = `<!doctype html><html lang="en" theme="light"><head><style>${css}</style></head><body style="margin:0">
 <header style="padding:8px 16px"><nav id="nav" class="mega-menu" aria-label="Main">
   <a href="#home" aria-current="page">Home</a>
@@ -19,9 +17,8 @@ const markup = `<!doctype html><html lang="en" theme="light"><head><style>${css}
   <a href="#pricing">Pricing</a>
 </nav></header><main><p>Content</p></main></body></html>`;
 
-for (const [name, engine] of engines) {
+for (const [name, engine, test] of engines) {
   test(`${name}: mega menu opens a wide panel of link groups below its button`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 1000, height: 700 } });

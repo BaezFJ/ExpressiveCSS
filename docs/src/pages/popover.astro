@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -15,8 +14,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="popover">
-<PageBody sections={S}>
+<DocsLayout page="popover" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>.popover</code> is a native <code>[popover]</code> panel. The
@@ -137,5 +135,4 @@ const S = defineSections([
           </tr>
         </TokenTable>
   </Section>
-</PageBody>
 </DocsLayout>

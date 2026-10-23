@@ -1,9 +1,9 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import OptionsTable from "../components/api/OptionsTable.astro";
+import TokenTable from "../components/api/TokenTable.astro";
 import { defineSections } from "../lib/sections";
 
 const S = defineSections([
@@ -21,8 +21,7 @@ const digits = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const dial = [["1", ""], ["2", "ABC"], ["3", "DEF"], ["4", "GHI"], ["5", "JKL"], ["6", "MNO"], ["7", "PQRS"], ["8", "TUV"], ["9", "WXYZ"], ["*", ""], ["0", "+"], ["#", ""]];
 const rows = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
 ---
-<DocsLayout page="keypad">
-<PageBody sections={S}>
+<DocsLayout page="keypad" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A keypad or keyboard is a set of on-screen keys that type into a text field.
@@ -288,9 +287,7 @@ Expressive.Keypad.init(document.querySelector('.keypad'), {
         </ul>
   </Section>
   <Section {...S.tokens}>
-        <table class="striped">
-          <thead><tr><th>Token</th><th>Default</th></tr></thead>
-          <tbody>
+        <TokenTable>
             <tr><td><code>--md-comp-keypad-key-size</code></td><td>72px</td></tr>
             <tr><td><code>--md-comp-keypad-gap</code></td><td>12px</td></tr>
             <tr><td><code>--md-comp-keypad-key-color</code></td><td><code>surface-container-highest</code></td></tr>
@@ -305,8 +302,7 @@ Expressive.Keypad.init(document.querySelector('.keypad'), {
             <tr><td><code>--md-comp-keyboard-key-shape</code></td><td>12px</td></tr>
             <tr><td><code>--md-comp-keyboard-container-color</code></td><td><code>surface-container</code></td></tr>
             <tr><td><code>--md-comp-keyboard-container-shape</code></td><td>16px</td></tr>
-          </tbody>
-        </table>
+        </TokenTable>
   </Section>
   <Section {...S.options}>
         <OptionsTable>
@@ -321,7 +317,6 @@ keypad.target;    // the field named by aria-controls, or null
 keypad.destroy(); // removes the listeners
 `} />
   </Section>
-</PageBody>
 <script is:inline>
 document.getElementById('demo-number-row').addEventListener('change', (e) => {
   document.getElementById('demo-numbers').hidden = !e.target.checked;

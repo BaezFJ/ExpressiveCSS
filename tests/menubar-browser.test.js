@@ -1,12 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
+import { readFileSync } from 'node:fs';
+import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
-const engines = Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name);
 const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><style>${css}</style></head><body>
 <div id="bar" class="menubar" aria-label="Editor">
   <button type="button" class="menu-trigger" data-target="file">File</button>
@@ -18,9 +16,8 @@ const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><styl
 <menu id="view"><li><button type="button">Zoom in</button></li></menu>
 <script>${js}</script><script>Expressive.AutoInit();</script></body></html>`;
 
-for (const [name, engine] of engines) {
+for (const [name, engine, test] of engines) {
   test(`${name}: a menubar has one tab stop and moves between its menus with the arrow keys`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 900, height: 600 } });

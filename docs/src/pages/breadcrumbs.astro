@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -13,8 +12,7 @@ const S = defineSections([
   { id: "navbar", label: "In an app bar" },
 ]);
 ---
-<DocsLayout page="breadcrumbs">
-<PageBody sections={S}>
+<DocsLayout page="breadcrumbs" sections={S}>
   <Section {...S.anatomy}>
                     <p class="flow-text">
                         Put an <code>&lt;ol&gt;</code> inside a <code>&lt;nav&gt;</code>
@@ -128,5 +126,4 @@ const S = defineSections([
 </header>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

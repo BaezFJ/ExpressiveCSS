@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import InstanceNote from "../components/api/InstanceNote.astro";
@@ -21,10 +20,9 @@ const S = defineSections([
   { id: "dismissal", label: "Dismissing snackbars", heading: "Dismiss a snackbar programmatically" },
 ]);
 ---
-<DocsLayout page="snackbar">
+<DocsLayout page="snackbar" sections={S}>
 <p>Snackbars with an action are persistent and dismissible by default. Escape dismisses a focused snackbar. Closing it restores focus only when focus is still inside the bar. If you set a finite timer, it still pauses during focus or hover.</p>
 
-<PageBody sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Snackbars show short updates about app processes at the bottom
@@ -377,5 +375,4 @@ Expressive.Snackbar.getInstance(snackbarElement)?.dismiss();
 Expressive.Snackbar.dismissAll();
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

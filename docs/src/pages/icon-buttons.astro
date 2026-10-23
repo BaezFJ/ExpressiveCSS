@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -19,8 +18,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="icon_buttons">
-<PageBody sections={S}>
+<DocsLayout page="icon_buttons" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           An icon button is one action shown as one icon, such as a toolbar
@@ -298,5 +296,5 @@ const S = defineSections([
           the <a href={route('state_layers')}>state layer</a> opacity,
           so those two colour tokens are all a new style needs.
         </p>
-  </Section></PageBody>
+  </Section>
 </DocsLayout>

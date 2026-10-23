@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -16,8 +15,7 @@ const S = defineSections([
   { id: "tokens", label: "Tokens" },
 ]);
 ---
-<DocsLayout page="search">
-<PageBody sections={S}>
+<DocsLayout page="search" sections={S}>
   <Section {...S.anatomy}>
                     <p class="flow-text">
                         Add <code>search-bar</code> to a <code>&lt;search&gt;</code> element
@@ -303,5 +301,4 @@ Expressive.Autocomplete.init(document.querySelector('.search-bar input'), {
                       </tr>
                     </TokenTable>
   </Section>
-</PageBody>
 </DocsLayout>

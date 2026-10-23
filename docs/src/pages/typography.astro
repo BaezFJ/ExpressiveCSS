@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -18,8 +17,7 @@ const S = defineSections([
   { id: "fontstack", label: "Typeface tokens" },
 ]);
 ---
-<DocsLayout page="typography">
-<PageBody sections={S}>
+<DocsLayout page="typography" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           The HTML elements carry the type scale. <code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code>
@@ -317,5 +315,4 @@ CSS.highlights.set("mark", new Highlight(range));
           browser text-size preferences keep working.
         </p>
   </Section>
-</PageBody>
 </DocsLayout>

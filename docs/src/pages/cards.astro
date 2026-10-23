@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -17,8 +16,7 @@ const S = defineSections([
   { id: "sizes", label: "Sizes" },
 ]);
 ---
-<DocsLayout page="cards">
-<PageBody sections={S}>
+<DocsLayout page="cards" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Use an <code>&lt;article&gt;</code> for an elevated card. Inside it, any
@@ -594,5 +592,4 @@ const S = defineSections([
 <article class="large">…</article>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

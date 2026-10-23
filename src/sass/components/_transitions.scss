@@ -1,5 +1,3 @@
-@use "../abstracts" as *;
-
 // !important because the class must replace the transition of whatever
 // component it is added to (.button, .fab, ...), at any specificity.
 .scale-transition {

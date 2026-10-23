@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -34,8 +33,7 @@ const tick = () => {
 tick();
 setInterval(tick, 1000);`;
 ---
-<DocsLayout page="countdown">
-<PageBody sections={S}>
+<DocsLayout page="countdown" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>.countdown</code> shows a whole number from 0 to 999. When
@@ -117,5 +115,4 @@ ${clockScript.replace(/^/gm, "  ")}
           With reduced motion, the digits change without rolling.
         </p>
   </Section>
-</PageBody>
 </DocsLayout>

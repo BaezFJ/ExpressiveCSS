@@ -1,13 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
-import { leaseBrowser } from './browser.js';
+import { readFileSync } from 'node:fs';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
-const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
-const engines = Object.entries({ chromium, firefox, webkit }).filter(([name]) => !requested || requested === name);
 const row = (n) => `<li id="item-${n}"><span class="drag-handle" aria-hidden="true"></span><span>Song ${n}</span>
   <span class="sortable-actions">
     <button type="button" class="icon-button" data-move="up" aria-label="Move Song ${n} up"><span class="material-symbols" aria-hidden="true">arrow_upward</span></button>
@@ -18,9 +15,8 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
 <script>window.__changes = []; document.getElementById('list').addEventListener('change', (e) => window.__changes.push([e.detail.item.id, e.detail.from, e.detail.to]));</script>
 <script>${js}</script></body></html>`;
 
-for (const [name, engine] of engines) {
+for (const [name, engine, test] of engines) {
   test(`${name}: a sortable list reorders by move buttons and by dragging its handles`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 600, height: 700 } });
@@ -67,7 +63,6 @@ for (const [name, engine] of engines) {
   });
 
   test(`${name}: Escape that cancels a drag in a modal dialog leaves the dialog open`, { timeout: 30000 }, async (t) => {
-    if (!existsSync(engine.executablePath())) { t.skip(`${name} is not installed`); return; }
     const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 600, height: 700 } });

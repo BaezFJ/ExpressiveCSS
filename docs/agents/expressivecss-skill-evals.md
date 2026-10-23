@@ -12,7 +12,7 @@ Cases live in `tests/fixtures/expressivecss-skill-evals/cases.json`. Each case d
 - guides that must and must not be read;
 - required decision and report fields;
 - forbidden edits and candidate content;
-- critical invariants expressed as structured assertions with stable IDs.
+- a case contract, checked in code, whose critical invariant ID is `<case-id>/contract`.
 
 A run starts with only the root skill in context. A guide counts as loaded only when trusted execution evidence records a successful read of its exact repository-relative path. Listing a guide in the candidate response does not count.
 
@@ -21,7 +21,7 @@ even when a later step in that compound command fails. Partial output, command
 paths and candidate claims do not count. The command retains its original exit
 status; observing a read does not award successful verification.
 
-Every critical invariant must be present exactly once and evaluated. Missing, duplicate, unknown, or unevaluated critical IDs fail the case. Mutation tests change guide routes, review statuses, criterion and component bindings, required evidence kinds, coverage records, capture roles, visible-difference classifications, event order, forbidden edits, and no-edit behavior. Refine preservation and Compact/Expanded navigation must match fixture-owned contracts rather than candidate-invented strings. They also reject broad passes synthesized from scoped MCP output and stop live adapters at a bounded timeout. Each mutation must fail for its named invariant.
+The evaluator derives each case's critical invariant from its ID, so fixtures cannot omit or rename one. A case contract that cannot be evaluated fails the case. Mutation tests change guide routes, review statuses, criterion and component bindings, required evidence kinds, coverage records, capture roles, visible-difference classifications, event order, forbidden edits, and no-edit behavior. Refine preservation and Compact/Expanded navigation must match fixture-owned contracts rather than candidate-invented strings. They also reject broad passes synthesized from scoped MCP output and stop live adapters at a bounded timeout. Each mutation must fail for its named invariant.
 
 The three basic implementation cases additionally require operator-owned `completionChecks`. In a live run the evaluator recomputes these from bounded reads of the actual project files, replacing any adapter-supplied values. Setup needs installed package files and a stylesheet import or link; button creation needs an additional enabled, labeled native button; token-only theming needs a valid changed seed with the other inspected sources unchanged. These are static completion checks, not browser or full accessibility passes. Candidate-authored checks do not count.
 

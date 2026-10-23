@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import OptionsTable from "../components/api/OptionsTable.astro";
@@ -18,8 +17,7 @@ const S = defineSections([
   { id: "alpine", label: "Alpine.js" },
 ]);
 ---
-<DocsLayout page="auto_init">
-<PageBody sections={S}>
+<DocsLayout page="auto_init" sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
           Auto Init starts all of the registered Expressive components with a single call.
@@ -380,5 +378,4 @@ document.addEventListener('alpine:init', () => {
           <code>&lt;dialog&gt;</code> elements. Open one with <code>$refs.dialog.showModal()</code>.
         </p>
   </Section>
-</PageBody>
 </DocsLayout>

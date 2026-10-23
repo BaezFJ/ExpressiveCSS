@@ -5,7 +5,7 @@ import { cp, mkdir, mkdtemp, realpath, rm, writeFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { performance } from 'node:perf_hooks';
 
 const THIS_FILE = fileURLToPath(import.meta.url);
@@ -80,7 +80,6 @@ const SUPPORT_GUIDES = new Map([
   ['skills/expressivecss/expressivecss-runtime/SKILL.md', 'expressivecss-runtime'],
   ['skills/expressivecss/expressivecss-accessibility/SKILL.md', 'expressivecss-accessibility'],
 ]);
-const ASSERTION_OPERATORS = new Set(['equals', 'includes', 'notIncludes', 'truthy', 'falsy', 'caseContract']);
 const TRUSTED_TRACE_OPERATIONS = new Set(['read', 'write', 'patch', 'create', 'delete']);
 const REVIEW_STATUSES = new Set(['Pass', 'Intentional adaptation', 'Fail', 'Not applicable', 'Blocked']);
 export const DEFAULT_ADAPTER_TIMEOUT_MS = 120_000;
@@ -98,30 +97,6 @@ export const EVALUATOR_LIMITS = Object.freeze({
   objectDepth: 32,
   traversalCount: 20_000,
 });
-const KNOWN_CRITICAL_INVARIANT_IDS = new Set([
-  'setup-only-routing/contract',
-  'css-only-markup-routing/contract',
-  'token-only-theming-routing/contract',
-  'critique-no-edit/contract',
-  'css-only-audit/contract',
-  'interactive-audit/contract',
-  'combined-review-order/contract',
-  'refine-preserves-product/contract',
-  'redesign-preserves-requirements/contract',
-  'feedback-component-choice/contract',
-  'feedback-inline-choice/contract',
-  'feedback-dialog-choice/contract',
-  'switch-versus-checkbox/contract',
-  'deferred-checkbox/contract',
-  'adaptive-navigation/contract',
-  'brand-through-tokens/contract',
-  'runtime-owned-aria/contract',
-  'manual-init-teardown/contract',
-  'older-version-contract/contract',
-  'reachable-state-ledger/contract',
-  'matched-before-after/contract',
-  'mcp-pass-is-scoped/contract',
-]);
 const CAPTURE_DIMENSIONS = [
   'route', 'taskPoint', 'dataFixtureId', 'state', 'viewportWidth', 'viewportHeight',
   'deviceScaleFactor', 'colorScheme', 'motionPreference', 'locale', 'direction',
@@ -164,10 +139,6 @@ function hasPath(value, dottedPath) {
     current = current[key];
   }
   return true;
-}
-
-function valueAtPath(value, dottedPath) {
-  return dottedPath ? dottedPath.split('.').reduce((current, key) => current?.[key], value) : value;
 }
 
 function validTimestamp(value) {
@@ -329,29 +300,6 @@ function collectionLimitErrors(response, executionEvidence) {
 
 function result(id, status, evidence, { expected, actual } = {}) {
   return { id, critical: true, status, evidence, expected, actual };
-}
-
-function evaluateBasicAssertion(assertion, response) {
-  if (!ASSERTION_OPERATORS.has(assertion.operator) || assertion.operator === 'caseContract') {
-    return { status: 'unevaluated', actual: undefined };
-  }
-  if (!hasPath(response, assertion.path)) return { status: 'unevaluated', actual: undefined };
-  const actual = valueAtPath(response, assertion.path);
-  let passed = false;
-  switch (assertion.operator) {
-    case 'equals': passed = actual === assertion.value; break;
-    case 'includes': passed = Array.isArray(actual)
-      ? actual.includes(assertion.value)
-      : typeof actual === 'string' && actual.includes(assertion.value); break;
-    case 'notIncludes': passed = Array.isArray(actual)
-      ? !actual.includes(assertion.value)
-      : typeof actual === 'string' && !actual.includes(assertion.value); break;
-
-    case 'truthy': passed = Boolean(actual); break;
-    case 'falsy': passed = actual === false; break;
-    default: return { status: 'unevaluated', actual };
-  }
-  return { status: passed ? 'pass' : 'fail', actual };
 }
 
 function artifactsById(response) {
@@ -652,19 +600,14 @@ function caseContract(testCase, response, executionEvidence) {
 export function validateCaseDefinitions(caseData) {
   const errors = [];
   const cases = caseData?.cases;
-  const stable = caseData?.stableInvariantIds;
-  if (!Array.isArray(cases) || !Array.isArray(stable)) {
-    return { status: 'fail', errors: ['cases and stableInvariantIds must be arrays'] };
+  if (!Array.isArray(cases)) {
+    return { status: 'fail', errors: ['cases must be an array'] };
   }
   if (cases.length > EVALUATOR_LIMITS.caseCount) {
     errors.push(`case definitions may contain at most ${EVALUATOR_LIMITS.caseCount} cases`);
   }
-  if (new Set(stable).size !== stable.length) errors.push('stableInvariantIds contains duplicates');
-  for (const id of stable) if (!KNOWN_CRITICAL_INVARIANT_IDS.has(id)) errors.push(`unknown stable invariant ${id}`);
-  for (const id of KNOWN_CRITICAL_INVARIANT_IDS) if (!stable.includes(id)) errors.push(`missing stable invariant ${id}`);
   const caseIds = cases.map((item) => item.id);
   if (new Set(caseIds).size !== caseIds.length) errors.push('case IDs contain duplicates');
-  const defined = [];
   for (const item of cases) {
     for (const field of CASE_CONTRACT_ARRAY_FIELDS) {
       if (!Object.hasOwn(item, field) || !Array.isArray(item[field])) {
@@ -673,20 +616,6 @@ export function validateCaseDefinitions(caseData) {
         || new Set(item[field]).size !== item[field].length) {
         errors.push(`${item.id} ${field} must contain unique non-empty strings`);
       }
-    }
-    if (!Array.isArray(item.expectedCriticalInvariantIds) || !Array.isArray(item.criticalInvariants)) {
-      errors.push(`${item.id} has no critical invariant arrays`);
-      continue;
-    }
-    const ids = item.criticalInvariants.map((entry) => entry.id);
-    if (new Set(ids).size !== ids.length) errors.push(`${item.id} has duplicate critical invariants`);
-    if (!sameMembers(ids, item.expectedCriticalInvariantIds) || ids.some((id, index) => id !== item.expectedCriticalInvariantIds[index])) {
-      errors.push(`${item.id} critical invariant inventory differs from definitions`);
-    }
-    for (const invariant of item.criticalInvariants) {
-      defined.push(invariant.id);
-      if (!KNOWN_CRITICAL_INVARIANT_IDS.has(invariant.id)) errors.push(`${item.id} has unknown invariant ${invariant.id}`);
-      if (!ASSERTION_OPERATORS.has(invariant.operator)) errors.push(`${invariant.id} has unknown operator ${invariant.operator}`);
     }
     const requiredCategories = item.requiredEvidenceCategories ?? [];
     const requiredByCriterion = item.requiredEvidenceByCriterion ?? {};
@@ -710,27 +639,7 @@ export function validateCaseDefinitions(caseData) {
       errors.push(`${item.id} maps criterion evidence without required categories`);
     }
   }
-  if (!sameMembers(defined, stable)) errors.push('defined critical invariants do not equal the stable catalog');
   return { status: errors.length === 0 ? 'pass' : 'fail', errors };
-}
-
-function definitionInvariants(testCase) {
-  const invariants = testCase.criticalInvariants ?? [];
-  const expected = testCase.expectedCriticalInvariantIds ?? [];
-  const ids = invariants.map((item) => item.id);
-  const output = [];
-  if (new Set(ids).size !== ids.length) {
-    output.push(result('schema/duplicate-critical-invariant', 'fail', 'stable invariant catalog contains a duplicate', { actual: ids }));
-  }
-  for (const id of expected) {
-    if (!ids.includes(id)) output.push(result(`schema/missing/${id}`, 'fail', 'stable invariant catalog is missing a required critical invariant', { expected: id }));
-  }
-  for (const invariant of invariants) {
-    if (!KNOWN_CRITICAL_INVARIANT_IDS.has(invariant.id)) {
-      output.push(result(`schema/unknown/${invariant.id}`, 'fail', 'stable invariant catalog contains an unknown critical invariant', { actual: invariant.id }));
-    }
-  }
-  return output;
 }
 
 function forbiddenContentInvariant(testCase, response) {
@@ -899,7 +808,7 @@ function evaluateCaseInternal(testCase, response, executionEvidence = null) {
   if (limitErrors.length > 0) {
     return { caseId: testCase?.id, status: 'fail', actualGuideReads: [], invariants: [limitInvariant] };
   }
-  const invariants = [limitInvariant, ...definitionInvariants(testCase)];
+  const invariants = [limitInvariant];
   const trustedExecution = trustedExecutionIsValid(executionEvidence)
     && !['toolTrace', 'preRunFilesystemHash', 'postRunFilesystemHash', 'executionEvidence', 'evidenceArtifacts', 'completionChecks']
       .some((key) => Object.hasOwn(response ?? {}, key));
@@ -977,16 +886,8 @@ function evaluateCaseInternal(testCase, response, executionEvidence = null) {
       'Critique before Audit requires earlier collection sequence and timestamp', { actual: evidence }));
   }
 
-  for (const assertion of testCase.criticalInvariants ?? []) {
-    if (!KNOWN_CRITICAL_INVARIANT_IDS.has(assertion.id)) continue;
-    const checked = assertion.operator === 'caseContract'
-      ? caseContract(testCase, scoredResponse, executionEvidence)
-      : evaluateBasicAssertion(assertion, response);
-    invariants.push(result(assertion.id, checked.status, `critical invariant ${assertion.id}`, {
-      expected: assertion.value,
-      actual: checked.actual,
-    }));
-  }
+  const contract = caseContract(testCase, scoredResponse, executionEvidence);
+  invariants.push(result(`${testCase.id}/contract`, contract.status, `critical invariant ${testCase.id}/contract`, { actual: contract.actual }));
 
   if (testCase.id === 'mcp-pass-is-scoped') {
     const scoped = response?.mcpStatus === 'static_contract_pass' && response?.fullReviewStatus === 'Blocked';
@@ -1400,28 +1301,31 @@ export async function runEvaluations({
 }
 
 async function main() {
-  const { values: args } = parseArgs({ strict: false, allowPositionals: true, options: { 'adapter-arg': { type: 'string', multiple: true, default: [] } } });
-  const casesPath = path.resolve(args.cases || path.join(DEFAULT_ROOT, 'tests/fixtures/expressivecss-skill-evals/cases.json'));
+  const string = { type: 'string' };
+  const { values: args } = parseArgs({ options: {
+    cases: string, responses: string, adapter: string, 'adapter-arg': { type: 'string', multiple: true, default: [] },
+    'adapter-timeout-ms': string, case: string, 'skill-root': string, 'output-directory': string, output: string,
+  } });
+  const resolved = (value) => (value ? path.resolve(value) : null);
   const report = await runEvaluations({
-    casesPath,
-    responsesPath: typeof args.responses === 'string' ? path.resolve(args.responses) : null,
-    adapter: typeof args.adapter === 'string' ? args.adapter : null,
+    casesPath: path.resolve(args.cases || path.join(DEFAULT_ROOT, 'tests/fixtures/expressivecss-skill-evals/cases.json')),
+    responsesPath: resolved(args.responses),
+    adapter: args.adapter ?? null,
     adapterArgs: args['adapter-arg'],
-    adapterTimeoutMs: typeof args['adapter-timeout-ms'] === 'string'
-      ? Number(args['adapter-timeout-ms'])
-      : DEFAULT_ADAPTER_TIMEOUT_MS,
-    caseId: typeof args.case === 'string' ? args.case : null,
+    adapterTimeoutMs: args['adapter-timeout-ms'] ? Number(args['adapter-timeout-ms']) : DEFAULT_ADAPTER_TIMEOUT_MS,
+    caseId: args.case ?? null,
     repositoryRoot: DEFAULT_ROOT,
-    skillRoot: typeof args['skill-root'] === 'string' ? path.resolve(args['skill-root']) : null,
-    outputDirectory: typeof args['output-directory'] === 'string' ? path.resolve(args['output-directory']) : null,
+    skillRoot: resolved(args['skill-root']),
+    outputDirectory: resolved(args['output-directory']),
   });
   const output = `${JSON.stringify(report, null, 2)}\n`;
-  if (typeof args.output === 'string') await writeFile(path.resolve(args.output), output);
+  if (args.output) await writeFile(path.resolve(args.output), output);
   else process.stdout.write(output);
   if (report.status !== 'pass') process.exitCode = 1;
 }
 
-if (process.argv[1] && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url) {
+// Node 20 has no import.meta.main; compare paths there, so the CLI still runs.
+if (import.meta.main ?? path.resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
   main().catch((error) => {
     console.error(redactValue(error.message));
     process.exitCode = 1;

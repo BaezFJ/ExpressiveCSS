@@ -1,8 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit } from 'playwright';
-import { leaseBrowser } from './browser.js';
+import { chromium } from 'playwright';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const browserTest = existsSync(chromium.executablePath()) ? test : test.skip;
@@ -68,9 +68,7 @@ browserTest('a plain fieldset drops its container and puts the legend at the con
   }
 });
 
-for (const [engine, browserType] of Object.entries({ chromium, firefox, webkit })) {
-  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
-  const utilityTest = existsSync(browserType.executablePath()) ? test : test.skip;
+for (const [engine, browserType, utilityTest] of engines) {
 
   utilityTest(`sizing helpers let nested flex and grid content shrink and scroll (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);

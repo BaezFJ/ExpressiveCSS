@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -13,8 +12,7 @@ const S = defineSections([
 ]);
 const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}`);
 ---
-<DocsLayout page="scroll-area">
-<PageBody sections={S}>
+<DocsLayout page="scroll-area" sections={S}>
   <Section {...S.usage}>
     <p>Add <code>.scroll-area</code> to a container with a bounded height or width.
       It applies <code>overflow: auto</code>, a thin scrollbar, and theme-aware colors.
@@ -81,7 +79,6 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
       Forced-colors mode restores system colors and the default width.</p>
     <p>For a selective Sass build, include <code>"scroll-area"</code> in <code>$utilities</code>.</p>
   </Section>
-</PageBody>
 </DocsLayout>
 
 <style>

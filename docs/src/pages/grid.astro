@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -15,8 +14,7 @@ const S = defineSections([
   { id: "grid-responsive", label: "Responsive layouts", heading: "Creating responsive layouts" },
 ]);
 ---
-<DocsLayout page="grid">
-<PageBody sections={S}>
+<DocsLayout page="grid" sections={S}>
   <Section {...S["grid-container"]}>
                     <p class="flow-text">ExpressiveCSS uses a standard 12-column fluid responsive grid to help
                         you lay out your page.</p>
@@ -643,5 +641,4 @@ const S = defineSections([
 </div>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>

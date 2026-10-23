@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -19,8 +18,7 @@ const S = defineSections([
   { id: "properties", label: "Properties" },
 ]);
 ---
-<DocsLayout page="color-picker">
-<PageBody sections={S}>
+<DocsLayout page="color-picker" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           Write a <code>.color-picker</code> with <code>role="group"</code> and a name around an
@@ -107,5 +105,4 @@ instance.destroy(); // removes the area, hue slider and hex field; the native in
           <tr><td><code>value</code></td><td>String</td><td>The current <code>#rrggbb</code> color. Setting it updates the picker and the input without firing events.</td></tr>
         </PropertiesTable>
   </Section>
-</PageBody>
 </DocsLayout>

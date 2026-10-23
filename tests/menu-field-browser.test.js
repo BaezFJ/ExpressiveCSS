@@ -1,8 +1,8 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
-import { chromium, firefox, webkit, expect } from '@playwright/test';
-import { leaseBrowser } from './browser.js';
+import { readFileSync } from 'node:fs';
+import { expect } from '@playwright/test';
+import { leaseBrowser, engines } from './browser.js';
 import utilsBundle from 'playwright-core/lib/utilsBundle';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
@@ -11,9 +11,7 @@ const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'u
 // Every test opens its own context in the shared browser, so they can overlap.
 describe('menu field and navigation surfaces', { concurrency: 4 }, () => {
 
-for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
-  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
-  const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+for (const [engine, type, browserTest] of engines) {
   browserTest(`AppBar documentation demos leave site controls reachable (${engine})`, async () => {
     const browser = await leaseBrowser(type);
     try {
@@ -227,9 +225,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 }
 
-for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
-  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
-  const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+for (const [engine, type, browserTest] of engines) {
   browserTest(`Panes use the nearest available width at layout boundaries (${engine})`, async () => {
     const browser = await leaseBrowser(type);
     try {
@@ -337,9 +333,7 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
   });
 }
 
-for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
-  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
-  const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+for (const [engine, type, browserTest] of engines) {
   browserTest(`AppBar focus ownership and teardown (${engine})`, async () => {
     const browser = await leaseBrowser(type);
     let page;
@@ -488,7 +482,6 @@ for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
     } finally { try { await page?.evaluate(() => window.bar?.destroy()); } finally { await browser.close(); } }
   });
 }
-assert.ok(!process.env.EXPRESSIVECSS_TEST_BROWSER || ['chromium', 'firefox', 'webkit'].includes(process.env.EXPRESSIVECSS_TEST_BROWSER));
 const sheetMarkup = `<dialog aria-labelledby="title"><header><h2 id="title">Details</h2><form method="dialog"><button aria-label="Close">×</button></form></header><div id="body"><p>Supporting content</p></div><form method="dialog"><button id="save">Save</button><button disabled>Unavailable</button></form></dialog>`;
 const longSheetMarkup = `<dialog aria-labelledby="long-title"><h2 id="long-title">Notification preferences</h2><div id="long-body"><p>${'Review each setting before saving your changes. '.repeat(80)}</p></div><form method="dialog"><button id="save-long" value="save">Save notification preferences</button><button id="cancel-long" class="outlined" value="cancel">Cancel</button></form></dialog>`;
 
@@ -512,9 +505,7 @@ async function sheetFixture(page, { variant = 'side-sheet', direction = 'ltr', m
 }
 
 
-for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
-  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
-  const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+for (const [engine, type, browserTest] of engines) {
   browserTest(`Side sheet rendered docking and drag direction (${engine})`, async () => {
     const browser = await leaseBrowser(type);
     try {
@@ -1820,9 +1811,7 @@ async function fixture(page, { direction = 'ltr', staleActive = false, ...option
   }, options);
 }
 
-for (const [engine, type] of Object.entries({ chromium, firefox, webkit })) {
-  if (process.env.EXPRESSIVECSS_TEST_BROWSER && process.env.EXPRESSIVECSS_TEST_BROWSER !== engine) continue;
-  const browserTest = existsSync(type.executablePath()) ? test : test.skip;
+for (const [engine, type, browserTest] of engines) {
   browserTest(`Tabs synchronize swipe selection and callbacks (${engine})`, async () => {
     const browser = await leaseBrowser(type);
     let page;

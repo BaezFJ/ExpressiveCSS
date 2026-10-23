@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
@@ -57,8 +56,7 @@ const monthWeeks = (month: number) => {
 const monthName = (month: number) =>
   new Date(Date.UTC(2026, month, 1)).toLocaleString("en-US", { month: "long", timeZone: "UTC" });
 ---
-<DocsLayout page="calendar">
-<PageBody sections={S}>
+<DocsLayout page="calendar" sections={S}>
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>table.calendar</code> shows a month, week or day of events.
@@ -328,5 +326,4 @@ const monthName = (month: number) =>
           </tr>
         </TokenTable>
   </Section>
-</PageBody>
 </DocsLayout>

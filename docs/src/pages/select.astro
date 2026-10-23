@@ -1,6 +1,5 @@
 ---
 import DocsLayout from "../layouts/DocsLayout.astro";
-import PageBody from "../components/PageBody.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
@@ -19,8 +18,7 @@ const S = defineSections([
   { id: "disabled", label: "Disabled styles" },
 ]);
 ---
-<DocsLayout page="select">
-<PageBody sections={S}>
+<DocsLayout page="select" sections={S}>
   <Section {...S.introduction}>
         <p class="flow-text">
           Wrap a native <code>&lt;select&gt;</code> in <code>.field</code> and
@@ -347,5 +345,4 @@ instance.destroy();
 </select>
 `} />
   </Section>
-</PageBody>
 </DocsLayout>
