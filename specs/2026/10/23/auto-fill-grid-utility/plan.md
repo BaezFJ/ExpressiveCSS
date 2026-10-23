@@ -14,7 +14,7 @@ Prerequisites: none.
 - [x] Add `.grid-auto-fill` beside `.grid` and `.inline-grid` in `src/sass/utilities/_helpers.scss`, with `display: grid` and `grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--grid-column-min, #{rem(240px)})), 1fr))`, plus a short comment on what the property does.
 - [x] Rebuild and run `node --test tests/helpers-browser.test.js` until V1 to V4 pass in all three engines.
 - [x] Run V5 to check that nothing else changed.
-- [x] Add the CSS gzip budget line here instead of in group 2, because the budget test failed once the class existed (84,889 bytes, +70; 85,075 after merging the line clamp utilities).
+- [x] Add the CSS gzip budget line here instead of in group 2, because the budget test failed once the class existed (84,889 bytes, +70; 85,075 after merging the line clamp utilities; 85,232 after merging #408 to #411).
 
 Completion check: V1 to V5 pass, none skipped.
 

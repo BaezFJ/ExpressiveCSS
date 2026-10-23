@@ -357,6 +357,10 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the open menu shown by :popover-open in place of an inline display: 84,789 gzip bytes (+11).
   // Reviewed the lightbox resets for the UA popover box: 84,819 gzip bytes (+30).
   // Reviewed the line clamp utilities and their window-size prefixes: 85,005 gzip bytes (+186).
-  // Reviewed the .grid-auto-fill utility: 85,075 gzip bytes (+70).
-  assert.ok(sizes(css).gzip <= 85075, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the .opacity-0 to .opacity-100 helpers: 85,049 gzip bytes (+44).
+  // Reviewed the pointer-events and cursor-pointer helpers: 85,077 gzip bytes (+28).
+  // Reviewed the .list-unstyled helper: 85,097 gzip bytes (+20).
+  // Reviewed position and inset helpers with logical edge pins: 85,161 gzip bytes (+64).
+  // Reviewed the .grid-auto-fill utility: 85,232 gzip bytes (+71).
+  assert.ok(sizes(css).gzip <= 85232, `CSS gzip: ${sizes(css).gzip}`);
 });

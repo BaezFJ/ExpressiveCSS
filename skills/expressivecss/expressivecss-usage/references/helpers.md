@@ -143,6 +143,8 @@ Never use display hiding as the only way to provide required content or actions.
 | `.center-align` | Centers text. | Use on the text container. `.center` is not the canonical helper. |
 | `.query-container` | `container-type: inline-size`. Horizontal cards and description lists inside it stack below 600px of container width. | Put it on a wrapper that fills its parent; inline-size containment stops the element sizing itself from its content. |
 | `.relative`, `.sticky-top` | `position: relative`; `position: sticky; top: 0`. | A sticky element stops at an ancestor with `overflow: hidden`. |
+| `.position-absolute`, `.position-fixed`, `.position-static` | The matching `position`. | Give an absolute element's parent `.relative`. There is no bare `.fixed`; that is a component modifier. `.position-fixed` sets no `z-index`, so add a `--expressive-z-*` value, and a transformed, filtered or contained ancestor captures it. `.position-static` undoes `.relative` and `.sticky-top`. |
+| `.inset-0`, `.top-0`, `.bottom-0`, `.start-0`, `.end-0` | `inset: 0`, or 0 on one edge. | `.start-0` and `.end-0` are logical and swap sides in RTL. None of the position classes take a window-size prefix. |
 | `.block`, `.inline-block`, `.grid`, `.inline-grid`, `.contents` | The matching `display`. | There is no `display: inline` class; `.inline` is the checkbox and radio row. Keep `.contents` off buttons, lists, tables and headings. |
 | `.divider` | Draws a 1px `outline-variant` divider. | Keep decorative dividers out of the accessibility tree; use semantic grouping or headings for real structure. |
 
@@ -236,6 +238,7 @@ Give a generic scroll region `tabindex="0"` and an accessible name when keyboard
 | `.text-nowrap` | `white-space: nowrap`. | Keeps one line without clipping or ellipsis; check narrow screens. |
 | `.text-wrap` | `white-space: normal`. | Restores ordinary wrapping. |
 | `.text-balance`, `.text-pretty` | `text-wrap-style: balance`, `text-wrap-style: pretty`. | Headings already balance and paragraphs already use pretty; use these on other elements, such as a `<span>` title or a list item. |
+| `.opacity-0`, `.opacity-25`, `.opacity-38`, `.opacity-50`, `.opacity-75`, `.opacity-100` | `opacity` of 0, 0.25, 0.38, 0.5, 0.75 or 1. 38 is M3's disabled-content opacity. Overrides a component's own opacity. | Disables and hides nothing: the element still takes clicks and focus and stays in the accessibility tree. Dimmed text needs enough contrast unless it belongs to a disabled control. |
 | `.bordered`, `.border-top`, `.border-bottom`, `.border-start`, `.border-end` | A 1px `outline-variant` border on all sides or one side. Start and end mirror in RTL. | `.border` is the outlined card variant, not this utility. |
 | `.corner-none` to `.corner-full` | `border-radius` from the matching `--md-sys-shape-corner-*` token (`none`, `extra-small`, `small`, `medium`, `large`, `extra-large`, `full`). | On a component it replaces the component's own shape and its state corner changes. `.rounded` is the pill button. |
 | `.hoverable` | Transitions to one fixed hover shadow. | That shadow can be lower than an existing high z-depth; hover must not be the only cue or interaction path. |
