@@ -164,13 +164,12 @@ for (const [engine, browserType, utilityTest] of engines) {
       const classes = ['line-clamp-1', 'line-clamp-2', 'line-clamp-3', 'line-clamp-2 line-clamp-none', ''];
       await page.setContent(`<style>${css} .clamp-fixture { width: 240px; margin: 0; font: 16px/20px sans-serif; }</style>
         ${classes.map(name => `<p class="clamp-fixture ${name}">${'A paragraph long enough to wrap onto many lines. '.repeat(12)}</p>`).join('')}`);
-      const [one, two, three, none, full] = await page.locator('p').evaluateAll(els => els.map(el => ({
-        height: el.getBoundingClientRect().height,
-        clamp: getComputedStyle(el).getPropertyValue('-webkit-line-clamp'),
+      const [one, two, three, none, full] = await page.locator('p').evaluateAll(els => els.map(el => {
+        const style = getComputedStyle(el);
         // The height alone can't tell: without hidden overflow the cut lines
         // still paint below the clamped box.
-        overflow: getComputedStyle(el).overflow,
-      })));
+        return { height: el.getBoundingClientRect().height, clamp: style.getPropertyValue('-webkit-line-clamp'), overflow: style.overflow };
+      }));
       for (const [lines, { height, clamp, overflow }] of [one, two, three].entries()) {
         assert.ok(Math.abs(height - 20 * (lines + 1)) <= 1, `line-clamp-${lines + 1} height ${height}`);
         assert.deepEqual([clamp, overflow], [String(lines + 1), 'hidden']);
