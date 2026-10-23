@@ -9,7 +9,7 @@ Component ID: `autocomplete`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `f7181ced82cd28cb345583511d50d6719a690d455d3da9afa9d61a5ac87f018e`
+Contract SHA-256: `506fb222374cb236c4f3992429174ed0447f17e94b1fcc9a6925cddaa59a9100`
 
 #### Selection and adaptation
 
@@ -68,7 +68,7 @@ Add `autocomplete` to a text input inside a `.field`. `AutoInit()` starts every 
 | `searchDelay` | Number | `0` | Milliseconds to wait after typing pauses before calling `onSearch`, so remote data is fetched once per pause. A search on focus runs at once. Blur, `destroy()` and choosing a single result cancel a pending search. `0` searches on every input. |
 | `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
-| `allowUnsafeHTML` | Boolean | `false` | If true, matched text is inserted as HTML. Only use sanitized data. |
+| `allowUnsafeHTML` | Boolean | `false` | If true, each data entry's `text` is inserted as HTML. Ids always stay text. Only use sanitized data. |
 | `selected` | Array | `[]` | Initial selected ids, strings or numbers. An id without loaded data displays the id. Pass the selected ids to `setMenuItems` with the loaded data to resolve their labels. |
 
 #### Methods

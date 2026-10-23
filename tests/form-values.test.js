@@ -212,6 +212,37 @@ describe('Form values', () => {
     }
   });
 
+  test('data-save keeps passwords and hidden inputs out of storage', (t) => {
+    t.after(() => { window.localStorage.clear(); delete globalThis.localStorage; });
+    globalThis.localStorage = window.localStorage;
+    const markup = (ref) => `<form class="questionnaire no-autoinit" data-save="signup">
+      <fieldset><legend>Account</legend>
+        <input type="email" name="email" aria-label="Email">
+        <input type="password" name="password" aria-label="Password">
+        <input type="hidden" name="ref" value="${ref}"></fieldset>
+      <footer><button type="button" value="next">Next</button><button type="submit">Send</button></footer>
+    </form>`;
+    document.body.innerHTML = markup('user-a');
+    let survey = Expressive.Questionnaire.init(document.querySelector('form'));
+    const form = document.querySelector('form');
+    form.elements.email.value = 'a@example.test';
+    form.elements.password.value = 'dummy-secret';
+    form.elements.password.dispatchEvent(new window.Event('change', { bubbles: true }));
+    survey.destroy();
+    assert.deepEqual(JSON.parse(localStorage.getItem('questionnaire:signup')).answers, ['a@example.test']);
+
+    document.body.innerHTML = markup('user-b');
+    survey = Expressive.Questionnaire.init(document.querySelector('form'));
+    try {
+      const restored = document.querySelector('form').elements;
+      assert.equal(restored.email.value, 'a@example.test');
+      assert.equal(restored.password.value, '');
+      assert.equal(restored.ref.value, 'user-b');
+    } finally {
+      survey.destroy();
+    }
+  });
+
   test('skipping a question clears its error', () => {
     document.body.innerHTML = `<form class="questionnaire">
       <fieldset><legend>Email</legend><input type="email" name="email"></fieldset>
