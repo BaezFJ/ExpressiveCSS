@@ -367,5 +367,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the .sticky-column data table pinning and its row-state fill: 85,400 gzip bytes (+168).
   // Reviewed the data table column resize handle and the sort rules that skip it: 85,475 gzip bytes (+75).
   // Reviewed end padding on resizable header cells that clears the handle's hit area: 85,486 gzip bytes (+11).
-  assert.ok(sizes(css).gzip <= 85486, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed dropping the global display: table-cell on td and th, which kept hidden cells showing: 85,480 gzip bytes (-6).
+  assert.ok(sizes(css).gzip <= 85480, `CSS gzip: ${sizes(css).gzip}`);
 });
