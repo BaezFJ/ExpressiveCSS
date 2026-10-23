@@ -83,7 +83,7 @@ Covers R8, R11 as regressions.
 
 Covers R10.
 
-- Action: read the "Display and position" table in `llm.md`, the helpers table in `docs/src/pages/helpers.astro`, and `skills/expressivecss/expressivecss-usage/references/helpers.md`; build the docs with `npm run docs:build:astro` (from `package.json`, not yet run on this branch) and open the helpers page.
+- Action: read the "Display and position" table in `llm.md`, the helpers table in `docs/src/pages/helpers.astro`, and `skills/expressivecss/expressivecss-usage/references/helpers.md`; build the docs with `npm run docs:build:astro` and open the helpers page.
 - Expected: each source lists all eight new classes with their declarations, says `.position-fixed` adds no z-index, points to `--expressive-z-*`, and warns that a transformed or filtered ancestor contains a fixed element. The pinned-badge example renders with the badge in the card's top end corner in LTR. `CHANGELOG.md` has the Added entry.
 - Result: Pass, 2026-10-23, for the sources and the docs build: `npm run docs:build:astro` and `npm run docs:verify` succeeded. The rendered example was not opened in a browser.
 

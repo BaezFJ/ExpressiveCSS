@@ -28,11 +28,11 @@ Outcome: authors and agents can find every new class and its limits.
 Prerequisites: group 1.
 
 - [x] Add rows for the new classes to the "Display and position" table in `llm.md`, and a note that `.position-fixed` adds no z-index, that `--expressive-z-*` values order fixed surfaces, and that a transformed or filtered ancestor captures a fixed element.
-- [x] Add the same rows and note to the table in `docs/src/pages/helpers.astro`, with a short example: a badge pinned with `.position-absolute.top-0.end-0` inside a `.relative` card.
+- [x] Add the same rows and note to the table in `docs/src/pages/helpers.astro`, with a short example: a dismiss icon button pinned with `.position-absolute.top-0.end-0` inside a `.relative` card. Badges already anchor themselves, so the example uses a button.
 - [x] Update the `.relative`, `.sticky-top` row in `skills/expressivecss/expressivecss-usage/references/helpers.md`.
 - [x] Add an Added entry to `CHANGELOG.md` under Unreleased.
 
-Completion check: the three docs list the same eight new class names, and `npm run docs:build:astro` succeeds (command from `package.json`, not yet run on this branch).
+Completion check: the three docs list the same eight new class names, and `npm run docs:build:astro` succeeds.
 
 Covers R10; V7.
 
