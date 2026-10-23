@@ -730,7 +730,7 @@ const S = defineSections([
 `} />
   </Section>
   <Section {...S.formatting}>
-        <p>These classes handle truncation, text wrapping and hover effects.</p>
+        <p>These classes handle truncation, line clamping, text wrapping, opacity and hover effects.</p>
 
         <h5>Truncation</h5>
         <p>
@@ -781,6 +781,24 @@ const S = defineSections([
           </tbody>
         </table>
         <p>Allow wrapping on narrow screens when keeping a line intact would hide required text. These classes do not change display or overflow.</p>
+
+        <h5>Opacity</h5>
+        <p>
+          <code>.opacity-0</code>, <code>.opacity-25</code>, <code>.opacity-38</code>, <code>.opacity-50</code>,
+          <code>.opacity-75</code> and <code>.opacity-100</code> set <code>opacity</code> to 0, 0.25, 0.38, 0.5, 0.75 and 1.
+          38 is the M3 opacity for disabled content. A class overrides a component's own opacity, and unlayered page CSS overrides the class.
+        </p>
+        <p>
+          Dimmed text still needs enough contrast unless it belongs to a disabled control. Opacity disables and hides nothing:
+          even at <code>.opacity-0</code> the element takes clicks and focus and stays in the accessibility tree.
+          Use <code>disabled</code>, <code>.hide</code> or <code>hidden</code> for that.
+        </p>
+        <div class="flex gap-3" aria-hidden="true">
+          {[25, 38, 50, 75, 100].map(step => <div class={`primary corner-medium opacity-${step}`} style="width: 48px; height: 48px"></div>)}
+        </div>
+<Code code={`
+<img class="opacity-50" src="pattern.svg" alt="">
+`} />
 
 
         <h5>Hover</h5>

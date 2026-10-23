@@ -9,7 +9,7 @@ Component ID: `lightbox`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `93d1bebf3eed3635c22463050f0c1fbc8580699e02b68aa8a61946e5a9209ee7`
+Contract SHA-256: `c253dbca285c8f8e80ca31e9bcfcdffb5ba679caf2da3a2a4943641ad2fe90fc`
 
 #### Selection and adaptation
 
