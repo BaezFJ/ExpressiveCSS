@@ -10,11 +10,11 @@ Outcome: the modifier pins the first column, and the name cell after a checkbox 
 
 Prerequisites: none.
 
-- [ ] Add a case to `tests/data-table-browser.test.js` inside the `for (const [name, engine, test] of engines)` loop. Build a table wider than its wrapper, with a checkbox column, a `th scope="row"` name column and enough other columns to scroll, under the modifier. Cover V1 to V3 and V6.
-- [ ] Run `npm run build:css` and `node --test tests/data-table-browser.test.js`. Confirm the new case fails and the existing cases pass.
-- [ ] Measure the checkbox cell's rendered width on the base commit in each engine, and pick the token default from it.
-- [ ] In `src/sass/components/_data-table.scss`, add `--md-comp-data-table-checkbox-column-width` to the token list and the header comment, then add the modifier block: sticky first cells, the paired cell after a checkbox cell, the fixed checkbox width, the stacking order and the inline-end divider.
-- [ ] Rebuild and rerun the file until it passes. Add the reviewed CSS budget line and raise the bound to the measured size.
+- [x] Add a case to `tests/data-table-browser.test.js` inside the `for (const [name, engine, test] of engines)` loop. Build a table wider than its wrapper, with a checkbox column, a `th scope="row"` name column and enough other columns to scroll, under the modifier. Cover V1 to V3 and V6.
+- [x] Run `npm run build:css` and `node --test tests/data-table-browser.test.js`. Confirm the new case fails and the existing cases pass.
+- [x] Measure the checkbox cell's rendered width on the base commit in each engine, and pick the token default from it.
+- [x] In `src/sass/components/_data-table.scss`, add `--md-comp-data-table-checkbox-column-width` to the token list and the header comment, then add the modifier block: sticky first cells, the paired cell after a checkbox cell, the fixed checkbox width, the stacking order and the inline-end divider.
+- [x] Rebuild and rerun the file until it passes. Add the reviewed CSS budget line and raise the bound to the measured size.
 
 Completion check: `node --test tests/data-table-browser.test.js` and `node --test tests/selective-builds.test.js` pass.
 

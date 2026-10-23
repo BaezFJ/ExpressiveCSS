@@ -22,6 +22,12 @@
 // aria-expanded. A .data-table-actions bar just before the wrapper joins its
 // top edge and takes the selected color while any row is selected.
 //
+// .sticky-column on the wrapper pins each row's first cell to its
+// inline-start edge while the other columns scroll sideways. When the first
+// column holds checkboxes, the name cell after it is pinned too, so the
+// checkbox column takes a fixed width that offsets the second cell. Detail
+// rows and the caption scroll with the table.
+//
 // Tokens:
 //   --md-comp-data-table-container-color           surface
 //   --md-comp-data-table-shape                     12px
@@ -31,6 +37,7 @@
 //   --md-comp-data-table-cell-padding              16px
 //   --md-comp-data-table-selected-container-color  secondary-container
 //   --md-comp-data-table-detail-container-color    surface-container-low
+//   --md-comp-data-table-checkbox-column-width     cell padding + 18px box
 
 .data-table {
   --md-comp-data-table-container-color: var(--md-sys-color-surface);
@@ -41,6 +48,7 @@
   --md-comp-data-table-cell-padding: 16px;
   --md-comp-data-table-selected-container-color: var(--md-sys-color-secondary-container);
   --md-comp-data-table-detail-container-color: var(--md-sys-color-surface-container-low);
+  --md-comp-data-table-checkbox-column-width: calc(var(--md-comp-data-table-cell-padding) + 18px);
 
   box-sizing: border-box;
   max-width: 100%;
@@ -148,6 +156,40 @@
   :is(th, td):has(> label > input[type="checkbox"]:only-child) {
     width: 1px;
     padding-inline-end: 0;
+  }
+
+  // Sticky first column. Pinned body cells stack above scrolled body cells,
+  // and the pinned header cells above the scrolled header cells.
+  &.sticky-column {
+    > table > * > tr:where(:not(.data-table-detail)) > :first-child {
+      position: sticky;
+      inset-inline-start: 0;
+      z-index: 1;
+      border-inline-end: 1px solid var(--md-comp-data-table-outline-color);
+    }
+
+    > table > thead > tr > :first-child {
+      z-index: 2;
+    }
+  }
+
+  &.sticky-column:has(> table > * > tr > :first-child > label > input[type="checkbox"]:only-child) {
+    > table > * > tr:where(:not(.data-table-detail)) > :first-child {
+      width: var(--md-comp-data-table-checkbox-column-width);
+      padding-inline-end: 0;
+      border-inline-end: 0;
+    }
+
+    > table > * > tr:where(:not(.data-table-detail)) > :nth-child(2) {
+      position: sticky;
+      inset-inline-start: var(--md-comp-data-table-checkbox-column-width);
+      z-index: 1;
+      border-inline-end: 1px solid var(--md-comp-data-table-outline-color);
+    }
+
+    > table > thead > tr > :nth-child(2) {
+      z-index: 2;
+    }
   }
 
   // The sort control fills the header text and carries a trailing arrow.

@@ -34,7 +34,138 @@ const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><styl
 <div id="probe" style="background-color:var(--md-sys-color-secondary-container)"></div>
 </main></body></html>`;
 
+// Six extra columns make each table wider than its 400px wrapper.
+const extra = (tag, label) => Array.from({ length: 6 }, (_, i) => `<${tag}>${label} ${i + 1}</${tag}>`).join('');
+const pick = (label) => `<label><input type="checkbox" aria-label="${label}"></label>`;
+const sticky = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><style>${css}</style></head><body>
+<div id="wide" class="data-table sticky-column" style="inline-size:400px;max-block-size:240px">
+  <table style="min-inline-size:1200px">
+    <caption>Orders</caption>
+    <thead><tr><th scope="col">${pick('Select all')}</th><th id="h-name" scope="col">Customer</th>${extra('th', 'Column')}</tr></thead>
+    <tbody>${names.map((person, index) => `<tr id="w${index}">
+      <td>${index === 5 ? '' : pick(`Select ${person}`)}</td><th scope="row">${person}</th>${extra('td', 'Value')}</tr>`).join('')}</tbody>
+    <tfoot><tr><td></td><th scope="row">Total</th>${extra('td', 'Sum')}</tr></tfoot>
+  </table>
+</div>
+<div id="plain" class="data-table sticky-column" style="inline-size:400px">
+  <table style="min-inline-size:1200px">
+    <thead><tr><th scope="col">Customer</th><th scope="col">Status</th>${extra('th', 'Column')}</tr></thead>
+    <tbody><tr><th scope="row">Ada</th><td>Shipped</td>${extra('td', 'Value')}</tr></tbody>
+    <tfoot><tr><th scope="row">Total</th><td></td>${extra('td', 'Sum')}</tr></tfoot>
+  </table>
+</div>
+<div id="off" class="data-table" style="inline-size:400px">
+  <table style="min-inline-size:1200px">
+    <thead><tr><th scope="col">${pick('Select all')}</th><th scope="col">Customer</th>${extra('th', 'Column')}</tr></thead>
+    <tbody><tr><td>${pick('Select Ada')}</td><th scope="row">Ada</th>${extra('td', 'Value')}</tr></tbody>
+  </table>
+</div>
+</body></html>`;
+
+// The inline-start and inline-end edges of a box, its width, and the
+// inline-start edge of its scrollport inside the 1px outline.
+const edges = (page, selector) => page.locator(selector).evaluate((el) => {
+  const box = el.getBoundingClientRect();
+  if (getComputedStyle(el).direction === 'rtl') return { start: box.right, end: box.left, inner: box.right - el.clientLeft, width: box.width };
+  return { start: box.left, end: box.right, inner: box.left + el.clientLeft, width: box.width };
+});
+
+// Scrolls a wrapper to its far inline end, and down by top; returns the sideways distance.
+const scrollAcross = (page, selector, top = 0) => page.locator(selector).evaluate((el, y) => {
+  el.scrollLeft = (getComputedStyle(el).direction === 'rtl' ? -1 : 1) * el.scrollWidth;
+  el.scrollTop = y;
+  return Math.abs(el.scrollLeft);
+}, top);
+
+// The table cell painted on top at a point.
+const hit = (page, x, y) => page.evaluate(([px, py]) => {
+  const cell = document.elementFromPoint(px, py).closest('th, td');
+  return { group: cell.parentElement.parentElement.localName, index: cell.cellIndex, id: cell.id };
+}, [x, y]);
+
+const near = (dir, a, b, message) => assert.ok(Math.abs(a - b) < 1, `${dir}: ${message}, got ${a} vs ${b}`);
+const style = (page, selector, property) => page.locator(selector).evaluate((el, p) => getComputedStyle(el).getPropertyValue(p), property);
+
+// V1: without a checkbox column only the first cell is pinned, in every row group.
+async function checkPlain(page, dir) {
+  const third = (await edges(page, '#plain tbody td:nth-child(3)')).start;
+  const moved = await scrollAcross(page, '#plain');
+  assert.ok(moved > 300, `${dir}: the plain table scrolls sideways, got ${moved}`);
+  const { inner } = await edges(page, '#plain');
+  for (const cell of ['thead th:first-child', 'tbody th:first-child', 'tfoot th:first-child']) {
+    near(dir, (await edges(page, `#plain ${cell}`)).start, inner, `${cell} stays at the scrollport edge`);
+  }
+  near(dir, Math.abs((await edges(page, '#plain tbody td:nth-child(3)')).start - third), moved, 'the third column moves by the scroll distance');
+  const gap = (await edges(page, '#plain tbody td:nth-child(2)')).start - (await edges(page, '#plain tbody th:first-child')).end;
+  assert.ok(Math.abs(gap) > 1, `${dir}: the second cell is not pinned without a checkbox column`);
+}
+
+// V2: a checkbox column pins its cell and the name after it, in every row,
+// including the row with no checkbox and the footer.
+async function checkPaired(page, dir) {
+  await scrollAcross(page, '#wide');
+  const { inner } = await edges(page, '#wide');
+  const width = await page.locator('#wide').evaluate((el) => {
+    const probe = el.appendChild(document.createElement('div'));
+    probe.style.inlineSize = 'var(--md-comp-data-table-checkbox-column-width)';
+    const value = probe.getBoundingClientRect().width;
+    probe.remove();
+    return value;
+  });
+  assert.ok(width > 0, `${dir}: the checkbox column width token is set`);
+  for (const row of ['thead tr', '#w0', '#w5', 'tfoot tr']) {
+    const box = await edges(page, `#wide ${row} > :first-child`);
+    near(dir, box.start, inner, `${row} checkbox cell stays at the edge`);
+    near(dir, (await edges(page, `#wide ${row} > :nth-child(2)`)).start, box.end, `${row} name cell meets the checkbox cell`);
+    near(dir, box.width, width, `${row} checkbox cell takes the token width`);
+  }
+}
+
+// V3: scrolled down too, the corner paints above scrolled header cells and
+// pinned body cells, and pinned body cells above scrolled body cells.
+async function checkStacking(page, dir) {
+  await scrollAcross(page, '#wide', 120);
+  const corner = await page.locator('#h-name').boundingBox();
+  const middle = corner.y + corner.height / 2;
+  assert.equal((await hit(page, corner.x + corner.width / 2, middle)).id, 'h-name', `${dir}: the corner cell is on top`);
+  const beside = dir === 'rtl' ? corner.x - 20 : corner.x + corner.width + 20;
+  const header = await hit(page, beside, middle);
+  assert.equal(header.group, 'thead', `${dir}: a scrolled header cell covers the body`);
+  assert.ok(header.index > 1, `${dir}: that header cell is a scrolled one`);
+  const body = await hit(page, corner.x + corner.width / 2, corner.y + corner.height + 10);
+  assert.deepEqual([body.group, body.index], ['tbody', 1], `${dir}: the pinned name cell covers scrolled body cells`);
+}
+
+// V6: the divider on the last pinned cell, and an unmodified table left alone.
+async function checkDividers(page, dir) {
+  for (const selector of ['#wide #w0 > :nth-child(2)', '#plain tbody th:first-child']) {
+    assert.equal(await style(page, selector, 'border-inline-end-width'), '1px', `${dir}: ${selector} draws the divider`);
+    assert.equal(await style(page, selector, 'border-inline-end-style'), 'solid');
+  }
+  assert.equal(await style(page, '#wide #w0 > :first-child', 'border-inline-end-width'), '0px', `${dir}: no divider between checkbox and name`);
+  assert.equal(await style(page, '#off thead th:nth-child(3)', 'z-index'), '1', `${dir}: an unmodified header keeps its stacking`);
+  assert.equal(await style(page, '#off tbody td:first-child', 'position'), 'static', `${dir}: an unmodified table pins nothing`);
+  const hug = await page.locator('#off tbody td:first-child').evaluate((el) => el.getBoundingClientRect().width - el.querySelector('label').getBoundingClientRect().width);
+  near(dir, hug, 16, 'an unmodified checkbox cell still hugs its box');
+}
+
 for (const [name, engine, test] of engines) {
+  test(`${name}: a sticky-column data table pins its first column, and the name after a checkbox`, { timeout: 30000 }, async () => {
+    const browser = await leaseBrowser(engine);
+    try {
+      const page = await browser.newPage({ viewport: { width: 800, height: 900 } });
+      for (const dir of ['ltr', 'rtl']) {
+        await page.setContent(sticky(dir));
+        await checkPlain(page, dir);
+        await checkPaired(page, dir);
+        await checkStacking(page, dir);
+        await checkDividers(page, dir);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
   test(`${name}: data table keeps table semantics, sticks its header and draws sort and selection`, { timeout: 30000 }, async (t) => {
     const browser = await leaseBrowser(engine);
     try {
