@@ -4,7 +4,7 @@ Date: 2026-10-23
 Roadmap phase: Phase 33, data table column visibility
 Branch: `feature/2026-10-23-data-table-column-visibility`
 Base: `origin/master` at `d501bacf0`, fetched 2026-10-23
-Status: specified; not implemented
+Status: implemented and locally verified 2026-10-23; CI and review pending
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 33](../../../../roadmap.md#phase-33-data-table-column-visibility). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -65,10 +65,10 @@ People can hide and show data table columns from a menu of checkbox items, and t
 These are open to change in review.
 
 - Attribute: `data-column` holds a header cell's `id`. An id survives reordering and grouped headers, and `headerColumns()` turns the cell into a column index. Look the id up in the item's root node, so a menu in the same shadow root as its table works.
-- Hiding: set the `hidden` attribute on each cell, which removes it from layout and the accessibility tree without new CSS. Mark the cells the framework hid, for example with `data-column-hidden`, so showing a column never unhides a cell the author hid.
+- Hiding: set the `hidden` attribute on each cell, which removes it from layout and the accessibility tree. Mark the cells the framework hid, for example with `data-column-hidden`, so showing a column never unhides a cell the author hid. Implemented with `data-column-hidden`. It did need one CSS change: the global `td, th` rule in `src/sass/base/_global.scss` restated `display: table-cell`, which beat the browser's `[hidden]` rule, so hidden cells kept showing. The line was deleted in its own commit, with a changelog Fixed entry.
 - Listener: one document listener for `expressive:change` in `DataTables.Init()`, acting only when `detail.item` matches `[role="menuitemcheckbox"][data-column]`. The data table's own `expressive:change`, whose detail has `selected`, passes through untouched.
 - Load-time state: extend the existing `Utils.onDocumentReady` pass and `sync()` to apply the linked items whose ids are headers of that wrapper.
-- Resize: make `freeze()` skip hidden first-row cells and `fit()` sum only visible ones. A shown cell keeps its inline width from before it hid. A cell with no inline width under the fixed layout gets its content width, no narrower than the minimum token, through `setWidth`.
+- Resize: make `freeze()` skip hidden first-row cells and `fit()` sum only visible ones. A shown cell keeps its inline width from before it hid. A cell with no inline width under the fixed layout gets its content width, no narrower than the minimum token, through `setWidth`. Implemented by filtering hidden cells out of `firstCells()`, which both functions use, and a `refit()` after each toggle. The content width is the header's `scrollWidth`, written directly rather than through `setWidth`; all three engines gave the fixture's Owner column 61px.
 - Every new function stays below cyclomatic complexity 5 for the fallow pre-commit gate.
 
 ## Technical constraints
