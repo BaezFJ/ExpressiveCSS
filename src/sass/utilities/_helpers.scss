@@ -11,6 +11,18 @@
 .valign-wrapper { display: flex; align-items: center; }
 .relative { position: relative; }
 .sticky-top { position: sticky; top: 0; }
+// Not a bare `.fixed`: the navigation bar, toolbar and table of contents use
+// that as a modifier, and a utility would override them. No z-index either;
+// a fixed element takes a --expressive-z-* value from the page. Static comes
+// last so it beats .relative and .sticky-top on the same element.
+.position-absolute { position: absolute; }
+.position-fixed { position: fixed; }
+.position-static { position: static; }
+.inset-0 { inset: 0; }
+.top-0 { top: 0; }
+.bottom-0 { bottom: 0; }
+.start-0 { inset-inline-start: 0; }
+.end-0 { inset-inline-end: 0; }
 
 // Display and flex layout. One declaration each; combine on the container,
 // and pair with .gap-* from _spacing.scss for the space between items.
@@ -66,6 +78,17 @@ $_layout: (
 }
 
 .inline-grid { display: inline-grid; }
+
+// As many columns as fit, each at least --grid-column-min wide (set it here or
+// on an ancestor). Empty tracks stay, so a short last row keeps the column
+// width, and a container narrower than the minimum gets one column. The
+// column count follows the container, so there are no prefixed copies; pair
+// with .gap-*.
+.grid-auto-fill {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--grid-column-min, #{rem(240px)})), 1fr));
+}
+
 .contents { display: contents; }
 
 // On a flex or grid child.
@@ -162,11 +185,21 @@ $_layout: (
 .text-pretty { text-wrap-style: pretty; }
 .truncate { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+// Pointer input. Clicks pass through a .pointer-events-none overlay to what
+// lies beneath, and a .pointer-events-auto child takes them back. Neither
+// changes focus or keys: use inert or disabled to block all input.
+.pointer-events-none { pointer-events: none; }
+.pointer-events-auto { pointer-events: auto; }
+.cursor-pointer { cursor: pointer; }
 // Opacity. 38 is M3's disabled-content opacity. Dimming hides nothing from
 // pointers, keyboards or screen readers; use .hide or `hidden` for that.
 @each $step, $value in ("0": 0, "25": 0.25, "38": 0.38, "50": 0.5, "75": 0.75, "100": 1) {
   .opacity-#{$step} { opacity: $value; }
 }
+
+// Lists without markers or indentation. WebKit drops the list role from a
+// list with `list-style: none`, so the markup adds role="list" back.
+.list-unstyled { list-style: none; padding-inline-start: 0; }
 
 // Responsive media
 img.responsive-img,

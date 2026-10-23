@@ -202,6 +202,59 @@ for (const [engine, browserType, utilityTest] of engines) {
     }
   });
 
+  utilityTest(`unstyled lists drop markers and indentation and stay lists (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      const items = '<li>One</li><li>Two<ul><li>Inner</li></ul></li><li>Three</li>';
+      await page.setContent(`<style>${css}</style>
+        <div><ul id="ul" class="list-unstyled" role="list">${items}</ul></div>
+        <div><ol id="ol" class="list-unstyled" role="list">${items}</ol></div>
+        <div><ul id="bare" class="list-unstyled">${items}</ul></div>
+        <div><ul id="plain">${items}</ul></div>`);
+      const read = (id) => page.locator(`#${id}`).evaluate((list) => {
+        const style = getComputedStyle(list);
+        const items = [...list.children];
+        const box = list.getBoundingClientRect();
+        const first = items[0].getBoundingClientRect();
+        return {
+          padding: style.paddingInlineStart,
+          margins: [style.marginBlockStart, style.marginBlockEnd],
+          markers: items.map((li) => getComputedStyle(li).listStyleType),
+          display: items.map((li) => getComputedStyle(li).display),
+          startOffset: document.dir === 'rtl' ? box.right - first.right : first.left - box.left,
+        };
+      });
+      for (const direction of ['ltr', 'rtl']) {
+        await page.evaluate((dir) => document.documentElement.dir = dir, direction);
+        const plain = await read('plain');
+        assert.notEqual(plain.padding, '0px', 'a plain list keeps its indentation');
+        assert.deepEqual(plain.markers, ['disc', 'disc', 'disc']);
+        for (const id of ['ul', 'ol']) {
+          assert.deepEqual(await read(id), {
+            padding: '0px',
+            margins: plain.margins,
+            markers: ['none', 'none', 'none'],
+            display: ['list-item', 'list-item', 'list-item'],
+            startOffset: 0,
+          }, `${id} in ${direction}`);
+        }
+      }
+      // A nested list keeps the browser's own markers and indentation.
+      assert.deepEqual(await page.locator('#ul ul').evaluate((list) => [
+        getComputedStyle(list).paddingInlineStart !== '0px',
+        getComputedStyle(list.firstElementChild).listStyleType !== 'none',
+      ]), [true, true]);
+      // Playwright computes these roles itself, so this guards the markup, not
+      // the engine's own tree; WebKit may drop the role without role="list".
+      for (const id of ['ul', 'ol', 'bare']) {
+        assert.match(await page.locator(`#${id}`).ariaSnapshot(), /^- list:\n {2}- listitem: One\n {2}- listitem:/, id);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
   utilityTest(`focusable hidden content reveals for keyboard and descendant focus (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
@@ -232,6 +285,75 @@ for (const [engine, browserType, utilityTest] of engines) {
           }), ['none', 'relative', '8px', true, true], 'focus restores consumer styling');
         }
       }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  utilityTest(`pointer helpers pass clicks through an overlay to what lies beneath (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<style>${css}</style>
+        <div class="relative" style="width: 300px; height: 120px">
+          <button id="target" type="button" style="position: absolute; top: 10px; left: 10px; width: 100px; height: 40px">Beneath</button>
+          <div id="overlay" class="pointer-events-none" style="position: absolute; inset: 0">
+            <button id="child" type="button" class="pointer-events-auto" style="position: absolute; bottom: 10px; right: 10px; width: 100px; height: 40px">Close</button>
+          </div>
+        </div>`);
+      await page.evaluate(() => {
+        window.clicks = { target: 0, overlay: 0, child: 0 };
+        document.getElementById('target').addEventListener('click', () => window.clicks.target++);
+        document.getElementById('child').addEventListener('click', () => window.clicks.child++);
+        // Only clicks aimed at the overlay itself; the child's bubble up to it.
+        document.getElementById('overlay').addEventListener('click', (event) => {
+          if (event.target.id === 'overlay') window.clicks.overlay++;
+        });
+      });
+      // locator.click() refuses a covered element, so click at its center.
+      const center = async (id) => {
+        const box = await page.locator(`#${id}`).boundingBox();
+        return [box.x + box.width / 2, box.y + box.height / 2];
+      };
+      await page.mouse.click(...await center('target'));
+      await page.mouse.click(...await center('child'));
+      assert.deepEqual(await page.evaluate(() => window.clicks), { target: 1, overlay: 0, child: 1 });
+    } finally {
+      await browser.close();
+    }
+  });
+
+  utilityTest(`grid-auto-fill fits as many columns as the container allows (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      const cells = (n) => '<div></div>'.repeat(n);
+      await page.setContent(`<style>${css} html { font-size: 16px; }</style>
+        <div id="grid" class="grid-auto-fill" style="--grid-column-min: 100px">${cells(8)}</div>
+        <div style="--grid-column-min: 200px"><div id="inherited" class="grid-auto-fill">${cells(4)}</div></div>
+        <div id="short" class="grid-auto-fill" style="--grid-column-min: 100px"><div><div style="width: 110px"></div></div><div></div></div>
+        <div id="fallback" class="grid-auto-fill">${cells(4)}</div>`);
+      const layout = (id, width) => page.locator(`#${id}`).evaluate((el, width) => {
+        el.style.width = `${width}px`;
+        const boxes = [...el.children].map((child) => child.getBoundingClientRect());
+        return {
+          columns: new Set(boxes.map((box) => box.left)).size,
+          widths: boxes.map((box) => box.width),
+          overflows: el.scrollWidth > el.clientWidth
+        };
+      }, width);
+      for (const [width, columns] of [[250, 2], [400, 4], [820, 8]]) {
+        assert.equal((await layout('grid', width)).columns, columns, `${width}px wide`);
+      }
+      // Four 100px columns and three 12px gaps need 436px.
+      await page.locator('#grid').evaluate((el) => el.classList.add('gap-3'));
+      assert.equal((await layout('grid', 400)).columns, 3, 'the gap counts');
+      assert.equal((await layout('inherited', 450)).columns, 2, 'an ancestor sets the minimum');
+      // A 110px item would widen its own column under an auto maximum.
+      assert.deepEqual((await layout('short', 450)).widths, [112.5, 112.5], 'columns share space equally and empty tracks stay');
+      assert.deepEqual([(await layout('fallback', 479)).columns, (await layout('fallback', 480)).columns], [1, 2], 'the fallback minimum is 240px');
+      const narrow = await layout('fallback', 180);
+      assert.deepEqual([narrow.columns, narrow.widths[0], narrow.overflows], [1, 180, false], 'a narrow container gets one column');
     } finally {
       await browser.close();
     }
@@ -429,4 +551,86 @@ browserTest('corners="cut" bevels container surfaces and leaves round indicators
   } finally {
     await browser.close();
   }
+});
+
+for (const [engine, browserType, utilityTest] of engines) {
+  utilityTest(`inset and edge pins fill and pin to the padding box in LTR and RTL (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      for (const dir of ['ltr', 'rtl']) {
+        await page.setContent(`<html dir="${dir}"><style>${css} .pin { width: 20px; height: 20px; }</style>
+          <div id="parent" class="relative" style="width: 200px; height: 120px; padding: 12px; border: 3px solid">
+            <div id="fill" class="position-absolute inset-0"></div>
+            <div id="top" class="pin position-absolute top-0"></div>
+            <div id="bottom" class="pin position-absolute bottom-0"></div>
+            <div id="start" class="pin position-absolute start-0"></div>
+            <div id="end" class="pin position-absolute end-0"></div>
+          </div></html>`);
+        const boxes = await page.evaluate(() => {
+          const rect = (id) => document.getElementById(id).getBoundingClientRect();
+          const outer = rect('parent');
+          return {
+            padding: { top: outer.top + 3, right: outer.right - 3, bottom: outer.bottom - 3, left: outer.left + 3 },
+            fill: rect('fill'), top: rect('top'), bottom: rect('bottom'), start: rect('start'), end: rect('end'),
+            position: getComputedStyle(document.getElementById('fill')).position
+          };
+        });
+        const near = (a, b, what) => assert.ok(Math.abs(a - b) <= 0.5, `${dir} ${what}: ${a} vs ${b}`);
+        assert.equal(boxes.position, 'absolute');
+        for (const side of ['top', 'right', 'bottom', 'left']) near(boxes.fill[side], boxes.padding[side], `fill ${side}`);
+        near(boxes.top.top, boxes.padding.top, 'top-0');
+        near(boxes.bottom.bottom, boxes.padding.bottom, 'bottom-0');
+        const [startSide, endSide] = dir === 'ltr' ? ['left', 'right'] : ['right', 'left'];
+        near(boxes.start[startSide], boxes.padding[startSide], 'start-0');
+        near(boxes.end[endSide], boxes.padding[endSide], 'end-0');
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  utilityTest(`a fixed inset element covers the viewport after scrolling (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<style>${css}</style><div style="height: 3000px"></div><div id="cover" class="position-fixed inset-0"></div>`);
+      const read = () => page.locator('#cover').evaluate((el) => {
+        const box = el.getBoundingClientRect();
+        const style = getComputedStyle(el);
+        return [box.left, box.top, Math.round(box.width), Math.round(box.height), style.position, style.zIndex];
+      });
+      const viewport = await page.evaluate(() => [document.documentElement.clientWidth, innerHeight]);
+      const expected = [0, 0, ...viewport, 'fixed', 'auto'];
+      assert.deepEqual(await read(), expected);
+      await page.evaluate(() => scrollTo(0, 1000));
+      assert.equal(await page.evaluate(() => scrollY), 1000);
+      assert.deepEqual(await read(), expected);
+    } finally {
+      await browser.close();
+    }
+  });
+}
+
+browserTest('position helpers leave component .fixed modifiers alone and static undoes positioning', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<style>${css}</style>
+      <nav id="bar" class="navigation-bar fixed" aria-label="Main"></nav>
+      <div id="toolbar" class="toolbar fixed"></div>
+      <ul id="toc" class="table-of-contents fixed"></ul>
+      <div id="relative" class="relative"></div>
+      <div id="sticky" class="sticky-top"></div>
+      <div id="static" class="relative sticky-top position-static"></div>`);
+    const styles = await page.evaluate(() => ['bar', 'toolbar', 'toc', 'relative', 'sticky', 'static']
+      .map((id) => getComputedStyle(document.getElementById(id)).position));
+    assert.deepEqual(styles, ['sticky', 'fixed', 'fixed', 'relative', 'sticky', 'static']);
+    assert.equal(await page.locator('#sticky').evaluate((el) => getComputedStyle(el).top), '0px');
+  } finally {
+    await browser.close();
+  }
+  // No window-size prefixed forms, though the layout classes have them.
+  assert.match(css, /\\:flex-row\b/);
+  assert.doesNotMatch(css, /\\:(position-(absolute|fixed|static)|inset-0|top-0|bottom-0|start-0|end-0)\b/);
 });

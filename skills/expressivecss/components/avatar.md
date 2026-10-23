@@ -9,7 +9,7 @@ Component ID: `avatar`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `c253dbca285c8f8e80ca31e9bcfcdffb5ba679caf2da3a2a4943641ad2fe90fc`
+Contract SHA-256: `506fb222374cb236c4f3992429174ed0447f17e94b1fcc9a6925cddaa59a9100`
 
 #### Selection and adaptation
 
