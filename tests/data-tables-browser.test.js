@@ -76,3 +76,168 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 }
+
+// Column resize: a .drag-handle button ending a header cell resizes its
+// column. Fixture columns are wide enough that the table starts at the
+// wrapper's width.
+const handle = (name) => `<button type="button" class="drag-handle" aria-label="Resize ${name}"></button>`;
+const resizeHtml = (dir = 'ltr') => `<!doctype html><html lang="en" dir="${dir}"><head><style>${css}</style></head><body>
+  <div id="sorted" class="data-table" data-sort style="inline-size: 600px">
+    <table>
+      <thead><tr>
+        <th scope="col" aria-sort="ascending"><button type="button">Customer</button>${handle('Customer')}</th>
+        <th scope="col">Status${handle('Status')}</th>
+        <th scope="col" class="numeric"><button type="button">Total</button>${handle('Total')}</th>
+        <th scope="col">Notes</th>
+      </tr></thead>
+      <tbody>
+        <tr><th scope="row">Alan</th><td>Pending</td><td class="numeric">$3.76</td><td>Gift</td></tr>
+        <tr><th scope="row">Alvin</th><td>Shipped</td><td class="numeric">$87.00</td><td>None</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="pinned" class="data-table sticky-column" style="inline-size: 400px">
+    <table>
+      <thead><tr>
+        <th scope="col"><label><input type="checkbox" aria-label="Select all"></label></th>
+        <th scope="col">Account${handle('Account')}</th>
+        ${'<th scope="col">Quarter figures</th>'.repeat(6)}
+      </tr></thead>
+      <tbody>
+        <tr><td><label><input type="checkbox" aria-label="Select Acme"></label></td><th scope="row">Acme</th>${'<td>1,024,000</td>'.repeat(6)}</tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="plain" class="data-table" style="inline-size: 600px">
+    <table><thead><tr><th scope="col">Customer</th><th scope="col">Total</th></tr></thead>
+      <tbody><tr><th scope="row">Alan</th><td>$3.76</td></tr></tbody></table>
+  </div>
+  <script>${js}</script></body></html>`;
+
+/** Each header cell's width in a table, in pixels. */
+const widths = (page, id) => page.locator(`#${id} thead th`).evaluateAll((cells) => cells.map((cell) => cell.getBoundingClientRect().width));
+
+/** Records the resize and sort events the page fires. */
+const listen = (page) => page.evaluate(() => {
+  window.fired = [];
+  for (const type of ['resize', 'sort']) {
+    document.addEventListener(`expressive:${type}`, (e) => window.fired.push({ type, label: e.detail.header.textContent, column: e.detail.column, width: e.detail.width }));
+  }
+});
+
+/** Drags a handle sideways by `dx` pixels with the mouse. */
+async function drag(page, locator, dx) {
+  const box = await locator.boundingBox();
+  const [x, y] = [box.x + box.width / 2, box.y + box.height / 2];
+  await page.mouse.move(x, y);
+  await page.mouse.down();
+  await page.mouse.move(x + dx, y, { steps: 5 });
+  await page.mouse.up();
+}
+
+/** Asserts two widths agree within a pixel. */
+function near(actual, expected, message) {
+  assert.ok(Math.abs(actual - expected) <= 1, `${message}: ${actual} vs ${expected}`);
+}
+
+/** Scrolls a wrapper to its far inline end. */
+const scrollToEnd = (page, id) => page.locator(`#${id}`).evaluate((wrapper) => {
+  wrapper.scrollLeft = getComputedStyle(wrapper).direction === 'rtl' ? -wrapper.scrollWidth : wrapper.scrollWidth;
+});
+
+for (const [engine, browserType, browserTest] of engines) {
+
+  browserTest(`${engine}: dragging a column handle resizes that column and fires one event`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(resizeHtml());
+      await listen(page);
+      const before = await widths(page, 'sorted');
+      await drag(page, page.getByRole('button', { name: 'Resize Status' }), 60);
+      const after = await widths(page, 'sorted');
+      near(after[1], before[1] + 60, 'Status follows the pointer');
+      [0, 2, 3].forEach((i) => near(after[i], before[i], `column ${i} keeps its width`));
+      const fired = await page.evaluate(() => window.fired);
+      assert.equal(fired.length, 1, JSON.stringify(fired));
+      assert.deepEqual([fired[0].type, fired[0].label, fired[0].column], ['resize', 'Status', 1]);
+      near(fired[0].width, after[1], 'the event carries the new width');
+      const overflow = await page.locator('#sorted').evaluate((wrapper) => wrapper.scrollWidth - wrapper.clientWidth);
+      near(overflow, 60, 'the wider table scrolls inside its wrapper');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: a column handle never sorts`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(resizeHtml());
+      await listen(page);
+      const customer = page.getByRole('button', { name: 'Resize Customer' });
+      await customer.click();
+      await drag(page, customer, 30);
+      await customer.focus();
+      await page.keyboard.press('Enter');
+      assert.deepEqual(await page.locator('#sorted tbody th').allTextContents(), ['Alan', 'Alvin']);
+      assert.equal(await page.locator('#sorted th[aria-sort]').count(), 1);
+      assert.equal(await page.locator('#sorted thead th').first().getAttribute('aria-sort'), 'ascending');
+      assert.equal((await page.evaluate(() => window.fired)).filter((each) => each.type === 'sort').length, 0);
+      assert.equal(await customer.evaluate((button) => getComputedStyle(button, '::after').content), 'none', 'the handle draws no sort arrow');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: resizing a pinned column keeps the sticky-column offset`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(resizeHtml());
+      await scrollToEnd(page, 'pinned');
+      const before = await widths(page, 'pinned');
+      await drag(page, page.getByRole('button', { name: 'Resize Account' }), 60);
+      near((await widths(page, 'pinned'))[1], before[1] + 60, 'the pinned name column resizes');
+      await scrollToEnd(page, 'pinned');
+      const [wrapper, box, name] = await page.evaluate(() => {
+        const rect = (selector) => document.querySelector(selector).getBoundingClientRect();
+        const outer = document.getElementById('pinned');
+        return [rect('#pinned').left + outer.clientLeft, rect('#pinned thead th:first-child'), rect('#pinned thead th:nth-child(2)')];
+      });
+      near(box.left, wrapper, 'the checkbox cell stays pinned');
+      near(name.left, box.right, 'the name cell stays right after it');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: setWidth clamps to the minimum and fires nothing; a table without handles is untouched`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(resizeHtml());
+      await listen(page);
+      const result = await page.evaluate(() => {
+        const header = document.querySelector('#sorted thead th:nth-child(2)');
+        Expressive.DataTables.setWidth(header, 30);
+        const narrowest = Expressive.DataTables.width(header);
+        Expressive.DataTables.setWidth(header, 200);
+        return [narrowest, Expressive.DataTables.width(header), window.fired.length];
+      });
+      near(result[0], 48, 'setWidth stops at the minimum token');
+      near(result[1], 200, 'setWidth sets the width');
+      assert.equal(result[2], 0, 'setWidth fires no event');
+
+      const handleStyle = await page.getByRole('button', { name: 'Resize Status' }).evaluate((button) => {
+        const [own, cell] = [button.getBoundingClientRect(), button.parentElement.getBoundingClientRect()];
+        return { cursor: getComputedStyle(button).cursor, gap: cell.right - own.right };
+      });
+      assert.equal(handleStyle.cursor, 'col-resize');
+      near(handleStyle.gap, 0, 'the handle sits at the cell end edge');
+      assert.deepEqual(await page.locator('#plain > table').evaluate((table) => [table.getAttribute('style'), getComputedStyle(table).tableLayout]), [null, 'auto']);
+    } finally {
+      await browser.close();
+    }
+  });
+}
