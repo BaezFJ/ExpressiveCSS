@@ -4,7 +4,7 @@ Date: 2026-10-23
 Roadmap phase: Phase 31, data table sticky first column
 Branch: `feature/2026-10-23-data-table-sticky-column`
 Base: `origin/master` at `7233e5714`
-Status: specified, not implemented
+Status: implemented and locally verified 2026-10-23; CI and review pending
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 31](../../../../roadmap.md#phase-31-data-table-sticky-first-column). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -61,10 +61,10 @@ An opt-in class on the wrapper keeps the leading column of a wide data table in 
 ### Proposals for implementation
 
 - Class name: `.sticky-column`, on the wrapper, next to the existing `.dense` modifier. It pairs with the `.sticky-top` helper. Rename it during review if a better name comes up.
-- Token: `--md-comp-data-table-checkbox-column-width`, set on `.data-table`. Its default is the checkbox cell's rendered width on the base commit (cell start padding plus the label's box), measured in all three engines during group 1. It applies only under the modifier, so R6 holds.
+- Token: `--md-comp-data-table-checkbox-column-width`, set on `.data-table`. Its default, `calc(var(--md-comp-data-table-cell-padding) + 18px)`, is the checkbox cell's rendered width on the base commit: 34px in all three engines. The 18px matches the checkbox's own px-sized box. It applies only under the modifier, so R6 holds.
 - Selectors: `> table > :is(thead, tbody, tfoot) > tr:not(.data-table-detail) > :first-child` for the first cell. The paired `:nth-child(2)` cell is pinned when the wrapper matches `:has(> table > * > tr > :first-child > label > input[type="checkbox"]:only-child)`. Both use `position: sticky` with `inset-inline-start`, so right-to-left pages mirror without extra rules.
-- Stacking: under the modifier, scrolled header cells move to `z-index: 2`, pinned header cells to `3`, and pinned body and footer cells use `1`.
-- Row state: pinned cells paint the container color, and the row's state goes on top as a background layer, through a private custom property that the hover and selected row rules set. A translucent `tr` background alone would let scrolled cells show through.
+- Stacking: pinned body and footer cells use `z-index: 1` and pinned header cells `2`. Scrolled header cells keep their `1`, because they never overlap pinned body cells; only the corner does. The first draft raised every header cell to `2` and was simplified during implementation.
+- Row state: pinned cells paint the container color, and the row's state goes on top as a background layer, through a private custom property that the hover and selected row rules set. A translucent `tr` background alone would let scrolled cells show through. Implemented as `--_row`: body rows paint `background-color: var(--_row, transparent)`, and pinned cells paint `linear-gradient(var(--_row), var(--_row))` over the container color. The pinned cells' row color changes at once while the rest of the row fades over `short4`; a registered `@property` would let it fade too.
 
 ## Technical constraints
 

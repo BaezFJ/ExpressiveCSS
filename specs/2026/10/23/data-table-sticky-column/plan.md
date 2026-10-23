@@ -2,7 +2,7 @@
 
 Roadmap phase: Phase 31, data table sticky first column. Branch `feature/2026-10-23-data-table-sticky-column` from `origin/master` at `7233e5714`. Requirements are in [requirements.md](requirements.md) and checks in [validation.md](validation.md).
 
-The groups run in order. Each one ends in a state that can be committed. The CSS budget line goes into whichever group first changes `dist/css/expressive.css`, because `tests/selective-builds.test.js` fails without it.
+The groups run in order. Each one ends in a state that can be committed. All three groups were implemented on 2026-10-23. The CSS budget line goes into whichever group first changes `dist/css/expressive.css`, because `tests/selective-builds.test.js` fails without it.
 
 ## 1. Pinned column and geometry test
 
@@ -43,10 +43,10 @@ Outcome: the change has a reviewed size, fresh generated files and passing contr
 
 Prerequisites: group 2.
 
-- [ ] Run `npm run build`, then `node --test tests/selective-builds.test.js`, and confirm the budget line matches the final size.
-- [ ] Run `npm run build:skill` as the last generation step, then `npm run check:generated`.
-- [ ] Run `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`, one at a time. Rerun a failure alone before debugging it.
-- [ ] Record each result in validation.md.
+- [x] Run `npm run build`, then `node --test tests/selective-builds.test.js`, and confirm the budget line matches the final size.
+- [x] Run `npm run build:skill` as the last generation step, then `npm run check:generated`.
+- [x] Run `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`, one at a time. Rerun a failure alone before debugging it.
+- [x] Record each result in validation.md.
 
 Completion check: every check in validation.md shows a result, and none failed for a reason this change causes.
 
