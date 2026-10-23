@@ -4,7 +4,7 @@ Date: 2026-10-23
 Roadmap phase: Phase 28, pointer utilities
 Branch: `feature/2026-10-23-pointer-utilities`
 Base: `origin/master` at `3ef49121a`
-Status: specified 2026-10-23; not implemented
+Status: specified and implemented 2026-10-23; checks recorded in validation.md
 
 Follow the [mission's agreed scope for utilities](../../../../mission.md#agreed-scope), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 28](../../../../roadmap.md#phase-28-pointer-utilities). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
