@@ -1,3 +1,4 @@
+@use "sass:map";
 @use "../abstracts" as *;
 
 // Small single-purpose classes a page author applies deliberately.
@@ -18,6 +19,12 @@
 // the end of this file: `.expanded:flex-row` applies from Expanded up, the
 // way the grid's `l6` does. `.inline` is the checkbox and radio row, so the
 // display utility for it is missing on purpose.
+//
+// The line clamps set display too, so put them on a child of a flex or grid
+// container, never on the container. Overflow clips at the padding box, so
+// block-end padding on a clamped element shows the top of the next line.
+$_clamp: (overflow: hidden, display: -webkit-box, -webkit-box-orient: vertical);
+
 $_layout: (
   "block": (display: block),
   "inline-block": (display: inline-block),
@@ -42,6 +49,10 @@ $_layout: (
   "start-align": (text-align: start),
   "center-align": (text-align: center),
   "end-align": (text-align: end),
+  "line-clamp-1": map.merge($_clamp, (-webkit-line-clamp: 1, line-clamp: 1)),
+  "line-clamp-2": map.merge($_clamp, (-webkit-line-clamp: 2, line-clamp: 2)),
+  "line-clamp-3": map.merge($_clamp, (-webkit-line-clamp: 3, line-clamp: 3)),
+  "line-clamp-none": (overflow: visible, display: block, -webkit-box-orient: horizontal, -webkit-line-clamp: unset, line-clamp: unset),
 );
 
 @mixin _declarations($map) {

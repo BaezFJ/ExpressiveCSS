@@ -356,6 +356,7 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed row badges that restated the navigation badge transform and a left lost to inset-inline-start: 84,778 gzip bytes (-43).
   // Reviewed the open menu shown by :popover-open in place of an inline display: 84,789 gzip bytes (+11).
   // Reviewed the lightbox resets for the UA popover box: 84,819 gzip bytes (+30).
-  // Reviewed the .opacity-0 to .opacity-100 helpers: 84,863 gzip bytes (+44).
-  assert.ok(sizes(css).gzip <= 84863, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the line clamp utilities and their window-size prefixes: 85,005 gzip bytes (+186).
+  // Reviewed the .opacity-0 to .opacity-100 helpers: 85,049 gzip bytes (+44).
+  assert.ok(sizes(css).gzip <= 85049, `CSS gzip: ${sizes(css).gzip}`);
 });
