@@ -1537,6 +1537,17 @@ Allow wrapping on narrow screens when keeping a line intact would hide required 
 
 Dimmed text still needs enough contrast unless it belongs to a disabled control. Opacity disables and hides nothing: even at `.opacity-0` the element takes clicks and focus and stays in the accessibility tree. Use `disabled`, `.hide` or `hidden` for that.
 
+#### Unstyled lists
+
+Add `list-unstyled` to a `<ul>` or `<ol>` to remove its markers and its inline-start padding (`list-style: none; padding-inline-start: 0`). The list keeps its margins, and a list nested inside it keeps its own markers. WebKit drops the list role from a list without markers, so add `role="list"` as well. The semantics checks flag a `.list-unstyled` list with no `role`; a list that sets another role on purpose, such as `role="none"`, passes.
+
+```html
+<ul class="list-unstyled" role="list">
+  <li>Invoices</li>
+  <li>Receipts</li>
+</ul>
+```
+
 #### Hover
 
 The `hoverable` class adds an animation for box shadow as seen below. It can be used on most elements, but is meant for use on cards.

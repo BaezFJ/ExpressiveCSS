@@ -202,6 +202,59 @@ for (const [engine, browserType, utilityTest] of engines) {
     }
   });
 
+  utilityTest(`unstyled lists drop markers and indentation and stay lists (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      const items = '<li>One</li><li>Two<ul><li>Inner</li></ul></li><li>Three</li>';
+      await page.setContent(`<style>${css}</style>
+        <div><ul id="ul" class="list-unstyled" role="list">${items}</ul></div>
+        <div><ol id="ol" class="list-unstyled" role="list">${items}</ol></div>
+        <div><ul id="bare" class="list-unstyled">${items}</ul></div>
+        <div><ul id="plain">${items}</ul></div>`);
+      const read = (id) => page.locator(`#${id}`).evaluate((list) => {
+        const style = getComputedStyle(list);
+        const items = [...list.children];
+        const box = list.getBoundingClientRect();
+        const first = items[0].getBoundingClientRect();
+        return {
+          padding: style.paddingInlineStart,
+          margins: [style.marginBlockStart, style.marginBlockEnd],
+          markers: items.map((li) => getComputedStyle(li).listStyleType),
+          display: items.map((li) => getComputedStyle(li).display),
+          startOffset: document.dir === 'rtl' ? box.right - first.right : first.left - box.left,
+        };
+      });
+      for (const direction of ['ltr', 'rtl']) {
+        await page.evaluate((dir) => document.documentElement.dir = dir, direction);
+        const plain = await read('plain');
+        assert.notEqual(plain.padding, '0px', 'a plain list keeps its indentation');
+        assert.deepEqual(plain.markers, ['disc', 'disc', 'disc']);
+        for (const id of ['ul', 'ol']) {
+          assert.deepEqual(await read(id), {
+            padding: '0px',
+            margins: plain.margins,
+            markers: ['none', 'none', 'none'],
+            display: ['list-item', 'list-item', 'list-item'],
+            startOffset: 0,
+          }, `${id} in ${direction}`);
+        }
+      }
+      // A nested list keeps the browser's own markers and indentation.
+      assert.deepEqual(await page.locator('#ul ul').evaluate((list) => [
+        getComputedStyle(list).paddingInlineStart !== '0px',
+        getComputedStyle(list.firstElementChild).listStyleType !== 'none',
+      ]), [true, true]);
+      // Playwright computes these roles itself, so this guards the markup, not
+      // the engine's own tree; WebKit may drop the role without role="list".
+      for (const id of ['ul', 'ol', 'bare']) {
+        assert.match(await page.locator(`#${id}`).ariaSnapshot(), /^- list:\n {2}- listitem: One\n {2}- listitem:/, id);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
   utilityTest(`focusable hidden content reveals for keyboard and descendant focus (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);
     try {

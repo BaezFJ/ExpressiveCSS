@@ -20,6 +20,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `.opacity-0`, `.opacity-25`, `.opacity-38`, `.opacity-50`, `.opacity-75`
   and `.opacity-100` set an element's opacity. 38 is the M3 opacity for
   disabled content.
+- `.list-unstyled` removes a `<ul>` or `<ol>`'s markers and inline-start
+  padding and keeps its margins. A new semantics rule,
+  `list-unstyled-has-list-role`, flags one with no `role`, because WebKit
+  drops the list role from a list without markers. Add `role="list"`, or
+  the role the list should have.
 - Calendar week, day and year views. `table.calendar.week` and
   `table.calendar.day` are hourly grids: a row per hour named by a
   `<th scope="row">`, and a column per day whose header can carry
