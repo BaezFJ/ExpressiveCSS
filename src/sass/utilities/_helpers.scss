@@ -162,6 +162,12 @@ $_layout: (
 .text-pretty { text-wrap-style: pretty; }
 .truncate { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+// Opacity. 38 is M3's disabled-content opacity. Dimming hides nothing from
+// pointers, keyboards or screen readers; use .hide or `hidden` for that.
+@each $step, $value in ("0": 0, "25": 0.25, "38": 0.38, "50": 0.5, "75": 0.75, "100": 1) {
+  .opacity-#{$step} { opacity: $value; }
+}
+
 // Lists without markers or indentation. WebKit drops the list role from a
 // list with `list-style: none`, so the markup adds role="list" back.
 .list-unstyled { list-style: none; padding-inline-start: 0; }
