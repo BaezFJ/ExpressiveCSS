@@ -30,6 +30,7 @@ Every phase keeps these:
 | Area | Outcome |
 | --- | --- |
 | Components and behaviors | Interactive components cover the keyboard, form and pointer patterns comparable frameworks provide, tested in Chromium, Firefox and WebKit. |
+| Utilities | Sass helpers cover the layout and text patterns Tailwind and Bootstrap provide, with window-size prefixes where a layout changes. |
 | Initialization | Markup can start and configure components without page script. |
 | MCP server and skill | Agents can discover components and retrieve complete, version-specific rules and runtime API guidance within predictable response limits. They can also read the shipped documentation as versioned resources. |
 
