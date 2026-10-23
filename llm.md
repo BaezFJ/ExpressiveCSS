@@ -1521,10 +1521,10 @@ Allow wrapping on narrow screens when keeping a line intact would hide required 
 
 #### Opacity
 
-`.opacity-0`, `.opacity-25`, `.opacity-38`, `.opacity-50`, `.opacity-75` and `.opacity-100` set `opacity` to 0, 0.25, 0.38, 0.5, 0.75 and 1. 38 is the M3 opacity for disabled content. A class overrides a component's own opacity, and page CSS overrides the class.
+`.opacity-0`, `.opacity-25`, `.opacity-38`, `.opacity-50`, `.opacity-75` and `.opacity-100` set `opacity` to 0, 0.25, 0.38, 0.5, 0.75 and 1. 38 is the M3 opacity for disabled content. A class overrides a component's own opacity, and unlayered page CSS overrides the class.
 
 ```html
-<span class="opacity-50">Half-faded label</span>
+<img class="opacity-50" src="pattern.svg" alt="">
 ```
 
 Dimmed text still needs enough contrast unless it belongs to a disabled control. Opacity disables and hides nothing: even at `.opacity-0` the element takes clicks and focus and stays in the accessibility tree. Use `disabled`, `.hide` or `hidden` for that.
