@@ -335,6 +335,29 @@ const visibilityHtml = `<!doctype html><html lang="en"><head><style>${css}</styl
       <tfoot><tr><td></td><th scope="row">Sum</th><td></td><td></td><td class="numeric">$90.76</td><td></td></tr></tfoot>
     </table>
   </div>
+  <menu id="other-menu">${toggleItem('p-region', 'Pinned region')}${toggleItem('d-status', 'Detail status')}</menu>
+  <div id="pinned-columns" class="data-table sticky-column" style="inline-size: 400px">
+    <table>
+      <thead><tr>
+        <th scope="col"><label><input type="checkbox" aria-label="Select all accounts"></label></th>
+        <th scope="col">Account</th>
+        <th scope="col" id="p-region">Region</th>
+        ${'<th scope="col">Quarter figures</th>'.repeat(5)}
+      </tr></thead>
+      <tbody>
+        <tr><td><label><input type="checkbox" aria-label="Select Acme account"></label></td><th scope="row">Acme</th><td>eu-west</td>${'<td>1,024,000</td>'.repeat(5)}</tr>
+      </tbody>
+    </table>
+  </div>
+  <div id="details" class="data-table" style="inline-size: 600px">
+    <table>
+      <thead><tr><th scope="col">Order</th><th scope="col" id="d-status">Status</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">1042</th><td>Shipped</td><td><button type="button" class="icon-button" aria-expanded="true" aria-controls="order-1042" aria-label="Details for order 1042"><span class="material-symbols" aria-hidden="true">expand_more</span></button></td></tr>
+        <tr id="order-1042" class="data-table-detail"><td colspan="3">Two items, shipped Monday.</td></tr>
+      </tbody>
+    </table>
+  </div>
   <script>${js}</script></body></html>`;
 
 /** Each row of a table as a string of 1 for a rendered cell and 0 for a hidden one. */
@@ -360,9 +383,82 @@ for (const [engine, browserType, browserTest] of engines) {
       const region = page.locator('[data-column="h-region"]');
       await region.click();
       assert.deepEqual(await rendered(page, 'accounts'), Array(4).fill('111010'));
-      assert.equal(await page.getByRole('columnheader', { name: 'Region' }).count(), 0, 'a hidden header leaves the accessibility tree');
+      assert.equal(await page.locator('#accounts').getByRole('columnheader', { name: 'Region' }).count(), 0, 'a hidden header leaves the accessibility tree');
       await region.click();
       assert.deepEqual(await rendered(page, 'accounts'), Array(4).fill('111110'));
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: a hidden column's cells move with their rows when another column sorts`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await columnsPage(browser);
+      await page.locator('#columns').click();
+      const region = page.locator('[data-column="h-region"]');
+      await region.click();
+      await page.keyboard.press('Escape');
+      await page.locator('#h-total > button:not(.drag-handle)').click();
+      await page.locator('#columns').click();
+      await region.click();
+      const rows = await page.locator('#accounts tbody tr').evaluateAll((rows) => rows.map((row) => [row.cells[1].textContent, row.cells[3].textContent]));
+      assert.deepEqual(rows, [['Initech', 'us-east'], ['Acme', 'eu-west']]);
+      assert.equal(await page.locator('#h-total').getAttribute('aria-sort'), 'ascending');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: hiding and showing a column after a resize keeps the other widths`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await columnsPage(browser);
+      await drag(page, page.getByRole('button', { name: 'Resize Total' }), 60);
+      const shownWidths = () => page.locator('#accounts thead th').evaluateAll((cells) => cells.map((cell) => (cell.hidden ? null : cell.getBoundingClientRect().width)));
+      const before = await shownWidths();
+      await page.locator('#columns').click();
+      await page.locator('[data-column="h-status"]').click();
+      const hiding = await shownWidths();
+      [0, 1, 3, 4].forEach((i) => near(hiding[i], before[i], `column ${i} keeps its width while Status hides`));
+      const table = await page.locator('#accounts > table').evaluate((each) => each.getBoundingClientRect().width);
+      near(table, hiding.reduce((sum, width) => sum + (width ?? 0), 0), 'the table is as wide as its visible columns');
+      await page.locator('[data-column="h-status"]').click();
+      const showing = await shownWidths();
+      [0, 1, 2, 3, 4].forEach((i) => near(showing[i], before[i], `column ${i} is back at its width`));
+      await page.locator('[data-column="h-owner"]').click();
+      const owner = await shownWidths();
+      [0, 1, 2, 3, 4].forEach((i) => near(owner[i], before[i], `column ${i} keeps its width while Owner shows`));
+      assert.ok(owner[5] >= 47, `a column hidden since load comes back no narrower than the minimum: ${owner[5]}`);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: hiding a column keeps sticky-column pins and lets a detail row span the rest`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await columnsPage(browser);
+      await page.evaluate(() => {
+        document.querySelectorAll('#other-menu > li').forEach((item) => item.setAttribute('aria-checked', 'false'));
+        Expressive.DataTables.sync(document.getElementById('pinned-columns'));
+        Expressive.DataTables.sync(document.getElementById('details'));
+      });
+      await scrollToEnd(page, 'pinned-columns');
+      const [wrapper, box, name] = await page.evaluate(() => {
+        const rect = (selector) => document.querySelector(selector).getBoundingClientRect();
+        const outer = document.getElementById('pinned-columns');
+        return [rect('#pinned-columns').left + outer.clientLeft, rect('#pinned-columns tbody td:first-child'), rect('#pinned-columns tbody th')];
+      });
+      near(box.left, wrapper, 'the checkbox cell stays pinned');
+      near(name.left, box.right, 'the name cell stays right after it');
+
+      assert.deepEqual(await rendered(page, 'details'), ['101', '101', '1']);
+      const [detail, table] = await page.evaluate(() => [
+        document.querySelector('#order-1042 > td').getBoundingClientRect().width,
+        document.querySelector('#details > table').getBoundingClientRect().width,
+      ]);
+      near(detail, table, 'the detail cell spans the visible columns');
     } finally {
       await browser.close();
     }

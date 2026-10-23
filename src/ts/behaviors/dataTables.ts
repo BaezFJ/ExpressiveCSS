@@ -97,11 +97,23 @@ function applyToggle(item: Element) {
   const table = header.closest('table');
   const show = item.getAttribute('aria-checked') === 'true';
   columnCells(table, headerColumns(table.tHead).get(header)).forEach(show ? reveal : conceal);
+  refit(table, header);
 }
 
-/** The cells of a table's first row, which set its column widths under the fixed layout. */
+/**
+ * Keeps a resized table as wide as its visible columns. A column shown for
+ * the first time since the widths were held takes its content's width, no
+ * narrower than the minimum token.
+ */
+function refit(table: HTMLTableElement, header: HTMLTableCellElement) {
+  if (table.style.tableLayout !== 'fixed') return;
+  if (!header.hidden && !header.style.width) header.style.width = `${Math.max(bounds(header)[0], header.scrollWidth)}px`;
+  fit(table);
+}
+
+/** The visible cells of a table's first row, which set its column widths under the fixed layout. */
 function firstCells(table: HTMLTableElement) {
-  return Array.from(table.rows[0]?.cells ?? []);
+  return Array.from(table.rows[0]?.cells ?? []).filter((cell) => !cell.hidden);
 }
 
 /** Sizes a table to the sum of its columns, so it scrolls once they outgrow the wrapper. */
