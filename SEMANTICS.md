@@ -739,9 +739,11 @@ Swept 0.8.0.
 | --- | --- | --- | --- |
 | `list-item-not-selected` | forbid | `li[aria-selected]:not([role])` | must not match |
 | `sortable-items-move-without-dragging` | forbid | `.sortable > li:not(:has([data-move="up"]):has([data-move="down"]))` | must not match |
+| `list-unstyled-has-list-role` | require-attr | `:is(ul, ol).list-unstyled` | must have `role` = `list` |
 
 - **list-item-not-selected** - aria-selected is not valid on a listitem. A plain <ul> has nowhere to put it - either give the item a role that takes it (option, tab, row, treeitem) and implement that role’s keyboard contract, or drop the attribute.
 - **sortable-items-move-without-dragging** - Give each .sortable item a [data-move="up"] and a [data-move="down"] button, in the row or in a menu. Dragging is a pointer gesture; the buttons are the keyboard path and the single-pointer alternative WCAG 2.5.7 requires.
+- **list-unstyled-has-list-role** - WebKit drops the list role from a list with no markers, so screen readers stop announcing it as a list. Give a .list-unstyled list role="list".
 
 ### loading-indicator
 

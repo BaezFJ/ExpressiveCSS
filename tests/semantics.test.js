@@ -331,6 +331,15 @@ const examples = [
 
 const enforcedRules = rulesOf(data);
 
+test('an unstyled list must restore its list role', () => {
+  const broken = (html) => violations(html, enforcedRules, data.compositeRoles, { fragmentSafe: true })
+    .filter((v) => v.rule.id === 'list-unstyled-has-list-role').length;
+  assert.equal(broken('<ul class="list-unstyled"><li>A</li></ul>'), 1);
+  assert.equal(broken('<ol class="list-unstyled" role="presentation"><li>A</li></ol>'), 1);
+  assert.equal(broken('<ul class="list-unstyled" role="list"><li>A</li></ul>'), 0);
+  assert.equal(broken('<ul><li>A</li></ul>'), 0);
+});
+
 test('aria-labelledby names each id once, however often it repeats', () => {
   // Repeating one id made a small snippet walk a large subtree once per token.
   const { document } = new JSDOM(

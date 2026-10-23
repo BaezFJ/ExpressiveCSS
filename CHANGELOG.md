@@ -11,6 +11,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `.line-clamp-3` cut text to that many lines and end the last one in an
   ellipsis, and `.line-clamp-none` shows every line again. All four take
   the `medium:`, `expanded:`, `large:` and `extra-large:` prefixes.
+- `.list-unstyled` removes a `<ul>` or `<ol>`'s markers and inline-start
+  padding and keeps its margins. A new semantics rule,
+  `list-unstyled-has-list-role`, requires `role="list"` on it, because
+  WebKit drops the list role from a list without markers.
 - Calendar week, day and year views. `table.calendar.week` and
   `table.calendar.day` are hourly grids: a row per hour named by a
   `<th scope="row">`, and a column per day whose header can carry

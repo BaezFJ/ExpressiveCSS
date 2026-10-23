@@ -9,7 +9,7 @@ Component ID: `lists`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `93d1bebf3eed3635c22463050f0c1fbc8580699e02b68aa8a61946e5a9209ee7`
+Contract SHA-256: `fe2085980db70a436810433922f52c0dfbe869989987e2c89fc7dda51a1b28e1`
 
 #### Selection and adaptation
 
@@ -70,3 +70,4 @@ The Lists section of the [API reference](https://www.expressivecss.com/llm.md) a
 
 - `list-item-not-selected`: aria-selected is not valid on a listitem. A plain <ul> has nowhere to put it - either give the item a role that takes it (option, tab, row, treeitem) and implement that role’s keyboard contract, or drop the attribute.
 - `sortable-items-move-without-dragging`: Give each .sortable item a [data-move="up"] and a [data-move="down"] button, in the row or in a menu. Dragging is a pointer gesture; the buttons are the keyboard path and the single-pointer alternative WCAG 2.5.7 requires.
+- `list-unstyled-has-list-role`: WebKit drops the list role from a list with no markers, so screen readers stop announcing it as a list. Give a .list-unstyled list role="list".
