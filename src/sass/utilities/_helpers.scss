@@ -168,6 +168,11 @@ $_layout: (
 .pointer-events-none { pointer-events: none; }
 .pointer-events-auto { pointer-events: auto; }
 .cursor-pointer { cursor: pointer; }
+// Opacity. 38 is M3's disabled-content opacity. Dimming hides nothing from
+// pointers, keyboards or screen readers; use .hide or `hidden` for that.
+@each $step, $value in ("0": 0, "25": 0.25, "38": 0.38, "50": 0.5, "75": 0.75, "100": 1) {
+  .opacity-#{$step} { opacity: $value; }
+}
 
 // Responsive media
 img.responsive-img,

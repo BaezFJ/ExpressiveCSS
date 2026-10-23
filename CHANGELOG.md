@@ -17,6 +17,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   a caption overlay. `.cursor-pointer` shows the pointer cursor and
   changes nothing else. Neither pointer-events class affects focus or
   keys; use `disabled` or `inert` to block all input.
+- `.opacity-0`, `.opacity-25`, `.opacity-38`, `.opacity-50`, `.opacity-75`
+  and `.opacity-100` set an element's opacity. 38 is the M3 opacity for
+  disabled content.
 - Calendar week, day and year views. `table.calendar.week` and
   `table.calendar.day` are hourly grids: a row per hour named by a
   `<th scope="row">`, and a column per day whose header can carry
