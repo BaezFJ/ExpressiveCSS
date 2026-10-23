@@ -1519,6 +1519,16 @@ To truncate long lines of text in an ellipsis, add the class `truncate` to the t
 
 Allow wrapping on narrow screens when keeping a line intact would hide required text. These classes do not change display or overflow.
 
+#### Opacity
+
+`.opacity-0`, `.opacity-25`, `.opacity-38`, `.opacity-50`, `.opacity-75` and `.opacity-100` set `opacity` to 0, 0.25, 0.38, 0.5, 0.75 and 1. 38 is the M3 opacity for disabled content. A class overrides a component's own opacity, and page CSS overrides the class.
+
+```html
+<span class="opacity-50">Half-faded label</span>
+```
+
+Dimmed text still needs enough contrast unless it belongs to a disabled control. Opacity disables and hides nothing: even at `.opacity-0` the element takes clicks and focus and stays in the accessibility tree. Use `disabled`, `.hide` or `hidden` for that.
+
 #### Hover
 
 The `hoverable` class adds an animation for box shadow as seen below. It can be used on most elements, but is meant for use on cards.
