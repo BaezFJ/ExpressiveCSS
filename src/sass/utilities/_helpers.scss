@@ -162,6 +162,10 @@ $_layout: (
 .text-pretty { text-wrap-style: pretty; }
 .truncate { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
+// Lists without markers or indentation. WebKit drops the list role from a
+// list with `list-style: none`, so the markup adds role="list" back.
+.list-unstyled { list-style: none; padding-inline-start: 0; }
+
 // Responsive media
 img.responsive-img,
 video.responsive-video {
