@@ -225,7 +225,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the audit fixes: Autocomplete ids stay text, questionnaires skip password and hidden inputs, and the label split into helpers for the complexity gate: 89,154 gzip bytes (+55).
   // Reviewed data table column resize by pointer drag, with the fixed-layout width model and setWidth: 89,569 gzip bytes (+415).
   // Reviewed column resize arrow keys, Home and End, and click steps through narrow, middle and wide: 89,737 gzip bytes (+168).
-  assert.ok(sizes(js).gzip <= 89737, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed data table column toggles: menu checkbox items with data-column hide and show a column: 90,022 gzip bytes (+285).
+  assert.ok(sizes(js).gzip <= 90022, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

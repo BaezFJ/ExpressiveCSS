@@ -309,3 +309,62 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 }
+
+// Column visibility: menu checkbox items with data-column hide and show the
+// column whose first-row header cell they name.
+const toggleItem = (id, label, checked = true) => `<li role="menuitemcheckbox" aria-checked="${checked}" data-column="${id}"><button type="button">${label}</button></li>`;
+const visibilityHtml = `<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+  <div class="data-table-actions">
+    <button type="button" class="button text menu-trigger no-autoinit" id="columns" data-target="column-menu">Columns</button>
+  </div>
+  <menu id="column-menu">${toggleItem('h-status', 'Status')}${toggleItem('h-region', 'Region')}${toggleItem('h-total', 'Total')}${toggleItem('h-owner', 'Owner', false)}</menu>
+  <div id="accounts" class="data-table" data-sort style="inline-size: 700px">
+    <table>
+      <thead><tr>
+        <th scope="col"><label><input type="checkbox" aria-label="Select all"></label></th>
+        <th scope="col">Account</th>
+        <th scope="col" id="h-status">Status</th>
+        <th scope="col" id="h-region">Region</th>
+        <th scope="col" id="h-total" class="numeric"><button type="button">Total</button>${handle('Total')}</th>
+        <th scope="col" id="h-owner">Owner</th>
+      </tr></thead>
+      <tbody>
+        <tr><td><label><input type="checkbox" aria-label="Select Acme"></label></td><th scope="row">Acme</th><td>Active</td><td>eu-west</td><td class="numeric">$87.00</td><td>Ada</td></tr>
+        <tr><td><label><input type="checkbox" aria-label="Select Initech"></label></td><th scope="row">Initech</th><td>Paused</td><td>us-east</td><td class="numeric">$3.76</td><td>Grace</td></tr>
+      </tbody>
+      <tfoot><tr><td></td><th scope="row">Sum</th><td></td><td></td><td class="numeric">$90.76</td><td></td></tr></tfoot>
+    </table>
+  </div>
+  <script>${js}</script></body></html>`;
+
+/** Each row of a table as a string of 1 for a rendered cell and 0 for a hidden one. */
+const rendered = (page, id) => page.locator(`#${id} > table`).evaluate((table) =>
+  Array.from(table.rows, (row) => Array.from(row.cells, (cell) => (cell.getClientRects().length ? 1 : 0)).join('')));
+
+/** Loads the visibility fixture with its column menu started. */
+async function columnsPage(browser) {
+  const page = await browser.newPage();
+  await page.setContent(visibilityHtml);
+  await page.evaluate(() => Expressive.Menu.init(document.getElementById('columns'), { inDuration: 0, outDuration: 0 }));
+  return page;
+}
+
+for (const [engine, browserType, browserTest] of engines) {
+
+  browserTest(`${engine}: a column menu hides and shows a column's header and every cell`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await columnsPage(browser);
+      assert.deepEqual(await rendered(page, 'accounts'), Array(4).fill('111110'), 'an unchecked item starts its column hidden');
+      await page.locator('#columns').click();
+      const region = page.locator('[data-column="h-region"]');
+      await region.click();
+      assert.deepEqual(await rendered(page, 'accounts'), Array(4).fill('111010'));
+      assert.equal(await page.getByRole('columnheader', { name: 'Region' }).count(), 0, 'a hidden header leaves the accessibility tree');
+      await region.click();
+      assert.deepEqual(await rendered(page, 'accounts'), Array(4).fill('111110'));
+    } finally {
+      await browser.close();
+    }
+  });
+}
