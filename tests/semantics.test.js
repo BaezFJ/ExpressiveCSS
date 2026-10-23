@@ -26,6 +26,7 @@ import { AUTO_INIT_FIXTURES } from './fixtures.js';
 import { render } from '../scripts/gen-semantics.mjs';
 import {
   FORBID_KINDS,
+  authoredName,
   expandedSelector,
   enforcedRules as rulesOf,
   violations
@@ -329,6 +330,16 @@ const examples = [
 // rules over the built pages, where the document-level ones become answerable.
 
 const enforcedRules = rulesOf(data);
+
+test('aria-labelledby names each id once, however often it repeats', () => {
+  // Repeating one id made a small snippet walk a large subtree once per token.
+  const { document } = new JSDOM(
+    `<nav aria-labelledby="${'x '.repeat(50000)}y"></nav><p id="x">${'<b>t</b>'.repeat(1000)}</p><p id="y">Main</p>`
+  ).window;
+  const started = performance.now();
+  assert.equal(authoredName(document.querySelector('nav'), document), `${'t'.repeat(1000)} Main`);
+  assert.ok(performance.now() - started < 500);
+});
 
 test('Material guidance preserves rail variants and only recommends sized extended FABs', () => {
   const guidance = read('m3-guidelines.md');

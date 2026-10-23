@@ -479,6 +479,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Security: Autocomplete with `allowUnsafeHTML` renders only a script-supplied
+  `text` as HTML. A `selected` id that has no data entry, which
+  `data-autocomplete-options` can set, used to become HTML too, so sanitized
+  user markup that kept the component's class and options attribute could
+  run script once the menu showed no results.
+- Security: a questionnaire with `data-save` no longer stores password or
+  hidden inputs. It used to keep a password in `localStorage` as plain text
+  until submit, and to restore both into the next visitor's form, which
+  replaced the server's hidden values. Saved progress from an earlier
+  version no longer matches and starts fresh.
 - A docked date or time picker, and a tooltip placed without CSS anchor
   positioning, stay beside their trigger on a page scrolled sideways and
   inside the body's margin. They used to be kept inside the body's box,

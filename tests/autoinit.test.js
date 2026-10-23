@@ -383,6 +383,21 @@ describe("AutoInit options from markup", () => {
     );
   });
 
+  test("a selected id from markup stays text when script allows unsafe HTML", (t) => {
+    start(
+      t,
+      `<input class="autocomplete" id="ac" data-autocomplete-options='{"isMultiSelect":true,"selected":["<img src=x onerror=alert(1)>"]}'>`,
+      () => {
+        const autocomplete = instance("Autocomplete", "#ac");
+        autocomplete.el.value = "zzz";
+        autocomplete.setMenuItems([]);
+        assert.equal(autocomplete.container.querySelector("img"), null);
+        assert.match(autocomplete.container.textContent, /<img src=x/);
+      },
+      { Autocomplete: { allowUnsafeHTML: true, data: [{ id: "apple", text: "<b>Apple</b>" }] } },
+    );
+  });
+
   test("nested objects and arrays are checked against their defaults", (t) => {
     start(
       t,

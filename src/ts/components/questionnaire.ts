@@ -37,6 +37,7 @@ const _defaults: QuestionnaireOptions = {
 };
 
 const NAVIGATION = ['previous', 'skip', 'next'];
+const UNSAVED = ['file', 'password', 'hidden'];
 const LETTERS = 'abcdefghijklmnopqrstuvwxyz';
 
 type Control = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
@@ -396,9 +397,12 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
     return key ? `questionnaire:${key}` : '';
   }
 
-  /** Every answer control that can be saved, in order; a file cannot be put back. */
+  /**
+   * Every answer control that can be saved, in order. A file cannot be put back,
+   * a password must not sit in storage, and a hidden input is the server's.
+   */
   private _allControls() {
-    return this._fieldsets().flatMap((item) => this._controls(item)).filter((control) => control.type !== 'file');
+    return this._fieldsets().flatMap((item) => this._controls(item)).filter((control) => !UNSAVED.includes(control.type));
   }
 
   /** With data-save, stores the answers and the shown question. */

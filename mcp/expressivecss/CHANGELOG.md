@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- Security: `quality_inspector` skips every `files` entry outside
+  `projectRoot` with the same reason before touching the disk. A missing
+  path used to get "file does not exist", so a client could tell which host
+  paths exist.
+- Security: a nav or control that repeats one id in `aria-labelledby` no
+  longer makes inspection walk the labelled element once per repeat. A
+  snippet of about 136 KB used to block the server for seconds, and a larger
+  one could run it out of memory. Each id now counts once, and only the
+  first 32 are read.
+- Security: version resolution reads crafted lockfiles in linear time. Blank
+  lines inside a pnpm entry, or a long run of `(` in a version, used to stall
+  every project-scoped tool call for as long as minutes or hours.
+- On Windows, a client `projectRoot` that is a network path (`\\host\share`)
+  is refused before it is resolved, unless it sits under an allowed root.
+  Resolving it would contact that host.
+
 - `rules_enforcer` and the lint command flag the class names, color roles
   and markup paths that ExpressiveCSS 1.0 removes, and each finding names
   the replacement. The new rule IDs start with `legacy-`: material-icons,
