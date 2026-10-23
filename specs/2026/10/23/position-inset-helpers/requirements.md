@@ -4,7 +4,7 @@ Date: 2026-10-23
 Roadmap phase: Phase 26, position and inset helpers
 Branch: `feature/2026-10-23-position-inset-helpers`
 Base: `origin/master` at `3ef49121a`
-Status: specified 2026-10-23; not implemented
+Status: implemented and locally verified 2026-10-23; not pushed, CI and review pending
 
 Follow the [mission's agreed scope for utilities](../../../../mission.md#agreed-scope), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 26](../../../../roadmap.md#phase-26-position-and-inset-helpers). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
