@@ -200,7 +200,7 @@ for (const [engine, browserType, utilityTest] of engines) {
       await page.setContent(`<style>${css} html { font-size: 16px; }</style>
         <div id="grid" class="grid-auto-fill" style="--grid-column-min: 100px">${cells(8)}</div>
         <div style="--grid-column-min: 200px"><div id="inherited" class="grid-auto-fill">${cells(4)}</div></div>
-        <div id="short" class="grid-auto-fill" style="--grid-column-min: 100px">${cells(2)}</div>
+        <div id="short" class="grid-auto-fill" style="--grid-column-min: 100px"><div><div style="width: 110px"></div></div><div></div></div>
         <div id="fallback" class="grid-auto-fill">${cells(4)}</div>`);
       const layout = (id, width) => page.locator(`#${id}`).evaluate((el, width) => {
         el.style.width = `${width}px`;
@@ -208,8 +208,7 @@ for (const [engine, browserType, utilityTest] of engines) {
         return {
           columns: new Set(boxes.map((box) => box.left)).size,
           widths: boxes.map((box) => box.width),
-          overflows: el.scrollWidth > el.clientWidth,
-          tracks: getComputedStyle(el).gridTemplateColumns
+          overflows: el.scrollWidth > el.clientWidth
         };
       }, width);
       for (const [width, columns] of [[250, 2], [400, 4], [820, 8]]) {
@@ -219,8 +218,9 @@ for (const [engine, browserType, utilityTest] of engines) {
       await page.locator('#grid').evaluate((el) => el.classList.add('gap-3'));
       assert.equal((await layout('grid', 400)).columns, 3, 'the gap counts');
       assert.equal((await layout('inherited', 450)).columns, 2, 'an ancestor sets the minimum');
-      assert.deepEqual((await layout('short', 450)).widths, [112.5, 112.5], 'empty tracks keep their width');
-      assert.equal((await layout('fallback', 960)).tracks, '240px 240px 240px 240px');
+      // A 110px item would widen its own column under an auto maximum.
+      assert.deepEqual((await layout('short', 450)).widths, [112.5, 112.5], 'columns share space equally and empty tracks stay');
+      assert.deepEqual([(await layout('fallback', 479)).columns, (await layout('fallback', 480)).columns], [1, 2], 'the fallback minimum is 240px');
       const narrow = await layout('fallback', 180);
       assert.deepEqual([narrow.columns, narrow.widths[0], narrow.overflows], [1, 180, false], 'a narrow container gets one column');
     } finally {
