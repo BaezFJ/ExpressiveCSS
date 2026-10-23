@@ -10,6 +10,8 @@ const BOX = ':scope > :first-child input[type="checkbox"]';
  * header row, the row whose cells set the widths of a fixed table layout.
  */
 const HANDLE = '.data-table > table > thead > tr:first-child > th > button.drag-handle:last-child';
+/** How far an arrow key resizes a column; Shift moves four times as far. */
+const STEP = 16;
 /** How each sort direction orders the rows. */
 const ORDER = { ascending: 1, descending: -1 };
 
@@ -85,6 +87,25 @@ function bounds(header: HTMLTableCellElement): [number, number] {
   return [min, Math.max(min, header.closest('.data-table').clientWidth)];
 }
 
+/** The next of a column's narrow, middle and wide widths, wrapping to narrow. */
+function nextStep(header: HTMLTableCellElement) {
+  const [min, max] = bounds(header);
+  const current = header.getBoundingClientRect().width;
+  return [min, (min + max) / 2, max].find((width) => width > current + 1) ?? min;
+}
+
+/**
+ * The width a key asks for, or undefined for another key. The arrow toward
+ * the column's inline-end edge widens it; Home and End jump to the bounds.
+ */
+function keyWidth(header: HTMLTableCellElement, e: KeyboardEvent) {
+  const [min, max] = bounds(header);
+  const amount = (e.shiftKey ? 4 : 1) * STEP * (getComputedStyle(header).direction === 'rtl' ? -1 : 1);
+  const current = header.getBoundingClientRect().width;
+  const widths: Record<string, number> = { ArrowRight: current + amount, ArrowLeft: current - amount, Home: min, End: max };
+  return widths[e.key];
+}
+
 /**
  * Data tables. In a `.data-table`, a checkbox in the first header cell
  * selects every row, and shows mixed while only some are selected. With
@@ -106,6 +127,8 @@ export class DataTables {
     document.addEventListener('input', DataTables._onChange);
     document.addEventListener('click', DataTables._onClick);
     document.addEventListener('pointerdown', DataTables._onPointerDown);
+    document.addEventListener('click', DataTables._onHandleClick);
+    document.addEventListener('keydown', DataTables._onKeyDown);
     Utils.onDocumentReady(() => document.querySelectorAll('.data-table').forEach(DataTables.sync));
   }
 
@@ -229,6 +252,35 @@ export class DataTables {
     };
     handle.addEventListener('pointerup', end, { signal });
     handle.addEventListener('pointercancel', end, { signal });
+  }
+
+  /**
+   * Steps a column through narrow, middle and wide: the single-pointer
+   * alternative to dragging. The click that ends a mouse drag is not a
+   * request to step; a keyboard click (detail 0) always is.
+   */
+  private static _onHandleClick = (e: MouseEvent) => {
+    const handle = Utils.closestInPath(e, HANDLE);
+    if (!handle || (e.detail !== 0 && DataTables._dragged)) return;
+    const header = handle.parentElement as HTMLTableCellElement;
+    DataTables._resizeTo(header, nextStep(header));
+  };
+
+  private static _onKeyDown = (e: KeyboardEvent) => {
+    const handle = Utils.closestInPath(e, HANDLE);
+    if (!handle || !Utils.plainKey(e)) return;
+    const header = handle.parentElement as HTMLTableCellElement;
+    const width = keyWidth(header, e);
+    if (width === undefined) return;
+    e.preventDefault();
+    DataTables._resizeTo(header, width);
+  };
+
+  /** Sets a column's width and fires `expressive:resize` if it changed. */
+  private static _resizeTo(header: HTMLTableCellElement, width: number) {
+    const from = DataTables.width(header);
+    DataTables.setWidth(header, width);
+    DataTables._resized(header, from);
   }
 
   /** Fires `expressive:resize` from the wrapper when a column's width moved off `from`. */

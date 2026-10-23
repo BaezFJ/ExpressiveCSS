@@ -240,4 +240,72 @@ for (const [engine, browserType, browserTest] of engines) {
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: arrow keys resize a column by 16px, 64px with Shift, one event per press`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(resizeHtml());
+      await listen(page);
+      const start = (await widths(page, 'sorted'))[1];
+      await page.getByRole('button', { name: 'Resize Status' }).focus();
+      await page.keyboard.press('ArrowRight');
+      near((await widths(page, 'sorted'))[1], start + 16, 'ArrowRight widens');
+      await page.keyboard.press('Shift+ArrowRight');
+      near((await widths(page, 'sorted'))[1], start + 80, 'Shift+ArrowRight widens by 64');
+      const fired = await page.evaluate(() => window.fired);
+      assert.deepEqual(fired.map((each) => [each.type, each.label, each.column]), [['resize', 'Status', 1], ['resize', 'Status', 1]]);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: in a right-to-left page, Left and a leftward drag widen a column`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(resizeHtml('rtl'));
+      const status = page.getByRole('button', { name: 'Resize Status' });
+      const start = (await widths(page, 'sorted'))[1];
+      await status.focus();
+      await page.keyboard.press('ArrowLeft');
+      near((await widths(page, 'sorted'))[1], start + 16, 'ArrowLeft widens');
+      await drag(page, status, -60);
+      near((await widths(page, 'sorted'))[1], start + 76, 'a leftward drag widens');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: Home stops at the minimum, and clicks step through narrow, middle and wide`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(resizeHtml());
+      await listen(page);
+      const status = page.getByRole('button', { name: 'Resize Status' });
+      const width = async () => (await widths(page, 'sorted'))[1];
+      const count = () => page.evaluate(() => window.fired.length);
+      await status.focus();
+      await page.keyboard.press('Home');
+      near(await width(), 48, 'Home goes to the minimum token');
+      assert.notEqual(await status.evaluate((button) => getComputedStyle(button).outlineStyle), 'none', 'a focused handle shows a focus ring');
+      await page.keyboard.press('ArrowLeft');
+      near(await width(), 48, 'ArrowLeft stops at the minimum');
+      assert.equal(await count(), 1, 'a key that changes nothing fires nothing');
+
+      const wide = await page.locator('#sorted').evaluate((wrapper) => wrapper.clientWidth);
+      await status.click();
+      near(await width(), (48 + wide) / 2, 'a click steps to the middle');
+      await status.click();
+      near(await width(), wide, 'then to the widest, the wrapper inner width');
+      await status.click();
+      near(await width(), 48, 'then wraps to the narrowest');
+      await page.keyboard.press('Space');
+      near(await width(), (48 + wide) / 2, 'Space steps too');
+      assert.equal(await count(), 5, 'each step fires one event');
+    } finally {
+      await browser.close();
+    }
+  });
 }
