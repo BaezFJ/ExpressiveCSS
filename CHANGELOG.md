@@ -11,6 +11,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `.line-clamp-3` cut text to that many lines and end the last one in an
   ellipsis, and `.line-clamp-none` shows every line again. All four take
   the `medium:`, `expanded:`, `large:` and `extra-large:` prefixes.
+- Pointer helpers. `.pointer-events-none` lets clicks, taps and hovers
+  pass through an element to what lies beneath it, and
+  `.pointer-events-auto` gives them back to a child, such as a button in
+  a caption overlay. `.cursor-pointer` shows the pointer cursor and
+  changes nothing else. Neither pointer-events class affects focus or
+  keys; use `disabled` or `inert` to block all input.
 - Calendar week, day and year views. `table.calendar.week` and
   `table.calendar.day` are hourly grids: a row per hour named by a
   `<th scope="row">`, and a column per day whose header can carry

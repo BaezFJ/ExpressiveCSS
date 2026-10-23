@@ -1535,6 +1535,33 @@ The `hoverable` class adds an animation for box shadow as seen below. It can be 
 <article class="hoverable">Hoverable Card</article>
 ```
 
+### Pointer
+
+| Class | Declaration |
+| --- | --- |
+| `.pointer-events-none` | `pointer-events: none`. Clicks, taps and hovers on the element and its children reach whatever lies beneath it. |
+| `.pointer-events-auto` | `pointer-events: auto`. A child of a `.pointer-events-none` element takes pointer input again. |
+| `.cursor-pointer` | `cursor: pointer` |
+
+```html
+<div class="relative">
+  <a href="/photos/42"><img class="w-full" src="..." alt="Harbor at dusk"></a>
+  <div class="pointer-events-none flex align-end justify-between p-2" style="position: absolute; inset: 0">
+    <span class="label-large">Harbor at dusk</span>
+    <button type="button" class="pointer-events-auto">Hide caption</button>
+  </div>
+</div>
+
+<tr class="cursor-pointer">
+  <td><a href="/orders/42">Order 42</a></td>
+  <td>Shipped</td>
+</tr>
+```
+
+A click on the caption opens the photo link beneath it, and the button still takes its own clicks. `.pointer-events-none` stops the pointer only: the element and its controls stay in the tab order and still respond to keys. To disable a control, use `disabled`; to take a whole region out of use, use `inert`.
+
+`.cursor-pointer` changes the cursor and nothing else. Links and buttons already show it. In the table row above, a page script opens the row's link on a click anywhere in the row, and keyboard users reach the same link by Tab. An element that responds to clicks but isn't a link or button still needs a role, a tab stop and key handling, so use a `<button>` or `<a href>` where one fits.
+
 ### Browser defaults
 
 Because we override many of the default browser styles and elements, we provide the `.browser-default` class to opt those elements out of the framework treatment.
