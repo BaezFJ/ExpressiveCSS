@@ -9,7 +9,7 @@ Component ID: `accordion`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `fe2085980db70a436810433922f52c0dfbe869989987e2c89fc7dda51a1b28e1`
+Contract SHA-256: `dff6fabf50186de2955f7d98d1a397c1c4b0b8783125de789963d99c0b586c10`
 
 #### Selection and adaptation
 

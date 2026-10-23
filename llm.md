@@ -1529,7 +1529,7 @@ Allow wrapping on narrow screens when keeping a line intact would hide required 
 
 #### Unstyled lists
 
-Add `list-unstyled` to a `<ul>` or `<ol>` to remove its markers and its inline-start padding (`list-style: none; padding-inline-start: 0`). The list keeps its margins, and a list nested inside it keeps its own markers. WebKit drops the list role from a list without markers, so add `role="list"` as well; the semantics checks require it.
+Add `list-unstyled` to a `<ul>` or `<ol>` to remove its markers and its inline-start padding (`list-style: none; padding-inline-start: 0`). The list keeps its margins, and a list nested inside it keeps its own markers. WebKit drops the list role from a list without markers, so add `role="list"` as well. The semantics checks flag a `.list-unstyled` list with no `role`; a list that sets another role on purpose, such as `role="none"`, passes.
 
 ```html
 <ul class="list-unstyled" role="list">

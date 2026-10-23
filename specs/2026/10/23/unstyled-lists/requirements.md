@@ -33,7 +33,7 @@ One class removes a list's markers and its inline-start indentation. The list ke
 - **R1.** A `ul` or `ol` with the class `list-unstyled` shows no markers on its items and has no inline-start padding, so its items start at the list's inline-start content edge in left-to-right and right-to-left pages.
 - **R2.** The class keeps everything else about the list: its block margins, its items' `display: list-item`, and its element and role in the markup.
 - **R3.** A nested list inside a `.list-unstyled` list keeps its own markers and indentation unless it also carries the class.
-- **R4.** `semantics.json` has a rule that every `ul.list-unstyled` or `ol.list-unstyled` carries `role="list"`. `npm run build:semantics` puts it into `SEMANTICS.md`, and the semantics test applies it to the examples in `llm.md`, the docs pages, the fixtures and the M3 guidelines. The MCP server and skill ship the semantics data, so agents get the rule too.
+- **R4.** `semantics.json` has a rule that flags a `ul.list-unstyled` or `ol.list-unstyled` with no `role` attribute. A list with `role="list"` passes, and so does one that sets another role on purpose, such as `role="none"`. `npm run build:semantics` puts it into `SEMANTICS.md`, and the semantics test applies it to the examples in `llm.md`, the docs pages, the fixtures and the M3 guidelines. The MCP server and skill ship the semantics data, so agents get the rule too.
 - **R5.** `llm.md` and the helpers docs page document the class and its declarations, explain why the example carries `role="list"`, and show an example that passes R4. The changelog's Unreleased section lists the addition.
 - **R6.** The CSS gzip budget in `tests/selective-builds.test.js` has a reviewed line for this change.
 
@@ -51,7 +51,7 @@ One class removes a list's markers and its inline-start indentation. The list ke
 ### Confirmed with the user on 2026-10-23
 
 - The class is `.list-unstyled`. Bootstrap uses the same name, so authors and agents can guess it. A bare `.unstyled` could be read as a variant of the `.list` component. Tailwind's `list-none` removes only markers, so using that name for a class that also removes padding would mislead.
-- The WebKit gap is handled by a `semantics.json` rule that requires `role="list"`, together with the docs note. The rule also fires on lists where the role may not matter, such as inside a `<nav>`. The user accepted that in exchange for a rule that catches a missing role in every checked example and in the MCP guidance.
+- The WebKit gap is handled by a `semantics.json` rule that requires `role="list"`, together with the docs note. The rule also fires on lists where the role may not matter, such as inside a `<nav>`. The user accepted that in exchange for a rule that catches a missing role in every checked example and in the MCP guidance. After the code review on 2026-10-23, the user narrowed the rule to lists with no `role` at all, so a list that removes its semantics on purpose (`role="none"`) or takes another role is not told to add `role="list"`.
 - The plan has three groups: utility and browser test, then semantics rule and docs, then budget and repository checks. The user chose the semantics rule after picking the three-group split, so the rule went into the second group.
 - Merge needs the browser geometry test, the `ariaSnapshot` list-role check and the repository checks.
 
@@ -59,7 +59,7 @@ One class removes a list's markers and its inline-start indentation. The list ke
 
 - Declarations: `list-style: none` and `padding-inline-start: 0` on the list. `list-style-type` is inherited, so items lose their markers; nested `ul` and `ol` keep theirs because the browser's own stylesheet sets their `list-style-type` directly. The logical property mirrors in right-to-left pages.
 - Placement: a "Lists" comment and the class in `src/sass/utilities/_helpers.scss`, after the text-behavior classes. It is not added to the `$_layout` map, which feeds the window-size prefixes.
-- Rule: id `list-unstyled-has-list-role`, kind `require-attr`, selector `:is(ul, ol).list-unstyled`, `attr: "role"`, `equals: "list"`, `fragmentSafe: true`, in the `list` row. If the semantics test expects a row's rules to come from its own component's markup, put the rule in a new cross-cutting row described the way `landmarks` is.
+- Rule: id `list-unstyled-has-list-role`, kind `forbid`, selector `:is(ul, ol).list-unstyled:not([role])`, `fragmentSafe: true`, in the `list` row. It first shipped as `require-attr` with `equals: "list"` and was narrowed after review. If the semantics test expects a row's rules to come from its own component's markup, put the rule in a new cross-cutting row described the way `landmarks` is.
 - Docs: a "Unstyled lists" subsection under "Formatting" in `llm.md` and in `docs/src/pages/helpers.astro`, after "Text wrapping".
 
 ## Technical constraints

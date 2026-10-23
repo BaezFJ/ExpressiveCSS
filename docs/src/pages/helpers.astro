@@ -786,8 +786,9 @@ const S = defineSections([
         <p>
           Add <code>list-unstyled</code> to a <code>&lt;ul&gt;</code> or <code>&lt;ol&gt;</code> to remove its markers
           and its inline-start padding. The list keeps its margins, and a list nested inside it keeps its own markers.
-          WebKit drops the list role from a list without markers, so add <code>role="list"</code> as well; the
-          semantics checks require it.
+          WebKit drops the list role from a list without markers, so add <code>role="list"</code> as well. The
+          semantics checks flag a <code>.list-unstyled</code> list with no <code>role</code>; a list that sets another
+          role on purpose, such as <code>role="none"</code>, passes.
         </p>
         <ul class="list-unstyled" role="list">
           <li>Invoices</li>

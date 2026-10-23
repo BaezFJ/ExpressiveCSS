@@ -945,12 +945,10 @@
         },
         {
           "id": "list-unstyled-has-list-role",
-          "kind": "require-attr",
-          "selector": ":is(ul, ol).list-unstyled",
-          "attr": "role",
-          "equals": "list",
+          "kind": "forbid",
+          "selector": ":is(ul, ol).list-unstyled:not([role])",
           "fragmentSafe": true,
-          "message": "WebKit drops the list role from a list with no markers, so screen readers stop announcing it as a list. Give a .list-unstyled list role=\"list\"."
+          "message": "WebKit drops the list role from a list with no markers, so screen readers stop announcing it as a list. Give a .list-unstyled list role=\"list\", or the role it should have instead."
         }
       ]
     },
