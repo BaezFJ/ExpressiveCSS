@@ -10,7 +10,7 @@ Follow the [mission's agreed scope for components](../../../../mission.md#agreed
 
 ## Phase selection
 
-Phases 25 to 34 merged by 2026-10-24 as #406 to #411 and #413 to #416, although the roadmap does not yet mark them complete. Phase 35 is the first unfinished phase. Its one dependency, Phase 34, merged as #416 (`613543a71`), and its [spec](../scatter-chart/) lists bubble sizes as an exclusion left to this phase.
+Phases 25 to 34 merged by 2026-10-24 as #406 to #411 and #413 to #416, and #417 marked them complete in the roadmap the same day. Phase 35 is the first unfinished phase. Its one dependency, Phase 34, merged as #416 (`613543a71`), and its [spec](../scatter-chart/) lists bubble sizes as an exclusion left to this phase.
 
 ## Current behavior
 
@@ -39,7 +39,7 @@ With `.bubble`, the scatter chart sizes each point by a value from the table, so
 - **R7.** Keyboard and pointer behavior keep their scatter chart rules: the arrows step through drawn points in table order, and the pointer picks the point whose centre is nearest.
 - **R8.** A scatter chart without `.bubble` renders and behaves exactly as on the base commit, and so does every other chart. Any `LineChart` member changed for this keeps its behavior for the other charts.
 - **R9.** `llm.md`'s "Scatter chart" section and the docs page `docs/src/pages/scatter-chart.astro` describe `.bubble`, the size column, gaps, the tooltip and the size token, with a live example. The component decisions entry lists the modifier, the changelog's Unreleased section has an Added entry, and `npm run build:skill` regenerates the derived files.
-- **R10.** `tests/selective-builds.test.js` has reviewed JavaScript and CSS gzip budget lines for this change, and the `sourceRevision` pin in `docs/src/data/component-decisions.json` names a commit on `master` that holds every capability-linked file. A squash merge drops branch commits, and the decisions test requires the pin to be an ancestor of `HEAD`, so the pin is `613543a71`, the Phase 34 merge, rather than a branch commit.
+- **R10.** `tests/selective-builds.test.js` has reviewed JavaScript and CSS gzip budget lines for this change, and the `sourceRevision` pin in `docs/src/data/component-decisions.json` names a commit on `master` that holds every capability-linked file. A squash merge drops branch commits, and the decisions test requires the pin to be an ancestor of `HEAD`, so the pin is `613543a71`, the Phase 34 merge, rather than a branch commit. #417 set `master` to the same pin.
 
 ### Exclusions
 
