@@ -43,3 +43,28 @@
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
 }
+
+// The x scale's labels, below the plot, each with a grid line up through it
+// at --at from the left. The script mirrors --at in a right-to-left chart.
+.scatter-chart.axis > .scatter-chart-plot {
+  margin-block-end: rem(20px);
+}
+
+.scatter-chart-axis.x {
+  > li {
+    inset-inline: auto;
+    inset-block: 0;
+    left: var(--at, 0%);
+    border-block-start: 0;
+    border-inline-start: 1px solid var(--md-comp-scatter-chart-grid-color);
+  }
+
+  > li > span {
+    inset-inline: auto;
+    top: 100%;
+    left: 0;
+    width: auto;
+    padding: 4px 0 0;
+    translate: -50% 0;
+  }
+}

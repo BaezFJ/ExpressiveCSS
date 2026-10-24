@@ -228,7 +228,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed data table column toggles: menu checkbox items with data-column hide and show a column: 90,022 gzip bytes (+285).
   // Reviewed hidden columns in the resize width model: held widths and the table width skip them: 90,069 gzip bytes (+47).
   // Reviewed the scatter chart: points from a shared x column on both scales: 90,582 gzip bytes (+513).
-  assert.ok(sizes(js).gzip <= 90582, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the scatter chart's x axis labels and the shared tick label helper: 90,733 gzip bytes (+151).
+  assert.ok(sizes(js).gzip <= 90733, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -372,5 +373,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed end padding on resizable header cells that clears the handle's hit area: 85,486 gzip bytes (+11).
   // Reviewed dropping the global display: table-cell on td and th, which kept hidden cells showing: 85,480 gzip bytes (-6).
   // Reviewed the scatter chart: the shared chart parts, axis and point styles: 85,984 gzip bytes (+504).
-  assert.ok(sizes(css).gzip <= 85984, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the scatter chart's x axis labels and vertical grid lines: 86,050 gzip bytes (+66).
+  assert.ok(sizes(css).gzip <= 86050, `CSS gzip: ${sizes(css).gzip}`);
 });

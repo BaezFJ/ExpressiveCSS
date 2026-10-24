@@ -1,5 +1,5 @@
 import { svgNode } from '../core/utils';
-import { LineChart, LineChartOptions, ChartScale, Series, cellValue } from './lineChart';
+import { LineChart, LineChartOptions, ChartScale, Series, affix, cellValue, numberFormat, tickText } from './lineChart';
 
 export interface ScatterChartOptions extends LineChartOptions {
   /**
@@ -37,6 +37,8 @@ export class ScatterChart extends LineChart {
   private _xs: (number | null)[];
   /** The x scale. */
   private _xFit: ChartScale;
+  /** The signs around the x column's numbers, which its axis labels repeat. */
+  private _xAffix: [string, string];
   /** The drawn points, row by row and within a row by series. */
   private _marks: Mark[];
 
@@ -67,7 +69,9 @@ export class ScatterChart extends LineChart {
 
   protected _read() {
     super._read();
-    if (this.series.length) this._xFit = this._xScale();
+    if (!this.series.length) return;
+    this._xFit = this._xScale();
+    this._xAffix = affix(this._rows.map((row) => row.cells[1]));
   }
 
   /** The x scale over the rows with a point, between `xMin` and `xMax` where they are set. */
@@ -125,6 +129,27 @@ export class ScatterChart extends LineChart {
     const d = this._marks.filter((mark) => mark.series === series).map(({ x, y }) => `M${x},${y}h0`).join('');
     group.append(svgNode('path', { class: 'scatter-chart-points', d }));
     return group;
+  }
+
+  /** With .axis, the y scale's labels, and the x scale's below the plot with a grid line at each. */
+  protected _axes(): Element[] {
+    return this._axis ? [...super._axes(), this._xAxis()] : [];
+  }
+
+  private _xAxis() {
+    const axis = document.createElement('ol');
+    axis.className = 'scatter-chart-axis x';
+    axis.setAttribute('aria-hidden', 'true');
+    const number = numberFormat(this.el, { notation: 'compact', maximumSignificantDigits: 3 });
+    for (const tick of this._xFit.ticks) {
+      const li = document.createElement('li');
+      const label = document.createElement('span');
+      label.textContent = tickText(number, tick, this._xAffix);
+      li.style.setProperty('--at', `${this._xAt(tick)}%`);
+      li.append(label);
+      axis.append(li);
+    }
+    return axis;
   }
 
   /** The legend only: the rows have no labels along an axis. */

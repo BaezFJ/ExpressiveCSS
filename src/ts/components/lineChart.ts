@@ -262,6 +262,11 @@ export function numberValue(raw: string): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
+/** An axis label: the tick in `format`, with the column's signs after any minus. */
+export function tickText(format: Intl.NumberFormat, tick: number, [prefix, suffix]: [string, string]) {
+  return format.format(tick).replace(/^[-\u2212]?/, (sign) => sign + prefix) + suffix;
+}
+
 /** The currency, percent and spacing around a cell's number, as [prefix, suffix]. */
 export function signs(text: string): [string, string] {
   // Each end is read from its own side, so a long run of spaces stays linear.
@@ -763,11 +768,10 @@ export class LineChart extends Component<LineChartOptions> {
     axis.className = `${this._type}-axis${end ? ' end' : ''}`;
     axis.setAttribute('aria-hidden', 'true');
     const number = numberFormat(this.el, { notation: 'compact', maximumSignificantDigits: 3 });
-    const [prefix, suffix] = series.affix;
     for (const tick of series.scale.ticks) {
       const li = document.createElement('li');
       const label = document.createElement('span');
-      label.textContent = number.format(tick).replace(/^[-\u2212]?/, (sign) => sign + prefix) + suffix;
+      label.textContent = tickText(number, tick, series.affix);
       li.style.setProperty('--at', `${series.y(tick)}%`);
       li.append(label);
       axis.append(li);

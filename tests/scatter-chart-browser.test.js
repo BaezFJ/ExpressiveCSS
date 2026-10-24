@@ -22,6 +22,11 @@ const html = `<style>${css}</style>
     ${chart(`class="scatter-chart" id="ltr" ${fixed}`, cars)}
     ${chart(`class="scatter-chart" id="gaps" ${fixed}`, [cars[0], ['Corolla', 'n/a', '32', '41'], ['Camry', '1600', '28', ''], cars[3]])}
   </div>
+  <div style="width: 600px">
+    ${chart('class="scatter-chart axis" id="auto"', cars)}
+    ${chart('class="scatter-chart axis" id="ends" data-x-min="0" data-x-max="2500" data-min="0" data-max="60"',
+      cars.map(([car, weight, city, highway]) => [car, `$${weight}`, `${city}%`, `${highway}%`]))}
+  </div>
   <div style="width: 600px" dir="rtl">
     ${chart(`class="scatter-chart" id="rtl" ${fixed}`, cars)}
   </div>
@@ -95,6 +100,52 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.deepEqual(ltr.instance, [true, false]);
 
       for (const id of ['#ltr', '#rtl']) near(await placed(page, id, [values(2), values(3)]), id);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: scatter chart labels both axes at round values, or at the ends the chart sets`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      // Each label's text, and its line's offset from the plot's left and top as a share of the plot.
+      const axes = (id) => page.locator(id).evaluate((el) => {
+        const plot = el.querySelector('.scatter-chart-plot').getBoundingClientRect();
+        const read = (selector, across) => [...el.querySelectorAll(selector)].map((li) => {
+          const [box, label] = [li.getBoundingClientRect(), li.firstElementChild.getBoundingClientRect()];
+          return {
+            text: li.textContent,
+            at: across ? (box.left - plot.left) / plot.width : (box.top - plot.top) / plot.height,
+            below: label.top >= plot.bottom - 1,
+          };
+        });
+        return { x: read('.scatter-chart-axis.x > li', true), y: read('.scatter-chart-axis:not(.x) > li', false) };
+      });
+      // Within a pixel of the share, as the plot's border and pixel snapping allow.
+      const lines = (labels, expected, message) => {
+        assert.equal(labels.length, expected.length, message);
+        labels.forEach(({ at }, i) => assert.ok(Math.abs(at - expected[i]) < 0.01, `${message}: line ${i} at ${at}, expected ${expected[i]}`));
+      };
+
+      // Data from 1,300 to 2,600 kg and 15 to 41 mpg, padded by 10% and widened to round steps.
+      const auto = await axes('#auto');
+      assert.deepEqual(auto.x.map(({ text }) => text), ['1K', '1.5K', '2K', '2.5K', '3K']);
+      lines(auto.x, [0, 0.25, 0.5, 0.75, 1], 'x lines');
+      assert.ok(auto.x.every(({ below }) => below), 'the x labels sit below the plot');
+      assert.deepEqual(auto.y.map(({ text }) => text), ['10', '20', '30', '40', '50']);
+      lines(auto.y, [1, 0.75, 0.5, 0.25, 0], 'y lines');
+
+      // The data attributes fix the ends, and the cells' signs repeat on the labels.
+      const ends = await axes('#ends');
+      assert.deepEqual(ends.x.map(({ text }) => text), ['$0', '$1K', '$2K']);
+      lines(ends.x, [0, 0.4, 0.8], 'the x scale runs from 0 to 2,500');
+      assert.deepEqual(ends.y.map(({ text }) => text), ['0%', '20%', '40%', '60%']);
+      lines(ends.y, [1, 2 / 3, 1 / 3, 0], 'the y scale runs from 0 to 60');
     } finally {
       await browser.close();
     }
