@@ -6,15 +6,18 @@ import { leaseBrowser, engines } from './browser.js';
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 
-// Car, weight, then two y series.
-const cars = [['Civic', '1300', '31', '40'], ['Corolla', '1400', '32', '41'], ['Camry', '1600', '28', '39'], ['Tahoe', '2600', '15', '20']];
-const chart = (attrs, rows) => `<figure ${attrs}>
-  <figcaption>Fuel economy</figcaption>
+/** A chart figure: its caption, a header row, and body rows that each start with a label. */
+const figure = (attrs, caption, headers, rows) => `<figure ${attrs}>
+  <figcaption>${caption}</figcaption>
   <table>
-    <thead><tr><th>Car</th><th>Weight (kg)</th><th>City</th><th>Highway</th></tr></thead>
+    <thead><tr>${headers.map((header) => `<th>${header}</th>`).join('')}</tr></thead>
     <tbody>${rows.map(([label, ...cells]) => `<tr><th>${label}</th>${cells.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody>
   </table>
 </figure>`;
+
+// Car, weight, then two y series.
+const cars = [['Civic', '1300', '31', '40'], ['Corolla', '1400', '32', '41'], ['Camry', '1600', '28', '39'], ['Tahoe', '2600', '15', '20']];
+const chart = (attrs, rows) => figure(attrs, 'Fuel economy', ['Car', 'Weight (kg)', 'City', 'Highway'], rows);
 const fixed = 'data-x-min="0" data-x-max="4000" data-min="0" data-max="50"';
 
 const html = `<style>${css}</style>
@@ -75,6 +78,55 @@ function near(series, message) {
 }
 
 const values = (column) => cars.map((row) => [Number(row[1]), Number(row[column])]);
+
+// Country, GDP per person, two y series, then the population that sizes each
+// bubble: the largest is four times the smallest.
+const countries = [['Chile', '30000', '80', '70', '20'], ['Peru', '15000', '77', '68', '35'], ['Mexico', '22000', '75', '66', '80'], ['Spain', '45000', '83', '72', '48']];
+const bubbles = (attrs, rows) => figure(attrs, 'Health and wealth', ['Country', 'GDP per person', 'Life expectancy', 'Healthy years', 'Population'], rows);
+const bubbleEnds = 'data-x-min="0" data-x-max="60000" data-min="50" data-max="100"';
+const bubbleHtml = `<style>${css}</style>
+  <div style="width: 600px">
+    ${bubbles(`class="scatter-chart bubble" id="bubbles" ${bubbleEnds}`, countries)}
+  </div>
+  <div style="width: 600px" dir="rtl">
+    ${bubbles(`class="scatter-chart bubble" id="rtl-bubbles" ${bubbleEnds}`, countries)}
+  </div>
+  <div style="width: 600px">
+    ${bubbles(`class="scatter-chart bubble" id="bubble-gaps" ${bubbleEnds}`,
+      countries.map((row, i) => (i < 2 ? [...row.slice(0, 4), ['n/a', '0'][i]] : row)))}
+    ${bubbles(`class="scatter-chart bubble toggle" id="bubble-toggle" ${bubbleEnds}`, [...countries, ['Japan', '40000', '', '74', '160']])}
+    ${bubbles(`class="scatter-chart bubble" id="bubble-watched" data-watch ${bubbleEnds}`, countries)}
+  </div>
+  <div style="width: 600px">
+    ${bubbles('class="scatter-chart bubble axis toggle" id="bubble-edges" data-x-min="15000" data-x-max="45000" data-min="66" data-max="83"', countries)}
+  </div>
+  <script>${js}</script>`;
+
+/**
+ * Each series' bubbles as drawn: centre in page pixels and diameter, with the
+ * plot box and direction to place a value pair on the fixed scales.
+ */
+const drawnBubbles = (page, id) => page.locator(id).evaluate((el) => {
+  const plot = el.querySelector('.scatter-chart-plot');
+  const box = plot.getBoundingClientRect();
+  return {
+    plot: [box.left + plot.clientLeft, box.top + plot.clientTop, plot.clientWidth, plot.clientHeight],
+    rtl: getComputedStyle(el).direction === 'rtl',
+    legend: [...el.querySelectorAll('.scatter-chart-legend li')].map((li) => li.textContent),
+    series: [...el.querySelectorAll('.scatter-chart-series')].map((group) => [...group.querySelectorAll('.scatter-chart-points')].map((path) => {
+      const [, x, y] = path.getAttribute('d').match(/M([-\d.e]+),([-\d.e]+)/);
+      const point = new DOMPoint(Number(x), Number(y)).matrixTransform(path.getScreenCTM());
+      return { at: [point.x, point.y], size: parseFloat(getComputedStyle(path).strokeWidth) };
+    })),
+  };
+});
+
+/** Where a country's bubble belongs in series `s`, and the diameter its population gives against the largest, 80. */
+function bubblePlace({ plot: [left, top, width, height], rtl }, s, [, gdp, ...rest]) {
+  const share = Number(gdp) / 60000;
+  const x = left + (rtl ? 1 - share : share) * width;
+  return { at: [x, top + (1 - (Number(rest[s]) - 50) / 50) * height], size: 48 * Math.sqrt(Number(rest[2]) / 80) };
+}
 
 for (const [engine, browserType, browserTest] of engines) {
 
@@ -343,6 +395,200 @@ for (const [engine, browserType, browserTest] of engines) {
       // A row with an x value but no y values draws nothing, so it does not stretch the x scale.
       assert.deepEqual(await page.locator('#xonly .scatter-chart-axis.x > li').allTextContents(), ['1K', '1.5K', '2K', '2.5K', '3K']);
       assert.deepEqual(errors, []);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: bubble chart sizes each point so its area follows the last column`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(bubbleHtml);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      for (const id of ['#bubbles', '#rtl-bubbles']) {
+        const chart = await drawnBubbles(page, id);
+        assert.deepEqual(chart.legend, ['Life expectancy', 'Healthy years'], `${id}: the population column is no series`);
+        assert.equal(chart.series.length, 2, `${id}: two series`);
+        chart.series.forEach((drawn, s) => {
+          assert.equal(drawn.length, countries.length, `${id}, series ${s + 1}: one bubble per row`);
+          const sizes = drawn.map(({ size }) => size);
+          assert.deepEqual(sizes, [...sizes].sort((a, b) => b - a), `${id}, series ${s + 1}: largest first, so smaller bubbles draw on top`);
+          for (const row of countries) {
+            const want = bubblePlace(chart, s, row);
+            const bubble = drawn.find(({ at }) => Math.abs(at[0] - want.at[0]) <= 1 && Math.abs(at[1] - want.at[1]) <= 1);
+            assert.ok(bubble, `${id}, series ${s + 1}: a bubble at ${row[0]}'s values, ${want.at}`);
+            // Area within 2%: the diameter squared over the population matches the largest bubble's.
+            assert.ok(Math.abs((bubble.size / want.size) ** 2 - 1) < 0.02,
+              `${id}, series ${s + 1}, ${row[0]}: ${bubble.size}px across, expected ${want.size}px`);
+          }
+        });
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: bubble chart leaves out rows without a positive size`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      const errors = [];
+      page.on('pageerror', (error) => errors.push(error));
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(bubbleHtml);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      const chart = await drawnBubbles(page, '#bubble-gaps');
+      assert.deepEqual(chart.series.map((drawn) => drawn.length), [2, 2], 'Chile ("n/a") and Peru ("0") draw nothing');
+      const seen = await page.locator('#bubble-gaps').evaluate((el) => {
+        const instance = Expressive.ScatterChart.getInstance(el);
+        return [0, 1, 2, 3, 4].map((i) => {
+          instance.show(i);
+          return el.querySelector('.scatter-chart-tooltip').hidden ? null : el.querySelector('.scatter-chart-tooltip strong').textContent;
+        });
+      });
+      assert.deepEqual(seen, ['Mexico', 'Mexico', 'Spain', 'Spain', null]);
+      await page.evaluate(() => Expressive.ScatterChart.getInstance(document.querySelector('#bubble-gaps')).show(-1));
+      await page.locator('#bubble-gaps .scatter-chart-plot').focus();
+      await page.keyboard.press('End');
+      assert.equal(await page.locator('#bubble-gaps .scatter-chart-tooltip strong').textContent(), 'Spain', 'End reaches the last drawn point');
+      assert.deepEqual(errors, []);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: bubble chart tooltip names the size, and the marker outlines the bubble`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(bubbleHtml);
+      await page.evaluate(() => Expressive.AutoInit());
+      await page.locator('#bubbles .scatter-chart-plot').focus();
+      await page.keyboard.press('Tab');
+      await page.keyboard.press('Shift+Tab');
+      const tooltip = (await page.locator('#bubbles .scatter-chart-tooltip').innerText()).replace(/\s+/g, ' ').trim();
+      assert.equal(tooltip, 'Chile GDP per person 30000 Life expectancy 80 Population 20');
+      const swatches = await page.locator('#bubbles .scatter-chart-tooltip > span').evaluateAll((spans) =>
+        spans.map((span) => [span.textContent, getComputedStyle(span, '::before').content !== 'none']));
+      assert.deepEqual(swatches.filter(([, swatch]) => swatch).map(([text]) => text), ['Life expectancy'], 'only the series has a swatch');
+      // Chile's bubble is 24px across; the marker adds its 2px border each side.
+      const marker = await page.locator('#bubbles .scatter-chart-cursor').evaluate((el) => el.getBoundingClientRect().width);
+      assert.ok(Math.abs(marker - 28) <= 0.5, `marker ${marker}px across`);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: bubble chart toggle legend refits the sizes to the points still shown`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(bubbleHtml);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      // Japan, only in "Healthy years", has the largest population, 160, so Mexico's 80 is half its area.
+      const before = await drawnBubbles(page, '#bubble-toggle');
+      const mexico = (chart) => chart.series[0].find(({ at }) => Math.abs(at[0] - bubblePlace(chart, 0, countries[2]).at[0]) <= 1);
+      assert.ok(Math.abs(mexico(before).size - 48 * Math.SQRT1_2) < 0.5, `Mexico ${mexico(before).size}px across beside Japan`);
+
+      await page.locator('#bubble-toggle .scatter-chart-legend button', { hasText: 'Healthy years' }).click();
+      const after = await drawnBubbles(page, '#bubble-toggle');
+      assert.equal(after.series.length, 1);
+      assert.equal(after.series[0].length, countries.length, 'Japan has no life expectancy, so it leaves');
+      for (const row of countries) {
+        const want = bubblePlace(after, 0, row);
+        const bubble = after.series[0].find(({ at }) => Math.abs(at[0] - want.at[0]) <= 1 && Math.abs(at[1] - want.at[1]) <= 1);
+        assert.ok(bubble && Math.abs((bubble.size / want.size) ** 2 - 1) < 0.02, `${row[0]}: ${bubble?.size}px across, expected ${want.size}px`);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: bubble chart update() grows a bubble from its old size, and data-watch redraws`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(bubbleHtml);
+      await page.evaluate(() => Expressive.AutoInit());
+      await page.locator('#bubbles .scatter-chart-plot').focus();
+
+      // Chile's population goes from 20 to 80, so its bubbles go from half the largest diameter to all of it.
+      const grown = await page.locator('#bubbles').evaluate((el) => {
+        el.querySelector('tbody tr td:nth-of-type(4)').textContent = '80';
+        Expressive.ScatterChart.getInstance(el).update();
+        const moving = [...el.querySelectorAll('.scatter-chart-points')].filter((path) => path.getAnimations().length);
+        return {
+          focused: document.activeElement === el.querySelector('.scatter-chart-plot'),
+          frames: moving.map((path) => path.getAnimations()[0].effect.getKeyframes().map((frame) => Number(frame['--scatter-chart-size']))),
+          durations: moving.map((path) => path.getAnimations()[0].effect.getTiming().duration),
+          sizes: moving.map((path) => path.style.getPropertyValue('--scatter-chart-size')),
+        };
+      });
+      assert.equal(grown.focused, true, 'focus stays on the plot');
+      assert.deepEqual(grown.frames, [[0.5, 1], [0.5, 1]], 'only Chile\'s two bubbles grow, from their old size');
+      assert.deepEqual(grown.sizes, ['1', '1']);
+      assert.deepEqual(grown.durations, [400, 400], 'the medium4 motion token, as the points move');
+
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      const still = await page.locator('#bubbles').evaluate((el) => {
+        el.querySelector('tbody tr td:nth-of-type(4)').textContent = '20';
+        Expressive.ScatterChart.getInstance(el).update();
+        return [...el.querySelectorAll('.scatter-chart-points')].filter((path) => path.getAnimations().length).length;
+      });
+      assert.equal(still, 0, 'no motion when the reader prefers less');
+
+      // data-watch redraws once Peru's population changes from 35 to 80, with no update() call.
+      await page.locator('#bubble-watched').evaluate((el) => { el.querySelectorAll('tbody tr')[1].cells[4].textContent = '80'; });
+      await page.evaluate(() => new Promise(requestAnimationFrame));
+      const watched = await drawnBubbles(page, '#bubble-watched');
+      const peru = watched.series[0].find(({ at }) => Math.abs(at[0] - bubblePlace(watched, 0, countries[1]).at[0]) <= 1);
+      assert.ok(Math.abs(peru.size - 48) < 0.5, `Peru ${peru.size}px across after the edit`);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: bubble chart leaves room for bubbles at the ends of its scales`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(bubbleHtml);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      // The scales end at the data's extremes: Peru sits on the left edge,
+      // Spain on the top and right, and Mexico, 48px across, on the bottom.
+      const room = await page.locator('#bubble-edges').evaluate((el) => {
+        const rect = (node) => node.getBoundingClientRect();
+        const bubbles = [...el.querySelectorAll('.scatter-chart-points')].map((path) => {
+          const { left, top, width, height } = rect(path);
+          const r = parseFloat(getComputedStyle(path).strokeWidth) / 2;
+          // A zero-length path's box is its centre.
+          return { left: left + width / 2 - r, right: left + width / 2 + r, top: top + height / 2 - r, bottom: top + height / 2 + r };
+        });
+        const edge = (side, pick) => pick(...bubbles.map((box) => box[side]));
+        return {
+          bubbles: { left: edge('left', Math.min), right: edge('right', Math.max), top: edge('top', Math.min), bottom: edge('bottom', Math.max) },
+          figure: rect(el),
+          caption: rect(el.querySelector('figcaption')).bottom,
+          yLabels: Math.max(...[...el.querySelectorAll('.scatter-chart-axis:not(.x) > li > span')].map((span) => rect(span).right)),
+          xLabels: Math.min(...[...el.querySelectorAll('.scatter-chart-axis.x > li > span')].map((span) => rect(span).top)),
+          legend: rect(el.querySelector('.scatter-chart-legend')).top,
+        };
+      });
+      const { bubbles } = room;
+      assert.ok(room.yLabels <= bubbles.left + 0.5, `y labels end at ${room.yLabels}, a bubble starts at ${bubbles.left}`);
+      assert.ok(room.xLabels >= bubbles.bottom - 0.5, `x labels start at ${room.xLabels}, a bubble ends at ${bubbles.bottom}`);
+      assert.ok(room.legend >= bubbles.bottom - 0.5, `the legend starts at ${room.legend}, a bubble ends at ${bubbles.bottom}`);
+      assert.ok(room.caption <= bubbles.top + 0.5, `the caption ends at ${room.caption}, a bubble starts at ${bubbles.top}`);
+      assert.ok(bubbles.right <= room.figure.right + 0.5, `a bubble ends at ${bubbles.right}, past the figure at ${room.figure.right}`);
     } finally {
       await browser.close();
     }

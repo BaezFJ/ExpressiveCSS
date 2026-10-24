@@ -232,7 +232,11 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed scatter chart points by keyboard and pointer, with the marker and tooltip: 91,122 gzip bytes (+389).
   // Reviewed scatter chart points moving from their old places after update(): 91,227 gzip bytes (+105).
   // Reviewed matching moved scatter points through a map instead of a search per point: 91,241 gzip bytes (+14).
-  assert.ok(sizes(js).gzip <= 91241, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed scatter chart bubbles sized by the last column, one path each: 91,434 gzip bytes (+193).
+  // Reviewed the bubble size in the tooltip and marker, and bubbles growing from their old size after update(): 91,624 gzip bytes (+190).
+  // Reviewed one pass for bubble sizes, sharing the scatter chart's drawn-row check: 91,630 gzip bytes (+6).
+  // Reviewed one tooltip helper for the scatter chart's x and size columns: 91,634 gzip bytes (+4).
+  assert.ok(sizes(js).gzip <= 91634, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -378,5 +382,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the scatter chart: the shared chart parts, axis and point styles: 85,984 gzip bytes (+504).
   // Reviewed the scatter chart's x axis labels and vertical grid lines: 86,050 gzip bytes (+66).
   // Reviewed the scatter chart's point marker and level tooltip: 86,100 gzip bytes (+50).
-  assert.ok(sizes(css).gzip <= 86100, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed scatter chart bubble sizes and their opacity: 86,141 gzip bytes (+41).
+  // Reviewed the registered bubble size property and the marker sized to its bubble: 86,183 gzip bytes (+42).
+  // Reviewed room around a bubble chart's plot for the largest radius, with the axis labels moved out: 86,273 gzip bytes (+90).
+  assert.ok(sizes(css).gzip <= 86273, `CSS gzip: ${sizes(css).gzip}`);
 });

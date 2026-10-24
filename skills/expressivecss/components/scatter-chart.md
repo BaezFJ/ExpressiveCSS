@@ -9,7 +9,7 @@ Component ID: `scatter-chart`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `52c4c60fc3fbe5ca95da7324cb8105bf90552f4233ce43905545e0f0f4a348c3`
+Contract SHA-256: `8f3a1fba5b89e96b14fe5159a30fa09c3cbe37a98cd00f4eeae97acabd752dd1`
 
 #### Selection and adaptation
 
@@ -25,11 +25,11 @@ Upstream: web-extension-inventory-reviewed (2026-10-24); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Support (2026-10-24, `llm.md#scatter-chart`): Points drawn from a figure's data table, with a shared x column and one series per further column, gaps for cells that are not numbers, fixed ranges for both scales, round labels for both scales with .axis, a legend with .toggle, update() motion, data-watch, and a pointer and keyboard tooltip that steps through points in table order.
+Support (2026-10-24, `llm.md#scatter-chart`): Points drawn from a figure's data table, with a shared x column and one series per further column, gaps for cells that are not numbers, fixed ranges for both scales, round labels for both scales with .axis, a legend with .toggle, update() motion, data-watch, a pointer and keyboard tooltip that steps through points in table order, and .bubble sizes from the last column with areas proportional to its values.
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Point placement in left-to-right and right-to-left pages, gaps, both axes, the tooltip, keyboard steps, the nearest point by pointer, update() motion, data-watch and the toggle legend are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no bubble sizes, trend lines or separate x columns per series.
+Known boundary: Point placement in left-to-right and right-to-left pages, gaps, both axes, the tooltip, keyboard steps, the nearest point by pointer, update() motion, data-watch, the toggle legend and .bubble areas, gaps, tooltip, refit and size motion are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no trend lines, separate x columns per series or sizes per series.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#scatter-chart).
 

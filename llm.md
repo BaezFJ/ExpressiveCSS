@@ -5675,6 +5675,7 @@ A `<figure class="scatter-chart">` takes a `<figcaption>` and a `<table>`. The f
 - The plot is one Tab stop named by the caption. Keyboard focus shows the first point; the arrow keys step through the points in table order, row by row and within a row by series, skipping the points left out. Home and End jump to the first and last point and Escape hides the tooltip. The arrows keep their meaning in a right-to-left page. The pointer shows the point nearest to it.
 - The tooltip names the row, the x header with its cell, and the series with its cell, as written in the table. A larger dot marks the highlighted point.
 - After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted point stay. Points move from their old places to the new ones; with reduced motion they appear at once. `toggle` makes each legend item a button that shows or hides its series, and both scales refit. It has the line chart's `show(index)`, which takes a point's number in table order, and `destroy()`.
+- `bubble` makes the last column each row's size: it is no series, and every point in the row becomes a bubble whose area follows that size. The largest size drawn is `--md-comp-scatter-chart-bubble-size` across, and the rest scale by area against it, refitting when a `toggle` legend hides a series. A row whose size is not a positive number draws no points. The tooltip adds the size header and cell, the marker outlines the bubble, and bubbles grow or shrink from their old sizes after `update()`. Bubbles are partly transparent so overlaps show, smaller ones drawn over larger ones in each series. The chart leaves half the largest diameter of room around the plot and moves the axis labels out by as much, so a bubble at the end of a scale stays clear of the labels, caption and legend. The pointer still picks the nearest centre, so inside a large bubble it can pick a smaller one nearby.
 - Series take four colors in column order, then repeat. Lines, `stacked`, `straight`, `points`, `values` and `sparkline` do not apply.
 
 ### Tokens
@@ -5683,6 +5684,7 @@ A `<figure class="scatter-chart">` takes a `<figcaption>` and a `<table>`. The f
 | --- | --- |
 | `--md-comp-scatter-chart-height` | 240px |
 | `--md-comp-scatter-chart-point-size` | 8px |
+| `--md-comp-scatter-chart-bubble-size` | 48px, the largest `bubble` diameter |
 | `--md-comp-scatter-chart-grid-color` | `outline-variant` |
 | `--md-comp-scatter-chart-axis-width` | 48px, room for the y `axis` labels |
 | `--md-comp-scatter-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |

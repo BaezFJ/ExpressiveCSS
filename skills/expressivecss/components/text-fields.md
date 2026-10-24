@@ -9,7 +9,7 @@ Component ID: `text-fields`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `52c4c60fc3fbe5ca95da7324cb8105bf90552f4233ce43905545e0f0f4a348c3`
+Contract SHA-256: `8f3a1fba5b89e96b14fe5159a30fa09c3cbe37a98cd00f4eeae97acabd752dd1`
 
 #### Selection and adaptation
 

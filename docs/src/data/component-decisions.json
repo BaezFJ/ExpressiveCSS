@@ -3863,10 +3863,10 @@
         "implementation": {
           "source": "llm.md#scatter-chart",
           "reviewedOn": "2026-10-24",
-          "documentedSupport": "Points drawn from a figure's data table, with a shared x column and one series per further column, gaps for cells that are not numbers, fixed ranges for both scales, round labels for both scales with .axis, a legend with .toggle, update() motion, data-watch, and a pointer and keyboard tooltip that steps through points in table order.",
+          "documentedSupport": "Points drawn from a figure's data table, with a shared x column and one series per further column, gaps for cells that are not numbers, fixed ranges for both scales, round labels for both scales with .axis, a legend with .toggle, update() motion, data-watch, a pointer and keyboard tooltip that steps through points in table order, and .bubble sizes from the last column with areas proportional to its values.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Point placement in left-to-right and right-to-left pages, gaps, both axes, the tooltip, keyboard steps, the nearest point by pointer, update() motion, data-watch and the toggle legend are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no bubble sizes, trend lines or separate x columns per series."
+            "Point placement in left-to-right and right-to-left pages, gaps, both axes, the tooltip, keyboard steps, the nearest point by pointer, update() motion, data-watch, the toggle legend and .bubble areas, gaps, tooltip, refit and size motion are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no trend lines, separate x columns per series or sizes per series."
           ]
         },
         "relationship": "none",
@@ -3894,15 +3894,15 @@
           },
           {
             "path": "src/sass/components/_scatter-chart.scss",
-            "sha256": "4d429cf9e8daa75c0f07aa6fa6c81f993fcbd59d3a07c17e01020678e296b077"
+            "sha256": "f064ff1fa5a08cd19c244531df9c85cc3b877908d9d21a237adad1ad7f73390f"
           },
           {
             "path": "src/ts/components/lineChart.ts",
-            "sha256": "a68636cd7533d79935e32f7981963ffb2bfe16081363803624add8312e6dc9b0"
+            "sha256": "06a7be0f88231c0368d299a6506643e9aac6fc9a99ac7143ae1d180f98541c71"
           },
           {
             "path": "src/ts/components/scatterChart.ts",
-            "sha256": "2cadc49e61a79046288fc6fa789e99cf55ceaee351644be6b10dddb46e2617ef"
+            "sha256": "6e5098db6b538b9609957e23e3a752ef65bb59b235ecb8c3a79fdda629031bbe"
           }
         ],
         "gaps": [
@@ -3917,6 +3917,11 @@
             "file": "tests/scatter-chart-browser.test.js",
             "name": "chromium: scatter chart places one point per row at its x and y values",
             "scope": "Hidden table, the named plot and its role description, the x column read as the axis, one point per row per series at its value in left-to-right and right-to-left pages, legend order, and separate instances from line charts. No spoken-output assertion."
+          },
+          {
+            "file": "tests/scatter-chart-browser.test.js",
+            "name": "chromium: bubble chart sizes each point so its area follows the last column",
+            "scope": "With .bubble, the last column leaves the series and legend, and each bubble's area is proportional to its row's size, the largest 48px across, at its scatter position in left-to-right and right-to-left pages. No spoken-output assertion."
           },
           {
             "file": "tests/scatter-chart-browser.test.js",

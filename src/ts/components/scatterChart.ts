@@ -14,12 +14,16 @@ export interface ScatterChartOptions extends LineChartOptions {
   xMax: number | null;
 }
 
-/** A drawn point: its row and series, and where it sits in the plot, in percent. */
+/**
+ * A drawn point: its row and series, where it sits in the plot, in percent,
+ * and its diameter as a share of the largest bubble's.
+ */
 interface Mark {
   row: number;
   series: Series;
   x: number;
   y: number;
+  size: number;
 }
 
 /** Points as path data: round caps on zero-length lines. */
@@ -28,11 +32,31 @@ const dots = (marks: Mark[]) => marks.map(({ x, y }) => `M${x},${y}h0`).join('')
 /** A point's row and series column, which update() matches old and new points by. */
 const place = ({ row, series }: Mark) => `${row} ${series.column}`;
 
+/** A tooltip line part. */
+const span = (text: string) => Object.assign(document.createElement('span'), { textContent: text });
+
+/** A CSS time, such as 400ms or 0.4s, in milliseconds. */
+const ms = (time: string) => parseFloat(time) * (time.trim().endsWith('ms') ? 1 : 1000);
+
+/**
+ * Sizes a bubble, and with motion timing grows or shrinks it from its old
+ * point's size. The Web Animations API, since SVG animation cannot reach a
+ * size that CSS computes from a token.
+ */
+function sized(path: SVGElement, size: number, was: Mark | undefined, timing: ReturnType<typeof pace>) {
+  path.style.setProperty('--scatter-chart-size', `${size}`);
+  if (!timing || !was || was.size === size) return;
+  path.animate({ '--scatter-chart-size': [`${was.size}`, `${size}`] }, { duration: ms(timing.dur), easing: `cubic-bezier(${timing.keySplines})` });
+}
+
 /**
  * Scatter chart. It reads its <table> like LineChart, but the first value
  * column is the x axis: each row draws one point per later column, at the
  * row's x value and that column's y value. A row without an x value, or a
  * cell without a y value, draws no point.
+ *
+ * With `.bubble`, the last column sizes each row's points, so their areas
+ * follow its values, and a row without a positive size draws no point.
  *
  * Call `update()` after changing the table, or start it with `watch` or
  * `data-watch`.
@@ -41,6 +65,8 @@ export class ScatterChart extends LineChart {
   // No initializers: LineChart's constructor draws before they would run.
   /** Each row's x value, or null. */
   private _xs: (number | null)[];
+  /** Each row's size: 1 without .bubble, or the last cell's value, null unless positive. */
+  private _sizes: (number | null)[];
   /** The x scale. */
   private _xFit: ChartScale;
   /** The signs around the x column's numbers, which its axis labels repeat. */
@@ -58,6 +84,14 @@ export class ScatterChart extends LineChart {
     return 2;
   }
 
+  protected get _seriesTo() {
+    return this._bubble ? -1 : undefined;
+  }
+
+  private get _bubble() {
+    return this.el.classList.contains('bubble');
+  }
+
   static get defaults(): ScatterChartOptions {
     return { ...LineChart.defaults, xMin: null, xMax: null };
   }
@@ -65,15 +99,23 @@ export class ScatterChart extends LineChart {
   static key = 'Expressive_ScatterChart';
 
   /**
-   * Reads each row's x value into `_xs`, which the x scale and the points
-   * use, and leaves out the values of rows without one, so they neither
-   * draw nor stretch the y scale. Nothing stacks.
+   * Reads each row's x value into `_xs` and its size into `_sizes`, which
+   * the scales and the points use, and leaves out the values of rows
+   * without either, so they neither draw nor stretch a scale. Nothing stacks.
    */
   protected _arrange(series: Series[]) {
     const xs = (this._xs = this._rows.map((row) => cellValue(row.cells[1])));
+    const sizes = (this._sizes = this._rows.map((row) => this._size(row)));
     for (const each of series) {
-      each.values = each.tops = each.values.map((value, row) => (xs[row] === null ? null : value));
+      each.values = each.tops = each.values.map((value, row) => (xs[row] === null || sizes[row] === null ? null : value));
     }
+  }
+
+  /** A row's size: 1 without .bubble, or its last cell's value, null unless positive. */
+  private _size(row: HTMLTableRowElement) {
+    if (!this._bubble) return 1;
+    const size = cellValue(row.cells[this._header.length - 1]) ?? 0;
+    return size > 0 ? size : null;
   }
 
   protected get _count() {
@@ -90,20 +132,28 @@ export class ScatterChart extends LineChart {
   }
 
   /**
-   * Puts the marker on a point and fills the tooltip beside it: the row,
-   * its x header and text, and the series and its text, as the author wrote
-   * them. Past the middle the tooltip opens back over the plot.
+   * Puts the marker on a point, at a bubble's size, and fills the tooltip
+   * beside it: the row, its x header and text, the series and its text, and
+   * with .bubble the size header and text, as the author wrote them. Past
+   * the middle the tooltip opens back over the plot.
    */
-  private _fill({ row, series, x, y }: Mark) {
+  private _fill({ row, series, x, y, size }: Mark) {
     this._cursor.dataset.series = series.color;
+    this._cursor.style.setProperty('--scatter-chart-size', `${size}`);
     for (const part of [this._cursor, this._tooltip]) Object.assign(part.style, { left: `${x}%`, top: `${y}%` });
     this._tooltip.classList.toggle('end', x > 50);
-    const span = (text: string) => Object.assign(document.createElement('span'), { textContent: text });
-    const [title, axis, name] = [document.createElement('strong'), span(this._header[1].textContent.trim()), span(series.name)];
+    const [title, name] = [document.createElement('strong'), span(series.name)];
     title.textContent = this.labels[row];
-    axis.className = 'x';
     name.dataset.series = series.color;
-    this._tooltip.replaceChildren(title, axis, span(this._rows[row].cells[1].textContent.trim()), name, span(series.text[row]));
+    const sizeText = this._bubble ? this._cellText(row, this._header.length - 1) : [];
+    this._tooltip.replaceChildren(title, ...this._cellText(row, 1), name, span(series.text[row]), ...sizeText);
+  }
+
+  /** A column's header, without a swatch since it names no series, and the row's text in it. */
+  private _cellText(row: number, column: number) {
+    const header = span(this._header[column].textContent.trim());
+    header.className = 'x';
+    return [header, span(this._rows[row].cells[column]?.textContent.trim() ?? '')];
   }
 
   /** The point nearest the pointer, or -1 with none. */
@@ -145,7 +195,7 @@ export class ScatterChart extends LineChart {
 
   /** The x values of the rows with a point, with 10% of their span to spare each side. */
   private _xRange(): [number, number] {
-    const xs = this._xs.filter((_, row) => this.series.some((series) => series.values[row] !== null)) as number[];
+    const xs = this._xs.filter((_, row) => this._hasPoint(row)) as number[];
     if (!xs.length) return [-1, 1];
     const [low, high] = [xs.reduce((a, b) => Math.min(a, b)), xs.reduce((a, b) => Math.max(a, b))];
     const pad = (high - low) * 0.1 || 1;
@@ -164,10 +214,23 @@ export class ScatterChart extends LineChart {
     return this._reversed ? 100 - x : x;
   }
 
+  /** Whether any series shown draws a point in a row. */
+  private _hasPoint(row: number) {
+    return this.series.some((series) => series.values[row] !== null);
+  }
+
+  /** The points, each diameter the square root of its row's share of the largest size drawn, so areas follow sizes. */
   private _layout(): Mark[] {
+    const largest = this._sizes.reduce<number>((most, size, row) => (this._hasPoint(row) ? Math.max(most, size!) : most), 0);
     return this.labels.flatMap((_, row) => this.series
       .filter((series) => series.values[row] !== null)
-      .map((series) => ({ row, series, x: this._xAt(this._xs[row]!), y: series.y(series.values[row]!) })));
+      .map((series) => ({
+        row,
+        series,
+        x: this._xAt(this._xs[row]!),
+        y: series.y(series.values[row]!),
+        size: Math.sqrt(this._sizes[row]! / largest)
+      })));
   }
 
   /** One group per series, its points round caps on zero-length lines, so CSS sizes them in pixels. */
@@ -186,8 +249,8 @@ export class ScatterChart extends LineChart {
   }
 
   /**
-   * A series' points. After update() each moves from where its row's point
-   * in the same column was drawn, or appears where it is.
+   * A series' points, in one path, or with .bubble one path each, largest
+   * first so smaller bubbles stay on top.
    */
   private _group(series: Series, timing: ReturnType<typeof pace>, was: Map<string, Mark>) {
     const group = svgNode('g', {
@@ -195,10 +258,20 @@ export class ScatterChart extends LineChart {
       'data-series': series.color
     });
     const marks = this._marks.filter((mark) => mark.series === series);
+    const sets = this._bubble ? marks.sort((a, b) => b.size - a.size).map((mark) => [mark]) : [marks];
+    group.append(...sets.map((set) => this._pointPath(set, timing, was)));
+    return group;
+  }
+
+  /**
+   * A path of points. After update() each moves from where its row's point
+   * in the same column was drawn, or appears where it is.
+   */
+  private _pointPath(marks: Mark[], timing: ReturnType<typeof pace>, was: Map<string, Mark>) {
     const path = svgNode('path', { class: 'scatter-chart-points', d: dots(marks) });
     if (timing) morph(path, dots(marks.map((mark) => was.get(place(mark)) ?? mark)), timing);
-    group.append(path);
-    return group;
+    if (this._bubble) sized(path, marks[0].size, was.get(place(marks[0])), timing);
+    return path;
   }
 
   /** With .axis, the y scale's labels, and the x scale's below the plot with a grid line at each. */
