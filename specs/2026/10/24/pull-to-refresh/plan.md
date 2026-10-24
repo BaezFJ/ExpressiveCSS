@@ -27,11 +27,11 @@ Outcome: the button and `refresh()` reach the same refresh, and the edge cases b
 
 Prerequisites: group 1.
 
-- [ ] Add the V2 to V7 cases and record which fail.
-- [ ] Handle `[data-refresh]` clicks and `refresh()`, `aria-busy`, ignored repeats while busy, short pulls, `touchcancel`, scrolled-down starts and mouse drags.
-- [ ] Read the page's scroll position when the element does not scroll, and add the `:root:has(.pull-to-refresh)` rule.
-- [ ] Make `destroy()` undo the offset, `aria-busy` and the indicator, and end a running refresh silently.
-- [ ] Rebuild and rerun the file until V1 to V7 pass. Update the budget lines.
+- [x] Add the V2 to V7 cases and record which fail. All passed on group 1's code, so source mutations stood in for the failing run.
+- [x] Handle `[data-refresh]` clicks and `refresh()`, `aria-busy`, ignored repeats while busy, short pulls, `touchcancel`, scrolled-down starts and mouse drags.
+- [x] Read the page's scroll position when the element does not scroll, and add the `:root:has(.pull-to-refresh)` rule.
+- [x] Make `destroy()` undo the offset, `aria-busy` and the indicator, and end a running refresh silently.
+- [x] Rebuild and rerun the file until V1 to V7 pass. Update the budget lines.
 
 Completion check: V1 to V7 pass in all three engines.
 

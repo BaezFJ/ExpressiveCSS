@@ -100,7 +100,7 @@ export class PullToRefresh extends Component<PullToRefreshOptions> {
   }
 
   private _onStart = (event: TouchEvent) => {
-    if (this._refresh || event.touches.length !== 1 || this._scrollTop() > 0) return;
+    if (this._refresh || event.touches.length !== 1) return;
     const { clientX, clientY } = event.touches[0];
     this._start = { x: clientX, y: clientY };
   };
