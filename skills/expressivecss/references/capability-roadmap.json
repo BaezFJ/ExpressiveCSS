@@ -1591,7 +1591,7 @@
       "sources": [
         {
           "path": "src/sass/components/_pull-to-refresh.scss",
-          "sha256": "a806693436d9e0f2c3b4f9fe1f8d9f1c3ffdd76d1426327cf01016b08018833d"
+          "sha256": "82683a82db3309935575713659b0df1707de087802f20aa87d7ac3f875e4ae98"
         },
         {
           "path": "src/ts/components/pullToRefresh.ts",

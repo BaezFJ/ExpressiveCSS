@@ -65,9 +65,8 @@
     visibility: visible;
     opacity: 1;
     translate: 0 var(--md-comp-pull-to-refresh-indicator-offset);
-    transition:
-      translate var(--md-comp-pull-to-refresh-motion-duration) var(--md-comp-pull-to-refresh-motion),
-      opacity var(--md-comp-pull-to-refresh-motion-duration) var(--md-comp-pull-to-refresh-motion);
+    // Shown at once; only hiding waits for the motion.
+    transition-delay: 0s;
 
     &::before {
       animation-play-state: running;
@@ -85,8 +84,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .pull-to-refresh > .loading-indicator,
-  .pull-to-refresh[aria-busy="true"] > .loading-indicator {
+  .pull-to-refresh > .loading-indicator {
     transition: none;
   }
 }
