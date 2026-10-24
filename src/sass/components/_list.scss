@@ -111,8 +111,8 @@
     // A trailing span.badge or span.meta is not a label either: this rule
     // outranks the trailing one, so it took column 2 and pushed a bare-text
     // label past it into column 3.
-    > div:not(.meta),
-    > #{$icon-label}:not(.drag-handle, .sortable-actions, .badge, .meta) {
+    > div:not(.meta, .swipe-actions),
+    > #{$icon-label}:not(.drag-handle, .sortable-actions, .swipe-actions, .badge, .meta) {
       grid-column: 2;
       min-width: 0;
     }

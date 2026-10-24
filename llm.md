@@ -352,6 +352,7 @@ function unmount() {
 | `Menu` | `.menu-trigger` |
 | `MessageScroller` | `.message-scroller` |
 | `PullToRefresh` | `.pull-to-refresh` |
+| `SwipeActions` | `.list.swipeable` |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
@@ -5928,6 +5929,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Menu` | `.menu-trigger` |
 | `MessageScroller` | `.message-scroller` |
 | `PullToRefresh` | `.pull-to-refresh` |
+| `SwipeActions` | `.list.swipeable` |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |

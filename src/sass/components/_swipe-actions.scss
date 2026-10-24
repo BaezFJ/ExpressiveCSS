@@ -1,0 +1,71 @@
+@use "../abstracts" as *;
+
+// Swipe actions. A touch swipe toward a row's inline start slides the row and
+// brings its `.swipe-actions` group in from the inline end. The
+// `[data-swipe-toggle]` button does the same without a swipe.
+//
+//   <ul class="list swipeable" aria-label="Inbox">
+//     <li>
+//       Label
+//       <button type="button" class="icon-button" data-swipe-toggle aria-label="Actions for Label">…</button>
+//       <span class="swipe-actions">
+//         <button type="button" class="icon-button" aria-label="Archive Label">…</button>
+//       </span>
+//     </li>
+//   </ul>
+//
+// The group waits just past the row's inline end and slides with it, so the
+// two never overlap. The script sets `--swipe-offset` on the row, adds
+// `.swiping` while a finger is down and `.swipe-open` while it is open.
+//
+// Tokens:
+//   --md-comp-swipe-actions-gap              4px  between the actions
+//   --md-comp-swipe-actions-motion           default spatial spring, for opening and closing
+//   --md-comp-swipe-actions-motion-duration  its duration
+
+.list.swipeable {
+  --md-comp-swipe-actions-gap: 4px;
+  --md-comp-swipe-actions-motion: var(--md-sys-motion-spring-default-spatial);
+  --md-comp-swipe-actions-motion-duration: var(--md-sys-motion-spring-default-spatial-duration);
+
+  // Clip, not hidden: a hidden list would scroll to an action that takes
+  // focus, and the row opening is what brings it into view.
+  overflow-x: clip;
+
+  > li:has(> .swipe-actions) {
+    position: relative;
+    translate: var(--swipe-offset, 0px) 0;
+    transition:
+      background-color var(--md-sys-motion-duration-short4) ease-out,
+      translate var(--md-comp-swipe-actions-motion-duration) var(--md-comp-swipe-actions-motion);
+
+    // The row follows the finger.
+    &.swiping {
+      transition: none;
+    }
+
+    // The toggle is the trailing action, though the group comes after it.
+    > [data-swipe-toggle] {
+      grid-column: 3;
+      grid-row: 1 / -1;
+      justify-self: end;
+      align-self: center;
+    }
+
+    > .swipe-actions {
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: 100%;
+      display: flex;
+      align-items: center;
+      gap: var(--md-comp-swipe-actions-gap);
+      padding-inline: var(--md-comp-swipe-actions-gap);
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .list.swipeable > li:has(> .swipe-actions) {
+    transition: none;
+  }
+}
