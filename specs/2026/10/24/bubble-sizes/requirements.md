@@ -4,7 +4,7 @@ Date: 2026-10-24
 Roadmap phase: Phase 35, bubble sizes on the scatter chart
 Branch: `feature/2026-10-24-bubble-sizes`
 Base: `origin/master` at `613543a71`, fetched 2026-10-24
-Status: implemented and locally verified 2026-10-24; CI and review pending
+Status: implemented 2026-10-24; merged as #418
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 35](../../../../roadmap.md#phase-35-bubble-sizes-on-the-scatter-chart). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 

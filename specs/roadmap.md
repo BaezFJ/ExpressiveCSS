@@ -12,7 +12,8 @@ Later phases build on these:
   - `update()` redraws from a changed table, keeping focus and the highlighted row. Lines, areas and bars move from their old values to the new ones.
   - `data-watch` redraws a chart whenever its table changes.
   - A `.toggle` legend shows and hides series.
-  - A `.scatter-chart` plots each row as a point from an x column and one or more y columns.
+  - A `.scatter-chart` plots each row as a point from an x column and one or more y columns, and `.bubble` sizes each point by a third column.
+- **Touch gestures:** a `.pull-to-refresh` container refreshes on a pull down at its top or from its `[data-refresh]` button. In a `.list.swipeable`, a swipe reveals a row's `.swipe-actions`, which its `[data-swipe-toggle]` button and the keyboard also reach.
 - **Data tables:** a sticky header, `data-sort` sorting and a select-all box. `.sticky-column` pins the first column, a `.drag-handle` resizes a column by pointer or keyboard and fires `expressive:resize`, and menu checkbox items with `data-column` hide and show columns.
 - **Utilities:** layout helpers take `medium:`, `expanded:`, `large:` and `extra-large:` prefixes, and spacing uses the same window sizes. Line clamp, opacity, pointer, position and inset helpers, `.grid-auto-fill` and `.list-unstyled` cover text, layout and list patterns without page CSS.
 - **Pickers:** Datepicker and Timepicker follow the page's `lang` and read typed dates in their own format. Timepicker's `showSeconds` adds a seconds field, and `minTime` and `maxTime` bound the times a person can choose.
@@ -183,9 +184,7 @@ Completed 2026-10-24. See [spec](2026/10/24/scatter-chart/).
 
 ### Phase 35: bubble sizes on the scatter chart
 
-Depends on phase 34. A third numeric column sets each point's area.
-
-Completion check: a browser test finds each point's area proportional to its value in the third column.
+Completed 2026-10-24. See [spec](2026/10/24/bubble-sizes/).
 
 ## Milestone: touch and input gaps
 
@@ -193,19 +192,11 @@ Touch gestures that mobile frameworks offer work in ExpressiveCSS, each with a n
 
 ### Phase 36: pull-to-refresh
 
-No dependencies. Pulling down past a threshold at the top of a scroll container shows the M3 Expressive loading indicator and fires an event, and the indicator stays until the page reports that the refresh finished.
-
-Completion check: a touch-emulated browser test pulls past the threshold, gets one event and a visible indicator, and sees the indicator hide once the page reports the refresh finished.
-
-Open for spec: the non-gesture way to refresh, and how to keep the browser's own pull-to-refresh from also firing.
+Completed 2026-10-24. See [spec](2026/10/24/pull-to-refresh/).
 
 ### Phase 37: swipe actions on list rows
 
-No dependencies. Swiping a list row sideways reveals its actions, and people who don't swipe can reach the same actions from the row.
-
-Completion check: a touch-emulated swipe reveals a row's actions, and a keyboard user reaches the same actions from that row.
-
-Open for spec: whether it reuses the sheet drag code, and whether a full swipe runs the first action.
+Completed 2026-10-24. See [spec](2026/10/24/swipe-actions/).
 
 ### Phase 38: pattern input mask
 
