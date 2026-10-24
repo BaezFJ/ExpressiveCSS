@@ -241,7 +241,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed pull-to-refresh review fixes: scrolled-down inner and surrounding scrollers keep the drag, a second finger ends a pull, shadow-safe button lookup: 92,401 gzip bytes (+84).
   // Reviewed the pull-to-refresh status region and i18n, the guard for a throwing onRefresh, rejections passed on and the threshold check: 92,556 gzip bytes (+155).
   // Reviewed swipe actions: a touch swipe that reveals a row's actions, the toggle, focus and Escape, one open row: 93,575 gzip bytes (+1,019).
-  assert.ok(sizes(js).gzip <= 93575, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed swipe actions destroy() also putting back a row part-way through a swipe: 93,590 gzip bytes (+15).
+  assert.ok(sizes(js).gzip <= 93590, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

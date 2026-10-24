@@ -120,10 +120,11 @@ export class SwipeActions extends Component<SwipeActionsOptions> {
   }
 
   destroy() {
+    // A row part-way through a swipe goes back too, not only the open one.
+    const rows = [this._swipe?.row, this._open];
     this._swipe = null;
-    const open = this._open;
     this._open = null;
-    if (open) this._shut(open);
+    rows.forEach((row) => row && this._shut(row));
     this._rows().forEach((row) => this._toggleFor(row)?.removeAttribute('aria-expanded'));
     super.destroy();
   }

@@ -72,14 +72,16 @@ async function open(browser, engine, { dir = 'ltr', reducedMotion = 'no-preferen
   /**
    * Drags `dx` pixels sideways (negative is left) and `dy` down across a
    * row's label, in ten steps, then ends as `end` says, or not at all.
+   * `rest` holds the finger still first, past the flick window.
    */
-  const swipe = async (selector, dx, { dy = 0, end = 'touchend' } = {}) => {
+  const swipe = async (selector, dx, { dy = 0, end = 'touchend', rest = 0 } = {}) => {
     const box = await page.locator(selector).boundingBox();
     const from = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
     await send('touchstart', from);
     for (let i = 1; i <= 10; i++) {
       await send('touchmove', { x: from.x + (dx * i) / 10, y: from.y + (dy * i) / 10 });
     }
+    if (rest) await page.waitForTimeout(rest);
     if (end) await send(end);
     await page.waitForTimeout(50);
   };
@@ -133,6 +135,214 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.keyboard.press('Enter');
       assert.deepEqual(await page.evaluate(() => window.clicks), ['Archive message 3'], 'Enter runs the action once');
       await page.evaluate(() => Expressive.SwipeActions.getInstance(document.getElementById('list')).destroy());
+    } finally {
+      await browser.close();
+    }
+  });
+}
+
+/** The fixture with its list in a 300px tall scrolling box. */
+const scrolling = () => fixture().replace('<div id="box" style="width:360px">', '<div id="box" style="width:360px;height:300px;overflow-y:auto">');
+
+/** The instance on the list, called in the page. */
+const call = (page, method, ...args) => page.evaluate(([method, args]) => {
+  const list = document.getElementById('list');
+  return Expressive.SwipeActions.getInstance(list)[method](...args.map((id) => document.getElementById(id)));
+}, [method, args]);
+
+const offset = (page, selector) => page.locator(selector).evaluate((row) => row.style.getPropertyValue('--swipe-offset'));
+const actionsWidth = (page, selector) => page.locator(`${selector} .swipe-actions`).evaluate((el) => el.offsetWidth);
+
+for (const [engine, browserType, browserTest] of engines) {
+
+  browserTest(`${engine}: a short swipe closes, the row slides no farther than its actions, and a swipe back closes it`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { page, swipe, send } = await open(browser, engine);
+      await swipe('#row2', -20, { rest: 150 });
+      await settled(page, '#row2', false);
+      assert.equal(await expanded(page, '#row2'), 'false', 'a short swipe that rests leaves the row closed');
+
+      const width = await actionsWidth(page, '#row2');
+      await swipe('#row2', -400, { end: null });
+      assert.equal(await offset(page, '#row2'), `${-width}px`, 'the row slides only as far as its actions reach');
+      await send('touchend');
+      await settled(page, '#row2', true);
+      assert.equal(await expanded(page, '#row2'), 'true');
+
+      await swipe('#row2', 150);
+      await settled(page, '#row2', false);
+      assert.equal(await expanded(page, '#row2'), 'false', 'a swipe toward the inline end closes an open row');
+
+      await swipe('#row4', 150);
+      await settled(page, '#row4', false);
+      assert.equal(await offset(page, '#row4'), '', 'a closed row does not slide the other way');
+      assert.deepEqual(await page.evaluate(() => window.toggles), [{ row: 'row2', open: true }, { row: 'row2', open: false }]);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: a vertical drag, a mouse drag, a second finger and touchcancel open nothing`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { page, swipe, send } = await open(browser, engine, { html: scrolling() });
+      await swipe('#row2', -30, { dy: -150 });
+      assert.equal(await expanded(page, '#row2'), 'false', 'a drag that moves up first is a scroll');
+      if (engine === 'chromium') {
+        assert.ok(await page.locator('#box').evaluate((el) => el.scrollTop) > 0, 'a real touch scrolls the box');
+      }
+      await page.locator('#box').evaluate((el) => { el.scrollTop = 0; });
+
+      const box = await page.locator('#row3').boundingBox();
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(box.x + box.width / 2 - 150, box.y + box.height / 2, { steps: 10 });
+      await page.mouse.up();
+      assert.equal(await expanded(page, '#row3'), 'false', 'a mouse drag never swipes');
+
+      const row = await page.locator('#row4').boundingBox();
+      const from = { x: row.x + row.width / 2, y: row.y + row.height / 2 };
+      await send('touchstart', from);
+      for (let i = 1; i <= 5; i++) await send('touchmove', { x: from.x - i * 30, y: from.y });
+      await send('touchstart', { x: from.x - 150, y: from.y }, { x: from.x, y: from.y + 100 });
+      await send('touchmove', { x: from.x - 160, y: from.y }, { x: from.x, y: from.y + 110 });
+      await send('touchend');
+      await settled(page, '#row4', false);
+      assert.equal(await expanded(page, '#row4'), 'false', 'a second finger ends the swipe');
+
+      await swipe('#row5', -150, { end: 'touchcancel' });
+      await settled(page, '#row5', false);
+      assert.equal(await expanded(page, '#row5'), 'false', 'a cancelled swipe opens nothing');
+      assert.deepEqual(await page.evaluate(() => window.toggles), []);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: the toggle opens and closes a row, and a tap outside, Escape or an action closes it`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { page } = await open(browser, engine);
+      await page.click('#row2 [data-swipe-toggle]');
+      await settled(page, '#row2', true);
+      assert.equal(await expanded(page, '#row2'), 'true');
+      await page.click('#row2 [data-swipe-toggle]');
+      await settled(page, '#row2', false);
+      assert.equal(await expanded(page, '#row2'), 'false');
+
+      await page.click('#row2 [data-swipe-toggle]');
+      await settled(page, '#row2', true);
+      const label = await page.locator('#row5').boundingBox();
+      await page.mouse.click(label.x + 40, label.y + label.height / 2);
+      await settled(page, '#row2', false);
+      assert.equal(await expanded(page, '#row2'), 'false', 'a tap outside closes the row');
+
+      await page.focus('#row2 [data-action="archive"]');
+      await settled(page, '#row2', true);
+      assert.equal(await expanded(page, '#row2'), 'true', 'focus on an action opens its closed row');
+      await page.keyboard.press('Escape');
+      await settled(page, '#row2', false);
+      assert.equal(await page.evaluate(() => document.activeElement.getAttribute('aria-label')), 'Actions for message 2', 'Escape moves focus to the toggle');
+
+      await page.click('#row2 [data-swipe-toggle]');
+      await settled(page, '#row2', true);
+      await page.click('#row2 [data-action="delete"]');
+      assert.deepEqual(await page.evaluate(() => window.clicks), ['Delete message 2'], 'the action runs once');
+      await settled(page, '#row2', false);
+      assert.equal(await expanded(page, '#row2'), 'false', 'the row closes after its action');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: one row is open at a time, and each change fires one event and runs onToggle`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { page, swipe } = await open(browser, engine);
+      await page.evaluate(() => {
+        window.callbacks = [];
+        Expressive.SwipeActions.getInstance(document.getElementById('list')).options.onToggle = (detail) => window.callbacks.push({ row: detail.row.id, open: detail.open });
+      });
+      await swipe('#row2', -150);
+      await page.click('#row4 [data-swipe-toggle]');
+      await call(page, 'open', 'row6');
+      assert.deepEqual(await page.evaluate(() => [...document.querySelectorAll('#list > .swipe-open')].map((row) => row.id)), ['row6'], 'only the last row stays open');
+      await call(page, 'close');
+      const expected = [
+        { row: 'row2', open: true }, { row: 'row2', open: false },
+        { row: 'row4', open: true }, { row: 'row4', open: false },
+        { row: 'row6', open: true }, { row: 'row6', open: false },
+      ];
+      assert.deepEqual(await page.evaluate(() => window.toggles), expected);
+      assert.deepEqual(await page.evaluate(() => window.callbacks), expected);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: in a right-to-left page the actions are at the left and a swipe to the right reveals them`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { page, swipe } = await open(browser, engine, { dir: 'rtl' });
+      await swipe('#row2', 150);
+      await settled(page, '#row2', true);
+      const [actions, list] = await page.locator('#row2').evaluate((row) => [
+        row.querySelector('.swipe-actions').getBoundingClientRect().left,
+        row.parentElement.getBoundingClientRect().left,
+      ]);
+      assert.ok(Math.abs(actions - list) < 2, 'the actions sit at the left edge');
+      await swipe('#row3', -150);
+      await settled(page, '#row3', false);
+      assert.equal(await expanded(page, '#row3'), 'false', 'a swipe to the left opens nothing');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: with reduced motion the row follows the finger but opens and closes without animating`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      // The documented override on :root outranks the zeroed motion tokens.
+      const html = fixture().replace('<style>', '<style>:root { --md-sys-motion-spring-default-spatial-duration: 500ms; }</style><style>');
+      const { page, swipe, send } = await open(browser, engine, { reducedMotion: 'reduce', html });
+      await swipe('#row2', -60, { end: null });
+      assert.equal(await offset(page, '#row2'), '-60px', 'the row follows the finger');
+      await send('touchend');
+      const animations = () => page.locator('#row2').evaluate((row) => new Promise((resolve) => {
+        requestAnimationFrame(() => resolve(row.getAnimations().length));
+      }));
+      assert.equal(await animations(), 0, 'release does not animate');
+      assert.equal(await revealed(page, '#row2'), true);
+      await page.click('#row2 [data-swipe-toggle]');
+      assert.equal(await animations(), 0, 'the toggle does not animate');
+      assert.equal(await revealed(page, '#row2'), false);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: destroy() closes the open row silently and undoes what it set`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { page, swipe, send } = await open(browser, engine);
+      await page.click('#row2 [data-swipe-toggle]');
+      await call(page, 'destroy');
+      const toggles = await page.evaluate(() => window.toggles.length);
+      assert.equal(toggles, 1, 'destroy() fires no event');
+      assert.equal(await offset(page, '#row2'), '');
+      assert.equal(await page.locator('#row2 [data-swipe-toggle]').getAttribute('aria-expanded'), null);
+      await swipe('#row3', -150);
+      await page.click('#row4 [data-swipe-toggle]');
+      assert.equal(await page.locator('#list > .swipe-open').count(), 0, 'nothing opens after destroy()');
+
+      await page.evaluate(() => Expressive.SwipeActions.init(document.getElementById('list')));
+      await swipe('#row5', -100, { end: null });
+      await call(page, 'destroy');
+      await send('touchend');
+      assert.equal(await offset(page, '#row5'), '', 'a swipe in progress leaves no offset');
+      assert.equal(await page.locator('#row5').evaluate((row) => row.classList.contains('swiping')), false);
+      assert.equal(await page.evaluate(() => window.toggles.length), 1);
     } finally {
       await browser.close();
     }
