@@ -3823,6 +3823,110 @@
       }
     },
     {
+      "slug": "scatter-chart",
+      "title": "Scatter chart",
+      "aliases": [
+        "scatter plot",
+        "scatter graph",
+        "xy chart",
+        "x-y plot",
+        "correlation chart"
+      ],
+      "guideSource": {
+        "pageId": "scatter-chart",
+        "heading": "Scatter chart",
+        "headingLevel": 2,
+        "semantics": [
+          "scatter-chart"
+        ]
+      },
+      "jobs": [
+        "One measure plotted against another, with a point for each row."
+      ],
+      "useWhen": [
+        "Show how two numeric measures relate across many items, such as weight against fuel economy or ad spend against signups."
+      ],
+      "avoidWhen": [
+        "The x values are categories or dates in order; use a line or column chart. A handful of items reads better as a table or bar chart."
+      ],
+      "alternatives": [
+        "line-chart",
+        "bar-chart",
+        "data-table"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/scatter-chart.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#scatter-chart",
+          "reviewedOn": "2026-10-24",
+          "documentedSupport": "Points drawn from a figure's data table, with a shared x column and one series per further column, gaps for cells that are not numbers, fixed ranges for both scales, round labels for both scales with .axis, a legend with .toggle, update() motion, data-watch, and a pointer and keyboard tooltip that steps through points in table order.",
+          "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+          "limitations": [
+            "Point placement in left-to-right and right-to-left pages, gaps, both axes, the tooltip, keyboard steps, the nearest point by pointer, update() motion, data-watch and the toggle legend are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no bubble sizes, trend lines or separate x columns per series."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-24",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the data available as text, name the chart, keep series distinguishable, state each scale's units, and let a keyboard reach every point the pointer can."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Weight against city and highway fuel economy for twenty cars is a scatter chart. Fuel economy by model year is a line chart.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-24",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/abstracts/_mixins.scss",
+            "sha256": "47a0a21ff5ea47c1030e3730605cadb4498d868202a88d89670c3aa55cf09702"
+          },
+          {
+            "path": "src/sass/components/_scatter-chart.scss",
+            "sha256": "4d429cf9e8daa75c0f07aa6fa6c81f993fcbd59d3a07c17e01020678e296b077"
+          },
+          {
+            "path": "src/ts/components/lineChart.ts",
+            "sha256": "a68636cd7533d79935e32f7981963ffb2bfe16081363803624add8312e6dc9b0"
+          },
+          {
+            "path": "src/ts/components/scatterChart.ts",
+            "sha256": "2cadc49e61a79046288fc6fa789e99cf55ceaee351644be6b10dddb46e2617ef"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Point placement, gaps, both axes, the tooltip, keyboard steps, the pointer, update() motion, data-watch and the toggle legend are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+            "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/scatter-chart-browser.test.js",
+            "name": "chromium: scatter chart places one point per row at its x and y values",
+            "scope": "Hidden table, the named plot and its role description, the x column read as the axis, one point per row per series at its value in left-to-right and right-to-left pages, legend order, and separate instances from line charts. No spoken-output assertion."
+          },
+          {
+            "file": "tests/scatter-chart-browser.test.js",
+            "name": "chromium: scatter chart arrow keys step through the points in table order",
+            "scope": "Keyboard focus shows the first point; arrows, Home, End and Escape step through points in table order and skip gaps; the live tooltip text. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "timeline",
       "title": "Timeline",
       "aliases": [
@@ -12212,5 +12316,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "d2b0e7f91d5e1d871b33424091071316e96ac88f"
+  "sourceRevision": "be2053d670a475a9c6b3a3d114441fc7f13cde7f"
 }

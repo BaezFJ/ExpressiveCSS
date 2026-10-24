@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**93 of 93 rows enforced; 0 remaining.**
+**94 of 94 rows enforced; 0 remaining.**
 
-88 of those rows are components - a part of the framework an author writes markup for.
+89 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 88 components declare conformance debt.**
+**2 of 89 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -1038,6 +1038,18 @@ Added with the rich text editor component. The script hides the textarea and giv
 | `rich-text-editor-textarea-is-named` | forbid | `.rich-text-editor > textarea:not([aria-label], [aria-labelledby], [id])` | must not match |
 
 - **rich-text-editor-textarea-is-named** - Name the textarea with a <label for>, aria-label or aria-labelledby. The editor copies that name to its editable area, which has none of its own. Its content is the starting HTML, not a name.
+
+### scatter-chart
+
+Added with the scatter chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn points, axes and legend are aria-hidden.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `scatter-chart-is-a-figure-with-a-table` | forbid | `.scatter-chart:not(figure:has(> table))` | must not match |
+| `scatter-chart-has-a-caption` | forbid | `.scatter-chart:not(:has(> figcaption))` | must not match |
+
+- **scatter-chart-is-a-figure-with-a-table** - Write .scatter-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
+- **scatter-chart-has-a-caption** - Name a .scatter-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
 ### scrim
 

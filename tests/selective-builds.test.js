@@ -227,7 +227,12 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed column resize arrow keys, Home and End, and click steps through narrow, middle and wide: 89,737 gzip bytes (+168).
   // Reviewed data table column toggles: menu checkbox items with data-column hide and show a column: 90,022 gzip bytes (+285).
   // Reviewed hidden columns in the resize width model: held widths and the table width skip them: 90,069 gzip bytes (+47).
-  assert.ok(sizes(js).gzip <= 90069, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the scatter chart: points from a shared x column on both scales: 90,582 gzip bytes (+513).
+  // Reviewed the scatter chart's x axis labels and the shared tick label helper: 90,733 gzip bytes (+151).
+  // Reviewed scatter chart points by keyboard and pointer, with the marker and tooltip: 91,122 gzip bytes (+389).
+  // Reviewed scatter chart points moving from their old places after update(): 91,227 gzip bytes (+105).
+  // Reviewed matching moved scatter points through a map instead of a search per point: 91,241 gzip bytes (+14).
+  assert.ok(sizes(js).gzip <= 91241, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -370,5 +375,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the data table column resize handle and the sort rules that skip it: 85,475 gzip bytes (+75).
   // Reviewed end padding on resizable header cells that clears the handle's hit area: 85,486 gzip bytes (+11).
   // Reviewed dropping the global display: table-cell on td and th, which kept hidden cells showing: 85,480 gzip bytes (-6).
-  assert.ok(sizes(css).gzip <= 85480, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the scatter chart: the shared chart parts, axis and point styles: 85,984 gzip bytes (+504).
+  // Reviewed the scatter chart's x axis labels and vertical grid lines: 86,050 gzip bytes (+66).
+  // Reviewed the scatter chart's point marker and level tooltip: 86,100 gzip bytes (+50).
+  assert.ok(sizes(css).gzip <= 86100, `CSS gzip: ${sizes(css).gzip}`);
 });

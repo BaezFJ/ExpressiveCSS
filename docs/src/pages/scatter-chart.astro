@@ -1,0 +1,174 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "series", label: "Several series" },
+  { id: "scale", label: "Values and scale" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "javascript", label: "JavaScript" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const cars: [string, number, number, number][] = [
+  ["Civic", 1300, 31, 40], ["Corolla", 1400, 32, 41], ["Prius", 1450, 57, 56], ["Camry", 1600, 28, 39],
+  ["RAV4", 1650, 27, 35], ["F-150", 2200, 20, 24], ["Tahoe", 2600, 15, 20],
+];
+const spend: [string, number, number][] = [
+  ["Search", 12000, 340], ["Social", 8000, 150], ["Video", 15000, 210], ["Email", 2000, 120], ["Display", 6000, 60], ["Podcasts", 4000, 70],
+];
+---
+<DocsLayout page="scatter-chart" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;figure class="scatter-chart"&gt;</code> plots one measure
+          against another from a <code>&lt;table&gt;</code>, with a point for
+          each row.
+        </p>
+        <p>
+          The first column labels each row and the second holds its x value.
+          Each further column is a series of y values, named by its header
+          cell. Each row draws one point per series, so a scatter chart shows
+          how two measures move together, such as a car's weight and its fuel
+          economy. To show one measure over time, use a
+          <a href="line-chart.html">line chart</a>.
+        </p>
+        <figure class="scatter-chart axis" data-markdown-ignore>
+          <figcaption>Ad spend and signups by channel</figcaption>
+          <table>
+            <thead><tr><th>Channel</th><th>Spend</th><th>Signups</th></tr></thead>
+            <tbody>{spend.map(([channel, dollars, signups]) => <tr><th>{channel}</th><td>${dollars.toLocaleString("en")}</td><td>{signups}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="scatter-chart axis">
+  <figcaption>Ad spend and signups by channel</figcaption>
+  <table>
+    <thead>
+      <tr><th>Channel</th><th>Spend</th><th>Signups</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Search</th><td>$12,000</td><td>340</td></tr>
+      <tr><th>Social</th><td>$8,000</td><td>150</td></tr>
+      <!-- One row per channel -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.series}>
+        <p>
+          Each further column is another series, in the next color, with a
+          legend below the chart. Add <code>toggle</code> to the figure to make
+          each legend item a button that shows or hides its series, as on the
+          <a href="line-chart.html#toggle">line chart</a>. Both scales refit to
+          the points left.
+        </p>
+        <p>
+          Series share the x column. A series that needs other x values puts
+          them in rows of their own, with the other series' cells left empty.
+        </p>
+        <figure class="scatter-chart axis toggle" data-markdown-ignore>
+          <figcaption>Fuel economy by weight (mpg)</figcaption>
+          <table>
+            <thead><tr><th>Car</th><th>Weight (kg)</th><th>City</th><th>Highway</th></tr></thead>
+            <tbody>{cars.map(([car, weight, city, highway]) => <tr><th>{car}</th><td>{weight}</td><td>{city}</td><td>{highway}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="scatter-chart axis toggle">
+  <figcaption>Fuel economy by weight (mpg)</figcaption>
+  <table>
+    <thead>
+      <tr><th>Car</th><th>Weight (kg)</th><th>City</th><th>Highway</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Civic</th><td>1300</td><td>31</td><td>40</td></tr>
+      <!-- One row per car -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.scale}>
+        <p>
+          Cells read as in a line chart. A cell's number is its
+          <code>data-value</code>, or its text without currency signs, percent
+          signs or grouping commas. The tooltip shows the cell's text as
+          written. A row whose x cell is not a number draws no points, and a y
+          cell that is not a number draws no point for its series.
+        </p>
+        <p>
+          Both scales run from a little below the lowest value to a little
+          above the highest. Set <code>data-x-min</code> and
+          <code>data-x-max</code> on the figure to fix the x scale, and
+          <code>data-min</code> and <code>data-max</code> to fix the y scale.
+          x grows toward the inline end, so it runs leftward in a right-to-left
+          page.
+        </p>
+        <p>
+          Add <code>axis</code> to label both scales at round values, with a
+          grid line at each: y beside the plot and x below it. Each scale's
+          labels repeat its cells' currency or percent sign. The labels are
+          hidden from assistive technology. The table still carries the values.
+        </p>
+<Code code={`
+<figure class="scatter-chart axis" data-x-min="0" data-min="0">
+  <figcaption>Ad spend and signups by channel</figcaption>
+  <table><!-- … --></table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The table is the chart's text alternative. Give it a header row and
+          a header cell per row, and name the chart with a
+          <code>&lt;figcaption&gt;</code>. The drawn chart, labels and legend
+          are hidden from assistive technology.
+        </p>
+        <p>
+          The plot is one Tab stop named by the caption. Keyboard focus shows
+          the first point. The arrow keys step through the points in table
+          order: right and down go to the next point, left and up to the one
+          before. Within a row the series go in column order. Home and End jump
+          to the first and last points, and Escape hides the tooltip. The
+          arrows keep this meaning in a right-to-left page, since table order
+          is not a direction on screen. The pointer shows the point nearest to
+          it. The tooltip is a polite live region, so a screen reader hears the
+          row, its x value and the series value as it moves. In forced colors
+          the points keep their colors so the legend still keys them.
+        </p>
+  </Section>
+  <Section {...S.javascript}>
+        <p>
+          <code>AutoInit()</code> starts every <code>.scatter-chart</code>. To
+          start one yourself, call <code>ScatterChart.init</code>. After
+          changing its table, call <code>update()</code> to redraw it in place,
+          or put <code>data-watch</code> on the figure and it redraws itself.
+          Points move from their old places to the new ones, or appear at once
+          with reduced motion. It has the line chart's options and methods,
+          plus <code>xMin</code> and <code>xMax</code> for the x scale.
+        </p>
+<Code code={`
+const chart = Expressive.ScatterChart.init(document.querySelector('.scatter-chart'), { xMin: 0 });
+chart.show(2);   // highlight the third point in table order; -1 hides the tooltip
+chart.update();  // redraw from the table; focus and the highlighted point stay
+chart.destroy(); // remove the drawing and show the table again
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.scatter-chart</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-scatter-chart-height</code></td><td>240px</td></tr>
+          <tr><td><code>--md-comp-scatter-chart-point-size</code></td><td>8px</td></tr>
+          <tr><td><code>--md-comp-scatter-chart-grid-color</code></td><td><code>outline-variant</code></td></tr>
+          <tr><td><code>--md-comp-scatter-chart-axis-width</code></td><td>48px, room for the y <code>axis</code> labels</td></tr>
+          <tr><td><code>--md-comp-scatter-chart-color-1</code> … <code>-4</code></td><td><code>primary</code>, <code>tertiary</code>, <code>secondary</code>, <code>on-surface-variant</code></td></tr>
+        </TokenTable>
+        <p>For a selective Sass build, include <code>"scatter-chart"</code> in <code>$components</code>.</p>
+  </Section>
+</DocsLayout>

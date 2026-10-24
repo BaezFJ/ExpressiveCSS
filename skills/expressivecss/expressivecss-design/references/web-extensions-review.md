@@ -419,6 +419,22 @@ Feature gap: There are no y axis labels for either scale, no always-on line mark
 
 Mapped browser scope: Hidden table, the named plot, column positions on the start scale with an empty slot for a gap, area and dashed line classes and colors, a fixed and a fitted end scale, legend order, separate instances from column charts, a chart of gaps showing its table, and the tooltip and cursor points from the keyboard. No spoken-output assertion.
 
+## [Scatter chart](../../components/scatter-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the data available as text, name the chart, keep series distinguishable, state each scale's units, and let a keyboard reach every point the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the points, both axes, the legend and the tooltip from the page's table with the line chart's runtime; the page owns the data, its formatting, the ranges and the caption.
+
+Verification gap: Point placement, gaps, both axes, the tooltip, keyboard steps, the pointer, update() motion, data-watch and the toggle legend are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+
+Feature gap: There are no bubble sizes, trend lines or separate x columns per series. Next check: Bubble sizes from a third value column are roadmap phase 35.
+
+Mapped browser scope: Hidden table, the named plot and its role description, the x column read as the axis, one point per row per series at its value in left-to-right and right-to-left pages, gaps, both axes with fixed and fitted ends, keyboard steps in table order, the nearest point by pointer, update() motion, data-watch and the toggle legend. No spoken-output assertion.
+
 ## [Timeline](../../components/timeline.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

@@ -145,7 +145,7 @@ const splines = (easing: string) => /cubic-bezier\(([^)]*)\)/.exec(easing)?.[1] 
  * ponytail: a curve that overshoots is not a valid SVG spline, so the
  * paths then skip their motion; a linear() token gets the standard curve.
  */
-function pace(el: Element) {
+export function pace(el: Element) {
   const style = getComputedStyle(el);
   const dur = style.getPropertyValue('--md-sys-motion-duration-medium4').trim() || '400ms';
   return parseFloat(dur) > 0 ? { dur, keySplines: splines(style.getPropertyValue('--md-sys-motion-easing-standard')) } : null;
@@ -155,7 +155,7 @@ function pace(el: Element) {
  * Moves a path from the path data `from` to its own. SVG animation rather
  * than a CSS transition, since WebKit cannot transition the d property.
  */
-function morph(path: SVGElement, from: string, timing: Pace) {
+export function morph(path: SVGElement, from: string, timing: Pace) {
   const to = path.getAttribute('d');
   if (from === to) return;
   path.append(svgNode('animate', { attributeName: 'd', from, to, ...timing, calcMode: 'spline', keyTimes: '0;1', fill: 'remove' }));
@@ -248,7 +248,7 @@ export interface Series {
  * one number. Anything else, such as "(1,200)" or "3–5", is a gap rather
  * than a guess.
  */
-function cellValue(cell: Element | undefined): number | null {
+export function cellValue(cell: Element | undefined): number | null {
   if (!cell) return null;
   return numberValue((cell as HTMLElement).dataset.value ?? cell.textContent);
 }
@@ -262,6 +262,11 @@ export function numberValue(raw: string): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
+/** An axis label: the tick in `format`, with the column's signs after any minus. */
+export function tickText(format: Intl.NumberFormat, tick: number, [prefix, suffix]: [string, string]) {
+  return format.format(tick).replace(/^[-\u2212]?/, (sign) => sign + prefix) + suffix;
+}
+
 /** The currency, percent and spacing around a cell's number, as [prefix, suffix]. */
 export function signs(text: string): [string, string] {
   // Each end is read from its own side, so a long run of spaces stays linear.
@@ -271,7 +276,7 @@ export function signs(text: string): [string, string] {
 }
 
 /** The signs around the first value a column spells out in its text. */
-function affix(cells: (Element | undefined)[]): [string, string] {
+export function affix(cells: (Element | undefined)[]): [string, string] {
   const cell = cells.find((each) => !(each as HTMLElement)?.dataset.value && cellValue(each) !== null);
   return signs(cell?.textContent.trim() ?? '');
 }
@@ -353,6 +358,11 @@ export class LineChart extends Component<LineChartOptions> {
   /** The class prefix of the generated parts; ColumnChart reuses this class. */
   protected get _type() {
     return 'line-chart';
+  }
+
+  /** The column the series start at; a scatter chart's first value column is its x axis. */
+  protected get _seriesFrom() {
+    return 1;
   }
 
   /** Whether the y axis always includes zero, as columns grow from it. */
@@ -552,19 +562,20 @@ export class LineChart extends Component<LineChartOptions> {
       .filter((row) => row !== headerRow);
     [this._header, this._rows] = [header, rows];
     this.labels = rows.map((row) => row.cells[0]?.textContent.trim() ?? '');
-    this.series = header.slice(1).map((cell, i) => {
-      const values = rows.map((row) => cellValue(row.cells[i + 1]));
+    const from = this._seriesFrom;
+    this.series = header.slice(from).map((cell, i) => {
+      const values = rows.map((row) => cellValue(row.cells[i + from]));
       return {
         name: cell.textContent.trim(),
         className: cell.className,
-        column: i + 1,
+        column: i + from,
         color: seriesColor(i),
-        text: rows.map((row) => row.cells[i + 1]?.textContent.trim() ?? ''),
+        text: rows.map((row) => row.cells[i + from]?.textContent.trim() ?? ''),
         values,
         tops: values,
         y: undefined,
         scale: undefined,
-        affix: affix(rows.map((row) => row.cells[i + 1]))
+        affix: affix(rows.map((row) => row.cells[i + from]))
       };
     });
     this._all = this.series;
@@ -757,11 +768,10 @@ export class LineChart extends Component<LineChartOptions> {
     axis.className = `${this._type}-axis${end ? ' end' : ''}`;
     axis.setAttribute('aria-hidden', 'true');
     const number = numberFormat(this.el, { notation: 'compact', maximumSignificantDigits: 3 });
-    const [prefix, suffix] = series.affix;
     for (const tick of series.scale.ticks) {
       const li = document.createElement('li');
       const label = document.createElement('span');
-      label.textContent = number.format(tick).replace(/^[-\u2212]?/, (sign) => sign + prefix) + suffix;
+      label.textContent = tickText(number, tick, series.affix);
       li.style.setProperty('--at', `${series.y(tick)}%`);
       li.append(label);
       axis.append(li);

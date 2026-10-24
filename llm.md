@@ -103,6 +103,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Radar chart
 - Radial chart
 - Mixed chart
+- Scatter chart
 
 ### Forms
 
@@ -342,6 +343,7 @@ function unmount() {
 | `RadarChart` | `.radar-chart` |
 | `RadialChart` | `.radial-chart` |
 | `MixedChart` | `.mixed-chart` |
+| `ScatterChart` | `.scatter-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
@@ -5645,6 +5647,48 @@ A `<figure class="mixed-chart">` takes the same `<figcaption>` and `<table>` as 
 
 ---
 
+## Scatter chart
+
+One measure plotted against another, with a point for each row.
+
+A `<figure class="scatter-chart">` takes a `<figcaption>` and a `<table>`. The first column labels each row, the second holds its x value, and each further column is a series of y values named by its header cell. `AutoInit()` draws one point per series for each row, at the row's x value and the series' y value. A legend names the series when there are two or more, and a tooltip shows the point under the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="scatter-chart axis" data-x-min="0">
+  <figcaption>Fuel economy by weight</figcaption>
+  <table>
+    <thead>
+      <tr><th>Car</th><th>Weight (kg)</th><th>City mpg</th><th>Highway mpg</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Civic</th><td>1300</td><td>31</td><td>40</td></tr>
+      <tr><th>Camry</th><td>1600</td><td>28</td><td>39</td></tr>
+      <tr><th>Tahoe</th><td>2600</td><td>15</td><td>20</td></tr>
+    </tbody>
+  </table>
+</figure>
+```
+
+- Cells read as in the line chart: `data-value` wins over the text, and the text may carry a currency or percent sign and grouping commas around one number. A row whose x cell is not a number draws no points, and a y cell that is not a number draws no point for that series. Series share the x column, so a series that needs other x values puts them in rows of their own with the other series' cells left empty.
+- Both scales fit the points with 10% to spare. `data-min` and `data-max` on the figure, or the `min` and `max` options, fix the y scale's ends, and `data-x-min` and `data-x-max`, or the `xMin` and `xMax` options, fix the x scale's. x grows toward the inline end, so it runs leftward in a right-to-left page.
+- `axis` labels the y scale beside the plot's start and the x scale below it, at round steps with a grid line at each. Each scale's labels repeat its cells' currency or percent sign. Without `axis` there are no labels, so name the units in the caption or headers.
+- The plot is one Tab stop named by the caption. Keyboard focus shows the first point; the arrow keys step through the points in table order, row by row and within a row by series, skipping the points left out. Home and End jump to the first and last point and Escape hides the tooltip. The arrows keep their meaning in a right-to-left page. The pointer shows the point nearest to it.
+- The tooltip names the row, the x header with its cell, and the series with its cell, as written in the table. A larger dot marks the highlighted point.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted point stay. Points move from their old places to the new ones; with reduced motion they appear at once. `toggle` makes each legend item a button that shows or hides its series, and both scales refit. It has the line chart's `show(index)`, which takes a point's number in table order, and `destroy()`.
+- Series take four colors in column order, then repeat. Lines, `stacked`, `straight`, `points`, `values` and `sparkline` do not apply.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-scatter-chart-height` | 240px |
+| `--md-comp-scatter-chart-point-size` | 8px |
+| `--md-comp-scatter-chart-grid-color` | `outline-variant` |
+| `--md-comp-scatter-chart-axis-width` | 48px, room for the y `axis` labels |
+| `--md-comp-scatter-chart-color-1` … `-4` | `primary`, `tertiary`, `secondary`, `on-surface-variant` |
+
+---
+
 ## Tree
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
@@ -5811,6 +5855,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `RadarChart` | `.radar-chart` |
 | `RadialChart` | `.radial-chart` |
 | `MixedChart` | `.mixed-chart` |
+| `ScatterChart` | `.scatter-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
