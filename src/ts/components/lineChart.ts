@@ -365,6 +365,11 @@ export class LineChart extends Component<LineChartOptions> {
     return 1;
   }
 
+  /** The column the series end before, as slice() takes it; a bubble chart's last column holds sizes. */
+  protected get _seriesTo(): number | undefined {
+    return undefined;
+  }
+
   /** Whether the y axis always includes zero, as columns grow from it. */
   protected get _fromZero() {
     return false;
@@ -563,7 +568,7 @@ export class LineChart extends Component<LineChartOptions> {
     [this._header, this._rows] = [header, rows];
     this.labels = rows.map((row) => row.cells[0]?.textContent.trim() ?? '');
     const from = this._seriesFrom;
-    this.series = header.slice(from).map((cell, i) => {
+    this.series = header.slice(from, this._seriesTo).map((cell, i) => {
       const values = rows.map((row) => cellValue(row.cells[i + from]));
       return {
         name: cell.textContent.trim(),

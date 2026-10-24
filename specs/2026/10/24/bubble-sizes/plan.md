@@ -10,11 +10,11 @@ Outcome: `.scatter-chart.bubble` takes its last column as sizes, and each point'
 
 Prerequisites: none.
 
-- [ ] Add the V1 case to `tests/scatter-chart-browser.test.js` with a `.bubble` fixture. Run `npm run build` and the file, and confirm V1 fails.
-- [ ] Add the `_seriesTo` getter to `LineChart` and use it in `_read()`. Override it in `ScatterChart` for `.bubble`.
-- [ ] Read the sizes in `ScatterChart._arrange()` and draw one path per bubble with its `--size`, largest first within each series.
-- [ ] Add the bubble rules and `--md-comp-scatter-chart-bubble-size` to `src/sass/components/_scatter-chart.scss`, with the forced-colors opacity rule.
-- [ ] Rebuild and rerun until V1 passes in all three engines. Add the reviewed JavaScript and CSS budget lines.
+- [x] Add the V1 case to `tests/scatter-chart-browser.test.js` with a `.bubble` fixture. Run `npm run build` and the file, and confirm V1 fails.
+- [x] Add the `_seriesTo` getter to `LineChart` and use it in `_read()`. Override it in `ScatterChart` for `.bubble`.
+- [x] Read the sizes in `ScatterChart._arrange()` and draw one path per bubble with its `--size`, largest first within each series.
+- [x] Add the bubble rules and `--md-comp-scatter-chart-bubble-size` to `src/sass/components/_scatter-chart.scss`, with the forced-colors opacity rule.
+- [x] Rebuild and rerun until V1 passes in all three engines. Add the reviewed JavaScript and CSS budget lines.
 
 Completion check: V1 passes in Chromium, Firefox and WebKit, the existing scatter cases still pass, and `node --test tests/selective-builds.test.js` passes.
 

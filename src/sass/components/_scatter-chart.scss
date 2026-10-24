@@ -11,12 +11,16 @@
 // round caps on zero-length lines with a non-scaling stroke, so they stay
 // round at any size.
 //
-// Modifiers: .axis labels both axes at round values with grid lines, and
-// .toggle makes each legend item a button that shows or hides its series.
+// Modifiers: .axis labels both axes at round values with grid lines,
+// .toggle makes each legend item a button that shows or hides its series,
+// and .bubble makes the last column each row's size, drawing every point as
+// a bubble whose area follows it. The script sets each bubble's --size, its
+// diameter as a share of the largest.
 //
 // Tokens:
 //   --md-comp-scatter-chart-height       240px
 //   --md-comp-scatter-chart-point-size   8px
+//   --md-comp-scatter-chart-bubble-size  48px, the largest bubble's diameter
 //   --md-comp-scatter-chart-grid-color   outline-variant
 //   --md-comp-scatter-chart-color-1..4   primary, tertiary, secondary,
 //                                        on-surface-variant
@@ -26,6 +30,7 @@
 
 .scatter-chart {
   --md-comp-scatter-chart-point-size: 8px;
+  --md-comp-scatter-chart-bubble-size: 48px;
 }
 
 .scatter-chart-plot > svg {
@@ -42,6 +47,12 @@
   stroke-width: var(--md-comp-scatter-chart-point-size);
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
+}
+
+// Partly transparent, so overlapping bubbles still show through.
+.scatter-chart.bubble .scatter-chart-points {
+  stroke-width: calc(var(--md-comp-scatter-chart-bubble-size) * var(--size, 1));
+  stroke-opacity: 0.7;
 }
 
 // The x scale's labels, below the plot, each with a grid line up through it
@@ -97,5 +108,9 @@
 @media (forced-colors: active) {
   .scatter-chart-cursor {
     forced-color-adjust: none;
+  }
+
+  .scatter-chart.bubble .scatter-chart-points {
+    stroke-opacity: 1;
   }
 }

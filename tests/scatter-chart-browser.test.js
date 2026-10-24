@@ -76,6 +76,52 @@ function near(series, message) {
 
 const values = (column) => cars.map((row) => [Number(row[1]), Number(row[column])]);
 
+// Country, GDP per person, two y series, then the population that sizes each
+// bubble: the largest is four times the smallest.
+const countries = [['Chile', '30000', '80', '70', '20'], ['Peru', '15000', '77', '68', '35'], ['Mexico', '22000', '75', '66', '80'], ['Spain', '45000', '83', '72', '48']];
+const bubbles = (attrs, rows) => `<figure ${attrs}>
+  <figcaption>Health and wealth</figcaption>
+  <table>
+    <thead><tr><th>Country</th><th>GDP per person</th><th>Life expectancy</th><th>Healthy years</th><th>Population</th></tr></thead>
+    <tbody>${rows.map(([label, ...cells]) => `<tr><th>${label}</th>${cells.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody>
+  </table>
+</figure>`;
+const bubbleEnds = 'data-x-min="0" data-x-max="60000" data-min="50" data-max="100"';
+const bubbleHtml = `<style>${css}</style>
+  <div style="width: 600px">
+    ${bubbles(`class="scatter-chart bubble" id="bubbles" ${bubbleEnds}`, countries)}
+  </div>
+  <div style="width: 600px" dir="rtl">
+    ${bubbles(`class="scatter-chart bubble" id="rtl-bubbles" ${bubbleEnds}`, countries)}
+  </div>
+  <script>${js}</script>`;
+
+/**
+ * Each series' bubbles as drawn: centre in page pixels and diameter, with the
+ * plot box and direction to place a value pair on the fixed scales.
+ */
+const drawnBubbles = (page, id) => page.locator(id).evaluate((el) => {
+  const plot = el.querySelector('.scatter-chart-plot');
+  const box = plot.getBoundingClientRect();
+  return {
+    plot: [box.left + plot.clientLeft, box.top + plot.clientTop, plot.clientWidth, plot.clientHeight],
+    rtl: getComputedStyle(el).direction === 'rtl',
+    legend: [...el.querySelectorAll('.scatter-chart-legend li')].map((li) => li.textContent),
+    series: [...el.querySelectorAll('.scatter-chart-series')].map((group) => [...group.querySelectorAll('.scatter-chart-points')].map((path) => {
+      const [, x, y] = path.getAttribute('d').match(/M([-\d.e]+),([-\d.e]+)/);
+      const point = new DOMPoint(Number(x), Number(y)).matrixTransform(path.getScreenCTM());
+      return { at: [point.x, point.y], size: parseFloat(getComputedStyle(path).strokeWidth) };
+    })),
+  };
+});
+
+/** Where a country's bubble belongs in series `s`, and the diameter its population gives against the largest, 80. */
+function bubblePlace({ plot: [left, top, width, height], rtl }, s, [, gdp, ...rest]) {
+  const share = Number(gdp) / 60000;
+  const x = left + (rtl ? 1 - share : share) * width;
+  return { at: [x, top + (1 - (Number(rest[s]) - 50) / 50) * height], size: 48 * Math.sqrt(Number(rest[2]) / 80) };
+}
+
 for (const [engine, browserType, browserTest] of engines) {
 
   browserTest(`${engine}: scatter chart places one point per row at its x and y values`, async () => {
@@ -343,6 +389,35 @@ for (const [engine, browserType, browserTest] of engines) {
       // A row with an x value but no y values draws nothing, so it does not stretch the x scale.
       assert.deepEqual(await page.locator('#xonly .scatter-chart-axis.x > li').allTextContents(), ['1K', '1.5K', '2K', '2.5K', '3K']);
       assert.deepEqual(errors, []);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: bubble chart sizes each point so its area follows the last column`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(bubbleHtml);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      for (const id of ['#bubbles', '#rtl-bubbles']) {
+        const chart = await drawnBubbles(page, id);
+        assert.deepEqual(chart.legend, ['Life expectancy', 'Healthy years'], `${id}: the population column is no series`);
+        assert.equal(chart.series.length, 2, `${id}: two series`);
+        chart.series.forEach((drawn, s) => {
+          assert.equal(drawn.length, countries.length, `${id}, series ${s + 1}: one bubble per row`);
+          for (const row of countries) {
+            const want = bubblePlace(chart, s, row);
+            const bubble = drawn.find(({ at }) => Math.abs(at[0] - want.at[0]) <= 1 && Math.abs(at[1] - want.at[1]) <= 1);
+            assert.ok(bubble, `${id}, series ${s + 1}: a bubble at ${row[0]}'s values, ${want.at}`);
+            // Area within 2%: the diameter squared over the population matches the largest bubble's.
+            assert.ok(Math.abs((bubble.size / want.size) ** 2 - 1) < 0.02,
+              `${id}, series ${s + 1}, ${row[0]}: ${bubble.size}px across, expected ${want.size}px`);
+          }
+        });
+      }
     } finally {
       await browser.close();
     }
