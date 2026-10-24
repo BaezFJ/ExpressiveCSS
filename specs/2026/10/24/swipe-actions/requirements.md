@@ -4,7 +4,7 @@ Date: 2026-10-24
 Roadmap phase: Phase 37, swipe actions on list rows
 Branch: `feature/2026-10-24-swipe-actions`
 Base: `origin/master` at `935145a31`, fetched 2026-10-24
-Status: implemented and locally verified 2026-10-24; CI and review pending
+Status: implemented 2026-10-24; merged as #420
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 37](../../../../roadmap.md#phase-37-swipe-actions-on-list-rows). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 

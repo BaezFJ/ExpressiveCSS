@@ -4,7 +4,7 @@ Date: 2026-10-24
 Roadmap phase: Phase 36, pull-to-refresh
 Branch: `feature/2026-10-24-pull-to-refresh`
 Base: `origin/master` at `591de9f30`, fetched 2026-10-24
-Status: implemented and locally verified 2026-10-24; CI and review pending
+Status: implemented 2026-10-24; merged as #419
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 36](../../../../roadmap.md#phase-36-pull-to-refresh). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
