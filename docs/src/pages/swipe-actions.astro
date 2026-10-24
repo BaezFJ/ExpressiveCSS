@@ -1,0 +1,157 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "toggle", label: "Without a swipe" },
+  { id: "closing", label: "Closing a row" },
+  { id: "events", label: "Events" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const mail = [
+  "Build passed on main",
+  "Invoice 2041 is ready",
+  "Design review moved to Thursday",
+  "New comment on the roadmap",
+  "Your export finished",
+];
+---
+<DocsLayout page="swipe-actions" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          Add <code>swipeable</code> to a <a href={route('lists')}>list</a> so people
+          can swipe a row sideways on a touch screen to reach its actions. Each row's
+          actions button does the same for everyone else.
+        </p>
+        <p>
+          A row with actions holds a <code>&lt;button data-swipe-toggle&gt;</code> as
+          its trailing action, then a <code>.swipe-actions</code> group of buttons as its
+          last child. <code>AutoInit()</code> starts every <code>.list.swipeable</code>.
+          A touch swipe toward the row's inline start slides the row with the finger
+          and brings the actions in from the other edge. Released past half the
+          actions' width, or with a flick, the row stays open. A swipe only reveals
+          the actions; none of them runs until a person presses it. On a touch
+          screen, swipe a row below to the left; elsewhere, press its actions button.
+        </p>
+        <ul id="demo-swipe" class="list swipeable mb-3" aria-label="Inbox" style="max-width: 36rem;">
+          {mail.map((subject) => (
+            <li>
+              <span class="material-symbols" aria-hidden="true">mail</span>
+              <span class="truncate">{subject}</span>
+              <button type="button" class="icon-button" data-swipe-toggle aria-label={`Actions for ${subject}`}>
+                <span class="material-symbols" aria-hidden="true">more_horiz</span>
+              </button>
+              <span class="swipe-actions">
+                <button type="button" class="icon-button" data-demo="archive" aria-label={`Archive ${subject}`}>
+                  <span class="material-symbols" aria-hidden="true">archive</span>
+                </button>
+                <button type="button" class="icon-button" data-demo="delete" aria-label={`Delete ${subject}`}>
+                  <span class="material-symbols" aria-hidden="true">delete</span>
+                </button>
+              </span>
+            </li>
+          ))}
+        </ul>
+<Code code={`
+<ul class="list swipeable" aria-label="Inbox">
+  <li>
+    <span class="material-symbols" aria-hidden="true">mail</span>
+    Weekly report
+    <button type="button" class="icon-button" data-swipe-toggle aria-label="Actions for Weekly report">
+      <span class="material-symbols" aria-hidden="true">more_horiz</span>
+    </button>
+    <span class="swipe-actions">
+      <button type="button" class="icon-button" aria-label="Archive Weekly report">
+        <span class="material-symbols" aria-hidden="true">archive</span>
+      </button>
+      <button type="button" class="icon-button" aria-label="Delete Weekly report">
+        <span class="material-symbols" aria-hidden="true">delete</span>
+      </button>
+    </span>
+  </li>
+</ul>
+`} />
+  </Section>
+  <Section {...S.toggle}>
+        <p>
+          Swiping needs a touch screen, so every row with actions needs its
+          <code>&lt;button data-swipe-toggle&gt;</code>. Keyboard, mouse and switch users
+          open and close the row with it, the script keeps its
+          <code>aria-expanded</code> in step, and a semantics rule flags a row without
+          one. Name the toggle and each action for the row they belong to.
+        </p>
+        <p>
+          The actions stay in the tab order and the accessibility tree while the row
+          is closed, and focus on one opens its row, so tabbing reaches every action.
+          A mouse drag never swipes, and neither does a drag that moves up or down
+          first, which scrolls as usual.
+        </p>
+  </Section>
+  <Section {...S.closing}>
+        <p>
+          One row in a list is open at a time. A tap or focus outside the open row
+          closes it, as does a swipe the other way, or Escape inside it. Escape on an
+          action, or pressing an action, closes the row and moves focus from the
+          action to the toggle. The page handles what each action does. Under reduced
+          motion the row still follows the finger but opens and closes without
+          sliding. In a right-to-left page the actions sit at the left, and a swipe to
+          the right reveals them.
+        </p>
+  </Section>
+  <Section {...S.events}>
+        <p>
+          Opening or closing a row fires <code>expressive:swipetoggle</code> from the
+          list and runs the <code>onToggle</code> option, both with
+          <code>{"{ row, open }"}</code>.
+        </p>
+<Code code={`
+document.addEventListener('expressive:swipetoggle', (event) => {
+  const { row, open } = event.detail;
+  console.log(row, open ? 'opened' : 'closed');
+});
+`} />
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+          <tr>
+            <td><code>onToggle</code></td>
+            <td>Function</td>
+            <td><code>null</code></td>
+            <td>Called when a row opens or closes, with <code>{"{ row, open }"}</code>.</td>
+          </tr>
+        </OptionsTable>
+  </Section>
+  <Section {...S.methods}>
+<Code code={`
+const list = Expressive.SwipeActions.getInstance(document.querySelector('.list.swipeable'));
+list.open(row); // opens a row of the list, closing the one that was open
+list.close();   // closes the open row
+list.destroy(); // removes listeners, closes the open row without an event
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.list.swipeable</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-swipe-actions-gap</code></td><td>4px</td></tr>
+          <tr><td><code>--md-comp-swipe-actions-motion</code></td><td>default spatial spring</td></tr>
+          <tr><td><code>--md-comp-swipe-actions-motion-duration</code></td><td>the default spatial spring's duration</td></tr>
+        </TokenTable>
+  </Section>
+<script is:inline>
+(() => {
+  document.getElementById('demo-swipe').addEventListener('click', (event) => {
+    const action = event.target.closest('[data-demo="delete"]');
+    if (action) action.closest('li').remove();
+  });
+})();
+</script>
+</DocsLayout>

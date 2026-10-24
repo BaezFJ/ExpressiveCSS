@@ -110,6 +110,22 @@ Feature gap: Only a downward pull at the top refreshes; there is no pull from th
 
 Mapped browser scope: The contained overscroll, one event and a visible indicator per pull past the threshold, cancelled moves only during a pull, the indicator kept until the page reports the finish, drags that do nothing, repeat refreshes ignored while busy, the refresh button, a container that pulls the page, reduced motion with a :root duration override, and destroy() mid-refresh. No spoken-output assertion.
 
+## [Swipe actions](../../components/swipe-actions.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Offer a single-pointer and keyboard path to every action a swipe reveals (WCAG 2.5.1), keep the actions named and reachable while the row is closed, run nothing on the gesture alone, and do not take scrolling away from a drag that is not a swipe.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework reads the touch swipe, slides the row, keeps the toggle's aria-expanded in step, opens a row when focus reaches its actions and closes it on Escape, an outside tap or an action; the page owns the buttons, their names and what each action does.
+
+Verification gap: Swipe reveal, the slide limit, short, vertical, mouse, two-finger and cancelled drags, the toggle, focus on an action, Escape, an outside tap, closing after an action, one open row, the event and onToggle, right-to-left pages, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit. Real phones, flick velocity, pen input, spoken output and forced colors remain unverified. Next check: Swipe on Chrome for Android and Safari on iOS and confirm the browser's back gesture and vertical scrolling still work; read a row's actions with a screen reader.
+
+Feature gap: Actions only on the inline-end side, and no full swipe that runs an action. Next check: None planned.
+
+Mapped browser scope: Swipe reveal with no action run, the keyboard path through the toggle and its actions, short and over-long swipes, drags that do nothing, the toggle, outside tap, Escape and action close, one open row with matching events and callbacks, right-to-left pages, reduced motion with a :root duration override, and destroy() with a row open or mid-swipe. No spoken-output assertion.
+
 ## [Accordion](../../components/accordion.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

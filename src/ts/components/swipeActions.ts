@@ -246,29 +246,34 @@ export class SwipeActions extends Component<SwipeActionsOptions> {
   }
 
   private _onClick = (event: MouseEvent) => {
-    const target = Utils.eventTarget(event);
-    const row = this._rowFor(target);
-    if (!row) return;
-    if (target.closest('[data-swipe-toggle]')) this._toggle(row);
-    else if (target.closest('.swipe-actions button')) this._closeFrom(row);
+    const target = Utils.eventTarget(event)!;
+    // Not _rowFor(): an action may already have removed its row from the list.
+    if (target.closest('.swipe-actions button')) this._closeFrom(target.closest('li'));
+    else if (target.closest('[data-swipe-toggle]')) this._toggle(this._rowFor(target));
   };
 
-  private _toggle(row: HTMLElement) {
+  /** open() ignores anything that is not a row of this list. */
+  private _toggle(row: HTMLElement | null) {
     if (row === this._open) this.close();
-    else this.open(row);
+    else this.open(row as HTMLElement);
   }
 
-  /** Closes a row from inside its actions, moving focus to its toggle so it does not stay on a hidden button. */
-  private _closeFrom(row: HTMLElement) {
+  /** Closes the open row from inside it, moving focus off an action so it does not stay on a hidden button. */
+  private _closeFrom(row: HTMLElement | null) {
+    if (!row || row !== this._open) return;
+    // A row an action removed holds no focus, so it is left alone.
     const focused = row.querySelector(':scope > .swipe-actions')!.contains(row.ownerDocument.activeElement);
-    if (row === this._open) this.close();
-    if (focused && row.isConnected) this._toggleFor(row)?.focus();
+    this.close();
+    if (focused) this._focusToggle(row);
+  }
+
+  private _focusToggle(row: HTMLElement) {
+    this._toggleFor(row)?.focus();
   }
 
   private _onKeydown = (event: KeyboardEvent) => {
     if (event.key !== 'Escape') return;
-    const row = this._rowFor(Utils.eventTarget(event));
-    if (row && row === this._open) this._closeFrom(row);
+    this._closeFrom(this._rowFor(Utils.eventTarget(event)));
   };
 
   /** Focus on an action opens its row; focus anywhere outside the open row closes it. */

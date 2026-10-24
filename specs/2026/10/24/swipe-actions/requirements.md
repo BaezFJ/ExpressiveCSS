@@ -4,7 +4,7 @@ Date: 2026-10-24
 Roadmap phase: Phase 37, swipe actions on list rows
 Branch: `feature/2026-10-24-swipe-actions`
 Base: `origin/master` at `935145a31`, fetched 2026-10-24
-Status: specified 2026-10-24; not implemented
+Status: implemented and locally verified 2026-10-24; CI and review pending
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 37](../../../../roadmap.md#phase-37-swipe-actions-on-list-rows). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -36,13 +36,13 @@ A `.list.swipeable` list lets people swipe a row toward its inline start to reve
 - **R5.** Each row holds a `[data-swipe-toggle]` button. Activating it by click, Enter or Space opens the row, or closes an open one. The component keeps `aria-expanded` on the toggle in step with the row's state, whether the row opened by swipe, toggle, focus or script.
 - **R6.** When focus moves to a button inside a row's `.swipe-actions`, the row opens so the focused action is visible. The action buttons stay in the tab order and in the accessibility tree while the row is closed.
 - **R7.** An open row closes when a tap or focus lands outside it, or on Escape inside it. Escape on an action moves focus to the row's toggle.
-- **R8.** Activating an action button closes its row after the button's own click handlers have run. The page handles what the action does.
+- **R8.** Activating an action button closes its row after the button's own click handlers have run, and moves focus from the action to the row's toggle, so focus does not stay on a hidden button. A row whose action removed it from the list closes at once. The page handles what the action does. The focus move and the removed row were added during implementation on 2026-10-24.
 - **R9.** At most one row in a list is open. Opening a row, by any route, closes the open one.
 - **R10.** In a right-to-left page, the actions sit at the left, and a swipe toward the right reveals them.
 - **R11.** Under `prefers-reduced-motion: reduce`, the content still follows the finger during a swipe, but a release, the toggle, focus and Escape open and close the row without animating.
 - **R12.** Opening or closing a row fires a bubbling `expressive:swipetoggle` event from the list, with `{ row, open }` in its `detail`, and runs the `onToggle` option. The instance's `open(row)` and `close()` methods open and close rows from script.
 - **R13.** `destroy()` removes every listener, closes any open row without firing an event, and clears the swipe offset and `aria-expanded` it set. A later swipe opens nothing.
-- **R14.** `llm.md` gains a "Swipe actions" section under Lists, and a docs page documents the markup, options, methods, event and the toggle with a live example. `semantics.json` gains a rule that flags a `.swipeable` row without a `[data-swipe-toggle]` button. The component decisions data, the changelog's Unreleased section and the hand-written web extensions review get entries, and `npm run build:skill` regenerates the derived files.
+- **R14.** `llm.md` gains a "Swipe actions" section, placed after Pull-to-refresh as its own component guide, and a docs page documents the markup, options, methods, event and the toggle with a live example. `semantics.json` gains a `swipe-actions` row with a rule that flags a `.swipeable` row without a `[data-swipe-toggle]` button. The semantics roster test requires a row for every Sass partial, so the rule could not sit in the `list` row as first proposed. The component decisions data, the changelog's Unreleased section and the hand-written web extensions review get entries, and `npm run build:skill` regenerates the derived files.
 - **R15.** `tests/selective-builds.test.js` has reviewed JavaScript and CSS gzip budget lines for this change, and the capability `sourceRevision` pin names a commit on `master`.
 
 ### Exclusions
@@ -68,9 +68,9 @@ A `.list.swipeable` list lets people swipe a row toward its inline start to reve
 - The work splits into three groups: the swipe and its acceptance test; then the toggle, keyboard path and edge cases; then docs and checks.
 - The merge condition is the acceptance test passing in Chromium, Firefox and WebKit, plus the repository's required CI checks and review.
 
-### Proposals for implementation
+### Implementation notes
 
-These are open to change in review.
+The markup below was proposed in the spec and built as written. The notes after it record how the build went, and stay open to change in review.
 
 - Markup. The toggle is the row's trailing action, and the actions group is its last child.
 
@@ -94,13 +94,13 @@ These are open to change in review.
   </ul>
   ```
 
-- Layout. The Sass places `.swipe-actions` absolutely at the row's inline end, outside the grid, and clips the row. Every other child of the row moves by a `translate` on one custom property, `--swipe-offset`, which the script sets in pixels while a finger is down. A `.swipe-open` class on the `<li>` sets the open offset to the group's width; the close and open animate with a CSS transition on the default spatial spring token, which reduced motion turns off.
-- Focus opening (R6) can be pure CSS, `li:has(.swipe-actions :focus-visible)`, with the script only syncing `aria-expanded` and closing the other open row on `focusin`.
-- The component sets `aria-controls` on the toggle, generating an `id` on the group when it has none. `aria-expanded` and `aria-controls` are dynamic state the framework owns; the author writes the toggle's name.
-- Gesture input follows `pullToRefresh.ts`: a passive `touchstart` and a non-passive `touchmove` on the list, registered for the instance's life, that calls `preventDefault()` only once a move past the 4px slop is more horizontal than vertical. Flick velocity and the flick window reuse the values in `sheetDrag.ts` (0.5px per millisecond, 100ms). No component imports from `behaviors/` today, so both constants move to `core/` and `sheetDrag.ts` imports them from there.
-- Register the component in `components/registry.ts` as `SwipeActions` with the `.list.swipeable` selector, since a list-wide non-passive `touchmove` belongs on the list rather than on the document.
-- The `semantics.json` rule sits in the existing `list` row: `.swipeable > li:has(.swipe-actions):not(:has([data-swipe-toggle]))`.
+- Layout, as built. The row itself slides, by a `translate` on one custom property, `--swipe-offset`, that the script sets in pixels. Bare-text labels are text nodes, so sliding each child separately would leave them behind. The `.swipe-actions` group is absolutely placed just past the row's inline end and slides with it, so the two never overlap, and the list has `overflow-x: clip`. Clip, not hidden: a hidden list would scroll to a focused action instead of letting the row open. `.swipe-actions` is excluded from the list's label rule, which would otherwise put the group in grid column 2, and the toggle takes column 3 explicitly. Open and close animate with a CSS transition on the default spatial spring token, which reduced motion turns off; `.swiping` turns it off while a finger is down.
+- Focus opening (R6) is in the script, on a document `focusin`, because the open offset depends on the group's measured width.
+- The proposed `aria-controls` on the toggle was left out: the toggle and the group sit side by side in the row, and screen readers barely use `aria-controls`. The semantics note says only `aria-expanded` is set.
+- Gesture input follows `pullToRefresh.ts`: a passive `touchstart` and a non-passive `touchmove` on the list, registered for the instance's life, that call `preventDefault()` only once a move past the 4px slop is more horizontal than vertical. The flick values match `sheetDrag.ts` (0.5px per millisecond, 100ms) as two local constants; moving them to `core/` would have touched `sheetDrag.ts`, which the exclusions keep out.
+- The component is registered in `components/registry.ts` as `SwipeActions` with the `.list.swipeable` selector, exported from `components/index.ts`, and its types from `modular.ts`.
 - Every new function stays below cyclomatic complexity 5 for the fallow pre-commit gate.
+- The capability `sourceRevision` pin had gone stale on `master`: #419 pinned its branch commit `aaf6ac5e8`, which the squash merge dropped. Group 1 re-pinned it to `935145a31`, then group 3 pinned this branch's group 1 commit, `de14a41ac`, because no commit on `master` holds the new files. A squash merge drops that commit too, so a follow-up must re-pin to the merge commit.
 
 ### Deferred
 

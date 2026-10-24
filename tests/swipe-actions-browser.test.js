@@ -251,6 +251,19 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.deepEqual(await page.evaluate(() => window.clicks), ['Delete message 2'], 'the action runs once');
       await settled(page, '#row2', false);
       assert.equal(await expanded(page, '#row2'), 'false', 'the row closes after its action');
+
+      // An action that removes its row, as delete does, leaves no open row behind.
+      await page.evaluate(() => {
+        window.toggles = [];
+        document.querySelector('#row7 [data-action="delete"]').addEventListener('click', (event) => event.currentTarget.closest('li').remove());
+      });
+      await page.click('#row7 [data-swipe-toggle]');
+      await settled(page, '#row7', true);
+      await page.click('#row7 [data-action="delete"]');
+      assert.deepEqual(await page.evaluate(() => window.toggles), [{ row: 'row7', open: true }, { row: 'row7', open: false }], 'the removed row closes at once');
+      await page.mouse.click(label.x + 40, label.y + label.height / 2);
+      await call(page, 'open', 'row8');
+      assert.deepEqual(await page.evaluate(() => window.toggles), [{ row: 'row7', open: true }, { row: 'row7', open: false }, { row: 'row8', open: true }]);
     } finally {
       await browser.close();
     }

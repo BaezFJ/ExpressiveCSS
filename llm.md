@@ -401,6 +401,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:action`, `expressive:closed` | Snackbar | none |
 | `expressive:copy` | Copy buttons | `{ text, copied }` |
 | `expressive:refresh` | Pull-to-refresh | `{ waitUntil }` |
+| `expressive:swipetoggle` | Swipe actions | `{ row, open }` |
 | `expressive:change`, `expressive:sort`, `expressive:resize` | Data tables, from the wrapper | `{ selected }`, `{ header, column, direction }`, `{ header, column, width }`; `sort` is cancelable |
 
 An Autocomplete or Select input hosts a Menu, so it also fires that Menu's `expressive:open`, `expressive:close` and `expressive:select`. A callback that changes the choice again, such as an `onShow` that selects another tab, leaves only the event for the final choice.
@@ -3591,6 +3592,68 @@ Removes the listeners and the status region, and ends a running refresh without 
 | `--md-comp-pull-to-refresh-indicator-offset` | 16px (where the indicator rests while refreshing) |
 | `--md-comp-pull-to-refresh-motion` | default spatial spring |
 | `--md-comp-pull-to-refresh-motion-duration` | the default spatial spring's duration |
+
+---
+
+## Swipe actions
+
+Reveals a list row's actions when a person swipes it sideways, or presses its actions button.
+
+Add `swipeable` to a `.list`. A row with actions holds a `<button data-swipe-toggle>` as its trailing action, then a `.swipe-actions` group of buttons as its last child. `AutoInit()` starts every `.list.swipeable`.
+
+A touch swipe toward the row's inline start, which is left in a left-to-right page, slides the row with the finger and brings the actions in from the other edge. Released past half the actions' width, or with a flick, the row stays open; released short of that, it slides back. A swipe only reveals the actions, and none of them runs until a person presses it. A swipe the other way closes an open row. A drag that moves up or down first scrolls as usual, a second finger or a cancelled touch puts the row back, and a mouse drag never swipes.
+
+The toggle opens and closes the row for keyboard, mouse and switch users, and the script keeps its `aria-expanded` in step. The actions stay in the tab order and the accessibility tree while the row is closed, and focus on one opens its row. One row in a list is open at a time. A tap or focus outside the open row closes it, and so does Escape inside it. Escape on an action, or pressing one, closes the row and moves focus from the action to the toggle. The page handles what each action does.
+
+Opening or closing a row fires `expressive:swipetoggle` from the list and runs `onToggle`, both with `{ row, open }`. Under reduced motion the row still follows the finger but opens and closes without sliding.
+
+```html
+<ul class="list swipeable" aria-label="Inbox">
+  <li>
+    <span class="material-symbols" aria-hidden="true">mail</span>
+    Weekly report
+    <button type="button" class="icon-button" data-swipe-toggle aria-label="Actions for Weekly report">
+      <span class="material-symbols" aria-hidden="true">more_horiz</span>
+    </button>
+    <span class="swipe-actions">
+      <button type="button" class="icon-button" aria-label="Archive Weekly report">
+        <span class="material-symbols" aria-hidden="true">archive</span>
+      </button>
+      <button type="button" class="icon-button" aria-label="Delete Weekly report">
+        <span class="material-symbols" aria-hidden="true">delete</span>
+      </button>
+    </span>
+  </li>
+</ul>
+```
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `onToggle` | Function | `null` | Called when a row opens or closes, with `{ row, open }`. |
+
+### Methods
+
+#### .open(row)
+
+Opens a row of the list, closing the one that was open.
+
+#### .close()
+
+Closes the open row, if there is one.
+
+#### .destroy()
+
+Removes the listeners, closes the open row without an event and removes the toggles' `aria-expanded`.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-swipe-actions-gap` | 4px (between the actions) |
+| `--md-comp-swipe-actions-motion` | default spatial spring |
+| `--md-comp-swipe-actions-motion-duration` | the default spatial spring's duration |
 
 ---
 
