@@ -14,6 +14,10 @@ const HANDLE = '.data-table > table > thead > tr:first-child > th > button.drag-
 const STEP = 16;
 /** How each sort direction orders the rows. */
 const ORDER = { ascending: 1, descending: -1 };
+/** A menu checkbox item that shows and hides the column of the header cell it names. */
+const TOGGLE = '[role="menuitemcheckbox"][data-column]';
+/** Marks a cell hidden with its column, so showing the column never shows a cell the author hid. */
+const HIDDEN = 'data-column-hidden';
 
 /** The cell of a body row that covers a column, counting colspan. */
 function cellAt(row: HTMLTableRowElement, column: number) {
@@ -56,9 +60,60 @@ function headerColumns(head: HTMLTableSectionElement) {
   return columns;
 }
 
-/** The cells of a table's first row, which set its column widths under the fixed layout. */
+/**
+ * The header cell a column toggle names: a cell of a data table's first
+ * header row that spans one column. The id is looked up in the item's own
+ * document or shadow root.
+ */
+function toggledHeader(item: Element) {
+  const root = item.getRootNode() as Document | ShadowRoot;
+  const header = root.getElementById?.(item.getAttribute('data-column')) as HTMLTableCellElement;
+  return header?.matches('.data-table > table > thead > tr:first-child > th') && header.colSpan === 1 ? header : null;
+}
+
+/** A column's cells, one per row, leaving out cells that span several columns. */
+function columnCells(table: HTMLTableElement, column: number) {
+  const head = [...headerColumns(table.tHead)].filter(([, each]) => each === column).map(([cell]) => cell as HTMLTableCellElement);
+  const rows = table.querySelectorAll<HTMLTableRowElement>(':scope > tbody > tr, :scope > tfoot > tr');
+  return [...head, ...Array.from(rows, (row) => cellAt(row, column))].filter((cell) => cell?.colSpan === 1);
+}
+
+function conceal(cell: HTMLTableCellElement) {
+  if (cell.hidden) return;
+  cell.hidden = true;
+  cell.setAttribute(HIDDEN, '');
+}
+
+function reveal(cell: HTMLTableCellElement) {
+  if (!cell.hasAttribute(HIDDEN)) return;
+  cell.hidden = false;
+  cell.removeAttribute(HIDDEN);
+}
+
+/** Shows or hides the column a toggle names, as its `aria-checked` says. */
+function applyToggle(item: Element) {
+  const header = toggledHeader(item);
+  if (!header) return;
+  const table = header.closest('table');
+  const show = item.getAttribute('aria-checked') === 'true';
+  columnCells(table, headerColumns(table.tHead).get(header)).forEach(show ? reveal : conceal);
+  refit(table, header);
+}
+
+/**
+ * Keeps a resized table as wide as its visible columns. A column shown for
+ * the first time since the widths were held takes its content's width, no
+ * narrower than the minimum token.
+ */
+function refit(table: HTMLTableElement, header: HTMLTableCellElement) {
+  if (table.style.tableLayout !== 'fixed') return;
+  if (!header.hidden && !header.style.width) header.style.width = `${Math.max(bounds(header)[0], header.scrollWidth)}px`;
+  fit(table);
+}
+
+/** The visible cells of a table's first row, which set its column widths under the fixed layout. */
 function firstCells(table: HTMLTableElement) {
-  return Array.from(table.rows[0]?.cells ?? []);
+  return Array.from(table.rows[0]?.cells ?? []).filter((cell) => !cell.hidden);
 }
 
 /** Sizes a table to the sum of its columns, so it scrolls once they outgrow the wrapper. */
@@ -114,7 +169,9 @@ function keyWidth(header: HTMLTableCellElement, e: KeyboardEvent) {
  * `expressive:change` with the selected rows, and a cancelable
  * `expressive:sort`, which a server-sorted table cancels to sort the rows
  * itself. A `.drag-handle` button ending a header cell resizes its column
- * and fires `expressive:resize` with `{ header, column, width }`.
+ * and fires `expressive:resize` with `{ header, column, width }`. A menu
+ * checkbox item with `data-column` naming a first-row header cell's id
+ * hides that column while it is unchecked.
  */
 export class DataTables {
   private static _initialized = false;
@@ -129,6 +186,7 @@ export class DataTables {
     document.addEventListener('pointerdown', DataTables._onPointerDown);
     document.addEventListener('click', DataTables._onHandleClick);
     document.addEventListener('keydown', DataTables._onKeyDown);
+    document.addEventListener('expressive:change', DataTables._onToggle);
     Utils.onDocumentReady(() => document.querySelectorAll('.data-table').forEach(DataTables.sync));
   }
 
@@ -136,11 +194,16 @@ export class DataTables {
    * Shows on a table's select-all box whether all, some or none of its rows
    * are selected. This runs for the tables in the page when it loads; call
    * it for a `.data-table` rendered later with rows already checked, or
-   * after checking rows from script, which fires no change.
+   * after checking rows from script, which fires no change. It also shows
+   * and hides the columns that column toggles name, as their
+   * `aria-checked` says.
    */
   static sync(wrapper: Element) {
     const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
     if (table) DataTables._select(DataTables._all(table), DataTables._enabled(table), false);
+    (wrapper.getRootNode() as ParentNode).querySelectorAll(TOGGLE).forEach((item) => {
+      if (wrapper.contains(toggledHeader(item))) applyToggle(item);
+    });
   }
 
   /** A column's width in pixels, read from its header cell. */
@@ -221,6 +284,12 @@ export class DataTables {
     if (Utils.emit(wrapper, 'sort', { header, column, direction }, true)) {
       DataTables._sort(header.closest('table'), header, column, ORDER[direction]);
     }
+  };
+
+  /** Menu's change from a column toggle; a data table's own change has no item. */
+  private static _onToggle = (e: CustomEvent<{ item?: Element }>) => {
+    const item = e.detail?.item;
+    if (item?.matches?.(TOGGLE)) applyToggle(item);
   };
 
   private static _onPointerDown = (e: PointerEvent) => {

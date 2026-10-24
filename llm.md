@@ -3616,7 +3616,7 @@ Put a `<button>` in each sortable `<th>` and set `aria-sort="ascending"` or `"de
 
 ### Row selection
 
-A checked checkbox in a row's first cell selects the row and fills it with `secondary-container`. Name each checkbox after its row. `aria-selected` is not valid on the rows of a plain table, so the checkbox carries the state. A checkbox in the first header cell selects every enabled row, and shows mixed while only some are selected. Each change fires `expressive:change` from the wrapper with `{ selected }`, the selected rows. Checking rows from script fires no change, so call `Expressive.DataTables.sync(wrapper)` afterwards, and for a table rendered after the page loaded with rows already checked.
+A checked checkbox in a row's first cell selects the row and fills it with `secondary-container`. Name each checkbox after its row. `aria-selected` is not valid on the rows of a plain table, so the checkbox carries the state. A checkbox in the first header cell selects every enabled row, and shows mixed while only some are selected. Each change fires `expressive:change` from the wrapper with `{ selected }`, the selected rows. Checking rows from script fires no change, so call `Expressive.DataTables.sync(wrapper)` afterwards, and for a table rendered after the page loaded with rows already checked. `sync` also applies the table's column toggles.
 
 ```html
 <div class="data-table">
@@ -3751,6 +3751,36 @@ wrapper.addEventListener('expressive:resize', ({ detail }) => {
   saved[detail.column] = detail.width;
   localStorage.setItem('order-widths', JSON.stringify(saved));
 });
+```
+
+### Column visibility
+
+Give a menu checkbox item `data-column` set to the `id` of a header cell in the table's first header row, and the item shows and hides that column. While the item's `aria-checked` is `"false"`, the header cell and the column's cell in every body and footer row are hidden, and hidden cells leave the accessibility tree. A cell that spans several columns, such as a detail row's cell, stays. An item that is unchecked when the page loads starts its column hidden. The menu itself is an ordinary Menu, so it must be started, and its trigger can sit in a `.data-table-actions` bar.
+
+The framework fires no event of its own. To keep the choice across visits, save it from the menu's `expressive:change`, which carries `{ item, checked }`, and render each item's `aria-checked` from what you saved. For a table or menu rendered after the page loaded, or after setting `aria-checked` from script, call `Expressive.DataTables.sync(wrapper)`. Name only header cells that span one column. Leave the row header column out of the menu, and under `sticky-column` the pinned columns too, because the pin follows the first cells in the markup, hidden or not. A resized table keeps its other widths when a column hides or shows.
+
+```html
+<div class="data-table-actions">
+  <button type="button" class="button text menu-trigger" data-target="order-columns">Columns</button>
+</div>
+<div class="data-table">
+  <table>
+    <thead>
+      <tr>
+        <th scope="col">Customer</th>
+        <th scope="col" id="order-status">Status</th>
+        <th scope="col" id="order-total" class="numeric">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><th scope="row">Alvin</th><td>Shipped</td><td class="numeric">$87.00</td></tr>
+    </tbody>
+  </table>
+</div>
+<menu id="order-columns">
+  <li role="menuitemcheckbox" aria-checked="true" data-column="order-status"><button type="button">Status</button></li>
+  <li role="menuitemcheckbox" aria-checked="false" data-column="order-total"><button type="button">Total</button></li>
+</menu>
 ```
 
 ### Tokens

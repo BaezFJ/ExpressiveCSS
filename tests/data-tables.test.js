@@ -169,3 +169,74 @@ test('without data-sort the header buttons are left to the page', () => {
   assert.deepEqual(order(), ['b', 'b-detail', 'a', 'c']);
   assert.equal(document.getElementById('by-name').parentElement.hasAttribute('aria-sort'), false);
 });
+
+// Column visibility: a menuitemcheckbox with data-column naming a first-row
+// header cell hides and shows that column when Menu toggles it.
+const COLUMNS = `<menu>
+  <li role="menuitemcheckbox" aria-checked="true" data-column="h-a" id="t-a">A</li>
+  <li role="menuitemcheckbox" aria-checked="true" data-column="h-b" id="t-b">B</li>
+  <li role="menuitemcheckbox" aria-checked="true" data-column="nope" id="t-missing">Missing</li>
+  <li role="menuitemcheckbox" aria-checked="true" data-column="not-a-header" id="t-div">Div</li>
+  <li role="menuitemcheckbox" aria-checked="true" data-column="h-group" id="t-group">Group</li>
+  <li role="menuitemcheckbox" aria-checked="true" data-column="h-c1" id="t-c1">C1</li>
+</menu>
+<div id="not-a-header"></div>
+<div class="data-table" id="grouped"><table>
+  <thead>
+    <tr><th rowspan="2" id="h-a">A</th><th rowspan="2" id="h-b">B</th><th colspan="2" id="h-group">Group</th></tr>
+    <tr><th id="h-c1">C1</th><th>C2</th></tr>
+  </thead>
+  <tbody>
+    <tr><td colspan="2" id="wide">ab</td><td>c1</td><td>c2</td></tr>
+    <tr><td id="a2">a</td><td id="b2" hidden>own</td><td>c1</td><td>c2</td></tr>
+    <tr><td id="a3">a</td><td id="b3">b</td><td>c1</td><td>c2</td></tr>
+  </tbody>
+  <tfoot><tr><td id="a4">a</td><td id="b4">b</td><td colspan="2">c</td></tr></tfoot>
+</table></div>`;
+
+/** Flips a menu checkbox item and fires Menu's change from its trigger. */
+function toggle(id) {
+  const item = document.getElementById(id);
+  const checked = item.getAttribute('aria-checked') !== 'true';
+  item.setAttribute('aria-checked', String(checked));
+  document.body.dispatchEvent(new window.CustomEvent('expressive:change', { bubbles: true, detail: { item, checked } }));
+}
+
+/** The ids, or else the text, of the hidden cells in a table. */
+const hidden = (selector) => [...document.querySelectorAll(`${selector} :is(th, td)[hidden]`)].map((cell) => cell.id || cell.textContent);
+
+test('a column toggle hides its header and cells, leaving spanning and author-hidden cells', () => {
+  document.body.innerHTML += COLUMNS;
+  toggle('t-b');
+  assert.deepEqual(hidden('#grouped'), ['h-b', 'b2', 'b3', 'b4']);
+  toggle('t-a');
+  assert.deepEqual(hidden('#grouped'), ['h-a', 'h-b', 'a2', 'b2', 'a3', 'b3', 'a4', 'b4'], 'a cell spanning a hidden column stays');
+  toggle('t-b');
+  assert.deepEqual(hidden('#grouped'), ['h-a', 'a2', 'b2', 'a3', 'a4'], 'a cell the author hid stays hidden');
+  toggle('t-a');
+  assert.deepEqual(hidden('#grouped'), ['b2']);
+  assert.equal(document.querySelectorAll('.data-table [data-column-hidden]').length, 0);
+});
+
+test('a toggle naming no first-row single-column header changes no table', () => {
+  document.body.innerHTML += COLUMNS;
+  for (const id of ['t-missing', 't-div', 't-group', 't-c1']) {
+    toggle(id);
+    assert.equal(document.getElementById(id).getAttribute('aria-checked'), 'false');
+  }
+  assert.deepEqual(hidden('#grouped'), ['b2']);
+  toggle('t-b');
+  assert.deepEqual(hidden('.data-table:not(#grouped)'), [], 'a table no toggle names is untouched');
+});
+
+test('sync applies the column toggles that name its headers', () => {
+  document.body.innerHTML += COLUMNS;
+  const wrapper = document.getElementById('grouped');
+  document.getElementById('t-a').setAttribute('aria-checked', 'false');
+  assert.deepEqual(hidden('#grouped'), ['b2'], 'nothing changes before sync');
+  Expressive.DataTables.sync(wrapper);
+  assert.deepEqual(hidden('#grouped'), ['h-a', 'a2', 'b2', 'a3', 'a4']);
+  document.getElementById('t-a').setAttribute('aria-checked', 'true');
+  Expressive.DataTables.sync(wrapper);
+  assert.deepEqual(hidden('#grouped'), ['b2']);
+});
