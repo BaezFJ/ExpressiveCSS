@@ -463,4 +463,26 @@ for (const [engine, browserType, browserTest] of engines) {
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: a column toggle finds its header in its own shadow root`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await columnsPage(browser);
+      const hidden = await page.evaluate(() => {
+        const root = document.body.appendChild(document.createElement('div')).attachShadow({ mode: 'open' });
+        root.innerHTML = document.getElementById('details').outerHTML + document.getElementById('other-menu').outerHTML;
+        const item = root.querySelector('[data-column="d-status"]');
+        item.setAttribute('aria-checked', 'false');
+        item.dispatchEvent(new CustomEvent('expressive:change', { bubbles: true, composed: true, detail: { item, checked: false } }));
+        const cells = () => [...root.querySelectorAll('[hidden]')].map((cell) => cell.textContent);
+        const unchecked = cells();
+        item.setAttribute('aria-checked', 'true');
+        Expressive.DataTables.sync(root.getElementById('details'));
+        return [unchecked, cells()];
+      });
+      assert.deepEqual(hidden, [['Status', 'Shipped'], []]);
+    } finally {
+      await browser.close();
+    }
+  });
 }
