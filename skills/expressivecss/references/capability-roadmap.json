@@ -2510,11 +2510,11 @@
         },
         {
           "path": "src/ts/components/lineChart.ts",
-          "sha256": "c1158479916c4237190fafd7aa60d9202201e01f3c8408d9ec2592fa39b48777"
+          "sha256": "a68636cd7533d79935e32f7981963ffb2bfe16081363803624add8312e6dc9b0"
         },
         {
           "path": "src/ts/components/scatterChart.ts",
-          "sha256": "b3f6d630e713515c7768c0f369e79d9ecc6cc3ac837d6ed19a073691e7185964"
+          "sha256": "2cadc49e61a79046288fc6fa789e99cf55ceaee351644be6b10dddb46e2617ef"
         }
       ],
       "gaps": [

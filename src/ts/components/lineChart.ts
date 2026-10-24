@@ -162,7 +162,7 @@ export function morph(path: SVGElement, from: string, timing: Pace) {
 }
 
 /** The paths' motion timing. */
-export type Pace = NonNullable<ReturnType<typeof pace>>;
+type Pace = NonNullable<ReturnType<typeof pace>>;
 
 /** A series' line, the fill under it and its dots, as path data. */
 interface Shape {

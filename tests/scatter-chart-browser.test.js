@@ -29,7 +29,8 @@ const html = `<style>${css}</style>
   </div>
   <div style="width: 600px">
     ${chart(`class="scatter-chart" id="watched" data-watch ${fixed}`, cars)}
-    ${chart('class="scatter-chart axis toggle" id="toggled"', cars)}
+    ${chart('class="scatter-chart axis toggle" id="toggled"', [...cars, ['Hummer', '4000', '', '14']])}
+    ${chart('class="scatter-chart axis" id="xonly"', [...cars, ['Trailer', '5000', '', '']])}
   </div>
   <div style="width: 600px" dir="rtl">
     ${chart(`class="scatter-chart" id="rtl" ${fixed}`, cars)}
@@ -149,6 +150,18 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.deepEqual(ends.x.map(({ text }) => text), ['$0', '$1K', '$2K']);
       lines(ends.x, [0, 0.4, 0.8], 'the x scale runs from 0 to 2,500');
       assert.deepEqual(ends.y.map(({ text }) => text), ['0%', '20%', '40%', '60%']);
+
+      // The xMin and xMax options fix the x ends as the data attributes do.
+      const options = await page.locator('#auto').evaluate((el) => {
+        // A fresh figure from the caption and table, without the drawn parts.
+        const figure = document.createElement('figure');
+        figure.className = 'scatter-chart axis';
+        figure.append(...['figcaption', 'table'].map((tag) => el.querySelector(`:scope > ${tag}`).cloneNode(true)));
+        el.after(figure);
+        Expressive.ScatterChart.init(figure, { xMin: 0, xMax: 2500 });
+        return [...figure.querySelectorAll('.scatter-chart-axis.x > li')].map((li) => li.textContent);
+      });
+      assert.deepEqual(options, ['0', '1K', '2K']);
       lines(ends.y, [1, 2 / 3, 1 / 3, 0], 'the y scale runs from 0 to 60');
     } finally {
       await browser.close();
@@ -223,6 +236,8 @@ for (const [engine, browserType, browserTest] of engines) {
         });
         assert.ok(Math.abs(marker[0] - x) <= 1 && Math.abs(marker[1] - y) <= 1, `${id}: the marker sits on the point`);
         assert.deepEqual(marker.slice(2), ['2', false], `${id}: the marker takes the series color`);
+        // Camry sits 40% across from the left, or 60% in the mirrored chart, where the tooltip opens back over the plot.
+        assert.equal(await tooltip.evaluate((el) => el.classList.contains('end')), id === '#rtl', `${id}: the tooltip opens away from the near edge`);
         await page.mouse.move(0, 0);
         assert.equal(await tooltip.isVisible(), false, `${id}: leaving the plot hides the tooltip`);
       }
@@ -292,14 +307,19 @@ for (const [engine, browserType, browserTest] of engines) {
         series: [...el.querySelectorAll('.scatter-chart-series')].map((group) => group.dataset.series),
         buttons: [...el.querySelectorAll('.chart-toggle')].map((button) => [button.textContent, button.getAttribute('aria-pressed'), button.getAttribute('aria-disabled')]),
         y: [...el.querySelectorAll('.scatter-chart-axis:not(.x) > li')].map((li) => li.textContent),
+        x: [...el.querySelectorAll('.scatter-chart-axis.x > li')].map((li) => li.textContent),
       }));
 
-      assert.deepEqual((await state()).y, ['10', '20', '30', '40', '50']);
+      // The Hummer, at 4,000 kg, has only a highway value.
+      const shown = await state();
+      assert.deepEqual(shown.y, ['10', '20', '30', '40', '50']);
+      assert.deepEqual(shown.x, ['1K', '2K', '3K', '4K', '5K']);
       await chart.getByRole('button', { name: 'Highway' }).click();
       const hidden = await state();
       assert.deepEqual(hidden.series, ['1'], 'the highway points are gone');
       assert.deepEqual(hidden.buttons, [['City', 'true', 'true'], ['Highway', 'false', null]]);
       assert.deepEqual(hidden.y, ['10', '20', '30', '40'], 'the y scale refits to the city values');
+      assert.deepEqual(hidden.x, ['1K', '1.5K', '2K', '2.5K', '3K'], 'the x scale refits to the rows with a city value');
 
       await chart.getByRole('button', { name: 'City' }).click({ force: true });
       assert.deepEqual((await state()).series, ['1'], 'the last series shown stays');
@@ -320,6 +340,8 @@ for (const [engine, browserType, browserTest] of engines) {
 
       // Corolla has no x, so neither series draws it; Camry has no highway value.
       near(await placed(page, '#gaps', [[[1300, 31], [1600, 28], [2600, 15]], [[1300, 40], [2600, 20]]]), '#gaps');
+      // A row with an x value but no y values draws nothing, so it does not stretch the x scale.
+      assert.deepEqual(await page.locator('#xonly .scatter-chart-axis.x > li').allTextContents(), ['1K', '1.5K', '2K', '2.5K', '3K']);
       assert.deepEqual(errors, []);
     } finally {
       await browser.close();

@@ -1,5 +1,5 @@
 import { svgNode } from '../core/utils';
-import { LineChart, LineChartOptions, ChartScale, Pace, Series, affix, cellValue, morph, numberFormat, pace, tickText } from './lineChart';
+import { LineChart, LineChartOptions, ChartScale, Series, affix, cellValue, morph, numberFormat, pace, tickText } from './lineChart';
 
 export interface ScatterChartOptions extends LineChartOptions {
   /**
@@ -24,6 +24,9 @@ interface Mark {
 
 /** Points as path data: round caps on zero-length lines. */
 const dots = (marks: Mark[]) => marks.map(({ x, y }) => `M${x},${y}h0`).join('');
+
+/** A point's row and series column, which update() matches old and new points by. */
+const place = ({ row, series }: Mark) => `${row} ${series.column}`;
 
 /**
  * Scatter chart. It reads its <table> like LineChart, but the first value
@@ -62,8 +65,9 @@ export class ScatterChart extends LineChart {
   static key = 'Expressive_ScatterChart';
 
   /**
-   * Leaves out the values of rows without an x value, so they neither draw
-   * nor stretch the y scale. Nothing stacks.
+   * Reads each row's x value into `_xs`, which the x scale and the points
+   * use, and leaves out the values of rows without one, so they neither
+   * draw nor stretch the y scale. Nothing stacks.
    */
   protected _arrange(series: Series[]) {
     const xs = (this._xs = this._rows.map((row) => cellValue(row.cells[1])));
@@ -176,27 +180,25 @@ export class ScatterChart extends LineChart {
       focusable: 'false'
     });
     const timing = this._before.length ? pace(this.el) : null;
-    svg.append(...this.series.map((series) => this._group(series, timing)));
+    const was = new Map(this._drawn.map((old) => [place(old), old]));
+    svg.append(...this.series.map((series) => this._group(series, timing, was)));
     return svg;
   }
 
-  /** A series' points; after update() they move from where they were. */
-  private _group(series: Series, timing: Pace | null) {
+  /**
+   * A series' points. After update() each moves from where its row's point
+   * in the same column was drawn, or appears where it is.
+   */
+  private _group(series: Series, timing: ReturnType<typeof pace>, was: Map<string, Mark>) {
     const group = svgNode('g', {
       class: `scatter-chart-series ${series.className}`.trim(),
       'data-series': series.color
     });
     const marks = this._marks.filter((mark) => mark.series === series);
     const path = svgNode('path', { class: 'scatter-chart-points', d: dots(marks) });
-    if (timing) morph(path, dots(marks.map((mark) => this._from(mark))), timing);
+    if (timing) morph(path, dots(marks.map((mark) => was.get(place(mark)) ?? mark)), timing);
     group.append(path);
     return group;
-  }
-
-  /** Where a point was drawn before update(): its row's point in the same column, or where it is now. */
-  private _from(mark: Mark) {
-    const column = mark.series.column;
-    return this._drawn.find((old) => old.row === mark.row && old.series.column === column) ?? mark;
   }
 
   /** With .axis, the y scale's labels, and the x scale's below the plot with a grid line at each. */
