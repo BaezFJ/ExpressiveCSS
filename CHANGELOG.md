@@ -251,8 +251,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   shows the container's loading indicator with `aria-busy="true"` until
   every promise passed to `event.detail.waitUntil()` settles or the page
   calls `complete()`. The `threshold` option sets the pull distance (64px).
-  The container and the page holding it get `overscroll-behavior-y:
-  contain`, so the browser's own pull-to-refresh stops. New semantics rules
+  A visually hidden status region announces the start and the finish, in
+  words set with `i18n`. The container and the page holding it get
+  `overscroll-behavior-y: contain`, so the browser's own pull-to-refresh
+  stops. New semantics rules
   ask for the button and a direct `.loading-indicator` child.
 
 - A `data-draggable` map marker moves without a drag (WCAG 2.5.7). A tap

@@ -1,3 +1,5 @@
+@use "../abstracts" as *;
+
 // Pull-to-refresh. The author's loading indicator, a direct child, hides at
 // rest, comes down with a touch pull from the top, and stays while the page
 // refreshes.
@@ -11,7 +13,8 @@
 // While a finger pulls, the script adds `.pulling` and sets
 // `--pull-to-refresh-offset` (how far the indicator has come down) and
 // `--pull-to-refresh-progress` (0 to 1 toward the threshold). A refresh sets
-// `aria-busy="true"` until the page reports the finish.
+// `aria-busy="true"` until the page reports the finish, and announces the
+// start and the finish in a `.pull-to-refresh-status` region it adds.
 //
 // Tokens:
 //   --md-comp-pull-to-refresh-indicator-offset  16px  where the indicator rests while refreshing
@@ -70,6 +73,10 @@
       animation-play-state: running;
     }
   }
+}
+
+.pull-to-refresh-status {
+  @include visually-hidden;
 }
 
 // A container that does not scroll pulls the page, so the page's own pull stops too.

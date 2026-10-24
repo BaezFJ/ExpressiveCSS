@@ -993,7 +993,7 @@ Swept 0.8.0. Renamed from preloader; M3 calls the component Progress indicators.
 
 ### pull-to-refresh
 
-Added with the pull-to-refresh component. A touch pull and a [data-refresh] button start the same refresh, so people who cannot pull use the button. The author's loading indicator carries the role and name; the script shows it and sets aria-busy on the container while the refresh runs, and adds no roles.
+Added with the pull-to-refresh component. A touch pull and a [data-refresh] button start the same refresh, so people who cannot pull use the button. The author's loading indicator carries the role and name; the script shows it, sets aria-busy on the container while the refresh runs, and adds a visually hidden role="status" region that announces the start and the finish, because the indicator is hidden once the refresh ends.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |

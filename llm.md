@@ -3541,7 +3541,7 @@ A `.pull-to-refresh` container holds a `.loading-indicator` as a direct child, a
 
 A touch pull from the top brings the indicator down with the finger and fades it in. Releasing past the threshold starts a refresh. Releasing short of it, a cancelled touch, a drag that moves up or sideways first, and a second finger do nothing, and a mouse drag never pulls. A drag that a scrolled-down scroller can take, whether inside the container or around it, scrolls that scroller instead. The refresh button starts the same refresh, so keyboard, mouse and switch users can refresh without a touch screen.
 
-A refresh fires `expressive:refresh` from the container and runs `onRefresh`. Both get a `detail` with `waitUntil(promise)`. The indicator stays, and the container has `aria-busy="true"`, until every promise passed to `waitUntil()` settles, fulfilled or rejected, or the page calls `complete()`. Without either, the refresh keeps running. Pulls, button presses and `refresh()` calls during a refresh do nothing.
+A refresh fires `expressive:refresh` from the container and runs `onRefresh`. Both get a `detail` with `waitUntil(promise)`. The indicator stays, and the container has `aria-busy="true"`, until every promise passed to `waitUntil()` settles, fulfilled or rejected, or the page calls `complete()`. Without either, the refresh keeps running. Pulls, button presses and `refresh()` calls during a refresh do nothing. A rejected promise still ends the refresh, and a rejection the page does not catch reaches `unhandledrejection` as usual. An `onRefresh` that throws ends the refresh it started, and the error still reaches the page.
 
 ```js
 document.addEventListener('expressive:refresh', (event) => {
@@ -3549,7 +3549,7 @@ document.addEventListener('expressive:refresh', (event) => {
 });
 ```
 
-The container has `overscroll-behavior-y: contain`, and so does the page while it holds one, so the browser's own pull-to-refresh does not run as well. Don't nest one `.pull-to-refresh` inside another. The indicator carries the role and name, as every loading indicator does; the script shows it and adds no roles. Under reduced motion it hides at once instead of sliding back up.
+The container has `overscroll-behavior-y: contain`, and so does the page while it holds one, so the browser's own pull-to-refresh does not run as well. Don't nest one `.pull-to-refresh` inside another. The indicator carries the role and name, as every loading indicator does; the script shows it. The script also adds a visually hidden `.pull-to-refresh-status` region with `role="status"` that announces "Refreshing" when a refresh starts and "Refreshed" when it finishes; set the words with `i18n`. Under reduced motion it hides at once instead of sliding back up.
 
 ```html
 <div class="pull-to-refresh" style="height: 24rem; overflow-y: auto">
@@ -3565,8 +3565,9 @@ The container has `overscroll-behavior-y: contain`, and so does the page while i
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `threshold` | Number | `64` | How far a finger must pull down, in pixels, for the release to refresh. |
+| `threshold` | Number | `64` | How far a finger must pull down, in pixels, for the release to refresh. A value that is not a positive number falls back to `64`. |
 | `onRefresh` | Function | `null` | Called when a refresh starts, with the event's `detail`. |
+| `i18n` | Object | `{ refreshing: 'Refreshing', refreshed: 'Refreshed' }` | What the status region announces when a refresh starts and when it finishes. |
 
 ### Methods
 
@@ -3580,7 +3581,7 @@ Ends the running refresh: the indicator goes back up and `aria-busy` is removed.
 
 #### .destroy()
 
-Removes the listeners and ends a running refresh without an event.
+Removes the listeners and the status region, and ends a running refresh without an event.
 
 ### Tokens
 

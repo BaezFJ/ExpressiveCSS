@@ -2439,10 +2439,10 @@
         "implementation": {
           "source": "llm.md#pull-to-refresh",
           "reviewedOn": "2026-10-24",
-          "documentedSupport": "A touch pull from a scroll position of 0 past a threshold, a refresh button and refresh() method that start the same refresh, an expressive:refresh event and onRefresh callback whose detail takes waitUntil(), complete(), aria-busy while refreshing, contained overscroll on the container and the page, and containers that scroll themselves or pull the page.",
-          "webAdaptation": "Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The author's loading indicator carries the role and name; the script sets only a class, two custom properties and aria-busy.",
+          "documentedSupport": "A touch pull from a scroll position of 0 past a threshold, a refresh button and refresh() method that start the same refresh, an expressive:refresh event and onRefresh callback whose detail takes waitUntil(), complete(), aria-busy while refreshing, a status region that announces the start and the finish with i18n strings, contained overscroll on the container and the page, and containers that scroll themselves or pull the page.",
+          "webAdaptation": "Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The author's loading indicator carries the role and name; the script sets a class, two custom properties and aria-busy, and adds a visually hidden role=\"status\" region because the indicator is hidden once the refresh ends.",
           "limitations": [
-            "The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, screen reader output and forced colors remain unverified. There is no pull from the bottom and no nesting."
+            "The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified. There is no pull from the bottom and no nesting."
           ]
         },
         "relationship": "none",
@@ -2466,17 +2466,17 @@
         "sources": [
           {
             "path": "src/sass/components/_pull-to-refresh.scss",
-            "sha256": "979254277c2f64ebd489b142b27fc74368dcc8f37765d9745fd535913534ea15"
+            "sha256": "a806693436d9e0f2c3b4f9fe1f8d9f1c3ffdd76d1426327cf01016b08018833d"
           },
           {
             "path": "src/ts/components/pullToRefresh.ts",
-            "sha256": "1d7de6bd72ab6960b80e1a48b9d43de855b4aa231f288e2b2f6b7b19c7f8f9e9"
+            "sha256": "20bb63e7c7d7c1f1edbfaaae1f73f59e0df5f96f00dcd630a771e65a529eecf4"
           }
         ],
         "gaps": [
           {
             "kind": "verification",
-            "description": "The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, screen reader output and forced colors remain unverified.",
+            "description": "The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified.",
             "nextStep": "Pull on Chrome and Firefox for Android and Safari on iOS and confirm the browser's own refresh does not run; read a refresh with a screen reader."
           }
         ],

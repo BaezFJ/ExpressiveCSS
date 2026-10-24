@@ -71,7 +71,15 @@ const mail = [
           container has <code>aria-busy="true"</code>, until every promise passed
           in settles, whether it succeeds or fails. Or call <code>complete()</code>
           when the work is done. Until one of those happens, the refresh keeps
-          running, and further pulls and presses do nothing.
+          running, and further pulls and presses do nothing. A rejection the
+          page does not catch still reaches <code>unhandledrejection</code>, and an
+          <code>onRefresh</code> that throws ends the refresh it started.
+        </p>
+        <p>
+          The script adds a visually hidden status region to the container. It
+          announces "Refreshing" when a refresh starts and "Refreshed" when it
+          finishes, so screen reader users hear both. Set the words with the
+          <code>i18n</code> option.
         </p>
 <Code code={`
 document.addEventListener('expressive:refresh', (event) => {
@@ -110,13 +118,19 @@ document.addEventListener('expressive:refresh', (event) => {
             <td><code>threshold</code></td>
             <td>Number</td>
             <td><code>64</code></td>
-            <td>How far a finger must pull down, in pixels, for the release to refresh.</td>
+            <td>How far a finger must pull down, in pixels, for the release to refresh. A value that is not a positive number falls back to <code>64</code>.</td>
           </tr>
           <tr>
             <td><code>onRefresh</code></td>
             <td>Function</td>
             <td><code>null</code></td>
             <td>Called when a refresh starts, with the event's <code>detail</code>.</td>
+          </tr>
+          <tr>
+            <td><code>i18n</code></td>
+            <td>Object</td>
+            <td><code>{"{ refreshing: 'Refreshing', refreshed: 'Refreshed' }"}</code></td>
+            <td>What the status region announces when a refresh starts and when it finishes.</td>
           </tr>
         </OptionsTable>
   </Section>
@@ -125,7 +139,7 @@ document.addEventListener('expressive:refresh', (event) => {
 const refresher = Expressive.PullToRefresh.getInstance(document.querySelector('.pull-to-refresh'));
 refresher.refresh();  // starts a refresh; does nothing while one runs
 refresher.complete(); // ends it: the indicator goes back up, aria-busy is removed
-refresher.destroy();  // removes listeners and ends a refresh without an event
+refresher.destroy();  // removes listeners and the status region, ends a refresh without an event
 `} />
   </Section>
   <Section {...S.tokens}>

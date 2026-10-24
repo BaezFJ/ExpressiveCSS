@@ -7,9 +7,18 @@ export interface PullToRefreshDetail {
   waitUntil(promise: PromiseLike<unknown>): void;
 }
 
+/** What the container's status region announces. */
+export interface PullToRefreshI18nOptions {
+  /** Announced when a refresh starts. */
+  refreshing: string;
+  /** Announced when it finishes. */
+  refreshed: string;
+}
+
 export interface PullToRefreshOptions extends BaseOptions {
   /**
    * How far a finger must pull down, in pixels, for the release to refresh.
+   * A value that is not a positive number falls back to the default.
    * @default 64
    */
   threshold: number;
@@ -18,11 +27,17 @@ export interface PullToRefreshOptions extends BaseOptions {
    * @default null
    */
   onRefresh: ((detail: PullToRefreshDetail) => void) | null;
+  /** What the status region announces when a refresh starts and finishes. */
+  i18n: Partial<PullToRefreshI18nOptions>;
 }
 
 const _defaults: PullToRefreshOptions = {
   threshold: 64,
-  onRefresh: null
+  onRefresh: null,
+  i18n: {
+    refreshing: 'Refreshing',
+    refreshed: 'Refreshed'
+  }
 };
 
 /** Past this the finger was moving, not resting. Hand jitter, in pixels. */
@@ -57,9 +72,20 @@ export class PullToRefresh extends Component<PullToRefreshOptions> {
   private _travel = 0;
   /** The running refresh. A new object each time, so a promise from an earlier one cannot end it. */
   private _refresh: { pending: number } | null = null;
+  /**
+   * Announces the start and the finish. The author's indicator cannot: it is
+   * hidden once the refresh ends, which would drop the finish.
+   */
+  private _status: HTMLElement;
 
   constructor(el: HTMLElement, options: Partial<PullToRefreshOptions>) {
     super(el, options);
+    // Markup options are untrusted; zero or less would refresh on any pull.
+    if (!(this.options.threshold > 0)) this.options.threshold = _defaults.threshold;
+    this._status = el.ownerDocument.createElement('span');
+    this._status.className = 'pull-to-refresh-status';
+    this._status.setAttribute('role', 'status');
+    el.append(this._status);
     const signal = this._events.signal;
     // Not passive: a pull cancels the move so the container does not also scroll.
     el.addEventListener('touchstart', this._onStart, { passive: true, signal });
@@ -79,20 +105,24 @@ export class PullToRefresh extends Component<PullToRefreshOptions> {
     const run = { pending: 0 };
     this._refresh = run;
     this.el.setAttribute('aria-busy', 'true');
+    this._status.textContent = this.options.i18n.refreshing;
     const settle = () => {
       if (--run.pending === 0 && this._refresh === run) this.complete();
     };
     const detail: PullToRefreshDetail = {
       waitUntil: (promise) => {
         run.pending++;
-        Promise.resolve(promise).then(settle, settle);
+        // finally() passes a rejection on, so a failure the page does not
+        // catch still reaches unhandledrejection.
+        Promise.resolve(promise).finally(settle);
       }
     };
-    this._notify('refresh', this.options.onRefresh, { args: [detail], detail });
+    this._announce(run, detail);
   }
 
-  /** Ends the running refresh: the indicator hides and `aria-busy` goes. */
+  /** Ends the running refresh: the indicator hides, `aria-busy` goes and the finish is announced. */
   complete() {
+    if (this._refresh) this._status.textContent = this.options.i18n.refreshed;
     this._refresh = null;
     this.el.removeAttribute('aria-busy');
   }
@@ -100,7 +130,21 @@ export class PullToRefresh extends Component<PullToRefreshOptions> {
   destroy() {
     this._endPull();
     this.complete();
+    this._status.remove();
     super.destroy();
+  }
+
+  /**
+   * Runs `onRefresh` and fires the event. A callback that throws ends the
+   * refresh it started, so later pulls still work, and the error still reaches the page.
+   */
+  private _announce(run: { pending: number }, detail: PullToRefreshDetail) {
+    try {
+      this._notify('refresh', this.options.onRefresh, { args: [detail], detail });
+    } catch (error) {
+      if (this._refresh === run) this.complete();
+      throw error;
+    }
   }
 
   /**

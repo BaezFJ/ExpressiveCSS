@@ -310,7 +310,8 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.equal((await read()).busy, 'true');
       await call(page, 'destroy');
       assert.deepEqual(await read(), { busy: null, pulling: false, offset: '', progress: '' });
-      assert.equal(await page.locator('#list').evaluate((el) => !!Expressive.PullToRefresh.getInstance(el)), false);
+      assert.deepEqual(await page.locator('#list').evaluate((el) => [!!Expressive.PullToRefresh.getInstance(el), el.querySelectorAll('.pull-to-refresh-status').length]), [false, 0],
+        'the instance and its status region are gone');
       await hidden(page);
 
       await pull(150);
@@ -388,9 +389,14 @@ for (const [engine, browserType, browserTest] of engines) {
         };
         window.next = ['a', 'b'];
       });
+      await page.evaluate(() => {
+        window.unhandled = [];
+        window.addEventListener('unhandledrejection', (event) => { window.unhandled.push(event.reason.message); event.preventDefault(); });
+      });
       await call(page, 'refresh');
       await page.evaluate(() => window.settle.b.reject(new Error('offline')));
       assert.equal(await busy(), 'true', 'one promise is still pending');
+      await page.waitForFunction(() => window.unhandled.includes('offline'));
       await page.evaluate(() => window.settle.a.resolve());
       await page.waitForFunction(() => !document.getElementById('list').hasAttribute('aria-busy'));
 
@@ -427,6 +433,18 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.equal((await state(page)).refreshes, 1);
       await call(page, 'complete');
 
+      await page.evaluate(() => {
+        const list = document.getElementById('list');
+        Expressive.PullToRefresh.getInstance(list).destroy();
+        list.setAttribute('data-pull-to-refresh-options', '{"threshold": -5}');
+        Expressive.AutoInit();
+      });
+      await pull(40);
+      assert.equal((await state(page)).refreshes, 1, 'a threshold below 1 falls back to 64px, so 40px is short');
+      await pull(150);
+      assert.equal((await state(page)).refreshes, 2);
+      await call(page, 'complete');
+
       const got = await page.evaluate(() => new Promise((resolve) => {
         Expressive.PullToRefresh.init(document.getElementById('list'), {
           onRefresh(detail) { resolve(typeof detail.waitUntil); },
@@ -434,6 +452,63 @@ for (const [engine, browserType, browserTest] of engines) {
         document.querySelector('#list [data-refresh]').click();
       }));
       assert.equal(got, 'function');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: a status region announces the start and the finish, in the page's words`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { page } = await open(browser, engine);
+      const status = () => page.locator('#list > .pull-to-refresh-status').evaluate((el) => ({
+        role: el.getAttribute('role'),
+        text: el.textContent,
+        hidden: el.getBoundingClientRect().width <= 1,
+      }));
+      assert.deepEqual(await status(), { role: 'status', text: '', hidden: true }, 'the region waits empty and visually hidden');
+      await call(page, 'refresh');
+      assert.equal((await status()).text, 'Refreshing');
+      await call(page, 'complete');
+      assert.equal((await status()).text, 'Refreshed');
+      await page.locator('#list > .pull-to-refresh-status').evaluate((el) => { el.textContent = ''; });
+      await call(page, 'complete');
+      assert.equal((await status()).text, '', 'complete() with nothing running announces nothing');
+
+      await page.evaluate(() => {
+        const list = document.getElementById('list');
+        Expressive.PullToRefresh.getInstance(list).destroy();
+        list.setAttribute('data-pull-to-refresh-options', '{"i18n": {"refreshing": "Actualizando"}}');
+        Expressive.AutoInit();
+      });
+      await call(page, 'refresh');
+      assert.equal((await status()).text, 'Actualizando');
+      await call(page, 'complete');
+      assert.equal((await status()).text, 'Refreshed', 'one string from markup keeps the other default');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: an onRefresh that throws ends its refresh, and the next one still starts`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { page } = await open(browser, engine);
+      const errors = [];
+      page.on('pageerror', (error) => errors.push(error.message));
+      await page.evaluate(() => {
+        window.calls = 0;
+        Expressive.PullToRefresh.init(document.getElementById('list'), {
+          onRefresh() { window.calls++; throw new Error('broken handler'); },
+        });
+      });
+      await page.click('#list [data-refresh]');
+      await page.waitForTimeout(50);
+      assert.equal(await page.locator('#list').evaluate((el) => el.getAttribute('aria-busy')), null, 'the refresh ended');
+      await page.click('#list [data-refresh]');
+      await page.waitForTimeout(50);
+      assert.equal(await page.evaluate(() => window.calls), 2, 'a second press runs the callback again');
+      assert.ok(errors.some((message) => message.includes('broken handler')), 'the error still reaches the page');
     } finally {
       await browser.close();
     }

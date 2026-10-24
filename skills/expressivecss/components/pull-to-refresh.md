@@ -9,7 +9,7 @@ Component ID: `pull-to-refresh`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `c7e235383d5ea22cfef46acd1be42c09ada4628683f997d00e1cbd2f99ca8955`
+Contract SHA-256: `a37c2c9909efd7febe8de28964f6a7c619b27f3a4291f4b1e7aed37af22294ed`
 
 #### Selection and adaptation
 
@@ -25,11 +25,11 @@ Upstream: web-extension-inventory-reviewed (2026-10-24); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Support (2026-10-24, `llm.md#pull-to-refresh`): A touch pull from a scroll position of 0 past a threshold, a refresh button and refresh() method that start the same refresh, an expressive:refresh event and onRefresh callback whose detail takes waitUntil(), complete(), aria-busy while refreshing, contained overscroll on the container and the page, and containers that scroll themselves or pull the page.
+Support (2026-10-24, `llm.md#pull-to-refresh`): A touch pull from a scroll position of 0 past a threshold, a refresh button and refresh() method that start the same refresh, an expressive:refresh event and onRefresh callback whose detail takes waitUntil(), complete(), aria-busy while refreshing, a status region that announces the start and the finish with i18n strings, contained overscroll on the container and the page, and containers that scroll themselves or pull the page.
 
-Web adaptation: Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The author's loading indicator carries the role and name; the script sets only a class, two custom properties and aria-busy.
+Web adaptation: Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The author's loading indicator carries the role and name; the script sets a class, two custom properties and aria-busy, and adds a visually hidden role="status" region because the indicator is hidden once the refresh ends.
 
-Known boundary: The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, screen reader output and forced colors remain unverified. There is no pull from the bottom and no nesting.
+Known boundary: The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified. There is no pull from the bottom and no nesting.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#pull-to-refresh).
 
@@ -39,7 +39,7 @@ A `.pull-to-refresh` container holds a `.loading-indicator` as a direct child, a
 
 A touch pull from the top brings the indicator down with the finger and fades it in. Releasing past the threshold starts a refresh. Releasing short of it, a cancelled touch, a drag that moves up or sideways first, and a second finger do nothing, and a mouse drag never pulls. A drag that a scrolled-down scroller can take, whether inside the container or around it, scrolls that scroller instead. The refresh button starts the same refresh, so keyboard, mouse and switch users can refresh without a touch screen.
 
-A refresh fires `expressive:refresh` from the container and runs `onRefresh`. Both get a `detail` with `waitUntil(promise)`. The indicator stays, and the container has `aria-busy="true"`, until every promise passed to `waitUntil()` settles, fulfilled or rejected, or the page calls `complete()`. Without either, the refresh keeps running. Pulls, button presses and `refresh()` calls during a refresh do nothing.
+A refresh fires `expressive:refresh` from the container and runs `onRefresh`. Both get a `detail` with `waitUntil(promise)`. The indicator stays, and the container has `aria-busy="true"`, until every promise passed to `waitUntil()` settles, fulfilled or rejected, or the page calls `complete()`. Without either, the refresh keeps running. Pulls, button presses and `refresh()` calls during a refresh do nothing. A rejected promise still ends the refresh, and a rejection the page does not catch reaches `unhandledrejection` as usual. An `onRefresh` that throws ends the refresh it started, and the error still reaches the page.
 
 #### Syntax
 
@@ -57,14 +57,15 @@ A refresh fires `expressive:refresh` from the container and runs `onRefresh`. Bo
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `threshold` | Number | `64` | How far a finger must pull down, in pixels, for the release to refresh. |
+| `threshold` | Number | `64` | How far a finger must pull down, in pixels, for the release to refresh. A value that is not a positive number falls back to `64`. |
 | `onRefresh` | Function | `null` | Called when a refresh starts, with the event's `detail`. |
+| `i18n` | Object | `{ refreshing: 'Refreshing', refreshed: 'Refreshed' }` | What the status region announces when a refresh starts and when it finishes. |
 
 #### Methods
 
 - `.refresh()`: Starts a refresh, as a pull or the refresh button does. Does nothing while one runs.
 - `.complete()`: Ends the running refresh: the indicator goes back up and `aria-busy` is removed.
-- `.destroy()`: Removes the listeners and ends a running refresh without an event.
+- `.destroy()`: Removes the listeners and the status region, and ends a running refresh without an event.
 
 #### Also documented
 
