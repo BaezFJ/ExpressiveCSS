@@ -94,6 +94,22 @@ Verification gap: Following, release on scrolling up, the inert button, prepend 
 
 Mapped browser scope: Opening at the end, following streamed text, release on a wheel scroll up, the inert button and resuming from it, following kept through a click on a message, scrollToMessage with a peek and with a missing id, prepend preservation, an appended anchor at the peek with a spacer that clears as the reply grows, and destroy. No spoken-output assertion.
 
+## [Pull-to-refresh](../../components/pull-to-refresh.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Offer a control that refreshes without the gesture, keep the native browser pull from running as well, report the busy state, and do not take scrolling away from a drag that is not a pull.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework reads the touch pull, shows the author's loading indicator, sets aria-busy and announces the start and the finish in its own status region; the page owns the refresh button, the indicator's name, the data loading and the moment the refresh finishes.
+
+Verification gap: The pull threshold, waitUntil() and complete(), short, cancelled, sideways and mouse drags, pulls while scrolled down, inner and surrounding scrollers, a second finger, the busy state, the refresh button by click, Enter and Space, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit. Real phones, pen input, spoken output from the status region and forced colors remain unverified. Next check: Pull on Chrome and Firefox for Android and Safari on iOS and confirm the browser's own refresh does not run; read a refresh with a screen reader.
+
+Feature gap: Only a downward pull at the top refreshes; there is no pull from the bottom to load more and no nested containers. Next check: None planned.
+
+Mapped browser scope: The contained overscroll, one event and a visible indicator per pull past the threshold, cancelled moves only during a pull, the indicator kept until the page reports the finish, drags that do nothing, repeat refreshes ignored while busy, the refresh button, a container that pulls the page, reduced motion with a :root duration override, and destroy() mid-refresh. No spoken-output assertion.
+
 ## [Accordion](../../components/accordion.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

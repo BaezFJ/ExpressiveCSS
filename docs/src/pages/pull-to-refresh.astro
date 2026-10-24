@@ -1,0 +1,167 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "finishing", label: "Finishing a refresh" },
+  { id: "button", label: "The refresh button" },
+  { id: "scrolling", label: "What scrolls" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const mail = [
+  "Build passed on main",
+  "Invoice 2041 is ready",
+  "Design review moved to Thursday",
+  "New comment on the roadmap",
+  "Your export finished",
+  "Weekly usage report",
+  "Reminder: update your password",
+  "Two new sign-ups today",
+  "Release notes draft",
+  "Lunch on Friday?",
+];
+---
+<DocsLayout page="pull-to-refresh" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          Use <code>.pull-to-refresh</code> to let people fetch the latest items by
+          pulling down at the top of a list on a touch screen. A refresh button
+          inside the container does the same for everyone else.
+        </p>
+        <p>
+          Put a <a href={route('loading_indicator')}>loading indicator</a> in the
+          container as a direct child, then a <code>&lt;button data-refresh&gt;</code>,
+          then the content. <code>AutoInit()</code> starts every
+          <code>.pull-to-refresh</code>. A touch pull from the top brings the
+          indicator down with the finger. Releasing past the threshold starts a
+          refresh, and the indicator stays until the page says the refresh is done.
+          On a touch screen, pull the list below down; elsewhere, press Refresh.
+        </p>
+        <div id="demo-refresh" class="pull-to-refresh mb-3" style="height: 22rem; max-width: 36rem; overflow-y: auto; border: 1px solid var(--md-sys-color-outline-variant); border-radius: 16px;">
+          <span class="loading-indicator contained" role="status" aria-label="Refreshing"></span>
+          <button type="button" class="text" data-refresh>Refresh</button>
+          <ul class="list" id="demo-mail">
+            {mail.map((subject) => <li>{subject}</li>)}
+          </ul>
+        </div>
+<Code code={`
+<div class="pull-to-refresh" style="height: 24rem; overflow-y: auto">
+  <span class="loading-indicator contained" role="status" aria-label="Refreshing"></span>
+  <button type="button" class="text" data-refresh>Refresh</button>
+  <ul class="list">
+    <li>Inbox</li>
+  </ul>
+</div>
+`} />
+  </Section>
+  <Section {...S.finishing}>
+        <p>
+          A refresh fires <code>expressive:refresh</code> from the container and runs
+          the <code>onRefresh</code> option. Pass the work's promise to
+          <code>event.detail.waitUntil()</code>. The indicator stays, and the
+          container has <code>aria-busy="true"</code>, until every promise passed
+          in settles, whether it succeeds or fails. Or call <code>complete()</code>
+          when the work is done. Until one of those happens, the refresh keeps
+          running, and further pulls and presses do nothing. A rejection the
+          page does not catch still reaches <code>unhandledrejection</code>, and an
+          <code>onRefresh</code> that throws ends the refresh it started.
+        </p>
+        <p>
+          The script adds a visually hidden status region to the container. It
+          announces "Refreshing" when a refresh starts and "Refreshed" when it
+          finishes, so screen reader users hear both. Set the words with the
+          <code>i18n</code> option.
+        </p>
+<Code code={`
+document.addEventListener('expressive:refresh', (event) => {
+  event.detail.waitUntil(loadLatest());
+});
+`} />
+  </Section>
+  <Section {...S.button}>
+        <p>
+          Pulling needs a touch screen, so every container needs its
+          <code>&lt;button data-refresh&gt;</code>. Keyboard, mouse and switch users
+          refresh with it, and a semantics rule flags a container without one.
+          A mouse drag never pulls. The <code>refresh()</code> method starts the
+          same refresh from script.
+        </p>
+  </Section>
+  <Section {...S.scrolling}>
+        <p>
+          The container can scroll itself, with <code>overflow-y: auto</code> or
+          <code>scroll</code>, or sit in a page that scrolls. Either way, a pull
+          counts only at a scroll position of 0, and a drag that moves up or
+          sideways first scrolls as usual. So does a drag that a scrolled-down
+          scroller inside the container, or around it, can take. A second
+          finger ends a pull, so a pinch still zooms. The container has
+          <code>overscroll-behavior-y: contain</code>, and so does the page while it
+          holds one, so the browser's own pull-to-refresh does not also run. Don't
+          nest one <code>.pull-to-refresh</code> inside another.
+        </p>
+        <p>
+          Under reduced motion the indicator hides at once instead of sliding back up.
+        </p>
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+          <tr>
+            <td><code>threshold</code></td>
+            <td>Number</td>
+            <td><code>64</code></td>
+            <td>How far a finger must pull down, in pixels, for the release to refresh. A value that is not a positive number falls back to <code>64</code>.</td>
+          </tr>
+          <tr>
+            <td><code>onRefresh</code></td>
+            <td>Function</td>
+            <td><code>null</code></td>
+            <td>Called when a refresh starts, with the event's <code>detail</code>.</td>
+          </tr>
+          <tr>
+            <td><code>i18n</code></td>
+            <td>Object</td>
+            <td><code>{"{ refreshing: 'Refreshing', refreshed: 'Refreshed' }"}</code></td>
+            <td>What the status region announces when a refresh starts and when it finishes.</td>
+          </tr>
+        </OptionsTable>
+  </Section>
+  <Section {...S.methods}>
+<Code code={`
+const refresher = Expressive.PullToRefresh.getInstance(document.querySelector('.pull-to-refresh'));
+refresher.refresh();  // starts a refresh; does nothing while one runs
+refresher.complete(); // ends it: the indicator goes back up, aria-busy is removed
+refresher.destroy();  // removes listeners and the status region, ends a refresh without an event
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.pull-to-refresh</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-pull-to-refresh-indicator-offset</code></td><td>16px</td></tr>
+          <tr><td><code>--md-comp-pull-to-refresh-motion</code></td><td>default spatial spring</td></tr>
+          <tr><td><code>--md-comp-pull-to-refresh-motion-duration</code></td><td>the default spatial spring's duration</td></tr>
+        </TokenTable>
+  </Section>
+<script is:inline>
+(() => {
+  const root = document.getElementById('demo-refresh');
+  const list = document.getElementById('demo-mail');
+  let count = 0;
+  root.addEventListener('expressive:refresh', (event) => {
+    event.detail.waitUntil(new Promise((resolve) => setTimeout(resolve, 1500)).then(() => {
+      const item = document.createElement('li');
+      item.textContent = `New message ${++count}`;
+      list.prepend(item);
+    }));
+  });
+})();
+</script>
+</DocsLayout>

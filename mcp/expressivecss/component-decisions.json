@@ -2402,6 +2402,100 @@
       }
     },
     {
+      "slug": "pull-to-refresh",
+      "title": "Pull-to-refresh",
+      "aliases": [
+        "pull to refresh",
+        "swipe to refresh",
+        "pull down to refresh",
+        "refresh gesture"
+      ],
+      "guideSource": {
+        "pageId": "pull-to-refresh",
+        "heading": "Pull-to-refresh",
+        "headingLevel": 2,
+        "semantics": [
+          "pull-to-refresh"
+        ]
+      },
+      "jobs": [
+        "Refreshes a list or page when a person pulls down at its top, or presses its refresh button."
+      ],
+      "useWhen": [
+        "Let people fetch the latest items of a feed, inbox or list on a touch screen, with a button that does the same for everyone else."
+      ],
+      "avoidWhen": [
+        "Content that updates itself, or a page where a pull would compete with another vertical drag; use a refresh button alone."
+      ],
+      "alternatives": [
+        "message-scroller",
+        "lists"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/pull-to-refresh.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#pull-to-refresh",
+          "reviewedOn": "2026-10-24",
+          "documentedSupport": "A touch pull from a scroll position of 0 past a threshold, a refresh button and refresh() method that start the same refresh, an expressive:refresh event and onRefresh callback whose detail takes waitUntil(), complete(), aria-busy while refreshing, a status region that announces the start and the finish with i18n strings, contained overscroll on the container and the page, and containers that scroll themselves or pull the page.",
+          "webAdaptation": "Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The author's loading indicator carries the role and name; the script sets a class, two custom properties and aria-busy, and adds a visually hidden role=\"status\" region because the indicator is hidden once the refresh ends.",
+          "limitations": [
+            "The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified. There is no pull from the bottom and no nesting."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-24",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Offer a control that refreshes without the gesture, keep the native browser pull from running as well, report the busy state, and do not take scrolling away from a drag that is not a pull."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "An inbox that fetches new mail on demand takes pull-to-refresh with a Refresh button; a live chat that receives messages on its own needs a message scroller instead.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-24",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_pull-to-refresh.scss",
+            "sha256": "82683a82db3309935575713659b0df1707de087802f20aa87d7ac3f875e4ae98"
+          },
+          {
+            "path": "src/ts/components/pullToRefresh.ts",
+            "sha256": "861006bffd5074cca9a5f34f0b75ac01d2490b77e35d6a63c12718846807ebba"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified.",
+            "nextStep": "Pull on Chrome and Firefox for Android and Safari on iOS and confirm the browser's own refresh does not run; read a refresh with a screen reader."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/pull-to-refresh-browser.test.js",
+            "name": "chromium: a pull past the threshold refreshes once and the indicator stays until the page reports the finish",
+            "scope": "Real touch input. Contained overscroll, one event per pull past the threshold, the indicator and aria-busy kept until a waitUntil() promise settles or complete() runs. No spoken-output assertion."
+          },
+          {
+            "file": "tests/pull-to-refresh-browser.test.js",
+            "name": "chromium: the refresh button, by click, Enter or Space, and refresh() each start a refresh",
+            "scope": "The refresh button by click, Enter and Space, and refresh(), each firing one event and showing the indicator."
+          }
+        ]
+      }
+    },
+    {
       "slug": "accordion",
       "title": "Accordion",
       "aliases": [
@@ -12322,5 +12416,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "613543a71e84290640b4f70369ffadab2335f53f"
+  "sourceRevision": "aaf6ac5e8dd21083fcff18ef8ed8b12dc73f71ba"
 }

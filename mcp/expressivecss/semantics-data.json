@@ -1028,6 +1028,24 @@
           }
         ]
       },
+      "pull-to-refresh": {
+        "status": "enforced",
+        "note": "Added with the pull-to-refresh component. A touch pull and a [data-refresh] button start the same refresh, so people who cannot pull use the button. The author's loading indicator carries the role and name; the script shows it, sets aria-busy on the container while the refresh runs, and adds a visually hidden role=\"status\" region that announces the start and the finish, because the indicator is hidden once the refresh ends.",
+        "rules": [
+          {
+            "id": "pull-to-refresh-has-a-refresh-button",
+            "kind": "forbid",
+            "selector": ".pull-to-refresh:not(:has(button[data-refresh]))",
+            "message": "Put a <button data-refresh> inside each .pull-to-refresh. Pulling needs a touch screen, and the button is the way to refresh for a keyboard, mouse or switch user."
+          },
+          {
+            "id": "pull-to-refresh-has-an-indicator",
+            "kind": "forbid",
+            "selector": ".pull-to-refresh:not(:has(> .loading-indicator))",
+            "message": "Give a .pull-to-refresh a .loading-indicator as a direct child. It is what comes down with a pull and shows while the refresh runs."
+          }
+        ]
+      },
       "rich-text-editor": {
         "status": "enforced",
         "note": "Added with the rich text editor component. The script hides the textarea and gives the editable element role=\"textbox\" with aria-multiline, copying the textarea's name to it, so the name has to be on the textarea. The toolbar follows the toolbar rules; icon-only buttons are covered by icon-only-control-is-named.",

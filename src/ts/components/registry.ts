@@ -69,6 +69,7 @@ export const AUTO_INIT_COMPONENTS = {
     component: Components.MessageScroller,
     selector: ".message-scroller",
   },
+  PullToRefresh: { component: Components.PullToRefresh, selector: ".pull-to-refresh" },
   Lightbox: { component: Components.Lightbox, selector: ".lightboxed" },
   ScrollSpy: { component: Components.ScrollSpy, selector: ".scrollspy" },
   FormSelect: { component: Components.FormSelect, selector: "select" },

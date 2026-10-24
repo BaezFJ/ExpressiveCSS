@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**94 of 94 rows enforced; 0 remaining.**
+**95 of 95 rows enforced; 0 remaining.**
 
-89 of those rows are components - a part of the framework an author writes markup for.
+90 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 89 components declare conformance debt.**
+**2 of 90 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -990,6 +990,18 @@ Swept 0.8.0. Renamed from preloader; M3 calls the component Progress indicators.
 
 - **div-progress-reports-progress** - <progress> reports itself. A <div class="progress"> is a bar drawn with CSS and reports nothing - it needs role="progressbar", plus aria-valuenow/min/max when it is determinate.
 - **determinate-progress-reports-its-value** - role="progressbar" with no aria-valuenow is an *indeterminate* bar. A determinate one draws a width the user can see and must report the same number: aria-valuenow, plus valuemin/valuemax when they are not 0 and 100.
+
+### pull-to-refresh
+
+Added with the pull-to-refresh component. A touch pull and a [data-refresh] button start the same refresh, so people who cannot pull use the button. The author's loading indicator carries the role and name; the script shows it, sets aria-busy on the container while the refresh runs, and adds a visually hidden role="status" region that announces the start and the finish, because the indicator is hidden once the refresh ends.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `pull-to-refresh-has-a-refresh-button` | forbid | `.pull-to-refresh:not(:has(button[data-refresh]))` | must not match |
+| `pull-to-refresh-has-an-indicator` | forbid | `.pull-to-refresh:not(:has(> .loading-indicator))` | must not match |
+
+- **pull-to-refresh-has-a-refresh-button** - Put a <button data-refresh> inside each .pull-to-refresh. Pulling needs a touch screen, and the button is the way to refresh for a keyboard, mouse or switch user.
+- **pull-to-refresh-has-an-indicator** - Give a .pull-to-refresh a .loading-indicator as a direct child. It is what comes down with a pull and shows while the refresh runs.
 
 ### questionnaire
 

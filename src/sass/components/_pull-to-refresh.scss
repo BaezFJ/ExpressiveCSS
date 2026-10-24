@@ -1,0 +1,90 @@
+@use "../abstracts" as *;
+
+// Pull-to-refresh. The author's loading indicator, a direct child, hides at
+// rest, comes down with a touch pull from the top, and stays while the page
+// refreshes.
+//
+//   <div class="pull-to-refresh">
+//     <span class="loading-indicator contained" role="status" aria-label="Refreshing"></span>
+//     <button type="button" class="text" data-refresh>Refresh</button>
+//     ...content
+//   </div>
+//
+// While a finger pulls, the script adds `.pulling` and sets
+// `--pull-to-refresh-offset` (how far the indicator has come down) and
+// `--pull-to-refresh-progress` (0 to 1 toward the threshold). A refresh sets
+// `aria-busy="true"` until the page reports the finish, and announces the
+// start and the finish in a `.pull-to-refresh-status` region it adds.
+//
+// Tokens:
+//   --md-comp-pull-to-refresh-indicator-offset  16px  where the indicator rests while refreshing
+//   --md-comp-pull-to-refresh-motion            default spatial spring, for the indicator's return
+//   --md-comp-pull-to-refresh-motion-duration   its duration
+
+.pull-to-refresh {
+  --md-comp-pull-to-refresh-indicator-offset: 16px;
+  --md-comp-pull-to-refresh-motion: var(--md-sys-motion-spring-default-spatial);
+  --md-comp-pull-to-refresh-motion-duration: var(--md-sys-motion-spring-default-spatial-duration);
+
+  // Stops the browser's own pull-to-refresh and scroll chaining.
+  overscroll-behavior-y: contain;
+
+  // Sticky with a negative end margin, so it stays at the top of the scroll
+  // area without taking space from the content under it.
+  > .loading-indicator {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    margin-inline: auto;
+    margin-block-end: calc(-1 * var(--md-comp-loading-indicator-container-size));
+    // It covers the content under it while showing, and has nothing to press.
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    translate: 0 -100%;
+    // Hidden only once it has gone back up.
+    transition:
+      translate var(--md-comp-pull-to-refresh-motion-duration) var(--md-comp-pull-to-refresh-motion),
+      opacity var(--md-comp-pull-to-refresh-motion-duration) var(--md-comp-pull-to-refresh-motion),
+      visibility 0s linear var(--md-comp-pull-to-refresh-motion-duration);
+
+    &::before {
+      animation-play-state: paused;
+    }
+  }
+
+  &.pulling > .loading-indicator {
+    visibility: visible;
+    translate: 0 calc(var(--pull-to-refresh-offset, 0px) - 100%);
+    opacity: var(--pull-to-refresh-progress, 1);
+    transition: none;
+  }
+
+  &[aria-busy="true"] > .loading-indicator {
+    visibility: visible;
+    opacity: 1;
+    translate: 0 var(--md-comp-pull-to-refresh-indicator-offset);
+    // Shown at once; only hiding waits for the motion.
+    transition-delay: 0s;
+
+    &::before {
+      animation-play-state: running;
+    }
+  }
+}
+
+.pull-to-refresh-status {
+  @include visually-hidden;
+}
+
+// A container that does not scroll pulls the page, so the page's own pull stops too.
+:root:has(.pull-to-refresh) {
+  overscroll-behavior-y: contain;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pull-to-refresh > .loading-indicator {
+    transition: none;
+  }
+}

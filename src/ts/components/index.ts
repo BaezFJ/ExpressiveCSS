@@ -32,6 +32,7 @@ export { Datepicker } from "./datepicker";
 export { Menu } from "./menu";
 export { Menubar } from "./menubar";
 export { MessageScroller } from "./messageScroller";
+export { PullToRefresh } from "./pullToRefresh";
 export { RichTextEditor } from "./richTextEditor";
 export { MapView } from "./mapView";
 export { Lightbox } from "./lightbox";
