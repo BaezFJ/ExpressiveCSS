@@ -145,7 +145,7 @@ const splines = (easing: string) => /cubic-bezier\(([^)]*)\)/.exec(easing)?.[1] 
  * ponytail: a curve that overshoots is not a valid SVG spline, so the
  * paths then skip their motion; a linear() token gets the standard curve.
  */
-function pace(el: Element) {
+export function pace(el: Element) {
   const style = getComputedStyle(el);
   const dur = style.getPropertyValue('--md-sys-motion-duration-medium4').trim() || '400ms';
   return parseFloat(dur) > 0 ? { dur, keySplines: splines(style.getPropertyValue('--md-sys-motion-easing-standard')) } : null;
@@ -155,14 +155,14 @@ function pace(el: Element) {
  * Moves a path from the path data `from` to its own. SVG animation rather
  * than a CSS transition, since WebKit cannot transition the d property.
  */
-function morph(path: SVGElement, from: string, timing: Pace) {
+export function morph(path: SVGElement, from: string, timing: Pace) {
   const to = path.getAttribute('d');
   if (from === to) return;
   path.append(svgNode('animate', { attributeName: 'd', from, to, ...timing, calcMode: 'spline', keyTimes: '0;1', fill: 'remove' }));
 }
 
 /** The paths' motion timing. */
-type Pace = NonNullable<ReturnType<typeof pace>>;
+export type Pace = NonNullable<ReturnType<typeof pace>>;
 
 /** A series' line, the fill under it and its dots, as path data. */
 interface Shape {

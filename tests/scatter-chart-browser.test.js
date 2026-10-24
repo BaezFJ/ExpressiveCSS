@@ -27,6 +27,10 @@ const html = `<style>${css}</style>
     ${chart('class="scatter-chart axis" id="ends" data-x-min="0" data-x-max="2500" data-min="0" data-max="60"',
       cars.map(([car, weight, city, highway]) => [car, `$${weight}`, `${city}%`, `${highway}%`]))}
   </div>
+  <div style="width: 600px">
+    ${chart(`class="scatter-chart" id="watched" data-watch ${fixed}`, cars)}
+    ${chart('class="scatter-chart axis toggle" id="toggled"', cars)}
+  </div>
   <div style="width: 600px" dir="rtl">
     ${chart(`class="scatter-chart" id="rtl" ${fixed}`, cars)}
   </div>
@@ -222,6 +226,83 @@ for (const [engine, browserType, browserTest] of engines) {
         await page.mouse.move(0, 0);
         assert.equal(await tooltip.isVisible(), false, `${id}: leaving the plot hides the tooltip`);
       }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: scatter chart update() moves the points and keeps focus, and data-watch redraws`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+      const plot = page.locator('#ltr .scatter-chart-plot');
+      await plot.focus();
+      await page.evaluate(() => Expressive.ScatterChart.getInstance(document.querySelector('#ltr')).show(1));
+
+      // Civic's highway value goes from 40 to 45.
+      const moved = await page.locator('#ltr').evaluate((el) => {
+        el.querySelector('tbody tr td:nth-of-type(3)').textContent = '45';
+        const chart = Expressive.ScatterChart.getInstance(el);
+        chart.update();
+        const animate = el.querySelectorAll('.scatter-chart-points')[1].querySelector('animate');
+        return {
+          focused: document.activeElement === el.querySelector('.scatter-chart-plot'),
+          active: chart.activeIndex,
+          tooltip: el.querySelector('.scatter-chart-tooltip').innerText.replace(/\s+/g, ' ').trim(),
+          from: animate?.getAttribute('from'),
+          animated: el.querySelectorAll('animate').length,
+        };
+      });
+      assert.equal(moved.focused, true, 'focus stays on the plot');
+      assert.equal(moved.active, 1, 'the highlighted point stays');
+      assert.equal(moved.tooltip, 'Civic Weight (kg) 1300 Highway 45');
+      assert.match(moved.from, /^M32\.5,20h0/, 'the moved point starts from its old place');
+      assert.equal(moved.animated, 1, 'only the series that changed moves');
+      // The end of the motion: the drawn path data holds the new place.
+      near(await placed(page, '#ltr', [values(2), values(3).map(([x, y], i) => [x, i ? y : 45])]), 'after update()');
+
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      const still = await page.locator('#ltr').evaluate((el) => {
+        el.querySelector('tbody tr td:nth-of-type(3)').textContent = '30';
+        Expressive.ScatterChart.getInstance(el).update();
+        return el.querySelectorAll('animate').length;
+      });
+      assert.equal(still, 0, 'no motion when the reader prefers less');
+
+      // data-watch redraws once the table changes, with no update() call.
+      await page.locator('#watched').evaluate((el) => { el.querySelector('tbody tr td').textContent = '2000'; });
+      await page.evaluate(() => new Promise(requestAnimationFrame));
+      near(await placed(page, '#watched', [values(2), values(3)].map((series) => series.map(([x, y], i) => [i ? x : 2000, y]))), 'data-watch');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: scatter chart toggle legend hides a series and refits the scales`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+      const chart = page.locator('#toggled');
+      const state = () => chart.evaluate((el) => ({
+        series: [...el.querySelectorAll('.scatter-chart-series')].map((group) => group.dataset.series),
+        buttons: [...el.querySelectorAll('.chart-toggle')].map((button) => [button.textContent, button.getAttribute('aria-pressed'), button.getAttribute('aria-disabled')]),
+        y: [...el.querySelectorAll('.scatter-chart-axis:not(.x) > li')].map((li) => li.textContent),
+      }));
+
+      assert.deepEqual((await state()).y, ['10', '20', '30', '40', '50']);
+      await chart.getByRole('button', { name: 'Highway' }).click();
+      const hidden = await state();
+      assert.deepEqual(hidden.series, ['1'], 'the highway points are gone');
+      assert.deepEqual(hidden.buttons, [['City', 'true', 'true'], ['Highway', 'false', null]]);
+      assert.deepEqual(hidden.y, ['10', '20', '30', '40'], 'the y scale refits to the city values');
+
+      await chart.getByRole('button', { name: 'City' }).click({ force: true });
+      assert.deepEqual((await state()).series, ['1'], 'the last series shown stays');
     } finally {
       await browser.close();
     }

@@ -230,7 +230,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the scatter chart: points from a shared x column on both scales: 90,582 gzip bytes (+513).
   // Reviewed the scatter chart's x axis labels and the shared tick label helper: 90,733 gzip bytes (+151).
   // Reviewed scatter chart points by keyboard and pointer, with the marker and tooltip: 91,122 gzip bytes (+389).
-  assert.ok(sizes(js).gzip <= 91122, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed scatter chart points moving from their old places after update(): 91,227 gzip bytes (+105).
+  assert.ok(sizes(js).gzip <= 91227, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

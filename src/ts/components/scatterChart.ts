@@ -1,5 +1,5 @@
 import { svgNode } from '../core/utils';
-import { LineChart, LineChartOptions, ChartScale, Series, affix, cellValue, numberFormat, tickText } from './lineChart';
+import { LineChart, LineChartOptions, ChartScale, Pace, Series, affix, cellValue, morph, numberFormat, pace, tickText } from './lineChart';
 
 export interface ScatterChartOptions extends LineChartOptions {
   /**
@@ -22,6 +22,9 @@ interface Mark {
   y: number;
 }
 
+/** Points as path data: round caps on zero-length lines. */
+const dots = (marks: Mark[]) => marks.map(({ x, y }) => `M${x},${y}h0`).join('');
+
 /**
  * Scatter chart. It reads its <table> like LineChart, but the first value
  * column is the x axis: each row draws one point per later column, at the
@@ -41,6 +44,8 @@ export class ScatterChart extends LineChart {
   private _xAffix: [string, string];
   /** The drawn points, row by row and within a row by series. */
   private _marks: Mark[];
+  /** During update(), the points drawn before it, which the new ones move from. */
+  private _drawn: Mark[];
 
   protected get _type() {
     return 'scatter-chart';
@@ -120,7 +125,7 @@ export class ScatterChart extends LineChart {
   }
 
   protected _read() {
-    this._marks = [];
+    [this._drawn, this._marks] = [this._marks ?? [], []];
     super._read();
     if (!this.series.length) return;
     this._xFit = this._xScale();
@@ -170,18 +175,28 @@ export class ScatterChart extends LineChart {
       'aria-hidden': 'true',
       focusable: 'false'
     });
-    svg.append(...this.series.map((series) => this._group(series)));
+    const timing = this._before.length ? pace(this.el) : null;
+    svg.append(...this.series.map((series) => this._group(series, timing)));
     return svg;
   }
 
-  private _group(series: Series) {
+  /** A series' points; after update() they move from where they were. */
+  private _group(series: Series, timing: Pace | null) {
     const group = svgNode('g', {
       class: `scatter-chart-series ${series.className}`.trim(),
       'data-series': series.color
     });
-    const d = this._marks.filter((mark) => mark.series === series).map(({ x, y }) => `M${x},${y}h0`).join('');
-    group.append(svgNode('path', { class: 'scatter-chart-points', d }));
+    const marks = this._marks.filter((mark) => mark.series === series);
+    const path = svgNode('path', { class: 'scatter-chart-points', d: dots(marks) });
+    if (timing) morph(path, dots(marks.map((mark) => this._from(mark))), timing);
+    group.append(path);
     return group;
+  }
+
+  /** Where a point was drawn before update(): its row's point in the same column, or where it is now. */
+  private _from(mark: Mark) {
+    const column = mark.series.column;
+    return this._drawn.find((old) => old.row === mark.row && old.series.column === column) ?? mark;
   }
 
   /** With .axis, the y scale's labels, and the x scale's below the plot with a grid line at each. */
