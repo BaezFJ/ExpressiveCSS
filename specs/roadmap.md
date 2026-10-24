@@ -12,8 +12,9 @@ Later phases build on these:
   - `update()` redraws from a changed table, keeping focus and the highlighted row. Lines, areas and bars move from their old values to the new ones.
   - `data-watch` redraws a chart whenever its table changes.
   - A `.toggle` legend shows and hides series.
-- **Data tables:** a sticky header, `data-sort` sorting and a select-all box.
-- **Utilities:** layout helpers take `medium:`, `expanded:`, `large:` and `extra-large:` prefixes, and spacing uses the same window sizes.
+  - A `.scatter-chart` plots each row as a point from an x column and one or more y columns.
+- **Data tables:** a sticky header, `data-sort` sorting and a select-all box. `.sticky-column` pins the first column, a `.drag-handle` resizes a column by pointer or keyboard and fires `expressive:resize`, and menu checkbox items with `data-column` hide and show columns.
+- **Utilities:** layout helpers take `medium:`, `expanded:`, `large:` and `extra-large:` prefixes, and spacing uses the same window sizes. Line clamp, opacity, pointer, position and inset helpers, `.grid-auto-fill` and `.list-unstyled` cover text, layout and list patterns without page CSS.
 - **Pickers:** Datepicker and Timepicker follow the page's `lang` and read typed dates in their own format. Timepicker's `showSeconds` adds a seconds field, and `minTime` and `maxTime` bound the times a person can choose.
 - **Chips:** submit their values under the input's `name` through the form-associated `expressive-chips-control` element, so the browser handles reset, validity and disabled state.
 - **Menus:** Home and End keys, `placement`, and anchored menus that open on whichever side fits. Checkbox items toggle and keep the menu open, and radio items check within a named group.
@@ -138,49 +139,27 @@ Authors can build common layout and text patterns from utility classes without p
 
 ### Phase 25: line clamp utilities
 
-No dependencies. Authors can cut a block of text to a set number of lines that ends in an ellipsis. Carousel and navbar already clamp their own text, but no class offers it.
-
-Completion check: a browser test renders a long paragraph with each clamp class and finds its height equal to that many line boxes in Chromium, Firefox and WebKit.
-
-Open for spec: which line counts to ship, and whether they take window-size prefixes.
+Completed 2026-10-23. See [spec](2026/10/23/line-clamp-utilities/).
 
 ### Phase 26: position and inset helpers
 
-No dependencies. Authors can position an element absolutely or fixed and stretch it over its positioned ancestor from markup. Only `.relative` and `.sticky-top` exist today.
-
-Completion check: a browser test places an inset element inside a `.relative` parent and finds its box equal to the parent's padding box, in left-to-right and right-to-left pages.
-
-Open for spec: whether these join the window-size prefixed map, and how a fixed element relates to the `--expressive-z-*` stacking scale.
+Completed 2026-10-23. See [spec](2026/10/23/position-inset-helpers/).
 
 ### Phase 27: auto-fill grid utility
 
-No dependencies. Authors can lay out a grid that fits as many columns of a minimum width as its container allows, with the minimum set by a custom property.
-
-Completion check: a browser test resizes the container and counts the expected columns at three widths.
-
-Open for spec: whether calendar, cards, stat and mega menu, which each write their own `repeat(auto-fill/auto-fit, minmax(...))`, move onto the shared rule with unchanged layout.
+Completed 2026-10-23. See [spec](2026/10/23/auto-fill-grid-utility/).
 
 ### Phase 28: pointer utilities
 
-No dependencies. Authors can let pointer input pass through an element, and can show the pointer cursor on a clickable element that isn't a link or button.
-
-Completion check: a browser test clicks an overlay that has the pass-through class, and the element underneath receives the click.
+Completed 2026-10-23. See [spec](2026/10/23/pointer-utilities/).
 
 ### Phase 29: opacity utilities
 
-No dependencies. Authors can dim an element to a fixed set of opacity steps.
-
-Completion check: a browser test reads the computed opacity of each class and finds the documented value.
-
-Open for spec: whether the steps follow M3's disabled and state-layer opacities or a plain percentage scale.
+Completed 2026-10-23. See [spec](2026/10/23/opacity-utilities/).
 
 ### Phase 30: unstyled lists
 
-No dependencies. A list can drop its markers and indentation and keep its list semantics.
-
-Completion check: a browser test finds no marker and no inline-start padding, and the accessibility tree still reports a list with its items.
-
-Open for spec: WebKit drops the list role from a list with `list-style: none`, so the docs may need to tell authors to add `role="list"`.
+Completed 2026-10-23. See [spec](2026/10/23/unstyled-lists/).
 
 ## Milestone: data table and chart gaps
 
@@ -188,33 +167,19 @@ Data tables handle wide data, and charts can plot one measure against another.
 
 ### Phase 31: data table sticky first column
 
-No dependencies. A wide data table can keep its first column in view while the other columns scroll sideways.
-
-Completion check: a browser test scrolls a wide table sideways and finds the first column pinned to the wrapper's inline-start edge in left-to-right and right-to-left pages, with the corner header cell above the scrolled cells.
+Completed 2026-10-23. See [spec](2026/10/23/data-table-sticky-column/).
 
 ### Phase 32: data table column resize
 
-No dependencies. People can resize a column by pointer or keyboard, and the page hears the new width through an `expressive:*` event. A keyboard path is required because WCAG 2.5.7 asks for a pointer alternative to dragging, as pane resizing already provides.
-
-Completion check: a browser test drags a column edge, then presses an arrow key on it, and each action changes the width and fires one event.
-
-Open for spec: the minimum column width, and whether widths survive a reload.
+Completed 2026-10-23. See [spec](2026/10/23/data-table-column-resize/).
 
 ### Phase 33: data table column visibility
 
-Depends on phase 11. People can hide and show columns from a menu of checkbox items, and each column's header and cells change together.
-
-Completion check: unchecking a column's menu item hides its header and every cell in that column, and checking it shows them again.
-
-Open for spec: whether the framework or the page owns the hidden state. Today the data table draws state and only `data-sort` changes the table.
+Completed 2026-10-24. See [spec](2026/10/23/data-table-column-visibility/).
 
 ### Phase 34: scatter chart
 
-No dependencies. A scatter chart plots each table row as a point from two numeric columns. It follows the other charts for the source table, `update()`, `data-watch`, legend toggling, tooltips and keyboard focus.
-
-Completion check: a browser test renders a two-series table and finds one focusable point per row at the position its values give.
-
-Open for spec: how much of the line chart code it reuses.
+Completed 2026-10-24. See [spec](2026/10/24/scatter-chart/).
 
 ### Phase 35: bubble sizes on the scatter chart
 
