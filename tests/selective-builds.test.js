@@ -233,7 +233,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed scatter chart points moving from their old places after update(): 91,227 gzip bytes (+105).
   // Reviewed matching moved scatter points through a map instead of a search per point: 91,241 gzip bytes (+14).
   // Reviewed scatter chart bubbles sized by the last column, one path each: 91,434 gzip bytes (+193).
-  assert.ok(sizes(js).gzip <= 91434, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the bubble size in the tooltip and marker, and bubbles growing from their old size after update(): 91,627 gzip bytes (+193).
+  assert.ok(sizes(js).gzip <= 91627, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -380,5 +381,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the scatter chart's x axis labels and vertical grid lines: 86,050 gzip bytes (+66).
   // Reviewed the scatter chart's point marker and level tooltip: 86,100 gzip bytes (+50).
   // Reviewed scatter chart bubble sizes and their opacity: 86,141 gzip bytes (+41).
-  assert.ok(sizes(css).gzip <= 86141, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the registered bubble size property and the marker sized to its bubble: 86,183 gzip bytes (+42).
+  assert.ok(sizes(css).gzip <= 86183, `CSS gzip: ${sizes(css).gzip}`);
 });

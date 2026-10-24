@@ -26,11 +26,11 @@ Outcome: bad sizes leave gaps, the tooltip names the size, a hidden series refit
 
 Prerequisites: group 1.
 
-- [ ] Add the V2 to V5 cases and record which fail.
-- [ ] Add the size header and cell text to `_fill()`, and size the cursor marker to the highlighted bubble.
-- [ ] Animate stroke width beside the `d` morph in `_group()`, skipped when `pace()` gives no timing.
-- [ ] Fix whatever else the cases show in `scatterChart.ts`, or in shared `LineChart` code when the fault is there, keeping other charts' behavior.
-- [ ] Rebuild and rerun the scatter file, then `tests/chart-update-browser.test.js`, `tests/chart-watch-browser.test.js`, `tests/chart-legend-toggle-browser.test.js` and `tests/chart-transition-browser.test.js`, one at a time. Update the budget lines.
+- [x] Add the V2 to V5 cases and record which fail.
+- [x] Add the size header and cell text to `_fill()`, and size the cursor marker to the highlighted bubble.
+- [x] Animate the bubble size beside the `d` morph in `_pointPath()`, skipped when `pace()` gives no timing.
+- [x] Fix whatever else the cases show in `scatterChart.ts`, or in shared `LineChart` code when the fault is there, keeping other charts' behavior.
+- [x] Rebuild and rerun the scatter file, then `tests/chart-update-browser.test.js`, `tests/chart-watch-browser.test.js`, `tests/chart-legend-toggle-browser.test.js` and `tests/chart-transition-browser.test.js`, one at a time. Update the budget lines.
 
 Completion check: V1 to V5 pass in all three engines, and the four chart files pass.
 

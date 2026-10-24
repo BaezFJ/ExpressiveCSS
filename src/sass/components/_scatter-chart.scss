@@ -14,8 +14,9 @@
 // Modifiers: .axis labels both axes at round values with grid lines,
 // .toggle makes each legend item a button that shows or hides its series,
 // and .bubble makes the last column each row's size, drawing every point as
-// a bubble whose area follows it. The script sets each bubble's --size, its
-// diameter as a share of the largest.
+// a bubble whose area follows it. The script sets each bubble's
+// --scatter-chart-size, its diameter as a share of the largest, and animates
+// it on update(), so it is registered as a number.
 //
 // Tokens:
 //   --md-comp-scatter-chart-height       240px
@@ -24,6 +25,12 @@
 //   --md-comp-scatter-chart-grid-color   outline-variant
 //   --md-comp-scatter-chart-color-1..4   primary, tertiary, secondary,
 //                                        on-surface-variant
+
+@property --scatter-chart-size {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 1;
+}
 
 @include chart("scatter-chart");
 @include chart-axis("scatter-chart");
@@ -51,7 +58,7 @@
 
 // Partly transparent, so overlapping bubbles still show through.
 .scatter-chart.bubble .scatter-chart-points {
-  stroke-width: calc(var(--md-comp-scatter-chart-bubble-size) * var(--size, 1));
+  stroke-width: calc(var(--md-comp-scatter-chart-bubble-size) * var(--scatter-chart-size));
   stroke-opacity: 0.7;
 }
 
@@ -90,6 +97,12 @@
   box-sizing: border-box;
   background-color: var(--scatter-chart-color);
   translate: -50% -50%;
+}
+
+// Around a bubble, the marker is the bubble's size plus its border.
+.scatter-chart.bubble .scatter-chart-cursor {
+  width: max(14px, calc(var(--md-comp-scatter-chart-bubble-size) * var(--scatter-chart-size) + 4px));
+  height: max(14px, calc(var(--md-comp-scatter-chart-bubble-size) * var(--scatter-chart-size) + 4px));
 }
 
 .scatter-chart-tooltip {

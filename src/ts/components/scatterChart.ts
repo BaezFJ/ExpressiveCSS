@@ -32,6 +32,20 @@ const dots = (marks: Mark[]) => marks.map(({ x, y }) => `M${x},${y}h0`).join('')
 /** A point's row and series column, which update() matches old and new points by. */
 const place = ({ row, series }: Mark) => `${row} ${series.column}`;
 
+/** A CSS time, such as 400ms or 0.4s, in milliseconds. */
+const ms = (time: string) => parseFloat(time) * (time.trim().endsWith('ms') ? 1 : 1000);
+
+/**
+ * Sizes a bubble, and with motion timing grows or shrinks it from its old
+ * point's size. The Web Animations API, since SVG animation cannot reach a
+ * size that CSS computes from a token.
+ */
+function sized(path: SVGElement, size: number, was: Mark | undefined, timing: ReturnType<typeof pace>) {
+  path.style.setProperty('--scatter-chart-size', `${size}`);
+  if (!timing || !was || was.size === size) return;
+  path.animate({ '--scatter-chart-size': [`${was.size}`, `${size}`] }, { duration: ms(timing.dur), easing: `cubic-bezier(${timing.keySplines})` });
+}
+
 /**
  * Scatter chart. It reads its <table> like LineChart, but the first value
  * column is the x axis: each row draws one point per later column, at the
@@ -115,12 +129,14 @@ export class ScatterChart extends LineChart {
   }
 
   /**
-   * Puts the marker on a point and fills the tooltip beside it: the row,
-   * its x header and text, and the series and its text, as the author wrote
-   * them. Past the middle the tooltip opens back over the plot.
+   * Puts the marker on a point, at a bubble's size, and fills the tooltip
+   * beside it: the row, its x header and text, the series and its text, and
+   * with .bubble the size header and text, as the author wrote them. Past
+   * the middle the tooltip opens back over the plot.
    */
-  private _fill({ row, series, x, y }: Mark) {
+  private _fill({ row, series, x, y, size }: Mark) {
     this._cursor.dataset.series = series.color;
+    this._cursor.style.setProperty('--scatter-chart-size', `${size}`);
     for (const part of [this._cursor, this._tooltip]) Object.assign(part.style, { left: `${x}%`, top: `${y}%` });
     this._tooltip.classList.toggle('end', x > 50);
     const span = (text: string) => Object.assign(document.createElement('span'), { textContent: text });
@@ -128,7 +144,16 @@ export class ScatterChart extends LineChart {
     title.textContent = this.labels[row];
     axis.className = 'x';
     name.dataset.series = series.color;
-    this._tooltip.replaceChildren(title, axis, span(this._rows[row].cells[1].textContent.trim()), name, span(series.text[row]));
+    this._tooltip.replaceChildren(title, axis, span(this._rows[row].cells[1].textContent.trim()), name, span(series.text[row]), ...this._sizeText(row, span));
+  }
+
+  /** With .bubble, the size header, without a swatch, and the row's size text. */
+  private _sizeText(row: number, span: (text: string) => HTMLSpanElement) {
+    if (!this._bubble) return [];
+    const last = this._header.length - 1;
+    const header = span(this._header[last].textContent.trim());
+    header.className = 'x';
+    return [header, span(this._rows[row].cells[last]?.textContent.trim() ?? '')];
   }
 
   /** The point nearest the pointer, or -1 with none. */
@@ -234,8 +259,8 @@ export class ScatterChart extends LineChart {
    */
   private _pointPath(marks: Mark[], timing: ReturnType<typeof pace>, was: Map<string, Mark>) {
     const path = svgNode('path', { class: 'scatter-chart-points', d: dots(marks) });
-    if (this._bubble) path.style.setProperty('--size', `${marks[0].size}`);
     if (timing) morph(path, dots(marks.map((mark) => was.get(place(mark)) ?? mark)), timing);
+    if (this._bubble) sized(path, marks[0].size, was.get(place(marks[0])), timing);
     return path;
   }
 
