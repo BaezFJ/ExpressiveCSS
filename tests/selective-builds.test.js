@@ -238,7 +238,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed one tooltip helper for the scatter chart's x and size columns: 91,634 gzip bytes (+4).
   // Reviewed pull-to-refresh: a touch pull from the top, the refresh button, waitUntil() and complete(): 92,325 gzip bytes (+691).
   // Reviewed dropping pull-to-refresh's scroll check on touchstart, which the first move repeats: 92,317 gzip bytes (-8).
-  assert.ok(sizes(js).gzip <= 92317, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed pull-to-refresh review fixes: scrolled-down inner and surrounding scrollers keep the drag, a second finger ends a pull, shadow-safe button lookup: 92,401 gzip bytes (+84).
+  assert.ok(sizes(js).gzip <= 92401, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -388,5 +389,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the registered bubble size property and the marker sized to its bubble: 86,183 gzip bytes (+42).
   // Reviewed room around a bubble chart's plot for the largest radius, with the axis labels moved out: 86,273 gzip bytes (+90).
   // Reviewed pull-to-refresh: the sticky indicator that follows a pull and holds while busy, and contained overscroll: 86,524 gzip bytes (+251).
-  assert.ok(sizes(css).gzip <= 86524, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the pull-to-refresh indicator taking no taps and fading out as it goes back up: 86,534 gzip bytes (+10).
+  assert.ok(sizes(css).gzip <= 86534, `CSS gzip: ${sizes(css).gzip}`);
 });

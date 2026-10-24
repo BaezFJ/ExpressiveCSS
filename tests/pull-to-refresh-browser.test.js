@@ -22,20 +22,37 @@ const html = `<style>${css}</style>
     <button type="button" class="text" data-refresh>Refresh</button>
     <ul>${rows}${rows}${rows}</ul>
   </div>
+  <div class="pull-to-refresh" id="nest" style="width:400px;height:300px;overflow-y:auto">
+    <span class="loading-indicator contained" role="status" aria-label="Refreshing"></span>
+    <button type="button" class="text" data-refresh>Refresh</button>
+    <div id="inner" style="height:200px;overflow-y:auto"><ul>${rows}</ul></div>
+  </div>
+  <main id="pane" style="width:400px;height:300px;overflow-y:auto">
+    <div class="pull-to-refresh" id="inpane">
+      <span class="loading-indicator contained" role="status" aria-label="Refreshing"></span>
+      <button type="button" class="text" data-refresh>Refresh</button>
+      <ul>${rows}</ul>
+    </div>
+  </main>
   <script>${js}</script>
   <script>
     window.refreshes = 0;
+    // Moves the component cancelled, so they did not scroll.
+    window.prevented = 0;
+    document.addEventListener('touchmove', (event) => { if (event.defaultPrevented) window.prevented++; }, { passive: true });
     document.addEventListener('expressive:refresh', (event) => {
       window.refreshes++;
       if (window.onPull) window.onPull(event);
     });
-    // Synthetic touches, for engines without CDP touch input.
-    window.touch = (type, x, y) => {
-      if (type === 'touchstart') window.touchTarget = document.elementFromPoint(x, y);
-      const point = { identifier: 1, clientX: x, clientY: y, target: window.touchTarget };
+    // Synthetic touches, for engines without CDP touch input. \`points\`
+    // are the fingers still down after the event; the first finger's
+    // target receives every event, as a real touch's does.
+    window.touch = (type, points) => {
+      if (type === 'touchstart' && points.length === 1) window.touchTarget = document.elementFromPoint(points[0].x, points[0].y);
+      const touches = points.map(({ x, y }, i) => ({ identifier: i + 1, clientX: x, clientY: y, target: window.touchTarget }));
       const event = new TouchEvent(type, { bubbles: true, cancelable: true });
-      Object.defineProperty(event, 'touches', { value: type === 'touchend' || type === 'touchcancel' ? [] : [point] });
-      Object.defineProperty(event, 'changedTouches', { value: [point] });
+      Object.defineProperty(event, 'touches', { value: touches });
+      Object.defineProperty(event, 'changedTouches', { value: touches.slice(-1) });
       window.touchTarget.dispatchEvent(event);
     };
   </script>`;
@@ -47,13 +64,13 @@ async function open(browser, engine) {
   await page.setContent(html);
   await page.evaluate(() => Expressive.AutoInit());
   const cdp = engine === 'chromium' ? await context.newCDPSession(page) : null;
-  const send = async (type, point) => {
+  /** Sends a touch event with the fingers still down after it: none for an end. */
+  const send = async (type, ...points) => {
     if (cdp) {
       const cdpType = { touchstart: 'touchStart', touchmove: 'touchMove', touchend: 'touchEnd', touchcancel: 'touchCancel' }[type];
-      const ending = type === 'touchend' || type === 'touchcancel';
-      await cdp.send('Input.dispatchTouchEvent', { type: cdpType, touchPoints: ending ? [] : [point] });
+      await cdp.send('Input.dispatchTouchEvent', { type: cdpType, touchPoints: points });
     } else {
-      await page.evaluate(([type, x, y]) => window.touch(type, x, y), [type, point.x, point.y]);
+      await page.evaluate(([type, points]) => window.touch(type, points), [type, points]);
     }
   };
   /** Drags `distance` pixels down (negative is up) from the list's middle, then ends as `end` says. */
@@ -64,7 +81,7 @@ async function open(browser, engine) {
     for (let i = 1; i <= 10; i++) {
       await send('touchmove', { x: from.x + (dx * i) / 10, y: from.y + (distance * i) / 10 });
     }
-    if (end) await send(end, from);
+    if (end) await send(end);
     await page.waitForTimeout(50);
   };
   return { page, pull, send };
@@ -83,6 +100,7 @@ const state = (page, selector = '#list') => page.locator(selector).evaluate((el)
   const indicator = el.querySelector(':scope > .loading-indicator');
   return {
     refreshes: window.refreshes,
+    prevented: window.prevented,
     busy: el.getAttribute('aria-busy'),
     visible: getComputedStyle(indicator).visibility === 'visible',
     overscroll: getComputedStyle(el).overscrollBehaviorY,
@@ -105,6 +123,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await pull(150);
       let now = await state(page);
       assert.equal(now.refreshes, 1, 'one refresh event');
+      assert.ok(now.prevented > 0, 'the pull cancels its moves, so nothing scrolls under it');
       assert.equal(now.visible, true, 'the indicator shows while refreshing');
       assert.equal(now.busy, 'true');
       await page.waitForTimeout(200);
@@ -141,11 +160,13 @@ for (const [engine, browserType, browserTest] of engines) {
       await hidden(page);
       await pull(150, { end: 'touchcancel' });
       await hidden(page);
+      await page.evaluate(() => { window.prevented = 0; });
       await pull(100, { dx: 300 });
       await hidden(page);
 
       await list.evaluate((el) => { el.scrollTop = 200; });
       await pull(150);
+      assert.equal((await state(page)).prevented, 0, 'a drag that is no pull keeps its moves, so it scrolls');
       if (engine === 'chromium') {
         assert.ok(await list.evaluate((el) => el.scrollTop) < 200, 'a real touch scrolls the list back up');
       }
@@ -261,31 +282,158 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 
-  browserTest(`${engine}: destroy() ends a running refresh without an event and stops later pulls`, async () => {
+  browserTest(`${engine}: destroy() undoes a pull in progress and a running refresh, and stops later ones`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
       const { page, pull, send } = await open(browser, engine);
-      await page.evaluate(() => { window.onPull = (event) => event.detail.waitUntil(new Promise(() => {})); });
-      await pull(150);
-      // A second finger mid-pull, so destroy() also has a pull to undo.
-      const box = await page.locator('#list').boundingBox();
-      await send('touchstart', { x: box.x + 200, y: box.y + 60 });
-      await call(page, 'destroy');
-      await send('touchend', { x: box.x + 200, y: box.y + 60 });
-
-      const cleared = await page.locator('#list').evaluate((el) => ({
+      const read = () => page.locator('#list').evaluate((el) => ({
         busy: el.getAttribute('aria-busy'),
         pulling: el.classList.contains('pulling'),
         offset: el.style.getPropertyValue('--pull-to-refresh-offset'),
         progress: el.style.getPropertyValue('--pull-to-refresh-progress'),
-        instance: !!Expressive.PullToRefresh.getInstance(el),
       }));
-      assert.deepEqual(cleared, { busy: null, pulling: false, offset: '', progress: '', instance: false });
+
+      // A finger still down, past the threshold.
+      await pull(150, { end: null });
+      assert.deepEqual(await read(), { busy: null, pulling: true, offset: '64px', progress: '1' });
+      await call(page, 'destroy');
+      assert.deepEqual(await read(), { busy: null, pulling: false, offset: '', progress: '' });
+      await send('touchend');
+      assert.equal((await state(page)).refreshes, 0, 'lifting the finger after destroy() does not refresh');
+
+      // A refresh that never finishes on its own.
+      await page.evaluate(() => {
+        window.onPull = (event) => event.detail.waitUntil(new Promise(() => {}));
+        Expressive.PullToRefresh.init(document.getElementById('list'));
+      });
+      await page.click('#list [data-refresh]');
+      assert.equal((await read()).busy, 'true');
+      await call(page, 'destroy');
+      assert.deepEqual(await read(), { busy: null, pulling: false, offset: '', progress: '' });
+      assert.equal(await page.locator('#list').evaluate((el) => !!Expressive.PullToRefresh.getInstance(el)), false);
       await hidden(page);
 
       await pull(150);
       await page.click('#list [data-refresh]');
       assert.equal((await state(page)).refreshes, 1, 'no event after destroy()');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: a drag that a scroller inside the container or around it can take scrolls it instead of pulling`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { page, pull } = await open(browser, engine);
+
+      // A scrolled-down list inside a container that is at its top.
+      await page.locator('#nest').scrollIntoViewIfNeeded();
+      await page.locator('#inner').evaluate((el) => { el.scrollTop = 100; });
+      await pull(150, { selector: '#inner' });
+      let now = await state(page, '#nest');
+      assert.equal(now.refreshes, 0, 'the inner list takes the drag');
+      assert.equal(now.prevented, 0, 'and scrolls');
+      await page.locator('#inner').evaluate((el) => { el.scrollTop = 0; });
+      await pull(150, { selector: '#inner' });
+      assert.equal((await state(page, '#nest')).refreshes, 1, 'with the inner list at its top, the container pulls');
+      await call(page, 'complete', '#nest');
+
+      // A container that does not scroll, inside a scrolled-down pane.
+      await page.locator('#pane').scrollIntoViewIfNeeded();
+      await page.locator('#pane').evaluate((el) => { el.scrollTop = 200; });
+      await pull(150, { selector: '#pane' });
+      now = await state(page, '#inpane');
+      assert.equal(now.refreshes, 1, 'the pane takes the drag');
+      await page.locator('#pane').evaluate((el) => { el.scrollTop = 0; });
+      await pull(150, { selector: '#pane' });
+      assert.equal((await state(page, '#inpane')).refreshes, 2, 'with the pane at its top, the container pulls');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: a second finger ends a pull`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { page, send } = await open(browser, engine);
+      const box = await page.locator('#list').boundingBox();
+      const finger = (x, y) => ({ x: box.x + x, y: box.y + y });
+      await send('touchstart', finger(150, 60));
+      for (let y = 70; y <= 160; y += 10) await send('touchmove', finger(150, y));
+      assert.equal(await page.locator('#list').evaluate((el) => el.classList.contains('pulling')), true);
+
+      await send('touchstart', finger(150, 160), finger(250, 60));
+      assert.equal(await page.locator('#list').evaluate((el) => el.classList.contains('pulling')), false, 'the pull ends');
+      await page.evaluate(() => { window.prevented = 0; });
+      for (let y = 170; y <= 220; y += 10) await send('touchmove', finger(150, y), finger(250, y - 100));
+      await send('touchend');
+      const now = await state(page);
+      assert.equal(now.refreshes, 0, 'lifting the fingers does not refresh');
+      assert.equal(now.prevented, 0, 'two fingers keep their moves, for a pinch');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: waitUntil() waits for every promise, rejected ones too, and only the running refresh's`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { page } = await open(browser, engine);
+      const busy = () => page.locator('#list').evaluate((el) => el.getAttribute('aria-busy'));
+      await page.evaluate(() => {
+        window.settle = {};
+        const deferred = (name) => new Promise((resolve, reject) => { window.settle[name] = { resolve, reject }; });
+        window.onPull = (event) => {
+          for (const name of window.next) event.detail.waitUntil(deferred(name));
+        };
+        window.next = ['a', 'b'];
+      });
+      await call(page, 'refresh');
+      await page.evaluate(() => window.settle.b.reject(new Error('offline')));
+      assert.equal(await busy(), 'true', 'one promise is still pending');
+      await page.evaluate(() => window.settle.a.resolve());
+      await page.waitForFunction(() => !document.getElementById('list').hasAttribute('aria-busy'));
+
+      // complete() ends a refresh whose promise is still pending; that
+      // promise settling later must not end the next refresh.
+      await page.evaluate(() => { window.next = ['old']; });
+      await call(page, 'refresh');
+      await call(page, 'complete');
+      await page.evaluate(() => { window.next = ['new']; });
+      await call(page, 'refresh');
+      await page.evaluate(() => window.settle.old.resolve());
+      await page.waitForTimeout(50);
+      assert.equal(await busy(), 'true', 'the earlier refresh\'s promise does not end this one');
+      await page.evaluate(() => window.settle.new.resolve());
+      await page.waitForFunction(() => !document.getElementById('list').hasAttribute('aria-busy'));
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: the threshold comes from markup options and onRefresh gets the detail`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { page, pull } = await open(browser, engine);
+      await page.evaluate(() => {
+        const list = document.getElementById('list');
+        Expressive.PullToRefresh.getInstance(list).destroy();
+        list.setAttribute('data-pull-to-refresh-options', '{"threshold": 200}');
+        Expressive.AutoInit();
+      });
+      await pull(150);
+      assert.equal((await state(page)).refreshes, 0, '150px is short of a 200px threshold');
+      await pull(300);
+      assert.equal((await state(page)).refreshes, 1);
+      await call(page, 'complete');
+
+      const got = await page.evaluate(() => new Promise((resolve) => {
+        Expressive.PullToRefresh.init(document.getElementById('list'), {
+          onRefresh(detail) { resolve(typeof detail.waitUntil); },
+        });
+        document.querySelector('#list [data-refresh]').click();
+      }));
+      assert.equal(got, 'function');
     } finally {
       await browser.close();
     }

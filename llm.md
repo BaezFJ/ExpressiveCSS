@@ -3539,7 +3539,7 @@ Refreshes a list or page when a person pulls down at its top, or presses its ref
 
 A `.pull-to-refresh` container holds a `.loading-indicator` as a direct child, a `<button data-refresh>` and the content. `AutoInit()` starts every `.pull-to-refresh`. The container can scroll itself, with `overflow-y: auto` or `scroll`, or sit in a page that scrolls; either way a pull counts only at a scroll position of 0.
 
-A touch pull from the top brings the indicator down with the finger and fades it in. Releasing past the threshold starts a refresh. Releasing short of it, a cancelled touch, and a drag that moves up or sideways first do nothing, and a mouse drag never pulls. The refresh button starts the same refresh, so keyboard, mouse and switch users can refresh without a touch screen.
+A touch pull from the top brings the indicator down with the finger and fades it in. Releasing past the threshold starts a refresh. Releasing short of it, a cancelled touch, a drag that moves up or sideways first, and a second finger do nothing, and a mouse drag never pulls. A drag that a scrolled-down scroller can take, whether inside the container or around it, scrolls that scroller instead. The refresh button starts the same refresh, so keyboard, mouse and switch users can refresh without a touch screen.
 
 A refresh fires `expressive:refresh` from the container and runs `onRefresh`. Both get a `detail` with `waitUntil(promise)`. The indicator stays, and the container has `aria-busy="true"`, until every promise passed to `waitUntil()` settles, fulfilled or rejected, or the page calls `complete()`. Without either, the refresh keeps running. Pulls, button presses and `refresh()` calls during a refresh do nothing.
 
@@ -3588,6 +3588,7 @@ Removes the listeners and ends a running refresh without an event.
 | --- | --- |
 | `--md-comp-pull-to-refresh-indicator-offset` | 16px (where the indicator rests while refreshing) |
 | `--md-comp-pull-to-refresh-motion` | default spatial spring |
+| `--md-comp-pull-to-refresh-motion-duration` | the default spatial spring's duration |
 
 ---
 

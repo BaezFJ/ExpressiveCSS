@@ -2442,7 +2442,7 @@
           "documentedSupport": "A touch pull from a scroll position of 0 past a threshold, a refresh button and refresh() method that start the same refresh, an expressive:refresh event and onRefresh callback whose detail takes waitUntil(), complete(), aria-busy while refreshing, contained overscroll on the container and the page, and containers that scroll themselves or pull the page.",
           "webAdaptation": "Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The author's loading indicator carries the role and name; the script sets only a class, two custom properties and aria-busy.",
           "limitations": [
-            "The pull threshold, waitUntil() and complete(), drags that do nothing, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, screen reader output and forced colors remain unverified. There is no pull from the bottom and no nesting."
+            "The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, screen reader output and forced colors remain unverified. There is no pull from the bottom and no nesting."
           ]
         },
         "relationship": "none",
@@ -2466,17 +2466,17 @@
         "sources": [
           {
             "path": "src/sass/components/_pull-to-refresh.scss",
-            "sha256": "409724702529a4f31972a9d095667020264b8ba40921928c9656605a7b072df5"
+            "sha256": "979254277c2f64ebd489b142b27fc74368dcc8f37765d9745fd535913534ea15"
           },
           {
             "path": "src/ts/components/pullToRefresh.ts",
-            "sha256": "a5de9c7e7c7e935d82f9d3aec31678d6fa31659bccc0ce3880e9b3b1e1636102"
+            "sha256": "1d7de6bd72ab6960b80e1a48b9d43de855b4aa231f288e2b2f6b7b19c7f8f9e9"
           }
         ],
         "gaps": [
           {
             "kind": "verification",
-            "description": "The pull threshold, waitUntil() and complete(), drags that do nothing, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, screen reader output and forced colors remain unverified.",
+            "description": "The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, screen reader output and forced colors remain unverified.",
             "nextStep": "Pull on Chrome and Firefox for Android and Safari on iOS and confirm the browser's own refresh does not run; read a refresh with a screen reader."
           }
         ],

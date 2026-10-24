@@ -93,7 +93,9 @@ document.addEventListener('expressive:refresh', (event) => {
           The container can scroll itself, with <code>overflow-y: auto</code> or
           <code>scroll</code>, or sit in a page that scrolls. Either way, a pull
           counts only at a scroll position of 0, and a drag that moves up or
-          sideways first scrolls as usual. The container has
+          sideways first scrolls as usual. So does a drag that a scrolled-down
+          scroller inside the container, or around it, can take. A second
+          finger ends a pull, so a pinch still zooms. The container has
           <code>overscroll-behavior-y: contain</code>, and so does the page while it
           holds one, so the browser's own pull-to-refresh does not also run. Don't
           nest one <code>.pull-to-refresh</code> inside another.
@@ -131,6 +133,7 @@ refresher.destroy();  // removes listeners and ends a refresh without an event
         <TokenTable>
           <tr><td><code>--md-comp-pull-to-refresh-indicator-offset</code></td><td>16px</td></tr>
           <tr><td><code>--md-comp-pull-to-refresh-motion</code></td><td>default spatial spring</td></tr>
+          <tr><td><code>--md-comp-pull-to-refresh-motion-duration</code></td><td>the default spatial spring's duration</td></tr>
         </TokenTable>
   </Section>
 <script is:inline>

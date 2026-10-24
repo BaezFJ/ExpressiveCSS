@@ -1,4 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
+import { Utils } from '../core/utils';
 
 /** What `expressive:refresh` carries, and what `onRefresh` receives. */
 export interface PullToRefreshDetail {
@@ -26,8 +27,16 @@ const _defaults: PullToRefreshOptions = {
 
 /** Past this the finger was moving, not resting. Hand jitter, in pixels. */
 const SLOP = 4;
-/** `overflow-y` values that give the container its own scroll. */
+/** `overflow-y` values that make an element a scroll container. */
 const SCROLLING = new Set(['auto', 'scroll']);
+
+/**
+ * Whether the walk up from a touch stops at `node`: a scroll container that
+ * is scrolled down, so a downward drag scrolls it, or the one that holds the
+ * pull-to-refresh container, which decides on its own.
+ */
+const stopsAt = (node: Element, el: Element) =>
+  SCROLLING.has(getComputedStyle(node).overflowY) && (node.scrollTop > 0 || node.contains(el));
 
 /**
  * Pull-to-refresh. A touch pull down from the top of the container, or a
@@ -36,13 +45,14 @@ const SCROLLING = new Set(['auto', 'scroll']);
  *
  * Touch events rather than pointer events: a pointer drag the browser takes
  * for a pan ends in `pointercancel`, and Safari has no directional
- * `touch-action` to keep a downward pull from it. Browsers fire touch events
- * for a stylus and never for a mouse.
+ * `touch-action` to keep a downward pull from it. A mouse never fires touch
+ * events; a stylus does where the browser reports it as touch, as Safari on
+ * iPadOS does.
  */
 export class PullToRefresh extends Component<PullToRefreshOptions> {
   static key = 'Expressive_PullToRefresh';
-  /** Where the finger went down, while it may still become a pull. */
-  private _start: { x: number; y: number } | null = null;
+  /** Where the finger went down and on what, while it may still become a pull. */
+  private _start: { x: number; y: number; target: Element | null } | null = null;
   private _pulling = false;
   private _travel = 0;
   /** The running refresh. A new object each time, so a promise from an earlier one cannot end it. */
@@ -93,16 +103,23 @@ export class PullToRefresh extends Component<PullToRefreshOptions> {
     super.destroy();
   }
 
-  /** The scroll position of the container, or of the page when the container does not scroll. */
-  private _scrollTop() {
-    const scrolls = SCROLLING.has(getComputedStyle(this.el).overflowY);
-    return (scrolls ? this.el : this.el.ownerDocument.scrollingElement!).scrollTop;
+  /**
+   * Whether a downward drag from `target` would scroll something instead: a
+   * scrolled-down scroller inside the container, the container itself, or
+   * the scroller it sits in, which is the page when no ancestor scrolls.
+   */
+  private _canScrollUp(target: Element | null) {
+    let node = target;
+    while (node && !stopsAt(node, this.el)) node = node.parentElement;
+    return (node ?? this.el.ownerDocument.scrollingElement!).scrollTop > 0;
   }
 
   private _onStart = (event: TouchEvent) => {
-    if (this._refresh || event.touches.length !== 1) return;
+    if (this._refresh) return;
+    // A second finger is a pinch or a mistake, not a pull.
+    if (event.touches.length !== 1) return this._endPull();
     const { clientX, clientY } = event.touches[0];
-    this._start = { x: clientX, y: clientY };
+    this._start = { x: clientX, y: clientY, target: Utils.eventTarget(event) };
   };
 
   private _onMove = (event: TouchEvent) => {
@@ -116,7 +133,7 @@ export class PullToRefresh extends Component<PullToRefreshOptions> {
   /** Pulls once the finger moves down, or leaves the touch to scrolling when it moves another way first. */
   private _decide(dx: number, dy: number) {
     if (Math.max(Math.abs(dx), Math.abs(dy)) <= SLOP) return;
-    if (dy > Math.abs(dx) && this._scrollTop() <= 0) this._pulling = true;
+    if (dy > Math.abs(dx) && !this._canScrollUp(this._start!.target)) this._pulling = true;
     else this._start = null;
   }
 
@@ -146,7 +163,7 @@ export class PullToRefresh extends Component<PullToRefreshOptions> {
   };
 
   private _onClick = (event: MouseEvent) => {
-    const button = (event.target as Element).closest('[data-refresh]');
+    const button = Utils.eventTarget(event)?.closest('[data-refresh]');
     if (button && this.el.contains(button)) this.refresh();
   };
 }
