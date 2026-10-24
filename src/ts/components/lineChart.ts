@@ -248,7 +248,7 @@ export interface Series {
  * one number. Anything else, such as "(1,200)" or "3–5", is a gap rather
  * than a guess.
  */
-function cellValue(cell: Element | undefined): number | null {
+export function cellValue(cell: Element | undefined): number | null {
   if (!cell) return null;
   return numberValue((cell as HTMLElement).dataset.value ?? cell.textContent);
 }
@@ -271,7 +271,7 @@ export function signs(text: string): [string, string] {
 }
 
 /** The signs around the first value a column spells out in its text. */
-function affix(cells: (Element | undefined)[]): [string, string] {
+export function affix(cells: (Element | undefined)[]): [string, string] {
   const cell = cells.find((each) => !(each as HTMLElement)?.dataset.value && cellValue(each) !== null);
   return signs(cell?.textContent.trim() ?? '');
 }
@@ -353,6 +353,11 @@ export class LineChart extends Component<LineChartOptions> {
   /** The class prefix of the generated parts; ColumnChart reuses this class. */
   protected get _type() {
     return 'line-chart';
+  }
+
+  /** The column the series start at; a scatter chart's first value column is its x axis. */
+  protected get _seriesFrom() {
+    return 1;
   }
 
   /** Whether the y axis always includes zero, as columns grow from it. */
@@ -552,19 +557,20 @@ export class LineChart extends Component<LineChartOptions> {
       .filter((row) => row !== headerRow);
     [this._header, this._rows] = [header, rows];
     this.labels = rows.map((row) => row.cells[0]?.textContent.trim() ?? '');
-    this.series = header.slice(1).map((cell, i) => {
-      const values = rows.map((row) => cellValue(row.cells[i + 1]));
+    const from = this._seriesFrom;
+    this.series = header.slice(from).map((cell, i) => {
+      const values = rows.map((row) => cellValue(row.cells[i + from]));
       return {
         name: cell.textContent.trim(),
         className: cell.className,
-        column: i + 1,
+        column: i + from,
         color: seriesColor(i),
-        text: rows.map((row) => row.cells[i + 1]?.textContent.trim() ?? ''),
+        text: rows.map((row) => row.cells[i + from]?.textContent.trim() ?? ''),
         values,
         tops: values,
         y: undefined,
         scale: undefined,
-        affix: affix(rows.map((row) => row.cells[i + 1]))
+        affix: affix(rows.map((row) => row.cells[i + from]))
       };
     });
     this._all = this.series;

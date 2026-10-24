@@ -27,6 +27,7 @@ export { HeatmapChart } from "./heatmapChart";
 export { RadarChart } from "./radarChart";
 export { RadialChart } from "./radialChart";
 export { MixedChart } from "./mixedChart";
+export { ScatterChart } from "./scatterChart";
 export { Datepicker } from "./datepicker";
 export { Menu } from "./menu";
 export { Menubar } from "./menubar";

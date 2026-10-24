@@ -1,0 +1,45 @@
+@use "../abstracts" as *;
+
+// Scatter chart. A <figure class="scatter-chart"> holds a <figcaption> and a
+// <table> of data: the first column labels each row, the second is the x
+// axis, and each further column is a series named by its header cell.
+// Without JavaScript the table shows. ScatterChart draws each row as one
+// point per series and hides the table visually, so a screen reader still
+// reads the data as a table. The plot, tooltip and legend come from chart().
+//
+// The SVG stretches to the plot (preserveAspectRatio="none"), and points are
+// round caps on zero-length lines with a non-scaling stroke, so they stay
+// round at any size.
+//
+// Modifiers: .axis labels both axes at round values with grid lines, and
+// .toggle makes each legend item a button that shows or hides its series.
+//
+// Tokens:
+//   --md-comp-scatter-chart-height       240px
+//   --md-comp-scatter-chart-point-size   8px
+//   --md-comp-scatter-chart-grid-color   outline-variant
+//   --md-comp-scatter-chart-color-1..4   primary, tertiary, secondary,
+//                                        on-surface-variant
+
+@include chart("scatter-chart");
+@include chart-axis("scatter-chart");
+
+.scatter-chart {
+  --md-comp-scatter-chart-point-size: 8px;
+}
+
+.scatter-chart-plot > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.scatter-chart-points {
+  fill: none;
+  stroke: var(--scatter-chart-color);
+  stroke-width: var(--md-comp-scatter-chart-point-size);
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
