@@ -151,6 +151,82 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 
+  browserTest(`${engine}: scatter chart arrow keys step through the points in table order`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+      const plot = page.locator('#ltr .scatter-chart-plot');
+      const tooltip = page.locator('#ltr .scatter-chart-tooltip');
+      const text = async () => (await tooltip.isVisible()) ? (await tooltip.innerText()).replace(/\s+/g, ' ').trim() : null;
+
+      // Keyboard focus, as Tab gives it, shows the first point.
+      await plot.focus();
+      await page.keyboard.press('Tab');
+      await page.keyboard.press('Shift+Tab');
+      assert.equal(await text(), 'Civic Weight (kg) 1300 City 31');
+      await page.keyboard.press('ArrowRight');
+      assert.equal(await text(), 'Civic Weight (kg) 1300 Highway 40', 'a row\'s next series comes before the next row');
+      await page.keyboard.press('ArrowDown');
+      assert.equal(await text(), 'Corolla Weight (kg) 1400 City 32');
+      await page.keyboard.press('End');
+      assert.equal(await text(), 'Tahoe Weight (kg) 2600 Highway 20');
+      await page.keyboard.press('ArrowRight');
+      assert.equal(await text(), 'Tahoe Weight (kg) 2600 Highway 20', 'the last point stays');
+      await page.keyboard.press('Home');
+      await page.keyboard.press('ArrowLeft');
+      assert.equal(await text(), 'Civic Weight (kg) 1300 City 31', 'the first point stays');
+      assert.equal(await tooltip.getAttribute('aria-live'), 'polite');
+      await page.keyboard.press('Escape');
+      assert.equal(await text(), null);
+      assert.equal(await page.locator('#ltr .scatter-chart-cursor').isVisible(), false, 'Escape hides the marker too');
+
+      // In the chart with gaps, the keys skip the points it leaves out.
+      const gaps = await page.locator('#gaps').evaluate((el) => {
+        const chart = Expressive.ScatterChart.getInstance(el);
+        const seen = [];
+        for (let i = 0; i < 6; i++) {
+          chart.show(i);
+          seen.push(el.querySelector('.scatter-chart-tooltip').hidden ? null : el.querySelector('.scatter-chart-tooltip strong').textContent);
+        }
+        return seen;
+      });
+      assert.deepEqual(gaps, ['Civic', 'Civic', 'Camry', 'Tahoe', 'Tahoe', null]);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: scatter chart pointer highlights the nearest point`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+      for (const id of ['#ltr', '#rtl']) {
+        await page.locator(id).scrollIntoViewIfNeeded();
+        const [, highway] = await placed(page, id, [values(2), values(3)]);
+        const [x, y] = highway.drawn[2];
+        await page.mouse.move(x + 2, y);
+        const tooltip = page.locator(`${id} .scatter-chart-tooltip`);
+        assert.equal((await tooltip.innerText()).replace(/\s+/g, ' ').trim(), 'Camry Weight (kg) 1600 Highway 39', id);
+        const marker = await page.locator(`${id} .scatter-chart-cursor`).evaluate((el) => {
+          const box = el.getBoundingClientRect();
+          return [box.left + box.width / 2, box.top + box.height / 2, el.dataset.series, el.hidden];
+        });
+        assert.ok(Math.abs(marker[0] - x) <= 1 && Math.abs(marker[1] - y) <= 1, `${id}: the marker sits on the point`);
+        assert.deepEqual(marker.slice(2), ['2', false], `${id}: the marker takes the series color`);
+        await page.mouse.move(0, 0);
+        assert.equal(await tooltip.isVisible(), false, `${id}: leaving the plot hides the tooltip`);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: scatter chart leaves out a row without x and a cell without y`, async () => {
     const browser = await leaseBrowser(browserType);
     const errors = [];

@@ -67,7 +67,60 @@ export class ScatterChart extends LineChart {
     }
   }
 
+  protected get _count() {
+    return this._marks?.length ?? 0;
+  }
+
+  /** Highlights one point, numbered as `_marks` lists them. Pass -1 to hide the tooltip. */
+  show(index: number) {
+    if (!this._tooltip || index === this.activeIndex) return;
+    this.activeIndex = index;
+    const mark = this._marks[index];
+    this._cursor.hidden = this._tooltip.hidden = !mark;
+    if (mark) this._fill(mark);
+  }
+
+  /**
+   * Puts the marker on a point and fills the tooltip beside it: the row,
+   * its x header and text, and the series and its text, as the author wrote
+   * them. Past the middle the tooltip opens back over the plot.
+   */
+  private _fill({ row, series, x, y }: Mark) {
+    this._cursor.dataset.series = series.color;
+    for (const part of [this._cursor, this._tooltip]) Object.assign(part.style, { left: `${x}%`, top: `${y}%` });
+    this._tooltip.classList.toggle('end', x > 50);
+    const span = (text: string) => Object.assign(document.createElement('span'), { textContent: text });
+    const [title, axis, name] = [document.createElement('strong'), span(this._header[1].textContent.trim()), span(series.name)];
+    title.textContent = this.labels[row];
+    axis.className = 'x';
+    name.dataset.series = series.color;
+    this._tooltip.replaceChildren(title, axis, span(this._rows[row].cells[1].textContent.trim()), name, span(series.text[row]));
+  }
+
+  /** The point nearest the pointer, or -1 with none. */
+  protected _indexAt(e: PointerEvent) {
+    const [plot, box] = [this._plot, this._plot.getBoundingClientRect()];
+    const away = ({ x, y }: Mark) => Math.hypot(
+      box.left + plot.clientLeft + (x / 100) * plot.clientWidth - e.clientX,
+      box.top + plot.clientTop + (y / 100) * plot.clientHeight - e.clientY);
+    return this._marks.reduce((nearest, mark, i) => (nearest < 0 || away(mark) < away(this._marks[nearest]) ? i : nearest), -1);
+  }
+
+  /**
+   * Steps through the points in table order. The arrows keep their meaning
+   * in a right-to-left chart, since table order is no direction on screen.
+   */
+  protected _keyTarget(key: string): number | undefined {
+    // With nothing shown, Escape is left to a dialog or sheet around the chart.
+    if (key === 'Escape') return this.activeIndex < 0 ? undefined : -1;
+    const last = this._marks.length - 1;
+    const step = ({ ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>)[key];
+    if (step) return Math.min(last, Math.max(0, this.activeIndex + step));
+    return ({ Home: 0, End: last } as Record<string, number>)[key];
+  }
+
   protected _read() {
+    this._marks = [];
     super._read();
     if (!this.series.length) return;
     this._xFit = this._xScale();

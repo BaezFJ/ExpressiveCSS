@@ -68,3 +68,34 @@
     translate: -50% 0;
   }
 }
+
+// The highlighted point's marker, and the tooltip level with it.
+.scatter-chart-cursor {
+  inset-block: auto;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--md-sys-color-surface);
+  border-radius: 50%;
+  box-sizing: border-box;
+  background-color: var(--scatter-chart-color);
+  translate: -50% -50%;
+}
+
+.scatter-chart-tooltip {
+  translate: 12px -50%;
+
+  &.end {
+    translate: calc(-100% - 12px) -50%;
+  }
+
+  // The x header names the axis, not a series, so it has no swatch.
+  > span.x::before {
+    content: none;
+  }
+}
+
+@media (forced-colors: active) {
+  .scatter-chart-cursor {
+    forced-color-adjust: none;
+  }
+}
