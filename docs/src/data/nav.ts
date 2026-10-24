@@ -478,6 +478,13 @@ export const NAV: DocsGroup[] = [
           "Columns, lines and areas together from one data table, with a second scale for values in other units.",
       },
       {
+        id: "scatter-chart",
+        label: "Scatter chart",
+        route: "/scatter-chart.html",
+        description:
+          "One measure plotted against another, with a point for each row.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",

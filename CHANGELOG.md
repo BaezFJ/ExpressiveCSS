@@ -231,6 +231,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   scrolls the selected tab into view, without scrolling the page, and with
   no `.active` tab or matching hash the first enabled tab is selected rather
   than a disabled first one.
+- Scatter chart. A `<figure class="scatter-chart">` plots each table row
+  as one point per series: the second column holds the x value, and each
+  further column is a series of y values. `data-x-min` and `data-x-max`, or
+  the `xMin` and `xMax` options, fix the x scale, and `axis` labels both
+  scales. The plot is one Tab stop whose arrow keys step through the points
+  in table order, and it takes `update()`, `data-watch` and a `toggle`
+  legend like the other charts. A new semantics rule asks for a `<figure>`
+  with a `<table>` and a `<figcaption>`.
 
 - A `data-draggable` map marker moves without a drag (WCAG 2.5.7). A tap
   picks it up and sets `aria-pressed`, and the next tap on the map drops it
