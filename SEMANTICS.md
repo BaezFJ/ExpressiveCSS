@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**95 of 95 rows enforced; 0 remaining.**
+**96 of 96 rows enforced; 0 remaining.**
 
-90 of those rows are components - a part of the framework an author writes markup for.
+91 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 90 components declare conformance debt.**
+**2 of 91 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -1178,6 +1178,16 @@ Added with the stepper component. The ordered list carries the step count and po
 - **stepper-current-is-a-step** - Mark the current step with aria-current="step". "page" or "true" tells assistive technology something else.
 - **stepper-has-one-current-step** - Only one step is current. Mark finished steps with .complete instead.
 - **stepper-step-is-not-error-colored** - Mark a step that needs attention with .invalid. .error is the error color utility: it paints the whole step red and is not spoken.
+
+### swipe-actions
+
+Added with the swipe actions component. A touch swipe, the row's [data-swipe-toggle] button and focus on an action all open the same row, so people who cannot swipe use the toggle or the keyboard. The action buttons are named in markup and stay in the accessibility tree while the row is closed; the script keeps aria-expanded on the toggle in step with the row.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `swipeable-rows-open-without-swiping` | forbid | `.swipeable > li:has(> .swipe-actions):not(:has([data-swipe-toggle]))` | must not match |
+
+- **swipeable-rows-open-without-swiping** - Give each .swipeable row with .swipe-actions a [data-swipe-toggle] button. Swiping is a path-based gesture; the toggle is the single-pointer alternative WCAG 2.5.1 requires, and focus on an action opens the row for keyboard users.
 
 ### tabs
 

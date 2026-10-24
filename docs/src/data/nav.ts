@@ -386,6 +386,13 @@ export const NAV: DocsGroup[] = [
           "Refreshes a list or page when a person pulls down at its top, or presses its refresh button.",
       },
       {
+        id: "swipe-actions",
+        label: "Swipe actions",
+        route: "/swipe-actions.html",
+        description:
+          "Reveals a list row's actions when a person swipes it sideways, or presses its actions button.",
+      },
+      {
         id: "accordion",
         label: "Accordion",
         route: "/accordion.html",

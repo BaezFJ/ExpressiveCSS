@@ -126,6 +126,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<div class="pull-to-refresh"><span class="loading-indicator contained" role="status" aria-label="Refreshing"></span><button type="button" class="text" data-refresh>Refresh</button><ul><li>Row</li></ul></div>`,
   },
   {
+    name: "SwipeActions",
+    selector: ".list.swipeable",
+    html: `<ul class="list swipeable" aria-label="Inbox"><li>Message<button type="button" class="icon-button" data-swipe-toggle aria-label="Actions for Message"><span class="material-symbols" aria-hidden="true">more_horiz</span></button><span class="swipe-actions"><button type="button" class="icon-button" aria-label="Archive Message"><span class="material-symbols" aria-hidden="true">archive</span></button></span></li></ul>`,
+  },
+  {
     name: "CommandPalette",
     selector: "dialog.command-palette",
     html: `<dialog class="command-palette" aria-label="Commands"><input type="search" aria-label="Search commands"><ul><li><button type="button">New file</button></li></ul></dialog>`,

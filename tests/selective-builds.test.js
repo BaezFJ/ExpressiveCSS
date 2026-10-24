@@ -240,7 +240,10 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed dropping pull-to-refresh's scroll check on touchstart, which the first move repeats: 92,317 gzip bytes (-8).
   // Reviewed pull-to-refresh review fixes: scrolled-down inner and surrounding scrollers keep the drag, a second finger ends a pull, shadow-safe button lookup: 92,401 gzip bytes (+84).
   // Reviewed the pull-to-refresh status region and i18n, the guard for a throwing onRefresh, rejections passed on and the threshold check: 92,556 gzip bytes (+155).
-  assert.ok(sizes(js).gzip <= 92556, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed swipe actions: a touch swipe that reveals a row's actions, the toggle, focus and Escape, one open row: 93,575 gzip bytes (+1,019).
+  // Reviewed swipe actions destroy() also putting back a row part-way through a swipe: 93,590 gzip bytes (+15).
+  // Reviewed swipe actions closing a row whose action removed it from the list at once: 93,587 gzip bytes (-3).
+  assert.ok(sizes(js).gzip <= 93587, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -392,5 +395,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed pull-to-refresh: the sticky indicator that follows a pull and holds while busy, and contained overscroll: 86,524 gzip bytes (+251).
   // Reviewed the pull-to-refresh indicator taking no taps and fading out as it goes back up: 86,534 gzip bytes (+10).
   // Reviewed the visually hidden pull-to-refresh status region: 86,567 gzip bytes (+33).
-  assert.ok(sizes(css).gzip <= 86567, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed swipe actions: the clipped list, the sliding row, the trailing toggle and the actions past the row's end: 86,736 gzip bytes (+169).
+  assert.ok(sizes(css).gzip <= 86736, `CSS gzip: ${sizes(css).gzip}`);
 });

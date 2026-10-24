@@ -242,6 +242,7 @@ function unmount() {
             <tr><td><code>Menu</code></td><td><code>.menu-trigger</code></td></tr>
             <tr><td><code>MessageScroller</code></td><td><code>.message-scroller</code></td></tr>
             <tr><td><code>PullToRefresh</code></td><td><code>.pull-to-refresh</code></td></tr>
+            <tr><td><code>SwipeActions</code></td><td><code>.list.swipeable</code></td></tr>
             <tr><td><code>Lightbox</code></td><td><code>.lightboxed</code></td></tr>
             <tr><td><code>NavigationRail</code></td><td><code>.navigation-rail</code></td></tr>
             <tr><td><code>ScrollSpy</code></td><td><code>.scrollspy</code></td></tr>
@@ -312,6 +313,7 @@ document.addEventListener('expressive:open', (event) => {
             <tr><td><code>expressive:action</code>, <code>expressive:closed</code></td><td>Snackbar</td><td>none</td></tr>
             <tr><td><code>expressive:copy</code></td><td>Copy buttons</td><td><code>{"{ text, copied }"}</code></td></tr>
             <tr><td><code>expressive:refresh</code></td><td>Pull-to-refresh</td><td><code>{"{ waitUntil }"}</code></td></tr>
+            <tr><td><code>expressive:swipetoggle</code></td><td>Swipe actions</td><td><code>{"{ row, open }"}</code></td></tr>
             <tr><td><code>expressive:change</code>, <code>expressive:sort</code></td><td>Data tables, from the wrapper</td><td><code>{"{ selected }"}</code>, <code>{"{ header, column, direction }"}</code>; <code>sort</code> is cancelable</td></tr>
           </tbody>
         </table>

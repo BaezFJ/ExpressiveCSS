@@ -256,6 +256,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `overscroll-behavior-y: contain`, so the browser's own pull-to-refresh
   stops. New semantics rules
   ask for the button and a direct `.loading-indicator` child.
+- Swipe actions. In a `.list.swipeable`, a touch swipe toward a row's
+  inline start slides it and reveals its `.swipe-actions` buttons. A swipe
+  only reveals; nothing runs until a person presses an action. The row's
+  `<button data-swipe-toggle>` opens and closes it without a swipe, focus
+  on an action opens its row, and Escape, a tap outside or an action closes
+  it. One row is open at a time. Each change fires `expressive:swipetoggle`
+  with `{ row, open }` and runs `onToggle`; `open(row)` and `close()` work
+  from script. A new semantics rule asks for the toggle in every row with
+  actions.
 
 - A `data-draggable` map marker moves without a drag (WCAG 2.5.7). A tap
   picks it up and sets `aria-pressed`, and the next tap on the map drops it

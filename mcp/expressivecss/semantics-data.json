@@ -2069,6 +2069,18 @@
         "note": "Swept 0.8.0. Generated markup: role=\"status\" and the labelled dismiss button are checked at runtime in tests/forms-generated.test.js and teardown.test.js.",
         "rules": []
       },
+      "swipe-actions": {
+        "status": "enforced",
+        "note": "Added with the swipe actions component. A touch swipe, the row's [data-swipe-toggle] button and focus on an action all open the same row, so people who cannot swipe use the toggle or the keyboard. The action buttons are named in markup and stay in the accessibility tree while the row is closed; the script keeps aria-expanded on the toggle in step with the row.",
+        "rules": [
+          {
+            "id": "swipeable-rows-open-without-swiping",
+            "kind": "forbid",
+            "selector": ".swipeable > li:has(> .swipe-actions):not(:has([data-swipe-toggle]))",
+            "message": "Give each .swipeable row with .swipe-actions a [data-swipe-toggle] button. Swiping is a path-based gesture; the toggle is the single-pointer alternative WCAG 2.5.1 requires, and focus on an action opens the row for keyboard users."
+          }
+        ]
+      },
       "tabs": {
         "status": "enforced",
         "note": "Swept 0.8.0. Anchor navigation by default: Left, Right, Home and End move focus between the links as a shortcut, each link stays a Tab stop, and aria-current marks the one shown. A strip the page writes as role=\"tablist\", with role=\"tab\" links that name their panel in aria-controls, takes the ARIA tabs pattern instead - the component keeps aria-selected and a roving tabindex, and the arrow keys select as they move. The roles are the author's; the keyboard model and the state are the component's, implemented and tested, so rule 2 allows the role.",
