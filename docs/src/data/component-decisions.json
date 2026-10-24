@@ -2470,7 +2470,7 @@
           },
           {
             "path": "src/ts/components/pullToRefresh.ts",
-            "sha256": "20bb63e7c7d7c1f1edbfaaae1f73f59e0df5f96f00dcd630a771e65a529eecf4"
+            "sha256": "861006bffd5074cca9a5f34f0b75ac01d2490b77e35d6a63c12718846807ebba"
           }
         ],
         "gaps": [

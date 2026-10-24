@@ -40,6 +40,9 @@ const _defaults: PullToRefreshOptions = {
   }
 };
 
+/** One refresh, with how many `waitUntil()` promises it still waits for. */
+type Run = { pending: number };
+
 /** Past this the finger was moving, not resting. Hand jitter, in pixels. */
 const SLOP = 4;
 /** `overflow-y` values that make an element a scroll container. */
@@ -71,7 +74,7 @@ export class PullToRefresh extends Component<PullToRefreshOptions> {
   private _pulling = false;
   private _travel = 0;
   /** The running refresh. A new object each time, so a promise from an earlier one cannot end it. */
-  private _refresh: { pending: number } | null = null;
+  private _refresh: Run | null = null;
   /**
    * Announces the start and the finish. The author's indicator cannot: it is
    * hidden once the refresh ends, which would drop the finish.
@@ -87,8 +90,8 @@ export class PullToRefresh extends Component<PullToRefreshOptions> {
     this._status.setAttribute('role', 'status');
     el.append(this._status);
     const signal = this._events.signal;
-    // Not passive: a pull cancels the move so the container does not also scroll.
     el.addEventListener('touchstart', this._onStart, { passive: true, signal });
+    // Not passive: a pull cancels the move so the container does not also scroll.
     el.addEventListener('touchmove', this._onMove, { passive: false, signal });
     el.addEventListener('touchend', this._onEnd, { signal });
     el.addEventListener('touchcancel', this._endPull, { signal });
@@ -102,7 +105,7 @@ export class PullToRefresh extends Component<PullToRefreshOptions> {
   /** Starts a refresh, as a pull or the refresh button does. Does nothing while one runs. */
   refresh() {
     if (this._refresh || PullToRefresh.getInstance(this.el) !== this) return;
-    const run = { pending: 0 };
+    const run: Run = { pending: 0 };
     this._refresh = run;
     this.el.setAttribute('aria-busy', 'true');
     this._status.textContent = this.options.i18n.refreshing;
@@ -117,7 +120,7 @@ export class PullToRefresh extends Component<PullToRefreshOptions> {
         Promise.resolve(promise).finally(settle);
       }
     };
-    this._announce(run, detail);
+    this._fireRefresh(run, detail);
   }
 
   /** Ends the running refresh: the indicator hides, `aria-busy` goes and the finish is announced. */
@@ -138,7 +141,7 @@ export class PullToRefresh extends Component<PullToRefreshOptions> {
    * Runs `onRefresh` and fires the event. A callback that throws ends the
    * refresh it started, so later pulls still work, and the error still reaches the page.
    */
-  private _announce(run: { pending: number }, detail: PullToRefreshDetail) {
+  private _fireRefresh(run: Run, detail: PullToRefreshDetail) {
     try {
       this._notify('refresh', this.options.onRefresh, { args: [detail], detail });
     } catch (error) {
@@ -161,7 +164,10 @@ export class PullToRefresh extends Component<PullToRefreshOptions> {
   private _onStart = (event: TouchEvent) => {
     if (this._refresh) return;
     // A second finger is a pinch or a mistake, not a pull.
-    if (event.touches.length !== 1) return this._endPull();
+    if (event.touches.length !== 1) {
+      this._endPull();
+      return;
+    }
     const { clientX, clientY } = event.touches[0];
     this._start = { x: clientX, y: clientY, target: Utils.eventTarget(event) };
   };
@@ -169,15 +175,16 @@ export class PullToRefresh extends Component<PullToRefreshOptions> {
   private _onMove = (event: TouchEvent) => {
     if (!this._start) return;
     const { clientX, clientY } = event.touches[0];
-    const [dx, dy] = [clientX - this._start.x, clientY - this._start.y];
-    if (!this._pulling) this._decide(dx, dy);
+    const dx = clientX - this._start.x;
+    const dy = clientY - this._start.y;
+    if (!this._pulling) this._decide(dx, dy, this._start.target);
     if (this._pulling) this._drag(event, dy);
   };
 
   /** Pulls once the finger moves down, or leaves the touch to scrolling when it moves another way first. */
-  private _decide(dx: number, dy: number) {
+  private _decide(dx: number, dy: number, target: Element | null) {
     if (Math.max(Math.abs(dx), Math.abs(dy)) <= SLOP) return;
-    if (dy > Math.abs(dx) && !this._canScrollUp(this._start!.target)) this._pulling = true;
+    if (dy > Math.abs(dx) && !this._canScrollUp(target)) this._pulling = true;
     else this._start = null;
   }
 
