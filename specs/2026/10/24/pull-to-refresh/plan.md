@@ -10,12 +10,12 @@ Outcome: a touch pull at the top of a `.pull-to-refresh` container fires one eve
 
 Prerequisites: none.
 
-- [ ] Write V1 in a new `tests/pull-to-refresh-browser.test.js`, with CDP touch input in Chromium and dispatched touch events in Firefox and WebKit. Run `npm run build` and the file, and confirm V1 fails.
-- [ ] Add `src/ts/components/pullToRefresh.ts` with the `threshold` and `onRefresh` options, `waitUntil()` on the event detail, and `complete()`. Export it from `components/index.ts` and register it in `components/registry.ts`.
-- [ ] Add `src/sass/components/_pull-to-refresh.scss` with the indicator position, its return transition and `overscroll-behavior-y: contain`, and forward it from `src/sass/components/_index.scss`.
-- [ ] Add the `pull-to-refresh` row to `semantics.json`, the `tests/fixtures.js` entry and the `AUTO_INIT_FIXTURES.length` count in `tests/autoinit.test.js`. Run `npm run build:semantics`.
-- [ ] Add `PullToRefresh` to both registry tables in `llm.md` and to `docs/src/pages/auto-init.astro`, which the docs test requires of every registered component, and run `npm run build:skill`.
-- [ ] Rebuild and rerun until V1 passes in all three engines. Add the reviewed JavaScript and CSS budget lines.
+- [x] Write V1 in a new `tests/pull-to-refresh-browser.test.js`, with CDP touch input in Chromium and dispatched touch events in Firefox and WebKit. Run `npm run build` and the file, and confirm V1 fails.
+- [x] Add `src/ts/components/pullToRefresh.ts` with the `threshold` and `onRefresh` options, `waitUntil()` on the event detail, and `complete()`. Export it from `components/index.ts` and register it in `components/registry.ts`.
+- [x] Add `src/sass/components/_pull-to-refresh.scss` with the indicator position, its return transition and `overscroll-behavior-y: contain`, and forward it from `src/sass/components/_index.scss`.
+- [x] Add the `pull-to-refresh` row to `semantics.json`, the `tests/fixtures.js` entry and the `AUTO_INIT_FIXTURES.length` count in `tests/autoinit.test.js`. Run `npm run build:semantics`.
+- [x] Add `PullToRefresh` to both registry tables in `llm.md` and to `docs/src/pages/auto-init.astro`, which the docs test requires of every registered component, and run `npm run build:skill`.
+- [x] Rebuild and rerun until V1 passes in all three engines. Add the reviewed JavaScript and CSS budget lines.
 
 Completion check: V1 passes in Chromium, Firefox and WebKit, and `node --test tests/selective-builds.test.js tests/autoinit.test.js` passes.
 

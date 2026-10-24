@@ -121,6 +121,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<div class="message-scroller"><div class="message-scroller-viewport" role="log" aria-label="Conversation" tabindex="0"><div class="message"><p class="message-bubble">Hi</p></div></div></div>`,
   },
   {
+    name: "PullToRefresh",
+    selector: ".pull-to-refresh",
+    html: `<div class="pull-to-refresh"><span class="loading-indicator contained" role="status" aria-label="Refreshing"></span><button type="button" class="btn text" data-refresh>Refresh</button><ul><li>Row</li></ul></div>`,
+  },
+  {
     name: "CommandPalette",
     selector: "dialog.command-palette",
     html: `<dialog class="command-palette" aria-label="Commands"><input type="search" aria-label="Search commands"><ul><li><button type="button">New file</button></li></ul></dialog>`,

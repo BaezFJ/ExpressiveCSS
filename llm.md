@@ -351,6 +351,7 @@ function unmount() {
 | `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
 | `MessageScroller` | `.message-scroller` |
+| `PullToRefresh` | `.pull-to-refresh` |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
@@ -5865,6 +5866,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
 | `MessageScroller` | `.message-scroller` |
+| `PullToRefresh` | `.pull-to-refresh` |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
