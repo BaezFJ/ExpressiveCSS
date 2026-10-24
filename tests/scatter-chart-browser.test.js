@@ -6,15 +6,18 @@ import { leaseBrowser, engines } from './browser.js';
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 
-// Car, weight, then two y series.
-const cars = [['Civic', '1300', '31', '40'], ['Corolla', '1400', '32', '41'], ['Camry', '1600', '28', '39'], ['Tahoe', '2600', '15', '20']];
-const chart = (attrs, rows) => `<figure ${attrs}>
-  <figcaption>Fuel economy</figcaption>
+/** A chart figure: its caption, a header row, and body rows that each start with a label. */
+const figure = (attrs, caption, headers, rows) => `<figure ${attrs}>
+  <figcaption>${caption}</figcaption>
   <table>
-    <thead><tr><th>Car</th><th>Weight (kg)</th><th>City</th><th>Highway</th></tr></thead>
+    <thead><tr>${headers.map((header) => `<th>${header}</th>`).join('')}</tr></thead>
     <tbody>${rows.map(([label, ...cells]) => `<tr><th>${label}</th>${cells.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody>
   </table>
 </figure>`;
+
+// Car, weight, then two y series.
+const cars = [['Civic', '1300', '31', '40'], ['Corolla', '1400', '32', '41'], ['Camry', '1600', '28', '39'], ['Tahoe', '2600', '15', '20']];
+const chart = (attrs, rows) => figure(attrs, 'Fuel economy', ['Car', 'Weight (kg)', 'City', 'Highway'], rows);
 const fixed = 'data-x-min="0" data-x-max="4000" data-min="0" data-max="50"';
 
 const html = `<style>${css}</style>
@@ -79,13 +82,7 @@ const values = (column) => cars.map((row) => [Number(row[1]), Number(row[column]
 // Country, GDP per person, two y series, then the population that sizes each
 // bubble: the largest is four times the smallest.
 const countries = [['Chile', '30000', '80', '70', '20'], ['Peru', '15000', '77', '68', '35'], ['Mexico', '22000', '75', '66', '80'], ['Spain', '45000', '83', '72', '48']];
-const bubbles = (attrs, rows) => `<figure ${attrs}>
-  <figcaption>Health and wealth</figcaption>
-  <table>
-    <thead><tr><th>Country</th><th>GDP per person</th><th>Life expectancy</th><th>Healthy years</th><th>Population</th></tr></thead>
-    <tbody>${rows.map(([label, ...cells]) => `<tr><th>${label}</th>${cells.map((cell) => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody>
-  </table>
-</figure>`;
+const bubbles = (attrs, rows) => figure(attrs, 'Health and wealth', ['Country', 'GDP per person', 'Life expectancy', 'Healthy years', 'Population'], rows);
 const bubbleEnds = 'data-x-min="0" data-x-max="60000" data-min="50" data-max="100"';
 const bubbleHtml = `<style>${css}</style>
   <div style="width: 600px">
