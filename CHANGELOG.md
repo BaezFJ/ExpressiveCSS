@@ -244,7 +244,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `--md-comp-scatter-chart-bubble-size` (48px) across. A row without a
   positive size draws no points. The tooltip names the size, a `toggle`
   legend refits the sizes, and bubbles grow or shrink from their old sizes
-  after `update()`.
+  after `update()`. Room around the plot keeps a bubble at the end of a
+  scale clear of the axis labels and legend.
 
 - A `data-draggable` map marker moves without a drag (WCAG 2.5.7). A tap
   picks it up and sets `aria-pressed`, and the next tap on the map drops it

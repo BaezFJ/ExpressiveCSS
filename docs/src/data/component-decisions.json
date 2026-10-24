@@ -3894,7 +3894,7 @@
           },
           {
             "path": "src/sass/components/_scatter-chart.scss",
-            "sha256": "549f6b99388e750d3002e8dadb84d9f23b2948af45688498ed3ae252fb0bf4cb"
+            "sha256": "f064ff1fa5a08cd19c244531df9c85cc3b877908d9d21a237adad1ad7f73390f"
           },
           {
             "path": "src/ts/components/lineChart.ts",
@@ -3902,7 +3902,7 @@
           },
           {
             "path": "src/ts/components/scatterChart.ts",
-            "sha256": "8f0bee1ac4412ba906c1d62245805c495d9120eb932a4b18bd12dfb12e460418"
+            "sha256": "8eb2ac127bdfaf90968c540a7749dec04b4260b31b37c1cb15358e80275a791f"
           }
         ],
         "gaps": [

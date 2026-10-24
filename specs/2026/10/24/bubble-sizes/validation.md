@@ -22,6 +22,8 @@ V1 is the acceptance check from the roadmap. V2 to V5 are the short regression c
 
 A review on 2026-10-24 ran five source mutations. Dropping the square root and drawing zero sizes already failed V1 and V2. Three passed until the review added assertions: reversed bubble draw order (now V1), a wrong animation duration (now V5, which expects the 400ms medium4 token) and the size header keeping a swatch (now V3).
 
+Following that review, the chart leaves room around a bubble chart's plot for the largest radius and moves the axis labels out by as much. A sixth case, "bubble chart leaves room for bubbles at the ends of its scales", puts Peru on the left edge, Spain on the top and right, and Mexico (48px across) on the bottom of fixed scales. It checks that no bubble overlaps the y labels, x labels, legend or caption, or passes the figure's end. It failed before the Sass change in all three engines, with Peru's bubble 16px into the y labels, and passes after it. `_layout()` now finds the largest size first, so a mark's `size` is always the share. All 13 cases pass in all three engines, 39 runs.
+
 ## Regression checks
 
 | ID | Covers | Action | Expected result | Result |

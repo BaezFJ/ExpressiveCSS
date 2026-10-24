@@ -195,7 +195,7 @@ export class ScatterChart extends LineChart {
 
   /** The x values of the rows with a point, with 10% of their span to spare each side. */
   private _xRange(): [number, number] {
-    const xs = this._xs.filter((_, row) => this.series.some((series) => series.values[row] !== null)) as number[];
+    const xs = this._xs.filter((_, row) => this._hasPoint(row)) as number[];
     if (!xs.length) return [-1, 1];
     const [low, high] = [xs.reduce((a, b) => Math.min(a, b)), xs.reduce((a, b) => Math.max(a, b))];
     const pad = (high - low) * 0.1 || 1;
@@ -214,13 +214,23 @@ export class ScatterChart extends LineChart {
     return this._reversed ? 100 - x : x;
   }
 
+  /** Whether any series shown draws a point in a row. */
+  private _hasPoint(row: number) {
+    return this.series.some((series) => series.values[row] !== null);
+  }
+
   /** The points, each diameter the square root of its row's share of the largest size drawn, so areas follow sizes. */
   private _layout(): Mark[] {
-    const marks = this.labels.flatMap((_, row) => this.series
+    const largest = this._sizes.reduce<number>((most, size, row) => (this._hasPoint(row) ? Math.max(most, size!) : most), 0);
+    return this.labels.flatMap((_, row) => this.series
       .filter((series) => series.values[row] !== null)
-      .map((series) => ({ row, series, x: this._xAt(this._xs[row]!), y: series.y(series.values[row]!), size: this._sizes[row]! })));
-    const largest = marks.reduce((most, mark) => Math.max(most, mark.size), 0);
-    return marks.map((mark) => ({ ...mark, size: Math.sqrt(mark.size / largest) }));
+      .map((series) => ({
+        row,
+        series,
+        x: this._xAt(this._xs[row]!),
+        y: series.y(series.values[row]!),
+        size: Math.sqrt(this._sizes[row]! / largest)
+      })));
   }
 
   /** One group per series, its points round caps on zero-length lines, so CSS sizes them in pixels. */

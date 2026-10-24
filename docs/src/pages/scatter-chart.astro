@@ -109,7 +109,9 @@ const spend: [string, number, number, number][] = [
           The tooltip adds the size column's header and cell, and the marker
           outlines the highlighted bubble. Bubbles are partly transparent, and
           smaller ones are drawn over larger ones in each series, so overlaps
-          stay readable. A <code>toggle</code> legend refits the sizes to the
+          stay readable. The chart leaves half the largest diameter of room
+          around the plot, so a bubble at the end of a scale stays clear of
+          the axis labels, caption and legend. A <code>toggle</code> legend refits the sizes to the
           bubbles left, and after <code>update()</code> each bubble grows or
           shrinks from its old size.
         </p>

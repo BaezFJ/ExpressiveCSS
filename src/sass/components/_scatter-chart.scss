@@ -62,6 +62,30 @@
   stroke-opacity: 0.7;
 }
 
+// With .bubble, room the largest bubble's radius wide around the plot, and
+// the axis labels moved out by as much, so a bubble at the end of a scale
+// spills into empty space instead of over the labels, caption or legend.
+.scatter-chart.bubble {
+  --scatter-chart-room: calc(var(--md-comp-scatter-chart-bubble-size) / 2);
+
+  > .scatter-chart-plot {
+    margin: var(--scatter-chart-room);
+  }
+
+  &.axis > .scatter-chart-plot {
+    margin-block: calc(8px + var(--scatter-chart-room)) calc(#{rem(20px)} + var(--scatter-chart-room));
+    margin-inline-start: calc(var(--md-comp-scatter-chart-axis-width) + var(--scatter-chart-room));
+  }
+
+  .scatter-chart-axis:not(.x) > li > span {
+    inset-inline-end: calc(100% + var(--scatter-chart-room));
+  }
+
+  .scatter-chart-axis.x > li > span {
+    top: calc(100% + var(--scatter-chart-room));
+  }
+}
+
 // The x scale's labels, below the plot, each with a grid line up through it
 // at --at from the left. The script mirrors --at in a right-to-left chart.
 .scatter-chart.axis > .scatter-chart-plot {

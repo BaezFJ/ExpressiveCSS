@@ -100,6 +100,9 @@ const bubbleHtml = `<style>${css}</style>
     ${bubbles(`class="scatter-chart bubble toggle" id="bubble-toggle" ${bubbleEnds}`, [...countries, ['Japan', '40000', '', '74', '160']])}
     ${bubbles(`class="scatter-chart bubble" id="bubble-watched" data-watch ${bubbleEnds}`, countries)}
   </div>
+  <div style="width: 600px">
+    ${bubbles('class="scatter-chart bubble axis toggle" id="bubble-edges" data-x-min="15000" data-x-max="45000" data-min="66" data-max="83"', countries)}
+  </div>
   <script>${js}</script>`;
 
 /**
@@ -550,6 +553,45 @@ for (const [engine, browserType, browserTest] of engines) {
       const watched = await drawnBubbles(page, '#bubble-watched');
       const peru = watched.series[0].find(({ at }) => Math.abs(at[0] - bubblePlace(watched, 0, countries[1]).at[0]) <= 1);
       assert.ok(Math.abs(peru.size - 48) < 0.5, `Peru ${peru.size}px across after the edit`);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: bubble chart leaves room for bubbles at the ends of its scales`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(bubbleHtml);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      // The scales end at the data's extremes: Peru sits on the left edge,
+      // Spain on the top and right, and Mexico, 48px across, on the bottom.
+      const room = await page.locator('#bubble-edges').evaluate((el) => {
+        const rect = (node) => node.getBoundingClientRect();
+        const bubbles = [...el.querySelectorAll('.scatter-chart-points')].map((path) => {
+          const { left, top, width, height } = rect(path);
+          const r = parseFloat(getComputedStyle(path).strokeWidth) / 2;
+          // A zero-length path's box is its centre.
+          return { left: left + width / 2 - r, right: left + width / 2 + r, top: top + height / 2 - r, bottom: top + height / 2 + r };
+        });
+        const edge = (side, pick) => pick(...bubbles.map((box) => box[side]));
+        return {
+          bubbles: { left: edge('left', Math.min), right: edge('right', Math.max), top: edge('top', Math.min), bottom: edge('bottom', Math.max) },
+          figure: rect(el),
+          caption: rect(el.querySelector('figcaption')).bottom,
+          yLabels: Math.max(...[...el.querySelectorAll('.scatter-chart-axis:not(.x) > li > span')].map((span) => rect(span).right)),
+          xLabels: Math.min(...[...el.querySelectorAll('.scatter-chart-axis.x > li > span')].map((span) => rect(span).top)),
+          legend: rect(el.querySelector('.scatter-chart-legend')).top,
+        };
+      });
+      const { bubbles } = room;
+      assert.ok(room.yLabels <= bubbles.left + 0.5, `y labels end at ${room.yLabels}, a bubble starts at ${bubbles.left}`);
+      assert.ok(room.xLabels >= bubbles.bottom - 0.5, `x labels start at ${room.xLabels}, a bubble ends at ${bubbles.bottom}`);
+      assert.ok(room.legend >= bubbles.bottom - 0.5, `the legend starts at ${room.legend}, a bubble ends at ${bubbles.bottom}`);
+      assert.ok(room.caption <= bubbles.top + 0.5, `the caption ends at ${room.caption}, a bubble starts at ${bubbles.top}`);
+      assert.ok(bubbles.right <= room.figure.right + 0.5, `a bubble ends at ${bubbles.right}, past the figure at ${room.figure.right}`);
     } finally {
       await browser.close();
     }
