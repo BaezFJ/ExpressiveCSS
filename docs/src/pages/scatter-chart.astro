@@ -8,6 +8,7 @@ import { defineSections } from "../lib/sections";
 const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "series", label: "Several series" },
+  { id: "bubble", label: "Bubble sizes" },
   { id: "scale", label: "Values and scale" },
   { id: "accessibility", label: "Accessibility" },
   { id: "javascript", label: "JavaScript" },
@@ -18,8 +19,8 @@ const cars: [string, number, number, number][] = [
   ["Civic", 1300, 31, 40], ["Corolla", 1400, 32, 41], ["Prius", 1450, 57, 56], ["Camry", 1600, 28, 39],
   ["RAV4", 1650, 27, 35], ["F-150", 2200, 20, 24], ["Tahoe", 2600, 15, 20],
 ];
-const spend: [string, number, number][] = [
-  ["Search", 12000, 340], ["Social", 8000, 150], ["Video", 15000, 210], ["Email", 2000, 120], ["Display", 6000, 60], ["Podcasts", 4000, 70],
+const spend: [string, number, number, number][] = [
+  ["Search", 12000, 340, 9000], ["Social", 8000, 150, 14000], ["Video", 15000, 210, 22000], ["Email", 2000, 120, 3000], ["Display", 6000, 60, 11000], ["Podcasts", 4000, 70, 2500],
 ];
 ---
 <DocsLayout page="scatter-chart" sections={S}>
@@ -89,6 +90,46 @@ const spend: [string, number, number][] = [
     <tbody>
       <tr><th>Civic</th><td>1300</td><td>31</td><td>40</td></tr>
       <!-- One row per car -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.bubble}>
+        <p>
+          Add <code>bubble</code> to the figure to size each point by a third
+          measure. The last column holds the sizes. It is no series: every
+          point in its row becomes a bubble whose area follows the row's size.
+          The largest size drawn is
+          <code>--md-comp-scatter-chart-bubble-size</code> across, 48px by
+          default, and the rest scale by area against it. A row whose size is
+          not a positive number draws no points.
+        </p>
+        <p>
+          The tooltip adds the size column's header and cell, and the marker
+          outlines the highlighted bubble. Bubbles are partly transparent, and
+          smaller ones are drawn over larger ones in each series, so overlaps
+          stay readable. A <code>toggle</code> legend refits the sizes to the
+          bubbles left, and after <code>update()</code> each bubble grows or
+          shrinks from its old size.
+        </p>
+        <figure class="scatter-chart axis bubble" data-markdown-ignore>
+          <figcaption>Ad spend, signups and visits by channel</figcaption>
+          <table>
+            <thead><tr><th>Channel</th><th>Spend</th><th>Signups</th><th>Visits</th></tr></thead>
+            <tbody>{spend.map(([channel, dollars, signups, visits]) => <tr><th>{channel}</th><td>${dollars.toLocaleString("en")}</td><td>{signups}</td><td>{visits.toLocaleString("en")}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="scatter-chart axis bubble">
+  <figcaption>Ad spend, signups and visits by channel</figcaption>
+  <table>
+    <thead>
+      <tr><th>Channel</th><th>Spend</th><th>Signups</th><th>Visits</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Search</th><td>$12,000</td><td>340</td><td>9,000</td></tr>
+      <!-- One row per channel; the last column sizes its bubble -->
     </tbody>
   </table>
 </figure>
@@ -165,6 +206,7 @@ chart.destroy(); // remove the drawing and show the table again
         <TokenTable>
           <tr><td><code>--md-comp-scatter-chart-height</code></td><td>240px</td></tr>
           <tr><td><code>--md-comp-scatter-chart-point-size</code></td><td>8px</td></tr>
+          <tr><td><code>--md-comp-scatter-chart-bubble-size</code></td><td>48px, the largest <code>bubble</code> diameter</td></tr>
           <tr><td><code>--md-comp-scatter-chart-grid-color</code></td><td><code>outline-variant</code></td></tr>
           <tr><td><code>--md-comp-scatter-chart-axis-width</code></td><td>48px, room for the y <code>axis</code> labels</td></tr>
           <tr><td><code>--md-comp-scatter-chart-color-1</code> … <code>-4</code></td><td><code>primary</code>, <code>tertiary</code>, <code>secondary</code>, <code>on-surface-variant</code></td></tr>

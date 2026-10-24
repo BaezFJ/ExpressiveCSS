@@ -2,7 +2,7 @@
 
 Roadmap phase: Phase 35, bubble sizes on the scatter chart. Branch `feature/2026-10-24-bubble-sizes` from `origin/master` at `613543a71`. Requirements are in [requirements.md](requirements.md) and checks in [validation.md](validation.md).
 
-The groups run in order, and each ends in a state that can be committed. Budget lines go into whichever group first changes a bundle's size, because `tests/selective-builds.test.js` fails without them.
+The groups run in order, and each ends in a state that can be committed. Budget lines go into whichever group first changes a bundle's size, because `tests/selective-builds.test.js` fails without them. All three groups were implemented on 2026-10-24, one commit each.
 
 ## 1. Read the size column and draw each point's area
 
@@ -42,11 +42,11 @@ Outcome: `.bubble` is documented, the pin and generated files are current, and C
 
 Prerequisites: group 2.
 
-- [ ] Add a bubble sizes part to the "Scatter chart" section of `llm.md`, a live example to `docs/src/pages/scatter-chart.astro`, and the modifier to the scatter chart entry in `docs/src/data/component-decisions.json`.
-- [ ] Add an Added entry to the Unreleased section of `CHANGELOG.md`.
-- [ ] Re-pin the scatter chart's `sourceRevision` to the last commit that changes its sources.
-- [ ] Run `npm run build`, confirm the budget lines, then run `npm run build:skill` as the last generation step and `npm run check:generated`.
-- [ ] Record each result in validation.md.
+- [x] Add a bubble sizes part to the "Scatter chart" section of `llm.md`, a live example to `docs/src/pages/scatter-chart.astro`, and the modifier to the scatter chart entry in `docs/src/data/component-decisions.json`.
+- [x] Add an Added entry to the Unreleased section of `CHANGELOG.md`.
+- [x] Re-pin `sourceRevision` to `613543a71`, the Phase 34 merge on `master`, and update the scatter chart's source hashes. The old pin, `be2053d67`, was a branch commit the squash merge dropped.
+- [x] Run `npm run build`, confirm the budget lines, then run `npm run build:skill` as the last generation step and `npm run check:generated`.
+- [x] Record each result in validation.md.
 
 Completion check: `npm run check:generated` is clean, V7 passes, and every check in validation.md shows a result.
 

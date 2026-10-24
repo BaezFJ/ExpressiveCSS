@@ -239,6 +239,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   in table order, and it takes `update()`, `data-watch` and a `toggle`
   legend like the other charts. A new semantics rule asks for a `<figure>`
   with a `<table>` and a `<figcaption>`.
+- Bubble sizes on the scatter chart. With `bubble`, the last column sizes
+  each row's points, so their areas follow its values, and the largest is
+  `--md-comp-scatter-chart-bubble-size` (48px) across. A row without a
+  positive size draws no points. The tooltip names the size, a `toggle`
+  legend refits the sizes, and bubbles grow or shrink from their old sizes
+  after `update()`.
 
 - A `data-draggable` map marker moves without a drag (WCAG 2.5.7). A tap
   picks it up and sets `aria-pressed`, and the next tap on the map drops it
