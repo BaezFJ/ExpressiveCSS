@@ -20,6 +20,8 @@ V1 is the acceptance check from the roadmap. V2 to V5 are the short regression c
 | V4 | R5 | The fixture with `.toggle`, and the largest population on a row whose only y value is "Healthy years". | Click the "Healthy years" legend button. | The remaining points resize so that the largest shown population is 48px across, and their areas stay proportional within 2%. | Passed 2026-10-24 in all three engines. Before the click, Mexico is 48 × √½ px across beside Japan. It already passed after group 1, because the size scale fits the drawn points. |
 | V5 | R6 | The fixture with focus on the plot, then a copy with `data-watch`. | Change one population cell and call `update()`. Repeat under `prefers-reduced-motion: reduce`. Then change a population cell on the `data-watch` copy without calling `update()`. | After `update()`, the changed point ends at its new size, focus stays on the plot, and the point has an animation from its old size. Under reduced motion it has none. The `data-watch` copy redraws the changed point at its new size. | Passed 2026-10-24 in all three engines. Seen failing before group 2. Only Chile's two bubbles animate, with `--scatter-chart-size` keyframes 0.5 to 1. |
 
+A review on 2026-10-24 ran five source mutations. Dropping the square root and drawing zero sizes already failed V1 and V2. Three passed until the review added assertions: reversed bubble draw order (now V1), a wrong animation duration (now V5, which expects the 400ms medium4 token) and the size header keeping a swatch (now V3).
+
 ## Regression checks
 
 | ID | Covers | Action | Expected result | Result |

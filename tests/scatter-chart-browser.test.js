@@ -414,6 +414,8 @@ for (const [engine, browserType, browserTest] of engines) {
         assert.equal(chart.series.length, 2, `${id}: two series`);
         chart.series.forEach((drawn, s) => {
           assert.equal(drawn.length, countries.length, `${id}, series ${s + 1}: one bubble per row`);
+          const sizes = drawn.map(({ size }) => size);
+          assert.deepEqual(sizes, [...sizes].sort((a, b) => b - a), `${id}, series ${s + 1}: largest first, so smaller bubbles draw on top`);
           for (const row of countries) {
             const want = bubblePlace(chart, s, row);
             const bubble = drawn.find(({ at }) => Math.abs(at[0] - want.at[0]) <= 1 && Math.abs(at[1] - want.at[1]) <= 1);
@@ -471,6 +473,9 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.keyboard.press('Shift+Tab');
       const tooltip = (await page.locator('#bubbles .scatter-chart-tooltip').innerText()).replace(/\s+/g, ' ').trim();
       assert.equal(tooltip, 'Chile GDP per person 30000 Life expectancy 80 Population 20');
+      const swatches = await page.locator('#bubbles .scatter-chart-tooltip > span').evaluateAll((spans) =>
+        spans.map((span) => [span.textContent, getComputedStyle(span, '::before').content !== 'none']));
+      assert.deepEqual(swatches.filter(([, swatch]) => swatch).map(([text]) => text), ['Life expectancy'], 'only the series has a swatch');
       // Chile's bubble is 24px across; the marker adds its 2px border each side.
       const marker = await page.locator('#bubbles .scatter-chart-cursor').evaluate((el) => el.getBoundingClientRect().width);
       assert.ok(Math.abs(marker - 28) <= 0.5, `marker ${marker}px across`);
@@ -522,12 +527,14 @@ for (const [engine, browserType, browserTest] of engines) {
         return {
           focused: document.activeElement === el.querySelector('.scatter-chart-plot'),
           frames: moving.map((path) => path.getAnimations()[0].effect.getKeyframes().map((frame) => Number(frame['--scatter-chart-size']))),
+          durations: moving.map((path) => path.getAnimations()[0].effect.getTiming().duration),
           sizes: moving.map((path) => path.style.getPropertyValue('--scatter-chart-size')),
         };
       });
       assert.equal(grown.focused, true, 'focus stays on the plot');
       assert.deepEqual(grown.frames, [[0.5, 1], [0.5, 1]], 'only Chile\'s two bubbles grow, from their old size');
       assert.deepEqual(grown.sizes, ['1', '1']);
+      assert.deepEqual(grown.durations, [400, 400], 'the medium4 motion token, as the points move');
 
       await page.emulateMedia({ reducedMotion: 'reduce' });
       const still = await page.locator('#bubbles').evaluate((el) => {
