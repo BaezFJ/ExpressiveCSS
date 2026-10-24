@@ -4,7 +4,7 @@ Date: 2026-10-24
 Roadmap phase: Phase 34, scatter chart
 Branch: `feature/2026-10-24-scatter-chart`
 Base: `origin/master` at `733d58c98`, fetched 2026-10-24
-Status: specified 2026-10-24; not implemented
+Status: implemented and locally verified 2026-10-24; CI and review pending
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 34](../../../../roadmap.md#phase-34-scatter-chart). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
