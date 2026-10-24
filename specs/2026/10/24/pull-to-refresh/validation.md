@@ -42,7 +42,7 @@ V2 to V7 passed on the code from group 1, which already handled their behavior, 
 
 A failure in a file this change does not touch is rerun alone before anyone debugs it.
 
-`npm run verify` ran on 2026-10-24 after group 3: 2,703 tests passed with no failures, then `check:generated`, `docs:build:astro` and `docs:verify` (123 pages) passed. `npm test --prefix mcp/expressivecss` (the MCP smoke test) passed. `verify:packages` did not run.
+`npm run verify` ran on 2026-10-24 after group 3 (2,703 tests) and again after the review fixes: 2,721 tests passed with no failures, then `check:generated`, `docs:build:astro` and `docs:verify` (123 pages) passed. `npm test --prefix mcp/expressivecss` (the MCP smoke test) passed. `verify:packages` did not run.
 
 ## Manual checks
 
