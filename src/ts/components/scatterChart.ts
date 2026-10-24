@@ -32,6 +32,9 @@ const dots = (marks: Mark[]) => marks.map(({ x, y }) => `M${x},${y}h0`).join('')
 /** A point's row and series column, which update() matches old and new points by. */
 const place = ({ row, series }: Mark) => `${row} ${series.column}`;
 
+/** A tooltip line part. */
+const span = (text: string) => Object.assign(document.createElement('span'), { textContent: text });
+
 /** A CSS time, such as 400ms or 0.4s, in milliseconds. */
 const ms = (time: string) => parseFloat(time) * (time.trim().endsWith('ms') ? 1 : 1000);
 
@@ -139,21 +142,18 @@ export class ScatterChart extends LineChart {
     this._cursor.style.setProperty('--scatter-chart-size', `${size}`);
     for (const part of [this._cursor, this._tooltip]) Object.assign(part.style, { left: `${x}%`, top: `${y}%` });
     this._tooltip.classList.toggle('end', x > 50);
-    const span = (text: string) => Object.assign(document.createElement('span'), { textContent: text });
-    const [title, axis, name] = [document.createElement('strong'), span(this._header[1].textContent.trim()), span(series.name)];
+    const [title, name] = [document.createElement('strong'), span(series.name)];
     title.textContent = this.labels[row];
-    axis.className = 'x';
     name.dataset.series = series.color;
-    this._tooltip.replaceChildren(title, axis, span(this._rows[row].cells[1].textContent.trim()), name, span(series.text[row]), ...this._sizeText(row, span));
+    const sizeText = this._bubble ? this._cellText(row, this._header.length - 1) : [];
+    this._tooltip.replaceChildren(title, ...this._cellText(row, 1), name, span(series.text[row]), ...sizeText);
   }
 
-  /** With .bubble, the size header, without a swatch, and the row's size text. */
-  private _sizeText(row: number, span: (text: string) => HTMLSpanElement) {
-    if (!this._bubble) return [];
-    const last = this._header.length - 1;
-    const header = span(this._header[last].textContent.trim());
+  /** A column's header, without a swatch since it names no series, and the row's text in it. */
+  private _cellText(row: number, column: number) {
+    const header = span(this._header[column].textContent.trim());
     header.className = 'x';
-    return [header, span(this._rows[row].cells[last]?.textContent.trim() ?? '')];
+    return [header, span(this._rows[row].cells[column]?.textContent.trim() ?? '')];
   }
 
   /** The point nearest the pointer, or -1 with none. */

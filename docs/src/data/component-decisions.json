@@ -3902,7 +3902,7 @@
           },
           {
             "path": "src/ts/components/scatterChart.ts",
-            "sha256": "8eb2ac127bdfaf90968c540a7749dec04b4260b31b37c1cb15358e80275a791f"
+            "sha256": "6e5098db6b538b9609957e23e3a752ef65bb59b235ecb8c3a79fdda629031bbe"
           }
         ],
         "gaps": [
