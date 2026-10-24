@@ -399,6 +399,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:open`, `expressive:close` | Tooltip, Snackbar, Tour | Tour's close: `{ completed }` |
 | `expressive:action`, `expressive:closed` | Snackbar | none |
 | `expressive:copy` | Copy buttons | `{ text, copied }` |
+| `expressive:refresh` | Pull-to-refresh | `{ waitUntil }` |
 | `expressive:change`, `expressive:sort`, `expressive:resize` | Data tables, from the wrapper | `{ selected }`, `{ header, column, direction }`, `{ header, column, width }`; `sort` is cancelable |
 
 An Autocomplete or Select input hosts a Menu, so it also fires that Menu's `expressive:open`, `expressive:close` and `expressive:select`. A callback that changes the choice again, such as an `onShow` that selects another tab, leaves only the event for the final choice.
@@ -3529,6 +3530,64 @@ Scrolling is smooth unless the reader prefers reduced motion.
 | --- | --- |
 | `--md-comp-message-scroller-padding` | 16px |
 | `--md-comp-message-scroller-gap` | 16px (between items) |
+
+---
+
+## Pull-to-refresh
+
+Refreshes a list or page when a person pulls down at its top, or presses its refresh button.
+
+A `.pull-to-refresh` container holds a `.loading-indicator` as a direct child, a `<button data-refresh>` and the content. `AutoInit()` starts every `.pull-to-refresh`. The container can scroll itself, with `overflow-y: auto` or `scroll`, or sit in a page that scrolls; either way a pull counts only at a scroll position of 0.
+
+A touch pull from the top brings the indicator down with the finger and fades it in. Releasing past the threshold starts a refresh. Releasing short of it, a cancelled touch, and a drag that moves up or sideways first do nothing, and a mouse drag never pulls. The refresh button starts the same refresh, so keyboard, mouse and switch users can refresh without a touch screen.
+
+A refresh fires `expressive:refresh` from the container and runs `onRefresh`. Both get a `detail` with `waitUntil(promise)`. The indicator stays, and the container has `aria-busy="true"`, until every promise passed to `waitUntil()` settles, fulfilled or rejected, or the page calls `complete()`. Without either, the refresh keeps running. Pulls, button presses and `refresh()` calls during a refresh do nothing.
+
+```js
+document.addEventListener('expressive:refresh', (event) => {
+  event.detail.waitUntil(loadLatest());
+});
+```
+
+The container has `overscroll-behavior-y: contain`, and so does the page while it holds one, so the browser's own pull-to-refresh does not run as well. Don't nest one `.pull-to-refresh` inside another. The indicator carries the role and name, as every loading indicator does; the script shows it and adds no roles. Under reduced motion it hides at once instead of sliding back up.
+
+```html
+<div class="pull-to-refresh" style="height: 24rem; overflow-y: auto">
+  <span class="loading-indicator contained" role="status" aria-label="Refreshing"></span>
+  <button type="button" class="text" data-refresh>Refresh</button>
+  <ul class="list">
+    <li>Inbox</li>
+  </ul>
+</div>
+```
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `threshold` | Number | `64` | How far a finger must pull down, in pixels, for the release to refresh. |
+| `onRefresh` | Function | `null` | Called when a refresh starts, with the event's `detail`. |
+
+### Methods
+
+#### .refresh()
+
+Starts a refresh, as a pull or the refresh button does. Does nothing while one runs.
+
+#### .complete()
+
+Ends the running refresh: the indicator goes back up and `aria-busy` is removed.
+
+#### .destroy()
+
+Removes the listeners and ends a running refresh without an event.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-pull-to-refresh-indicator-offset` | 16px (where the indicator rests while refreshing) |
+| `--md-comp-pull-to-refresh-motion` | default spatial spring |
 
 ---
 

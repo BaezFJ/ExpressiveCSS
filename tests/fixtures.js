@@ -123,7 +123,7 @@ export const AUTO_INIT_FIXTURES = [
   {
     name: "PullToRefresh",
     selector: ".pull-to-refresh",
-    html: `<div class="pull-to-refresh"><span class="loading-indicator contained" role="status" aria-label="Refreshing"></span><button type="button" class="btn text" data-refresh>Refresh</button><ul><li>Row</li></ul></div>`,
+    html: `<div class="pull-to-refresh"><span class="loading-indicator contained" role="status" aria-label="Refreshing"></span><button type="button" class="text" data-refresh>Refresh</button><ul><li>Row</li></ul></div>`,
   },
   {
     name: "CommandPalette",

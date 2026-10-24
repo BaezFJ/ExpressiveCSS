@@ -14,12 +14,12 @@ const rows = Array.from({ length: 40 }, (_, i) => `<li>Row ${i + 1}</li>`).join(
 const html = `<style>${css}</style>
   <div class="pull-to-refresh" id="list" style="width:400px;height:300px;overflow-y:auto">
     <span class="loading-indicator contained" role="status" aria-label="Refreshing"></span>
-    <button type="button" class="btn text" data-refresh>Refresh</button>
+    <button type="button" class="text" data-refresh>Refresh</button>
     <ul>${rows}</ul>
   </div>
   <div class="pull-to-refresh" id="page" style="width:400px">
     <span class="loading-indicator contained" role="status" aria-label="Refreshing"></span>
-    <button type="button" class="btn text" data-refresh>Refresh</button>
+    <button type="button" class="text" data-refresh>Refresh</button>
     <ul>${rows}${rows}${rows}</ul>
   </div>
   <script>${js}</script>

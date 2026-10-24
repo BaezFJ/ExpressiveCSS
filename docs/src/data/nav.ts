@@ -379,6 +379,13 @@ export const NAV: DocsGroup[] = [
           "A chat scroll container that anchors turns, follows streamed replies and keeps its place as history loads.",
       },
       {
+        id: "pull-to-refresh",
+        label: "Pull-to-refresh",
+        route: "/pull-to-refresh.html",
+        description:
+          "Refreshes a list or page when a person pulls down at its top, or presses its refresh button.",
+      },
+      {
         id: "accordion",
         label: "Accordion",
         route: "/accordion.html",

@@ -246,6 +246,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   legend refits the sizes, and bubbles grow or shrink from their old sizes
   after `update()`. Room around the plot keeps a bubble at the end of a
   scale clear of the axis labels and legend.
+- Pull-to-refresh. A touch pull down from the top of a `.pull-to-refresh`
+  container, or its `<button data-refresh>`, fires `expressive:refresh` and
+  shows the container's loading indicator with `aria-busy="true"` until
+  every promise passed to `event.detail.waitUntil()` settles or the page
+  calls `complete()`. The `threshold` option sets the pull distance (64px).
+  The container and the page holding it get `overscroll-behavior-y:
+  contain`, so the browser's own pull-to-refresh stops. New semantics rules
+  ask for the button and a direct `.loading-indicator` child.
 
 - A `data-draggable` map marker moves without a drag (WCAG 2.5.7). A tap
   picks it up and sets `aria-pressed`, and the next tap on the map drops it

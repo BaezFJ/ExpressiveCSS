@@ -2,7 +2,7 @@
 
 Roadmap phase: Phase 36, pull-to-refresh. Branch `feature/2026-10-24-pull-to-refresh` from `origin/master` at `591de9f30`. Requirements are in [requirements.md](requirements.md) and checks in [validation.md](validation.md).
 
-The groups run in order, and each ends in a state that can be committed. Budget lines go into whichever group first changes a bundle's size, because `tests/selective-builds.test.js` fails without them. A registered component also needs its `semantics.json` row in the first group, because the semantics roster test fails without one.
+The groups run in order, and each ends in a state that can be committed. All three were implemented on 2026-10-24, one commit each. Budget lines go into whichever group first changes a bundle's size, because `tests/selective-builds.test.js` fails without them. A registered component also needs its `semantics.json` row in the first group, because the semantics roster test fails without one.
 
 ## 1. Pull past the threshold, refresh and finish
 
@@ -43,12 +43,12 @@ Outcome: the component is documented, the pin and generated files are current, a
 
 Prerequisites: group 2.
 
-- [ ] Add a "Pull-to-refresh" section to `llm.md` and a docs page, `docs/src/pages/pull-to-refresh.astro`, with a live example, and add the page to the docs catalogue.
-- [ ] Add the component to `docs/src/data/component-decisions.json` with its capability entry, and re-pin `sourceRevision` to a commit on `master`.
-- [ ] Add an entry to `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`, and an Added entry to the Unreleased section of `CHANGELOG.md`.
-- [ ] Update the hardcoded guide counts in `tests/expressivecss-skill.test.js`, `tests/expressivecss-version-resolution.test.js` and `tests/expressivecss-component-decisions.test.js`, and the reading budget if it grows.
-- [ ] Run `npm run build`, confirm the budget lines, then run `npm run build:skill` as the last generation step and `npm run check:generated`.
-- [ ] Record each result in validation.md.
+- [x] Add a "Pull-to-refresh" section to `llm.md` and a docs page, `docs/src/pages/pull-to-refresh.astro`, with a live example, and add the page to the docs catalogue.
+- [x] Add the component to `docs/src/data/component-decisions.json` with its capability entry, and re-pin `sourceRevision` to a commit on `master`.
+- [x] Add an entry to `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`, and an Added entry to the Unreleased section of `CHANGELOG.md`.
+- [x] Update the hardcoded guide counts in `tests/expressivecss-skill.test.js`, `tests/expressivecss-version-resolution.test.js` and `tests/expressivecss-component-decisions.test.js`, and the reading budget if it grows.
+- [x] Run `npm run build`, confirm the budget lines, then run `npm run build:skill` as the last generation step and `npm run check:generated`.
+- [x] Record each result in validation.md.
 
 Completion check: `npm run check:generated` is clean, V8 passes, and every check in validation.md shows a result.
 

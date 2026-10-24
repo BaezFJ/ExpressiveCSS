@@ -4,7 +4,7 @@ Date: 2026-10-24
 Roadmap phase: Phase 36, pull-to-refresh
 Branch: `feature/2026-10-24-pull-to-refresh`
 Base: `origin/master` at `591de9f30`, fetched 2026-10-24
-Status: specified 2026-10-24; not implemented
+Status: implemented and locally verified 2026-10-24; CI and review pending
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 36](../../../../roadmap.md#phase-36-pull-to-refresh). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -72,7 +72,7 @@ These are open to change in review.
   ```html
   <div class="pull-to-refresh">
     <span class="loading-indicator contained" role="status" aria-label="Refreshing"></span>
-    <button type="button" class="btn text" data-refresh>Refresh</button>
+    <button type="button" class="text" data-refresh>Refresh</button>
     <ul class="list">…</ul>
   </div>
   ```

@@ -2,36 +2,40 @@
 
 Roadmap phase: Phase 36, pull-to-refresh. Requirements are in [requirements.md](requirements.md) and the work order in [plan.md](plan.md).
 
-Every result is pending, since nothing is built yet. Tests run against built bundles, so run `npm run build` first, and run suites one at a time, since parallel browser runs flake.
+The agent ran every check below on 2026-10-24 on branch `feature/2026-10-24-pull-to-refresh`. All 7 cases pass in all three engines, 21 runs in total. Tests run against built bundles, so run `npm run build` first, and run suites one at a time, since parallel browser runs flake.
 
 ## Automated checks
 
-V1 to V7 are Playwright cases in a new file, `tests/pull-to-refresh-browser.test.js`, run with `node --test tests/pull-to-refresh-browser.test.js` in Chromium, Firefox and WebKit. Each case destroys its component and clears its timers in a `finally` block.
+V1 to V7 are Playwright cases in a new file, `tests/pull-to-refresh-browser.test.js`, run with `node --test tests/pull-to-refresh-browser.test.js` in Chromium, Firefox and WebKit. Each case closes its page in a `finally` block, and V1 and V7 also call `destroy()`.
 
 Touch input: Chromium drives real touches through CDP `Input.dispatchTouchEvent` in a `hasTouch` context, as `tests/sheet-touch-browser.test.js` does. Firefox and WebKit get `touchstart`, `touchmove` and `touchend` events dispatched from the page in a `hasTouch` context. A probe on 2026-10-24 found Firefox has the `Touch` constructor and WebKit does not, so both get a `TouchEvent` whose `touches` list is defined on the event.
 
-Fixture: a `.pull-to-refresh` list of 40 rows in a 400 by 300px box with `overflow-y: auto`, holding a contained loading indicator and a `[data-refresh]` button, started by `AutoInit()`. A second copy has no scroll of its own inside a 3000px page. A listener counts `expressive:refresh` events.
+Fixture: a `.pull-to-refresh` list of 40 rows in a 400 by 300px box with `overflow-y: auto`, holding a contained loading indicator and a `[data-refresh]` button, started by `AutoInit()`. A second copy has no scroll of its own and holds 120 rows, so the page scrolls. A listener counts `expressive:refresh` events.
 
 V1 is the acceptance check from the roadmap. V2 to V7 are the short regression cases the user asked for, one per behavior.
 
 | ID | Covers | Setup | Action | Expected result | Result |
 | --- | --- | --- | --- | --- | --- |
-| V1 | R1, R4, R7 | The fixture at a scroll position of 0. The listener calls `event.detail.waitUntil()` with a promise the test resolves. | Pull down 150px and release. Read the indicator, then resolve the promise. Repeat with a listener that calls `complete()` instead. | One event fires. The indicator is visible and the container has `aria-busy="true"` until the promise resolves, then the indicator hides and `aria-busy` is gone. `complete()` gives the same result. The container's computed `overscroll-behavior-y` is `contain`. Seen failing before group 1. | Pending |
-| V2 | R2, R3 | The fixture. | Pull down 40px and release. Pull 150px and send `touchcancel`. Scroll the list to 200px and pull 150px. Drag 150px with the mouse at a scroll position of 0. | No event fires in any of the four, and the indicator is hidden again each time. The scrolled-down pull scrolls the list. | Pending |
-| V3 | R5 | The fixture, with a listener that never settles its promise. | Pull past the threshold, then pull again, click the button and call `refresh()`. Then call `complete()`. | One event in total. `aria-busy="true"` holds until `complete()`, then is removed, and a new pull fires a second event. | Pending |
-| V4 | R6 | The fixture. | Click the button. After the finish, focus it and press Enter, then Space. Then call `refresh()`. | Each fires one event and shows the indicator until the finish, four events in all. | Pending |
-| V5 | R8 | The copy without its own scroll, in a page at `scrollY` 0, then at `scrollY` 500. | Pull 150px at each position. | The pull at 0 fires one event. The pull at 500 scrolls the page and fires nothing. The root's computed `overscroll-behavior-y` is `contain`. | Pending |
-| V6 | R9 | The fixture under `prefers-reduced-motion: reduce`. | Pull 40px and release, then pull past the threshold and finish. | The short pull's indicator is hidden on the next frame with no running transition. The full pull still fires one event and shows the indicator. | Pending |
-| V7 | R10 | The fixture with a refresh running. | Call `destroy()`, then pull past the threshold and click the button. | `aria-busy`, `.pulling` and the offset properties are cleared, the indicator is hidden, and no event fires after `destroy()`. | Pending |
+| V1 | R1, R4, R7 | The fixture at a scroll position of 0. The listener calls `event.detail.waitUntil()` with a promise the test resolves. | Pull down 150px and release. Read the indicator, then resolve the promise. Repeat with a listener that calls `complete()` instead. | One event fires. The indicator is visible and the container has `aria-busy="true"` until the promise resolves, then the indicator hides and `aria-busy` is gone. `complete()` gives the same result. The container's computed `overscroll-behavior-y` is `contain`. Seen failing before group 1. | Passed 2026-10-24 in Chromium, Firefox and WebKit. Seen failing before group 1 in all three: the computed `overscroll-behavior-y` was `auto`. |
+| V2 | R2, R3 | The fixture. | Pull down 40px and release. Pull 150px and send `touchcancel`. Scroll the list to 200px and pull 150px. Drag 150px with the mouse at a scroll position of 0. The case also drags 100px down and 300px sideways. | No event fires in any of them, and the indicator is hidden again each time. The scrolled-down pull scrolls the list. | Passed 2026-10-24 in all three engines. Only Chromium's real touches scroll, so only Chromium asserts that the list scrolled back up. |
+| V3 | R5 | The fixture, with a listener that never settles its promise. | Pull past the threshold, then pull again, click the button and call `refresh()`. Then call `complete()`. | One event in total. `aria-busy="true"` holds until `complete()`, then is removed, and a new pull fires a second event. | Passed 2026-10-24 in all three engines. |
+| V4 | R6 | The fixture. | Click the button. After the finish, focus it and press Enter, then Space. Then call `refresh()`. | Each fires one event and shows the indicator until the finish, four events in all. | Passed 2026-10-24 in all three engines. |
+| V5 | R8 | The copy without its own scroll, in a page at `scrollY` 0, then at `scrollY` 500. | Pull 150px at each position. | The pull at 0 fires one event. The pull at 500 scrolls the page and fires nothing. The root's computed `overscroll-behavior-y` is `contain`. | Passed 2026-10-24 in all three engines. Only Chromium asserts that the page scrolled back up. |
+| V6 | R9 | The fixture under `prefers-reduced-motion: reduce`, with the documented `:root` override setting `--md-sys-motion-spring-default-spatial-duration` to 500ms. | Pull 40px and release, then pull past the threshold and finish. | The short pull's indicator is hidden on the next frame with no running transition. The full pull still fires one event and shows the indicator. | Passed 2026-10-24 in all three engines. Without the `:root` override the case passed even with the component's reduced-motion rule removed, because the token zeroing hid the gap, so the override was added. |
+| V7 | R10 | The fixture with a refresh running. | Call `destroy()`, then pull past the threshold and click the button. | `aria-busy`, `.pulling` and the offset properties are cleared, the indicator is hidden, and no event fires after `destroy()`. | Passed 2026-10-24 in all three engines. |
+
+V2 to V7 passed on the code from group 1, which already handled their behavior, so no run saw them fail. A source mutation run on 2026-10-24 stood in, in Chromium. Removing the busy guard failed V3. Removing the scroll check failed V2 and V5. Reading only the element's own scroll failed V5. Removing the reduced-motion rule failed V6 once the `:root` override was in. Skipping the cleanup in `destroy()` failed V7. Removing the button handler failed V4. Treating `touchcancel` as a release, and pulling on any downward move whatever its sideways travel, failed V2. Leaving a settled `waitUntil()` promise without effect failed V1. The first run found a scroll check in `touchstart` that the first move repeats, so the duplicate was deleted.
 
 ## Regression and generation checks
 
 | ID | Covers | Action | Expected result | Result |
 | --- | --- | --- | --- | --- |
-| V8 | R12 | Run `node --test tests/selective-builds.test.js tests/autoinit.test.js` and the component decisions test after each group that changes a bundle. | The budget test passes with reviewed JavaScript and CSS lines naming this change, AutoInit starts the new fixture, and the `sourceRevision` pin is an ancestor of `HEAD` on `master`. | Pending |
-| V9 | R11 | After plan group 3, run `npm run build:semantics`, `npm run build:skill` and `npm run check:generated`, then `node --test tests/expressivecss-skill.test.js` and the semantics tests. Read the new docs. | Generation is clean, the guide counts match, the semantics row accepts the documented markup and rejects a container without a `[data-refresh]` button, and `llm.md`, the docs page, the decisions entry, the web extensions review and the changelog describe the component. | Pending |
+| V8 | R12 | Run `node --test tests/selective-builds.test.js tests/autoinit.test.js` and the component decisions test after each group that changes a bundle. | The budget test passes with reviewed JavaScript and CSS lines naming this change, AutoInit starts the new fixture, and the `sourceRevision` pin is an ancestor of `HEAD` on `master`. | Passed 2026-10-24 on the branch. JavaScript went from 91,634 to 92,317 gzip bytes and CSS from 86,273 to 86,524, in reviewed lines. The pin is `aaf6ac5e8`, the group 2 commit, because no commit on `master` holds the new files yet. It is a branch commit, so a squash merge drops it, and a follow-up must re-pin it to the merge commit, as #417 did for #416. |
+| V9 | R11 | After plan group 3, run `npm run build:semantics`, `npm run build:skill` and `npm run check:generated`, then `node --test tests/expressivecss-skill.test.js` and the semantics tests. Read the new docs. | Generation is clean, the guide counts match, the semantics row accepts the documented markup and rejects a container without a `[data-refresh]` button, and `llm.md`, the docs page, the decisions entry, the web extensions review and the changelog describe the component. | Passed 2026-10-24. `build:skill` wrote 86 guides and `check:generated` is clean. A jsdom check found the two rules match nothing in the documented markup, and flag a container without the button and one whose indicator is not a direct child. The basic-button reading budget grew 354 bytes to 44,993 for the new decision row. |
 
 A failure in a file this change does not touch is rerun alone before anyone debugs it.
+
+`npm run verify` ran on 2026-10-24 after group 3: 2,703 tests passed with no failures, then `check:generated`, `docs:build:astro` and `docs:verify` (123 pages) passed. `npm test --prefix mcp/expressivecss` (the MCP smoke test) passed. `verify:packages` did not run.
 
 ## Manual checks
 
@@ -39,7 +43,7 @@ None required. The user left manual phone, visual, forced-colors and screen read
 
 ## Merge conditions
 
-- V1 passes in Chromium, Firefox and WebKit, and was seen failing before the change.
-- V2 to V7 pass in all three engines.
-- V8 and V9 pass, and `npm run build:skill` ran after the last edit.
-- The repository's required CI checks and review pass on the pull request.
+- V1 passes in Chromium, Firefox and WebKit, and was seen failing before the change. Met locally on 2026-10-24.
+- V2 to V7 pass in all three engines. Met locally on 2026-10-24.
+- V8 and V9 pass, and `npm run build:skill` ran after the last edit. Met locally on 2026-10-24.
+- The repository's required CI checks and review pass on the pull request. Pending: no pull request is open.
