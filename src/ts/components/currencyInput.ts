@@ -13,13 +13,13 @@ const LATIN = '9876543210';
 
 /**
  * Splits digits and separators into whole and fraction digits. The last `.`
- * or `,` is the decimal mark when one to `digits` digits follow it, so
+ * or `,` is the decimal mark when no more than `digits` digits follow it, so
  * `1.234,5` and `1,234.50` both split at the end; any other separator groups.
  */
 function split(clean: string, digits: number): [string, string] {
   const mark = Math.max(clean.lastIndexOf('.'), clean.lastIndexOf(','));
   const fraction = clean.slice(mark + 1);
-  return mark >= 0 && fraction.length > 0 && fraction.length <= digits ? [clean.slice(0, mark), fraction] : [clean, ''];
+  return mark >= 0 && fraction.length <= digits ? [clean.slice(0, mark), fraction] : [clean, ''];
 }
 
 /**
@@ -72,15 +72,19 @@ export class CurrencyInput extends Component<CurrencyInputOptions> {
     const signal = this._events.signal;
     // Capture, so a page's change listener on the field reads the formatted
     // text. Blur covers a visit that changed nothing, which fires no change.
-    el.addEventListener('change', this._format, { capture: true, signal });
+    el.addEventListener('change', this._onChange, { capture: true, signal });
     el.addEventListener('blur', this._format, { signal });
     el.addEventListener('focus', this._onFocus, { signal });
     el.addEventListener('input', this._validate, { signal });
-    // On the document, so the listener follows the field into another form.
-    el.ownerDocument.addEventListener('formdata', this._onFormData, { capture: true, signal });
+    // Neither formdata nor reset leaves a shadow root, so a field in one
+    // listens there. Otherwise the document, so the listener follows the
+    // field into another form.
+    const root = el.getRootNode() as Document | ShadowRoot;
+    const scope = 'host' in root ? root : el.ownerDocument;
+    scope.addEventListener('formdata', this._onFormData, { capture: true, signal });
     // The form resets its fields after the reset event, so the field formats
     // the restored value a task later.
-    el.ownerDocument.addEventListener('reset', this._onReset, { capture: true, signal });
+    scope.addEventListener('reset', this._onReset, { capture: true, signal });
     this._start();
   }
 
@@ -115,6 +119,15 @@ export class CurrencyInput extends Component<CurrencyInputOptions> {
 
   private _format = () => {
     this._show(this.value);
+  };
+
+  /**
+   * Enter fires change while the field keeps focus. Formatting then would
+   * put the next keystroke after the currency sign, so the field waits for
+   * blur.
+   */
+  private _onChange = () => {
+    if (!this.el.matches(':focus')) this._format();
   };
 
   /** Shows `amount` in the locale and currency, leaving text that reads as no amount as it is. */

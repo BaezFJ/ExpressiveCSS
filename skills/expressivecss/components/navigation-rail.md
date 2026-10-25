@@ -9,7 +9,7 @@ Component ID: `navigation-rail`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `9248d5b48d807eef9612263d65fbcda9015c3825510619715498257492adc476`
+Contract SHA-256: `1a833199c3bf5a7b4bdc02823cb524aa1b6570019b097a0c22be7e37856070df`
 
 #### Selection and adaptation
 

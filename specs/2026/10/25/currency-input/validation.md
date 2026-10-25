@@ -24,6 +24,14 @@ The browser fixture for V1 and V3 to V7 is a `<form lang="de">` holding `<input 
 
 V1 and V3 to V7 run in `tests/currency-input-browser.test.js`, one test per check.
 
+A code review on 2026-10-25 found three gaps, all fixed on this branch with a browser test each.
+
+- Enter fires `change` while the field keeps focus in all three engines, and the field formatted then. Typing `6` after `1234.5` and Enter in a field whose Enter does not submit gave `1.234.506,00 €`. The field now formats on `change` only when it has lost focus.
+- `formdata` and `reset` do not leave a shadow root, so a field in one submitted `1.234,50 €` and ignored a reset. The listeners now go on the shadow root when there is one.
+- No test failed when the disabled, unnamed or other-form guard on the form data entry was removed. A new test checks a disabled and an unnamed field, and V4 now checks the other form's data whole. Each of the five mutations now fails three tests, one per engine.
+
+The JavaScript budget grew to 95,306 gzip bytes (+30). InputMask's reset listener has the same shadow-root gap; it is outside this phase.
+
 ## Manual checks
 
 These are not merge conditions.
