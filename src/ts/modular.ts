@@ -39,6 +39,7 @@ export type * from './components/mixedChart';
 export type * from './components/scatterChart';
 export type * from './components/sankeyChart';
 export type * from './components/pullToRefresh';
+export type * from './components/loadingOverlay';
 export type * from './components/swipeActions';
 export type * from './components/inputMask';
 export type * from './components/currencyInput';

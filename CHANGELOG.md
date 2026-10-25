@@ -18,6 +18,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   takes `update()` and `data-watch` like the other charts. A new
   semantics rule asks for a `<figure>` with a `<table>` and a
   `<figcaption>`.
+- Loading overlay. While the page sets `aria-busy="true"` on a
+  `.loading-overlay`, a surface scrim covers it, its loading indicator
+  shows in the centre, and the script makes the region `inert`, so
+  nothing inside takes a click, a tap or keyboard focus. A visually
+  hidden status region after it announces the start and the finish, in
+  words set with `i18n`, and focus goes back to the control that had it
+  when the region clears. A new semantics rule asks for a direct
+  `.loading-indicator` child.
 - `.defer-render` makes the browser skip layout and paint for a long
   list's off-screen rows through `content-visibility: auto`. Skipped rows
   reserve `--defer-render-row-size`, the list item height by default, and

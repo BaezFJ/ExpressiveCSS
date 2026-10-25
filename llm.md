@@ -354,6 +354,7 @@ function unmount() {
 | `Menu` | `.menu-trigger` |
 | `MessageScroller` | `.message-scroller` |
 | `PullToRefresh` | `.pull-to-refresh` |
+| `LoadingOverlay` | `.loading-overlay` |
 | `SwipeActions` | `.list.swipeable` |
 | `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
 | `CurrencyInput` | `input[data-currency]` of type text |
@@ -3611,6 +3612,59 @@ Removes the listeners and the status region, and ends a running refresh without 
 
 ---
 
+## Loading overlay
+
+Covers part of a page while it loads, so nothing inside takes input until the page clears it.
+
+A `.loading-overlay` region holds a `.loading-indicator` as a direct child and the content. `AutoInit()` starts every `.loading-overlay`. The page sets `aria-busy="true"` on the region when its work starts, and removes the attribute, or sets any other value, when the work is done; there is no method for either. While the region is busy, a scrim covers it, the indicator shows in its centre, and the script makes the region `inert`, so nothing inside takes a click, a tap or keyboard focus. When it clears, the region gets back the `inert` state it had before.
+
+```js
+const region = document.querySelector('.loading-overlay');
+region.setAttribute('aria-busy', 'true');
+try {
+  await save();
+} finally {
+  region.removeAttribute('aria-busy');
+}
+```
+
+Inert content leaves the accessibility tree, the indicator's status included. The indicator keeps the role and name every loading indicator has, and the script adds a visually hidden `.loading-overlay-status` region with `role="status"` just after the region, which announces "Loading" when the region becomes busy and "Loaded" when it clears; set the words with `i18n`. The script takes focus from a control inside the region when it becomes busy, including one in a shadow root, and gives it back when the region clears, unless the person moved focus elsewhere meanwhile or the page removed the control. A region busy from the start announces "Loading" a frame after the status region is added, since screen readers often skip text a live region already holds.
+
+The scrim and indicator show from the attribute alone, before the script starts and after `destroy()`, but only the script blocks input. They sit at z-index 5 and 6, above anything a component stacks inside itself; content the page raises higher shows through. They fade in and out, and appear at once under reduced motion. In forced colors the scrim dims the content toward `Canvas`. The scrim scrolls with the content of a region that scrolls itself, so put the overlay on a wrapper around a scroller. The region gets `position: relative` unless a utility positions it.
+
+```html
+<form class="loading-overlay">
+  <span class="loading-indicator contained" role="status" aria-label="Saving"></span>
+  <div class="field">
+    <input id="name" type="text" placeholder=" ">
+    <label for="name">Name</label>
+  </div>
+  <button type="submit" class="filled">Save</button>
+</form>
+```
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `i18n` | Object | `{ loading: 'Loading', loaded: 'Loaded' }` | What the status region announces when the region becomes busy and when it clears. |
+
+### Methods
+
+#### .destroy()
+
+Stops following `aria-busy`, removes the status region, and gives the region back the `inert` state it had before. The scrim still follows the attribute, so remove `aria-busy` too if the region should look available.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-loading-overlay-scrim-color` | surface at 70% |
+| `--md-comp-loading-overlay-motion` | default effects spring |
+| `--md-comp-loading-overlay-motion-duration` | the default effects spring's duration |
+
+---
+
 ## Swipe actions
 
 Reveals a list row's actions when a person swipes it sideways, or presses its actions button.
@@ -6052,6 +6106,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Menu` | `.menu-trigger` |
 | `MessageScroller` | `.message-scroller` |
 | `PullToRefresh` | `.pull-to-refresh` |
+| `LoadingOverlay` | `.loading-overlay` |
 | `SwipeActions` | `.list.swipeable` |
 | `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
 | `CurrencyInput` | `input[data-currency]` of type text |

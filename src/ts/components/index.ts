@@ -36,6 +36,7 @@ export { Menu } from "./menu";
 export { Menubar } from "./menubar";
 export { MessageScroller } from "./messageScroller";
 export { PullToRefresh } from "./pullToRefresh";
+export { LoadingOverlay } from "./loadingOverlay";
 export { SwipeActions } from "./swipeActions";
 export { RichTextEditor } from "./richTextEditor";
 export { MapView } from "./mapView";

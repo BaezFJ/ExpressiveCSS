@@ -1004,6 +1004,18 @@
           }
         ]
       },
+      "loading-overlay": {
+        "status": "enforced",
+        "note": "Added with the loading overlay component. The page owns aria-busy on the region; while it is \"true\" the script makes the region inert, so nothing inside takes pointer or keyboard input, and announces the start and the finish in a visually hidden role=\"status\" region it adds after the region, because inert content leaves the accessibility tree. The author's loading indicator keeps the role and name it has everywhere else.",
+        "rules": [
+          {
+            "id": "loading-overlay-has-an-indicator",
+            "kind": "forbid",
+            "selector": ".loading-overlay:not(:has(> .loading-indicator))",
+            "message": "Give a .loading-overlay a .loading-indicator as a direct child. It is what shows over the scrim while the region is busy."
+          }
+        ]
+      },
       "menu": {
         "status": "enforced",
         "note": "Swept 0.8.0. A [data-context-menu] trigger is a region: the menu opens at the pointer and the region carries no expanded state.",
