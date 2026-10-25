@@ -10,11 +10,11 @@ Outcome: typing or pasting digits into an `input[data-mask]` shows the pattern, 
 
 Prerequisites: none.
 
-- [ ] Write V1 in a new `tests/input-mask-browser.test.js`, with real keyboard typing and a clipboard paste in Chromium, Firefox and WebKit. Run `npm run build` and the file, and confirm V1 fails.
-- [ ] Add `src/ts/components/inputMask.ts`: parse the mask into slots and literals, format on a capture-phase `input` listener, place the caret, and format a prefilled value on start. Export it from `components/index.ts` and register it in `components/registry.ts` with the `input[data-mask]` selector.
-- [ ] Add the `input-mask` row and its type rule to `semantics.json`, the `tests/fixtures.js` entry and the `AUTO_INIT_FIXTURES.length` count in `tests/autoinit.test.js`, and write V9 in `tests/semantics.test.js`. Check whether the semantics roster accepts a row with no Sass partial, as the `character-counter` row does. Run `npm run build:semantics`.
-- [ ] Add `InputMask` to both registry tables in `llm.md` and to `docs/src/pages/auto-init.astro`, and run `npm run build:skill`.
-- [ ] Rebuild and rerun until V1 passes in all three engines. Add the reviewed JavaScript budget line.
+- [x] Write V1 in a new `tests/input-mask-browser.test.js`, with real keyboard typing and a clipboard paste in Chromium, Firefox and WebKit. Run `npm run build` and the file, and confirm V1 fails.
+- [x] Add `src/ts/components/inputMask.ts`: parse the mask into slots and literals, format on a capture-phase `input` listener, place the caret, and format a prefilled value on start. Export it from `components/index.ts` and register it in `components/registry.ts` with the `input[data-mask]` selector.
+- [x] Add the `input-mask` row and its type rule to `semantics.json`, the `tests/fixtures.js` entry and the `AUTO_INIT_FIXTURES.length` count in `tests/autoinit.test.js`, and write V9 in `tests/semantics.test.js`. The semantics roster takes a row with no Sass partial through the `additional` list, where `character-counter` also sits. Run `npm run build:semantics`.
+- [x] Add `InputMask` to both registry tables in `llm.md` and to `docs/src/pages/auto-init.astro`, and run `npm run build:skill`.
+- [x] Rebuild and rerun until V1 passes in all three engines. Add the reviewed JavaScript budget line.
 
 Completion check: V1 passes in Chromium, Firefox and WebKit, and `node --test tests/selective-builds.test.js tests/autoinit.test.js` passes.
 

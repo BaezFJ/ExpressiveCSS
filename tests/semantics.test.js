@@ -342,6 +342,17 @@ test('an unstyled list must state its role', () => {
   assert.equal(broken('<ul><li>A</li></ul>'), 0);
 });
 
+test('a mask goes only on an input with a caret', () => {
+  const broken = (html) => violations(html, enforcedRules, data.compositeRoles, { fragmentSafe: true })
+    .filter((v) => v.rule.id === 'input-mask-needs-a-caret').length;
+  assert.equal(broken('<input type="number" data-mask="000">'), 1);
+  assert.equal(broken('<input type="email" data-mask="aaa">'), 1);
+  assert.equal(broken('<textarea data-mask="000"></textarea>'), 1);
+  assert.equal(broken('<input type="tel" data-mask="(000) 000-0000">'), 0);
+  assert.equal(broken('<input type="TEXT" data-mask="000">'), 0);
+  assert.equal(broken('<input data-mask="000">'), 0);
+});
+
 test('aria-labelledby names each id once, however often it repeats', () => {
   // Repeating one id made a small snippet walk a large subtree once per token.
   const { document } = new JSDOM(

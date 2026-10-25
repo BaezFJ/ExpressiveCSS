@@ -353,6 +353,7 @@ function unmount() {
 | `MessageScroller` | `.message-scroller` |
 | `PullToRefresh` | `.pull-to-refresh` |
 | `SwipeActions` | `.list.swipeable` |
+| `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
@@ -5993,6 +5994,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `MessageScroller` | `.message-scroller` |
 | `PullToRefresh` | `.pull-to-refresh` |
 | `SwipeActions` | `.list.swipeable` |
+| `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |

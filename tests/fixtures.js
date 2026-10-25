@@ -131,6 +131,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<ul class="list swipeable" aria-label="Inbox"><li>Message<button type="button" class="icon-button" data-swipe-toggle aria-label="Actions for Message"><span class="material-symbols" aria-hidden="true">more_horiz</span></button><span class="swipe-actions"><button type="button" class="icon-button" aria-label="Archive Message"><span class="material-symbols" aria-hidden="true">archive</span></button></span></li></ul>`,
   },
   {
+    name: "InputMask",
+    selector: "input[data-mask]",
+    html: `<div class="field"><input id="phone" type="tel" inputmode="numeric" placeholder=" " data-mask="(000) 000-0000"><label for="phone">Phone</label></div>`,
+  },
+  {
     name: "CommandPalette",
     selector: "dialog.command-palette",
     html: `<dialog class="command-palette" aria-label="Commands"><input type="search" aria-label="Search commands"><ul><li><button type="button">New file</button></li></ul></dialog>`,
