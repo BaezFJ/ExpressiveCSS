@@ -52,14 +52,14 @@ Covers R6, R7.
 
 Prerequisites: groups 2 and 3.
 
-- [ ] Add `tests/back-to-top-browser.test.js`, looping over Chromium, Firefox and WebKit, with a tall page whose `<main id="main">` holds a heading and a button.
-- [ ] Case for V1: scroll past the threshold, click the link, and check `scrollY === 0`, focus on `#main` and the next Tab on the button. Repeat with Enter.
-- [ ] Case for V2: before the threshold and after scrolling back above it, the link is not visible, Tab skips it, `elementFromPoint` at its box misses it, and the ARIA snapshot omits it.
-- [ ] Case for V3: under emulated `reducedMotion: 'reduce'`, `scrollY` is 0 on the next frame after activation; without it, an intermediate frame shows a nonzero `scrollY`.
-- [ ] Case for V4: a `threshold` of `'400px'` from `data-back-to-top-options` shows the link after 400px.
-- [ ] Case for V10: the link's box sits at the bottom inline-end offset, flips under `dir="rtl"`, follows `--md-comp-back-to-top-offset`, and stays visible and working on a page that loads only the CSS.
+- [x] Add `tests/back-to-top-browser.test.js`, looping over Chromium, Firefox and WebKit, with a tall page whose `<main id="main">` holds a heading and a button.
+- [x] Case for V1: scroll past the threshold, click the link, and check `scrollY === 0`, focus on `#main` and the next Tab on the button. Repeat with Enter.
+- [x] Case for V2: before the threshold and after scrolling back above it, the link is not visible, Tab skips it, `elementFromPoint` at its box misses it, and the ARIA snapshot omits it.
+- [x] Case for V3: under emulated `reducedMotion: 'reduce'`, `scrollY` is 0 on the next frame after activation; without it, an intermediate frame shows a nonzero `scrollY`.
+- [x] Case for V4: a `threshold` of `'400px'` from `data-back-to-top-options` shows the link after 400px.
+- [x] Case for V10: the link's box sits at the bottom inline-end offset, flips under `dir="rtl"`, follows `--md-comp-back-to-top-offset`, and stays visible and working on a page that loads only the CSS.
 - [x] Add `tests/back-to-top.test.js` (jsdom), written with group 2 so the component landed with a test, for V5: AutoInit fixture, options from markup, the temporary `tabindex` added and removed, and `destroy()` leaving the markup as authored.
-- [ ] Run each file against a build without group 2 and confirm it fails, then against the new build and confirm it passes. Tear down pages, components and timers in `finally` blocks.
+- [x] Run each file against a build without group 2 and confirm it fails, then against the new build and confirm it passes. The browser file also ran against three mutations: no focus call, no `visibility: hidden` rule, and smooth scrolling under reduced motion. Each failed only its own case, in all three engines. Tear down pages, components and timers in `finally` blocks.
 
 Completion check: both files pass in all three engines and fail against the base build.
 
