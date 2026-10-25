@@ -364,6 +364,34 @@ test('a currency code goes only on a text input', () => {
   assert.equal(broken('<input data-currency="JPY">'), 0);
 });
 
+test('a hover card trigger is a link that names its card', () => {
+  const broken = (html, id) => violations(html, enforcedRules, data.compositeRoles)
+    .filter((v) => v.rule.id === id).length;
+  const card = '<div id="c" class="popover" popover="hint">Ada</div>';
+  assert.equal(broken(`<a class="hover-card-trigger" href="/ada" aria-details="c">Ada</a>${card}`, 'hover-card-trigger-is-a-link'), 0);
+  assert.equal(broken(`<a class="hover-card-trigger" href="/ada" aria-details="c">Ada</a>${card}`, 'hover-card-names-its-card'), 0);
+  assert.equal(broken(`<button class="hover-card-trigger" aria-details="c">Ada</button>${card}`, 'hover-card-trigger-is-a-link'), 1);
+  assert.equal(broken(`<a class="hover-card-trigger" aria-details="c">Ada</a>${card}`, 'hover-card-trigger-is-a-link'), 1);
+  assert.equal(broken(`<a class="hover-card-trigger" href="/ada">Ada</a>${card}`, 'hover-card-names-its-card'), 1);
+  assert.equal(broken('<a class="hover-card-trigger" href="/ada" aria-details="c">Ada</a><div id="c">Ada</div>', 'hover-card-names-its-card'), 1);
+});
+
+test('a transfer list has a name, unnamed checkboxes and labelled lists', () => {
+  const broken = (html, id) => violations(html, enforcedRules, data.compositeRoles).filter((v) => v.rule.id === id).length;
+  const lists = '<ul class="list transfer-available" aria-label="Available"><li><label><input type="checkbox" value="a"> A</label></li></ul>'
+    + '<ul class="list transfer-chosen" aria-labelledby="chosen"></ul>';
+  assert.equal(broken(`<div class="transfer-list">${lists}</div>`, 'transfer-list-needs-a-name'), 1);
+  assert.equal(broken(`<div class="transfer-list" data-name="">${lists}</div>`, 'transfer-list-needs-a-name'), 1);
+  assert.equal(broken(`<div class="transfer-list" data-name="t">${lists.replace('type="checkbox"', 'type="checkbox" name="t"')}</div>`, 'transfer-list-checkbox-unnamed'), 1);
+  assert.equal(broken(`<div class="transfer-list" data-name="t">${lists.replace(' aria-labelledby="chosen"', '')}</div>`, 'transfer-list-lists-labelled'), 1);
+  assert.equal(broken(`<div class="transfer-list" data-name="t">${lists}<button data-transfer="add">Add</button></div>`, 'transfer-list-buttons-typed'), 1);
+  assert.equal(broken(`<div class="transfer-list" data-name="t">${lists}<button type="submit" data-transfer="add">Add</button></div>`, 'transfer-list-buttons-typed'), 1);
+  assert.equal(broken(`<div class="transfer-list" data-name="t">${lists}<button type="button" data-transfer="add">Add</button></div>`, 'transfer-list-buttons-typed'), 0);
+  for (const id of ['transfer-list-needs-a-name', 'transfer-list-checkbox-unnamed', 'transfer-list-lists-labelled']) {
+    assert.equal(broken(`<div class="transfer-list" data-name="t">${lists}</div>`, id), 0, id);
+  }
+});
+
 test('aria-labelledby names each id once, however often it repeats', () => {
   // Repeating one id made a small snippet walk a large subtree once per token.
   const { document } = new JSDOM(

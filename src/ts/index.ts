@@ -24,6 +24,7 @@ import { Tour } from "./behaviors/tour";
 import { Sortable } from "./behaviors/sortable";
 import { Lists } from "./behaviors/lists";
 import { DataTables } from "./behaviors/dataTables";
+import { TransferList } from "./behaviors/transferList";
 
 export * from './modular';
 
@@ -52,3 +53,4 @@ Tour.Init();
 Sortable.Init();
 Lists.Init();
 DataTables.Init();
+TransferList.Init();

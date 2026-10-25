@@ -51,7 +51,9 @@ export const AUTO_INIT_COMPONENTS = {
   RadialChart: { component: Components.RadialChart, selector: ".radial-chart" },
   MixedChart: { component: Components.MixedChart, selector: ".mixed-chart" },
   ScatterChart: { component: Components.ScatterChart, selector: ".scatter-chart" },
+  FunnelChart: { component: Components.FunnelChart, selector: ".funnel-chart" },
   SankeyChart: { component: Components.SankeyChart, selector: ".sankey-chart" },
+  TreemapChart: { component: Components.TreemapChart, selector: ".treemap-chart" },
   CommandPalette: {
     component: Components.CommandPalette,
     selector: "dialog.command-palette",
@@ -94,6 +96,7 @@ export const AUTO_INIT_COMPONENTS = {
     selector: ".time-picker",
   },
   Tooltip: { component: Components.Tooltip, selector: ".tooltipped" },
+  HoverCard: { component: Components.HoverCard, selector: ".hover-card-trigger" },
   FloatingActionButton: {
     component: Components.FloatingActionButton,
     selector: ".fab-menu",

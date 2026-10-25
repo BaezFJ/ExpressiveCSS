@@ -252,8 +252,18 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the loading overlay: inert while aria-busy is "true", the status region after it and focus put back on clear: 95,566 gzip bytes (+260).
   // Reviewed the loading overlay review fixes: the blurred control, its root node's focus and the deferred first announcement: 95,625 gzip bytes (+59).
   // Reviewed the sankey chart: flows read from the table, nodes in columns, links on one scale, node names and colors, link keys, pointer hits and tooltip, and update() motion: 97,012 gzip bytes (+1,387).
-  // Reviewed BackToTop: the threshold sentinel, the inert link kept while focused, the scroll to the top, focus on the href target with a temporary tabindex, modified clicks left alone and the threshold check: 97,623 gzip bytes (+611).
-  assert.ok(sizes(js).gzip <= 97623, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the funnel chart: a centered stage per row as wide as its value against the largest, and the tooltip's share of the first stage: 97,313 gzip bytes (+332 over master's 96,981 build).
+  // Reviewed the transfer list: rows moved by its four buttons and back to their slots, the chosen values in the form data, the announcement, expressive:transfer and form reset: 98,124 gzip bytes (+811).
+  // Reviewed the hover card: a link's aria-details card shown with showPopover({ source }), open(), close() and destroy(): 98,362 gzip bytes (+238).
+  // Reviewed hover card timers: shown after enterDelay while the pointer is on the link or card, hidden after exitDelay, touch ignored: 98,543 gzip bytes (+181).
+  // Reviewed hover card keyboard focus holding the card, and Escape taken only from the link or card, with focus back on the link: 98,727 gzip bytes (+184).
+  // Reviewed hover card review fixes: a shared card handed between links on a named anchor, no state left by a failed showPopover, and Escape left to IME composition: 98,837 gzip bytes (+110).
+  // Reviewed Dialogs.confirm(): a promise-based alert dialog with Dialogs.i18n labels, removed once it closes: 99,202 gzip bytes (+367).
+  // Reviewed Dialogs.confirm() answering false when page code removes the open dialog: 99,221 gzip bytes (+19).
+  // Reviewed the treemap chart: rows squarified into rectangles whose areas follow their values: 99,814 gzip bytes (+593).
+  // Reviewed treemap chart keys in table order, the rectangle under the pointer and the tooltip with each row's share: 100,184 gzip bytes (+370).
+  // Reviewed BackToTop: the threshold sentinel, the inert link kept while focused, the scroll to the top, focus on the href target with a temporary tabindex, modified clicks left alone and the threshold check: 100,828 gzip bytes (+644).
+  assert.ok(sizes(js).gzip <= 100828, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -410,6 +420,11 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the loading overlay: the surface scrim and centred indicator while busy, their fade, the forced-colors wash and the hidden status region: 87,040 gzip bytes (+196).
   // Reviewed the loading overlay review fixes: isolation only while busy, the scrim and indicator above component layers, and the inherited radius: 87,044 gzip bytes (+4).
   // Reviewed the sankey chart: the shared chart parts, an unlined plot, filled nodes and links in six colors, the marked link, the tooltip and node names: 87,630 gzip bytes (+586).
-  // Reviewed .back-to-top: the fixed corner link, its offset and stacking tokens, and the inert link hidden at once after a fade in: 87,707 gzip bytes (+77).
-  assert.ok(sizes(css).gzip <= 87707, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the funnel chart: the label column, centered stages that grow from their old width and keep their color in forced colors, and the row band: 88,205 gzip bytes (+620 over master's 87,585 build).
+  // Reviewed the transfer list: two outlined lists that scroll, the buttons between them, stacking below medium and flipped icons in RTL: 88,345 gzip bytes (+140).
+  // Reviewed the treemap chart: the chart() plot and tooltip with absolutely placed rectangles: 88,681 gzip bytes (+336).
+  // Reviewed treemap chart colors, the gap as an inset fill, names and cells that show only where they fit, and forced-color edges: 88,991 gzip bytes (+310).
+  // Reviewed the treemap chart's ring round the highlighted rectangle, in Highlight under forced colors: 89,019 gzip bytes (+28).
+  // Reviewed .back-to-top: the fixed corner link, its offset and stacking tokens, and the inert link hidden at once after a fade in: 89,129 gzip bytes (+110).
+  assert.ok(sizes(css).gzip <= 89129, `CSS gzip: ${sizes(css).gzip}`);
 });

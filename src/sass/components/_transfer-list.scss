@@ -1,0 +1,73 @@
+@use "../abstracts" as *;
+
+// Transfer list. Two lists of checkbox rows with the buttons that move rows
+// between them in the middle. The rows are `.list` label rows, so a checked
+// row already shows the selected pill.
+//
+//   <div class="transfer-list" data-name="toppings">
+//     <ul class="list transfer-available" aria-label="Available toppings">
+//       <li><label><input type="checkbox" value="olives"> Olives</label></li>
+//     </ul>
+//     <div class="transfer-actions">
+//       <button type="button" class="icon-button" data-transfer="add" aria-label="Add checked toppings">…</button>
+//     </div>
+//     <ul class="list transfer-chosen" aria-label="Chosen toppings"></ul>
+//   </div>
+//
+// The grid follows the page direction, so the available list is at the
+// inline start, and the icons flip in a right-to-left page to keep pointing
+// at the list they move rows to. Below the medium window size the lists stack
+// with the buttons in a row between them.
+//
+// Tokens:
+//   --md-comp-transfer-list-gap              16px   between the lists and the buttons
+//   --md-comp-transfer-list-max-block-size   20rem  a list scrolls past this height
+//   --md-comp-transfer-list-shape            medium corner of each list's outline
+
+.transfer-list {
+  --md-comp-transfer-list-gap: 16px;
+  --md-comp-transfer-list-max-block-size: #{rem(320px)};
+  --md-comp-transfer-list-shape: var(--md-sys-shape-corner-medium);
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: var(--md-comp-transfer-list-gap);
+  align-items: center;
+
+  > .transfer-available,
+  > .transfer-chosen {
+    align-self: stretch;
+    min-block-size: rem(120px);
+    max-block-size: var(--md-comp-transfer-list-max-block-size);
+    margin: 0;
+    overflow-y: auto;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--md-comp-transfer-list-shape);
+  }
+
+  > .transfer-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .material-symbols:dir(rtl) {
+      scale: -1 1;
+    }
+  }
+
+  @include bp-down("medium") {
+    grid-template-columns: minmax(0, 1fr);
+
+    > .transfer-actions {
+      flex-direction: row;
+      justify-content: center;
+
+      // Down and up, toward the list each button moves rows to.
+      .material-symbols,
+      .material-symbols:dir(rtl) {
+        rotate: 90deg;
+        scale: none;
+      }
+    }
+  }
+}

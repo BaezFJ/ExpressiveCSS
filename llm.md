@@ -105,6 +105,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Mixed chart
 - Scatter chart
 - Sankey chart
+- Funnel chart
 
 ### Forms
 
@@ -346,6 +347,8 @@ function unmount() {
 | `MixedChart` | `.mixed-chart` |
 | `ScatterChart` | `.scatter-chart` |
 | `SankeyChart` | `.sankey-chart` |
+| `FunnelChart` | `.funnel-chart` |
+| `TreemapChart` | `.treemap-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
@@ -366,10 +369,11 @@ function unmount() {
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
+| `HoverCard` | `.hover-card-trigger` |
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
 
-`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, ImageCompare, Tour, and Sortable behaviors.
+`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, ImageCompare, Tour, Sortable, and TransferList behaviors.
 
 ## Component lifecycle
 
@@ -403,11 +407,12 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:create` | Autocomplete, from its `Add` row | `{ text }` |
 | `expressive:chip-add`, `chip-select`, `chip-delete` | Chips | `{ chip }` |
 | `expressive:change` | ButtonGroup, Menu checkbox and radio items, ScrollSpy (from the section), Tour | `{ button, pressed }`, `{ item, checked }`, `{ link }`, `{ step, index }` |
-| `expressive:open`, `expressive:close` | Tooltip, Snackbar, Tour | Tour's close: `{ completed }` |
+| `expressive:open`, `expressive:close` | Tooltip, HoverCard, Snackbar, Tour | Tour's close: `{ completed }` |
 | `expressive:action`, `expressive:closed` | Snackbar | none |
 | `expressive:copy` | Copy buttons | `{ text, copied }` |
 | `expressive:refresh` | Pull-to-refresh | `{ waitUntil }` |
 | `expressive:swipetoggle` | Swipe actions | `{ row, open }` |
+| `expressive:transfer` | Transfer list, from the container | `{ rows, from, to }` |
 | `expressive:change`, `expressive:sort`, `expressive:resize` | Data tables, from the wrapper | `{ selected }`, `{ header, column, direction }`, `{ header, column, width }`; `sort` is cancelable |
 
 An Autocomplete or Select input hosts a Menu, so it also fires that Menu's `expressive:open`, `expressive:close` and `expressive:select`. A callback that changes the choice again, such as an `onShow` that selects another tab, leaves only the event for the final choice.
@@ -420,7 +425,7 @@ The main bundle exports:
 
 - `AutoInit`, `Forms`, and `version`
 - `Copy` and `Theme`, the copy button and theme switch behaviors
-- `PaneResize`, `ImageCompare`, `Tour` and `Sortable` behaviors, and the `Menubar` component
+- `PaneResize`, `ImageCompare`, `Tour`, `Sortable` and `TransferList` behaviors, and the `Menubar` component
 - `Dialogs`, `BottomSheets`, and `SideSheets`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
 - `Chips`, `Datepicker`, `Menu`, and `Lightbox`
@@ -5223,6 +5228,58 @@ Name an icon-only button for what it explains, not "Info". The panel follows the
 
 ---
 
+## Hover card
+
+Shows a card of preview content after a delay when a link is hovered or gets keyboard focus.
+
+Add `hover-card-trigger` to an `<a href>` and point its `aria-details` at the card, a `.popover` with `popover="hint"`. `AutoInit()` starts every `.hover-card-trigger`. Once the pointer or keyboard focus has rested on the link for `enterDelay`, 500 ms by default, the card shows against the link: below it with start edges aligned, flipped to the other side when it would not fit. A pointer that only passes over the link shows nothing.
+
+The card stays while the pointer is on the link or the card, and while focus is on either. When both are left, it hides after `exitDelay`, 300 ms by default, so a pointer that crosses the gap to the card keeps it open. Focus stays on the link when the card shows, and Tab moves into the card's links and buttons. Escape hides the card and takes focus in it back to the link. A click elsewhere hides it too. One hint card shows at a time, and a hover card leaves an open menu or popover alone. Several links can name the same card, such as a name mentioned twice, and the card shows against whichever link showed it last.
+
+A tap or click follows the link and shows no card, so the linked page has to hold the same content for touch screens. Keep the card a short preview of where the link goes, and put anything to act on in the page, a popover opened by a button or a dialog. Do not also give the link `interestfor`, which Chromium would handle on its own as well.
+
+```html
+<p>Written by <a class="hover-card-trigger" href="/people/ada" aria-details="ada-card">Ada Lovelace</a>.</p>
+<div id="ada-card" class="popover" popover="hint">
+  <h3>Ada Lovelace</h3>
+  <p>Mathematician. Wrote the first published program, for the Analytical Engine.</p>
+  <p><a href="/people/ada/articles">All articles by Ada</a></p>
+</div>
+```
+
+### Accessibility
+
+`aria-details` tells a screen reader that the link has more detail and lets it move there. Screen readers support it unevenly, and a hidden card is not in the reading order at all, which is another reason the linked page must hold the same content. Leave the role off the card: it can hold links, which a tooltip cannot.
+
+### Options
+
+Constructor and `init` options. `data-hover-card-options` sets them from the markup.
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `enterDelay` | Number | `500` | How long the pointer or keyboard focus rests on the link before the card shows, in milliseconds. |
+| `exitDelay` | Number | `300` | How long the card stays after the pointer and focus leave the link and the card, in milliseconds. |
+
+### Methods
+
+#### .open()
+
+Shows the card now, without `enterDelay`.
+
+#### .close()
+
+Hides the card now, without `exitDelay`.
+
+#### .destroy()
+
+Hides a card the instance showed and removes the listeners. The link and card keep the markup as written.
+
+### Events
+
+`expressive:open` and `expressive:close` fire from the link when the card shows and hides, also when the browser hides it on Escape or a click elsewhere.
+
+---
+
 ## Stepper
 
 Progress through a fixed sequence of steps, such as a checkout, with each step's state.
@@ -5973,6 +6030,87 @@ A `<figure class="sankey-chart">` takes a `<figcaption>` and a `<table>` with on
 
 ---
 
+## Funnel chart
+
+Steps people take in order, each drawn as a stage as wide as the people who reach it.
+
+A `<figure class="funnel-chart">` takes a `<figcaption>` and a `<table>`. The first column labels each row and the second holds its value. `AutoInit()` draws each row as a stage, from the top down in table order, centered and as wide as its value against the largest one, which fills the chart. Each row's label sits beside its stage at the inline start. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="funnel-chart">
+  <figcaption>Signups this month</figcaption>
+  <table>
+    <thead>
+      <tr><th>Step</th><th>People</th><th>Revenue</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Visited</th><td>12,000</td><td>$0</td></tr>
+      <tr><th>Signed up</th><td>4,800</td><td>$0</td></tr>
+      <tr><th>Paid</th><td>640</td><td>$19,200</td></tr>
+    </tbody>
+  </table>
+</figure>
+```
+
+- Cells read as in the line chart: `data-value` wins over the text, and the text may carry a currency or percent sign and grouping commas around one number. A row whose value is not a number, or is zero or less, draws no stage but keeps its place and its label. Stages follow the table's order and are not sorted.
+- Only the second column draws stages, all in `--md-comp-funnel-chart-color-1`. Further columns show in the tooltip, so there is no legend.
+- The plot is one Tab stop named by the caption. Keyboard focus shows the first row; the down and up arrows move between rows, Home and End jump to the first and last, and Escape hides the tooltip. The keys are the same in a right-to-left page, where the labels move to the right. The pointer shows the row under it.
+- The tooltip names the row and each column's header and cell, as written in the table. After the second column's text it adds the stage's value as a percentage of the first row's, such as "4,800 (40%)": whole percentages, with a tenth below 10%, in the page's language. A row without a stage, or a first row without one, has no percentage.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. Each stage grows or shrinks from its old width, and a new one grows from nothing; with reduced motion they take their widths at once. It has the line chart's `show(index)` and `destroy()`.
+- `axis`, `toggle`, `stacked`, `values`, `sparkline`, `data-min` and `data-max` do not apply.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-funnel-chart-row-height` | 40px |
+| `--md-comp-funnel-chart-stage-height` | 60% of each row's height |
+| `--md-comp-funnel-chart-shape` | 4px, the stage's corner radius |
+| `--md-comp-funnel-chart-color-1` | `primary`, every stage's color |
+
+---
+
+## Treemap chart
+
+Parts of a whole drawn as rectangles whose areas follow their values, filling the plot.
+
+A `<figure class="treemap-chart">` takes the same `<figcaption>` and `<table>` as a pie chart. `AutoInit()` draws each row of the first value column as a rectangle whose share of the plot's area is its share of the total, with its name and cell written inside it, and a tooltip that follows the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="treemap-chart">
+  <figcaption>Budget by team</figcaption>
+  <table>
+    <thead>
+      <tr><th>Team</th><th>Budget</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Engineering</th><td>$600,000</td></tr>
+      <tr><th>Research</th><td>$300,000</td></tr>
+      <tr><th>Design</th><td>$120,000</td></tr>
+      <tr><th>Sales</th><td>$80,000</td></tr>
+    </tbody>
+  </table>
+</figure>
+```
+
+- The layout is squarified: rows are placed from the largest value to the smallest, equal values in table order, each strip chosen to keep its rectangles near square for the plot's shape. The largest starts at the top inline-start corner, so a right-to-left page, set by `dir` or CSS `direction`, mirrors the layout. A rectangle's place depends on its value, not its row, and the layout follows the plot when it changes shape.
+- Cells read as in the column chart. Zero, negative and non-numeric cells draw no rectangle and add nothing to the total; their rows stay in the table. Further value columns add lines to the tooltip.
+- Each rectangle shows its row name and its cell, as written, when both fit; one too small for them shows neither, and the tooltip names it. Long names end in an ellipsis. Rectangles take six colors in table order, then repeat, with text in each color's on-color. `--md-comp-treemap-chart-gap` parts neighbours inside each rectangle's area, so the areas stay exact.
+- The plot is one Tab stop named by the caption. Keyboard focus shows the first row with a rectangle. Right and down arrows move to the next such row in table order and left and up to the one before; the arrows keep their meaning in a right-to-left page. Home and End jump to the first and last, and Escape hides the tooltip. A tap or the pointer shows the rectangle under it.
+- The tooltip names the row, the value header with its cell and the row's share of the whole, in whole percentages with a tenth below 10%, in the page's `lang`. A ring in the gap marks the highlighted rectangle.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. Rectangles take their new places at once. It has the line chart's `show(index)`, which passes a row with no rectangle to the next one with one, and `destroy()`. There is no legend, axis or `sparkline`, and the `min` and `max` options do not apply.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-treemap-chart-height` | 240px |
+| `--md-comp-treemap-chart-gap` | 4px between neighbours |
+| `--md-comp-treemap-chart-color-1` … `-6` | `primary`, `tertiary`, `secondary`, `on-surface-variant`, then `primary-container` and `tertiary-container` deepened toward `on-surface` |
+| `--md-comp-treemap-chart-on-color-1` … `-6` | `on-primary`, `on-tertiary`, `on-secondary`, `surface`, `surface`, `surface` |
+
+---
+
 ## Tree
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
@@ -6141,6 +6279,8 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `MixedChart` | `.mixed-chart` |
 | `ScatterChart` | `.scatter-chart` |
 | `SankeyChart` | `.sankey-chart` |
+| `FunnelChart` | `.funnel-chart` |
+| `TreemapChart` | `.treemap-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
@@ -6161,6 +6301,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
+| `HoverCard` | `.hover-card-trigger` |
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
 
@@ -6590,7 +6731,24 @@ Close the dialog.
 dialog.close();
 ```
 
-Clicking the scrim does not close it — that is how the Dialog API works. Call `close()` yourself if you want that, or put a cancel action in the form.
+A tap or click on the scrim also closes a basic dialog. Both ends of the gesture have to land outside the dialog's box, so a drag that starts on the dialog, such as selecting text or missing a button, cannot dismiss it. Set `closedby="none"` or `closedby="closerequest"` to opt out.
+
+### Confirm from script
+
+`Expressive.Dialogs.confirm()` asks a yes-or-no question and returns a promise. It builds a basic dialog with `role="alertdialog"`, opens it with `showModal()`, and removes it once it closes. The promise resolves `true` when the person picks the confirm button and `false` on Cancel, Escape or a scrim tap.
+
+```js
+const ok = await Expressive.Dialogs.confirm({
+  headline: 'Delete draft?',
+  text: 'The draft and its attachments are removed.',
+  confirm: 'Delete'
+});
+if (ok) deleteDraft();
+```
+
+`text` is the question and is required. `headline` is optional. With a headline, the dialog is named by it and described by the text; without one, the text names it. All four strings are set as text, so markup in them is shown, not parsed. If page code removes the open dialog, for example on a route change, the promise resolves `false`. Focus starts on Cancel, the less destructive action, and the browser returns it to the element that had focus before the call. Label the confirm button with the action it takes, such as "Delete" or "Discard", rather than the "OK" default.
+
+`confirm` and `cancel` set the button labels for one call. `Expressive.Dialogs.i18n` holds the defaults, `{ confirm: 'OK', cancel: 'Cancel' }`; assign to it to change them for every later call. With the modular entry, `confirm()` works without `Dialogs.Init()`, but a scrim tap closes the dialog only after `Init()` runs.
 
 ### Tokens
 
@@ -9422,6 +9580,50 @@ Add `aria-invalid="true"` or `class="invalid"` on the input. The box uses `error
 ```
 
 ---
+
+## Transfer list
+
+Moves options between an available list and a chosen list, and submits the chosen ones with the form.
+
+A `.transfer-list` holds a `.list.transfer-available`, a `.transfer-actions` group of four `type="button"` buttons, and a `.list.transfer-chosen`. Each row is a `<label>` around a checkbox with a `value` and no `name`. Name each list with `aria-label` or `aria-labelledby`, and give the container a `data-name`. The root bundle starts the behavior on load; with the modular entry, call `TransferList.Init()`. Its listeners are on the document, so a list added later needs no call.
+
+`data-transfer="add"` moves the checked rows of the available list to the end of the chosen list, and `remove` moves the checked rows of the chosen list back. `add-all` and `remove-all` move every row. Moved rows arrive unchecked, and a row whose checkbox is disabled stays where it is. The chosen list keeps the order rows arrived in, and a row moved back returns to the place it had before the first move. The rows are native checkboxes, so Tab reaches each one and Space checks it; there is no listbox role or arrow-key model. A button pressed with nothing to move does nothing, and focus stays on the button after a move.
+
+When the form builds its data, each row of the chosen list adds its checkbox value under the container's `data-name`, in the chosen list's order. A form reset puts every row back where it was before the first move. A list inside a `<fieldset disabled>` submits nothing, as the fieldset's own fields do, but a chosen row whose own checkbox is disabled still submits.
+
+After each move the container fires a bubbling `expressive:transfer` event whose `detail` is `{ rows, from, to }`: the moved rows in their new order, then the two lists. A polite live region after the container announces the move. `Expressive.TransferList.i18n.moved` holds its text, `Moved {count} to {list}` by default, where `{list}` is the destination list's name.
+
+```html
+<form>
+  <div class="transfer-list" data-name="toppings">
+    <ul class="list transfer-available" aria-label="Available toppings">
+      <li><label><input type="checkbox" value="olives"> Olives</label></li>
+      <li><label><input type="checkbox" value="peppers"> Peppers</label></li>
+    </ul>
+    <div class="transfer-actions">
+      <button type="button" class="icon-button" data-transfer="add" aria-label="Add checked toppings">
+        <span class="material-symbols" aria-hidden="true">chevron_right</span>
+      </button>
+      <button type="button" class="icon-button" data-transfer="add-all" aria-label="Add all toppings">
+        <span class="material-symbols" aria-hidden="true">keyboard_double_arrow_right</span>
+      </button>
+      <button type="button" class="icon-button" data-transfer="remove" aria-label="Remove checked toppings">
+        <span class="material-symbols" aria-hidden="true">chevron_left</span>
+      </button>
+      <button type="button" class="icon-button" data-transfer="remove-all" aria-label="Remove all toppings">
+        <span class="material-symbols" aria-hidden="true">keyboard_double_arrow_left</span>
+      </button>
+    </div>
+    <ul class="list transfer-chosen" aria-label="Chosen toppings">
+      <li><label><input type="checkbox" value="mushrooms"> Mushrooms</label></li>
+    </ul>
+  </div>
+</form>
+```
+
+The lists sit side by side and follow the page direction, and the icons flip in a right-to-left page so they keep pointing at the list they move rows to. Below the medium window size the lists stack, with the buttons in a row between them and their icons turned to point down and up. Each list scrolls once it is taller than `--md-comp-transfer-list-max-block-size` (20rem); `--md-comp-transfer-list-gap` (16px) spaces the parts and `--md-comp-transfer-list-shape` (the medium corner) rounds each list's outline.
+
+The script writes the values, so a page with the script blocked submits nothing for the list. The list must sit inside its form; one that reaches a form through a `form` attribute, or sits in a form inside a shadow root, adds no entries and ignores resets. There is no `required` check, so validate the chosen list on submit when it must not be empty.
 
 ## Autocomplete
 

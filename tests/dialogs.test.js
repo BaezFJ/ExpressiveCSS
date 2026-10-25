@@ -6,7 +6,7 @@ import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-import { resetBody, window } from './setup.js';
+import { resetBody, window, Expressive } from './setup.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 
@@ -147,5 +147,102 @@ describe('dialog light dismiss', () => {
     dialog.dispatchEvent(new window.PointerEvent('pointercancel', { bubbles: true, pointerId: 1 }));
     tap(dialog, 'pointerup', { x: 10, y: 10 });
     assert.equal(dialog.open, true);
+  });
+});
+
+describe('Dialogs.confirm', () => {
+  beforeEach(resetBody);
+  const { Dialogs } = Expressive;
+  const dialogs = () => [...document.querySelectorAll('dialog[role="alertdialog"]')];
+  // The jsdom close() stub ignores its argument, so set the return value first.
+  const answer = (dialog, value) => {
+    dialog.returnValue = value;
+    dialog.close();
+  };
+
+  test('builds a named alert dialog, with and without a headline', () => {
+    Dialogs.confirm({ headline: 'Delete file?', text: 'This cannot be undone.' });
+    Dialogs.confirm({ text: 'Leave the page?' });
+    const [withHeadline, plain] = dialogs();
+
+    assert.equal(withHeadline.open, true);
+    const [heading, text, form] = withHeadline.children;
+    assert.equal(heading.tagName, 'H2');
+    assert.equal(heading.textContent, 'Delete file?');
+    assert.equal(text.tagName, 'P');
+    assert.equal(text.textContent, 'This cannot be undone.');
+    assert.equal(form.getAttribute('method'), 'dialog');
+    assert.equal(withHeadline.lastElementChild, form);
+    assert.equal(withHeadline.getAttribute('aria-labelledby'), heading.id);
+    assert.equal(withHeadline.getAttribute('aria-describedby'), text.id);
+
+    const [cancel, confirm] = form.querySelectorAll('button');
+    assert.deepEqual([cancel.type, cancel.value, cancel.className, cancel.autofocus], ['submit', '', 'text', true]);
+    assert.deepEqual([confirm.type, confirm.value, confirm.autofocus], ['submit', 'confirm', false]);
+
+    assert.equal(plain.querySelector('h2'), null);
+    assert.equal(plain.getAttribute('aria-labelledby'), plain.querySelector('p').id);
+    assert.equal(plain.hasAttribute('aria-describedby'), false);
+    assert.notEqual(plain.querySelector('p').id, text.id);
+  });
+
+  test('sets the text and labels as text, not markup', () => {
+    const markup = '<img src=x onerror=alert(1)>';
+    Dialogs.confirm({ headline: markup, text: markup, confirm: markup, cancel: markup });
+    const [dialog] = dialogs();
+    assert.equal(dialog.querySelector('img'), null);
+    assert.equal(dialog.querySelector('p').textContent, markup);
+    assert.equal(dialog.querySelector('h2').textContent, markup);
+    assert.deepEqual([...dialog.querySelectorAll('button')].map((b) => b.textContent), [markup, markup]);
+  });
+
+  test('labels default to Dialogs.i18n, and per-call labels win', () => {
+    const saved = { ...Dialogs.i18n };
+    try {
+      Dialogs.confirm({ text: 'a' });
+      Dialogs.confirm({ text: 'b', confirm: 'Delete' });
+      Dialogs.i18n.cancel = 'Keep';
+      Dialogs.confirm({ text: 'c' });
+      const labels = dialogs().map((d) => [...d.querySelectorAll('button')].map((b) => b.textContent));
+      assert.deepEqual(labels, [
+        ['Cancel', 'OK'],
+        ['Cancel', 'Delete'],
+        ['Keep', 'OK']
+      ]);
+    } finally {
+      Object.assign(Dialogs.i18n, saved);
+    }
+  });
+
+  test('resolves true for the confirm value and false otherwise', async () => {
+    // The open dialog, so a dialog left behind after closing cannot hang the test.
+    const open = () => document.querySelector('dialog[open]');
+    const yes = Dialogs.confirm({ text: 'a' });
+    answer(open(), 'confirm');
+    assert.equal(await yes, true);
+
+    const no = Dialogs.confirm({ text: 'b' });
+    open().close();
+    assert.equal(await no, false);
+  });
+
+  test('resolves false when page code removes the open dialog', async () => {
+    const answer = Dialogs.confirm({ text: 'a' });
+    document.body.innerHTML = '';
+    // Race a timer, so a promise that never settles fails instead of hanging.
+    const pending = new Promise((resolve) => setTimeout(resolve, 100, 'pending'));
+    assert.equal(await Promise.race([answer, pending]), false);
+  });
+
+  test('removes each dialog after it closes, and two calls resolve independently', async () => {
+    const first = Dialogs.confirm({ text: 'a' });
+    const second = Dialogs.confirm({ text: 'b' });
+    const [one, two] = dialogs();
+    answer(two, 'confirm');
+    assert.equal(await second, true);
+    assert.deepEqual(dialogs(), [one]);
+    answer(one, '');
+    assert.equal(await first, false);
+    assert.deepEqual(dialogs(), []);
   });
 });

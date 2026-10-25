@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**101 of 101 rows enforced; 0 remaining.**
+**105 of 105 rows enforced; 0 remaining.**
 
-96 of those rows are components - a part of the framework an author writes markup for.
+100 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 96 components declare conformance debt.**
+**2 of 100 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -643,6 +643,18 @@ Swept 0.8.0.
 - **switch-is-label** - A switch is a <label> wrapping its checkbox - that is what makes the text its accessible name.
 - **switch-decorative-text-hidden** - On/off captions inside the label are folded into the accessible name, which then reads "Off On". Hide them and let the label text name the switch.
 
+### funnel-chart
+
+Added with the funnel chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn stages and labels are aria-hidden.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `funnel-chart-is-a-figure-with-a-table` | forbid | `.funnel-chart:not(figure:has(> table))` | must not match |
+| `funnel-chart-has-a-caption` | forbid | `.funnel-chart:not(:has(> figcaption))` | must not match |
+
+- **funnel-chart-is-a-figure-with-a-table** - Write .funnel-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
+- **funnel-chart-has-a-caption** - Name a .funnel-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
+
 ### heatmap-chart
 
 Added with the heatmap chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn grid, labels and scale are aria-hidden.
@@ -654,6 +666,18 @@ Added with the heatmap chart component. The <table> is the chart's text alternat
 
 - **heatmap-chart-is-a-figure-with-a-table** - Write .heatmap-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
 - **heatmap-chart-has-a-caption** - Name a .heatmap-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
+
+### hover-card
+
+Added with the hover card component. The author writes a link with the hover-card-trigger class and points its aria-details at a .popover with popover="hint"; AutoInit shows that card after a delay when the link is hovered or gets keyboard focus. The card is extra detail, so it is not a tooltip and not the link's description.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `hover-card-trigger-is-a-link` | forbid | `.hover-card-trigger:not(a[href])` | must not match |
+| `hover-card-names-its-card` | require-idref | `.hover-card-trigger` | `aria-details` must reference `[popover]` inside `body` |
+
+- **hover-card-trigger-is-a-link** - Put hover-card-trigger on an <a href>. The card previews where the link goes, and a tap or click still has to follow it; a button already has a popover that opens on press.
+- **hover-card-names-its-card** - Point the trigger's aria-details at the id of its card, a [popover] element in the page. The component finds the card through it, and screen readers use it to reach the card.
 
 ### icon-buttons
 
@@ -1327,6 +1351,22 @@ Added with the tour component. A manual popover the Tour behavior shows one sect
 - **tour-is-a-dialog** - Give the .tour role="dialog". The behavior labels it with the current step's heading and moves focus to it, and the dialog role is what makes that name announced.
 - **tour-steps-name-a-target** - Each step <section> needs data-tour-target with the id of the element it explains. A step without one is never shown.
 
+### transfer-list
+
+Added with the transfer list behavior. The rows are native checkboxes in .list label rows, so Tab reaches each one and Space checks it; the [data-transfer] buttons move the checked rows, and no listbox role or arrow-key contract is involved. The checkboxes carry no name: when the form builds its data, the script adds each chosen row's value under the container's data-name, in the chosen list's order.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `transfer-list-needs-a-name` | forbid | `.transfer-list:not([data-name]), .transfer-list[data-name=""]` | must not match |
+| `transfer-list-checkbox-unnamed` | forbid | `.transfer-list input[type="checkbox"][name]` | must not match |
+| `transfer-list-lists-labelled` | forbid | `:is(.transfer-available, .transfer-chosen):not([aria-label], [aria-labelledby])` | must not match |
+| `transfer-list-buttons-typed` | forbid | `.transfer-list [data-transfer]:not([type="button" i])` | must not match |
+
+- **transfer-list-needs-a-name** - Give each .transfer-list a data-name. The chosen rows submit their values under it; without one the form gets nothing.
+- **transfer-list-checkbox-unnamed** - Leave the name off a transfer list's checkboxes. A checkbox's name submits whether it is checked, which only says what is selected to move; the script submits the chosen rows under the container's data-name.
+- **transfer-list-lists-labelled** - Name each transfer list with aria-label or aria-labelledby, such as "Available toppings" and "Chosen toppings". The name tells people which list a row is in, and the move announcement reads it.
+- **transfer-list-buttons-typed** - Give each [data-transfer] button type="button". A button in a form submits it by default, so an untyped move button would also send the form.
+
 ### transitions
 
 **Kind:** foundation.
@@ -1350,6 +1390,18 @@ Added with the tree component. Nested lists of native disclosures and links: eve
 
 - **tree-is-not-a-tree-widget** - A .tree takes no ARIA tree roles. It is lists of disclosures and links, which keep their own roles and keyboard behavior.
 - **tree-marks-current-not-selected** - Mark the open file or page with aria-current. aria-selected is not valid on a link or a list item.
+
+### treemap-chart
+
+Added with the treemap chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn rectangles and their text are aria-hidden.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `treemap-chart-is-a-figure-with-a-table` | forbid | `.treemap-chart:not(figure:has(> table))` | must not match |
+| `treemap-chart-has-a-caption` | forbid | `.treemap-chart:not(:has(> figcaption))` | must not match |
+
+- **treemap-chart-is-a-figure-with-a-table** - Write .treemap-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
+- **treemap-chart-has-a-caption** - Name a .treemap-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
 ## Exempt
 

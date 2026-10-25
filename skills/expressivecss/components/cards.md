@@ -9,7 +9,7 @@ Component ID: `cards`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `d00147c5574cfa3ce77b40af6f0080ca7baaa0e9011f2b730af30bbfde52aced`
+Contract SHA-256: `e34f190a7b5b7da7ee5e1c769b3a2969c3c211e7ed74201553c1e5f5799f9027`
 
 #### Selection and adaptation
 

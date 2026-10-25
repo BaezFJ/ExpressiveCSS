@@ -47,6 +47,7 @@
       "autocomplete",
       "character-counter",
       "currency-input",
+      "hover-card",
       "input-mask",
       "landmarks"
     ],
@@ -938,6 +939,28 @@
           }
         ]
       },
+      "hover-card": {
+        "status": "enforced",
+        "note": "Added with the hover card component. The author writes a link with the hover-card-trigger class and points its aria-details at a .popover with popover=\"hint\"; AutoInit shows that card after a delay when the link is hovered or gets keyboard focus. The card is extra detail, so it is not a tooltip and not the link's description.",
+        "rules": [
+          {
+            "id": "hover-card-trigger-is-a-link",
+            "kind": "forbid",
+            "selector": ".hover-card-trigger:not(a[href])",
+            "fragmentSafe": true,
+            "message": "Put hover-card-trigger on an <a href>. The card previews where the link goes, and a tap or click still has to follow it; a button already has a popover that opens on press."
+          },
+          {
+            "id": "hover-card-names-its-card",
+            "kind": "require-idref",
+            "selector": ".hover-card-trigger",
+            "attr": "aria-details",
+            "container": "body",
+            "targetSelector": "[popover]",
+            "message": "Point the trigger's aria-details at the id of its card, a [popover] element in the page. The component finds the card through it, and screen readers use it to reach the card."
+          }
+        ]
+      },
       "input-mask": {
         "status": "enforced",
         "note": "Added with the input mask component. The author writes `data-mask` on a text field they already had; AutoInit formats its value to the pattern as people type, paste or compose, and the form submits the formatted text. The component needs a caret to place, which only the text, tel, search, url and password input types have.",
@@ -1825,6 +1848,24 @@
           }
         ]
       },
+      "treemap-chart": {
+        "status": "enforced",
+        "note": "Added with the treemap chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn rectangles and their text are aria-hidden.",
+        "rules": [
+          {
+            "id": "treemap-chart-is-a-figure-with-a-table",
+            "kind": "forbid",
+            "selector": ".treemap-chart:not(figure:has(> table))",
+            "message": "Write .treemap-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript."
+          },
+          {
+            "id": "treemap-chart-has-a-caption",
+            "kind": "forbid",
+            "selector": ".treemap-chart:not(:has(> figcaption))",
+            "message": "Name a .treemap-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart."
+          }
+        ]
+      },
       "scatter-chart": {
         "status": "enforced",
         "note": "Added with the scatter chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn points, axes and legend are aria-hidden.",
@@ -1840,6 +1881,24 @@
             "kind": "forbid",
             "selector": ".scatter-chart:not(:has(> figcaption))",
             "message": "Name a .scatter-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart."
+          }
+        ]
+      },
+      "funnel-chart": {
+        "status": "enforced",
+        "note": "Added with the funnel chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn stages and labels are aria-hidden.",
+        "rules": [
+          {
+            "id": "funnel-chart-is-a-figure-with-a-table",
+            "kind": "forbid",
+            "selector": ".funnel-chart:not(figure:has(> table))",
+            "message": "Write .funnel-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript."
+          },
+          {
+            "id": "funnel-chart-has-a-caption",
+            "kind": "forbid",
+            "selector": ".funnel-chart:not(:has(> figcaption))",
+            "message": "Name a .funnel-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart."
           }
         ]
       },
@@ -2266,6 +2325,37 @@
             "kind": "forbid",
             "selector": ":is(a, button):has(> .tooltip):not([aria-describedby])",
             "message": "A .tooltip inside its control is swallowed: with an aria-label present the label wins and the tooltip is never announced, and without one the two run together. Give the tooltip an id and point aria-describedby at it."
+          }
+        ]
+      },
+      "transfer-list": {
+        "status": "enforced",
+        "note": "Added with the transfer list behavior. The rows are native checkboxes in .list label rows, so Tab reaches each one and Space checks it; the [data-transfer] buttons move the checked rows, and no listbox role or arrow-key contract is involved. The checkboxes carry no name: when the form builds its data, the script adds each chosen row's value under the container's data-name, in the chosen list's order.",
+        "rules": [
+          {
+            "id": "transfer-list-needs-a-name",
+            "kind": "forbid",
+            "selector": ".transfer-list:not([data-name]), .transfer-list[data-name=\"\"]",
+            "message": "Give each .transfer-list a data-name. The chosen rows submit their values under it; without one the form gets nothing."
+          },
+          {
+            "id": "transfer-list-checkbox-unnamed",
+            "kind": "forbid",
+            "selector": ".transfer-list input[type=\"checkbox\"][name]",
+            "fragmentSafe": true,
+            "message": "Leave the name off a transfer list's checkboxes. A checkbox's name submits whether it is checked, which only says what is selected to move; the script submits the chosen rows under the container's data-name."
+          },
+          {
+            "id": "transfer-list-lists-labelled",
+            "kind": "forbid",
+            "selector": ":is(.transfer-available, .transfer-chosen):not([aria-label], [aria-labelledby])",
+            "message": "Name each transfer list with aria-label or aria-labelledby, such as \"Available toppings\" and \"Chosen toppings\". The name tells people which list a row is in, and the move announcement reads it."
+          },
+          {
+            "id": "transfer-list-buttons-typed",
+            "kind": "forbid",
+            "selector": ".transfer-list [data-transfer]:not([type=\"button\" i])",
+            "message": "Give each [data-transfer] button type=\"button\". A button in a form submits it by default, so an untyped move button would also send the form."
           }
         ]
       },
