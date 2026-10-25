@@ -17,6 +17,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   and is announced through `TransferList.i18n.moved`. Four new semantics
   rules ask for `data-name`, unnamed checkboxes, named lists and
   `type="button"` on the move buttons.
+- Funnel chart. A `<figure class="funnel-chart">` draws each table row as
+  a stage, from the top down in table order, centered and as wide as its
+  value against the largest one. The tooltip adds each stage's percentage
+  of the first row, and further columns show in the tooltip. The plot is
+  one Tab stop whose up and down arrows move between rows, and it takes
+  `update()`, where stages move from their old widths, and `data-watch`
+  like the other charts. A new semantics rule asks for a `<figure>` with a
+  `<table>` and a `<figcaption>`.
 - Sankey chart. A `<figure class="sankey-chart">` draws each table row as
   a flow: the first column names the source node, the second the target
   node, and the third holds the value. Nodes stand in columns by their
