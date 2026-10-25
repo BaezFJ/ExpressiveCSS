@@ -90,6 +90,15 @@ function laidOut({ plot, nodes: boxes, links }, message, rtl = false, [flows, no
   assert.ok(boxes[3].top < boxes[4].top, `${message}: Homes above Industry`);
   assert.ok(boxes[1].top < boxes[5].top, `${message}: Grid above Storage`);
 
+  // Each link's ends lie on its source's and its target's edges.
+  const nodeBox = (name) => boxes[nodes.findIndex(([each]) => each === name)];
+  const on = ([top, bottom], box, label) => assert.ok(top >= box.top - 0.5 && bottom <= box.top + box.height + 0.5,
+    `${message}: ${label} runs ${top}-${bottom}px, off its node at ${box.top}-${box.top + box.height}px`);
+  links.forEach(({ source, target }, i) => {
+    on(source, nodeBox(flows[i][0]), `link ${i} at its source`);
+    on(target, nodeBox(flows[i][1]), `link ${i} at its target`);
+  });
+
   // Links on one node edge stack without overlapping: Grid's two in, its two out, and Wind's two out.
   const apart = ([a, b], label) => assert.ok(a[1] <= b[0] + 0.5, `${message}: ${label} do not overlap`);
   apart([links[0].target, links[1].target], "Grid's incoming links");

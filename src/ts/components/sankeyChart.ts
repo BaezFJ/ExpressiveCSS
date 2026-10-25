@@ -200,12 +200,12 @@ export class SankeyChart extends LineChart {
     const x = this._across((source.x + NODE_WIDTH + target.x) / 2);
     Object.assign(this._tooltip.style, { left: `${x}%`, top: `${(from + to + size) / 2}%` });
     this._tooltip.classList.toggle('end', x > 50);
-    const [header, cells] = [this._header.map((cell) => cell.textContent.trim()), this._rows[flow.row].cells];
+    const header = this._header.map((cell) => cell.textContent.trim());
     const [sourceName, targetName, value] = [span(header[0]), span(header[1]), span(header[2])];
     sourceName.dataset.series = source.color;
     targetName.dataset.series = target.color;
     value.className = 'value';
-    this._tooltip.replaceChildren(sourceName, span(source.name), targetName, span(target.name), value, span(cells[2].textContent.trim()));
+    this._tooltip.replaceChildren(sourceName, span(source.name), targetName, span(target.name), value, span(text(this._rows[flow.row], 2)));
   }
 
   /** The link under the pointer, or -1 off every link. By position, since a touch keeps its first target as it drags. */
@@ -305,8 +305,8 @@ export class SankeyChart extends LineChart {
     const span = document.createElement('span');
     span.className = last ? 'sankey-chart-name end' : 'sankey-chart-name';
     span.textContent = name;
-    span.style.setProperty('--x', `${last ? x : x + NODE_WIDTH}%`);
-    span.style.setProperty('--y', `${top + height / 2}%`);
+    span.style.setProperty('--sankey-chart-x', `${last ? x : x + NODE_WIDTH}%`);
+    span.style.setProperty('--sankey-chart-y', `${top + height / 2}%`);
     return span;
   }
 

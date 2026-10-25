@@ -253,7 +253,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the sankey chart's node names and colors: 96,332 gzip bytes (+132).
   // Reviewed the sankey chart's link keys, pointer hits and tooltip: 96,553 gzip bytes (+221).
   // Reviewed the sankey chart's links and nodes moving to their new shapes on update(): 96,636 gzip bytes (+83).
-  assert.ok(sizes(js).gzip <= 96636, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the sankey chart's prefixed name position properties and the tooltip value read through the cell helper: 96,640 gzip bytes (+4).
+  assert.ok(sizes(js).gzip <= 96640, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -410,5 +411,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the sankey chart: the shared chart parts, an unlined plot and filled nodes and links: 87,220 gzip bytes (+376).
   // Reviewed the sankey chart's colors, link opacity token and node names: 87,349 gzip bytes (+129).
   // Reviewed the sankey chart's marked link and tooltip placement: 87,377 gzip bytes (+28).
-  assert.ok(sizes(css).gzip <= 87377, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the sankey chart's prefixed name position properties with fallbacks: 87,385 gzip bytes (+8).
+  assert.ok(sizes(css).gzip <= 87385, `CSS gzip: ${sizes(css).gzip}`);
 });

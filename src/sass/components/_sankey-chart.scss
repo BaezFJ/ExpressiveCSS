@@ -14,8 +14,8 @@
 //
 // Each node takes a color in node order through data-series, and each link
 // its source node's color, lighter. The names sit over the drawing, level
-// with their nodes, from --x and --y, the script's percentages of the plot
-// from its inline start and top.
+// with their nodes, from --sankey-chart-x and --sankey-chart-y, the
+// script's percentages of the plot from its inline start and top.
 //
 // Tokens:
 //   --md-comp-sankey-chart-height        240px
@@ -93,8 +93,8 @@
 
 .sankey-chart-name {
   position: absolute;
-  top: var(--y);
-  inset-inline-start: var(--x);
+  top: var(--sankey-chart-y, 0%);
+  inset-inline-start: var(--sankey-chart-x, 0%);
   padding-inline: 4px;
   color: var(--md-sys-color-on-surface);
   @include typescale("body-small");
@@ -102,7 +102,7 @@
   translate: 0 -50%;
 
   &.end {
-    inset-inline: auto calc(100% - var(--x));
+    inset-inline: auto calc(100% - var(--sankey-chart-x, 0%));
   }
 }
 
