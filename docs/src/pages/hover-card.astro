@@ -58,7 +58,9 @@ const S = defineSections([
           Focus stays on the link when the card shows, and Tab moves into the card's
           links and buttons. Escape hides the card and takes focus in it back to the
           link. A click elsewhere hides it too. One hint card shows at a time, and a hover
-          card leaves an open <a href={route('menu')}>menu</a> or popover alone.
+          card leaves an open <a href={route('menu')}>menu</a> or popover alone. Several
+          links can name the same card, such as a name mentioned twice, and the card shows
+          against whichever link showed it last.
         </p>
   </Section>
   <Section {...S.touch}>

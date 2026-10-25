@@ -19,6 +19,10 @@ const _defaults: HoverCardOptions = {
   exitDelay: 300
 };
 
+// Links can share one card, such as a name mentioned twice; the link that
+// last showed it owns it, and the next one takes it over.
+const owners = new WeakMap<HTMLElement, HoverCard>();
+
 /**
  * Hover card. A `.hover-card-trigger` link names its card, a `.popover` with
  * `popover="hint"`, in `aria-details`. The card shows against the link after
@@ -32,6 +36,8 @@ export class HoverCard extends Component<HoverCardOptions> {
   /** What keeps the card wanted: the pointer, keyboard focus, or both. */
   private _holds = new Set<'pointer' | 'focus'>();
   private _timeout: ReturnType<typeof setTimeout>;
+  /** The anchor name the card is placed against while this link shows it. */
+  private _anchorName = `--hover-card-${Utils.guid()}`;
 
   constructor(el: HTMLElement, options: Partial<HoverCardOptions>) {
     super(el, options);
@@ -61,8 +67,10 @@ export class HoverCard extends Component<HoverCardOptions> {
 
   destroy() {
     clearTimeout(this._timeout);
-    if (this._shown) this.cardEl.hidePopover();
-    this._shown = false;
+    if (this._shown) {
+      this.cardEl.hidePopover();
+      this._hidden();
+    }
     super.destroy();
   }
 
@@ -72,10 +80,15 @@ export class HoverCard extends Component<HoverCardOptions> {
   open = () => {
     clearTimeout(this._timeout);
     if (!this.cardEl || this._shown) return;
+    owners.get(this.cardEl)?.close();
+    // `source` makes the link the card's anchor and invoker, so Tab moves from
+    // the link into the card. It throws for a card without the popover
+    // attribute, before any state changes.
+    (this.cardEl.showPopover as (options?: { source?: Element }) => void).call(this.cardEl, { source: this.el });
+    owners.set(this.cardEl, this);
     this._shown = true;
     this._listenForEscape(true);
-    // `source` makes the link the card's anchor and invoker, so Tab moves from the link into the card.
-    (this.cardEl.showPopover as (options?: { source?: Element }) => void).call(this.cardEl, { source: this.el });
+    this._anchor(true);
     this._notify('open');
   };
 
@@ -85,11 +98,26 @@ export class HoverCard extends Component<HoverCardOptions> {
   close = () => {
     clearTimeout(this._timeout);
     if (!this._shown) return;
-    this._shown = false;
-    this._listenForEscape(false);
     this.cardEl.hidePopover();
+    this._hidden();
     this._notify('close');
   };
+
+  private _hidden() {
+    this._shown = false;
+    this._listenForEscape(false);
+    this._anchor(false);
+  }
+
+  // `source` anchors the card too, but Firefox keeps the first source's
+  // anchor for good, so a card two links share would stay at the first. A
+  // named anchor, set only while the card shows, follows the link that shows it.
+  private _anchor(on: boolean) {
+    Utils.setAnchorName(this.el, this._anchorName, on);
+    if (on) this.cardEl.style.setProperty('position-anchor', this._anchorName);
+    else this.cardEl.style.removeProperty('position-anchor');
+    for (const el of [this.el, this.cardEl]) if (!el.getAttribute('style')) el.removeAttribute('style');
+  }
 
   /** Wanted cards show after enterDelay; once nothing holds the card, it hides after exitDelay. */
   private _schedule() {
@@ -145,7 +173,7 @@ export class HoverCard extends Component<HoverCardOptions> {
   // that has focus. An engine that does not know popover="hint" treats the
   // card as manual, which Escape would not close.
   private _handleKeydown = (e: KeyboardEvent) => {
-    if (e.key !== 'Escape') return;
+    if (e.key !== 'Escape' || Utils.isComposing(e)) return;
     if (Utils.focusIsIn(this.el, this.cardEl)) this._takeEscape(e);
     this.close();
   };
@@ -159,8 +187,7 @@ export class HoverCard extends Component<HoverCardOptions> {
 
   private _handleToggle = (e: Event) => {
     if ((e as ToggleEvent).newState !== 'closed' || !this._shown) return;
-    this._shown = false;
-    this._listenForEscape(false);
+    this._hidden();
     this._notify('close');
   };
 }

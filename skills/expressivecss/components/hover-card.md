@@ -9,7 +9,7 @@ Component ID: `hover-card`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `19265999961cefebc68cbdfec322165fd768ec9e7f63acec17730bb6b8322133`
+Contract SHA-256: `4a48cc329973f1d182d09c5bf8a4aca51a16041df9cf84088ce97fa896983d3a`
 
 #### Selection and adaptation
 
@@ -37,7 +37,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Add `hover-card-trigger` to an `<a href>` and point its `aria-details` at the card, a `.popover` with `popover="hint"`. `AutoInit()` starts every `.hover-card-trigger`. Once the pointer or keyboard focus has rested on the link for `enterDelay`, 500 ms by default, the card shows against the link: below it with start edges aligned, flipped to the other side when it would not fit. A pointer that only passes over the link shows nothing.
 
-The card stays while the pointer is on the link or the card, and while focus is on either. When both are left, it hides after `exitDelay`, 300 ms by default, so a pointer that crosses the gap to the card keeps it open. Focus stays on the link when the card shows, and Tab moves into the card's links and buttons. Escape hides the card and takes focus in it back to the link. A click elsewhere hides it too. One hint card shows at a time, and a hover card leaves an open menu or popover alone.
+The card stays while the pointer is on the link or the card, and while focus is on either. When both are left, it hides after `exitDelay`, 300 ms by default, so a pointer that crosses the gap to the card keeps it open. Focus stays on the link when the card shows, and Tab moves into the card's links and buttons. Escape hides the card and takes focus in it back to the link. A click elsewhere hides it too. One hint card shows at a time, and a hover card leaves an open menu or popover alone. Several links can name the same card, such as a name mentioned twice, and the card shows against whichever link showed it last.
 
 A tap or click follows the link and shows no card, so the linked page has to hold the same content for touch screens. Keep the card a short preview of where the link goes, and put anything to act on in the page, a popover opened by a button or a dialog. Do not also give the link `interestfor`, which Chromium would handle on its own as well.
 

@@ -5237,7 +5237,7 @@
         "sources": [
           {
             "path": "src/ts/components/hoverCard.ts",
-            "sha256": "65fb569c5335552b907029aa81353072c3fc6af02cf24897016ce6bb8efd6ed4"
+            "sha256": "6e08cd305135d7280bc515e9e1b262f51c86959b3339270f312c7ae53a34e2bf"
           }
         ],
         "gaps": [

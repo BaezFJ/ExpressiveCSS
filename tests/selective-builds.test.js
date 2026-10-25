@@ -252,7 +252,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the hover card: a link's aria-details card shown with showPopover({ source }), open(), close() and destroy(): 95,544 gzip bytes (+238).
   // Reviewed hover card timers: shown after enterDelay while the pointer is on the link or card, hidden after exitDelay, touch ignored: 95,725 gzip bytes (+181).
   // Reviewed hover card keyboard focus holding the card, and Escape taken only from the link or card, with focus back on the link: 95,909 gzip bytes (+184).
-  assert.ok(sizes(js).gzip <= 95909, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed hover card review fixes: a shared card handed between links on a named anchor, no state left by a failed showPopover, and Escape left to IME composition: 96,042 gzip bytes (+133).
+  assert.ok(sizes(js).gzip <= 96042, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

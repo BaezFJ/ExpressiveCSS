@@ -116,4 +116,34 @@ for (const [name, browserType, browserTest] of engines) {
       await browser.close();
     }
   });
+
+  browserTest(`${name}: two links that share a card each show it against themselves`, { timeout: 30000 }, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage({ viewport: { width: 800, height: 600 }, reducedMotion: 'reduce' });
+      await page.setContent(`<style>${css} body { margin: 0 }</style>
+        <p style="margin: 100px"><a id="first" class="hover-card-trigger" href="#ada" aria-details="card">Ada</a></p>
+        <p style="margin: 300px 100px 0"><a id="second" class="hover-card-trigger" href="#ada" aria-details="card">Ada again</a></p>
+        <div id="card" class="popover" popover="hint"><p>Ada Lovelace</p></div>
+        <script>${js}</script>`);
+      await page.evaluate(() => {
+        for (const id of ['first', 'second']) Expressive.HoverCard.init(document.getElementById(id), { enterDelay: 100, exitDelay: 400 });
+      });
+      const below = (id) => page.evaluate((id) => {
+        const card = document.getElementById('card');
+        const gap = parseFloat(getComputedStyle(card).getPropertyValue('--md-comp-popover-gap'));
+        return card.matches(':popover-open') && Math.abs(card.getBoundingClientRect().top - document.getElementById(id).getBoundingClientRect().bottom - gap) <= 2;
+      }, id);
+
+      await page.mouse.move(...await center(page, '#first'));
+      await page.waitForFunction(() => document.getElementById('card').matches(':popover-open'), null, { timeout: 2000 });
+      assert.equal(await below('first'), true);
+      await page.mouse.move(...await center(page, '#second'));
+      await page.waitForTimeout(900);
+      assert.equal(await below('second'), true, 'the card shows against the second link and stays');
+    } finally {
+      await browser.close();
+    }
+  });
 }
+

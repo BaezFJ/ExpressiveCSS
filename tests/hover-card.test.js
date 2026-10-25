@@ -245,3 +245,95 @@ test('HoverCard Escape with focus in the card takes the key and returns focus to
     restore();
   }
 });
+
+test('HoverCard keeps working after showPopover throws, as it does for a card without the popover attribute', () => {
+  const { calls, restore } = shimPopovers();
+  document.body.innerHTML = markup();
+  const link = document.querySelector('a');
+  const instance = Expressive.HoverCard.init(link);
+  const show = window.HTMLElement.prototype.showPopover;
+  try {
+    window.HTMLElement.prototype.showPopover = () => { throw new window.DOMException('Not a popover', 'NotSupportedError'); };
+    assert.throws(() => instance.open(), /Not a popover/);
+    window.HTMLElement.prototype.showPopover = show;
+    instance.open();
+    assert.deepEqual(calls, [['show', link]], 'the failed open left nothing marked as shown');
+  } finally {
+    window.HTMLElement.prototype.showPopover = show;
+    instance.destroy();
+    restore();
+  }
+});
+
+test('HoverCard keeps the card when the pointer returns to the link within exitDelay, and does nothing after destroy()', (t) => {
+  const { calls, restore } = shimPopovers();
+  document.body.innerHTML = markup();
+  const link = document.querySelector('a');
+  const instance = Expressive.HoverCard.init(link);
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  try {
+    pointer(link, 'pointerenter');
+    t.mock.timers.tick(500);
+    pointer(link, 'pointerleave');
+    t.mock.timers.tick(299);
+    pointer(link, 'pointerenter');
+    t.mock.timers.tick(1000);
+    assert.deepEqual(calls.map(([kind]) => kind), ['show']);
+    pointer(link, 'pointerleave');
+    instance.destroy();
+    t.mock.timers.tick(1000);
+    pointer(link, 'pointerenter');
+    t.mock.timers.tick(1000);
+    assert.deepEqual(calls.map(([kind]) => kind), ['show', 'hide'], 'destroy() hid the card and stopped listening');
+    // A card still waiting out enterDelay never shows once destroyed.
+    const later = Expressive.HoverCard.init(link);
+    pointer(link, 'pointerenter');
+    t.mock.timers.tick(200);
+    later.destroy();
+    t.mock.timers.tick(1000);
+    assert.deepEqual(calls.map(([kind]) => kind), ['show', 'hide']);
+  } finally {
+    instance.destroy();
+    t.mock.timers.reset();
+    restore();
+  }
+});
+
+test('HoverCard hands a shared card from one link to the next', () => {
+  const { calls, restore } = shimPopovers();
+  document.body.innerHTML = `<a class="hover-card-trigger" href="#ada" aria-details="card">Ada</a>
+<a class="hover-card-trigger" href="#ada" aria-details="card">Ada again</a>
+<div id="card" class="popover" popover="hint">Ada Lovelace</div>`;
+  const [first, second] = document.querySelectorAll('a');
+  const seen = [];
+  for (const [name, el] of [['first', first], ['second', second]]) {
+    for (const type of ['open', 'close']) el.addEventListener(`expressive:${type}`, () => seen.push(`${name} ${type}`));
+  }
+  const instances = [first, second].map((el) => Expressive.HoverCard.init(el));
+  try {
+    instances[0].open();
+    instances[1].open();
+    assert.deepEqual(calls, [['show', first], ['hide'], ['show', second]]);
+    assert.deepEqual(seen, ['first open', 'first close', 'second open']);
+    instances[0].close();
+    assert.ok(document.getElementById('card').hasAttribute('data-open'), 'the first link no longer owns the card');
+  } finally {
+    for (const instance of instances) instance.destroy();
+    restore();
+  }
+});
+
+test('HoverCard leaves Escape alone while an input method composes', () => {
+  const { restore } = shimPopovers();
+  document.body.innerHTML = markup();
+  const card = document.getElementById('card');
+  const instance = Expressive.HoverCard.init(document.querySelector('a'));
+  try {
+    instance.open();
+    document.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', isComposing: true, bubbles: true, cancelable: true }));
+    assert.ok(card.hasAttribute('data-open'));
+  } finally {
+    instance.destroy();
+    restore();
+  }
+});
