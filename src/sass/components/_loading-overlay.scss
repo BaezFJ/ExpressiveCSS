@@ -1,0 +1,105 @@
+@use "../abstracts" as *;
+
+// Loading overlay. While the page marks the region `aria-busy="true"`, a
+// scrim covers it and the author's loading indicator, a direct child, shows
+// in its centre. The script makes the region inert while it is busy and
+// announces the start and the finish in a `.loading-overlay-status` region it
+// adds after it.
+//
+//   <div class="loading-overlay">
+//     <span class="loading-indicator contained" role="status" aria-label="Loading"></span>
+//     ...content
+//   </div>
+//
+// The scrim is a surface wash, not the 32% modal scrim: it dims part of a
+// page the way disabled content looks instead of darkening it. It scrolls
+// with the content of a region that scrolls itself, so put the overlay on a
+// wrapper around a scroller.
+//
+// Tokens:
+//   --md-comp-loading-overlay-scrim-color     surface at 70%
+//   --md-comp-loading-overlay-motion          default effects spring, for the fade
+//   --md-comp-loading-overlay-motion-duration its duration
+
+.loading-overlay {
+  --md-comp-loading-overlay-scrim-color: color-mix(in oklab, var(--md-sys-color-surface) 70%, transparent);
+  --md-comp-loading-overlay-motion: var(--md-sys-motion-spring-default-effects);
+  --md-comp-loading-overlay-motion-duration: var(--md-sys-motion-spring-default-effects-duration);
+
+  &::after,
+  > .loading-indicator {
+    position: absolute;
+    // The script's inert blocks input while busy; these must not catch a
+    // click while they fade out after the region clears.
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    // Hidden only once it has faded out.
+    transition:
+      opacity var(--md-comp-loading-overlay-motion-duration) var(--md-comp-loading-overlay-motion),
+      visibility 0s linear var(--md-comp-loading-overlay-motion-duration);
+  }
+
+  // Above the highest z-index any component sets inside itself (4, the
+  // carousel's), so card state layers and sticky table columns are dimmed too.
+  &::after {
+    content: "";
+    inset: 0;
+    z-index: 5;
+    border-radius: inherit;
+    background-color: var(--md-comp-loading-overlay-scrim-color);
+  }
+
+  > .loading-indicator {
+    inset: 0;
+    z-index: 6;
+    margin: auto;
+
+    &::before {
+      animation-play-state: paused;
+    }
+  }
+
+  // Keeps the scrim's stacking inside the region, so it never covers the page
+  // around it. Only while busy: at rest, a popup inside the region, such as a
+  // docked date picker, has to rise over the page, as `.field` lets it.
+  &[aria-busy="true"] {
+    isolation: isolate;
+  }
+
+  &[aria-busy="true"]::after,
+  &[aria-busy="true"] > .loading-indicator {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s;
+  }
+
+  &[aria-busy="true"] > .loading-indicator::before {
+    animation-play-state: running;
+  }
+}
+
+// Zero specificity, so a positioning utility on the region wins.
+:where(.loading-overlay) {
+  position: relative;
+}
+
+.loading-overlay-status {
+  @include visually-hidden;
+}
+
+// Forced colors drop a translucent background, which would leave the content
+// looking available. A Canvas wash keeps it dimmed under any system theme.
+@media (forced-colors: active) {
+  .loading-overlay::after {
+    forced-color-adjust: none;
+    background-color: color-mix(in oklab, Canvas 70%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-overlay::after,
+  .loading-overlay > .loading-indicator {
+    transition: none;
+  }
+}

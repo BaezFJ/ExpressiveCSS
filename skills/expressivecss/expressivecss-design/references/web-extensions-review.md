@@ -158,6 +158,22 @@ Feature gap: Formatting happens on blur, not while typing; there is no currency 
 
 Mapped browser scope: A typed amount formatted on blur with the plain number in form data and submit data, the plain number on focus, change and blur listeners reading the formatted text, pasted amounts submitted with Enter under de and en, text with no digit kept and marked invalid with the default and replaced message, a saved value formatted without events and again after a reset button and form.reset(), and destroy() clearing the message. No spoken-output assertion.
 
+## [Loading overlay](../../components/loading-overlay.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Block input to the busy region only, report the busy state and its end to assistive technology, keep focus from being lost for good, and keep the content visibly unavailable in forced colors.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page owns aria-busy and the indicator's name; the framework follows the attribute, makes the region inert, shows a surface scrim and the indicator, announces the start and the finish in its own status region after the region, and returns focus on clear.
+
+Verification gap: Input blocking by click and Tab, regions busy at start, the author's inert state, the status region and its i18n words, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit, and the forced-colors and reduced-motion rules statically. Spoken output from the status region and real forced-colors themes remain unverified. Next check: Mark a region busy and clear it with VoiceOver and NVDA running, and view it under a Windows high-contrast theme.
+
+Feature gap: The scrim does not follow the content of a region that scrolls itself, and there is no full-page mode or determinate progress. Next check: None planned.
+
+Mapped browser scope: A mouse click, Tab and typing blocked while busy and a click restored mid-fade after aria-busy="false" or its removal, a region set busy twice, inert from the start, an author's inert kept, the status region outside the region with default and markup i18n words, focus returned, also inside a shadow root, kept after a move and skipped for a removed control, the scrim covering the region with the indicator centred, the scrim and indicator above z-index 4 content and isolated only while busy, and destroy() while busy and at rest. No spoken-output assertion.
+
 ## [Accordion](../../components/accordion.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
@@ -514,6 +530,22 @@ Verification gap: Point placement, gaps, both axes, the tooltip, keyboard steps,
 Feature gap: There are no bubble sizes, trend lines or separate x columns per series. Next check: Bubble sizes from a third value column are roadmap phase 35.
 
 Mapped browser scope: Hidden table, the named plot and its role description, the x column read as the axis, one point per row per series at its value in left-to-right and right-to-left pages, gaps, both axes with fixed and fitted ends, keyboard steps in table order, the nearest point by pointer, update() motion, data-watch and the toggle legend. No spoken-output assertion.
+
+## [Sankey chart](../../components/sankey-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the flows available as text, name the chart, keep nodes distinguishable, name each node on the chart, and let a keyboard reach every link the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the nodes, links, names and tooltip from the page's table with the line chart's runtime; the page owns the flows, their order, their formatting and the caption.
+
+Verification gap: Link and node sizes, columns, skipped rows, names, colors, right-to-left mirroring, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+
+Feature gap: Nodes are not reached by keyboard or pointer, node order follows the table with no crossing reduction, and flows that close a cycle are not drawn. Next check: Reach nodes and their totals from the keyboard if readers need them; until then the table lists every flow.
+
+Mapped browser scope: Hidden table, the named plot and its role description, link thickness and node height on one scale, columns, stacking order, skipped rows, node names and colors, right-to-left mirroring, keyboard steps in table order, the link under the pointer and a touch tap, update() motion, reduced motion and data-watch. No spoken-output assertion.
 
 ## [Timeline](../../components/timeline.md)
 

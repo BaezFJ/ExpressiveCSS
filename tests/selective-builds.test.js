@@ -249,10 +249,11 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the currency input: an amount shown in the locale and currency on blur, the plain number in the form data: 95,116 gzip bytes (+655).
   // Reviewed currency input focus editing, the validity message, formatting after a form reset and destroy(): 95,276 gzip bytes (+160).
   // Reviewed currency input waiting for blur after Enter and listening in a shadow root: 95,306 gzip bytes (+30).
-  // Reviewed show more: clamped text expands from its button, which sets aria-expanded and aria-controls: 95,661 gzip bytes (+355).
-  // Reviewed show more hiding its button while the text fits, the "Show less" label, keeping a focused button and destroy(): 95,952 gzip bytes (+291).
-  // Reviewed show more code review fixes: destroy() relabels only open text, drops an empty style attribute and reads the element's document fonts: 95,993 gzip bytes (+41).
-  assert.ok(sizes(js).gzip <= 95993, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the loading overlay: inert while aria-busy is "true", the status region after it and focus put back on clear: 95,566 gzip bytes (+260).
+  // Reviewed the loading overlay review fixes: the blurred control, its root node's focus and the deferred first announcement: 95,625 gzip bytes (+59).
+  // Reviewed the sankey chart: flows read from the table, nodes in columns, links on one scale, node names and colors, link keys, pointer hits and tooltip, and update() motion: 97,012 gzip bytes (+1,387).
+  // Reviewed show more on top of the loading overlay and sankey chart: the toggle, the fit check with its focus, blur and font rechecks, the swapped label and destroy(): 97,674 gzip bytes (+662).
+  assert.ok(sizes(js).gzip <= 97674, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -405,7 +406,10 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the pull-to-refresh indicator taking no taps and fading out as it goes back up: 86,534 gzip bytes (+10).
   // Reviewed the visually hidden pull-to-refresh status region: 86,567 gzip bytes (+33).
   // Reviewed swipe actions: the clipped list, the sliding row, the trailing toggle and the actions past the row's end: 86,736 gzip bytes (+169).
-  // Reviewed show more: a hidden button stays hidden despite the button display rule: 86,857 gzip bytes (+13).
   // Reviewed .defer-render: content-visibility on off-screen rows except swipe rows, their reserved size and inset focus rings: 86,844 gzip bytes (+108).
-  assert.ok(sizes(css).gzip <= 86857, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the loading overlay: the surface scrim and centred indicator while busy, their fade, the forced-colors wash and the hidden status region: 87,040 gzip bytes (+196).
+  // Reviewed the loading overlay review fixes: isolation only while busy, the scrim and indicator above component layers, and the inherited radius: 87,044 gzip bytes (+4).
+  // Reviewed the sankey chart: the shared chart parts, an unlined plot, filled nodes and links in six colors, the marked link, the tooltip and node names: 87,630 gzip bytes (+586).
+  // Reviewed show more on top of the loading overlay and sankey chart: the rule that keeps a hidden button hidden. Measured 87,597 gzip bytes after the merge, under the sankey line.
+  assert.ok(sizes(css).gzip <= 87630, `CSS gzip: ${sizes(css).gzip}`);
 });
