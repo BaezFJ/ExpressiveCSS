@@ -91,6 +91,9 @@ export class InputMask extends Component<BaseOptions> {
   constructor(el: HTMLInputElement, options: Partial<BaseOptions>) {
     super(el, options);
     this._tokens = parse(el.dataset.mask ?? '');
+    // A mask with no slot would format every value to nothing, erasing a
+    // saved value, so the component leaves such a field alone.
+    if (!this._tokens.some((token) => 'accepts' in token)) return;
     const signal = this._events.signal;
     // Capture, which runs before the field's own bubble listeners, so the
     // page's input listeners read the formatted value.

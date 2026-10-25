@@ -27,6 +27,8 @@ All of V1 to V8 run in `tests/input-mask-browser.test.js`, one test per check.
 
 Findings recorded for the docs on 2026-10-25, the same in Chromium, Firefox and WebKit: after a formatted edit, Control+Z changes nothing, because assigning the value clears the field's undo history. Keypad's Backspace at the end of the value works, because the value never ends in a literal. With the caret placed right after a literal, Keypad's Backspace deletes nothing and moves the caret before the literal, and a second press deletes the digit.
 
+A code review on 2026-10-25 found two gaps, both fixed on this branch. A mask with no slot, such as `data-mask=""` or `data-mask="---"`, formatted a saved value to an empty string; the component now leaves such a field alone, and V5 checks both. No test pinned the rule that a typed character matches only the next literal: changing `landing()` to match any later literal left all 24 tests passing. V2 now types `1555123456` into a `+1 (000) 000-0000` field and expects `+1 (155) 512-3456`, and the same change fails 3 tests, one per engine. The JavaScript budget grew to 94,461 gzip bytes (+10).
+
 ## Manual checks
 
 These are not merge conditions.

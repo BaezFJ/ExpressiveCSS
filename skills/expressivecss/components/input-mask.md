@@ -9,7 +9,7 @@ Component ID: `input-mask`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `1ca5bd5260ecc879ac5eeda0d7d3394d7e4c832d3f531d6bca581d289f57c88c`
+Contract SHA-256: `477fc067c670916a77b75f2040f3f16fc62d24279464cd5519f3b5edc74a972a`
 
 #### Selection and adaptation
 
@@ -37,7 +37,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Add `data-mask` to an `<input>` of type `text`, `tel`, `search`, `url` or `password`. `AutoInit()` starts every one. In the mask, `0` takes a digit, `a` takes a letter and `*` takes either. Every other character is a literal the mask writes itself, and a backslash makes the next character a literal, so `\0` writes a zero.
 
-As a person types, each character that fits fills the next slot, and the mask writes the literals that come before it: typing `5551` into `(000) 000-0000` shows `(555) 1`. A character that fits no slot is dropped, as is one past the end. A paste or autofill keeps the characters that fit and skips the rest, so `555.123.4567` becomes `(555) 123-4567`. The caret stays after the last character the edit added. Backspace right after a literal, or Delete right before one, removes the digit across it. Full-width digits from an IME count as digits, and while an IME composes, the field waits and formats once the composition ends.
+As a person types, each character that fits fills the next slot, and the mask writes the literals that come before it: typing `5551` into `(000) 000-0000` shows `(555) 1`. A character that fits no slot is dropped, as is one past the end. A paste or autofill keeps the characters that fit and skips the rest, so `555.123.4567` becomes `(555) 123-4567`. A typed character matches only the literal that comes next, so in a `+1 (000) 000-0000` mask a typed leading 1 fills the first slot; a paste or autofill that starts with `+1` matches the prefix. Leave a country code out of the mask, or say in the supporting text not to type it. A mask with no slot leaves the field alone. The caret stays after the last character the edit added. Backspace right after a literal, or Delete right before one, removes the digit across it. Full-width digits from an IME count as digits, and while an IME composes, the field waits and formats once the composition ends.
 
 The form submits the value as the field shows it, `(555) 123-4567`, and `pattern`, `required` and the length checks run on that value. A saved value is formatted when the component starts, without an `input` or `change` event, and again after a form reset. The component formats before the page's own `input` listeners run, so they read the formatted value. A value a script sets is formatted once the script fires an `input` event. Keypad keys format like typing; with the caret right after a literal, the Keypad's Backspace moves the caret before the literal, and a second press deletes the digit.
 

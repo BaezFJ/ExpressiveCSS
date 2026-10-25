@@ -72,6 +72,13 @@ const S = defineSections([
           edit added.
         </p>
         <p>
+          A typed character matches only the literal that comes next, so in a
+          <code>+1 (000) 000-0000</code> mask a typed leading 1 fills the first slot.
+          A paste or autofill that starts with <code>+1</code> matches the prefix.
+          Leave a country code out of the mask, or say in the supporting text not to
+          type it. A mask with no slot leaves the field alone.
+        </p>
+        <p>
           Backspace right after a literal, or Delete right before one, removes the
           digit across it, and the digits after it move back. <a href={route('keypad')}>Keypad</a>
           keys format like typing; with the caret right after a literal, its Backspace

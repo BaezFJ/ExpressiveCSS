@@ -19,9 +19,12 @@ const field = (id, mask, extra = '') => `<div class="field">
 const html = `<style>${css}</style>
   <form id="form">
     ${field('phone', '(000) 000-0000', 'inputmode="numeric"')}
-    ${field('code', 'aa-0000', 'type="text"')}
-    ${field('escaped', '\\0*0', 'type="text"')}
+    ${field('code', 'aa-0000')}
+    ${field('escaped', '\\0*0')}
+    ${field('intl', '+1 (000) 000-0000')}
     ${field('saved', '(000) 000-0000', 'value="5551234567"')}
+    ${field('blank', '', 'value="keep me"')}
+    ${field('dashes', '---', 'value="keep me"')}
     ${field('keyed', '(000) 000-0000', 'inputmode="none"')}
     <div class="keypad" role="group" aria-label="Keypad" aria-controls="keyed">
       <button type="button" value="1">1</button>
@@ -120,6 +123,11 @@ each('characters that fit no slot, a typed literal and characters past the end a
   await page.click('#escaped');
   await page.keyboard.type('x5');
   assert.equal((await state('escaped')).value, '0x5');
+  // A typed character matches only the next literal, so a leading 1 fills
+  // the first slot instead of the 1 in the prefix.
+  await page.click('#intl');
+  await page.keyboard.type('1555123456');
+  assert.equal((await state('intl')).value, '+1 (155) 512-3456');
 });
 
 each('Backspace and Delete next to a literal remove the digit across it', async ({ page, state, start }) => {
@@ -173,6 +181,9 @@ each('the field waits for a composition to end, in either event order', async ({
 each('a saved value is formatted on start without events, and again after a reset', async ({ page, state }) => {
   assert.equal((await state('saved')).value, '(555) 123-4567');
   assert.deepEqual(await page.evaluate(() => window.events), []);
+  // A mask with no slot leaves the saved value alone.
+  assert.equal((await state('blank')).value, 'keep me');
+  assert.equal((await state('dashes')).value, 'keep me');
   for (const reset of [() => page.click('#clear'), () => page.evaluate(() => document.getElementById('form').reset())]) {
     await page.fill('#saved', '1');
     await reset();
