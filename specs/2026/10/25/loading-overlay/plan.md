@@ -37,14 +37,14 @@ Covers R3, R6.
 
 Prerequisites: group 2.
 
-- [ ] Add the `semantics.json` row before the script, since the roster test fails for a registered component without one.
-- [ ] Add `src/ts/components/loadingOverlay.ts`: a `Component` with key `Expressive_LoadingOverlay` and `i18n` defaults `{ loading: 'Loading', loaded: 'Loaded' }`.
-- [ ] On start, insert the `.loading-overlay-status` element after the region and observe `aria-busy` with a filtered `MutationObserver`. Apply the busy state at once if the attribute is already `"true"`.
-- [ ] On busy: remember the region's `inert` state and the focused element if it is inside the region, set `inert`, and write `i18n.loading` to the status.
-- [ ] On clear: restore `inert`, write `i18n.loaded`, and refocus the remembered element if it is still connected and focus is on `<body>`, or wherever group 1 found focus goes.
-- [ ] `destroy()` disconnects the observer, removes the status element and restores `inert`.
-- [ ] Register it in `src/ts/components/registry.ts` and export it from `src/ts/components/index.ts`. Add the `tests/fixtures.js` entry and bump `AUTO_INIT_FIXTURES.length` in `tests/autoinit.test.js`.
-- [ ] Keep each function below cyclomatic complexity 5.
+- [x] Add the `semantics.json` row before the script, since the roster test fails for a registered component without one.
+- [x] Add `src/ts/components/loadingOverlay.ts`: a `Component` with key `Expressive_LoadingOverlay` and `i18n` defaults `{ loading: 'Loading', loaded: 'Loaded' }`.
+- [x] On start, insert the `.loading-overlay-status` element after the region and observe `aria-busy` with a filtered `MutationObserver`. Apply the busy state at once if the attribute is already `"true"`.
+- [x] On busy: remember the region's `inert` state and the focused element if it is inside the region, set `inert`, and write `i18n.loading` to the status.
+- [x] On clear: restore `inert`, write `i18n.loaded`, and refocus the remembered element if it is still connected and focus is on `<body>`, or wherever group 1 found focus goes.
+- [x] `destroy()` disconnects the observer, removes the status element and restores `inert`.
+- [x] Register it in `src/ts/components/registry.ts` and export it from `src/ts/components/index.ts`. Add the `tests/fixtures.js` entry and bump `AUTO_INIT_FIXTURES.length` in `tests/autoinit.test.js`.
+- [x] Keep each function below cyclomatic complexity 5.
 
 Completion check: `npm run build` succeeds, the typecheck passes, and `node --test tests/autoinit.test.js` passes.
 

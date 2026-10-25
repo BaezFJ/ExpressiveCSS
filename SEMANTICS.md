@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**98 of 98 rows enforced; 0 remaining.**
+**99 of 99 rows enforced; 0 remaining.**
 
-93 of those rows are components - a part of the framework an author writes markup for.
+94 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 93 components declare conformance debt.**
+**2 of 94 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -776,6 +776,16 @@ Short waits with unknown duration. The current framework contract uses a named s
 
 - **loading-indicator-reports-itself** - The current loading-indicator contract requires role="status". Provide meaningful waiting text updates and verify announcement delivery; a role alone does not prove spoken output.
 - **loading-indicator-is-named** - Name the waiting state with aria-label or aria-labelledby. Verify meaningful status updates separately from its accessible name.
+
+### loading-overlay
+
+Added with the loading overlay component. The page owns aria-busy on the region; while it is "true" the script makes the region inert, so nothing inside takes pointer or keyboard input, and announces the start and the finish in a visually hidden role="status" region it adds after the region, because inert content leaves the accessibility tree. The author's loading indicator keeps the role and name it has everywhere else.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `loading-overlay-has-an-indicator` | forbid | `.loading-overlay:not(:has(> .loading-indicator))` | must not match |
+
+- **loading-overlay-has-an-indicator** - Give a .loading-overlay a .loading-indicator as a direct child. It is what shows over the scrim while the region is busy.
 
 ### map
 
