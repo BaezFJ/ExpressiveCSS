@@ -143,7 +143,8 @@ label:has(> [type="checkbox"]):not(.switch):not(:has(> [type="checkbox"] + span)
   &::before {
     content: "";
     position: absolute;
-    inset-inline-start: 0;
+    // A label that pads its box in, such as a list row, moves the mark with it.
+    inset-inline-start: var(--checkbox-mark-inset, 0);
     top: 50%;
     width: var(--md-comp-checkbox-container-size);
     height: var(--md-comp-checkbox-container-size);
