@@ -7,6 +7,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Treemap chart. A `<figure class="treemap-chart">` draws each row of its
+  table's first value column as a rectangle whose area is its share of the
+  total, filling the plot in a squarified layout from the largest value
+  down, mirrored in right-to-left pages. Each rectangle shows its name and
+  cell when they fit, and rows with no positive value draw nothing. The plot
+  is one Tab stop whose arrow keys step through the rectangles in table
+  order, the tooltip adds each row's share, and it takes `update()` and
+  `data-watch` like the other charts. A new semantics rule asks for a
+  `<figure>` with a `<table>` and a `<figcaption>`.
 - Hover card. A link with `hover-card-trigger` names a `.popover` with
   `popover="hint"` in `aria-details`, and once the pointer or keyboard
   focus has rested on the link for 500 ms, that card shows against it.

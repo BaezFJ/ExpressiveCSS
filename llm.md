@@ -348,6 +348,7 @@ function unmount() {
 | `ScatterChart` | `.scatter-chart` |
 | `SankeyChart` | `.sankey-chart` |
 | `FunnelChart` | `.funnel-chart` |
+| `TreemapChart` | `.treemap-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
@@ -6026,6 +6027,47 @@ A `<figure class="funnel-chart">` takes a `<figcaption>` and a `<table>`. The fi
 
 ---
 
+## Treemap chart
+
+Parts of a whole drawn as rectangles whose areas follow their values, filling the plot.
+
+A `<figure class="treemap-chart">` takes the same `<figcaption>` and `<table>` as a pie chart. `AutoInit()` draws each row of the first value column as a rectangle whose share of the plot's area is its share of the total, with its name and cell written inside it, and a tooltip that follows the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="treemap-chart">
+  <figcaption>Budget by team</figcaption>
+  <table>
+    <thead>
+      <tr><th>Team</th><th>Budget</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Engineering</th><td>$600,000</td></tr>
+      <tr><th>Research</th><td>$300,000</td></tr>
+      <tr><th>Design</th><td>$120,000</td></tr>
+      <tr><th>Sales</th><td>$80,000</td></tr>
+    </tbody>
+  </table>
+</figure>
+```
+
+- The layout is squarified: rows are placed from the largest value to the smallest, equal values in table order, each strip chosen to keep its rectangles near square for the plot's shape. The largest starts at the top inline-start corner, so a right-to-left page, set by `dir` or CSS `direction`, mirrors the layout. A rectangle's place depends on its value, not its row, and the layout follows the plot when it changes shape.
+- Cells read as in the column chart. Zero, negative and non-numeric cells draw no rectangle and add nothing to the total; their rows stay in the table. Further value columns add lines to the tooltip.
+- Each rectangle shows its row name and its cell, as written, when both fit; one too small for them shows neither, and the tooltip names it. Long names end in an ellipsis. Rectangles take six colors in table order, then repeat, with text in each color's on-color. `--md-comp-treemap-chart-gap` parts neighbours inside each rectangle's area, so the areas stay exact.
+- The plot is one Tab stop named by the caption. Keyboard focus shows the first row with a rectangle. Right and down arrows move to the next such row in table order and left and up to the one before; the arrows keep their meaning in a right-to-left page. Home and End jump to the first and last, and Escape hides the tooltip. A tap or the pointer shows the rectangle under it.
+- The tooltip names the row, the value header with its cell and the row's share of the whole, in whole percentages with a tenth below 10%, in the page's `lang`. A ring in the gap marks the highlighted rectangle.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. Rectangles take their new places at once. It has the line chart's `show(index)`, which passes a row with no rectangle to the next one with one, and `destroy()`. There is no legend, axis or `sparkline`, and the `min` and `max` options do not apply.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-treemap-chart-height` | 240px |
+| `--md-comp-treemap-chart-gap` | 4px between neighbours |
+| `--md-comp-treemap-chart-color-1` … `-6` | `primary`, `tertiary`, `secondary`, `on-surface-variant`, then `primary-container` and `tertiary-container` deepened toward `on-surface` |
+| `--md-comp-treemap-chart-on-color-1` … `-6` | `on-primary`, `on-tertiary`, `on-secondary`, `surface`, `surface`, `surface` |
+
+---
+
 ## Tree
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
@@ -6195,6 +6237,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `ScatterChart` | `.scatter-chart` |
 | `SankeyChart` | `.sankey-chart` |
 | `FunnelChart` | `.funnel-chart` |
+| `TreemapChart` | `.treemap-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |

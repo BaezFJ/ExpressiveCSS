@@ -94,6 +94,7 @@ describe('Forced colors edges and glyphs', () => {
     'circular determinate track': [/^\.progress\.circular\.determinate$/, /conic-gradient\(CanvasText 0 var\(--md-comp-progress-value, 0%\), transparent 0\),\s*radial-gradient\([\s\S]*GrayText 0 calc/],
     'questionnaire footer button': [/^:where\(\.questionnaire > footer\) > button:not\(\.outlined, \.text\)$/, EDGE],
     'bar chart track': [/^\.bar-chart\.track \.bar-chart-bars > div$/, EDGE],
+    'treemap chart rectangle': [/^\.treemap-chart-box::before$/, EDGE],
     'search bar': [/^:is\(\.search-bar\):not\(\.search-view \*\)$/, /outline:\s*1px solid CanvasText/],
     'select caret': [/\.caret$/, GLYPH],
     'select check': [/^menu\[role=listbox\]:not\(\.multiple-select-menu\) > li\.selected:not\(\.disabled, \.optgroup\)::after$/, GLYPH],

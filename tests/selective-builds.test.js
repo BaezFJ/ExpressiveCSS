@@ -260,7 +260,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed hover card review fixes: a shared card handed between links on a named anchor, no state left by a failed showPopover, and Escape left to IME composition: 98,837 gzip bytes (+110).
   // Reviewed Dialogs.confirm(): a promise-based alert dialog with Dialogs.i18n labels, removed once it closes: 99,202 gzip bytes (+367).
   // Reviewed Dialogs.confirm() answering false when page code removes the open dialog: 99,221 gzip bytes (+19).
-  assert.ok(sizes(js).gzip <= 99221, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the treemap chart: rows squarified into rectangles whose areas follow their values: 99,814 gzip bytes (+593).
+  // Reviewed treemap chart keys in table order, the rectangle under the pointer and the tooltip with each row's share: 100,184 gzip bytes (+370).
+  assert.ok(sizes(js).gzip <= 100184, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -419,5 +421,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the sankey chart: the shared chart parts, an unlined plot, filled nodes and links in six colors, the marked link, the tooltip and node names: 87,630 gzip bytes (+586).
   // Reviewed the funnel chart: the label column, centered stages that grow from their old width and keep their color in forced colors, and the row band: 88,205 gzip bytes (+620 over master's 87,585 build).
   // Reviewed the transfer list: two outlined lists that scroll, the buttons between them, stacking below medium and flipped icons in RTL: 88,345 gzip bytes (+140).
-  assert.ok(sizes(css).gzip <= 88345, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the treemap chart: the chart() plot and tooltip with absolutely placed rectangles: 88,681 gzip bytes (+336).
+  // Reviewed treemap chart colors, the gap as an inset fill, names and cells that show only where they fit, and forced-color edges: 88,991 gzip bytes (+310).
+  // Reviewed the treemap chart's ring round the highlighted rectangle, in Highlight under forced colors: 89,019 gzip bytes (+28).
+  assert.ok(sizes(css).gzip <= 89019, `CSS gzip: ${sizes(css).gzip}`);
 });

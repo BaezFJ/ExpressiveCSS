@@ -53,6 +53,7 @@ export const AUTO_INIT_COMPONENTS = {
   ScatterChart: { component: Components.ScatterChart, selector: ".scatter-chart" },
   FunnelChart: { component: Components.FunnelChart, selector: ".funnel-chart" },
   SankeyChart: { component: Components.SankeyChart, selector: ".sankey-chart" },
+  TreemapChart: { component: Components.TreemapChart, selector: ".treemap-chart" },
   CommandPalette: {
     component: Components.CommandPalette,
     selector: "dialog.command-palette",

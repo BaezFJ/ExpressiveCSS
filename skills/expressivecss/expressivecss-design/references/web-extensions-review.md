@@ -577,6 +577,22 @@ Feature gap: There are no tapered stages, colors per row, step-to-step conversio
 
 Mapped browser scope: Hidden table, the named plot and its role description, one centered stage per row as wide as its value against the largest in left-to-right and right-to-left pages, gaps, labels beside their stages, the tooltip and its percentages, keyboard steps, the row under the pointer, update() motion and data-watch. No spoken-output assertion.
 
+## [Treemap chart](../../components/treemap-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the data available as text, name the chart, keep each part identifiable without relying on color alone, and let a keyboard reach every part the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework lays out the rectangles, writes the names and cells that fit, and draws the tooltip from the page's table with the line chart's runtime; the page owns the data, its formatting and the caption.
+
+Verification gap: Areas, layout, gaps, colors, text fitting, keyboard steps, the pointer, the tooltip, update() and data-watch are checked in a browser; screen reader output, forced colors in a browser and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text in a browser.
+
+Feature gap: There is one level only, with no parent groups, legend, drill-down or animated update(). Next check: Add a parent column only when a page needs grouped regions.
+
+Mapped browser scope: Hidden table, the named plot and its role description, each rectangle's area in proportion to its value, the squarified layout in left-to-right and right-to-left pages, rows with no positive value, colors in table order, the inset gap, text only where it fits, keyboard steps in table order, the rectangle under the pointer, the tooltip with each row's share, update() and data-watch. No spoken-output assertion.
+
 ## [Timeline](../../components/timeline.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
