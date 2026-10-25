@@ -104,6 +104,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Radial chart
 - Mixed chart
 - Scatter chart
+- Sankey chart
 
 ### Forms
 
@@ -344,6 +345,7 @@ function unmount() {
 | `RadialChart` | `.radial-chart` |
 | `MixedChart` | `.mixed-chart` |
 | `ScatterChart` | `.scatter-chart` |
+| `SankeyChart` | `.sankey-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
@@ -5928,6 +5930,49 @@ A `<figure class="scatter-chart">` takes a `<figcaption>` and a `<table>`. The f
 
 ---
 
+## Sankey chart
+
+Flows between nodes, each link as thick as its value.
+
+A `<figure class="sankey-chart">` takes a `<figcaption>` and a `<table>` with one row per flow. The first column names the flow's source node, the second its target node, and the third holds its value. `AutoInit()` draws the nodes in columns and each row as a link from its source to its target, and a tooltip shows the link under the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="sankey-chart">
+  <figcaption>Energy flow (TWh)</figcaption>
+  <table>
+    <thead>
+      <tr><th>Source</th><th>Target</th><th>TWh</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Solar</th><td>Grid</td><td>30</td></tr>
+      <tr><th>Wind</th><td>Grid</td><td>50</td></tr>
+      <tr><th>Grid</th><td>Homes</td><td>60</td></tr>
+      <tr><th>Grid</th><td>Industry</td><td>20</td></tr>
+    </tbody>
+  </table>
+</figure>
+```
+
+- A node is named by its cell's text, so the same name in either column is the same node. The value cell reads as in the line chart: `data-value` wins over the text, and the text may carry a currency or percent sign and grouping commas around one number. Columns after the third are not drawn.
+- A row draws nothing when its value is not a positive number, when its source or target cell is empty, when its source and target are the same node, or when its link would close a cycle with the rows above it. The other links and nodes draw as if that row were absent.
+- A node with no incoming link stands in the first column, and any other node one column past the furthest of its sources. The columns spread from the inline start to the inline end, so they run leftward in a right-to-left page. Within a column, nodes stack in the order their names first appear in the table, so sort the rows to change the order or to cut crossings.
+- Each link is as thick as its value, and each node as tall as the larger of its incoming and outgoing totals, on one scale that fits the tallest column to the plot. A node's links leave and arrive in table order down its edges.
+- Nodes take six colors in node order, then repeat, and each link takes its source node's color, lighter. Each node's name sits beside it, toward the plot's middle.
+- The plot is one Tab stop named by the caption. Keyboard focus shows the first link; the arrow keys step through the drawn links in table order, right and down to the next and left and up to the one before, skipping the rows that draw nothing. Home and End jump to the first and last link and Escape hides the tooltip. The arrows keep their meaning in a right-to-left page. The pointer shows the link under it. Nodes are not reached by keys or pointer; their totals are in the table.
+- The tooltip names the source and target under their column headers and the value cell as written, and the shown link darkens.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted link stay. Links and nodes still in the table move from their old shapes to the new ones; with reduced motion they appear at once. It has the line chart's `show(index)`, which takes a link's number among those drawn, and `destroy()`.
+- `axis`, `toggle`, `stacked`, `values` and `sparkline` do not apply.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-sankey-chart-height` | 240px |
+| `--md-comp-sankey-chart-link-opacity` | 0.4 |
+| `--md-comp-sankey-chart-color-1` … `-6` | `primary`, `tertiary`, `secondary`, `on-surface-variant`, then `primary-container` and `tertiary-container` deepened toward `on-surface` |
+
+---
+
 ## Tree
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
@@ -6095,6 +6140,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `RadialChart` | `.radial-chart` |
 | `MixedChart` | `.mixed-chart` |
 | `ScatterChart` | `.scatter-chart` |
+| `SankeyChart` | `.sankey-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |

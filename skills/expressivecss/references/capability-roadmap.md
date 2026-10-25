@@ -56,6 +56,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Radial chart](#radial-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Mixed chart](#mixed-chart) | unassessed | needs-review | needs-rerun | 0 |
 | [Scatter chart](#scatter-chart) | implemented | source-reviewed | incomplete | 0 |
+| [Sankey chart](#sankey-chart) | implemented | source-reviewed | incomplete | 0 |
 | [Timeline](#timeline) | implemented | source-reviewed | needs-rerun | 0 |
 | [Calendar](#calendar) | implemented | source-reviewed | incomplete | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
@@ -841,6 +842,23 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 - not-recorded: [tests/scatter-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/7540a267cf10bfef5f3aa22e6e15328107b7bcc5/tests/scatter-chart-browser.test.js): `chromium: scatter chart places one point per row at its x and y values`. Hidden table, the named plot and its role description, the x column read as the axis, one point per row per series at its value in left-to-right and right-to-left pages, legend order, and separate instances from line charts. No spoken-output assertion.
 - not-recorded: [tests/scatter-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/7540a267cf10bfef5f3aa22e6e15328107b7bcc5/tests/scatter-chart-browser.test.js): `chromium: bubble chart sizes each point so its area follows the last column`. With .bubble, the last column leaves the series and legend, and each bubble's area is proportional to its row's size, the largest 48px across, at its scatter position in left-to-right and right-to-left pages. No spoken-output assertion.
 - not-recorded: [tests/scatter-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/7540a267cf10bfef5f3aa22e6e15328107b7bcc5/tests/scatter-chart-browser.test.js): `chromium: scatter chart arrow keys step through the points in table order`. Keyboard focus shows the first point; arrows, Home, End and Escape step through points in table order and skip gaps; the live tooltip text. No spoken-output assertion.
+
+<a id="sankey-chart"></a>
+
+## Sankey chart
+
+**implemented within the stated scope.** Nodes and links drawn from a figure's data table of source, target and value columns, with nodes in columns by their longest path from a source, stacked in the order they first appear, links and nodes on one scale, rows skipped for values that are not positive, missing names, self links and cycles, node names and colors, right-to-left mirroring, update() motion, data-watch, and a pointer and keyboard tooltip that steps through links in table order.
+
+Source review: source-reviewed, 2026-10-25. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/7540a267cf10bfef5f3aa22e6e15328107b7bcc5/src/sass/abstracts/_mixins.scss), [src/sass/components/_sankey-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/7540a267cf10bfef5f3aa22e6e15328107b7bcc5/src/sass/components/_sankey-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/7540a267cf10bfef5f3aa22e6e15328107b7bcc5/src/ts/components/lineChart.ts), [src/ts/components/sankeyChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/7540a267cf10bfef5f3aa22e6e15328107b7bcc5/src/ts/components/sankeyChart.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG and node names are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+
+- verification: Link and node sizes, columns, skipped rows, names, colors, right-to-left mirroring, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+
+- not-recorded: [tests/sankey-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/7540a267cf10bfef5f3aa22e6e15328107b7bcc5/tests/sankey-chart-browser.test.js): `chromium: sankey chart sizes links and nodes on one scale`. Hidden table, the named plot and its role description, each link as thick as its value at both ends, each node as tall as the larger of its in and out totals, columns from the inline start, stacking in order of first appearance, links that do not overlap on a node edge, the tallest column filling the plot, and separate instances from line charts. No spoken-output assertion.
+- not-recorded: [tests/sankey-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/7540a267cf10bfef5f3aa22e6e15328107b7bcc5/tests/sankey-chart-browser.test.js): `chromium: sankey chart arrow keys step through the drawn links in table order`. Keyboard focus shows the first link; arrows, Home, End and Escape step through the drawn links in table order and skip the rows that draw nothing; the marked link and the live tooltip text. No spoken-output assertion.
 
 <a id="timeline"></a>
 

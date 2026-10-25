@@ -9,7 +9,7 @@ Component ID: `command-palette`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `5e4ef25095b1ac33cfeec89c86bc71900345b44f4f4ed1f07939830a610c3a27`
+Contract SHA-256: `b298076d448032bcb0e8f3f71c360caeecdc2559f5a3cc0155979057541041fc`
 
 #### Selection and adaptation
 

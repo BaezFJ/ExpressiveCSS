@@ -37,6 +37,7 @@ export type * from './components/radarChart';
 export type * from './components/radialChart';
 export type * from './components/mixedChart';
 export type * from './components/scatterChart';
+export type * from './components/sankeyChart';
 export type * from './components/pullToRefresh';
 export type * from './components/loadingOverlay';
 export type * from './components/backToTop';

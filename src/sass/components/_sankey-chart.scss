@@ -1,0 +1,114 @@
+@use "../abstracts" as *;
+
+// Sankey chart. A <figure class="sankey-chart"> holds a <figcaption> and a
+// <table> of flows: the first column names each row's source node, the
+// second its target node, and the third holds the value. Without JavaScript
+// the table shows. SankeyChart draws the nodes in columns and each row as a
+// link between two of them, and hides the table visually, so a screen
+// reader still reads the flows as a table. The plot and tooltip come from
+// chart().
+//
+// The SVG stretches to the plot (preserveAspectRatio="none"). Nodes and
+// links are filled shapes with no stroke, so stretching keeps every link
+// as thick as its value and every node as tall as its total.
+//
+// Each node takes a color in node order through data-series, and each link
+// its source node's color, lighter. The names sit over the drawing, level
+// with their nodes, from --sankey-chart-x and --sankey-chart-y, the
+// script's percentages of the plot from its inline start and top.
+//
+// Tokens:
+//   --md-comp-sankey-chart-height        240px
+//   --md-comp-sankey-chart-link-opacity  0.4
+//   --md-comp-sankey-chart-color-1..6    primary, tertiary, secondary,
+//                                        on-surface-variant, then primary-
+//                                        and tertiary-container deepened
+//                                        toward on-surface, as the pie chart's
+
+@include chart("sankey-chart");
+
+.sankey-chart {
+  --md-comp-sankey-chart-link-opacity: 0.4;
+  --md-comp-sankey-chart-color-5: color-mix(in oklab, var(--md-sys-color-primary-container) 45%, var(--md-sys-color-on-surface));
+  --md-comp-sankey-chart-color-6: color-mix(in oklab, var(--md-sys-color-tertiary-container) 45%, var(--md-sys-color-on-surface));
+}
+
+// chart() sets colors 1 to 4.
+@for $i from 5 through 6 {
+  .sankey-chart [data-series="#{$i}"] {
+    --sankey-chart-color: var(--md-comp-sankey-chart-color-#{$i});
+  }
+}
+
+// No grid lines or baseline: the nodes and links have no value axis.
+.sankey-chart-plot {
+  border: 0;
+  background: none;
+
+  > svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+}
+
+.sankey-chart-node {
+  fill: var(--sankey-chart-color);
+}
+
+.sankey-chart-link {
+  fill: var(--sankey-chart-color);
+  fill-opacity: var(--md-comp-sankey-chart-link-opacity);
+
+  // The link the keys or pointer picked.
+  &.active {
+    fill-opacity: 0.8;
+  }
+}
+
+// Level with the link's middle.
+.sankey-chart-tooltip {
+  translate: 12px -50%;
+
+  &.end {
+    translate: calc(-100% - 12px) -50%;
+  }
+
+  // The value header names a column, not a node, so it has no swatch.
+  > span.value::before {
+    content: none;
+  }
+}
+
+// Over the drawing, and out of the pointer's way, so a link under a name
+// still takes it.
+.sankey-chart-names {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.sankey-chart-name {
+  position: absolute;
+  top: var(--sankey-chart-y, 0%);
+  inset-inline-start: var(--sankey-chart-x, 0%);
+  padding-inline: 4px;
+  color: var(--md-sys-color-on-surface);
+  @include typescale("body-small");
+  white-space: nowrap;
+  translate: 0 -50%;
+
+  &.end {
+    inset-inline: auto calc(100% - var(--sankey-chart-x, 0%));
+  }
+}
+
+// The colors tell the nodes apart, so they keep them.
+@media (forced-colors: active) {
+  .sankey-chart-plot > svg {
+    forced-color-adjust: none;
+  }
+}

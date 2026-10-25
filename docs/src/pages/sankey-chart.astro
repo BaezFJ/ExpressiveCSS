@@ -1,0 +1,150 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "layout", label: "Columns and order" },
+  { id: "values", label: "Values and skipped rows" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "javascript", label: "JavaScript" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const energy: [string, string, number][] = [
+  ["Solar", "Grid", 30], ["Wind", "Grid", 50], ["Gas", "Grid", 40], ["Grid", "Homes", 60],
+  ["Grid", "Industry", 45], ["Grid", "Losses", 15], ["Wind", "Storage", 10], ["Storage", "Homes", 8],
+];
+const visits: [string, string, number][] = [
+  ["Search", "Product", 420], ["Email", "Product", 180], ["Social", "Blog", 260], ["Blog", "Product", 140],
+  ["Product", "Cart", 310], ["Product", "Left", 430], ["Cart", "Purchase", 190], ["Cart", "Left", 120],
+];
+---
+<DocsLayout page="sankey-chart" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;figure class="sankey-chart"&gt;</code> draws flows
+          between nodes from a <code>&lt;table&gt;</code>, each link as thick
+          as its value.
+        </p>
+        <p>
+          Each row is one flow. The first column names its source node, the
+          second its target node, and the third holds its value. A node with
+          the same name in either column is one node, so a node can take flows
+          in and send them on. To compare parts of one whole, use a
+          <a href="pie-chart.html">pie chart</a>.
+        </p>
+        <figure class="sankey-chart" data-markdown-ignore>
+          <figcaption>Energy flow (TWh)</figcaption>
+          <table>
+            <thead><tr><th>Source</th><th>Target</th><th>TWh</th></tr></thead>
+            <tbody>{energy.map(([source, target, value]) => <tr><th>{source}</th><td>{target}</td><td>{value}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="sankey-chart">
+  <figcaption>Energy flow (TWh)</figcaption>
+  <table>
+    <thead>
+      <tr><th>Source</th><th>Target</th><th>TWh</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Solar</th><td>Grid</td><td>30</td></tr>
+      <tr><th>Wind</th><td>Grid</td><td>50</td></tr>
+      <tr><th>Grid</th><td>Homes</td><td>60</td></tr>
+      <!-- One row per flow -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.layout}>
+        <p>
+          A node that takes no flow stands in the first column. Every other
+          node stands one column past the furthest of its sources, so each
+          link runs toward the inline end. In a right-to-left page the columns
+          run from right to left.
+        </p>
+        <p>
+          Within a column, nodes stack in the order their names first appear
+          in the table, reading row by row and source before target. The
+          chart does not reorder them, so sort the rows to change the order
+          or to cut crossing links. Each node's links leave and arrive in
+          table order down its edges.
+        </p>
+        <figure class="sankey-chart" data-markdown-ignore>
+          <figcaption>Visits from each channel to a purchase</figcaption>
+          <table>
+            <thead><tr><th>From</th><th>To</th><th>Visits</th></tr></thead>
+            <tbody>{visits.map(([source, target, value]) => <tr><th>{source}</th><td>{target}</td><td>{value}</td></tr>)}</tbody>
+          </table>
+        </figure>
+  </Section>
+  <Section {...S.values}>
+        <p>
+          The value cell reads as in a line chart. Its number is its
+          <code>data-value</code>, or its text without currency signs, percent
+          signs or grouping commas. The tooltip shows the text as written.
+          Each link is as thick as its value, and each node as tall as the
+          larger of what flows in and what flows out, on one scale that fits
+          the tallest column to the chart's height.
+        </p>
+        <p>
+          A row draws nothing when its value is not a positive number, when a
+          name is missing, when its source and target are the same node, or
+          when its link would lead back to a node above it and close a loop.
+          The rest of the chart draws as if the row were not there. The table
+          still shows every row.
+        </p>
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The table is the chart's text alternative. Give it a header row and
+          a header cell per row, and name the chart with a
+          <code>&lt;figcaption&gt;</code>. The drawn chart and its node names
+          are hidden from assistive technology.
+        </p>
+        <p>
+          The plot is one Tab stop named by the caption. Keyboard focus shows
+          the first link. The arrow keys step through the links in table
+          order: right and down go to the next link, left and up to the one
+          before, skipping the rows that draw nothing. Home and End jump to
+          the first and last links, and Escape hides the tooltip. The arrows
+          keep this meaning in a right-to-left page, since table order is not
+          a direction on screen. The pointer shows the link under it. The
+          tooltip is a polite live region, so a screen reader hears the
+          source, the target and the value as it moves. Nodes are not reached
+          this way; their totals are in the table. In forced colors the nodes
+          and links keep their colors.
+        </p>
+  </Section>
+  <Section {...S.javascript}>
+        <p>
+          <code>AutoInit()</code> starts every <code>.sankey-chart</code>. To
+          start one yourself, call <code>SankeyChart.init</code>. After
+          changing its table, call <code>update()</code> to redraw it in place,
+          or put <code>data-watch</code> on the figure and it redraws itself.
+          Links and nodes move from their old shapes to the new ones, or
+          appear at once with reduced motion. It has the line chart's options
+          and methods.
+        </p>
+<Code code={`
+const chart = Expressive.SankeyChart.init(document.querySelector('.sankey-chart'));
+chart.show(2);   // highlight the third drawn link in table order; -1 hides the tooltip
+chart.update();  // redraw from the table; focus and the highlighted link stay
+chart.destroy(); // remove the drawing and show the table again
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.sankey-chart</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-sankey-chart-height</code></td><td>240px</td></tr>
+          <tr><td><code>--md-comp-sankey-chart-link-opacity</code></td><td>0.4</td></tr>
+          <tr><td><code>--md-comp-sankey-chart-color-1</code> … <code>-6</code></td><td><code>primary</code>, <code>tertiary</code>, <code>secondary</code>, <code>on-surface-variant</code>, then <code>primary-container</code> and <code>tertiary-container</code> deepened toward <code>on-surface</code></td></tr>
+        </TokenTable>
+        <p>For a selective Sass build, include <code>"sankey-chart"</code> in <code>$components</code>.</p>
+  </Section>
+</DocsLayout>
