@@ -1761,7 +1761,7 @@
       "sources": [
         {
           "path": "src/ts/components/showMore.ts",
-          "sha256": "482d9705d1b657a00e1167083b52cb35dfde78b0f9b99c8942df6480668d46e9"
+          "sha256": "d6a961f6810f004ac7d5cdf1575717a2cdbd20cb4ca6d4e08e2ba413f00713d3"
         },
         {
           "path": "src/sass/components/_show-more.scss",
@@ -1771,7 +1771,7 @@
       "gaps": [
         {
           "kind": "verification",
-          "description": "Toggling, the fit check, the focused-button case, labels, events and destroy() are checked in a browser or jsdom; spoken output with VoiceOver and NVDA is unverified.",
+          "description": "Toggling, the fit check, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output with VoiceOver and NVDA is unverified.",
           "nextStep": "Activate the button with VoiceOver and NVDA and check that the expanded state and label are announced."
         }
       ],
@@ -1785,7 +1785,13 @@
         {
           "file": "tests/show-more-browser.test.js",
           "name": "chromium: the button hides while the clamped text fits",
-          "scope": "Text that fits, a container widened and narrowed, a window-size prefix, Tab order, and a focused button kept until blur.",
+          "scope": "Text that fits, a fractional line height, a container widened and narrowed, a window-size prefix, Tab order, and a focused button kept through a resize and until blur.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/show-more-browser.test.js",
+          "name": "chromium: a web font that swaps in hides the button once its text fits",
+          "scope": "A held-back web font that makes cut text fit, and an instance destroyed before the font loads.",
           "state": "not-recorded"
         }
       ],

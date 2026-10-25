@@ -66,7 +66,7 @@ export class ShowMore extends Component<ShowMoreOptions> {
     this._observer.observe(this.text);
     // A web font that swaps in can change what fits without resizing the
     // clamped box, so the observer would not report it.
-    document.fonts?.ready.then(this._fit);
+    el.ownerDocument.fonts?.ready.then(this._fit);
   }
 
   static get defaults(): ShowMoreOptions {
@@ -90,7 +90,7 @@ export class ShowMore extends Component<ShowMoreOptions> {
   destroy() {
     if (this.button) {
       this._observer.disconnect();
-      this._show(false);
+      if (this.isOpen) this._show(false);
       for (const name of BUTTON_ATTRIBUTES) restoreAttribute(this.button, name, this._initial[name]);
       restoreAttribute(this.text, "id", this._initialId);
     }
@@ -111,9 +111,11 @@ export class ShowMore extends Component<ShowMoreOptions> {
   private _toggle = () => (this.isOpen ? this.close() : this.open());
 
   /**
-   * Hides the button while the clamped text fits. Open text keeps it, and so
-   * does focus, so collapsing text that now fits does not drop focus on the
-   * page; the check runs again on blur.
+   * Hides the button while the clamped text fits. Open text keeps it. So does
+   * focus, so a resize cannot hide the button someone is on and drop focus on
+   * the page. The check runs again on blur, which also hides a button whose
+   * text was collapsed after it widened to fit, since collapsing it then
+   * leaves the box the same size.
    */
   private _fit = () => {
     if (this.isOpen || this.button.matches(":focus") || ShowMore.getInstance(this.el) !== this) return;
@@ -133,9 +135,13 @@ export class ShowMore extends Component<ShowMoreOptions> {
   }
 
   private _clamp(on: boolean) {
-    for (const property of CLAMP_PROPERTIES) {
-      if (on) this.text.style.removeProperty(property);
-      else this.text.style.setProperty(property, "unset");
-    }
+    if (on) this._restoreClamp();
+    else for (const property of CLAMP_PROPERTIES) this.text.style.setProperty(property, "unset");
+  }
+
+  private _restoreClamp() {
+    for (const property of CLAMP_PROPERTIES) this.text.style.removeProperty(property);
+    // Leave no empty style attribute on text that had none.
+    if (!this.text.style.length) this.text.removeAttribute("style");
   }
 }

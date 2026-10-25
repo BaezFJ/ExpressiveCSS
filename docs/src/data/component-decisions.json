@@ -2718,7 +2718,7 @@
           "documentedSupport": "A .show-more holding text with a line-clamp-1, -2 or -3 class and a <button type=\"button\">; the button sets aria-expanded and aria-controls, shows the full text, reads \"Show less\" while it is open (i18n.showLess or data-show-less), and hides while the clamped text fits, checking again on resize, after web fonts load and on blur.",
           "webAdaptation": "The component unclamps with inline -webkit-line-clamp and line-clamp, because the utilities layer and prefixed clamp classes beat any component rule. A ResizeObserver on the text and document.fonts.ready run the fit check, scrollHeight against clientHeight with 1px for Firefox's rounding.",
           "limitations": [
-            "Toggling, the fit check across widths and window-size prefixes, the focused-button case, labels, events and destroy() are checked in a browser or jsdom; spoken output is unverified. Find-in-page does not open clamped text, and a font that starts loading after document.fonts.ready has settled is not caught until the next resize."
+            "Toggling, the fit check across widths, fractional line heights and window-size prefixes, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output is unverified. Find-in-page does not open clamped text, a font that starts loading after document.fonts.ready has settled is not caught until the next resize, and an icon-only button keeps its aria-label while open."
           ]
         },
         "relationship": "none",
@@ -2742,7 +2742,7 @@
         "sources": [
           {
             "path": "src/ts/components/showMore.ts",
-            "sha256": "482d9705d1b657a00e1167083b52cb35dfde78b0f9b99c8942df6480668d46e9"
+            "sha256": "d6a961f6810f004ac7d5cdf1575717a2cdbd20cb4ca6d4e08e2ba413f00713d3"
           },
           {
             "path": "src/sass/components/_show-more.scss",
@@ -2752,7 +2752,7 @@
         "gaps": [
           {
             "kind": "verification",
-            "description": "Toggling, the fit check, the focused-button case, labels, events and destroy() are checked in a browser or jsdom; spoken output with VoiceOver and NVDA is unverified.",
+            "description": "Toggling, the fit check, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output with VoiceOver and NVDA is unverified.",
             "nextStep": "Activate the button with VoiceOver and NVDA and check that the expanded state and label are announced."
           }
         ],
@@ -2765,7 +2765,12 @@
           {
             "file": "tests/show-more-browser.test.js",
             "name": "chromium: the button hides while the clamped text fits",
-            "scope": "Text that fits, a container widened and narrowed, a window-size prefix, Tab order, and a focused button kept until blur."
+            "scope": "Text that fits, a fractional line height, a container widened and narrowed, a window-size prefix, Tab order, and a focused button kept through a resize and until blur."
+          },
+          {
+            "file": "tests/show-more-browser.test.js",
+            "name": "chromium: a web font that swaps in hides the button once its text fits",
+            "scope": "A held-back web font that makes cut text fit, and an instance destroyed before the font loads."
           }
         ]
       }

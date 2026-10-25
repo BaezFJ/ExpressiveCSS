@@ -591,10 +591,11 @@ Google relationship: none. Upstream review: web-extension-inventory-reviewed (20
 
 Web adaptation: The component unclamps with inline -webkit-line-clamp and line-clamp, because the utilities layer and prefixed clamp classes beat any component rule. A ResizeObserver on the text and document.fonts.ready run the fit check, scrollHeight against clientHeight with 1px for Firefox's rounding.
 
-- verification: Toggling, the fit check, the focused-button case, labels, events and destroy() are checked in a browser or jsdom; spoken output with VoiceOver and NVDA is unverified. Next: Activate the button with VoiceOver and NVDA and check that the expanded state and label are announced.
+- verification: Toggling, the fit check, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output with VoiceOver and NVDA is unverified. Next: Activate the button with VoiceOver and NVDA and check that the expanded state and label are announced.
 
 - not-recorded: [tests/show-more-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/19375f1c652b463515607131daf999d79f600e4b/tests/show-more-browser.test.js): `chromium: the button shows the full text and collapses it again`. A click and Enter that unclamp and clamp the text, with aria-expanded and aria-controls.
-- not-recorded: [tests/show-more-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/19375f1c652b463515607131daf999d79f600e4b/tests/show-more-browser.test.js): `chromium: the button hides while the clamped text fits`. Text that fits, a container widened and narrowed, a window-size prefix, Tab order, and a focused button kept until blur.
+- not-recorded: [tests/show-more-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/19375f1c652b463515607131daf999d79f600e4b/tests/show-more-browser.test.js): `chromium: the button hides while the clamped text fits`. Text that fits, a fractional line height, a container widened and narrowed, a window-size prefix, Tab order, and a focused button kept through a resize and until blur.
+- not-recorded: [tests/show-more-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/19375f1c652b463515607131daf999d79f600e4b/tests/show-more-browser.test.js): `chromium: a web font that swaps in hides the button once its text fits`. A held-back web font that makes cut text fit, and an instance destroyed before the font loads.
 
 <a id="data-table"></a>
 

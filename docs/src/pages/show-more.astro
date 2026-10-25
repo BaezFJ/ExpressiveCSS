@@ -46,7 +46,9 @@ const S = defineSections([
           While the text is open, the button reads "Show less". <code>data-show-less</code> on the button
           sets that label for one control, and the <code>i18n.showLess</code> option sets it for the component.
           Closing the text puts the author's label back. Only the button's last text outside an
-          <code>aria-hidden="true"</code> element changes, so an icon keeps its glyph.
+          <code>aria-hidden="true"</code> element changes, so an icon keeps its glyph. An icon-only
+          button named by <code>aria-label</code> has no text to change: it keeps its name, and only
+          <code>aria-expanded</code> says the text is open. Prefer a visible label.
         </p>
 <Code code={`
 <div class="show-more">

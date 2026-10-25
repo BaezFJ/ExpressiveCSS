@@ -68,3 +68,18 @@ Prerequisites: group 3.
 Completion check: V7 and V8 pass, V9 runs on the pull request, and every check in validation.md shows a result.
 
 Covers: R8, R9; V7, V8, V9.
+
+## 5. Code review fixes
+
+Outcome: every guard in `showMore.ts` has a test that fails without it.
+
+Prerequisites: group 4.
+
+- [x] Add a fractional line-height fixture and a focused-resize step to V2, and V10 for a held-back web font and an instance destroyed before it loads.
+- [x] Restore the closed state in `destroy()` only when the text is open, remove the empty `style` attribute, and read `fonts` from the element's document.
+- [x] Correct the focus-check comment and spec note, and document icon-only buttons.
+- [x] Rerun the mutations: the 1px allowance (Firefox), the focus check, the font recheck, the destroyed-instance check, the relabel and the empty style each fail a test.
+
+Completion check: V1 to V10 pass, and each mutation fails at least one test.
+
+Covers: R2, R3, R4, R6, R8; V2, V5, V10.

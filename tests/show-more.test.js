@@ -81,8 +81,18 @@ test('destroy() restores the markup the author wrote', () => {
   instance.destroy();
   assert.equal(button.outerHTML, html.replace('hidden', 'hidden=""'));
   assert.equal(text.hasAttribute('id'), false);
-  assert.equal(text.getAttribute('style') ?? '', '');
+  assert.equal(text.hasAttribute('style'), false, 'no empty style attribute is left behind');
   button.click();
   assert.equal(button.hasAttribute('aria-expanded'), false, 'the click does nothing after destroy()');
-  assert.equal(text.getAttribute('style') ?? '', '');
+  assert.equal(text.hasAttribute('style'), false);
+});
+
+test('destroy() keeps a label the page changed while the text was closed', () => {
+  const instance = start();
+  const button = document.querySelector('button');
+  // Edited in place, as a translation script does, so the component's own
+  // reference to the label text sees the change.
+  button.firstChild.data = 'Read the whole review';
+  instance.destroy();
+  assert.equal(button.textContent, 'Read the whole review');
 });

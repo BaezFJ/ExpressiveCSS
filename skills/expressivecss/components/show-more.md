@@ -9,7 +9,7 @@ Component ID: `show-more`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `f78097975b98fa2eb90a21cfc2978bd1a2c0e3b60ba93fdb15e3489d69b4eddb`
+Contract SHA-256: `fcc158d884cc44392f6ee90bd95f700255514bce788a4ac5ad82fd1d26ac2b90`
 
 #### Selection and adaptation
 
@@ -29,13 +29,13 @@ Support (2026-10-25, `llm.md#show-more`): A .show-more holding text with a line-
 
 Web adaptation: The component unclamps with inline -webkit-line-clamp and line-clamp, because the utilities layer and prefixed clamp classes beat any component rule. A ResizeObserver on the text and document.fonts.ready run the fit check, scrollHeight against clientHeight with 1px for Firefox's rounding.
 
-Known boundary: Toggling, the fit check across widths and window-size prefixes, the focused-button case, labels, events and destroy() are checked in a browser or jsdom; spoken output is unverified. Find-in-page does not open clamped text, and a font that starts loading after document.fonts.ready has settled is not caught until the next resize.
+Known boundary: Toggling, the fit check across widths, fractional line heights and window-size prefixes, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output is unverified. Find-in-page does not open clamped text, a font that starts loading after document.fonts.ready has settled is not caught until the next resize, and an icon-only button keeps its aria-label while open.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#show-more).
 
 #### Contract
 
-A `.show-more` holds the text, with a `line-clamp-1`, `line-clamp-2` or `line-clamp-3` class, and a `<button type="button">` whose text is the collapsed label. `AutoInit()` starts every one. The component points the button at the text with `aria-controls`, adding an id to the text when it has none, and sets `aria-expanded`. Activating the button shows the full text and changes the label to "Show less"; activating it again clamps the text and puts the author's label back. Only the button's last text outside an `aria-hidden="true"` element changes, so an icon keeps its glyph.
+A `.show-more` holds the text, with a `line-clamp-1`, `line-clamp-2` or `line-clamp-3` class, and a `<button type="button">` whose text is the collapsed label. `AutoInit()` starts every one. The component points the button at the text with `aria-controls`, adding an id to the text when it has none, and sets `aria-expanded`. Activating the button shows the full text and changes the label to "Show less"; activating it again clamps the text and puts the author's label back. Only the button's last text outside an `aria-hidden="true"` element changes, so an icon keeps its glyph. An icon-only button named by `aria-label` has no text to change: it keeps its name, and only `aria-expanded` says the text is open. Prefer a visible label.
 
 While the clamped text fits, the button gets `hidden`, so it is neither seen nor reached by Tab. The component checks again when the text's size changes and once web fonts have loaded, so `line-clamp-3 expanded:line-clamp-none` hides the button from Expanded windows up. A focused button stays until focus moves on, and open text keeps its button. Expanding sets `-webkit-line-clamp` and `line-clamp` inline, because a prefixed clamp class would beat `line-clamp-none`. The text opens and closes at once, without a transition.
 

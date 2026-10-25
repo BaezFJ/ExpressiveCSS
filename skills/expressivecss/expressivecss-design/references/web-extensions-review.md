@@ -182,11 +182,11 @@ Requirements: Keep the control a native button named by visible text, report its
 
 Framework comparison: No dedicated Google component exists in the reviewed inventory. The page writes the clamped text and the button; the framework sets aria-expanded and aria-controls, unclamps and clamps the text, swaps the label to "Show less", and hides the button while the clamped text fits, checking again on resize, after web fonts load and on blur.
 
-Verification gap: Click and Enter toggling, text that fits, a container widened and narrowed, a window-size prefix, Tab order and a focused button kept until blur are checked in a browser; labels, events and destroy() in jsdom. Spoken output remains unverified. Next check: Activate the button with VoiceOver and NVDA and confirm the expanded state and label are announced.
+Verification gap: Click and Enter toggling, text that fits, a fractional line height, a container widened and narrowed, a window-size prefix, Tab order, a focused button kept through a resize and until blur, and a web-font swap are checked in a browser; labels, events and destroy() in jsdom. Spoken output remains unverified. Next check: Activate the button with VoiceOver and NVDA and confirm the expanded state and label are announced.
 
-Feature gap: The text opens without a transition, find-in-page does not open clamped text, and only one to three lines can be clamped. Next check: None planned.
+Feature gap: The text opens without a transition, find-in-page does not open clamped text, only one to three lines can be clamped, and an icon-only button keeps its aria-label while open. Next check: None planned.
 
-Mapped browser scope: The text height before and after a click and Enter with aria-expanded and aria-controls, the hidden attribute on a button whose text fits, after widening and after narrowing, expanded:line-clamp-none at an Expanded width, Tab skipping hidden buttons, and focus kept on a collapsed button until Tab. No spoken-output assertion.
+Mapped browser scope: The text height before and after a click and Enter with aria-expanded and aria-controls, the hidden attribute on a button whose text fits, after widening and after narrowing, expanded:line-clamp-none at an Expanded width, Tab skipping hidden buttons, focus kept on a collapsed button through a resize and until Tab, a fractional line height that fits, and a held-back web font that makes the text fit, with a destroyed instance left alone. No spoken-output assertion.
 
 ## [Data table](../../components/data-table.md)
 

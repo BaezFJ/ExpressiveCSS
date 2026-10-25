@@ -72,7 +72,14 @@ These follow from the code and can change during implementation if the code or t
 - `src/sass/components/_show-more.scss` holds one rule, `.show-more > button[hidden] { display: none; }`. Group 3 found that every `<button>` gets `display: inline-flex` from the button mixin, which beats the browser's `[hidden]` rule, so a hidden button stayed visible and focusable. Tour keeps the same rule for its hidden buttons. With a partial, the `show-more` semantics row left the `additional` list.
 
 - The label is the button's last text node outside an `aria-hidden="true"` element, so an icon before or after the label keeps its ligature text.
-- A focused button stays visible even when the text fits, and the fit check runs again on blur. Without that, collapsing text after the container widened hid the button the person had just pressed, and focus fell back to the page. Found and fixed in group 3; V2 covers it.
+- A focused button stays visible even when the text fits, and the fit check runs again on blur. The focus check stops a resize, such as a phone rotating, from hiding the button someone is on and dropping focus on the page. The blur check hides a button whose text was collapsed after it widened to fit; collapsing it then leaves the box the same size, so no resize reports it. Found in group 3. The code review on 2026-10-25 corrected the reason, which first named the collapse case for the focus check, and V2 now covers both.
+
+### Found in the code review on 2026-10-25
+
+- Four guards had no test: removing the 1px allowance, the focus check, the `document.fonts.ready` recheck or the destroyed-instance check left every test passing. V2 now has a fractional line-height fixture, which fails without the allowance in Firefox, and a focused-resize step. V10 holds a web font back and covers the font recheck and a late `fonts.ready` after `destroy()`; it replaced manual check M2.
+- `destroy()` now restores the closed state only when the text is open, so a label the page edited while the text was closed stays. It also removes the empty `style` attribute it left on text that had none, and reads `fonts` from the element's own document.
+- The docs now say an icon-only button named by `aria-label` keeps its name, and only `aria-expanded` reports the open state.
+- WebKit runs no animation frame until a page shows enough text, so V10's page starts with a plain paragraph.
 
 ### Confirmed after the codex review on 2026-10-25
 
