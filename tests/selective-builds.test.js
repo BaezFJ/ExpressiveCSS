@@ -250,7 +250,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed currency input focus editing, the validity message, formatting after a form reset and destroy(): 95,276 gzip bytes (+160).
   // Reviewed currency input waiting for blur after Enter and listening in a shadow root: 95,306 gzip bytes (+30).
   // Reviewed the cascader's start: nested options read from markup, the combobox input, the starting path and destroy(): 95,770 gzip bytes (+464).
-  assert.ok(sizes(js).gzip <= 95770, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed cascader columns in a popover anchored to the input, chosen by click, and the committed path with its input and change events, with open() split for the complexity gate: 96,585 gzip bytes (+815).
+  assert.ok(sizes(js).gzip <= 96585, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -405,5 +406,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed swipe actions: the clipped list, the sliding row, the trailing toggle and the actions past the row's end: 86,736 gzip bytes (+169).
   // Reviewed .defer-render: content-visibility on off-screen rows except swipe rows, their reserved size and inset focus rings: 86,844 gzip bytes (+108).
   // Reviewed the cascader's hidden source lists: 86,855 gzip bytes (+11).
-  assert.ok(sizes(css).gzip <= 86855, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the cascader popover: menu surface and glass, side-by-side listbox columns, selected path, focus ring, chevron and forced colors: 87,340 gzip bytes (+485).
+  assert.ok(sizes(css).gzip <= 87340, `CSS gzip: ${sizes(css).gzip}`);
 });
