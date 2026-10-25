@@ -47,7 +47,10 @@ export class HoverCard extends Component<HoverCardOptions> {
     for (const target of [this.el, this.cardEl]) {
       target.addEventListener('pointerenter', this._handlePointerEnter, { signal });
       target.addEventListener('pointerleave', this._handlePointerLeave, { signal });
+      target.addEventListener('focusout', this._handleFocusOut, { signal });
     }
+    this.el.addEventListener('focus', this._handleLinkFocus, { signal });
+    this.cardEl.addEventListener('focusin', this._handleCardFocus, { signal });
   }
 
   static get defaults(): HoverCardOptions {
@@ -70,6 +73,7 @@ export class HoverCard extends Component<HoverCardOptions> {
     clearTimeout(this._timeout);
     if (!this.cardEl || this._shown) return;
     this._shown = true;
+    this._listenForEscape(true);
     // `source` makes the link the card's anchor and invoker, so Tab moves from the link into the card.
     (this.cardEl.showPopover as (options?: { source?: Element }) => void).call(this.cardEl, { source: this.el });
     this._notify('open');
@@ -82,6 +86,7 @@ export class HoverCard extends Component<HoverCardOptions> {
     clearTimeout(this._timeout);
     if (!this._shown) return;
     this._shown = false;
+    this._listenForEscape(false);
     this.cardEl.hidePopover();
     this._notify('close');
   };
@@ -115,9 +120,47 @@ export class HoverCard extends Component<HoverCardOptions> {
     if (e.pointerType !== 'touch') this._release('pointer');
   };
 
+  // A pointer press also focuses the link, and the hover already covers it,
+  // so only keyboard focus holds the card from the link.
+  private _handleLinkFocus = () => {
+    if (this.el.matches(':focus-visible')) this._hold('focus');
+  };
+
+  private _handleCardFocus = () => this._hold('focus');
+
+  private _handleFocusOut = (e: FocusEvent) => {
+    const next = e.relatedTarget as Node | null;
+    if (!next || !(this.el.contains(next) || this.cardEl.contains(next))) this._release('focus');
+  };
+
+  /** Escape is listened for only while the card shows. close() removes it, and destroy() through the signal. */
+  private _listenForEscape(on: boolean) {
+    const doc = this.el.ownerDocument;
+    if (on) doc.addEventListener('keydown', this._handleKeydown, { capture: true, signal: this._events.signal });
+    else doc.removeEventListener('keydown', this._handleKeydown, true);
+  }
+
+  // Escape always hides the card, but it is only the card's key when focus is
+  // on the link or in the card; otherwise it still reaches the dialog or menu
+  // that has focus. An engine that does not know popover="hint" treats the
+  // card as manual, which Escape would not close.
+  private _handleKeydown = (e: KeyboardEvent) => {
+    if (e.key !== 'Escape') return;
+    if (Utils.focusIsIn(this.el, this.cardEl)) this._takeEscape(e);
+    this.close();
+  };
+
+  /** Keeps Escape from the page and, when focus is in the card, takes it back to the link before the card hides. */
+  private _takeEscape(e: KeyboardEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (Utils.focusIsIn(this.cardEl)) this.el.focus();
+  }
+
   private _handleToggle = (e: Event) => {
     if ((e as ToggleEvent).newState !== 'closed' || !this._shown) return;
     this._shown = false;
+    this._listenForEscape(false);
     this._notify('close');
   };
 }

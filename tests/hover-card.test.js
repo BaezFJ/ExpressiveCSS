@@ -196,3 +196,52 @@ test('HoverCard ignores touch, and never prevents the click that follows the lin
     restore();
   }
 });
+
+test('HoverCard Escape hides the card and leaves the key to whatever has focus elsewhere', () => {
+  const { restore } = shimPopovers();
+  document.body.innerHTML = `${markup()}<div role="dialog"><button id="save">Save</button></div>`;
+  const link = document.querySelector('a');
+  const card = document.getElementById('card');
+  const instance = Expressive.HoverCard.init(link);
+  let reached = 0;
+  document.querySelector('[role="dialog"]').addEventListener('keydown', () => reached++);
+  try {
+    instance.open();
+    document.getElementById('save').focus();
+    const escape = new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+    document.getElementById('save').dispatchEvent(escape);
+    assert.ok(!card.hasAttribute('data-open'));
+    assert.equal(escape.defaultPrevented, false);
+    assert.equal(reached, 1);
+  } finally {
+    instance.destroy();
+    restore();
+  }
+});
+
+test('HoverCard Escape with focus in the card takes the key and returns focus to the link', () => {
+  const { restore } = shimPopovers();
+  document.body.innerHTML = markup();
+  const link = document.querySelector('a');
+  const card = document.getElementById('card');
+  const instance = Expressive.HoverCard.init(link);
+  try {
+    instance.open();
+    // jsdom hides a [popover] in its own stylesheet and will not focus inside it.
+    card.style.display = 'block';
+    document.getElementById('inner').focus();
+    assert.equal(document.activeElement.id, 'inner');
+    const escape = new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+    document.getElementById('inner').dispatchEvent(escape);
+    assert.ok(!card.hasAttribute('data-open'));
+    assert.equal(escape.defaultPrevented, true);
+    assert.equal(document.activeElement, link);
+    // Closed, it no longer listens for Escape.
+    const later = new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+    link.dispatchEvent(later);
+    assert.equal(later.defaultPrevented, false);
+  } finally {
+    instance.destroy();
+    restore();
+  }
+});

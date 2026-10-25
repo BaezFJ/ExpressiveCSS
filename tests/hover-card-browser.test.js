@@ -1,5 +1,5 @@
-// Hover card: hovering a link shows its card after enterDelay, against the
-// link, and the card stays while the pointer is on it.
+// Hover card: hovering or tabbing to a link shows its card after enterDelay,
+// against the link, and the card stays while the pointer or focus is on it.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
@@ -30,6 +30,10 @@ async function setUp(browserType) {
   const open = () => page.evaluate(() => document.getElementById('card').matches(':popover-open'));
   return { browser, page, open };
 }
+
+// WebKit leaves links out of the Tab order unless Alt is held.
+const tab = (page, name) => page.keyboard.press(name === 'webkit' ? 'Alt+Tab' : 'Tab');
+const active = (page) => page.evaluate(() => document.activeElement?.id);
 
 async function center(page, selector) {
   const box = await page.locator(selector).boundingBox();
@@ -62,6 +66,52 @@ for (const [name, browserType, browserTest] of engines) {
       await page.mouse.move(5, 590, { steps: 5 });
       await page.waitForTimeout(600);
       assert.equal(await open(), false, 'the card hides once the pointer has left both for exitDelay');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${name}: keyboard focus shows the card, Tab moves into it, and Escape hides it with focus back on the link`, { timeout: 30000 }, async () => {
+    const { browser, page, open } = await setUp(browserType);
+    try {
+      await page.focus('#before');
+      await tab(page, name);
+      assert.equal(await active(page), 'link');
+      await page.waitForTimeout(200);
+      assert.equal(await open(), false, 'nothing shows before enterDelay');
+      await page.waitForFunction(() => document.getElementById('card').matches(':popover-open'), null, { timeout: 2000 });
+      assert.equal(await active(page), 'link', 'focus stays on the link');
+
+      await tab(page, name);
+      assert.equal(await active(page), 'inner', 'Tab moves into the card');
+      await page.waitForTimeout(600);
+      assert.equal(await open(), true, 'the card stays while focus is in it');
+
+      await page.keyboard.press('Escape');
+      assert.equal(await open(), false);
+      assert.equal(await active(page), 'link', 'focus returns to the link');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${name}: the card hides once focus moves past it, and a click that focuses the link is not keyboard focus`, { timeout: 30000 }, async () => {
+    const { browser, page, open } = await setUp(browserType);
+    try {
+      await page.focus('#before');
+      await tab(page, name);
+      await page.waitForFunction(() => document.getElementById('card').matches(':popover-open'), null, { timeout: 2000 });
+      await tab(page, name);
+      assert.equal(await active(page), 'inner');
+      await tab(page, name);
+      assert.ok(!await page.evaluate(() => document.getElementById('card').contains(document.activeElement)), 'focus left the card');
+      await page.waitForTimeout(600);
+      assert.equal(await open(), false, 'the card hides after exitDelay once focus has left the link and the card');
+
+      await page.mouse.click(...await center(page, '#link'));
+      await page.mouse.move(5, 590);
+      await page.waitForTimeout(800);
+      assert.equal(await open(), false, 'a click that focuses the link does not hold the card');
     } finally {
       await browser.close();
     }
