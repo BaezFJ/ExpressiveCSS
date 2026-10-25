@@ -354,6 +354,7 @@ function unmount() {
 | `PullToRefresh` | `.pull-to-refresh` |
 | `SwipeActions` | `.list.swipeable` |
 | `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
+| `ShowMore` | `.show-more` |
 | `CurrencyInput` | `input[data-currency]` of type text |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
@@ -399,7 +400,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:create` | Autocomplete, from its `Add` row | `{ text }` |
 | `expressive:chip-add`, `chip-select`, `chip-delete` | Chips | `{ chip }` |
 | `expressive:change` | ButtonGroup, Menu checkbox and radio items, ScrollSpy (from the section), Tour | `{ button, pressed }`, `{ item, checked }`, `{ link }`, `{ step, index }` |
-| `expressive:open`, `expressive:close` | Tooltip, Snackbar, Tour | Tour's close: `{ completed }` |
+| `expressive:open`, `expressive:close` | Tooltip, Snackbar, Tour, ShowMore | Tour's close: `{ completed }` |
 | `expressive:action`, `expressive:closed` | Snackbar | none |
 | `expressive:copy` | Copy buttons | `{ text, copied }` |
 | `expressive:refresh` | Pull-to-refresh | `{ waitUntil }` |
@@ -6008,6 +6009,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `PullToRefresh` | `.pull-to-refresh` |
 | `SwipeActions` | `.list.swipeable` |
 | `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
+| `ShowMore` | `.show-more` |
 | `CurrencyInput` | `input[data-currency]` of type text |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |

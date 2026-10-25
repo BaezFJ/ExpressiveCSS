@@ -44,7 +44,8 @@
     "character-counter",
     "currency-input",
     "input-mask",
-    "landmarks"
+    "landmarks",
+    "show-more"
   ],
   "notComponents": {
     "table_of_contents": "the list it styles is Scrollspy's markup, taught under Scrollspy in `llm.md` and rendered per page by the docs site's page scaffold. The partial stays in the sheet; `scrollspy` owns its rule."
@@ -2007,6 +2008,26 @@
       "status": "enforced",
       "note": "Swept 0.8.0. A <dialog>, so the dialog rules carry it.",
       "rules": []
+    },
+    "show-more": {
+      "status": "enforced",
+      "note": "Added with the show-more component. The author writes clamped text and the button that expands it; AutoInit sets the button's aria-expanded and aria-controls, swaps its label while the text is open, and hides it when the text already fits.",
+      "rules": [
+        {
+          "id": "show-more-needs-a-button",
+          "kind": "forbid",
+          "selector": ".show-more:not(:has(> button[type=\"button\" i]))",
+          "fragmentSafe": true,
+          "message": "Give a .show-more a <button type=\"button\"> child. A <span> or <div> with role=\"button\" is not operable from the keyboard without script, and a <button> without type=\"button\" submits the form it sits in."
+        },
+        {
+          "id": "show-more-needs-clamped-text",
+          "kind": "forbid",
+          "selector": ".show-more:not(:has(> :is(.line-clamp-1, .line-clamp-2, .line-clamp-3)))",
+          "fragmentSafe": true,
+          "message": "Give a .show-more a child with line-clamp-1, line-clamp-2 or line-clamp-3. That is the text the button expands; without it the component does nothing."
+        }
+      ]
     },
     "split-button": {
       "status": "enforced",

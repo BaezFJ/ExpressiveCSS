@@ -249,7 +249,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the currency input: an amount shown in the locale and currency on blur, the plain number in the form data: 95,116 gzip bytes (+655).
   // Reviewed currency input focus editing, the validity message, formatting after a form reset and destroy(): 95,276 gzip bytes (+160).
   // Reviewed currency input waiting for blur after Enter and listening in a shadow root: 95,306 gzip bytes (+30).
-  assert.ok(sizes(js).gzip <= 95306, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed show more: clamped text expands from its button, which sets aria-expanded and aria-controls: 95,661 gzip bytes (+355).
+  assert.ok(sizes(js).gzip <= 95661, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

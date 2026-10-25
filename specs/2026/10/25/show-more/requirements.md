@@ -34,7 +34,7 @@ These facts come from the base commit.
 - R4. When the clamped text already fits in its lines, the button gets the `hidden` attribute, so it is neither seen nor reached by Tab or a screen reader. The component checks again when the text element's size changes, so narrowing the container until the text is cut shows the button, and widening it until the text fits hides the button again. A window-size prefix such as `line-clamp-3 expanded:line-clamp-none` therefore hides the button on wide windows.
 - R5. Expanding and collapsing fire `expressive:open` and `expressive:close` from the `.show-more` element and call the `onOpen` and `onClose` options.
 - R6. `destroy()` restores the button's `aria-expanded`, `aria-controls`, `hidden` and label, removes any id the component added, puts the clamp back, and disconnects the size observer.
-- R7. `semantics.json` has a `show-more` row. Its rule requires the control to be a `<button>` and the text element to carry a `line-clamp-1`, `-2` or `-3` class. The static check does not start components.
+- R7. `semantics.json` has a `show-more` row. Its rules require the control to be a `<button type="button">` and the text element to carry a `line-clamp-1`, `-2` or `-3` class. The static check does not start components.
 - R8. A docs page, a "Show more" section in `llm.md`, both AutoInit registry tables in `llm.md`, `docs/src/pages/auto-init.astro` and the events tables document the markup, the options, the events and the limits under "Technical constraints". The changelog has an Added entry, and the component has a component-decisions entry and a hand-written `web-extensions-review.md` entry.
 - R9. The JavaScript bundle's new gzip size, and the CSS bundle's if the component adds Sass, are recorded in reviewed budget lines in `tests/selective-builds.test.js`. The generated skill and MCP copies are current.
 
@@ -66,7 +66,9 @@ These follow from the code and can change during implementation if the code or t
 - While expanded, the button stays visible even if the text would now fit clamped, because collapsing is how the person gets back. The fit check runs only while the text is clamped.
 - Swap only the button's last non-empty text node, so a leading icon element survives the label change.
 - Default `i18n.showLess` is `'Show less'`. The roadmap names no default for the collapsed label, since the author writes it.
-- Find the parts with `:scope > [class*="line-clamp-"]` and `:scope > button`. The selector for AutoInit is `.show-more`.
+- Find the parts with `:scope > :is(.line-clamp-1, .line-clamp-2, .line-clamp-3)` and `:scope > button`. The selector for AutoInit is `.show-more`. Group 2 narrowed the text selector from `[class*="line-clamp-"]`, which also matched `line-clamp-none` and prefixed classes, to the classes the semantics rule names.
+- The semantics rule also requires `type="button"`, added in group 2, because a `<button>` without it submits the form it sits in.
+- `open()` and `close()` are public methods, as on ExpandingCard, since the click handler needs them anyway. Added in group 2.
 - If the component needs any CSS at all, for example a gap between the text and the button, it goes in a new `src/sass/components/_show-more.scss`. Otherwise the change is JavaScript only and needs no CSS budget line.
 
 ### Open decisions

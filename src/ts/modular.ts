@@ -40,6 +40,7 @@ export type * from './components/scatterChart';
 export type * from './components/pullToRefresh';
 export type * from './components/swipeActions';
 export type * from './components/inputMask';
+export type * from './components/showMore';
 export type * from './components/currencyInput';
 export type * from './components/commandPalette';
 export type * from './components/questionnaire';

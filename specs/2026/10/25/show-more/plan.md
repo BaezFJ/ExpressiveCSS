@@ -26,11 +26,11 @@ Outcome: in a `.show-more` started by AutoInit, activating the button shows the 
 
 Prerequisites: group 1.
 
-- [ ] Write the toggle half of V1 in a new `tests/show-more-browser.test.js`. Run `npm run build` and the file, and confirm it fails.
-- [ ] Add `src/ts/components/showMore.ts` with `aria-expanded`, `aria-controls`, the generated id, the inline unclamp, and the `onOpen` and `onClose` options with the `expressive:open` and `expressive:close` events. Export it from `components/index.ts` and register it in `components/registry.ts` with the `.show-more` selector.
-- [ ] Add the `show-more` row and its rule to `semantics.json`, the `tests/fixtures.js` entry and the `AUTO_INIT_FIXTURES.length` count in `tests/autoinit.test.js`, and write V6 in `tests/semantics.test.js`. Run `npm run build:semantics`.
-- [ ] Add `ShowMore` to both registry tables in `llm.md`, to `docs/src/pages/auto-init.astro`, and to the events tables in both, then run `npm run build:skill`.
-- [ ] Rebuild and rerun until the toggle half of V1 passes in all three engines. Add the reviewed JavaScript budget line.
+- [x] Write the toggle half of V1 in a new `tests/show-more-browser.test.js`. Run `npm run build` and the file, and confirm it fails.
+- [x] Add `src/ts/components/showMore.ts`, and its types export in `modular.ts`, with `aria-expanded`, `aria-controls`, the generated id, the inline unclamp, and the `onOpen` and `onClose` options with the `expressive:open` and `expressive:close` events. Export it from `components/index.ts` and register it in `components/registry.ts` with the `.show-more` selector.
+- [x] Add the `show-more` row and its rule to `semantics.json`, the `tests/fixtures.js` entry and the `AUTO_INIT_FIXTURES.length` count in `tests/autoinit.test.js`, and write V6 in `tests/semantics.test.js`. Run `npm run build:semantics`.
+- [x] Add `ShowMore` to both registry tables in `llm.md`, to `docs/src/pages/auto-init.astro`, and to the events tables in both, then run `npm run build:skill`.
+- [x] Rebuild and rerun until the toggle half of V1 passes in all three engines. Add the reviewed JavaScript budget line.
 
 Completion check: the toggle half of V1 passes in Chromium, Firefox and WebKit, and V6 and V7 pass.
 
@@ -58,7 +58,7 @@ Outcome: the component is documented, the generated files are current, and CI ca
 
 Prerequisites: group 3.
 
-- [ ] Add a "Show more" section to `llm.md`, the types export in `modular.ts`, and a docs page with a live example, added to the docs catalogue. Cover the markup, `data-show-less` and `i18n.showLess`, the window-size prefix case, the find-in-page limit and the clamp-on-a-child rule.
+- [ ] Add a "Show more" section to `llm.md` and a docs page with a live example, added to the docs catalogue. Cover the markup, `data-show-less` and `i18n.showLess`, the window-size prefix case, the find-in-page limit and the clamp-on-a-child rule.
 - [ ] Add the component to `docs/src/data/component-decisions.json` with its capability entry, and re-pin `sourceRevision` to a commit on `master`.
 - [ ] Add an entry to `skills/expressivecss/expressivecss-design/references/web-extensions-review.md` and an Added entry to the Unreleased section of `CHANGELOG.md`.
 - [ ] Update the hardcoded guide counts in `tests/expressivecss-skill.test.js`, `tests/expressivecss-version-resolution.test.js` and `tests/expressivecss-component-decisions.test.js`, and the reading budget if it grows.
