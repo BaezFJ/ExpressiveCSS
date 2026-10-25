@@ -413,5 +413,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the sankey chart: the shared chart parts, an unlined plot, filled nodes and links in six colors, the marked link, the tooltip and node names: 87,630 gzip bytes (+586).
   // Reviewed the funnel chart: the label column, centered stages that grow from their old width and keep their color in forced colors, and the row band: 88,205 gzip bytes (+620 over master's 87,585 build).
   // Reviewed the transfer list: two outlined lists that scroll, the buttons between them, stacking below medium and flipped icons in RTL: 88,345 gzip bytes (+140).
-  assert.ok(sizes(css).gzip <= 88345, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed list rows centering a single line and no row gap, and the list row inset for the checkbox mark: 88,393 gzip bytes (+48).
+  assert.ok(sizes(css).gzip <= 88393, `CSS gzip: ${sizes(css).gzip}`);
 });

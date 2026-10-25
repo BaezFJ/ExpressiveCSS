@@ -623,6 +623,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A single-line list row sits in the middle of the row. The row grid's
+  empty second line stretched, so the text sat 4px above its leading icon
+  in most rows. A checkbox or radio label row also took the control's
+  12px row gap and sat 7px high. In a row taller than its text, the
+  headline and its supporting text now sit together in the middle instead
+  of being pushed apart. A checked checkbox in a label row shows its
+  checkmark on the box, not 16px before it.
 - A table cell with the `hidden` attribute is hidden. The global `td, th`
   rule set `display: table-cell`, which overrode the browser's
   `[hidden]` rule.
