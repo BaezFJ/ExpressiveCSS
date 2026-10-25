@@ -1,0 +1,7 @@
+// Cascader. A .field holding a text input, its label and a ul.cascader-options
+// of nested lists, one <li data-value> per option. The script builds the
+// columns from those lists in a popover, so the lists themselves never show.
+
+.cascader-options {
+  display: none;
+}

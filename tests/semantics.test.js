@@ -353,6 +353,25 @@ test('a mask goes only on an input with a caret', () => {
   assert.equal(broken('<input data-mask="000">'), 0);
 });
 
+test('a cascader is a named text field over plain lists with a value on every option', () => {
+  const broken = (id, html) => violations(html, enforcedRules, data.compositeRoles, { fragmentSafe: true })
+    .filter((v) => v.rule.id === id).length;
+  const field = (input, list = '<li data-value="us">United States</li>') =>
+    `<div class="field cascader">${input}<ul class="cascader-options">${list}</ul></div>`;
+  const named = '<input id="place" type="text"><label for="place">Place</label>';
+  assert.equal(broken('cascader-lists-take-no-roles', '<ul class="cascader-options" role="listbox"><li data-value="a">A</li></ul>'), 1);
+  assert.equal(broken('cascader-lists-take-no-roles', field(named, '<li data-value="us" role="option">United States</li>')), 1);
+  assert.equal(broken('cascader-option-has-value', field(named, '<li>United States<ul><li data-value="ca">California</li></ul></li>')), 1);
+  assert.equal(broken('cascader-needs-a-text-field', field('<input id="place" type="number"><label for="place">Place</label>')), 1);
+  assert.equal(broken('cascader-input-is-named', field('<input type="text">')), 1);
+  for (const input of [named, '<input aria-label="Place">', '<input type="TEXT" aria-labelledby="heading">']) {
+    const valid = field(input, '<li data-value="us">United States<ul><li data-value="ca" data-selected>California</li></ul></li>');
+    for (const id of ['cascader-lists-take-no-roles', 'cascader-option-has-value', 'cascader-needs-a-text-field', 'cascader-input-is-named']) {
+      assert.equal(broken(id, valid), 0, `${id}: ${input}`);
+    }
+  }
+});
+
 test('a currency code goes only on a text input', () => {
   const broken = (html) => violations(html, enforcedRules, data.compositeRoles, { fragmentSafe: true })
     .filter((v) => v.rule.id === 'currency-input-needs-a-text-field').length;

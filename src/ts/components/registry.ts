@@ -81,6 +81,7 @@ export const AUTO_INIT_COMPONENTS = {
   Lightbox: { component: Components.Lightbox, selector: ".lightboxed" },
   ScrollSpy: { component: Components.ScrollSpy, selector: ".scrollspy" },
   FormSelect: { component: Components.FormSelect, selector: "select" },
+  Cascader: { component: Components.Cascader, selector: ".cascader" },
   NavigationRail: {
     component: Components.NavigationRail,
     selector: ".navigation-rail",

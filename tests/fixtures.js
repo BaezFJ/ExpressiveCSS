@@ -141,6 +141,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<div class="field"><input id="price" type="text" inputmode="decimal" placeholder=" " data-currency="EUR"><label for="price">Price in euros</label></div>`,
   },
   {
+    name: "Cascader",
+    selector: ".cascader",
+    html: `<div class="field cascader"><input id="place" name="place" type="text"><label for="place">Place</label><ul class="cascader-options"><li data-value="us">United States<ul><li data-value="ca">California</li></ul></li></ul></div>`,
+  },
+  {
     name: "CommandPalette",
     selector: "dialog.command-palette",
     html: `<dialog class="command-palette" aria-label="Commands"><input type="search" aria-label="Search commands"><ul><li><button type="button">New file</button></li></ul></dialog>`,
