@@ -1,0 +1,148 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "layout", label: "Layout" },
+  { id: "values", label: "Values and gaps" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "javascript", label: "JavaScript" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const teams: [string, number][] = [
+  ["Engineering", 600000], ["Research", 300000], ["Design", 120000], ["Sales", 80000], ["Support", 80000], ["Legal", 20000],
+];
+const storage: [string, number][] = [
+  ["Photos", 48.2], ["Videos", 31.5], ["Apps", 12.4], ["Music", 6.1], ["Documents", 2.3], ["Mail", 1.2], ["Messages", 0.8], ["Other", 4.6],
+];
+---
+<DocsLayout page="treemap-chart" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;figure class="treemap-chart"&gt;</code> draws each row
+          of a <code>&lt;table&gt;</code> as a rectangle whose area follows its
+          value, together filling the plot.
+        </p>
+        <p>
+          The table takes the same shape as a
+          <a href="pie-chart.html">pie chart</a>'s: the first column names each
+          row and the second holds its value. Each rectangle's share of the
+          plot is its row's share of the total, and its name and value are
+          written inside it. A treemap keeps many parts readable where a pie
+          runs out of room for slices. To compare a few values against each
+          other, use a <a href="bar-chart.html">bar chart</a>.
+        </p>
+        <figure class="treemap-chart" data-markdown-ignore>
+          <figcaption>Budget by team</figcaption>
+          <table>
+            <thead><tr><th>Team</th><th>Budget</th></tr></thead>
+            <tbody>{teams.map(([team, dollars]) => <tr><th>{team}</th><td>${dollars.toLocaleString("en")}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="treemap-chart">
+  <figcaption>Budget by team</figcaption>
+  <table>
+    <thead>
+      <tr><th>Team</th><th>Budget</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Engineering</th><td>$600,000</td></tr>
+      <tr><th>Research</th><td>$300,000</td></tr>
+      <!-- One row per team -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.layout}>
+        <p>
+          The layout is squarified. Rows are placed from the largest value to
+          the smallest, equal values in table order, and each strip of
+          rectangles is chosen to keep them near square for the plot's shape.
+          The largest starts at the top inline-start corner, so a right-to-left
+          page mirrors the layout. A rectangle's place follows its value, not
+          its row, and the layout follows the plot when it changes shape.
+        </p>
+        <p>
+          A rectangle too small to hold its name and value shows neither; the
+          tooltip names it. Long names end in an ellipsis. Rectangles take six
+          colors in table order, then repeat, so neighbours can share a color
+          past the sixth row.
+        </p>
+        <figure class="treemap-chart" data-markdown-ignore>
+          <figcaption>Phone storage (GB)</figcaption>
+          <table>
+            <thead><tr><th>Category</th><th>Size</th></tr></thead>
+            <tbody>{storage.map(([category, size]) => <tr><th>{category}</th><td>{size}</td></tr>)}</tbody>
+          </table>
+        </figure>
+  </Section>
+  <Section {...S.values}>
+        <p>
+          Cells read as in the <a href="column-chart.html">column chart</a>:
+          <code>data-value</code> wins over the text, and the text may carry a
+          currency or percent sign and grouping commas around one number. A
+          zero, negative or non-numeric cell draws no rectangle and adds
+          nothing to the total. Its row stays in the table. Further value
+          columns add lines to the tooltip.
+        </p>
+        <p>
+          A gap of <code>--md-comp-treemap-chart-gap</code> parts neighbours.
+          It is drawn inside each rectangle's area, so the areas stay exact.
+        </p>
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The table is the chart's text alternative. Give it a header row and
+          a header cell per row, and name the chart with a
+          <code>&lt;figcaption&gt;</code>. The drawn rectangles and their text
+          are hidden from assistive technology.
+        </p>
+        <p>
+          The plot is one Tab stop named by the caption. Keyboard focus shows
+          the first row with a rectangle. The arrow keys step through the rows
+          with a rectangle in table order: right and down go to the next, left
+          and up to the one before. Home and End jump to the first and last,
+          and Escape hides the tooltip. The arrows keep this meaning in a
+          right-to-left page, since table order is not a direction on screen.
+          The pointer and a tap show the rectangle under them. The tooltip is
+          a polite live region, so a screen reader hears the row, its value
+          and its share of the whole as it moves. A ring in the gap marks the
+          highlighted rectangle, and in forced colors each rectangle keeps an
+          edge.
+        </p>
+  </Section>
+  <Section {...S.javascript}>
+        <p>
+          <code>AutoInit()</code> starts every <code>.treemap-chart</code>. To
+          start one yourself, call <code>TreemapChart.init</code>. After
+          changing its table, call <code>update()</code> to redraw it in place,
+          or put <code>data-watch</code> on the figure and it redraws itself.
+          Rectangles take their new places at once. It has the line chart's
+          methods; the <code>min</code> and <code>max</code> options do not
+          apply.
+        </p>
+<Code code={`
+const chart = Expressive.TreemapChart.init(document.querySelector('.treemap-chart'));
+chart.show(2);   // highlight the third row, or the next one with a rectangle; -1 hides the tooltip
+chart.update();  // redraw from the table; focus and the highlighted row stay
+chart.destroy(); // remove the drawing and show the table again
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.treemap-chart</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-treemap-chart-height</code></td><td>240px</td></tr>
+          <tr><td><code>--md-comp-treemap-chart-gap</code></td><td>4px between neighbours</td></tr>
+          <tr><td><code>--md-comp-treemap-chart-color-1</code> … <code>-6</code></td><td><code>primary</code>, <code>tertiary</code>, <code>secondary</code>, <code>on-surface-variant</code>, then <code>primary-container</code> and <code>tertiary-container</code> deepened toward <code>on-surface</code></td></tr>
+          <tr><td><code>--md-comp-treemap-chart-on-color-1</code> … <code>-6</code></td><td><code>on-primary</code>, <code>on-tertiary</code>, <code>on-secondary</code>, <code>surface</code>, <code>surface</code>, <code>surface</code></td></tr>
+        </TokenTable>
+        <p>For a selective Sass build, include <code>"treemap-chart"</code> in <code>$components</code>.</p>
+  </Section>
+</DocsLayout>

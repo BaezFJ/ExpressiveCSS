@@ -9,7 +9,7 @@ Component ID: `dialogs`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `42853ff2b0f92210b20876a214cdd947bfa0459bb22f1dd90fa3758898717254`
+Contract SHA-256: `c48050e64a46b9ea74766a840815f961337d196936a71d0156ccde57904ba343`
 
 #### Selection and adaptation
 
@@ -65,7 +65,7 @@ Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/spe
 
 #### Also documented
 
-The Dialogs section of the [API reference](https://www.expressivecss.com/llm.md) also covers Tokens, Full-screen.
+The Dialogs section of the [API reference](https://www.expressivecss.com/llm.md) also covers Confirm from script, Tokens, Full-screen.
 
 #### Rules
 

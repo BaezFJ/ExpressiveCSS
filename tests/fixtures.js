@@ -96,9 +96,19 @@ export const AUTO_INIT_FIXTURES = [
     html: `<figure class="scatter-chart"><figcaption>Fuel economy</figcaption><table><thead><tr><th>Car</th><th>Weight</th><th>Mpg</th></tr></thead><tbody><tr><th>Civic</th><td>1300</td><td>31</td></tr><tr><th>Tahoe</th><td>2600</td><td>15</td></tr></tbody></table></figure>`,
   },
   {
+    name: "FunnelChart",
+    selector: ".funnel-chart",
+    html: `<figure class="funnel-chart"><figcaption>Signups</figcaption><table><thead><tr><th>Step</th><th>Visitors</th></tr></thead><tbody><tr><th>Visited</th><td>1000</td></tr><tr><th>Paid</th><td>45</td></tr></tbody></table></figure>`,
+  },
+  {
     name: "SankeyChart",
     selector: ".sankey-chart",
     html: `<figure class="sankey-chart"><figcaption>Energy flow</figcaption><table><thead><tr><th>Source</th><th>Target</th><th>Value</th></tr></thead><tbody><tr><th>Solar</th><td>Grid</td><td>30</td></tr><tr><th>Grid</th><td>Homes</td><td>30</td></tr></tbody></table></figure>`,
+  },
+  {
+    name: "TreemapChart",
+    selector: ".treemap-chart",
+    html: `<figure class="treemap-chart"><figcaption>Budget by team</figcaption><table><thead><tr><th>Team</th><th>Budget</th></tr></thead><tbody><tr><th>Engineering</th><td>600</td></tr><tr><th>Design</th><td>120</td></tr></tbody></table></figure>`,
   },
   {
     name: "BarChart",
@@ -151,6 +161,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<div class="show-more"><p class="line-clamp-2">A long description that runs past two lines.</p><button type="button">Show more</button></div>`,
   },
   {
+    name: "HoverCard",
+    selector: ".hover-card-trigger",
+    html: `<p><a class="hover-card-trigger" href="#ada" aria-details="ada-card">Ada Lovelace</a></p><div id="ada-card" class="popover" popover="hint"><h3>Ada Lovelace</h3><p>Wrote the first published program.</p></div>`,
+  },
+  {
     name: "CurrencyInput",
     selector: "input[data-currency]",
     html: `<div class="field"><input id="price" type="text" inputmode="decimal" placeholder=" " data-currency="EUR"><label for="price">Price in euros</label></div>`,
@@ -174,6 +189,11 @@ export const AUTO_INIT_FIXTURES = [
     name: "ScrollSpy",
     selector: ".scrollspy",
     html: `<div id="section1" class="scrollspy section">one</div>`,
+  },
+  {
+    name: "BackToTop",
+    selector: ".back-to-top",
+    html: `<a class="back-to-top" href="#main" aria-label="Back to top"><span class="material-symbols" aria-hidden="true">arrow_upward</span></a>`,
   },
   {
     name: "FormSelect",

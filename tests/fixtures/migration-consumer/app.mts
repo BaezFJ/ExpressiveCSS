@@ -1,10 +1,12 @@
 import {
   AutoInit,
   ButtonGroup,
+  Dialogs,
   FloatingActionButton,
   NavigationRail,
   Snackbar,
   Tooltip,
+  type ConfirmOptions,
   type DatepickerOptions,
   type SnackbarOptions,
   type TimepickerOptions,
@@ -12,6 +14,8 @@ import {
 
 export const manualDatepicker: Partial<DatepickerOptions> = { autoSubmit: false };
 export const manualTimepicker: Partial<TimepickerOptions> = { autoSubmit: false };
+const deleteQuestion: ConfirmOptions = { headline: "Delete draft?", text: "The draft is removed.", confirm: "Delete" };
+export const confirmDelete = (): Promise<boolean> => Dialogs.confirm(deleteQuestion);
 
 export function checkTooltipContract(tooltip: Tooltip) {
   tooltip.open();
