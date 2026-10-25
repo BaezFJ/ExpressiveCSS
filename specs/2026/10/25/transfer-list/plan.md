@@ -10,11 +10,11 @@ Outcome: checking two rows and pressing `add` puts both in the chosen list, and 
 
 Prerequisites: none.
 
-- [ ] Write V1 in a new `tests/transfer-list-browser.test.js`, with real clicks in Chromium, Firefox and WebKit, following `tests/sortable-browser.test.js`. Run `npm run build` and the file, and confirm V1 fails.
-- [ ] Add `src/ts/behaviors/transferList.ts` with `TransferList.Init()`: a document `click` listener for `[data-transfer="add"]` (R2), found with `Utils.closestInPath`, and a capture `formdata` listener on the document that appends the chosen rows' values under `data-name` (R5). Start it in `src/ts/index.ts` and export it from `src/ts/modular.ts`.
-- [ ] Add `src/sass/components/_transfer-list.scss` and forward it from `src/sass/components/_index.scss`: side-by-side layout with logical properties, stacking below `medium`, each list scrolling inside a maximum block size, and the icon flip under `:dir(rtl)` (R11).
-- [ ] Add the `transfer-list` row and its three rules to `semantics.json` (R12), write V10 in `tests/semantics.test.js`, and run `npm run build:semantics`.
-- [ ] Write V2 and V8, then rebuild and rerun until V1, V2, V8 and V10 pass. Add the reviewed JavaScript and CSS budget lines.
+- [x] Write V1 in a new `tests/transfer-list-browser.test.js`, with real clicks in Chromium, Firefox and WebKit, following `tests/sortable-browser.test.js`. Run `npm run build` and the file, and confirm V1 fails.
+- [x] Add `src/ts/behaviors/transferList.ts` with `TransferList.Init()`: a document `click` listener for `[data-transfer="add"]` (R2), found with `Utils.closestInPath`, and a capture `formdata` listener on the document that appends the chosen rows' values under `data-name` (R5). Start it in `src/ts/index.ts` and export it from `src/ts/modular.ts`.
+- [x] Add `src/sass/components/_transfer-list.scss` and forward it from `src/sass/components/_index.scss`: side-by-side layout with logical properties, stacking below `medium`, each list scrolling inside a maximum block size, and the icon flip under `:dir(rtl)` (R11).
+- [x] Add the `transfer-list` row and its three rules to `semantics.json` (R12), write V10 in `tests/semantics.test.js`, and run `npm run build:semantics`.
+- [x] Write V2 and V8, then rebuild and rerun until V1, V2, V8 and V10 pass. Add the reviewed JavaScript and CSS budget lines.
 
 Completion check: V1, V2 and V8 pass in Chromium, Firefox and WebKit, and V10 and `node --test tests/selective-builds.test.js` pass.
 

@@ -2209,6 +2209,31 @@
         }
       ]
     },
+    "transfer-list": {
+      "status": "enforced",
+      "note": "Added with the transfer list behavior. The rows are native checkboxes in .list label rows, so Tab reaches each one and Space checks it; the [data-transfer] buttons move the checked rows, and no listbox role or arrow-key contract is involved. The checkboxes carry no name: when the form builds its data, the script adds each chosen row's value under the container's data-name, in the chosen list's order.",
+      "rules": [
+        {
+          "id": "transfer-list-needs-a-name",
+          "kind": "forbid",
+          "selector": ".transfer-list:not([data-name]), .transfer-list[data-name=\"\"]",
+          "message": "Give each .transfer-list a data-name. The chosen rows submit their values under it; without one the form gets nothing."
+        },
+        {
+          "id": "transfer-list-checkbox-unnamed",
+          "kind": "forbid",
+          "selector": ".transfer-list input[type=\"checkbox\"][name]",
+          "fragmentSafe": true,
+          "message": "Leave the name off a transfer list's checkboxes. A checkbox's name submits whether it is checked, which only says what is selected to move; the script submits the chosen rows under the container's data-name."
+        },
+        {
+          "id": "transfer-list-lists-labelled",
+          "kind": "forbid",
+          "selector": ":is(.transfer-available, .transfer-chosen):not([aria-label], [aria-labelledby])",
+          "message": "Name each transfer list with aria-label or aria-labelledby, such as \"Available toppings\" and \"Chosen toppings\". The name tells people which list a row is in, and the move announcement reads it."
+        }
+      ]
+    },
     "transitions": {
       "status": "enforced",
       "kind": "foundation",

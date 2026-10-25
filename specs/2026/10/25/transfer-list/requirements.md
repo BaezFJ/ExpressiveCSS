@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 46, transfer list
 Branch: `feature/2026-10-25-transfer-list`
 Base: `origin/master` at `a9bbf77ad`, fetched 2026-10-25
-Status: specified 2026-10-25; not implemented
+Status: specified 2026-10-25; group 1 implemented 2026-10-25
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 46](../../../../roadmap.md#phase-46-transfer-list). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -105,6 +105,7 @@ The interview did not settle these. They follow the confirmed choices and the co
 - Buttons stay enabled when nothing can move (R6). Setting `aria-disabled` would need the behavior to read every container's state on load, which a delegated behavior without init does not do.
 - The icons flip in right-to-left pages with a `scale: -1 1` under `:dir(rtl)` in the new partial, so authors write one set of icon names.
 - The live region and the recorded order live in `WeakMap`s keyed by the container, as `Sortable` keys its regions by list.
+- Added in group 1 after a review on 2026-10-25: a button that matches `:disabled` or `[aria-disabled="true"]` moves nothing, as in `Sortable`, because a click on a disabled button's icon still reaches the document listener.
 
 ### Deferred
 
