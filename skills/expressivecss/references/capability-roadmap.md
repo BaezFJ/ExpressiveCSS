@@ -71,6 +71,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Snackbar](#snackbar) | unassessed | needs-review | needs-rerun | 0 |
 | [Progress indicators](#progress) | unassessed | needs-review | needs-rerun | 0 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | needs-rerun | 1 |
+| [Loading overlay](#loading-overlay) | implemented | source-reviewed | incomplete | 0 |
 | [Skeleton](#skeleton) | implemented | source-reviewed | needs-rerun | 0 |
 | [Empty state](#empty-state) | implemented | source-reviewed | needs-rerun | 0 |
 | [Alert](#alert) | implemented | source-reviewed | incomplete | 0 |
@@ -1093,6 +1094,23 @@ Web adaptation: CSS-only; the author supplies an accessible waiting message.
 - integration: The framework requires a named status while Google recommends progressbar; an indeterminate progressbar validly omits aria-valuenow. Next: Record this current contract difference; test meaningful waiting text and spoken delivery. Choose a progress indicator initially when a transition to determinate progress is expected.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/3945c159a2fe7a6420ca31fdb6e10c1c2de9a0e7/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining progress and loading variants stop spatial motion`. Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.
+
+<a id="loading-overlay"></a>
+
+## Loading overlay
+
+**implemented within the stated scope.** A region the page marks aria-busy="true" shows a surface scrim and its loading indicator and is made inert until the attribute goes, with focus taken from the control inside it, keeps an inert state the author set, announces the start and the finish in a status region after it with i18n strings, returns focus to the control that had it, and stops following the attribute on destroy().
+
+Source review: source-reviewed, 2026-10-25. [src/sass/components/_loading-overlay.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/3945c159a2fe7a6420ca31fdb6e10c1c2de9a0e7/src/sass/components/_loading-overlay.scss), [src/ts/components/loadingOverlay.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/3945c159a2fe7a6420ca31fdb6e10c1c2de9a0e7/src/ts/components/loadingOverlay.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: The native inert attribute blocks pointer and keyboard input instead of script handlers. The page owns aria-busy, and the script follows it with a MutationObserver. Inert content leaves the accessibility tree, so the script adds a visually hidden role="status" region outside the region.
+
+- verification: Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified. Next: Mark a region busy and clear it with VoiceOver and NVDA running, and view it under a Windows high-contrast theme.
+
+- not-recorded: [tests/loading-overlay-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/3945c159a2fe7a6420ca31fdb6e10c1c2de9a0e7/tests/loading-overlay-browser.test.js): `chromium: a busy region takes no click or Tab, and clearing it gives both back`. A real mouse click and Tab while aria-busy is "true", and again after it is set to "false" and after it is removed.
+- not-recorded: [tests/loading-overlay-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/3945c159a2fe7a6420ca31fdb6e10c1c2de9a0e7/tests/loading-overlay-browser.test.js): `chromium: focus goes back to where it was when the region clears`. Focus dropped by inert and returned on clear, a focus move made while busy kept, and a removed control not refocused. No spoken-output assertion.
 
 <a id="skeleton"></a>
 

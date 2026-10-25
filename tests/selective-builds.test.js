@@ -249,9 +249,10 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the currency input: an amount shown in the locale and currency on blur, the plain number in the form data: 95,116 gzip bytes (+655).
   // Reviewed currency input focus editing, the validity message, formatting after a form reset and destroy(): 95,276 gzip bytes (+160).
   // Reviewed currency input waiting for blur after Enter and listening in a shadow root: 95,306 gzip bytes (+30).
-  // Reviewed BackToTop: the threshold sentinel, the inert link, the scroll to the top and focus on the href target with a temporary tabindex: 95,790 gzip bytes (+484).
-  // Reviewed BackToTop review fixes: a focused link kept until blur, modified and prevented clicks left alone, an invalid threshold replaced with a warning: 95,929 gzip bytes (+139).
-  assert.ok(sizes(js).gzip <= 95929, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the loading overlay: inert while aria-busy is "true", the status region after it and focus put back on clear: 95,566 gzip bytes (+260).
+  // Reviewed the loading overlay review fixes: the blurred control, its root node's focus and the deferred first announcement: 95,625 gzip bytes (+59).
+  // Reviewed BackToTop: the threshold sentinel, the inert link kept while focused, the scroll to the top, focus on the href target with a temporary tabindex, modified clicks left alone and the threshold check: 96,265 gzip bytes (+640).
+  assert.ok(sizes(js).gzip <= 96265, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -405,7 +406,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the visually hidden pull-to-refresh status region: 86,567 gzip bytes (+33).
   // Reviewed swipe actions: the clipped list, the sliding row, the trailing toggle and the actions past the row's end: 86,736 gzip bytes (+169).
   // Reviewed .defer-render: content-visibility on off-screen rows except swipe rows, their reserved size and inset focus rings: 86,844 gzip bytes (+108).
-  // Reviewed .back-to-top: the fixed corner link, its offset and stacking tokens, and the inert link faded and hidden: 86,966 gzip bytes (+122).
-  // Reviewed .back-to-top hiding at once instead of fading out, so a late script start shows no fade: 86,955 gzip bytes (-11).
-  assert.ok(sizes(css).gzip <= 86955, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the loading overlay: the surface scrim and centred indicator while busy, their fade, the forced-colors wash and the hidden status region: 87,040 gzip bytes (+196).
+  // Reviewed the loading overlay review fixes: isolation only while busy, the scrim and indicator above component layers, and the inherited radius: 87,044 gzip bytes (+4).
+  // Reviewed .back-to-top: the fixed corner link, its offset and stacking tokens, and the inert link hidden at once after a fade in: 87,155 gzip bytes (+111).
+  assert.ok(sizes(css).gzip <= 87155, `CSS gzip: ${sizes(css).gzip}`);
 });

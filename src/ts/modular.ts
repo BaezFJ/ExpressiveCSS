@@ -38,6 +38,7 @@ export type * from './components/radialChart';
 export type * from './components/mixedChart';
 export type * from './components/scatterChart';
 export type * from './components/pullToRefresh';
+export type * from './components/loadingOverlay';
 export type * from './components/backToTop';
 export type * from './components/swipeActions';
 export type * from './components/inputMask';

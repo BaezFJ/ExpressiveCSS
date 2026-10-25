@@ -21,6 +21,8 @@ describe('Reduced motion', () => {
     'time picker canvas': /^\.timepicker-canvas$/,
     // aside.open is (0,2,2); the closed-panel reset alone is (0,1,2) and loses.
     'open card reveal panel': /^article\.card-reveal-initialized > aside\.open$/,
+    'loading overlay scrim': /^\.loading-overlay::after$/,
+    'loading overlay indicator': /^\.loading-overlay > \.loading-indicator$/,
   };
   for (const [name, pattern] of Object.entries(targets)) {
     test(`cancels the ${name} transition`, () => assert.ok(cancels(pattern), name));

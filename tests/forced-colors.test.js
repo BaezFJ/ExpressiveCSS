@@ -31,6 +31,8 @@ describe('Forced colors', () => {
     'switch handle': [/^\.switch > \[type=checkbox\]:checked$/, /HighlightText/],
     'small badge': [/^\.badge:empty$/, SYSTEM_FILL],
     'loading indicator': [/^\.loading-indicator::before$/, SYSTEM_FILL],
+    // A translucent scrim is dropped, which would leave busy content looking available.
+    'loading overlay scrim': [/^\.loading-overlay::after$/, /forced-color-adjust:\s*none;[\s\S]*background-color:\s*color-mix\(in oklab, Canvas/],
     'active carousel dot': [/^\.carousel \.indicators \.indicator-item:is\(\.active/, SYSTEM_FILL],
     'selected date': [/^\.is-selected \.datepicker-day-button$/, /background-color:\s*Highlight/],
   };

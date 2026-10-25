@@ -158,6 +158,22 @@ Feature gap: Formatting happens on blur, not while typing; there is no currency 
 
 Mapped browser scope: A typed amount formatted on blur with the plain number in form data and submit data, the plain number on focus, change and blur listeners reading the formatted text, pasted amounts submitted with Enter under de and en, text with no digit kept and marked invalid with the default and replaced message, a saved value formatted without events and again after a reset button and form.reset(), and destroy() clearing the message. No spoken-output assertion.
 
+## [Loading overlay](../../components/loading-overlay.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Block input to the busy region only, report the busy state and its end to assistive technology, keep focus from being lost for good, and keep the content visibly unavailable in forced colors.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page owns aria-busy and the indicator's name; the framework follows the attribute, makes the region inert, shows a surface scrim and the indicator, announces the start and the finish in its own status region after the region, and returns focus on clear.
+
+Verification gap: Input blocking by click and Tab, regions busy at start, the author's inert state, the status region and its i18n words, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit, and the forced-colors and reduced-motion rules statically. Spoken output from the status region and real forced-colors themes remain unverified. Next check: Mark a region busy and clear it with VoiceOver and NVDA running, and view it under a Windows high-contrast theme.
+
+Feature gap: The scrim does not follow the content of a region that scrolls itself, and there is no full-page mode or determinate progress. Next check: None planned.
+
+Mapped browser scope: A mouse click, Tab and typing blocked while busy and a click restored mid-fade after aria-busy="false" or its removal, a region set busy twice, inert from the start, an author's inert kept, the status region outside the region with default and markup i18n words, focus returned, also inside a shadow root, kept after a move and skipped for a removed control, the scrim covering the region with the indicator centred, the scrim and indicator above z-index 4 content and isolated only while busy, and destroy() while busy and at rest. No spoken-output assertion.
+
 ## [Back to top](../../components/back-to-top.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

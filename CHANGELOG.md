@@ -7,6 +7,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Loading overlay. While the page sets `aria-busy="true"` on a
+  `.loading-overlay`, a surface scrim covers it, its loading indicator
+  shows in the centre, and the script makes the region `inert`, so
+  nothing inside takes a click, a tap or keyboard focus. A visually
+  hidden status region after it announces the start and the finish, in
+  words set with `i18n`, and focus goes back to the control that had it
+  when the region clears. A new semantics rule asks for a direct
+  `.loading-indicator` child.
 - `.back-to-top` is an in-page link that appears once the window has
   scrolled past `threshold`, one viewport height by default. Activating it
   scrolls to the top, instantly under reduced motion, and focuses the
