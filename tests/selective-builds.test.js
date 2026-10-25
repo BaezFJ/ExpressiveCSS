@@ -410,5 +410,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed .defer-render: content-visibility on off-screen rows except swipe rows, their reserved size and inset focus rings: 86,844 gzip bytes (+108).
   // Reviewed the cascader's hidden source lists: 86,855 gzip bytes (+11).
   // Reviewed the cascader popover: menu surface and glass, side-by-side listbox columns, selected path, focus ring, chevron and forced colors: 87,340 gzip bytes (+485).
-  assert.ok(sizes(css).gzip <= 87340, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the cascader popover's forced colors edge, and its label floating through the form control: 87,435 gzip bytes (+95).
+  assert.ok(sizes(css).gzip <= 87435, `CSS gzip: ${sizes(css).gzip}`);
 });

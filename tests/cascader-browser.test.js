@@ -355,3 +355,33 @@ each('destroy() unwraps the input and gives its name and required back', async (
   });
   assert.deepEqual(seen, ['div', 'place', true, false, 0]);
 });
+
+each('the source lists stay hidden, columns sit side by side, a long column scrolls, and option rows grow with the root font size', async (page) => {
+  const many = Array.from({ length: 40 }, (_, i) => `<li data-value="c${i}">City ${i}</li>`).join('');
+  await load(page, `<form id="form">${field('place').replace('<li data-value="sf">San Francisco</li>', many)}</form>`);
+  await page.click('#place');
+  await option(page, 'United States').click();
+  await option(page, 'California').click();
+  const measure = () => page.evaluate(() => {
+    const columns = [...document.querySelectorAll('.cascader-popover [role="listbox"]')];
+    const popover = document.querySelector('.cascader-popover').getBoundingClientRect();
+    const last = columns.at(-1);
+    return {
+      source: getComputedStyle(document.querySelector('.cascader-options')).display,
+      lefts: columns.map((column) => column.getBoundingClientRect().left),
+      scrolls: last.scrollHeight > last.clientHeight && last.getBoundingClientRect().bottom <= popover.bottom + 1,
+      row: document.querySelector('.cascader-popover [role="option"]').getBoundingClientRect().height,
+    };
+  });
+  const seen = await measure();
+  assert.equal(seen.source, 'none');
+  assert.ok(seen.lefts[0] < seen.lefts[1] && seen.lefts[1] < seen.lefts[2], `column lefts ${seen.lefts}`);
+  assert.equal(seen.scrolls, true);
+  // The control wraps the input, and the label still floats above the committed path.
+  await option(page, 'City 3').click();
+  assert.notEqual(await page.evaluate(() => getComputedStyle(document.querySelector('label[for="place"]')).transform), 'none');
+  await page.click('#place');
+  await page.evaluate(() => (document.documentElement.style.fontSize = '200%'));
+  const larger = await measure();
+  assert.ok(Math.abs(larger.row - seen.row * 2) <= 1, `row ${seen.row} then ${larger.row}`);
+});

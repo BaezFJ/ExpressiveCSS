@@ -759,6 +759,13 @@ export const NAV: DocsGroup[] = [
           "Choose one option, or several, from a styled menu.",
       },
       {
+        id: "cascader",
+        label: "Cascader",
+        route: "/cascader.html",
+        description:
+          "Pick a path through nested options shown in columns, and submit the whole path.",
+      },
+      {
         id: "checkboxes",
         label: "Checkboxes",
         route: "/checkboxes.html",

@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 48, cascader
 Branch: `feature/2026-10-25-cascader`
 Base: `origin/master` at `a9bbf77ad`
-Status: specified 2026-10-25; not implemented
+Status: implemented 2026-10-25; not merged
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 48](../../../../roadmap.md#phase-48-cascader). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -106,11 +106,23 @@ The intended markup:
 - The starting path comes from `data-selected` on a leaf (R11), because the author's list is the only place that knows which leaf it means.
 - R13's default message `Choose an option.` and its `i18n.required` option, following Chips' `i18n.required`.
 - No `expressive:*` event, following Phase 39 (see exclusions).
-- The cascader defines its own small control class, `expressive-cascader-control`, with the tech stack's `expressive-` prefix. Chips' `defineControl()` stays in `chips.ts`, since the user chose not to extract shared code in this phase.
+- The cascader's control is `expressive-cascader-control`, with the tech stack's `expressive-` prefix. Superseded during group 4: the spec kept Chips' `defineControl()` in `chips.ts`, but the fallow pre-commit gate rejects the duplicate, so the control moved to `src/ts/core/formControl.ts` and both components use it. See the implementation notes.
 
 ### Deferred
 
 None.
+
+### Implementation notes
+
+- The popover opens with `showPopover({ source: input })`, which gives it an implicit anchor, so `_cascader.scss` places it with `position-area` and `position-try-fallbacks` and no positioning script, as `.popover` does. Without anchor positioning it is centered in the viewport. Menu's positioning helpers stay private to `menu.ts`; they depend on Menu's options and context-menu cases.
+- The `_cascader.scss` partial landed in group 1, not group 2, because the semantics roster test counts Sass partials and the `cascader` row needs one.
+- The `cascader-lists-take-no-roles` rule blocks composite roles, so the row declares a `rejects` entry for `listbox`, as the semantics declaration test requires.
+- The semantics engine's accessible-name check ignores `<label>`, so `cascader-input-is-named` is a `forbid` rule: an input in a `.cascader` with no `label[for]` child, `aria-label` or `aria-labelledby`.
+- In group 4 the fallow duplicate-code gate flagged the control class and unwrap steps copied from Chips. Commit `329ae15ef` moved them to `src/ts/core/formControl.ts` (`wrapInControl`, `unwrapControl`, `formAssociated`), and Chips uses it with no change in behavior; its 53 tests pass. The control gained `checkValidity()` and `reportValidity()`, which V9 calls. The Chips capability pin was already stale on master, so it was left alone.
+- R13 is narrower than written. `Forms` validates a `.validate` input's own validity, and the input is no longer required once the control takes `required`, so `Forms` cannot mark it. The cascader sets `aria-invalid="true"` on the input when the control fires `invalid` (a failed submit or `checkValidity()`), for every cascader as FormSelect does, and puts the author's value back once a path is committed. The browser's validation message anchors at the input. The input is not described by a `[data-error]` element.
+- The control wraps the input with `display: contents`, so the field's `input + label` rules stopped floating the label above a committed path. `_cascader.scss` floats it through `:has()` instead; V11 checks it.
+- `sourceRevision` pins group 4's commit `a1c0e42ce`, the first that holds `cascader.ts` and the browser checks the capability entry names. A squash merge drops it, so a follow-up `docs(roadmap)` pull request must re-pin to the merge commit, as phases 38 and 39 did.
+- The MCP smoke test hardcodes slug completions for `ca`, which now include `cascader`.
 
 ## Technical constraints
 

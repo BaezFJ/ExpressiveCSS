@@ -33,6 +33,7 @@ describe('Forced colors', () => {
     'loading indicator': [/^\.loading-indicator::before$/, SYSTEM_FILL],
     'active carousel dot': [/^\.carousel \.indicators \.indicator-item:is\(\.active/, SYSTEM_FILL],
     'selected date': [/^\.is-selected \.datepicker-day-button$/, /background-color:\s*Highlight/],
+    'cascader path option': [/^\.cascader-popover \[role=option\]\[aria-selected=true\]$/, OUTLINE],
   };
   for (const [name, [selector, body]] of Object.entries(selected)) {
     test(`keeps the ${name} visible`, () => assert.ok(has(selector, body), name));
@@ -96,6 +97,8 @@ describe('Forced colors edges and glyphs', () => {
     'select caret': [/\.caret$/, GLYPH],
     'select check': [/^menu\[role=listbox\]:not\(\.multiple-select-menu\) > li\.selected:not\(\.disabled, \.optgroup\)::after$/, GLYPH],
     'submenu chevron': [/li:has\(> menu\) > :is\(a, button, .*\)::after$/, GLYPH],
+    'cascader chevron': [/^\.cascader-popover \.cascader-chevron$/, GLYPH],
+    'cascader popover': [/^\.cascader-popover$/, EDGE],
     'bottom sheet handle': [/^dialog\.bottom-sheet::before$/, GLYPH],
     'slider stops': [/\.stops::after$/, /--_stop:\s*HighlightText;\s*forced-color-adjust:\s*none/],
   };

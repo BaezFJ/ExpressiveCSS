@@ -8803,6 +8803,81 @@ instance.destroy();
 
 ---
 
+## Cascader
+
+Pick a path through nested options shown in columns, where each choice opens the next column, and submit the whole path.
+
+Write a `.field.cascader` holding a text `<input>` with a `name`, its `<label for>`, and a `ul.cascader-options` of nested lists. Each `<li>` holds a `data-value`, and its label is its own text outside any nested list. An `<li>` with a nested list of options is a branch; any other is a leaf. `AutoInit()` starts every `.cascader`. The lists stay in the page, hidden, and the script builds the columns from them; leave roles off them.
+
+The input becomes read-only, with `role="combobox"` and `aria-haspopup="dialog"`. A click, or Enter, Space, ArrowDown or Alt+ArrowDown, opens a popover below the field with `role="dialog"`. Each column is a listbox named by the field's label or by the option that opened it, and the options on the open path are `aria-selected="true"`. A branch ends in a chevron.
+
+| Key | In a column |
+| --- | --- |
+| ArrowDown, ArrowUp | Next or previous option, without wrapping |
+| Home, End | First or last option |
+| ArrowRight | On a branch, open the next column and move into it |
+| ArrowLeft | Back to the option that opened this column; the columns stay |
+| Enter, Space | On a branch, as ArrowRight; on a leaf, commit the path |
+| Escape, Tab, Shift+Tab | Close without committing, and return focus to the input |
+
+Under `dir="rtl"` the columns run right to left and ArrowLeft and ArrowRight swap. A click on a branch opens its column and keeps focus on the branch. A click on a leaf commits. A click outside closes without committing.
+
+Committing shows the path's labels in the input, such as `United States / California / San Francisco`, closes the popover, returns focus to the input and fires `input` and `change` on it. Committing the same path again fires nothing. The form gets one entry per level under the input's name, in order, through the form-associated `expressive-cascader-control` that wraps the input: `place=us&place=ca&place=sf`. With no path the form gets no entry.
+
+Mark a leaf `data-selected` to start with its path; the first marked leaf wins, and a marked branch is ignored. A form reset brings the starting path back without events. With `required` on the input, the field fails validation until a path is committed, with the message `Choose an option.`, and a failed submit or `checkValidity()` sets `aria-invalid="true"` on the input. A disabled input or fieldset submits nothing and does not open. Options added after start need `destroy()` and a new `init`.
+
+```html
+<div class="field cascader">
+  <input id="place" name="place" type="text" required>
+  <label for="place">Place</label>
+  <ul class="cascader-options">
+    <li data-value="us">United States
+      <ul>
+        <li data-value="ca">California
+          <ul>
+            <li data-value="sf">San Francisco</li>
+            <li data-value="la">Los Angeles</li>
+          </ul>
+        </li>
+        <li data-value="wa">Washington</li>
+      </ul>
+    </li>
+    <li data-value="cn">Canada</li>
+  </ul>
+</div>
+```
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `i18n` | Object | `{ required: 'Choose an option.' }` | `required` is the validity message while a required field has no path. Markup sets it with `data-cascader-options='{"i18n":{"required":"Elige un lugar."}}'` on the `.cascader`. |
+
+### Properties
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `value` | Array | The committed path's values, such as `['us', 'ca', 'sf']`, or an empty array. |
+| `input` | Element | The text input that shows the path. |
+| `popover` | Element | The popover of columns. |
+| `isOpen` | Boolean | Whether the popover is open. |
+
+### Methods
+
+#### .open()
+
+Opens the popover at the committed path, with focus on its leaf or on the first option. A disabled field does not open.
+
+#### .close()
+
+Closes the popover and keeps the committed path.
+
+#### .destroy()
+
+Closes and removes the popover, unwraps the input, and gives back its name, `required` and attributes. The input keeps its text.
+
+---
+
 ## Sliders
 
 Sliders handle a maximum of zero and update value-label placement when the input resizes, including horizontal RTL placement.
