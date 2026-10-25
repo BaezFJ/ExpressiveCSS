@@ -127,7 +127,7 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 
-  browserTest(`${engine}: treemap chart colors rectangles in table order, parts them by a gap and writes in those that fit`, async () => {
+  browserTest(`${engine}: treemap chart colors rectangles in table order, parts them by a gap and writes in those with room for it`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
