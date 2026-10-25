@@ -515,6 +515,22 @@ Feature gap: There are no bubble sizes, trend lines or separate x columns per se
 
 Mapped browser scope: Hidden table, the named plot and its role description, the x column read as the axis, one point per row per series at its value in left-to-right and right-to-left pages, gaps, both axes with fixed and fitted ends, keyboard steps in table order, the nearest point by pointer, update() motion, data-watch and the toggle legend. No spoken-output assertion.
 
+## [Sankey chart](../../components/sankey-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the flows available as text, name the chart, keep nodes distinguishable, name each node on the chart, and let a keyboard reach every link the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the nodes, links, names and tooltip from the page's table with the line chart's runtime; the page owns the flows, their order, their formatting and the caption.
+
+Verification gap: Link and node sizes, columns, skipped rows, names, colors, right-to-left mirroring, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+
+Feature gap: Nodes are not reached by keyboard or pointer, node order follows the table with no crossing reduction, and flows that close a cycle are not drawn. Next check: Reach nodes and their totals from the keyboard if readers need them; until then the table lists every flow.
+
+Mapped browser scope: Hidden table, the named plot and its role description, link thickness and node height on one scale, columns, stacking order, skipped rows, node names and colors, right-to-left mirroring, keyboard steps in table order, the link under the pointer and a touch tap, update() motion, reduced motion and data-watch. No spoken-output assertion.
+
 ## [Timeline](../../components/timeline.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

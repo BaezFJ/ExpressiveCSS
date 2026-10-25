@@ -9,7 +9,7 @@ Component ID: `slider`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `a4c78c905e90552e6305f6716552108817a22917dae6953fbfffafc0a2af9efe`
+Contract SHA-256: `50c87c883d7f38a32fbabdfbabf842261f1388b3a5eb7395e07a15571fec7e42`
 
 #### Selection and adaptation
 

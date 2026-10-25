@@ -499,6 +499,13 @@ export const NAV: DocsGroup[] = [
           "One measure plotted against another, with a point for each row.",
       },
       {
+        id: "sankey-chart",
+        label: "Sankey chart",
+        route: "/sankey-chart.html",
+        description:
+          "Flows between nodes, each link as thick as its value.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",

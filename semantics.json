@@ -1777,6 +1777,24 @@
         }
       ]
     },
+    "sankey-chart": {
+      "status": "enforced",
+      "note": "Added with the sankey chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn nodes, links and names are aria-hidden.",
+      "rules": [
+        {
+          "id": "sankey-chart-is-a-figure-with-a-table",
+          "kind": "forbid",
+          "selector": ".sankey-chart:not(figure:has(> table))",
+          "message": "Write .sankey-chart as a <figure> holding a <table> of the flows. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript."
+        },
+        {
+          "id": "sankey-chart-has-a-caption",
+          "kind": "forbid",
+          "selector": ".sankey-chart:not(:has(> figcaption))",
+          "message": "Name a .sankey-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart."
+        }
+      ]
+    },
     "scatter-chart": {
       "status": "enforced",
       "note": "Added with the scatter chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn points, axes and legend are aria-hidden.",

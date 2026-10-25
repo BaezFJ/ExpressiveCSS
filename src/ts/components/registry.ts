@@ -51,6 +51,7 @@ export const AUTO_INIT_COMPONENTS = {
   RadialChart: { component: Components.RadialChart, selector: ".radial-chart" },
   MixedChart: { component: Components.MixedChart, selector: ".mixed-chart" },
   ScatterChart: { component: Components.ScatterChart, selector: ".scatter-chart" },
+  SankeyChart: { component: Components.SankeyChart, selector: ".sankey-chart" },
   CommandPalette: {
     component: Components.CommandPalette,
     selector: "dialog.command-palette",
