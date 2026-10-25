@@ -9,7 +9,7 @@ Component ID: `line-chart`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `fdd4132f6179b908b09d1344e0009caaad841abd62cffb309851658ab6cb7778`
+Contract SHA-256: `df3aacad8d1215e1312ac304e9498921f8cf5484491654a438a895b382e5cf11`
 
 #### Selection and adaptation
 

@@ -1,0 +1,140 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "busy", label: "Marking it busy" },
+  { id: "scrolling", label: "Regions that scroll" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="loading_overlay" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          Use <code>.loading-overlay</code> to cover part of a page while it loads,
+          so nobody edits or presses what is about to change.
+        </p>
+        <p>
+          Put a <a href={route('loading_indicator')}>loading indicator</a> in the
+          region as a direct child, then the content. <code>AutoInit()</code> starts
+          every <code>.loading-overlay</code>. While the region has
+          <code>aria-busy="true"</code>, a scrim covers it, the indicator shows in its
+          centre, and nothing inside takes a click, a tap or keyboard focus. Press
+          Save below to see it.
+        </p>
+        <form id="demo-overlay" class="loading-overlay mb-3" style="max-width: 28rem; padding: 16px; border: 1px solid var(--md-sys-color-outline-variant); border-radius: 16px;">
+          <span class="loading-indicator contained" role="status" aria-label="Saving"></span>
+          <div class="field mb-3">
+            <input id="demo-overlay-name" type="text" placeholder=" " value="Ada Lovelace">
+            <label for="demo-overlay-name">Name</label>
+          </div>
+          <button type="submit" class="filled">Save</button>
+        </form>
+<Code code={`
+<form class="loading-overlay">
+  <span class="loading-indicator contained" role="status" aria-label="Saving"></span>
+  <div class="field">
+    <input id="name" type="text" placeholder=" ">
+    <label for="name">Name</label>
+  </div>
+  <button type="submit" class="filled">Save</button>
+</form>
+`} />
+  </Section>
+  <Section {...S.busy}>
+        <p>
+          The page sets <code>aria-busy="true"</code> on the region when the work
+          starts, and removes it, or sets any other value, when the work is done.
+          There is no method for either. The script watches the attribute and makes
+          the region <code>inert</code> while it is busy. When the region clears, it
+          gets back the <code>inert</code> state it had before.
+        </p>
+<Code code={`
+const region = document.querySelector('.loading-overlay');
+region.setAttribute('aria-busy', 'true');
+try {
+  await save();
+} finally {
+  region.removeAttribute('aria-busy');
+}
+`} />
+        <p>
+          Inert content leaves the accessibility tree, the indicator's own status
+          included. So the script adds a visually hidden status region just after
+          the region, which announces "Loading" when the region becomes busy and
+          "Loaded" when it clears. Set the words with the <code>i18n</code> option.
+        </p>
+        <p>
+          The script takes focus from a control inside the region when it becomes
+          busy, including one in a shadow root. When the region clears, focus goes
+          back to that control, unless the person moved focus somewhere else in the
+          meantime or the page removed the control.
+        </p>
+        <p>
+          The scrim and the indicator show from the attribute alone, before the
+          script starts and after <code>destroy()</code>, but only the script blocks
+          input. They stack above anything a component raises inside itself, at
+          z-index 5 and 6; content the page raises higher shows through. They fade in and out,
+          and appear at once under reduced motion. In forced colors the scrim dims
+          the content toward the system background, so it still looks unavailable.
+        </p>
+  </Section>
+  <Section {...S.scrolling}>
+        <p>
+          The scrim scrolls with the content of a region that scrolls itself, so
+          it would only cover the first screenful. Put the overlay on a wrapper
+          around the scroller instead. The region becomes a positioning context for
+          the scrim, with <code>position: relative</code>, unless a utility such as
+          <code>.sticky-top</code> positions it already.
+        </p>
+<Code code={`
+<div class="loading-overlay">
+  <span class="loading-indicator contained" role="status" aria-label="Loading"></span>
+  <div style="height: 24rem; overflow-y: auto">...rows</div>
+</div>
+`} />
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+          <tr>
+            <td><code>i18n</code></td>
+            <td>Object</td>
+            <td><code>{"{ loading: 'Loading', loaded: 'Loaded' }"}</code></td>
+            <td>What the status region announces when the region becomes busy and when it clears.</td>
+          </tr>
+        </OptionsTable>
+  </Section>
+  <Section {...S.methods}>
+<Code code={`
+const overlay = Expressive.LoadingOverlay.getInstance(document.querySelector('.loading-overlay'));
+overlay.destroy(); // stops following aria-busy, removes the status region, gives inert back;
+                   // the scrim still follows the attribute
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.loading-overlay</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-loading-overlay-scrim-color</code></td><td>surface at 70%</td></tr>
+          <tr><td><code>--md-comp-loading-overlay-motion</code></td><td>default effects spring</td></tr>
+          <tr><td><code>--md-comp-loading-overlay-motion-duration</code></td><td>the default effects spring's duration</td></tr>
+        </TokenTable>
+  </Section>
+<script is:inline>
+(() => {
+  const form = document.getElementById('demo-overlay');
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    form.setAttribute('aria-busy', 'true');
+    setTimeout(() => form.removeAttribute('aria-busy'), 2000);
+  });
+})();
+</script>
+</DocsLayout>

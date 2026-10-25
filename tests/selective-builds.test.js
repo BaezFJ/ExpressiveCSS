@@ -249,13 +249,11 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the currency input: an amount shown in the locale and currency on blur, the plain number in the form data: 95,116 gzip bytes (+655).
   // Reviewed currency input focus editing, the validity message, formatting after a form reset and destroy(): 95,276 gzip bytes (+160).
   // Reviewed currency input waiting for blur after Enter and listening in a shadow root: 95,306 gzip bytes (+30).
-  // Reviewed the cascader's start: nested options read from markup, the combobox input, the starting path and destroy(): 95,770 gzip bytes (+464).
-  // Reviewed cascader columns in a popover anchored to the input, chosen by click, and the committed path with its input and change events, with open() split for the complexity gate: 96,585 gzip bytes (+815).
-  // Reviewed cascader keys: opening from the input, arrows, Home and End in a column, the next and previous column, Enter and Space, Escape and Tab, swapped under rtl: 96,909 gzip bytes (+324).
-  // Reviewed moving Chips' form-associated control to core/formControl, with checkValidity() and reportValidity() on the control: 96,931 gzip bytes (+22).
-  // Reviewed the cascader's form control: one entry per level of the path, reset to the starting path, required with i18n.required, aria-invalid and disabled state: 97,290 gzip bytes (+359).
-  // Reviewed cascader review fixes: a re-chosen branch's fresh options name the next column, presses in a closed shadow root, modifier keys left to the browser, a field disabled while open: 97,342 gzip bytes (+52).
-  assert.ok(sizes(js).gzip <= 97342, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the loading overlay: inert while aria-busy is "true", the status region after it and focus put back on clear: 95,566 gzip bytes (+260).
+  // Reviewed the loading overlay review fixes: the blurred control, its root node's focus and the deferred first announcement: 95,625 gzip bytes (+59).
+  // Reviewed the sankey chart: flows read from the table, nodes in columns, links on one scale, node names and colors, link keys, pointer hits and tooltip, and update() motion: 97,012 gzip bytes (+1,387).
+  // Reviewed the cascader, merged over the loading overlay and sankey chart: nested options in listbox columns, keys in both directions, the path submitted through the form control it now shares with Chips in core/formControl, and the review fixes: 99,026 gzip bytes (+2,014).
+  assert.ok(sizes(js).gzip <= 99026, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -409,9 +407,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the visually hidden pull-to-refresh status region: 86,567 gzip bytes (+33).
   // Reviewed swipe actions: the clipped list, the sliding row, the trailing toggle and the actions past the row's end: 86,736 gzip bytes (+169).
   // Reviewed .defer-render: content-visibility on off-screen rows except swipe rows, their reserved size and inset focus rings: 86,844 gzip bytes (+108).
-  // Reviewed the cascader's hidden source lists: 86,855 gzip bytes (+11).
-  // Reviewed the cascader popover: menu surface and glass, side-by-side listbox columns, selected path, focus ring, chevron and forced colors: 87,340 gzip bytes (+485).
-  // Reviewed the cascader popover's forced colors edge, and its label floating through the form control: 87,435 gzip bytes (+95).
-  // Reviewed the cascader label floating while the popover is open: 87,442 gzip bytes (+7).
-  assert.ok(sizes(css).gzip <= 87442, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the loading overlay: the surface scrim and centred indicator while busy, their fade, the forced-colors wash and the hidden status region: 87,040 gzip bytes (+196).
+  // Reviewed the loading overlay review fixes: isolation only while busy, the scrim and indicator above component layers, and the inherited radius: 87,044 gzip bytes (+4).
+  // Reviewed the sankey chart: the shared chart parts, an unlined plot, filled nodes and links in six colors, the marked link, the tooltip and node names: 87,630 gzip bytes (+586).
+  // Reviewed the cascader, merged over the loading overlay and sankey chart: the hidden source lists, the popover surface and columns, the selected path, chevron, forced colors and the label floating through the form control: 88,176 gzip bytes (+546).
+  assert.ok(sizes(css).gzip <= 88176, `CSS gzip: ${sizes(css).gzip}`);
 });
