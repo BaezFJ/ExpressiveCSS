@@ -249,11 +249,14 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the currency input: an amount shown in the locale and currency on blur, the plain number in the form data: 95,116 gzip bytes (+655).
   // Reviewed currency input focus editing, the validity message, formatting after a form reset and destroy(): 95,276 gzip bytes (+160).
   // Reviewed currency input waiting for blur after Enter and listening in a shadow root: 95,306 gzip bytes (+30).
-  // Reviewed the hover card: a link's aria-details card shown with showPopover({ source }), open(), close() and destroy(): 95,544 gzip bytes (+238).
-  // Reviewed hover card timers: shown after enterDelay while the pointer is on the link or card, hidden after exitDelay, touch ignored: 95,725 gzip bytes (+181).
-  // Reviewed hover card keyboard focus holding the card, and Escape taken only from the link or card, with focus back on the link: 95,909 gzip bytes (+184).
-  // Reviewed hover card review fixes: a shared card handed between links on a named anchor, no state left by a failed showPopover, and Escape left to IME composition: 96,042 gzip bytes (+133).
-  assert.ok(sizes(js).gzip <= 96042, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the loading overlay: inert while aria-busy is "true", the status region after it and focus put back on clear: 95,566 gzip bytes (+260).
+  // Reviewed the loading overlay review fixes: the blurred control, its root node's focus and the deferred first announcement: 95,625 gzip bytes (+59).
+  // Reviewed the sankey chart: flows read from the table, nodes in columns, links on one scale, node names and colors, link keys, pointer hits and tooltip, and update() motion: 97,012 gzip bytes (+1,387).
+  // Reviewed the hover card: a link's aria-details card shown with showPopover({ source }), open(), close() and destroy(): 97,250 gzip bytes (+238).
+  // Reviewed hover card timers: shown after enterDelay while the pointer is on the link or card, hidden after exitDelay, touch ignored: 97,431 gzip bytes (+181).
+  // Reviewed hover card keyboard focus holding the card, and Escape taken only from the link or card, with focus back on the link: 97,615 gzip bytes (+184).
+  // Reviewed hover card review fixes: a shared card handed between links on a named anchor, no state left by a failed showPopover, and Escape left to IME composition: 97,750 gzip bytes (+135).
+  assert.ok(sizes(js).gzip <= 97750, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -407,5 +410,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the visually hidden pull-to-refresh status region: 86,567 gzip bytes (+33).
   // Reviewed swipe actions: the clipped list, the sliding row, the trailing toggle and the actions past the row's end: 86,736 gzip bytes (+169).
   // Reviewed .defer-render: content-visibility on off-screen rows except swipe rows, their reserved size and inset focus rings: 86,844 gzip bytes (+108).
-  assert.ok(sizes(css).gzip <= 86844, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the loading overlay: the surface scrim and centred indicator while busy, their fade, the forced-colors wash and the hidden status region: 87,040 gzip bytes (+196).
+  // Reviewed the loading overlay review fixes: isolation only while busy, the scrim and indicator above component layers, and the inherited radius: 87,044 gzip bytes (+4).
+  // Reviewed the sankey chart: the shared chart parts, an unlined plot, filled nodes and links in six colors, the marked link, the tooltip and node names: 87,630 gzip bytes (+586).
+  assert.ok(sizes(css).gzip <= 87630, `CSS gzip: ${sizes(css).gzip}`);
 });

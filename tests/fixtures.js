@@ -96,6 +96,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<figure class="scatter-chart"><figcaption>Fuel economy</figcaption><table><thead><tr><th>Car</th><th>Weight</th><th>Mpg</th></tr></thead><tbody><tr><th>Civic</th><td>1300</td><td>31</td></tr><tr><th>Tahoe</th><td>2600</td><td>15</td></tr></tbody></table></figure>`,
   },
   {
+    name: "SankeyChart",
+    selector: ".sankey-chart",
+    html: `<figure class="sankey-chart"><figcaption>Energy flow</figcaption><table><thead><tr><th>Source</th><th>Target</th><th>Value</th></tr></thead><tbody><tr><th>Solar</th><td>Grid</td><td>30</td></tr><tr><th>Grid</th><td>Homes</td><td>30</td></tr></tbody></table></figure>`,
+  },
+  {
     name: "BarChart",
     selector: ".bar-chart",
     html: `<figure class="bar-chart"><figcaption>Revenue</figcaption><table><thead><tr><th>Month</th><th>Revenue</th></tr></thead><tbody><tr><th>Jan</th><td>1</td></tr><tr><th>Feb</th><td>2</td></tr></tbody></table></figure>`,
@@ -124,6 +129,11 @@ export const AUTO_INIT_FIXTURES = [
     name: "PullToRefresh",
     selector: ".pull-to-refresh",
     html: `<div class="pull-to-refresh"><span class="loading-indicator contained" role="status" aria-label="Refreshing"></span><button type="button" class="text" data-refresh>Refresh</button><ul><li>Row</li></ul></div>`,
+  },
+  {
+    name: "LoadingOverlay",
+    selector: ".loading-overlay",
+    html: `<div class="loading-overlay"><span class="loading-indicator contained" role="status" aria-label="Loading"></span><button type="button" class="text">Save</button></div>`,
   },
   {
     name: "SwipeActions",

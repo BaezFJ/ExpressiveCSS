@@ -51,6 +51,7 @@ export const AUTO_INIT_COMPONENTS = {
   RadialChart: { component: Components.RadialChart, selector: ".radial-chart" },
   MixedChart: { component: Components.MixedChart, selector: ".mixed-chart" },
   ScatterChart: { component: Components.ScatterChart, selector: ".scatter-chart" },
+  SankeyChart: { component: Components.SankeyChart, selector: ".sankey-chart" },
   CommandPalette: {
     component: Components.CommandPalette,
     selector: "dialog.command-palette",
@@ -70,6 +71,7 @@ export const AUTO_INIT_COMPONENTS = {
     selector: ".message-scroller",
   },
   PullToRefresh: { component: Components.PullToRefresh, selector: ".pull-to-refresh" },
+  LoadingOverlay: { component: Components.LoadingOverlay, selector: ".loading-overlay" },
   SwipeActions: { component: Components.SwipeActions, selector: ".list.swipeable" },
   // Only the input types with a caret: setSelectionRange() throws on the rest.
   InputMask: {
