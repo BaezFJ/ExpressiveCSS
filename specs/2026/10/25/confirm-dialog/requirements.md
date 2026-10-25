@@ -62,7 +62,7 @@ These follow from the code and can change during implementation if the code or t
 
 - Resolve from the `close` event: `true` only when `dialog.returnValue` equals the confirm button's `value`. Set `returnValue` to an empty string before `showModal()`, so Escape and light dismiss, which leave it unchanged, resolve `false`.
 - Append the dialog to `document.body`, and give the heading and text ids from a counter so two open dialogs never share one.
-- Restore focus by hand only if the probe finds an engine whose `close()` does not return focus to the opener. The HTML spec's dialog closing steps restore focus to the previously focused element, so the fallback may be unnecessary.
+- No focus fallback. The probe on 2026-10-25 found that every engine returns focus to the opener on every close path, so R5 rests on the native dialog closing steps.
 - Keep each new function below cyclomatic complexity 5 for the fallow gate, for example by building the markup in one helper and wiring the close handler in another.
 - Update the `dialog` entry's note in `semantics.json` to mention the generated confirm dialog, if the semantics roster or guide tests need it. Then run `npm run build:semantics`.
 
@@ -77,6 +77,16 @@ None.
 - `Dialogs.Init()` registers light dismiss on the document. With the modular entry and no `Init()` call, a scrim tap does nothing and the dialog stays open until a button or Escape closes it. The docs say so.
 - jsdom has no `showModal()` or `close()` focus behavior, so jsdom tests stub `showModal` and dispatch `close` themselves. Focus return and real Escape handling are browser-test territory.
 - New functions stay below cyclomatic complexity 5, or the fallow pre-commit gate fails.
+
+### Probe results on 2026-10-25
+
+Plan group 1 ran in Playwright's Chromium, Firefox and WebKit against the base build. A button's click handler set `returnValue = ''`, called `showModal()` on a plain `<dialog>` and focused its Cancel button. The dialog was closed five ways, waiting for each `close` event before reopening. The run was repeated with `role="alertdialog"`.
+
+- The confirm button (`value="confirm"`) left `returnValue` as `"confirm"`. The Cancel button (`value=""`), Escape and `dialog.close()` from script left it as `""`. Light dismiss calls `close()`, so it takes the script path.
+- When the `close` event fired, focus was already back on the opener, in every engine and for every close path.
+- When the opener was removed before closing, focus was still on the Cancel button inside the closed dialog during the `close` event, and moved to `<body>` afterwards. R5 only restores focus to a connected opener, so this needs no code.
+- `role="alertdialog"` changed none of these results.
+- Chromium fires `close` from a queued task, and it fired only one `close` event when the dialog reopened before that task ran. Each `confirm()` call makes its own dialog and never reopens it, so this does not affect the feature. It does mean tests must await the promise before reading focus.
 
 ## Dependencies
 

@@ -33,7 +33,7 @@ Every result is pending, since the feature is not built. Tests run against built
 
 | ID | Covers | Setup | Action | Expected result | Result |
 | --- | --- | --- | --- | --- | --- |
-| V10 | R1 to R8 | A build from the base commit, and a build with `Dialogs.confirm()` removed. If group 1 adds a focus fallback, also a build without it. | Run V1 to V9 against each. | Every case fails against the base and confirm-less builds. V6 and V7 fail against the build without the focus fallback in each engine that needed it. | Pending |
+| V10 | R1 to R8 | A build from the base commit, and a build with `Dialogs.confirm()` removed. | Run V1 to V9 against each. | Every case fails against the base and confirm-less builds. | Pending |
 
 ### Repository-required checks
 

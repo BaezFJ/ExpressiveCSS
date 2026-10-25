@@ -8,10 +8,10 @@ Work on `feature/2026-10-25-confirm-dialog`. Tests run against built bundles, so
 
 Prerequisites: none.
 
-- [ ] In Chromium, Firefox and WebKit through Playwright, focus a button, open a `<dialog>` with `showModal()` from its click handler, close it with a `<form method="dialog">` button, and record where focus lands.
-- [ ] Repeat with Escape and with `dialog.close()` called from script, and record `returnValue` after each when it was set to `''` before opening.
-- [ ] Record whether a `role="alertdialog"` dialog behaves the same as a plain one for Escape and focus.
-- [ ] Write the findings into the Technical constraints section of requirements.md, and settle whether R5 needs a focus fallback.
+- [x] In Chromium, Firefox and WebKit through Playwright, focus a button, open a `<dialog>` with `showModal()` from its click handler, close it with a `<form method="dialog">` button, and record where focus lands.
+- [x] Repeat with Escape and with `dialog.close()` called from script, and record `returnValue` after each when it was set to `''` before opening.
+- [x] Record whether a `role="alertdialog"` dialog behaves the same as a plain one for Escape and focus.
+- [x] Write the findings into the Technical constraints section of requirements.md, and settle whether R5 needs a focus fallback.
 
 Completion check: requirements.md records each engine's focus target and `returnValue` for the three close paths, and the probe script is not committed.
 
@@ -24,7 +24,7 @@ Prerequisites: group 1.
 - [ ] In `src/ts/behaviors/dialogs.ts`, add `static i18n = { confirm: 'OK', cancel: 'Cancel' }` and `static confirm(options): Promise<boolean>`.
 - [ ] Build the `<dialog role="alertdialog">`, heading, `<p>` and `<form method="dialog">` with `textContent`, ids from a counter, and the naming attributes from R4.
 - [ ] Append it to `document.body`, set `returnValue = ''`, call `showModal()`, and focus the cancel button.
-- [ ] On `close`, resolve from `returnValue`, remove the dialog, and restore focus if group 1 found an engine that needs it.
+- [ ] On `close`, resolve from `returnValue` and remove the dialog. Group 1 found no engine that needs a focus fallback.
 - [ ] Add jsdom cases to `tests/dialogs.test.js`, with `showModal` stubbed: markup and naming with and without a headline, text set without HTML parsing, default and per-call labels, a changed `Dialogs.i18n`, resolve values from `returnValue`, removal after close, and two calls resolving independently.
 - [ ] Run each jsdom case against the base build and confirm it fails.
 
