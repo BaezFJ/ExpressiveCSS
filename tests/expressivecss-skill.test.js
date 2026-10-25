@@ -1009,8 +1009,10 @@ describe('the ExpressiveCSS agent skill', () => {
     // 44,443 bytes (+30); the scatter chart row at 44,639 bytes (+196); the
     // pull-to-refresh row at 44,993 bytes (+354); the swipe actions row at
     // 45,320 bytes (+327); the input mask row at 45,695 bytes (+375); the
-    // currency input row at 46,065 bytes (+370).
-    assert.ok(bytes <= 46065, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
+    // currency input row at 46,065 bytes (+370); the runtime and accessibility
+    // discovery terms at 46,124 bytes (+59); the resolver-first routing step at
+    // 46,281 bytes (+157).
+    assert.ok(bytes <= 46281, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
     assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
   });
 

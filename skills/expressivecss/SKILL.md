@@ -1,6 +1,6 @@
 ---
 name: expressivecss
-description: Build, refine, review, install, theme, and debug ExpressiveCSS interfaces, including page layouts, dashboards, and charts. Use for @expressivecss/expressive markup, components, accessibility, runtime lifecycle, performance, and framework contributions. Exclude generic Material Design or CSS work in projects without ExpressiveCSS.
+description: Build, refine, review, install, theme, and debug ExpressiveCSS interfaces, including page layouts, dashboards, and charts. Use for @expressivecss/expressive markup, components, accessibility (labels, focus, keyboard), runtime init and teardown of JavaScript components, performance, and framework contributions. Exclude generic Material Design or CSS work in projects without ExpressiveCSS.
 license: MIT
 compatibility: Requires access to the target project's files or the public ExpressiveCSS documentation.
 metadata:
@@ -18,7 +18,7 @@ ExpressiveCSS is Material Design 3 Expressive built from semantic HTML. This ski
 
 ## Staged guide routing
 
-Classify the task and runtime ownership first. When you report guides, list the ones you opened, not ones you only saw linked.
+Classify the task and runtime ownership first, and run the [version resolver](#authority-by-question-and-version) on the target project before opening any guide, even when the prompt does not ask for it. When you report guides, list the ones you opened, not ones you only saw linked.
 
 Guide names map to [Install](./expressivecss-install/SKILL.md), [Design](./expressivecss-design/SKILL.md), [Usage](./expressivecss-usage/SKILL.md), [Theming](./expressivecss-theming/SKILL.md), [Runtime](./expressivecss-runtime/SKILL.md), [Accessibility](./expressivecss-accessibility/SKILL.md), [Charts](./expressivecss-charts/SKILL.md), [Layout](./expressivecss-layout/SKILL.md), [Dashboard](./expressivecss-dashboard/SKILL.md), and [component guides](./components/).
 
