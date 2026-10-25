@@ -9,7 +9,7 @@ Component ID: `drop-zone`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `68212d6eac4bb39c161797769d6391ac7485f13076ccebdadc1f05e52d288897`
+Contract SHA-256: `5fb60f6e3849aa364bfdd2e30817daafb194ca9c9dad4adf3a23005ceeb05b96`
 
 #### Selection and adaptation
 

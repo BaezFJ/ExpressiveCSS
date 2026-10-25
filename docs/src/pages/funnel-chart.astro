@@ -1,0 +1,121 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "values", label: "Values and gaps" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "javascript", label: "JavaScript" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const steps: [string, number, string][] = [
+  ["Visited", 12000, "$0"], ["Signed up", 4800, "$0"], ["Started a trial", 2100, "$0"], ["Paid", 640, "$19,200"], ["Renewed", 410, "$12,300"],
+];
+---
+<DocsLayout page="funnel-chart" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>&lt;figure class="funnel-chart"&gt;</code> draws each row of
+          a <code>&lt;table&gt;</code> as a stage, from the top down, as wide
+          as its value.
+        </p>
+        <p>
+          The first column labels each row and the second holds its value.
+          The largest value fills the chart's width, and every other stage is
+          as wide as its share of it, centered under the one before. Stages
+          follow the table's order, so list the steps people take in the
+          order they take them, such as a visit, a signup and a purchase. To
+          compare values that are not steps, use a
+          <a href="bar-chart.html">bar chart</a>.
+        </p>
+        <figure class="funnel-chart" data-markdown-ignore>
+          <figcaption>Signups this month</figcaption>
+          <table>
+            <thead><tr><th>Step</th><th>People</th><th>Revenue</th></tr></thead>
+            <tbody>{steps.map(([step, people, revenue]) => <tr><th>{step}</th><td>{people.toLocaleString("en")}</td><td>{revenue}</td></tr>)}</tbody>
+          </table>
+        </figure>
+<Code code={`
+<figure class="funnel-chart">
+  <figcaption>Signups this month</figcaption>
+  <table>
+    <thead>
+      <tr><th>Step</th><th>People</th><th>Revenue</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Visited</th><td>12,000</td><td>$0</td></tr>
+      <tr><th>Signed up</th><td>4,800</td><td>$0</td></tr>
+      <!-- One row per step, in order -->
+    </tbody>
+  </table>
+</figure>
+`} />
+  </Section>
+  <Section {...S.values}>
+        <p>
+          Cells read as in a line chart. A cell's number is its
+          <code>data-value</code>, or its text without currency signs, percent
+          signs or grouping commas. The tooltip shows the cell's text as
+          written, followed by the stage's value as a percentage of the first
+          row's, such as "4,800 (40%)". Below 10% the percentage keeps a
+          tenth.
+        </p>
+        <p>
+          A row whose value is not a number, or is zero or less, draws no
+          stage but keeps its place and its label, and has no percentage. Only
+          the second column draws stages. Further columns, such as revenue
+          above, show in the tooltip with their header, so the chart has no
+          legend.
+        </p>
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The table is the chart's text alternative. Give it a header row and
+          a header cell per row, and name the chart with a
+          <code>&lt;figcaption&gt;</code>. The drawn stages and labels are
+          hidden from assistive technology.
+        </p>
+        <p>
+          The plot is one Tab stop named by the caption. Keyboard focus shows
+          the first row. The down and up arrows move to the next row and the
+          one before, Home and End jump to the first and last rows, and Escape
+          hides the tooltip. The keys are the same in a right-to-left page,
+          where the labels move to the right. The pointer shows the row under
+          it. The tooltip is a polite live region, so a screen reader hears
+          the row, its value and its percentage as it moves. In forced colors
+          the stages keep their color.
+        </p>
+  </Section>
+  <Section {...S.javascript}>
+        <p>
+          <code>AutoInit()</code> starts every <code>.funnel-chart</code>. To
+          start one yourself, call <code>FunnelChart.init</code>. After
+          changing its table, call <code>update()</code> to redraw it in place,
+          or put <code>data-watch</code> on the figure and it redraws itself.
+          Each stage grows or shrinks from its old width, or takes its new
+          width at once with reduced motion. It has the line chart's options
+          and methods.
+        </p>
+<Code code={`
+const chart = Expressive.FunnelChart.init(document.querySelector('.funnel-chart'));
+chart.show(2);   // highlight the third row; -1 hides the tooltip
+chart.update();  // redraw from the table; focus and the highlighted row stay
+chart.destroy(); // remove the drawing and show the table again
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.funnel-chart</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-funnel-chart-row-height</code></td><td>40px</td></tr>
+          <tr><td><code>--md-comp-funnel-chart-stage-height</code></td><td>60% of each row's height</td></tr>
+          <tr><td><code>--md-comp-funnel-chart-shape</code></td><td>4px, the stage's corner radius</td></tr>
+          <tr><td><code>--md-comp-funnel-chart-color-1</code></td><td><code>primary</code>, every stage's color</td></tr>
+        </TokenTable>
+        <p>For a selective Sass build, include <code>"funnel-chart"</code> in <code>$components</code>.</p>
+  </Section>
+</DocsLayout>

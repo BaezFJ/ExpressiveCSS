@@ -104,6 +104,7 @@ This file is the markup and JavaScript API contract. For **when** to use a compo
 - Radial chart
 - Mixed chart
 - Scatter chart
+- Funnel chart
 
 ### Forms
 
@@ -344,6 +345,7 @@ function unmount() {
 | `RadialChart` | `.radial-chart` |
 | `MixedChart` | `.mixed-chart` |
 | `ScatterChart` | `.scatter-chart` |
+| `FunnelChart` | `.funnel-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
@@ -5831,6 +5833,46 @@ A `<figure class="scatter-chart">` takes a `<figcaption>` and a `<table>`. The f
 
 ---
 
+## Funnel chart
+
+Steps people take in order, each drawn as a stage as wide as the people who reach it.
+
+A `<figure class="funnel-chart">` takes a `<figcaption>` and a `<table>`. The first column labels each row and the second holds its value. `AutoInit()` draws each row as a stage, from the top down in table order, centered and as wide as its value against the largest one, which fills the chart. Each row's label sits beside its stage at the inline start. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="funnel-chart">
+  <figcaption>Signups this month</figcaption>
+  <table>
+    <thead>
+      <tr><th>Step</th><th>People</th><th>Revenue</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Visited</th><td>12,000</td><td>$0</td></tr>
+      <tr><th>Signed up</th><td>4,800</td><td>$0</td></tr>
+      <tr><th>Paid</th><td>640</td><td>$19,200</td></tr>
+    </tbody>
+  </table>
+</figure>
+```
+
+- Cells read as in the line chart: `data-value` wins over the text, and the text may carry a currency or percent sign and grouping commas around one number. A row whose value is not a number, or is zero or less, draws no stage but keeps its place and its label. Stages follow the table's order and are not sorted.
+- Only the second column draws stages, all in `--md-comp-funnel-chart-color-1`. Further columns show in the tooltip, so there is no legend.
+- The plot is one Tab stop named by the caption. Keyboard focus shows the first row; the down and up arrows move between rows, Home and End jump to the first and last, and Escape hides the tooltip. The keys are the same in a right-to-left page, where the labels move to the right. The pointer shows the row under it.
+- The tooltip names the row and each column's header and cell, as written in the table. After the second column's text it adds the stage's value as a percentage of the first row's, such as "4,800 (40%)": whole percentages, with a tenth below 10%, in the page's language. A row without a stage, or a first row without one, has no percentage.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. Each stage grows or shrinks from its old width, and a new one grows from nothing; with reduced motion they take their widths at once. It has the line chart's `show(index)` and `destroy()`.
+- `axis`, `toggle`, `stacked`, `values`, `sparkline`, `data-min` and `data-max` do not apply.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-funnel-chart-row-height` | 40px |
+| `--md-comp-funnel-chart-stage-height` | 60% of each row's height |
+| `--md-comp-funnel-chart-shape` | 4px, the stage's corner radius |
+| `--md-comp-funnel-chart-color-1` | `primary`, every stage's color |
+
+---
+
 ## Tree
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
@@ -5998,6 +6040,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `RadialChart` | `.radial-chart` |
 | `MixedChart` | `.mixed-chart` |
 | `ScatterChart` | `.scatter-chart` |
+| `FunnelChart` | `.funnel-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |

@@ -499,6 +499,13 @@ export const NAV: DocsGroup[] = [
           "One measure plotted against another, with a point for each row.",
       },
       {
+        id: "funnel-chart",
+        label: "Funnel chart",
+        route: "/funnel-chart.html",
+        description:
+          "Steps people take in order, each drawn as a stage as wide as the people who reach it.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",

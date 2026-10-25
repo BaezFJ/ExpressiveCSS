@@ -7,6 +7,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Funnel chart. A `<figure class="funnel-chart">` draws each table row as
+  a stage, from the top down in table order, centered and as wide as its
+  value against the largest one. The tooltip adds each stage's percentage
+  of the first row, and further columns show in the tooltip. The plot is
+  one Tab stop whose up and down arrows move between rows, and it takes
+  `update()`, where stages move from their old widths, and `data-watch`
+  like the other charts. A new semantics rule asks for a `<figure>` with a
+  `<table>` and a `<figcaption>`.
 - `.defer-render` makes the browser skip layout and paint for a long
   list's off-screen rows through `content-visibility: auto`. Skipped rows
   reserve `--defer-render-row-size`, the list item height by default, and
