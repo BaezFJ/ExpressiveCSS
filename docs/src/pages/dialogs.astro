@@ -10,6 +10,7 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "basic", label: "Basic" },
   { id: "fullscreen", label: "Full-screen" },
+  { id: "confirm", label: "Confirm from script" },
   { id: "methods", label: "Methods" },
   { id: "tokens", label: "Tokens" },
 ]);
@@ -190,6 +191,52 @@ const S = defineSections([
 </dialog>
 `} />
   </Section>
+  <Section {...S.confirm}>
+        <p>
+          <code>Expressive.Dialogs.confirm()</code> asks a yes-or-no question
+          and returns a promise. It builds a basic dialog with
+          <code>role="alertdialog"</code>, opens it with
+          <code>showModal()</code>, and removes it once it closes. The promise
+          resolves <code>true</code> when the person picks the confirm button
+          and <code>false</code> on Cancel, Escape or a scrim tap.
+        </p>
+        <p>
+          <button type="button" id="confirm-demo">Delete draft</button>
+        </p>
+        <p id="confirm-demo-result" role="status"></p>
+<Code code={`
+const ok = await Expressive.Dialogs.confirm({
+  headline: 'Delete draft?',
+  text: 'The draft and its attachments are removed.',
+  confirm: 'Delete'
+});
+if (ok) deleteDraft();
+`} />
+        <p>
+          <code>text</code> is the question and is required. <code>headline</code>
+          is optional. With a headline, the dialog is named by it and described
+          by the text; without one, the text names it. All four strings are set
+          as text, so markup in them is shown, not parsed.
+        </p>
+        <p>
+          Focus starts on Cancel, the less destructive action, and the browser
+          returns it to the element that had focus before the call. Label the
+          confirm button with the action it takes, such as "Delete" or
+          "Discard", rather than the "OK" default.
+        </p>
+        <p>
+          <code>confirm</code> and <code>cancel</code> set the button labels for
+          one call. <code>Expressive.Dialogs.i18n</code> holds the defaults,
+          <code>{"{ confirm: 'OK', cancel: 'Cancel' }"}</code>; assign to it to
+          change them for every later call. With the modular entry,
+          <code>confirm()</code> works without <code>Dialogs.Init()</code>, but
+          a scrim tap closes the dialog only after <code>Init()</code> runs.
+        </p>
+<Code code={`
+Expressive.Dialogs.i18n.confirm = 'Aceptar';
+Expressive.Dialogs.i18n.cancel = 'Cancelar';
+`} />
+  </Section>
   <Section {...S.methods}>
         <p>
           Call these on the <code>&lt;dialog&gt;</code> element. See
@@ -252,4 +299,18 @@ dialog.close();
               <td><code>--md-sys-color-scrim</code> at 32%</td>
             </tr>
   </TokenTable>  </Section>
+<script is:inline>
+// The bundle loads after the page body.
+document.addEventListener('DOMContentLoaded', () => {
+  const result = document.getElementById('confirm-demo-result');
+  document.getElementById('confirm-demo').addEventListener('click', async () => {
+    const ok = await Expressive.Dialogs.confirm({
+      headline: 'Delete draft?',
+      text: 'The draft and its attachments are removed.',
+      confirm: 'Delete'
+    });
+    result.textContent = ok ? 'Draft deleted.' : 'Draft kept.';
+  });
+});
+</script>
 </DocsLayout>

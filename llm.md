@@ -6646,6 +6646,23 @@ dialog.close();
 
 Clicking the scrim does not close it — that is how the Dialog API works. Call `close()` yourself if you want that, or put a cancel action in the form.
 
+### Confirm from script
+
+`Expressive.Dialogs.confirm()` asks a yes-or-no question and returns a promise. It builds a basic dialog with `role="alertdialog"`, opens it with `showModal()`, and removes it once it closes. The promise resolves `true` when the person picks the confirm button and `false` on Cancel, Escape or a scrim tap.
+
+```js
+const ok = await Expressive.Dialogs.confirm({
+  headline: 'Delete draft?',
+  text: 'The draft and its attachments are removed.',
+  confirm: 'Delete'
+});
+if (ok) deleteDraft();
+```
+
+`text` is the question and is required. `headline` is optional. With a headline, the dialog is named by it and described by the text; without one, the text names it. All four strings are set as text, so markup in them is shown, not parsed. Focus starts on Cancel, the less destructive action, and the browser returns it to the element that had focus before the call. Label the confirm button with the action it takes, such as "Delete" or "Discard", rather than the "OK" default.
+
+`confirm` and `cancel` set the button labels for one call. `Expressive.Dialogs.i18n` holds the defaults, `{ confirm: 'OK', cancel: 'Cancel' }`; assign to it to change them for every later call. With the modular entry, `confirm()` works without `Dialogs.Init()`, but a scrim tap closes the dialog only after `Init()` runs.
+
 ### Tokens
 
 Override these on the `<dialog>` if you need a different surface or width.

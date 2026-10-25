@@ -2,7 +2,7 @@
 
 Roadmap phase: Phase 43, promise-based confirm dialog. Requirements are in [requirements.md](requirements.md) and the work order in [plan.md](plan.md).
 
-The agent ran V1 to V10 on 2026-10-25 on this branch. V11 to V13 are pending. Tests run against built bundles, so build first. Run suites one at a time, since parallel browser runs flake. The test file names below are planned and do not exist yet.
+The agent ran every check on 2026-10-25 on this branch. Tests run against built bundles, so build first. Run suites one at a time, since parallel browser runs flake. The test file names below are planned and do not exist yet.
 
 ## Automated checks
 
@@ -41,9 +41,9 @@ The interview did not pick these as acceptance checks, but `tech-stack.md` and `
 
 | ID | Covers | Setup | Action | Expected result | Result |
 | --- | --- | --- | --- | --- | --- |
-| V11 | R10 | A fresh build, with the gzip base taken from the merge-base build. | `node --test tests/selective-builds.test.js` | Passes with a new reviewed budget line that names this change and the JavaScript gzip bytes. The CSS size does not change. | Pending |
-| V12 | R9, R10 | Plan group 4 edits, with `npm run build:skill` run last. | `npm run check:generated` | Generation is clean, and the skill and MCP guides carry the new `llm.md` text. | Pending |
-| V13 | R1 to R10 | All changes in place. | `npm run verify`, then `npm test --prefix mcp/expressivecss` and `npm run verify:packages` | All pass. | Pending |
+| V11 | R10 | A fresh build, with the gzip base taken from the merge-base build. | `node --test tests/selective-builds.test.js` | Passes with a new reviewed budget line that names this change and the JavaScript gzip bytes. The CSS size does not change. | Passed 2026-10-25: JavaScript 95,666 gzip bytes (+360 from 95,306 at the merge-base `a9bbf77ad`). CSS unchanged. |
+| V12 | R9, R10 | Plan group 4 edits, with `npm run build:skill` run last. | `npm run check:generated` | Generation is clean, and the skill and MCP guides carry the new `llm.md` text. | Passed 2026-10-25: all 89 guides are current. |
+| V13 | R1 to R10 | All changes in place. | `npm run verify`, then `npm test --prefix mcp/expressivecss` and `npm run verify:packages` | All pass. | Passed 2026-10-25 in parts. `npm run verify` ran 2,844 tests with 2,843 passing. The one failure, the codex adapter "oversized streams" test, hit its 3,000 ms limit at a load average over 100 and failed the same way on the base commit; the file passed 14 of 14 once load dropped. `check:generated`, `docs:build:astro` (120 pages) and `docs:verify` then passed. `verify:packages` passed. `npm test --prefix mcp/expressivecss` failed twice on the smoke test's static-inspection time limit at a load average of 218, then passed. |
 
 ## Regression checks
 

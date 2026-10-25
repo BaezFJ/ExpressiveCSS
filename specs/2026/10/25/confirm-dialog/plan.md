@@ -51,11 +51,11 @@ Covers R2, R3, R5, R8, and V6 to V10.
 
 Prerequisites: group 3.
 
-- [ ] Document `Dialogs.confirm()` and `Dialogs.i18n` on `docs/src/pages/dialogs.astro` with a live example, and add the same text to the Dialogs section of `llm.md`.
-- [ ] Add an Added entry to `CHANGELOG.md` under Unreleased.
-- [ ] Update the `dialog` note in `semantics.json` if the roster or guide tests ask for it, then run `npm run build:semantics`.
-- [ ] Rebuild, measure the JavaScript gzip size against the merge-base build, and add a reviewed budget line to `tests/selective-builds.test.js`.
-- [ ] Run `npm run build:skill` after the last edit, then `npm run check:generated`, `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`.
+- [x] Document `Dialogs.confirm()` and `Dialogs.i18n` on `docs/src/pages/dialogs.astro` with a live example, and add the same text to the Dialogs section of `llm.md`.
+- [x] Add an Added entry to `CHANGELOG.md` under Unreleased.
+- [x] Update the `dialog` note in `semantics.json` if the roster or guide tests ask for it, then run `npm run build:semantics`. Not needed: the semantics and guide tests passed without it.
+- [x] Rebuild, measure the JavaScript gzip size against the merge-base build, and add a reviewed budget line to `tests/selective-builds.test.js`.
+- [x] Run `npm run build:skill` after the last edit, then `npm run check:generated`, `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`.
 
 Completion check: V11 to V13 pass.
 

@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 43, promise-based confirm dialog
 Branch: `feature/2026-10-25-confirm-dialog`
 Base: `origin/master` at `a9bbf77ad9edd0f44ce584e71f07a485fe6f2933` (#425)
-Status: specified 2026-10-25; not implemented
+Status: implemented and locally verified 2026-10-25; not pushed
 
 Follow the [mission's agreed scope for components and behaviors](../../../../mission.md#agreed-scope), the [framework stack and constraints](../../../../tech-stack.md#framework-stack) and [roadmap Phase 43](../../../../roadmap.md#phase-43-promise-based-confirm-dialog). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -65,7 +65,7 @@ These follow from the code and can change during implementation if the code or t
 - No focus fallback. The probe on 2026-10-25 found that every engine returns focus to the opener on every close path, so R5 rests on the native dialog closing steps.
 - The cancel button carries `autofocus`. In group 3's mutation run, every engine still focused Cancel without it, because Cancel is the first focusable element. The attribute keeps R5 true if the button order ever changes, and only the jsdom case detects its removal.
 - Keep each new function below cyclomatic complexity 5 for the fallow gate, for example by building the markup in one helper and wiring the close handler in another.
-- Update the `dialog` entry's note in `semantics.json` to mention the generated confirm dialog, if the semantics roster or guide tests need it. Then run `npm run build:semantics`.
+- The `dialog` entry in `semantics.json` stays as it is. The semantics roster and guide tests passed without a change.
 
 ### Open decisions
 

@@ -258,7 +258,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed hover card timers: shown after enterDelay while the pointer is on the link or card, hidden after exitDelay, touch ignored: 98,543 gzip bytes (+181).
   // Reviewed hover card keyboard focus holding the card, and Escape taken only from the link or card, with focus back on the link: 98,727 gzip bytes (+184).
   // Reviewed hover card review fixes: a shared card handed between links on a named anchor, no state left by a failed showPopover, and Escape left to IME composition: 98,837 gzip bytes (+110).
-  assert.ok(sizes(js).gzip <= 98837, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Dialogs.confirm(): a promise-based alert dialog with Dialogs.i18n labels, removed once it closes: 95,666 gzip bytes (+360).
+  assert.ok(sizes(js).gzip <= 95666, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
