@@ -8,10 +8,10 @@ Work on `feature/2026-10-25-deferred-rendering`. Tests run against built bundles
 
 Prerequisites: none.
 
-- [ ] In Chromium, Firefox and WebKit through Playwright, render a 5,000-row `.list` whose rows have `content-visibility: auto` set inline. Record what `checkVisibility({ contentVisibilityAuto: true })` returns for row 4,999 before and after `scrollIntoView()`.
-- [ ] Put `content-visibility: auto` on `<tr>` and `<tbody>` in a 5,000-row table, and record whether `checkVisibility({ contentVisibilityAuto: true })` ever returns false for an off-screen row.
-- [ ] Focus a link that fills a deferred row and screenshot the row's edges, to confirm the default 2px-offset ring is clipped and a `-3px` offset is not.
-- [ ] Write the findings into the Technical constraints section of requirements.md. If `<tr>` honors containment in all three engines, stop and ask the user whether tables come back into scope.
+- [x] In Chromium, Firefox and WebKit through Playwright, render a 5,000-row `.list` whose rows have `content-visibility: auto` set inline. Record what `checkVisibility({ contentVisibilityAuto: true })` returns for row 4,999 and for the link inside it before and after `scrollIntoView()`.
+- [x] Put `content-visibility: auto` on `<tr>` and `<tbody>` in a 5,000-row table, and record whether `checkVisibility({ contentVisibilityAuto: true })` ever returns false for an off-screen row.
+- [x] Focus a link that fills a deferred row and screenshot the row's edges, to confirm the default 2px-offset ring is clipped and a `-3px` offset is not.
+- [x] Write the findings into the Technical constraints section of requirements.md. If `<tr>` honors containment in all three engines, stop and ask the user whether tables come back into scope.
 
 Completion check: requirements.md records each engine's result for the three probes, and the probe script is not committed.
 
@@ -36,7 +36,7 @@ Covers R1, R2, R3.
 Prerequisites: group 2.
 
 - [ ] Add `tests/defer-render-browser.test.js`, looping over Chromium, Firefox and WebKit, with a 5,000-row `.list.defer-render` fixture inside a fixed-height scroll container.
-- [ ] Case for V1: an off-screen row reports `checkVisibility({ contentVisibilityAuto: true })` false, then true after it scrolls into view.
+- [ ] Case for V1: the link in an off-screen row reports `checkVisibility({ contentVisibilityAuto: true })` false, then true after it scrolls into view.
 - [ ] Case for V2: a skipped row's block size equals `--expressive-row-size`, and a custom value on the list changes it.
 - [ ] Case for V3: tab to a link that fills a deferred row and check that the outline sits inside the row box.
 - [ ] Case for V4: an off-screen row's text appears in the list's ARIA snapshot and is found by `window.find()` where the engine has it.

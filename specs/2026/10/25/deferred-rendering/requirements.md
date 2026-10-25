@@ -71,7 +71,16 @@ None.
 - `content-visibility: auto` always applies layout, style and paint containment, and adds size containment while the row is skipped. Paint containment clips anything a row draws outside its box: focus rings, box shadows and badges that overhang the edge. R3 handles focus rings; the docs name the rest.
 - Layout and paint containment make each row a containing block for absolutely and fixed positioned descendants, and a stacking context. Menus and tooltips that open in the top layer as popovers are unaffected. Anything else positioned outside the row is clipped.
 - The `contain-intrinsic-size` estimate only affects layout while a row is skipped. A wrong estimate moves the scrollbar thumb as rows render but does not change the final layout.
-- `HTMLElement.checkVisibility({ contentVisibilityAuto: true })` reports whether a row is skipped. The plan group 1 probe confirms support in each engine Playwright runs.
+- `HTMLElement.checkVisibility({ contentVisibilityAuto: true })` returns false for an element inside a row that skips its contents. The row itself still returns true, because the row is not skipped; only its contents are. Tests therefore check an element inside the row.
+
+### Probe results on 2026-10-25
+
+Plan group 1 ran in Playwright's Chromium, Firefox and WebKit against the base build, with `content-visibility: auto` and `contain-intrinsic-size: auto 56px` set inline on each row of a 5,000-row `.list`.
+
+- `checkVisibility({ contentVisibilityAuto: true })` on the link inside row 4,999 returned false before `scrollIntoView()` and true after it, in all three engines. On the `<li>` itself it returned true both times.
+- With the same declarations on each `<tr>` of a 5,000-row table, the cell in row 4,999 returned true while off screen in all three engines, so no engine skips table rows. Tables stay out of scope.
+- A focused link that fills a deferred row showed no focus ring at all in any engine: the default ring sits wholly outside the row box, and paint containment clipped all of it. With `outline-offset: -3px` the ring showed on all four sides in every engine.
+- All three engines have `window.find()`.
 - The class is CSS only. It adds nothing to the JavaScript bundle and no markup rule to `semantics.json`.
 
 ## Dependencies
