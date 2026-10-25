@@ -377,7 +377,8 @@ const S = defineSections([
           box shadow or a badge that hangs over the edge is cut off. Each
           row is also the containing block for absolutely and fixed
           positioned content. Menus and tooltips open in the top layer and
-          are not affected.
+          are not affected. Rows with <code>.swipe-actions</code> are never
+          deferred, because their actions wait past the row's end.
         </p>
         <p>
           Tables are not supported. Browsers ignore

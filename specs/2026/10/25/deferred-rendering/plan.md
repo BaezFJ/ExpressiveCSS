@@ -60,3 +60,15 @@ Prerequisites: group 3.
 Completion check: V5 to V7 pass.
 
 Covers R5, R6.
+
+## Group 5: review fixes
+
+Prerequisites: group 4.
+
+- [x] Leave rows with `.swipe-actions` out of the selector, nest the focus-ring rule under it, and document the exclusion (R7).
+- [x] Add V8, and extend V2 with the token fallback and the remembered size.
+- [x] Re-measure the budget, run `npm run build:skill` last, then `check:generated` and the affected suites.
+
+Completion check: V2 and V8 pass in all three engines, and each fails against the matching mutation.
+
+Covers R2, R7.

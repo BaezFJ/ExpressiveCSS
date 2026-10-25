@@ -3391,7 +3391,7 @@ Add `defer-render` to a long list so the browser skips layout and paint for rows
 </ul>
 ```
 
-The browser clips anything a deferred row draws outside its box. Focus rings inside a row are drawn inset for that reason, but a box shadow or a badge that hangs over the edge is cut off. Each row is also the containing block for absolutely and fixed positioned content; menus and tooltips open in the top layer and are not affected. Tables are not supported, because browsers ignore `content-visibility` on table rows. When the rows are not in the DOM at all, such as a dataset too large to render as markup or one fetched a page at a time during scrolling, use a virtual list script; ExpressiveCSS does not ship one.
+The browser clips anything a deferred row draws outside its box. Focus rings inside a row are drawn inset for that reason, but a box shadow or a badge that hangs over the edge is cut off. Each row is also the containing block for absolutely and fixed positioned content; menus and tooltips open in the top layer and are not affected. Rows with `.swipe-actions` are never deferred, because their actions wait past the row's end. Tables are not supported, because browsers ignore `content-visibility` on table rows. When the rows are not in the DOM at all, such as a dataset too large to render as markup or one fetched a page at a time during scrolling, use a virtual list script; ExpressiveCSS does not ship one.
 
 ---
 

@@ -33,12 +33,14 @@ These facts come from the base commit.
 - R4. Off-screen rows stay in the DOM and the accessibility tree, and find-in-page reaches their text. This is the reason to use `content-visibility` over a virtual list, and the docs say so.
 - R5. The lists docs page and `llm.md` document the class, the custom property, the table limit, the clipping and containing-block effects on row content, and when a virtual list is still the better choice. The changelog has an Added entry.
 - R6. The CSS bundle's new gzip size is recorded in a reviewed budget line in `tests/selective-builds.test.js`, and the generated skill and MCP copies are current.
+- R7. Rows that hold `.swipe-actions` are not deferred, so an open row's actions stay visible and take the pointer. Found in the code review on 2026-10-25.
 
 ### Exclusions
 
 - Tables. Per the CSS Containment spec, layout and paint containment have no effect on internal table boxes such as `<tr>` and `<tbody>`, so `content-visibility` does nothing on table rows. The docs say tables are not supported. Plan group 1 probes this in all three engines. If every engine contradicts the spec, the scope question goes back to the user before group 2.
 - A virtual list or any runtime script. The class is CSS only.
 - Window-size prefixes. Deferring rows does not change the layout, so `medium:defer-render` and the like are not needed.
+- Deferring swipeable rows. Their `.swipe-actions` group sits at `inset-inline-start: 100%`, outside the row, and paint containment would hide it and stop it from taking clicks. The selector skips those rows instead.
 - Measuring each row's real height. Authors with mixed row heights set `--defer-render-row-size` to an average.
 
 ## Decisions
@@ -61,6 +63,13 @@ These follow from the code and can change during implementation if the code or t
 - Default size: `contain-intrinsic-block-size: auto var(--defer-render-row-size, var(--md-comp-list-item-height, rem(56px)))`. `.list` defines the list item height token, so lists follow it and other containers fall back to `rem(56px)`. The block-size property leaves the width alone, since `contain-intrinsic-size` with one length would also give a skipped row a 56px intrinsic width.
 - Inset ring: inside `.defer-render > *`, give `:focus-visible` content `outline-offset: -3px`, the outline's thickness, the way cards inset theirs.
 - The interview's working custom property name, `--expressive-row-size`, became `--defer-render-row-size` during group 2, to match the other utility properties such as `--scroll-area-thumb-color` and `--grid-column-min`.
+
+### Found in the code review on 2026-10-25
+
+- In a `.list.swipeable.defer-render`, an open row's swipe actions were neither painted nor hit by `elementFromPoint` in all three engines, while the same markup without `defer-render` hit the button. The selector is now `.defer-render > :not(:has(> .swipe-actions))`, and the focus-ring rule is nested under it so swipe rows keep their normal ring.
+- Two parts of R2 had no test: the list item height fallback, which row `min-height` hides unless the token is under 56px, and the remembered size. V2 now covers both.
+- `content-visibility: auto` makes engines compute `contain-intrinsic-block-size` with `auto` even when the declaration leaves it out (Chromium reported `auto 56px` for a declaration without the keyword). The keyword stays in the source to state the intent; a test cannot tell the two apart.
+- CSS gzip rose to 86,844 bytes (+19 over the first measurement, +108 from the merge-base).
 
 ### Open decisions
 

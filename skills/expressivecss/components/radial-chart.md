@@ -9,7 +9,7 @@ Component ID: `radial-chart`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `4befc1302199374a8d921ad4fc7ad25b22f362ae44032df6f2004f3491981ee7`
+Contract SHA-256: `676fa5f0d10f291eca44ac48d6c0afd425457e5ef93ce3d343b8a69cf850691c`
 
 #### Selection and adaptation
 
