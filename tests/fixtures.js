@@ -96,6 +96,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<figure class="scatter-chart"><figcaption>Fuel economy</figcaption><table><thead><tr><th>Car</th><th>Weight</th><th>Mpg</th></tr></thead><tbody><tr><th>Civic</th><td>1300</td><td>31</td></tr><tr><th>Tahoe</th><td>2600</td><td>15</td></tr></tbody></table></figure>`,
   },
   {
+    name: "FunnelChart",
+    selector: ".funnel-chart",
+    html: `<figure class="funnel-chart"><figcaption>Signups</figcaption><table><thead><tr><th>Step</th><th>Visitors</th></tr></thead><tbody><tr><th>Visited</th><td>1000</td></tr><tr><th>Paid</th><td>45</td></tr></tbody></table></figure>`,
+  },
+  {
     name: "BarChart",
     selector: ".bar-chart",
     html: `<figure class="bar-chart"><figcaption>Revenue</figcaption><table><thead><tr><th>Month</th><th>Revenue</th></tr></thead><tbody><tr><th>Jan</th><td>1</td></tr><tr><th>Feb</th><td>2</td></tr></tbody></table></figure>`,

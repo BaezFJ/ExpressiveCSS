@@ -9,7 +9,7 @@ Component ID: `message-scroller`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `676fa5f0d10f291eca44ac48d6c0afd425457e5ef93ce3d343b8a69cf850691c`
+Contract SHA-256: `68212d6eac4bb39c161797769d6391ac7485f13076ccebdadc1f05e52d288897`
 
 #### Selection and adaptation
 

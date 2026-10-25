@@ -249,7 +249,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the currency input: an amount shown in the locale and currency on blur, the plain number in the form data: 95,116 gzip bytes (+655).
   // Reviewed currency input focus editing, the validity message, formatting after a form reset and destroy(): 95,276 gzip bytes (+160).
   // Reviewed currency input waiting for blur after Enter and listening in a shadow root: 95,306 gzip bytes (+30).
-  assert.ok(sizes(js).gzip <= 95306, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the funnel chart: a centered stage per row as wide as its value against the largest: 95,524 gzip bytes (+218).
+  assert.ok(sizes(js).gzip <= 95524, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -403,5 +404,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the visually hidden pull-to-refresh status region: 86,567 gzip bytes (+33).
   // Reviewed swipe actions: the clipped list, the sliding row, the trailing toggle and the actions past the row's end: 86,736 gzip bytes (+169).
   // Reviewed .defer-render: content-visibility on off-screen rows except swipe rows, their reserved size and inset focus rings: 86,844 gzip bytes (+108).
-  assert.ok(sizes(css).gzip <= 86844, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the funnel chart: the plot, tooltip and label column, and centered stages that keep their color in forced colors: 87,371 gzip bytes (+527).
+  assert.ok(sizes(css).gzip <= 87371, `CSS gzip: ${sizes(css).gzip}`);
 });
