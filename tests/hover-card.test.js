@@ -23,6 +23,13 @@ function shimPopovers() {
   return { calls, restore };
 }
 
+// A MouseEvent with pointerType set stands in for a PointerEvent.
+function pointer(el, type, pointerType = 'mouse') {
+  const event = new window.MouseEvent(type);
+  Object.defineProperty(event, 'pointerType', { value: pointerType });
+  el.dispatchEvent(event);
+}
+
 function events(el) {
   const seen = [];
   for (const type of ['open', 'close']) el.addEventListener(`expressive:${type}`, () => seen.push(type));
@@ -108,6 +115,84 @@ test('HoverCard logs one error and starts nothing when aria-details names no ele
     assert.deepEqual(calls, []);
   } finally {
     instance.destroy();
+    restore();
+  }
+});
+
+test('HoverCard shows after enterDelay on hover and never for a pointer that passes over', (t) => {
+  const { calls, restore } = shimPopovers();
+  document.body.innerHTML = markup();
+  const link = document.querySelector('a');
+  const instance = Expressive.HoverCard.init(link);
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  try {
+    pointer(link, 'pointerenter');
+    t.mock.timers.tick(200);
+    pointer(link, 'pointerleave');
+    t.mock.timers.tick(1000);
+    assert.deepEqual(calls, []);
+    pointer(link, 'pointerenter');
+    t.mock.timers.tick(499);
+    assert.deepEqual(calls, []);
+    t.mock.timers.tick(1);
+    assert.deepEqual(calls, [['show', link]]);
+  } finally {
+    instance.destroy();
+    t.mock.timers.reset();
+    restore();
+  }
+});
+
+test('HoverCard stays while the pointer moves from the link onto the card, and hides after exitDelay once it leaves both', (t) => {
+  const { calls, restore } = shimPopovers();
+  document.body.innerHTML = markup();
+  const link = document.querySelector('a');
+  const card = document.getElementById('card');
+  const instance = Expressive.HoverCard.init(link);
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  try {
+    pointer(link, 'pointerenter');
+    t.mock.timers.tick(500);
+    pointer(link, 'pointerleave');
+    t.mock.timers.tick(200);
+    pointer(card, 'pointerenter');
+    t.mock.timers.tick(1000);
+    assert.ok(card.hasAttribute('data-open'));
+    pointer(card, 'pointerleave');
+    t.mock.timers.tick(299);
+    assert.ok(card.hasAttribute('data-open'));
+    t.mock.timers.tick(1);
+    assert.ok(!card.hasAttribute('data-open'));
+    assert.deepEqual(calls.map(([kind]) => kind), ['show', 'hide']);
+  } finally {
+    instance.destroy();
+    t.mock.timers.reset();
+    restore();
+  }
+});
+
+test('HoverCard ignores touch, and never prevents the click that follows the link', (t) => {
+  const { calls, restore } = shimPopovers();
+  document.body.innerHTML = markup();
+  const link = document.querySelector('a');
+  const instance = Expressive.HoverCard.init(link);
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  try {
+    for (const type of ['pointerenter', 'pointerdown', 'pointerup', 'pointerleave']) pointer(link, type, 'touch');
+    link.dispatchEvent(new window.MouseEvent('mouseenter'));
+    const tap = new window.MouseEvent('click', { bubbles: true, cancelable: true });
+    link.dispatchEvent(tap);
+    t.mock.timers.tick(1000);
+    assert.deepEqual(calls, []);
+    assert.equal(tap.defaultPrevented, false);
+    pointer(link, 'pointerenter');
+    t.mock.timers.tick(500);
+    const click = new window.MouseEvent('click', { bubbles: true, cancelable: true });
+    link.dispatchEvent(click);
+    assert.equal(click.defaultPrevented, false);
+  } finally {
+    instance.destroy();
+    t.mock.timers.reset();
     restore();
   }
 });
