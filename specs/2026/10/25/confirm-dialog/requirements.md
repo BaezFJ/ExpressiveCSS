@@ -60,9 +60,10 @@ These facts come from the base commit.
 
 These follow from the code and can change during implementation if the code or the probe disagrees.
 
-- Resolve from the `close` event: `true` only when `dialog.returnValue` equals the confirm button's `value`. Set `returnValue` to an empty string before `showModal()`, so Escape and light dismiss, which leave it unchanged, resolve `false`.
+- Resolve from the `close` event: `true` only when `dialog.returnValue` equals the confirm button's `value`. Each call makes a new dialog, whose `returnValue` starts as `''`, and Escape and light dismiss leave it unchanged, so they resolve `false` with no reset.
 - Append the dialog to `document.body`, and give the heading and text ids from a counter so two open dialogs never share one.
 - No focus fallback. The probe on 2026-10-25 found that every engine returns focus to the opener on every close path, so R5 rests on the native dialog closing steps.
+- The cancel button carries `autofocus`. In group 3's mutation run, every engine still focused Cancel without it, because Cancel is the first focusable element. The attribute keeps R5 true if the button order ever changes, and only the jsdom case detects its removal.
 - Keep each new function below cyclomatic complexity 5 for the fallow gate, for example by building the markup in one helper and wiring the close handler in another.
 - Update the `dialog` entry's note in `semantics.json` to mention the generated confirm dialog, if the semantics roster or guide tests need it. Then run `npm run build:semantics`.
 

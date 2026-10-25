@@ -54,8 +54,8 @@ export class Dialogs {
   static confirm(options: ConfirmOptions): Promise<boolean> {
     const dialog = Dialogs._confirmDialog(options);
     document.body.append(dialog);
-    // Escape and close() leave returnValue alone, so only the confirm button sets it.
-    dialog.returnValue = '';
+    // A new dialog's returnValue is '', and Escape and close() leave it alone,
+    // so only the confirm button sets it.
     dialog.showModal();
     return new Promise((resolve) => {
       dialog.addEventListener(

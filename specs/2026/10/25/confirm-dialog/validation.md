@@ -2,7 +2,7 @@
 
 Roadmap phase: Phase 43, promise-based confirm dialog. Requirements are in [requirements.md](requirements.md) and the work order in [plan.md](plan.md).
 
-Every result is pending, since the feature is not built. Tests run against built bundles, so build first. Run suites one at a time, since parallel browser runs flake. The test file names below are planned and do not exist yet.
+The agent ran V1 to V10 on 2026-10-25 on this branch. V11 to V13 are pending. Tests run against built bundles, so build first. Run suites one at a time, since parallel browser runs flake. The test file names below are planned and do not exist yet.
 
 ## Automated checks
 
@@ -12,11 +12,11 @@ Every result is pending, since the feature is not built. Tests run against built
 
 | ID | Covers | Setup | Action | Expected result | Result |
 | --- | --- | --- | --- | --- | --- |
-| V1 | R1, R3, R4 | Call `Dialogs.confirm({ headline: 'Delete file?', text: 'This cannot be undone.' })`, then call it again with only `text`. | Inspect each dialog in `document.body`. | A `<dialog role="alertdialog">` with the heading, a `<p>` and a last-child `<form method="dialog">` holding Cancel then OK. With a headline, `aria-labelledby` names the heading and `aria-describedby` the text; without one, `aria-labelledby` names the text. Ids differ between the two dialogs. | Pending |
-| V2 | R6 | Call `confirm()` with `text: '<img src=x onerror=alert(1)>'` and the same string as a label. | Read the dialog's markup. | The string appears as text, and the dialog contains no `<img>`. | Pending |
-| V3 | R7 | Call `confirm()` with no labels, then with `confirm: 'Delete'`, then after setting `Dialogs.i18n.cancel = 'Keep'`. Restore `Dialogs.i18n` in `finally`. | Read the button texts. | OK and Cancel, then Delete and Cancel, then OK and Keep. | Pending |
-| V4 | R2 | Open a dialog, set `returnValue` to the confirm button's `value` and dispatch `close`. Repeat with `returnValue` left as `''`. | Await each promise. | `true`, then `false`. | Pending |
-| V5 | R8 | Open two dialogs, then close the second as confirmed and the first as cancelled. | Await both promises and count dialogs in the document. | The second resolves `true`, the first `false`, and no confirm dialog remains. | Pending |
+| V1 | R1, R3, R4 | Call `Dialogs.confirm({ headline: 'Delete file?', text: 'This cannot be undone.' })`, then call it again with only `text`. | Inspect each dialog in `document.body`. | A `<dialog role="alertdialog">` with the heading, a `<p>` and a last-child `<form method="dialog">` holding Cancel then OK. With a headline, `aria-labelledby` names the heading and `aria-describedby` the text; without one, `aria-labelledby` names the text. Ids differ between the two dialogs. | Passed 2026-10-25, and failed against the base build. |
+| V2 | R6 | Call `confirm()` with `text: '<img src=x onerror=alert(1)>'` and the same string as a label. | Read the dialog's markup. | The string appears as text, and the dialog contains no `<img>`. | Passed 2026-10-25, and failed against the base build. |
+| V3 | R7 | Call `confirm()` with no labels, then with `confirm: 'Delete'`, then after setting `Dialogs.i18n.cancel = 'Keep'`. Restore `Dialogs.i18n` in `finally`. | Read the button texts. | OK and Cancel, then Delete and Cancel, then OK and Keep. | Passed 2026-10-25, and failed against the base build. |
+| V4 | R2 | Open a dialog, set `returnValue` to the confirm button's `value` and dispatch `close`. Repeat with `returnValue` left as `''`. | Await each promise. | `true`, then `false`. | Passed 2026-10-25, and failed against the base build. |
+| V5 | R8 | Open two dialogs, then close the second as confirmed and the first as cancelled. | Await both promises and count dialogs in the document. | The second resolves `true`, the first `false`, and no confirm dialog remains. | Passed 2026-10-25, and failed against the base build. |
 
 ### Three-engine browser tests
 
@@ -24,16 +24,16 @@ Every result is pending, since the feature is not built. Tests run against built
 
 | ID | Covers | Setup | Action | Expected result | Result |
 | --- | --- | --- | --- | --- | --- |
-| V6 | R2, R5, R8 | Focus the opener and press Enter to open the dialog. | Activate the confirm button. | The promise resolves `true`, focus is on the opener, and the dialog is not in the document. This is the roadmap's completion check. | Pending |
-| V7 | R2, R5 | Open the dialog from the opener. | Activate Cancel. Open it again and press Escape. | Both resolve `false`, and focus is on the opener after each. | Pending |
-| V8 | R3, R5 | Open the dialog from the opener. | Read `document.activeElement`, then press Tab past the last button. | Focus starts on Cancel and stays inside the dialog. | Pending |
-| V9 | R2 | Open the dialog with the root bundle loaded. | Press and release the pointer on the scrim outside the dialog box. | The promise resolves `false` and the dialog is gone. | Pending |
+| V6 | R2, R5, R8 | Focus the opener and press Enter to open the dialog. | Activate the confirm button. | The promise resolves `true`, focus is on the opener, and the dialog is not in the document. This is the roadmap's completion check. | Passed 2026-10-25 in all three engines, and failed in each against the base build. |
+| V7 | R2, R5 | Open the dialog from the opener. | Activate Cancel. Open it again and press Escape. | Both resolve `false`, and focus is on the opener after each. | Passed 2026-10-25 in all three engines, and failed in each against the base build. |
+| V8 | R3, R5 | Open the dialog from the opener. | Read `document.activeElement`, press Tab, then call `focus()` on a button behind the dialog. | Focus starts on Cancel, moves to the confirm button, and stays there, because the page behind is inert. | Passed 2026-10-25 in all three engines, and failed in each against the base build. |
+| V9 | R2 | Open the dialog with the root bundle loaded. | Press and release the pointer on the scrim outside the dialog box. | The promise resolves `false` and the dialog is gone. | Passed 2026-10-25 in all three engines, and failed in each against the base build. |
 
 ### Mutation check
 
 | ID | Covers | Setup | Action | Expected result | Result |
 | --- | --- | --- | --- | --- | --- |
-| V10 | R1 to R8 | A build from the base commit, and a build with `Dialogs.confirm()` removed. | Run V1 to V9 against each. | Every case fails against the base and confirm-less builds. | Pending |
+| V10 | R1 to R8 | A build from the base commit, and a build with `Dialogs.confirm()` removed. | Run V1 to V9 against each. | Every case fails against the base and confirm-less builds. | Passed 2026-10-25: all 17 new cases (5 jsdom, 12 browser) failed against the base `dialogs.ts`. Removing `autofocus` failed only V1, since every engine focuses the first button anyway. |
 
 ### Repository-required checks
 

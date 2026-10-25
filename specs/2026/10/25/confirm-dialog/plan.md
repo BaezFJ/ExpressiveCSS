@@ -21,12 +21,12 @@ Covers R2, R5 (evidence only). Feeds V6, V7 and V10.
 
 Prerequisites: group 1.
 
-- [ ] In `src/ts/behaviors/dialogs.ts`, add `static i18n = { confirm: 'OK', cancel: 'Cancel' }` and `static confirm(options): Promise<boolean>`.
-- [ ] Build the `<dialog role="alertdialog">`, heading, `<p>` and `<form method="dialog">` with `textContent`, ids from a counter, and the naming attributes from R4.
-- [ ] Append it to `document.body`, set `returnValue = ''`, call `showModal()`, and focus the cancel button.
-- [ ] On `close`, resolve from `returnValue` and remove the dialog. Group 1 found no engine that needs a focus fallback.
-- [ ] Add jsdom cases to `tests/dialogs.test.js`, with `showModal` stubbed: markup and naming with and without a headline, text set without HTML parsing, default and per-call labels, a changed `Dialogs.i18n`, resolve values from `returnValue`, removal after close, and two calls resolving independently.
-- [ ] Run each jsdom case against the base build and confirm it fails.
+- [x] In `src/ts/behaviors/dialogs.ts`, add `static i18n = { confirm: 'OK', cancel: 'Cancel' }` and `static confirm(options): Promise<boolean>`.
+- [x] Build the `<dialog role="alertdialog">`, heading, `<p>` and `<form method="dialog">` with `textContent`, ids from a counter, and the naming attributes from R4.
+- [x] Append it to `document.body` and call `showModal()`. The cancel button's `autofocus` takes the first focus. A new dialog's `returnValue` is already `''`, so it needs no reset.
+- [x] On `close`, resolve from `returnValue` and remove the dialog. Group 1 found no engine that needs a focus fallback.
+- [x] Add jsdom cases to `tests/dialogs.test.js`, with `showModal` stubbed: markup and naming with and without a headline, text set without HTML parsing, default and per-call labels, a changed `Dialogs.i18n`, resolve values from `returnValue`, removal after close, and two calls resolving independently.
+- [x] Run each jsdom case against the base build and confirm it fails.
 
 Completion check: `node --test tests/dialogs.test.js` passes, and the new cases fail against the base build. The fallow pre-commit gate accepts the new functions.
 
@@ -36,12 +36,12 @@ Covers R1, R2, R3, R4, R6, R7, R8, and V1 to V5.
 
 Prerequisites: group 2.
 
-- [ ] Add `tests/confirm-dialog-browser.test.js`, looping over Chromium, Firefox and WebKit, with a page that has an opener button whose click handler calls `Expressive.Dialogs.confirm()`.
-- [ ] Case for V6: the confirm button resolves `true`, focus returns to the opener, and the dialog is gone.
-- [ ] Case for V7: the cancel button and Escape each resolve `false` with focus back on the opener.
-- [ ] Case for V8: focus is on the cancel button when the dialog opens, and the background is inert.
-- [ ] Case for V9: a scrim tap resolves `false` through the light-dismiss behavior.
-- [ ] Tear down pages in `finally` blocks. Run the file against the base build and confirm every case fails.
+- [x] Add `tests/confirm-dialog-browser.test.js`, looping over Chromium, Firefox and WebKit, with a page that has an opener button whose click handler calls `Expressive.Dialogs.confirm()`.
+- [x] Case for V6: the confirm button resolves `true`, focus returns to the opener, and the dialog is gone.
+- [x] Case for V7: the cancel button and Escape each resolve `false` with focus back on the opener.
+- [x] Case for V8: focus is on the cancel button when the dialog opens, and the background is inert.
+- [x] Case for V9: a scrim tap resolves `false` through the light-dismiss behavior.
+- [x] Tear down pages in `finally` blocks. Run the file against the base build and confirm every case fails.
 
 Completion check: `node --test tests/confirm-dialog-browser.test.js` passes in all three engines, and V10 shows every jsdom and browser case failing against the base build.
 
