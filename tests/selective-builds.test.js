@@ -252,7 +252,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the cascader's start: nested options read from markup, the combobox input, the starting path and destroy(): 95,770 gzip bytes (+464).
   // Reviewed cascader columns in a popover anchored to the input, chosen by click, and the committed path with its input and change events, with open() split for the complexity gate: 96,585 gzip bytes (+815).
   // Reviewed cascader keys: opening from the input, arrows, Home and End in a column, the next and previous column, Enter and Space, Escape and Tab, swapped under rtl: 96,909 gzip bytes (+324).
-  assert.ok(sizes(js).gzip <= 96909, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed moving Chips' form-associated control to core/formControl, with checkValidity() and reportValidity() on the control: 96,931 gzip bytes (+22).
+  assert.ok(sizes(js).gzip <= 96931, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
