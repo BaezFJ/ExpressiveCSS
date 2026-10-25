@@ -372,6 +372,9 @@ test('a transfer list has a name, unnamed checkboxes and labelled lists', () => 
   assert.equal(broken(`<div class="transfer-list" data-name="">${lists}</div>`, 'transfer-list-needs-a-name'), 1);
   assert.equal(broken(`<div class="transfer-list" data-name="t">${lists.replace('type="checkbox"', 'type="checkbox" name="t"')}</div>`, 'transfer-list-checkbox-unnamed'), 1);
   assert.equal(broken(`<div class="transfer-list" data-name="t">${lists.replace(' aria-labelledby="chosen"', '')}</div>`, 'transfer-list-lists-labelled'), 1);
+  assert.equal(broken(`<div class="transfer-list" data-name="t">${lists}<button data-transfer="add">Add</button></div>`, 'transfer-list-buttons-typed'), 1);
+  assert.equal(broken(`<div class="transfer-list" data-name="t">${lists}<button type="submit" data-transfer="add">Add</button></div>`, 'transfer-list-buttons-typed'), 1);
+  assert.equal(broken(`<div class="transfer-list" data-name="t">${lists}<button type="button" data-transfer="add">Add</button></div>`, 'transfer-list-buttons-typed'), 0);
   for (const id of ['transfer-list-needs-a-name', 'transfer-list-checkbox-unnamed', 'transfer-list-lists-labelled']) {
     assert.equal(broken(`<div class="transfer-list" data-name="t">${lists}</div>`, id), 0, id);
   }

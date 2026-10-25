@@ -2231,6 +2231,12 @@
           "kind": "forbid",
           "selector": ":is(.transfer-available, .transfer-chosen):not([aria-label], [aria-labelledby])",
           "message": "Name each transfer list with aria-label or aria-labelledby, such as \"Available toppings\" and \"Chosen toppings\". The name tells people which list a row is in, and the move announcement reads it."
+        },
+        {
+          "id": "transfer-list-buttons-typed",
+          "kind": "forbid",
+          "selector": ".transfer-list [data-transfer]:not([type=\"button\" i])",
+          "message": "Give each [data-transfer] button type=\"button\". A button in a form submits it by default, so an untyped move button would also send the form."
         }
       ]
     },

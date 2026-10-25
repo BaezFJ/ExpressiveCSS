@@ -37,15 +37,26 @@ export class TransferList {
     }
   }
 
-  /** The row checkboxes of one of a container's lists, in order. */
+  /** The row checkboxes of one of a container's lists, in order. Only a row's own label counts, so a list nested in a row keeps its boxes. */
   private static _boxes(container: Element, list: string) {
-    return [...container.querySelectorAll<HTMLInputElement>(`:scope > ${list} > li input[type="checkbox"]`)];
+    return [...container.querySelectorAll<HTMLInputElement>(`:scope > ${list} > li > label > input[type="checkbox"]`)];
   }
 
   private static _onFormData(e: FormDataEvent) {
     const containers = (e.target as HTMLFormElement).querySelectorAll<HTMLElement>('.transfer-list:not([data-name=""])[data-name]');
     for (const container of containers) {
-      for (const box of TransferList._boxes(container, '.transfer-chosen')) e.formData.append(container.dataset.name, box.value);
+      for (const box of TransferList._boxes(container, '.transfer-chosen').filter(TransferList._submits)) {
+        e.formData.append(container.dataset.name, box.value);
+      }
     }
+  }
+
+  /**
+   * Whether a chosen row submits. A disabled fieldset leaves it out, as it
+   * does its own fields outside the first legend. A row's own disabled box
+   * only keeps the row in place, so it still submits.
+   */
+  private static _submits(box: HTMLInputElement) {
+    return !box.matches('fieldset[disabled] > :not(legend:first-of-type) *');
   }
 }

@@ -1300,10 +1300,12 @@ Added with the transfer list behavior. The rows are native checkboxes in .list l
 | `transfer-list-needs-a-name` | forbid | `.transfer-list:not([data-name]), .transfer-list[data-name=""]` | must not match |
 | `transfer-list-checkbox-unnamed` | forbid | `.transfer-list input[type="checkbox"][name]` | must not match |
 | `transfer-list-lists-labelled` | forbid | `:is(.transfer-available, .transfer-chosen):not([aria-label], [aria-labelledby])` | must not match |
+| `transfer-list-buttons-typed` | forbid | `.transfer-list [data-transfer]:not([type="button" i])` | must not match |
 
 - **transfer-list-needs-a-name** - Give each .transfer-list a data-name. The chosen rows submit their values under it; without one the form gets nothing.
 - **transfer-list-checkbox-unnamed** - Leave the name off a transfer list's checkboxes. A checkbox's name submits whether it is checked, which only says what is selected to move; the script submits the chosen rows under the container's data-name.
 - **transfer-list-lists-labelled** - Name each transfer list with aria-label or aria-labelledby, such as "Available toppings" and "Chosen toppings". The name tells people which list a row is in, and the move announcement reads it.
+- **transfer-list-buttons-typed** - Give each [data-transfer] button type="button". A button in a form submits it by default, so an untyped move button would also send the form.
 
 ### transitions
 

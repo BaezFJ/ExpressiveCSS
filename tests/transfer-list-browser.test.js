@@ -79,6 +79,8 @@ for (const [name, engine, test] of engines) {
       await press(p, 'Add checked toppings');
       assert.deepEqual(await values(p, 'chosen'), ['mushrooms', 'olives'], 'the rows still move');
       assert.deepEqual(await formValues(p), [], 'without data-name nothing is submitted');
+      await p.locator('.transfer-list').evaluate((list) => list.setAttribute('data-name', ''));
+      assert.deepEqual(await p.evaluate(() => [...new FormData(document.getElementById('form'))]), [], 'an empty data-name submits nothing');
 
       // A click on a disabled button's icon reaches the document listener.
       await check(p, 'Peppers');
@@ -90,6 +92,39 @@ for (const [name, engine, test] of engines) {
         }, disable);
         assert.deepEqual(await values(p, 'chosen'), ['mushrooms', 'olives'], `${disable}: nothing moves`);
       }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${name}: a disabled fieldset leaves the chosen rows out, a locked row stays put but submits, and a nested list keeps to itself`, { timeout: 30000 }, async () => {
+    const browser = await leaseBrowser(engine);
+    try {
+      const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
+      await p.setContent(page(`<form id="form">
+        <fieldset disabled>${transferList({ chosen: ['mushrooms'] })}<input name="native" value="n"></fieldset>
+        <fieldset disabled><legend>${transferList({ chosen: ['ham'], name: ' data-name="meats"' })}</legend></fieldset>
+      </form>`));
+      assert.deepEqual(await p.evaluate(() => [...new FormData(document.getElementById('form'))]), [['meats', 'ham']],
+        'only the list in the first legend, which the fieldset leaves enabled, submits');
+
+      await p.setContent(page(form(transferList({ chosen: ['mushrooms'] }))));
+      await p.evaluate(() => {
+        document.querySelector('[value="mushrooms"]').disabled = true;
+        const basil = document.querySelector('[value="basil"]');
+        basil.checked = true;
+        basil.disabled = true;
+      });
+      await check(p, 'Olives');
+      await press(p, 'Add checked toppings');
+      assert.deepEqual(await values(p, 'available'), ['peppers', 'onions', 'basil'], 'a checked but disabled row stays');
+      assert.deepEqual(await formValues(p), ['mushrooms', 'olives'], 'a disabled chosen row still submits');
+
+      // An inner list inside an outer row submits only under its own name.
+      await p.setContent(page(form(transferList({ chosen: ['mushrooms'] }))));
+      await p.locator('.transfer-chosen > li').evaluate((li, inner) => li.insertAdjacentHTML('beforeend', inner),
+        transferList({ chosen: ['ham'], name: ' data-name="meats"' }).replace(/aria-label="([^"]+)"/g, 'aria-label="Inner $1"'));
+      assert.deepEqual(await p.evaluate(() => [...new FormData(document.getElementById('form'))]), [['toppings', 'mushrooms'], ['meats', 'ham']]);
     } finally {
       await browser.close();
     }
@@ -118,6 +153,7 @@ for (const [name, engine, test] of engines) {
       assert.ok(actions.y >= available.y + available.height - 1, 'narrow: the actions sit below the available list');
       assert.ok(chosen.y >= actions.y + actions.height - 1, 'narrow: the chosen list sits below the actions');
       assert.ok(actions.width > actions.height, 'narrow: the actions form a row');
+      assert.equal(await p.locator('[data-transfer="add"] .material-symbols').evaluate((icon) => getComputedStyle(icon).rotate), '90deg', 'narrow: the icons point down and up');
 
       await p.setViewportSize({ width: 800, height: 700 });
       const many = Array.from({ length: 50 }, (_, i) => `item${i}`);
