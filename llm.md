@@ -3722,6 +3722,47 @@ A leading icon goes first in the summary, hidden from assistive technology. The 
 
 ---
 
+## Show more
+
+Clamped text with a button that shows the rest, and hides itself when the text already fits.
+
+A `.show-more` holds the text, with a `line-clamp-1`, `line-clamp-2` or `line-clamp-3` class, and a `<button type="button">` whose text is the collapsed label. `AutoInit()` starts every one. The component points the button at the text with `aria-controls`, adding an id to the text when it has none, and sets `aria-expanded`. Activating the button shows the full text and changes the label to "Show less"; activating it again clamps the text and puts the author's label back. Only the button's last text outside an `aria-hidden="true"` element changes, so an icon keeps its glyph.
+
+While the clamped text fits, the button gets `hidden`, so it is neither seen nor reached by Tab. The component checks again when the text's size changes and once web fonts have loaded, so `line-clamp-3 expanded:line-clamp-none` hides the button from Expanded windows up. A focused button stays until focus moves on, and open text keeps its button. Expanding sets `-webkit-line-clamp` and `line-clamp` inline, because a prefixed clamp class would beat `line-clamp-none`. The text opens and closes at once, without a transition.
+
+The clamp classes set `display`, so the text cannot also be a flex or grid container; put the clamp on a child. The browser's find-in-page does not open clamped text, so a match in the hidden lines is not shown until the person opens it.
+
+```html
+<div class="show-more">
+  <p class="line-clamp-3">A long product description that runs well past three lines...</p>
+  <button type="button" class="text">Show more</button>
+</div>
+```
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `onOpen` | Function | `null` | Called after the full text shows. |
+| `onClose` | Function | `null` | Called after the text is clamped again. |
+| `i18n` | Object | `{ showLess: 'Show less' }` | The button's label while the text is open. `data-show-less` on the button sets it for one control. |
+
+### Methods
+
+#### .open()
+
+Shows the full text.
+
+#### .close()
+
+Clamps the text again.
+
+#### .destroy()
+
+Removes the listeners, clamps the text without an event, and restores the button's label, `aria-expanded`, `aria-controls` and `hidden`, and the text's id.
+
+---
+
 ## Data table
 
 Rows of records in a scrolling table with a sticky header, sort state and row selection.

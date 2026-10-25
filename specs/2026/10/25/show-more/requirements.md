@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 42, show-more text collapse
 Branch: `feature/2026-10-25-show-more`
 Base: `origin/master` at `a9bbf77ad9edd0f44ce584e71f07a485fe6f2933` (#425)
-Status: specified 2026-10-25; not implemented
+Status: implemented and locally verified 2026-10-25; not pushed
 
 Follow the [mission's agreed scope for components and behaviors](../../../../mission.md#agreed-scope), its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 42](../../../../roadmap.md#phase-42-show-more-text-collapse). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -73,6 +73,10 @@ These follow from the code and can change during implementation if the code or t
 
 - The label is the button's last text node outside an `aria-hidden="true"` element, so an icon before or after the label keeps its ligature text.
 - A focused button stays visible even when the text fits, and the fit check runs again on blur. Without that, collapsing text after the container widened hid the button the person had just pressed, and focus fell back to the page. Found and fixed in group 3; V2 covers it.
+
+### Confirmed after the codex review on 2026-10-25
+
+- Keep the branch pin and re-pin `sourceRevision` to the squash merge commit right after merging. The capability check requires every component to list a source file that exists at `sourceRevision`, and `sourceRevision` to be an ancestor of HEAD. `showMore.ts` is on no `master` commit, and the squash merge rewrites branch commits, so no pin passes before and after the merge. The branch pins its group 3 commit `19375f1c6`, as pull-to-refresh, swipe actions, input mask and currency input did. `master` fails the roadmap source-link test until the re-pin lands. Codex flagged this twice. The user chose the follow-up re-pin over a merge commit for this PR or a change to the validation.
 
 ### Open decisions
 

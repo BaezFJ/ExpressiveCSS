@@ -400,6 +400,13 @@ export const NAV: DocsGroup[] = [
           "Stacked disclosures that open one section of content at a time, on native details.",
       },
       {
+        id: "show_more",
+        label: "Show more",
+        route: "/show-more.html",
+        description:
+          "Clamped text with a button that shows the rest, and hides itself when the text already fits.",
+      },
+      {
         id: "data_table",
         section: "Data and charts",
         label: "Data table",

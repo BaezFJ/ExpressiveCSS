@@ -1,0 +1,85 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "label", label: "The button's label" },
+  { id: "fit", label: "Text that already fits" },
+  { id: "limits", label: "Limits" },
+  { id: "methods", label: "Methods" },
+]);
+---
+<DocsLayout page="show_more" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A <code>.show-more</code> cuts long text to a few lines and adds a button that shows the rest.
+        </p>
+        <p>
+          Put the text in a child with a <a href={route('helpers')}>line clamp class</a>,
+          <code>line-clamp-1</code>, <code>line-clamp-2</code> or <code>line-clamp-3</code>, and add a
+          <code>&lt;button type="button"&gt;</code> whose text is the collapsed label.
+          <code>AutoInit()</code> starts every one. The button gets <code>aria-expanded</code> and an
+          <code>aria-controls</code> that names the text, and the component adds an id to the text when it has none.
+        </p>
+        <div class="show-more mb-3" style="max-width: 28rem;">
+          <p class="line-clamp-3">
+            This jacket is cut from a recycled shell that sheds light rain and packs into its own chest
+            pocket. A brushed lining keeps it warm on cool mornings without the bulk of insulation, and two
+            zipped hand pockets hold a phone and keys. The hood folds into the collar when you don't need
+            it, and the cuffs close with a soft stretch band.
+          </p>
+          <button type="button" class="text">Show more</button>
+        </div>
+<Code code={`
+<div class="show-more">
+  <p class="line-clamp-3">This jacket is cut from a recycled shell that sheds light rain...</p>
+  <button type="button" class="text">Show more</button>
+</div>
+`} />
+  </Section>
+  <Section {...S.label}>
+        <p>
+          While the text is open, the button reads "Show less". <code>data-show-less</code> on the button
+          sets that label for one control, and the <code>i18n.showLess</code> option sets it for the component.
+          Closing the text puts the author's label back. Only the button's last text outside an
+          <code>aria-hidden="true"</code> element changes, so an icon keeps its glyph.
+        </p>
+<Code code={`
+<div class="show-more">
+  <p class="line-clamp-2">...</p>
+  <button type="button" class="text" data-show-less="Fewer details">
+    More details
+    <span class="material-symbols" aria-hidden="true">expand_more</span>
+  </button>
+</div>
+`} />
+  </Section>
+  <Section {...S.fit}>
+        <p>
+          While the clamped text fits, the button gets <code>hidden</code>, so it is neither seen nor reached
+          by Tab. The component checks again when the text's size changes and once web fonts have loaded.
+          With a window-size prefix, <code>line-clamp-3 expanded:line-clamp-none</code> clamps on compact
+          and medium windows and hides the button from Expanded up. Open text keeps its button, and a
+          focused button stays until focus moves on.
+        </p>
+  </Section>
+  <Section {...S.limits}>
+        <p>
+          The clamp classes set <code>display</code>, so the text cannot also be a flex or grid container.
+          The browser's find-in-page does not open clamped text, so a match in the hidden lines is not
+          shown until the person opens it. The text opens and closes at once, without a transition.
+        </p>
+  </Section>
+  <Section {...S.methods}>
+<Code code={`
+const more = Expressive.ShowMore.getInstance(document.querySelector('.show-more'));
+more.open();    // shows the full text and fires expressive:open
+more.close();   // clamps it again and fires expressive:close
+more.destroy(); // removes the listeners and restores the markup
+`} />
+  </Section>
+</DocsLayout>

@@ -2,7 +2,7 @@
 
 Roadmap phase: Phase 42, show-more text collapse. Requirements are in [requirements.md](requirements.md) and the work in [plan.md](plan.md).
 
-Every result is pending, because the feature is not built yet. Browser checks run against built bundles after `npm run build`, one suite at a time. The commands `node --test tests/show-more-browser.test.js` and `node --test tests/show-more.test.js` follow the pattern of earlier test files and have not been run, since the files do not exist yet.
+Browser checks run against built bundles after `npm run build`, one suite at a time. V1 and V2 run with `node --test tests/show-more-browser.test.js`, and V3 to V5 with `node --test tests/show-more.test.js`.
 
 The browser fixture for V1 and V2 is a `.show-more` started by AutoInit, holding `<p class="line-clamp-2">` with text that needs about five lines at 320px wide, and `<button type="button">Show more</button>`. Its container starts 320px wide.
 
@@ -16,8 +16,8 @@ The browser fixture for V1 and V2 is a `.show-more` started by AutoInit, holding
 | V4 | R5 | In jsdom: add `expressive:open` and `expressive:close` listeners on the document and pass `onOpen` and `onClose`. Click the button twice. | One open event and one `onOpen` call after the first click, one close event and one `onClose` call after the second, all from the `.show-more` element. | Passed 2026-10-25. |
 | V5 | R6 | In jsdom: start a fixture whose button already has `aria-controls="x"` and whose text has no id. Expand it, call `destroy()`, then click the button. | After `destroy()` the button's `aria-controls` is `x`, it has no `aria-expanded` and no `hidden`, it reads `Show more`, the text has no id and no inline clamp style, and the click changes nothing. | Passed 2026-10-25. |
 | V6 | R7 | In `tests/semantics.test.js`, check a `.show-more` whose control is a `<span role="button">`, one whose `<button>` has no `type="button"`, one whose text has no `line-clamp-*` class, and one with a `<button>` and `line-clamp-2`. | The rules flag the first three and pass the fourth. The check does not start components. | Passed 2026-10-25. |
-| V7 | R9 | `node --test tests/selective-builds.test.js tests/autoinit.test.js` | Both pass with the reviewed budget lines and the new AutoInit fixture count. | Pending |
-| V8 | R8, R9 | After `npm run build:skill` as the last generation step, run `npm run check:generated`, `node --test tests/expressivecss-skill.test.js tests/expressivecss-version-resolution.test.js tests/expressivecss-component-decisions.test.js tests/docs-astro.test.js`, `npm run docs:build:astro` and `npm run docs:verify`. | Generated files are clean, the guide counts match, the AutoInit and events tables list ShowMore, and the docs build. | Pending |
+| V7 | R9 | `node --test tests/selective-builds.test.js tests/autoinit.test.js` | Both pass with the reviewed budget lines and the new AutoInit fixture count. | Passed 2026-10-25: JavaScript 95,952 gzip bytes (+646 over the merge base), CSS 86,857 (+13), 39 AutoInit fixtures. |
+| V8 | R8, R9 | After `npm run build:skill` as the last generation step, run `npm run check:generated`, `node --test tests/expressivecss-skill.test.js tests/expressivecss-version-resolution.test.js tests/expressivecss-component-decisions.test.js tests/docs-astro.test.js`, `npm run docs:build:astro` and `npm run docs:verify`. | Generated files are clean, the guide counts match, the AutoInit and events tables list ShowMore, and the docs build. | Passed 2026-10-25 with 90 guides, the basic-button reading budget at 46,701 bytes (+420), a clean `check:generated`, 121 docs pages built and `docs:verify` passing. |
 | V9 | R8, R9 | The repository's required CI checks on the pull request. | All pass. | Pending |
 
 V1 and V2 run in `tests/show-more-browser.test.js`, one test per check. V3 to V5 run in `tests/show-more.test.js`.
@@ -37,3 +37,7 @@ These are not merge conditions.
 - V3 to V6 pass. The user made the jsdom and semantics tests merge gates.
 - V7 and V8 pass. The user did not pick them as a separate gate, but CI runs them, so V9 needs them.
 - The repository's required CI checks pass (V9), and the pull request is reviewed.
+
+## Local regression run on 2026-10-25
+
+`npm run verify` ran 2,842 tests with 5 failures, under a load average above 100 from parallel threads. Each failing file passed when run alone: `defer-render-browser` (Chromium focus ring), `keypad-browser`, `questionnaire-browser` and `stepper-browser` (Firefox 30-second timeouts), `sheet-spring-browser` and `spring-motion-browser` (WebKit springs) and `expressivecss-codex-adapter` (oversized streams). The `docker-runner` SIGINT test also failed alone; this branch does not touch `scripts/run-docker.mjs`, and memory records it as a load flake, so CI decides it. The verify steps after `test:run` then passed: `check:generated`, `docs:build:astro` and `docs:verify`. `npm test --prefix mcp/expressivecss` hit its inspection time limit once under load and passed on two reruns, and `npm run verify:packages` passed.
