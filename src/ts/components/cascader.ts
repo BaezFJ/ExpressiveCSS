@@ -1,5 +1,6 @@
 import { Utils, controllerFor, restoreAttribute } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
+import { FormControl, formAssociated, wrapInControl, unwrapControl } from '../core/formControl';
 
 /** One option from the author's nested lists. */
 interface CascaderNode {
@@ -10,8 +11,11 @@ interface CascaderNode {
   source: HTMLLIElement;
 }
 
+/** The form control a named field submits through, wrapping its input. */
+const CONTROL = 'expressive-cascader-control';
+
 /** The input attributes the component sets, put back by destroy(). */
-const INPUT_ATTRIBUTES = ['readonly', 'role', 'aria-haspopup', 'aria-expanded', 'aria-controls'];
+const INPUT_ATTRIBUTES = ['readonly', 'role', 'aria-haspopup', 'aria-expanded', 'aria-controls', 'aria-required', 'aria-invalid'];
 
 /** Keys that open the popover from the input; Alt+ArrowDown is ArrowDown too. */
 const OPEN_KEYS = ['Enter', ' ', 'ArrowDown'];
@@ -92,6 +96,13 @@ export class Cascader extends Component<CascaderOptions> {
   /** A label id the component gave, which destroy() takes back. */
   private _stampedLabel: HTMLLabelElement | null = null;
   private _ids = 0;
+  /** The path the field started with, which a form reset puts back. */
+  private _initialPath: CascaderNode[] = [];
+  /** The form control wrapping a named input, which the form reads instead of it. */
+  private _control: FormControl | null = null;
+  /** The form name the input had, which the control submits under. */
+  private _formName = '';
+  private _required = false;
 
   constructor(el: HTMLElement, options: Partial<CascaderOptions> = {}) {
     super(el, options);
@@ -112,8 +123,9 @@ export class Cascader extends Component<CascaderOptions> {
     this.input.setAttribute('aria-haspopup', 'dialog');
     this.input.setAttribute('aria-expanded', 'false');
     this.input.setAttribute('aria-controls', this.popover.id);
-    this._path = this._startingPath();
+    this._path = this._initialPath = this._startingPath();
     this._show();
+    this._takeName();
     const { signal } = this._events;
     this.input.addEventListener('click', this._handleInputClick, { signal });
     this.input.addEventListener('keydown', this._handleInputKeydown, { signal });
@@ -158,6 +170,7 @@ export class Cascader extends Component<CascaderOptions> {
   destroy() {
     if (this.input) {
       this.close();
+      this._giveNameBack();
       this._stampedLabel?.removeAttribute('id');
       this.popover.remove();
       INPUT_ATTRIBUTES.forEach((name, i) => restoreAttribute(this.input, name, this._saved[i]));
@@ -253,11 +266,71 @@ export class Cascader extends Component<CascaderOptions> {
     option.focus();
   }
 
+  /**
+   * A named input would submit the path's labels. The control submits under
+   * that name instead, one value per level, so the input gives its name and
+   * required up until destroy().
+   */
+  private _takeName() {
+    this._formName = this.input.getAttribute('name') ?? '';
+    // ponytail: without form-associated custom elements (jsdom) the input keeps its name and submits the labels.
+    if (this._formName && formAssociated()) this._wrap();
+  }
+
+  /** Wraps the input in the control, which takes its required too. */
+  private _wrap() {
+    this._required = this.input.required;
+    this.input.required = false;
+    if (this._required) this.input.setAttribute('aria-required', 'true');
+    this._control = wrapInControl(CONTROL, this.input, () => this._sync());
+    this._control.onFormReset = () => this._reset();
+    this._control.addEventListener('invalid', this._handleInvalid, { signal: this._events.signal });
+    this._sync();
+  }
+
+  /** After the path changes: one form value per level, and a required field's validity. */
+  private _sync() {
+    if (!this._control) return;
+    const data = new FormData();
+    this.value.forEach((value) => data.append(this._formName, value));
+    this._control.internals.setFormValue(data);
+    this._validate();
+  }
+
+  /** A required field is missing a value until a path is committed; the message anchors at the input. */
+  private _validate() {
+    const missing = this._required && !this._path.length;
+    this._control.internals.setValidity({ valueMissing: missing }, missing ? this._requiredMessage : '', this.input);
+    if (!missing) restoreAttribute(this.input, 'aria-invalid', this._saved[INPUT_ATTRIBUTES.indexOf('aria-invalid')]);
+  }
+
+  /** A validity flag needs a message, so an empty i18n.required falls back to the default. */
+  private get _requiredMessage() {
+    return this.options.i18n.required || _defaults.i18n.required;
+  }
+
+  /** A form reset puts the starting path back without firing events. */
+  private _reset() {
+    this.close();
+    this._path = this._initialPath;
+    this._show();
+    this._sync();
+  }
+
+  /** Unwraps the input and gives it its name and required back. */
+  private _giveNameBack() {
+    if (!this._control) return;
+    unwrapControl(this._control, this.input);
+    this._control = null;
+    this.input.required = this._required;
+  }
+
   /** Commits the open path, ending at a leaf: the input shows it, and changes to it fire input and change. */
   private _commit() {
     const changed = !samePath(this._open, this._path);
     this._path = this._open;
     this._show();
+    this._sync();
     this.close();
     this.input.focus();
     if (!changed) return;
@@ -337,6 +410,11 @@ export class Cascader extends Component<CascaderOptions> {
     if (!action) return;
     e.preventDefault();
     action(option, e);
+  };
+
+  /** A submit or checkValidity() found no path: the input says so to assistive technology. */
+  _handleInvalid = () => {
+    this.input.setAttribute('aria-invalid', 'true');
   };
 
   _handleInputClick = () => {

@@ -46,6 +46,9 @@ test('AutoInit starts a cascader on .cascader and makes its input a read-only co
     assert.equal(document.getElementById(cascader.popover.id), cascader.popover);
     assert.deepEqual(cascader.value, []);
     assert.equal(input.value, '');
+    // jsdom has no form-associated custom elements, so the input keeps its name.
+    assert.equal(document.querySelector('expressive-cascader-control'), null);
+    assert.equal(input.getAttribute('name'), 'place');
   } finally {
     cascader.destroy();
   }
@@ -91,4 +94,27 @@ test('destroy() removes the popover and puts the input attributes back, keeping 
   assert.equal(input.getAttribute('name'), 'place');
   assert.equal(input.value, 'United States / California / San Francisco');
   assert.equal(Expressive.Cascader.getInstance(document.querySelector('.cascader')), undefined);
+});
+
+test('open() builds a column per level of the chosen path, named after the label and the options that opened them; close() clears them', () => {
+  const cascader = start(places({ sf: 'data-selected' }));
+  try {
+    cascader.open();
+    const label = document.querySelector('label');
+    const columns = [...cascader.popover.querySelectorAll('[role="listbox"]')];
+    assert.equal(cascader.input.getAttribute('aria-expanded'), 'true');
+    assert.equal(cascader.popover.getAttribute('role'), 'dialog');
+    assert.equal(cascader.popover.getAttribute('aria-labelledby'), label.id);
+    assert.deepEqual(columns.map((column) => [...column.children].map((option) => option.textContent)),
+      [['United States', 'Canada'], ['California', 'Washington'], ['San Francisco', 'Los Angeles']]);
+    assert.deepEqual(columns.map((column) => document.getElementById(column.getAttribute('aria-labelledby')).textContent),
+      ['Place', 'United States', 'California']);
+    cascader.close();
+    assert.equal(cascader.input.getAttribute('aria-expanded'), 'false');
+    assert.equal(cascader.popover.children.length, 0);
+  } finally {
+    cascader.destroy();
+  }
+  // The label id was the component's, so it goes with it.
+  assert.equal(document.querySelector('label').hasAttribute('id'), false);
 });

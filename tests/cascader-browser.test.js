@@ -239,3 +239,119 @@ each('under dir="rtl" the columns run right to left and the arrow keys swap', as
   seen = await state(page);
   assert.deepEqual([seen.focused, seen.columns.length], ['California', 3]);
 });
+
+/** Replaces the page with `markup`, the bundle and AutoInit. */
+const load = (page, markup) => page.setContent(`<style>${css}</style>${markup}<script>${js}</script><script>Expressive.AutoInit()</script>`);
+
+each('the roadmap check: choosing an option in each of three columns submits the three values as one path', async (page) => {
+  await page.click('#place');
+  await option(page, 'United States').click();
+  await option(page, 'California').click();
+  await option(page, 'San Francisco').click();
+  const read = await page.evaluate(() => {
+    const form = document.getElementById('form');
+    const formData = new FormData(form).getAll('place');
+    form.requestSubmit();
+    return { formData, submitted: window.submitted.form, wrapped: document.getElementById('place').parentElement.localName };
+  });
+  assert.deepEqual(read, { formData: ['us', 'ca', 'sf'], submitted: ['us', 'ca', 'sf'], wrapped: 'expressive-cascader-control' });
+  assert.deepEqual(await page.evaluate(() => [...new FormData(document.getElementById('form')).keys()]), ['place', 'place', 'place']);
+});
+
+each('a form reset brings back the starting path without events, also with the popover open and in a shadow root', async (page) => {
+  await load(page, `<form id="form">${field('place')}<button type="reset" id="clear">Reset</button></form>
+    <form id="marked">${field('saved').replace('<li data-value="la">', '<li data-value="la" data-selected>')}</form>
+    <div id="host"></div>`);
+  await page.evaluate(() => {
+    window.events = [];
+    for (const type of ['input', 'change']) document.getElementById('saved').addEventListener(type, () => window.events.push(type));
+  });
+  const values = (id) => page.evaluate((id) => ({
+    input: document.getElementById(id).value,
+    data: new FormData(document.getElementById(id).form ?? document.getElementById(id).closest('form')).getAll(id),
+  }), id);
+  assert.deepEqual(await values('saved'), { input: 'United States / California / Los Angeles', data: ['us', 'ca', 'la'] });
+
+  await page.click('#saved');
+  await option(page, 'San Francisco').click();
+  assert.deepEqual((await values('saved')).data, ['us', 'ca', 'sf']);
+  await page.evaluate(() => (window.events = []));
+  await page.evaluate(() => document.getElementById('marked').reset());
+  assert.deepEqual(await values('saved'), { input: 'United States / California / Los Angeles', data: ['us', 'ca', 'la'] });
+
+  // Reset with the popover open, from the reset button of a field with no starting path.
+  await page.click('#place');
+  await option(page, 'Canada').click();
+  await page.click('#place');
+  await page.evaluate(() => document.getElementById('clear').click());
+  assert.deepEqual(await values('place'), { input: '', data: [] });
+  assert.equal(await page.evaluate(() => document.querySelector('#form .cascader-popover').matches(':popover-open')), false);
+  assert.equal(await page.evaluate(() => window.events.join(',')), '');
+
+  const shadow = await page.evaluate((markup) => {
+    const root = document.getElementById('host').attachShadow({ mode: 'open' });
+    root.innerHTML = `<form>${markup}</form>`;
+    const el = root.querySelector('.cascader');
+    const cascader = Expressive.Cascader.init(el);
+    cascader.open();
+    root.querySelector('[role="option"]:last-child').click();
+    const before = new FormData(root.querySelector('form')).getAll('shadowed');
+    root.querySelector('form').reset();
+    return { before, after: new FormData(root.querySelector('form')).getAll('shadowed'), input: root.getElementById('shadowed').value };
+  }, field('shadowed'));
+  assert.deepEqual(shadow, { before: ['cn'], after: [], input: '' });
+});
+
+each('a required field fails until a path is committed, with its message on the input', async (page) => {
+  await load(page, `<form id="form" novalidate>${field('place', 'required class="validate"')}</form>
+    <form id="es">${field('lugar', 'required', `data-cascader-options='{"i18n":{"required":"Elige un lugar."}}'`)}</form>`);
+  const check = (id) => page.evaluate((id) => {
+    const input = document.getElementById(id);
+    const control = input.parentElement;
+    return {
+      valid: control.checkValidity(),
+      missing: control.validity.valueMissing,
+      message: control.validationMessage,
+      required: [input.required, input.getAttribute('aria-required')],
+      invalid: input.getAttribute('aria-invalid'),
+    };
+  }, id);
+  assert.deepEqual(await check('place'), { valid: false, missing: true, message: 'Choose an option.', required: [false, 'true'], invalid: 'true' });
+  assert.equal((await check('lugar')).message, 'Elige un lugar.');
+
+  await page.click('#place');
+  await option(page, 'Canada').click();
+  assert.deepEqual(await check('place'), { valid: true, missing: false, message: '', required: [false, 'true'], invalid: null });
+});
+
+each('a disabled input or fieldset submits nothing and does not open', async (page) => {
+  await load(page, `<form id="form"><fieldset id="set">${field('place').replace('<li data-value="cn">', '<li data-value="cn" data-selected>')}</fieldset></form>`);
+  const data = () => page.evaluate(() => new FormData(document.getElementById('form')).getAll('place'));
+  assert.deepEqual(await data(), ['cn']);
+
+  await page.evaluate(() => (document.getElementById('place').disabled = true));
+  assert.deepEqual(await data(), []);
+  await page.click('#place', { force: true });
+  assert.equal(await page.getAttribute('#place', 'aria-expanded'), 'false');
+
+  await page.evaluate(() => {
+    document.getElementById('place').disabled = false;
+    document.getElementById('set').disabled = true;
+  });
+  assert.deepEqual(await data(), []);
+  await page.evaluate(() => Expressive.Cascader.getInstance(document.querySelector('.cascader')).open());
+  assert.equal(await page.getAttribute('#place', 'aria-expanded'), 'false');
+
+  await page.evaluate(() => (document.getElementById('set').disabled = false));
+  assert.deepEqual(await data(), ['cn']);
+});
+
+each('destroy() unwraps the input and gives its name and required back', async (page) => {
+  await load(page, `<form id="form">${field('place', 'required')}</form>`);
+  const seen = await page.evaluate(() => {
+    const input = document.getElementById('place');
+    Expressive.Cascader.getInstance(document.querySelector('.cascader')).destroy();
+    return [input.parentElement.localName, input.getAttribute('name'), input.required, input.hasAttribute('aria-required'), document.querySelectorAll('expressive-cascader-control').length];
+  });
+  assert.deepEqual(seen, ['div', 'place', true, false, 0]);
+});
