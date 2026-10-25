@@ -58,14 +58,18 @@ export class Dialogs {
     // so only the confirm button sets it.
     dialog.showModal();
     return new Promise((resolve) => {
-      dialog.addEventListener(
-        'close',
-        () => {
-          dialog.remove();
-          resolve(dialog.returnValue === 'confirm');
-        },
-        { once: true }
-      );
+      // Removing an open dialog fires no close event, so watch for page code
+      // that removes it, such as a route change, and answer false.
+      const removed = new MutationObserver(() => {
+        if (!dialog.isConnected) settle(false);
+      });
+      const settle = (answer: boolean) => {
+        removed.disconnect();
+        dialog.remove();
+        resolve(answer);
+      };
+      removed.observe(document, { childList: true, subtree: true });
+      dialog.addEventListener('close', () => settle(dialog.returnValue === 'confirm'), { once: true });
     });
   }
 
@@ -83,18 +87,18 @@ export class Dialogs {
     form.method = 'dialog';
     form.append(cancelButton, actionButton(confirm ?? Dialogs.i18n.confirm, 'confirm'));
     dialog.append(body, form);
-    Dialogs._name(dialog, body, headline);
+    Dialogs._name(dialog, body, id, headline);
     return dialog;
   }
 
   /** Names the dialog by its headline and describes it by the text, or names it by the text alone. */
-  private static _name(dialog: HTMLDialogElement, body: HTMLElement, headline?: string) {
+  private static _name(dialog: HTMLDialogElement, body: HTMLElement, id: string, headline?: string) {
     if (!headline) {
       dialog.setAttribute('aria-labelledby', body.id);
       return;
     }
     const heading = textElement('h2', headline);
-    heading.id = body.id.replace(/-text$/, '-headline');
+    heading.id = `${id}-headline`;
     dialog.prepend(heading);
     dialog.setAttribute('aria-labelledby', heading.id);
     dialog.setAttribute('aria-describedby', body.id);

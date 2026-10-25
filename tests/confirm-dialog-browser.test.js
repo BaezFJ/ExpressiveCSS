@@ -88,6 +88,21 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 
+  browserTest(`${engine}: removing the open dialog resolves false`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(html);
+      await open(page);
+      // A route change that clears the page, which fires no close event.
+      await page.evaluate(() => document.querySelector('dialog').remove());
+      await page.waitForFunction(() => window.answers.length === 1, null, { timeout: 2000 });
+      assert.deepEqual(await page.evaluate(() => window.answers), [false]);
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: a scrim tap resolves false`, async () => {
     const browser = await leaseBrowser(browserType);
     try {

@@ -36,6 +36,8 @@ These facts come from the base commit.
 - R7. `Dialogs.i18n = { confirm: 'OK', cancel: 'Cancel' }` holds the default button labels. Per-call `confirm` and `cancel` options override them for one dialog. Assigning to `Expressive.Dialogs.i18n` changes them for every later call.
 - R8. The dialog element is removed from the document after it closes, and its listeners go with it. Two calls in a row open two independent dialogs, each resolving its own promise.
 - R9. The dialogs docs page and the Dialogs section of `llm.md` document `Dialogs.confirm()`, its options, the resolve values, focus behavior and `Dialogs.i18n`. The docs advise a specific confirm verb such as "Delete" over the "OK" default. The changelog has an Added entry.
+- R11. When page code removes the open dialog, for example on a route change, the promise resolves `false`. Removing an open dialog fires no `close` event, so without this the promise would never settle. Found in the code review on 2026-10-25.
+- R12. TypeScript users can import the `ConfirmOptions` type from the package entries. Found in the code review on 2026-10-25.
 - R10. The JavaScript bundle's new gzip size is recorded in a reviewed budget line in `tests/selective-builds.test.js`, and the generated skill and MCP copies are current. These are framework constraints in `tech-stack.md`, so they hold even though the interview did not pick them as acceptance checks.
 
 ### Exclusions
@@ -66,6 +68,18 @@ These follow from the code and can change during implementation if the code or t
 - The cancel button carries `autofocus`. In group 3's mutation run, every engine still focused Cancel without it, because Cancel is the first focusable element. The attribute keeps R5 true if the button order ever changes, and only the jsdom case detects its removal.
 - Keep each new function below cyclomatic complexity 5 for the fallow gate, for example by building the markup in one helper and wiring the close handler in another.
 - The `dialog` entry in `semantics.json` stays as it is. The semantics roster and guide tests passed without a change.
+
+### Found in the code review on 2026-10-25
+
+- Removing the open dialog left the promise pending in all three engines, because removal fires no `close` event. `confirm()` now watches the document with a `MutationObserver` while the dialog is open and resolves `false` once the dialog is disconnected (R11). The spec still excludes aborting from script; this needs no new option.
+- `ConfirmOptions` was not exported from `index.ts` or `modular.ts` (R12).
+- The Dialogs section of `llm.md` said a scrim click does not close a dialog, which contradicted `Dialogs.Init()` light dismiss and the new confirm text. It now has the docs page's light-dismiss paragraph.
+- With `dialog.remove()` mutated away, the jsdom resolve test hung instead of failing. It now picks the open dialog, and the removal test races a timer.
+- `_name()` takes the id prefix instead of deriving the heading id from the text's id.
+- JS gzip rose to 95,687 bytes (+21 over the first measurement, +381 from the merge-base).
+- The branch was rebased onto `81b17cdbb` (#427) before the PR. Re-measured from that base (95,625), JS gzip is 96,008 (+383).
+- The branch was rebased again onto `0630992c4` (#429) after the PR opened. Against that base, measured at 96,981, JS gzip is 97,371 (+390).
+- In the merge train, the branch was rebased onto `66e730fba` (#432). Against that base, measured at 98,835, JS gzip is 99,221 (+386).
 
 ### Open decisions
 

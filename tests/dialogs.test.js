@@ -215,13 +215,23 @@ describe('Dialogs.confirm', () => {
   });
 
   test('resolves true for the confirm value and false otherwise', async () => {
+    // The open dialog, so a dialog left behind after closing cannot hang the test.
+    const open = () => document.querySelector('dialog[open]');
     const yes = Dialogs.confirm({ text: 'a' });
-    answer(dialogs()[0], 'confirm');
+    answer(open(), 'confirm');
     assert.equal(await yes, true);
 
     const no = Dialogs.confirm({ text: 'b' });
-    dialogs()[0].close();
+    open().close();
     assert.equal(await no, false);
+  });
+
+  test('resolves false when page code removes the open dialog', async () => {
+    const answer = Dialogs.confirm({ text: 'a' });
+    document.body.innerHTML = '';
+    // Race a timer, so a promise that never settles fails instead of hanging.
+    const pending = new Promise((resolve) => setTimeout(resolve, 100, 'pending'));
+    assert.equal(await Promise.race([answer, pending]), false);
   });
 
   test('removes each dialog after it closes, and two calls resolve independently', async () => {

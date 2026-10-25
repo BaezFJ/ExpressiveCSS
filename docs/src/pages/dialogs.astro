@@ -216,7 +216,9 @@ if (ok) deleteDraft();
           <code>text</code> is the question and is required. <code>headline</code>
           is optional. With a headline, the dialog is named by it and described
           by the text; without one, the text names it. All four strings are set
-          as text, so markup in them is shown, not parsed.
+          as text, so markup in them is shown, not parsed. If page code
+          removes the open dialog, for example on a route change, the promise
+          resolves <code>false</code>.
         </p>
         <p>
           Focus starts on Cancel, the less destructive action, and the browser

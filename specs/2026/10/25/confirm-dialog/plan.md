@@ -60,3 +60,17 @@ Prerequisites: group 3.
 Completion check: V11 to V13 pass.
 
 Covers R9, R10, and V11 to V13.
+
+## Group 5: review fixes
+
+Prerequisites: group 4.
+
+- [x] Resolve `false` when page code removes the open dialog, through a `MutationObserver` that disconnects once the promise settles (R11).
+- [x] Export the `ConfirmOptions` type from `modular.ts` (R12).
+- [x] Replace the contradicting scrim sentence in the `llm.md` Dialogs section.
+- [x] Make the jsdom resolve test pick the open dialog, add V14 and V15, and pass the id prefix to `_name()`.
+- [x] Re-measure the budget, run `npm run build:skill` last, then `check:generated` and `npm run verify`.
+
+Completion check: V14 and V15 pass, and each fails against a build without the observer.
+
+Covers R11, R12, and V14, V15.
