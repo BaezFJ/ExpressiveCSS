@@ -35,12 +35,12 @@ Covers R1, R2, R3.
 
 Prerequisites: group 2.
 
-- [ ] Add `tests/defer-render-browser.test.js`, looping over Chromium, Firefox and WebKit, with a 5,000-row `.list.defer-render` fixture inside a fixed-height scroll container.
-- [ ] Case for V1: the link in an off-screen row reports `checkVisibility({ contentVisibilityAuto: true })` false, then true after it scrolls into view.
-- [ ] Case for V2: a skipped row's block size equals `--defer-render-row-size`, and a custom value on the list changes it.
-- [ ] Case for V3: tab to a link that fills a deferred row and check that the outline sits inside the row box.
-- [ ] Case for V4: an off-screen row's text appears in the list's ARIA snapshot and is found by `window.find()` where the engine has it.
-- [ ] Run the file against a build without group 2 and confirm V1 to V3 fail, then against the new build and confirm all cases pass. Tear down the page in `finally` blocks.
+- [x] Add `tests/defer-render-browser.test.js`, looping over Chromium, Firefox and WebKit, with a 5,000-row `.list.defer-render` fixture inside a fixed-height scroll container.
+- [x] Case for V1: the link in an off-screen row reports `checkVisibility({ contentVisibilityAuto: true })` false, then true after it scrolls into view.
+- [x] Case for V2: a skipped row's block size equals `--defer-render-row-size`, and a custom value on the list changes it.
+- [x] Case for V3: tab to a link that fills a deferred row and check that the outline sits inside the row box.
+- [x] Case for V4: an off-screen row's text appears in the list's ARIA snapshot and is found by `window.find()` where the engine has it.
+- [x] Run the file against a build without group 2 and confirm V1 to V3 fail, then against the new build and confirm all cases pass. Tear down the page in `finally` blocks.
 
 Completion check: `node --test tests/defer-render-browser.test.js` passes in all three engines and fails against the base build.
 
