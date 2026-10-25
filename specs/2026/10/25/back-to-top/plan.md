@@ -37,10 +37,12 @@ Covers R1 to R5, R8.
 
 Prerequisites: group 2.
 
-- [ ] Add `src/sass/components/_back-to-top.scss` and forward it from `src/sass/components/_index.scss`.
-- [ ] Place the link with `position: fixed` at `inset-inline-end` and `bottom` of `--md-comp-back-to-top-offset` (16px), with `z-index: var(--md-comp-back-to-top-z)` (997). Reuse the `circle extra` FAB look, sizing any icon-holding box in `rem()`.
-- [ ] Style `.back-to-top[inert]` as `visibility: hidden` and `opacity: 0`, with a fade on the effects spring that is `none` under `prefers-reduced-motion: reduce`.
-- [ ] Hide the link in print, as the print stylesheet does for the FAB menu.
+- [x] Add `src/sass/components/_back-to-top.scss` and forward it from `src/sass/components/_index.scss`.
+- [x] Place the link with `position: fixed` at `inset-inline-end` and `bottom` of `--md-comp-back-to-top-offset` (16px), with `z-index: var(--md-comp-back-to-top-z)` (997). Reuse the FAB look: the markup adds `button circle extra`, which already sizes the box in `rem()`, so the partial only places and hides the link.
+- [x] Style `.back-to-top[inert]` as `visibility: hidden` and `opacity: 0`, with a fade on the effects spring that is `none` under `prefers-reduced-motion: reduce`.
+- [x] Hide the link in print, as the print stylesheet does for the FAB menu.
+
+- [x] Add the `back-to-top` row to `semantics.json` and run `npm run build:semantics`. Moved here from group 5, because the semantics roster test fails for a Sass component without a row.
 
 Completion check: `npm run build:css` passes, the built CSS holds the rules, and a page without the script shows the link.
 
@@ -67,7 +69,6 @@ Covers R1 to R8.
 
 Prerequisites: group 4.
 
-- [ ] Add the `back-to-top` entry to `semantics.json` and run `npm run build:semantics`.
 - [ ] Add a docs page under `docs/src/pages/` with a live example, the `threshold` option, the custom properties, the `.fab-menu` corner, and the window-only limit. Add it to the docs catalogue (`docs/src/data/nav.ts`) and, if it lists every component, `docs/src/data/component-decisions.json`.
 - [ ] Add the same reference to `llm.md` and an Added entry to `CHANGELOG.md` under Unreleased.
 - [ ] Rebuild, measure the CSS and JavaScript gzip sizes against the merge-base build, and add a reviewed budget line to `tests/selective-builds.test.js`.
