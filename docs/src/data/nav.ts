@@ -593,6 +593,13 @@ export const NAV: DocsGroup[] = [
           "A panel that opens from a button and stays until dismissed, on the native popover attribute.",
       },
       {
+        id: "hover_card",
+        label: "Hover card",
+        route: "/hover-card.html",
+        description:
+          "Shows a card of preview content after a delay when a link is hovered or gets keyboard focus.",
+      },
+      {
         id: "tour",
         label: "Tour",
         route: "/tour.html",

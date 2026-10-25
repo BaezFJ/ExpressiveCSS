@@ -254,7 +254,11 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the sankey chart: flows read from the table, nodes in columns, links on one scale, node names and colors, link keys, pointer hits and tooltip, and update() motion: 97,012 gzip bytes (+1,387).
   // Reviewed the funnel chart: a centered stage per row as wide as its value against the largest, and the tooltip's share of the first stage: 97,313 gzip bytes (+332 over master's 96,981 build).
   // Reviewed the transfer list: rows moved by its four buttons and back to their slots, the chosen values in the form data, the announcement, expressive:transfer and form reset: 98,124 gzip bytes (+811).
-  assert.ok(sizes(js).gzip <= 98124, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the hover card: a link's aria-details card shown with showPopover({ source }), open(), close() and destroy(): 98,362 gzip bytes (+238).
+  // Reviewed hover card timers: shown after enterDelay while the pointer is on the link or card, hidden after exitDelay, touch ignored: 98,543 gzip bytes (+181).
+  // Reviewed hover card keyboard focus holding the card, and Escape taken only from the link or card, with focus back on the link: 98,727 gzip bytes (+184).
+  // Reviewed hover card review fixes: a shared card handed between links on a named anchor, no state left by a failed showPopover, and Escape left to IME composition: 98,837 gzip bytes (+110).
+  assert.ok(sizes(js).gzip <= 98837, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

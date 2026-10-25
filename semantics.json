@@ -43,6 +43,7 @@
     "autocomplete",
     "character-counter",
     "currency-input",
+    "hover-card",
     "input-mask",
     "landmarks"
   ],
@@ -905,6 +906,28 @@
           "selector": "[data-currency]:not(input:is(:not([type]), [type=\"text\" i])), [data-currency=\"\"]",
           "fragmentSafe": true,
           "message": "Put data-currency, with a currency code such as EUR, on an <input> of type text. Other input types reject a formatted amount such as 1.234,50 €, and AutoInit skips them; a <textarea> is not formatted."
+        }
+      ]
+    },
+    "hover-card": {
+      "status": "enforced",
+      "note": "Added with the hover card component. The author writes a link with the hover-card-trigger class and points its aria-details at a .popover with popover=\"hint\"; AutoInit shows that card after a delay when the link is hovered or gets keyboard focus. The card is extra detail, so it is not a tooltip and not the link's description.",
+      "rules": [
+        {
+          "id": "hover-card-trigger-is-a-link",
+          "kind": "forbid",
+          "selector": ".hover-card-trigger:not(a[href])",
+          "fragmentSafe": true,
+          "message": "Put hover-card-trigger on an <a href>. The card previews where the link goes, and a tap or click still has to follow it; a button already has a popover that opens on press."
+        },
+        {
+          "id": "hover-card-names-its-card",
+          "kind": "require-idref",
+          "selector": ".hover-card-trigger",
+          "attr": "aria-details",
+          "container": "body",
+          "targetSelector": "[popover]",
+          "message": "Point the trigger's aria-details at the id of its card, a [popover] element in the page. The component finds the card through it, and screen readers use it to reach the card."
         }
       ]
     },

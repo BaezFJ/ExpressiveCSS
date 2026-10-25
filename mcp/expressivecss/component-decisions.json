@@ -5383,6 +5383,96 @@
       }
     },
     {
+      "slug": "hover-card",
+      "title": "Hover card",
+      "aliases": [
+        "hovercard",
+        "link preview",
+        "preview card",
+        "profile card"
+      ],
+      "guideSource": {
+        "pageId": "hover_card",
+        "heading": "Hover card",
+        "headingLevel": 2,
+        "semantics": [
+          "hover-card"
+        ]
+      },
+      "jobs": [
+        "Shows a card of preview content after a delay when a link is hovered or gets keyboard focus."
+      ],
+      "useWhen": [
+        "Preview where a link goes, such as a person, repository or article, for people who hover or tab to it, when the linked page holds the same content."
+      ],
+      "avoidWhen": [
+        "A short label for a control needs a tooltip; content touch users must reach, or anything to act on, belongs in the page, a popover opened by a button or a dialog."
+      ],
+      "alternatives": [
+        "tooltips",
+        "popover"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/hover-card.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#hover-card",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "A link with hover-card-trigger whose aria-details names a .popover with popover=\"hint\"; the card shows against the link after enterDelay of hover or keyboard focus, stays while the pointer or focus is on the link or card, hides after exitDelay or at once on Escape with focus back on the link, and a tap or click follows the link.",
+          "webAdaptation": "Script timers decide when the card shows, and showPopover({ source }) makes the link its anchor and invoker, so the browser places it, puts it next in the Tab order and light-dismisses it. Interest invokers (interestfor) exist only in Chromium, so they are not used.",
+          "limitations": [
+            "Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified. Touch shows no card, and the card's content is static markup."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Show the card on hover and keyboard focus after a delay, keep it open while the pointer or focus is on the link or the card, hide it on Escape with focus back on the link, leave the link's click alone and relate the card to the link with aria-details."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "An author name in an article previews the author's profile in a hover card; an icon button's label is a tooltip, and a note people open on press is a popover.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/ts/components/hoverCard.ts",
+            "sha256": "6e08cd305135d7280bc515e9e1b262f51c86959b3339270f312c7ae53a34e2bf"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified.",
+            "nextStep": "Tab to a hover card link with VoiceOver and NVDA and confirm the details relationship is announced and the card is reachable."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/hover-card-browser.test.js",
+            "name": "chromium: hovering the link shows the card after the delay, and it stays while the pointer is on the card",
+            "scope": "Nothing before enterDelay, the card against the link's bottom edge plus the popover gap, staying open with the pointer on the card past exitDelay, and hiding once the pointer has left both."
+          },
+          {
+            "file": "tests/hover-card-browser.test.js",
+            "name": "chromium: keyboard focus shows the card, Tab moves into it, and Escape hides it with focus back on the link",
+            "scope": "Tab to the link shows the card after enterDelay with focus kept on the link, Tab into the card keeps it open, and Escape hides it with focus back on the link."
+          }
+        ]
+      }
+    },
+    {
       "slug": "tour",
       "title": "Tour",
       "aliases": [
@@ -13099,5 +13189,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "4f55797f9e6b54337d165cb76efdfabe9d8181fb"
+  "sourceRevision": "796fd5483c97852a2af8e7d59817c397df08d147"
 }

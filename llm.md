@@ -367,6 +367,7 @@ function unmount() {
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
+| `HoverCard` | `.hover-card-trigger` |
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
 
@@ -404,7 +405,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:create` | Autocomplete, from its `Add` row | `{ text }` |
 | `expressive:chip-add`, `chip-select`, `chip-delete` | Chips | `{ chip }` |
 | `expressive:change` | ButtonGroup, Menu checkbox and radio items, ScrollSpy (from the section), Tour | `{ button, pressed }`, `{ item, checked }`, `{ link }`, `{ step, index }` |
-| `expressive:open`, `expressive:close` | Tooltip, Snackbar, Tour | Tour's close: `{ completed }` |
+| `expressive:open`, `expressive:close` | Tooltip, HoverCard, Snackbar, Tour | Tour's close: `{ completed }` |
 | `expressive:action`, `expressive:closed` | Snackbar | none |
 | `expressive:copy` | Copy buttons | `{ text, copied }` |
 | `expressive:refresh` | Pull-to-refresh | `{ waitUntil }` |
@@ -5183,6 +5184,58 @@ Name an icon-only button for what it explains, not "Info". The panel follows the
 
 ---
 
+## Hover card
+
+Shows a card of preview content after a delay when a link is hovered or gets keyboard focus.
+
+Add `hover-card-trigger` to an `<a href>` and point its `aria-details` at the card, a `.popover` with `popover="hint"`. `AutoInit()` starts every `.hover-card-trigger`. Once the pointer or keyboard focus has rested on the link for `enterDelay`, 500 ms by default, the card shows against the link: below it with start edges aligned, flipped to the other side when it would not fit. A pointer that only passes over the link shows nothing.
+
+The card stays while the pointer is on the link or the card, and while focus is on either. When both are left, it hides after `exitDelay`, 300 ms by default, so a pointer that crosses the gap to the card keeps it open. Focus stays on the link when the card shows, and Tab moves into the card's links and buttons. Escape hides the card and takes focus in it back to the link. A click elsewhere hides it too. One hint card shows at a time, and a hover card leaves an open menu or popover alone. Several links can name the same card, such as a name mentioned twice, and the card shows against whichever link showed it last.
+
+A tap or click follows the link and shows no card, so the linked page has to hold the same content for touch screens. Keep the card a short preview of where the link goes, and put anything to act on in the page, a popover opened by a button or a dialog. Do not also give the link `interestfor`, which Chromium would handle on its own as well.
+
+```html
+<p>Written by <a class="hover-card-trigger" href="/people/ada" aria-details="ada-card">Ada Lovelace</a>.</p>
+<div id="ada-card" class="popover" popover="hint">
+  <h3>Ada Lovelace</h3>
+  <p>Mathematician. Wrote the first published program, for the Analytical Engine.</p>
+  <p><a href="/people/ada/articles">All articles by Ada</a></p>
+</div>
+```
+
+### Accessibility
+
+`aria-details` tells a screen reader that the link has more detail and lets it move there. Screen readers support it unevenly, and a hidden card is not in the reading order at all, which is another reason the linked page must hold the same content. Leave the role off the card: it can hold links, which a tooltip cannot.
+
+### Options
+
+Constructor and `init` options. `data-hover-card-options` sets them from the markup.
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `enterDelay` | Number | `500` | How long the pointer or keyboard focus rests on the link before the card shows, in milliseconds. |
+| `exitDelay` | Number | `300` | How long the card stays after the pointer and focus leave the link and the card, in milliseconds. |
+
+### Methods
+
+#### .open()
+
+Shows the card now, without `enterDelay`.
+
+#### .close()
+
+Hides the card now, without `exitDelay`.
+
+#### .destroy()
+
+Hides a card the instance showed and removes the listeners. The link and card keep the markup as written.
+
+### Events
+
+`expressive:open` and `expressive:close` fire from the link when the card shows and hides, also when the browser hides it on Escape or a click elsewhere.
+
+---
+
 ## Stepper
 
 Progress through a fixed sequence of steps, such as a checkout, with each step's state.
@@ -6161,6 +6214,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
+| `HoverCard` | `.hover-card-trigger` |
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
 

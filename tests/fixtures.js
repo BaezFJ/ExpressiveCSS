@@ -151,6 +151,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<div class="field"><input id="phone" type="tel" inputmode="numeric" placeholder=" " data-mask="(000) 000-0000"><label for="phone">Phone</label></div>`,
   },
   {
+    name: "HoverCard",
+    selector: ".hover-card-trigger",
+    html: `<p><a class="hover-card-trigger" href="#ada" aria-details="ada-card">Ada Lovelace</a></p><div id="ada-card" class="popover" popover="hint"><h3>Ada Lovelace</h3><p>Wrote the first published program.</p></div>`,
+  },
+  {
     name: "CurrencyInput",
     selector: "input[data-currency]",
     html: `<div class="field"><input id="price" type="text" inputmode="decimal" placeholder=" " data-currency="EUR"><label for="price">Price in euros</label></div>`,

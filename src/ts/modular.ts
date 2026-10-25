@@ -44,6 +44,7 @@ export type * from './components/pullToRefresh';
 export type * from './components/loadingOverlay';
 export type * from './components/swipeActions';
 export type * from './components/inputMask';
+export type * from './components/hoverCard';
 export type * from './components/currencyInput';
 export type * from './components/commandPalette';
 export type * from './components/questionnaire';

@@ -364,6 +364,18 @@ test('a currency code goes only on a text input', () => {
   assert.equal(broken('<input data-currency="JPY">'), 0);
 });
 
+test('a hover card trigger is a link that names its card', () => {
+  const broken = (html, id) => violations(html, enforcedRules, data.compositeRoles)
+    .filter((v) => v.rule.id === id).length;
+  const card = '<div id="c" class="popover" popover="hint">Ada</div>';
+  assert.equal(broken(`<a class="hover-card-trigger" href="/ada" aria-details="c">Ada</a>${card}`, 'hover-card-trigger-is-a-link'), 0);
+  assert.equal(broken(`<a class="hover-card-trigger" href="/ada" aria-details="c">Ada</a>${card}`, 'hover-card-names-its-card'), 0);
+  assert.equal(broken(`<button class="hover-card-trigger" aria-details="c">Ada</button>${card}`, 'hover-card-trigger-is-a-link'), 1);
+  assert.equal(broken(`<a class="hover-card-trigger" aria-details="c">Ada</a>${card}`, 'hover-card-trigger-is-a-link'), 1);
+  assert.equal(broken(`<a class="hover-card-trigger" href="/ada">Ada</a>${card}`, 'hover-card-names-its-card'), 1);
+  assert.equal(broken('<a class="hover-card-trigger" href="/ada" aria-details="c">Ada</a><div id="c">Ada</div>', 'hover-card-names-its-card'), 1);
+});
+
 test('a transfer list has a name, unnamed checkboxes and labelled lists', () => {
   const broken = (html, id) => violations(html, enforcedRules, data.compositeRoles).filter((v) => v.rule.id === id).length;
   const lists = '<ul class="list transfer-available" aria-label="Available"><li><label><input type="checkbox" value="a"> A</label></li></ul>'

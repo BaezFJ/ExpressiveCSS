@@ -94,6 +94,7 @@ export const AUTO_INIT_COMPONENTS = {
     selector: ".time-picker",
   },
   Tooltip: { component: Components.Tooltip, selector: ".tooltipped" },
+  HoverCard: { component: Components.HoverCard, selector: ".hover-card-trigger" },
   FloatingActionButton: {
     component: Components.FloatingActionButton,
     selector: ".fab-menu",

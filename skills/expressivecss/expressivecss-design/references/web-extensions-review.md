@@ -302,6 +302,20 @@ Verification gap: Anchoring and flipping in LTR and RTL, light dismiss, Escape a
 
 Mapped browser scope: Default, top and end placement against the button in LTR and RTL, both-axis flip at the viewport corner, Escape with focus return, outside click, staying open for an inner button, one auto popover at a time and the Chromium expanded state. No spoken-output assertion.
 
+## [Hover card](../../components/hover-card.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Show the card on hover and keyboard focus after a delay, keep it open while the pointer or focus is on the link or the card, hide it on Escape with focus back on the link, leave the link's click alone and relate the card to the link with aria-details.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory; the closest is the rich tooltip, which takes the tooltip role and so cannot hold links. The page writes the link, its aria-details and the card; the framework times showing and hiding, shows the card with the link as its source and takes Escape. The browser owns the top layer, the anchoring, the Tab order into the card and light dismiss.
+
+Verification gap: Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified. Next check: Tab to a hover card link with VoiceOver and NVDA and confirm the details relationship is announced and the card is reachable.
+
+Mapped browser scope: Hover with the delay, the card's place against the link, staying open on the card and hiding after exitDelay; keyboard focus, Tab into the card, Escape with focus return, focus leaving the card and a click that focuses the link. No spoken-output assertion.
+
 ## [Drop zone](../../components/drop-zone.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
