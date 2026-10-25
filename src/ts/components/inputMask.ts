@@ -8,6 +8,9 @@ type Token = { accepts: RegExp } | { literal: string };
 /** What each slot character in a mask accepts. */
 const SLOTS: Record<string, RegExp> = { '0': /[0-9]/, a: /\p{L}/u, '*': /[0-9\p{L}]/u };
 
+/** Which way a one-character delete from a collapsed caret goes. */
+const DELETES: Record<string, number> = { deleteContentBackward: -1, deleteContentForward: 1 };
+
 /** Splits a mask into tokens. A backslash makes the character after it a literal. */
 const parse = (mask: string): Token[] =>
   (mask.match(/\\[^]|[^]/gu) ?? []).map((part) => (SLOTS[part] ? { accepts: SLOTS[part] } : { literal: part.slice(-1) }));
@@ -96,6 +99,10 @@ export class InputMask extends Component<BaseOptions> {
     // fire the last input before or after compositionend, and formatting
     // twice changes nothing.
     el.addEventListener('compositionend', this._format, { signal });
+    el.addEventListener('beforeinput', this._onBeforeInput, { signal });
+    // The form resets its fields after the reset event, so the mask formats
+    // the restored value a task later.
+    el.ownerDocument.addEventListener('reset', this._onReset, { capture: true, signal });
     this._rewrite();
   }
 
@@ -105,6 +112,47 @@ export class InputMask extends Component<BaseOptions> {
 
   private _onInput = (e: InputEvent) => {
     if (!e.isComposing) this._format();
+  };
+
+  /**
+   * Backspace after a literal, or Delete before one, would remove the
+   * literal, which the mask then writes back. It removes the slot character
+   * across the literal instead.
+   */
+  private _onBeforeInput = (e: InputEvent) => {
+    const step = DELETES[e.inputType];
+    const index = step && this.el.selectionStart === this.el.selectionEnd ? this._acrossLiteral(step) : -1;
+    if (index < 0) return;
+    e.preventDefault();
+    this._remove(index, e.inputType);
+  };
+
+  /** The index among the slot characters to delete when the character `step` from the caret is a literal, or -1. */
+  private _acrossLiteral(step: number) {
+    const { selectionStart: caret, value } = this.el;
+    const here = read(this._tokens, value, caret);
+    const index = here.before + Math.min(step, 0);
+    // Stepping over a literal passes no slot character.
+    return read(this._tokens, value, caret + step).before === here.before && index in here.chars ? index : -1;
+  }
+
+  /** Removes slot character `index`, puts the caret where it was, and reports the edit as typing would. */
+  private _remove(index: number, inputType: string) {
+    const { chars } = read(this._tokens, this.el.value, 0);
+    chars.splice(index, 1);
+    const { text, ends } = write(this._tokens, chars);
+    this.el.value = text;
+    const caret = ends[index - 1] ?? 0;
+    this.el.setSelectionRange(caret, caret);
+    this.el.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true, inputType }));
+  }
+
+  private _onReset = (e: Event) => {
+    if (e.target === this.el.form) setTimeout(this._afterReset);
+  };
+
+  private _afterReset = () => {
+    if (!this._events.signal.aborted) this._rewrite();
   };
 
   private _format = () => {

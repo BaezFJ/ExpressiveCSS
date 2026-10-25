@@ -26,12 +26,12 @@ Outcome: composition, deletion across literals, mid-value edits, reset, Keypad i
 
 Prerequisites: group 1.
 
-- [ ] Add V2 to V8 and record which fail.
-- [ ] Skip `input` events while composing, using `Utils.isComposing()` or a flag set between `compositionstart` and `compositionend`, and format once when the composition ends, in either event order. Normalize text with NFKC before matching.
-- [ ] Handle Backspace and Delete next to a literal, and selection deletes, in a `beforeinput` listener.
-- [ ] Format the default value after a form reset, and make `destroy()` remove every listener.
-- [ ] Record what each engine does to undo history after a formatted edit, for the docs.
-- [ ] Rebuild and rerun until V1 to V9 pass in all three engines. Update the budget line.
+- [x] Add V2 to V8 and record which fail.
+- [x] Skip `input` events while composing, using `Utils.isComposing()` or a flag set between `compositionstart` and `compositionend`, and format once when the composition ends, in either event order. Normalize text with NFKC before matching.
+- [x] Handle Backspace and Delete next to a literal, and selection deletes, in a `beforeinput` listener.
+- [x] Format the default value after a form reset, and make `destroy()` remove every listener.
+- [x] Record what each engine does to undo history after a formatted edit, for the docs.
+- [x] Rebuild and rerun until V1 to V9 pass in all three engines. Update the budget line.
 
 Completion check: V1 to V9 pass in Chromium, Firefox and WebKit.
 
