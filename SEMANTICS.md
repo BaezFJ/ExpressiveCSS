@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**102 of 102 rows enforced; 0 remaining.**
+**107 of 107 rows enforced; 0 remaining.**
 
-97 of those rows are components - a part of the framework an author writes markup for.
+102 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 97 components declare conformance debt.**
+**2 of 102 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -116,6 +116,20 @@ Added with the avatar component. Initials and icon ligatures read as letters, so
 - **avatar-image-has-alt** - Give an avatar image alt text naming the person, or alt="" when their name is already beside it.
 - **avatar-is-an-image-or-hidden** - Initials read as separate letters and an icon reads as its ligature name. Give a non-image avatar role="img" and a name, or aria-hidden="true" when the person is named next to it.
 - **avatar-image-role-is-named** - An avatar with role="img" needs aria-label or aria-labelledby. Its initials are hidden from the name computation of an image.
+
+### back-to-top
+
+Added with the back-to-top component. An in-page link, so it jumps to its target without the script. BackToTop keeps it inert until the window scrolls past the threshold, then scrolls to the top and focuses the target. Inert is the framework's dynamic state.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `back-to-top-is-an-in-page-link` | forbid | `.back-to-top:not(a[href^="#"])` | must not match |
+| `back-to-top-is-named` | require-accessible-name | `.back-to-top` | must end up with an accessible name |
+| `back-to-top-inert-is-not-authored` | forbid | `.back-to-top[inert]` | must not match |
+
+- **back-to-top-is-an-in-page-link** - Make .back-to-top an <a> whose href names an element on the page, such as #main. The link works without the script, and the script focuses that element.
+- **back-to-top-is-named** - The link usually holds only an icon. Give it an aria-label such as "Back to top".
+- **back-to-top-inert-is-not-authored** - Hidden is dynamic state, so the framework owns it. BackToTop sets inert while the page is above the threshold and removes it past it; authoring it hides the link from a page without the script.
 
 ### badges
 
@@ -274,6 +288,24 @@ Swept 0.8.0. Material 3 items remain exposed because several can be visible at o
 - **hidden-subtree-holds-nothing-focusable** - Hidden from assistive technology but still in the tab order: focus lands on a control the user has no way to perceive. Take away the tab stop (tabindex="-1"), or mark the subtree inert when it is genuinely not displayed - inert also removes it from hit-testing, which is wrong for anything still visible.
 - **carousel-not-a-composite-widget** - A carousel takes no composite role; it is a group of slides with independent controls.
 - **carousel-indicators-are-not-tabs** - Carousel indicators are independent controls, not tabs.
+
+### cascader
+
+Added with the cascader component. The author writes a text input, its label and a ul.cascader-options of nested lists with one data-value per option; AutoInit builds the columns, their listbox and option roles and their states in a popover, so the author's lists stay plain lists.
+
+**Rejected role:** `listbox` is not withheld but declined - the author's lists are only the source the script reads and are never shown; the listbox columns it builds in the popover carry the roles, states and arrow-key contract. `cascader-lists-take-no-roles` enforces that.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `cascader-lists-take-no-roles` | forbid | `.cascader-options[role], .cascader-options [role]` | must not match |
+| `cascader-option-has-value` | forbid | `.cascader-options li:not([data-value])` | must not match |
+| `cascader-needs-a-text-field` | forbid | `.cascader > input:not(:is(:not([type]), [type="text" i]))` | must not match |
+| `cascader-input-is-named` | forbid | `.cascader:not(:has(> label[for])) > input:not([aria-label]):not([aria-labelledby])` | must not match |
+
+- **cascader-lists-take-no-roles** - Leave roles off .cascader-options and its items. The lists are the source the script reads; it builds the listbox columns, with their roles and states, itself.
+- **cascader-option-has-value** - Give every option in .cascader-options a data-value. The form submits one value per level of the chosen path, and an option without one submits an empty string.
+- **cascader-needs-a-text-field** - A .cascader shows the chosen path in an <input> of type text, which the script makes read-only. Other input types reject the path's labels.
+- **cascader-input-is-named** - Name the cascader's input with a <label for> in the field, or aria-label. The popover and its first column take their name from the same label.
 
 ### character-counter
 
@@ -652,6 +684,18 @@ Added with the heatmap chart component. The <table> is the chart's text alternat
 
 - **heatmap-chart-is-a-figure-with-a-table** - Write .heatmap-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
 - **heatmap-chart-has-a-caption** - Name a .heatmap-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
+
+### hover-card
+
+Added with the hover card component. The author writes a link with the hover-card-trigger class and points its aria-details at a .popover with popover="hint"; AutoInit shows that card after a delay when the link is hovered or gets keyboard focus. The card is extra detail, so it is not a tooltip and not the link's description.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `hover-card-trigger-is-a-link` | forbid | `.hover-card-trigger:not(a[href])` | must not match |
+| `hover-card-names-its-card` | require-idref | `.hover-card-trigger` | `aria-details` must reference `[popover]` inside `body` |
+
+- **hover-card-trigger-is-a-link** - Put hover-card-trigger on an <a href>. The card previews where the link goes, and a tap or click still has to follow it; a button already has a popover that opens on press.
+- **hover-card-names-its-card** - Point the trigger's aria-details at the id of its card, a [popover] element in the page. The component finds the card through it, and screen readers use it to reach the card.
 
 ### icon-buttons
 
@@ -1151,6 +1195,18 @@ The bar is a `<search>` landmark holding an `<input type="search">`; the view is
 - **search-view-not-a-composite-widget** - The search view takes no composite role. Its contents are links and buttons reached with Tab; the combobox and listbox belong to the Autocomplete on the bar's input.
 - **search-bar-holds-a-search-input** - The bar's control is a search input. `type="search"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it.
 
+### show-more
+
+Added with the show-more component. The author writes clamped text and the button that expands it; AutoInit sets the button's aria-expanded and aria-controls, swaps its label while the text is open, and hides it when the text already fits.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `show-more-needs-a-button` | forbid | `.show-more:not(:has(> button[type="button" i]))` | must not match |
+| `show-more-needs-clamped-text` | forbid | `.show-more:not(:has(> :is(.line-clamp-1, .line-clamp-2, .line-clamp-3)))` | must not match |
+
+- **show-more-needs-a-button** - Give a .show-more a <button type="button"> child. A <span> or <div> with role="button" is not operable from the keyboard without script, and a <button> without type="button" submits the form it sits in.
+- **show-more-needs-clamped-text** - Give a .show-more a child with line-clamp-1, line-clamp-2 or line-clamp-3. That is the text the button expands; without it the component does nothing.
+
 ### side-sheet
 
 Swept 0.8.0. A <dialog>, so the dialog rules carry it.
@@ -1364,6 +1420,18 @@ Added with the tree component. Nested lists of native disclosures and links: eve
 
 - **tree-is-not-a-tree-widget** - A .tree takes no ARIA tree roles. It is lists of disclosures and links, which keep their own roles and keyboard behavior.
 - **tree-marks-current-not-selected** - Mark the open file or page with aria-current. aria-selected is not valid on a link or a list item.
+
+### treemap-chart
+
+Added with the treemap chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn rectangles and their text are aria-hidden.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `treemap-chart-is-a-figure-with-a-table` | forbid | `.treemap-chart:not(figure:has(> table))` | must not match |
+| `treemap-chart-has-a-caption` | forbid | `.treemap-chart:not(:has(> figcaption))` | must not match |
+
+- **treemap-chart-is-a-figure-with-a-table** - Write .treemap-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
+- **treemap-chart-has-a-caption** - Name a .treemap-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
 ## Exempt
 

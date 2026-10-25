@@ -48,6 +48,7 @@
 @forward "pull-to-refresh";
 @forward "loading-overlay";
 @forward "swipe-actions";
+@forward "show-more";
 @forward "transfer-list";
 @forward "search";
 @forward "drag-handle";
@@ -87,6 +88,7 @@
 @forward "scatter-chart";
 @forward "funnel-chart";
 @forward "sankey-chart";
+@forward "treemap-chart";
 @forward "aura";
 @forward "kpi";
 @forward "marquee";
@@ -94,3 +96,5 @@
 @forward "particles";
 @forward "keypad";
 @forward "org-chart";
+@forward "back-to-top";
+@forward "cascader";

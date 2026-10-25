@@ -342,6 +342,13 @@ export const NAV: DocsGroup[] = [
           "A circular action that can open a menu of related shortcuts.",
       },
       {
+        id: "back-to-top",
+        label: "Back to top",
+        route: "/back-to-top.html",
+        description:
+          "A link that appears once a long page has scrolled down, and returns to the top with focus on the main content.",
+      },
+      {
         id: "cards",
         section: "Containment",
         label: "Cards",
@@ -398,6 +405,13 @@ export const NAV: DocsGroup[] = [
         route: "/accordion.html",
         description:
           "Stacked disclosures that open one section of content at a time, on native details.",
+      },
+      {
+        id: "show_more",
+        label: "Show more",
+        route: "/show-more.html",
+        description:
+          "Clamped text with a button that shows the rest, and hides itself when the text already fits.",
       },
       {
         id: "data_table",
@@ -513,6 +527,13 @@ export const NAV: DocsGroup[] = [
           "Flows between nodes, each link as thick as its value.",
       },
       {
+        id: "treemap-chart",
+        label: "Treemap chart",
+        route: "/treemap-chart.html",
+        description:
+          "Parts of a whole drawn as rectangles whose areas follow their values.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",
@@ -591,6 +612,13 @@ export const NAV: DocsGroup[] = [
         route: "/popover.html",
         description:
           "A panel that opens from a button and stays until dismissed, on the native popover attribute.",
+      },
+      {
+        id: "hover_card",
+        label: "Hover card",
+        route: "/hover-card.html",
+        description:
+          "Shows a card of preview content after a delay when a link is hovered or gets keyboard focus.",
       },
       {
         id: "tour",
@@ -778,6 +806,13 @@ export const NAV: DocsGroup[] = [
         route: "/select.html",
         description:
           "Choose one option, or several, from a styled menu.",
+      },
+      {
+        id: "cascader",
+        label: "Cascader",
+        route: "/cascader.html",
+        description:
+          "Pick a path through nested options shown in columns, and submit the whole path.",
       },
       {
         id: "checkboxes",

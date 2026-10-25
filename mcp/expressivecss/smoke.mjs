@@ -738,8 +738,8 @@ async function verifyComponentResources(catalogueToolPayload, consumerRoots) {
   const assertCompletion = async (peer) => {
     for (const template of [guideTemplate, sectionTemplate]) {
       assert.deepEqual(await complete(peer, template, 'slug', ''), completed(slugs), `${template} lists every canonical slug`);
-      assert.deepEqual(await complete(peer, template, 'slug', 'ca'), completed(['calendar', 'cards', 'carousel']));
-      assert.deepEqual(await complete(peer, template, 'slug', 'CA'), completed(['calendar', 'cards', 'carousel']), 'slug prefixes ignore case');
+      assert.deepEqual(await complete(peer, template, 'slug', 'ca'), completed(['calendar', 'cards', 'carousel', 'cascader']));
+      assert.deepEqual(await complete(peer, template, 'slug', 'CA'), completed(['calendar', 'cards', 'carousel', 'cascader']), 'slug prefixes ignore case');
       assert.deepEqual(await complete(peer, template, 'slug', 's'), completed(slugs.filter((slug) => slug.startsWith('s'))));
       assert.deepEqual(await complete(peer, template, 'slug', 'date'), completed(['date-picker']));
       for (const slug of slugs) assert.deepEqual((await complete(peer, template, 'slug', slug)).completion.values[0], slug);
@@ -765,7 +765,7 @@ async function verifyComponentResources(catalogueToolPayload, consumerRoots) {
     }
     assert.deepEqual(await complete(peer, catalogueUri, 'slug', ''), noArgument, 'fixed catalogue URI has no arguments');
     await assert.rejects(peer.complete({ ref: { type: 'ref/prompt', name: 'component_guide' }, argument: { name: 'slug', value: '' } }), (error) => error.code === -32602);
-    assert.deepEqual(await complete(peer, guideTemplate, 'slug', 'ca'), completed(['calendar', 'cards', 'carousel']), 'failed completions do not affect later requests');
+    assert.deepEqual(await complete(peer, guideTemplate, 'slug', 'ca'), completed(['calendar', 'cards', 'carousel', 'cascader']), 'failed completions do not affect later requests');
     // Every completed name reads; completion never makes aliases or case variants readable.
     for (const slug of (await complete(peer, guideTemplate, 'slug', '')).completion.values) {
       await read(`${base}/${slug}`);

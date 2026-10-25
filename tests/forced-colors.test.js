@@ -35,6 +35,7 @@ describe('Forced colors', () => {
     'loading overlay scrim': [/^\.loading-overlay::after$/, /forced-color-adjust:\s*none;[\s\S]*background-color:\s*color-mix\(in oklab, Canvas/],
     'active carousel dot': [/^\.carousel \.indicators \.indicator-item:is\(\.active/, SYSTEM_FILL],
     'selected date': [/^\.is-selected \.datepicker-day-button$/, /background-color:\s*Highlight/],
+    'cascader path option': [/^\.cascader-popover \[role=option\]\[aria-selected=true\]$/, OUTLINE],
   };
   for (const [name, [selector, body]] of Object.entries(selected)) {
     test(`keeps the ${name} visible`, () => assert.ok(has(selector, body), name));
@@ -94,10 +95,13 @@ describe('Forced colors edges and glyphs', () => {
     'circular determinate track': [/^\.progress\.circular\.determinate$/, /conic-gradient\(CanvasText 0 var\(--md-comp-progress-value, 0%\), transparent 0\),\s*radial-gradient\([\s\S]*GrayText 0 calc/],
     'questionnaire footer button': [/^:where\(\.questionnaire > footer\) > button:not\(\.outlined, \.text\)$/, EDGE],
     'bar chart track': [/^\.bar-chart\.track \.bar-chart-bars > div$/, EDGE],
+    'treemap chart rectangle': [/^\.treemap-chart-box::before$/, EDGE],
     'search bar': [/^:is\(\.search-bar\):not\(\.search-view \*\)$/, /outline:\s*1px solid CanvasText/],
     'select caret': [/\.caret$/, GLYPH],
     'select check': [/^menu\[role=listbox\]:not\(\.multiple-select-menu\) > li\.selected:not\(\.disabled, \.optgroup\)::after$/, GLYPH],
     'submenu chevron': [/li:has\(> menu\) > :is\(a, button, .*\)::after$/, GLYPH],
+    'cascader chevron': [/^\.cascader-popover \.cascader-chevron$/, GLYPH],
+    'cascader popover': [/^\.cascader-popover$/, EDGE],
     'bottom sheet handle': [/^dialog\.bottom-sheet::before$/, GLYPH],
     'slider stops': [/\.stops::after$/, /--_stop:\s*HighlightText;\s*forced-color-adjust:\s*none/],
   };

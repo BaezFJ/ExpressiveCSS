@@ -1,0 +1,8 @@
+@use "../abstracts" as *;
+
+// Show more. Clamped text and the <button> that shows all of it; the ShowMore
+// component hides the button with the hidden attribute while the text fits,
+// which the button's own display rule would otherwise beat.
+.show-more > button[hidden] {
+  display: none;
+}

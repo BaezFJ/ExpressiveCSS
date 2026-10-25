@@ -1904,6 +1904,100 @@
       "selectionExample": "Speed dials have been removed. Replace legacy fab or fixed-action-btn wrappers with fab-menu and labelled actions; use a toolbar for persistent commands."
     },
     {
+      "slug": "back-to-top",
+      "title": "Back to top",
+      "aliases": [
+        "back to top",
+        "scroll to top",
+        "return to top",
+        "go to top"
+      ],
+      "guideSource": {
+        "pageId": "back-to-top",
+        "heading": "Back to top",
+        "headingLevel": 2,
+        "semantics": [
+          "back-to-top"
+        ]
+      },
+      "jobs": [
+        "A link that appears once a long page has scrolled down, and returns to the top with focus on the main content."
+      ],
+      "useWhen": [
+        "Give readers of a long article, docs page or feed a way back to the top and its navigation without scrolling the whole way."
+      ],
+      "avoidWhen": [
+        "Pages shorter than a few screens, or content that scrolls inside a pane or dialog rather than the window."
+      ],
+      "alternatives": [
+        "fab",
+        "scrollspy"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/back-to-top.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#back-to-top",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "An in-page link styled with the FAB classes, hidden and inert until the window scrolls past a threshold option (one viewport height by default), a focused link kept until focus leaves, a smooth scroll to the top that is instant under reduced motion, focus moved to the href target with a temporary tabindex, the body as the fallback target, modified and already prevented clicks left to the browser, a threshold that is not a CSS length replaced by the default with a warning, markup options, offset and stacking tokens, and a link that still jumps to its target without the script.",
+          "webAdaptation": "An IntersectionObserver on an empty element at the threshold instead of a scroll listener. The hidden state is the inert attribute plus visibility: hidden, with a fade in and an immediate hide, so a script that starts after the first paint does not show the link fading out, and a page without the script never hides the link.",
+          "limitations": [
+            "The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the control out of reach while it is hidden, move focus to the top of the content along with the scroll, honor reduced motion, and keep the link working without the script."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A long changelog page takes a back-to-top link at the bottom corner; a short settings page needs none.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_back-to-top.scss",
+            "sha256": "1c0afbbbf3ef51e1da38773d5f9c64d28a4e8244f46fefcaa9e19cac1e813f1e"
+          },
+          {
+            "path": "src/ts/components/backToTop.ts",
+            "sha256": "23ea9b49c6250aefa363eb85feb7703cab225aedc143e2d93445e595f609328f"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched.",
+            "nextStep": "Activate the link with VoiceOver and NVDA and confirm focus lands on the main content; check it in forced colors."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/back-to-top-browser.test.js",
+            "name": "chromium: the link returns to the top and focuses its target, by click and by Enter",
+            "scope": "Scroll past the threshold, activate by click and by Enter, and find the page at the top, focus on the target, the next Tab on the first control and no tabindex left behind."
+          },
+          {
+            "file": "tests/back-to-top-browser.test.js",
+            "name": "chromium: the link is out of reach above the threshold",
+            "scope": "Above the threshold, before and after scrolling past it, the link is hidden, skipped by Tab, missed by hit testing and absent from the ARIA snapshot. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "cards",
       "title": "Cards",
       "aliases": [
@@ -2672,6 +2766,106 @@
             "file": "tests/accordion-browser.test.js",
             "name": "chromium: accordion joins its tiles, turns the chevron and keeps one item open per name",
             "scope": "Outer, inner and open corner radii, chevron rotation, hidden native marker, exclusive name groups, Enter on a focused summary and the expanded state Chromium reports for each summary. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "show-more",
+      "title": "Show more",
+      "aliases": [
+        "read more",
+        "expand text",
+        "truncated text",
+        "text collapse"
+      ],
+      "guideSource": {
+        "pageId": "show_more",
+        "heading": "Show more",
+        "headingLevel": 2,
+        "semantics": [
+          "show-more"
+        ]
+      },
+      "jobs": [
+        "Clamped text with a button that shows the rest, and hides itself when the text already fits."
+      ],
+      "useWhen": [
+        "A description, review or message that usually runs past a few lines, in a card or list where the full text would push the rest of the layout down."
+      ],
+      "avoidWhen": [
+        "Sections with headings or controls a person needs to find; use an accordion, whose panels the browser's find-in-page can open.",
+        "Text that is short or always matters in full; show all of it."
+      ],
+      "alternatives": [
+        "accordion",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/show-more.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#show-more",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "A .show-more holding text with a line-clamp-1, -2 or -3 class and a <button type=\"button\">; the button sets aria-expanded and aria-controls, shows the full text, reads \"Show less\" while it is open (i18n.showLess or data-show-less), and hides while the clamped text fits, checking again on resize, after web fonts load and on blur.",
+          "webAdaptation": "The component unclamps with inline -webkit-line-clamp and line-clamp, because the utilities layer and prefixed clamp classes beat any component rule. A ResizeObserver on the text and document.fonts.ready run the fit check, scrollHeight against clientHeight with 1px for Firefox's rounding.",
+          "limitations": [
+            "Toggling, the fit check across widths, fractional line heights and window-size prefixes, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output is unverified. Find-in-page does not open clamped text, a font that starts loading after document.fonts.ready has settled is not caught until the next resize, and an icon-only button keeps its aria-label while open."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the control a native button named by visible text, report its expanded state, point it at the text it controls, and hide it from sight and the tab order when there is nothing more to show."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A product card clamps its description to three lines with a Show more text button; a terms-of-service page with headed sections uses an accordion instead.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/ts/components/showMore.ts",
+            "sha256": "d6a961f6810f004ac7d5cdf1575717a2cdbd20cb4ca6d4e08e2ba413f00713d3"
+          },
+          {
+            "path": "src/sass/components/_show-more.scss",
+            "sha256": "430401c741e9628d553e836fb98078fd39a1f64e42f2fa49264a34427638e650"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Toggling, the fit check, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output with VoiceOver and NVDA is unverified.",
+            "nextStep": "Activate the button with VoiceOver and NVDA and check that the expanded state and label are announced."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/show-more-browser.test.js",
+            "name": "chromium: the button shows the full text and collapses it again",
+            "scope": "A click and Enter that unclamp and clamp the text, with aria-expanded and aria-controls."
+          },
+          {
+            "file": "tests/show-more-browser.test.js",
+            "name": "chromium: the button hides while the clamped text fits",
+            "scope": "Text that fits, a fractional line height, a container widened and narrowed, a window-size prefix, Tab order, and a focused button kept through a resize and until blur."
+          },
+          {
+            "file": "tests/show-more-browser.test.js",
+            "name": "chromium: a web font that swaps in hides the button once its text fits",
+            "scope": "A held-back web font that makes cut text fit, and an instance destroyed before the font loads."
           }
         ]
       }
@@ -4332,6 +4526,109 @@
       }
     },
     {
+      "slug": "treemap-chart",
+      "title": "Treemap chart",
+      "aliases": [
+        "tree map",
+        "treemap",
+        "squarified treemap",
+        "rectangle chart"
+      ],
+      "guideSource": {
+        "pageId": "treemap-chart",
+        "heading": "Treemap chart",
+        "headingLevel": 2,
+        "semantics": [
+          "treemap-chart"
+        ]
+      },
+      "jobs": [
+        "Parts of a whole drawn as rectangles whose areas follow their values."
+      ],
+      "useWhen": [
+        "Show how a total splits across many parts, such as a budget across teams or disk space across folders, where a pie would run out of room for slices."
+      ],
+      "avoidWhen": [
+        "Readers need to compare values precisely or the parts have an order; use a bar or column chart. Two to five parts read better as a pie chart."
+      ],
+      "alternatives": [
+        "pie-chart",
+        "bar-chart",
+        "data-table"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/treemap-chart.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#treemap-chart",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "Rectangles drawn from a figure's data table, one per row of the first value column with its area in proportion to the total, in a squarified layout that mirrors in right-to-left pages, with names and cells written in rectangles that hold them, no rectangle for cells that are not positive numbers, six colors, update(), data-watch, and a pointer and keyboard tooltip with each row's share that steps through rows in table order.",
+          "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rectangles are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+          "limitations": [
+            "Areas, the layout in left-to-right and right-to-left pages, gaps, colors, text fitting, keyboard steps, the rectangle under the pointer, the tooltip, update() and data-watch are checked in a browser, and the forced-colors edge is checked in the stylesheet; screen reader output and enlarged text remain unverified. There is one level only: no parent groups, legend, drill-down or animated update()."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the data available as text, name the chart, keep each part identifiable without relying on color alone, and let a keyboard reach every part the pointer can."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A budget split across twelve teams is a treemap chart. Revenue split across three plans is a pie chart.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/abstracts/_mixins.scss",
+            "sha256": "47a0a21ff5ea47c1030e3730605cadb4498d868202a88d89670c3aa55cf09702"
+          },
+          {
+            "path": "src/sass/components/_treemap-chart.scss",
+            "sha256": "a18d6c6bff6123070064a01ac0c6fabbbf4e248d02ebbdcddffcc2d20f3739e9"
+          },
+          {
+            "path": "src/ts/components/lineChart.ts",
+            "sha256": "06a7be0f88231c0368d299a6506643e9aac6fc9a99ac7143ae1d180f98541c71"
+          },
+          {
+            "path": "src/ts/components/treemapChart.ts",
+            "sha256": "146294b6f97121b990cca2e1de1dd96489707e38bdc4c969d52cddba6210be3f"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Areas, layout, gaps, colors, text fitting, keyboard steps, the pointer, the tooltip, update() and data-watch are checked in a browser; screen reader output, forced colors in a browser and enlarged text remain unverified.",
+            "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text in a browser."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/treemap-chart-browser.test.js",
+            "name": "chromium: treemap chart draws each row as a rectangle whose area follows its value",
+            "scope": "Hidden table, the named plot and its role description, separate instances from line charts, each rectangle's area in proportion to its value, the areas covering the plot without overlap, and the squarified layout in left-to-right and right-to-left pages. No spoken-output assertion."
+          },
+          {
+            "file": "tests/treemap-chart-browser.test.js",
+            "name": "chromium: treemap chart steps through its rectangles by key in table order, in either direction",
+            "scope": "Keyboard focus skips a row with no rectangle; arrows, Home, End and Escape step through rows in table order without swapping in a right-to-left page; the outlined rectangle and the live tooltip text with each row's share. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "timeline",
       "title": "Timeline",
       "aliases": [
@@ -5378,6 +5675,96 @@
             "file": "tests/popover-browser.test.js",
             "name": "chromium: popover anchors to its button, flips at the edge and stays open while used",
             "scope": "Default, top and end placement against the button in LTR and RTL, both-axis flip at the viewport corner, Escape with focus return, outside click, staying open for an inner button, one auto popover at a time and the Chromium expanded state. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "hover-card",
+      "title": "Hover card",
+      "aliases": [
+        "hovercard",
+        "link preview",
+        "preview card",
+        "profile card"
+      ],
+      "guideSource": {
+        "pageId": "hover_card",
+        "heading": "Hover card",
+        "headingLevel": 2,
+        "semantics": [
+          "hover-card"
+        ]
+      },
+      "jobs": [
+        "Shows a card of preview content after a delay when a link is hovered or gets keyboard focus."
+      ],
+      "useWhen": [
+        "Preview where a link goes, such as a person, repository or article, for people who hover or tab to it, when the linked page holds the same content."
+      ],
+      "avoidWhen": [
+        "A short label for a control needs a tooltip; content touch users must reach, or anything to act on, belongs in the page, a popover opened by a button or a dialog."
+      ],
+      "alternatives": [
+        "tooltips",
+        "popover"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/hover-card.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#hover-card",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "A link with hover-card-trigger whose aria-details names a .popover with popover=\"hint\"; the card shows against the link after enterDelay of hover or keyboard focus, stays while the pointer or focus is on the link or card, hides after exitDelay or at once on Escape with focus back on the link, and a tap or click follows the link.",
+          "webAdaptation": "Script timers decide when the card shows, and showPopover({ source }) makes the link its anchor and invoker, so the browser places it, puts it next in the Tab order and light-dismisses it. Interest invokers (interestfor) exist only in Chromium, so they are not used.",
+          "limitations": [
+            "Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified. Touch shows no card, and the card's content is static markup."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Show the card on hover and keyboard focus after a delay, keep it open while the pointer or focus is on the link or the card, hide it on Escape with focus back on the link, leave the link's click alone and relate the card to the link with aria-details."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "An author name in an article previews the author's profile in a hover card; an icon button's label is a tooltip, and a note people open on press is a popover.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/ts/components/hoverCard.ts",
+            "sha256": "6e08cd305135d7280bc515e9e1b262f51c86959b3339270f312c7ae53a34e2bf"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified.",
+            "nextStep": "Tab to a hover card link with VoiceOver and NVDA and confirm the details relationship is announced and the card is reachable."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/hover-card-browser.test.js",
+            "name": "chromium: hovering the link shows the card after the delay, and it stays while the pointer is on the card",
+            "scope": "Nothing before enterDelay, the card against the link's bottom edge plus the popover gap, staying open with the pointer on the card past exitDelay, and hiding once the pointer has left both."
+          },
+          {
+            "file": "tests/hover-card-browser.test.js",
+            "name": "chromium: keyboard focus shows the card, Tab moves into it, and Escape hides it with focus back on the link",
+            "scope": "Tab to the link shows the card after enterDelay with focus kept on the link, Tab into the card keeps it open, and Escape hides it with focus back on the link."
           }
         ]
       }
@@ -7757,6 +8144,96 @@
           }
         ],
         "inventorySha256": "621393b5463f16c154580894a55366ba25ac90e542a2a7798639d22e1f78c628"
+      }
+    },
+    {
+      "slug": "cascader",
+      "title": "Cascader",
+      "aliases": [
+        "cascading select",
+        "column picker",
+        "nested select",
+        "path picker"
+      ],
+      "guideSource": {
+        "pageId": "cascader",
+        "heading": "Cascader",
+        "headingLevel": 2,
+        "semantics": [
+          "cascader"
+        ]
+      },
+      "jobs": [
+        "Picks a path through nested options shown in columns and submits every level."
+      ],
+      "useWhen": [
+        "A path through a known hierarchy of a few levels, such as country, region and city, where the server needs every level."
+      ],
+      "avoidWhen": [
+        "A flat list or one level of groups, which a select covers, a deep or searchable hierarchy, or several paths at once."
+      ],
+      "alternatives": [
+        "select",
+        "tree"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/cascader.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#cascader",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "Nested lists with data-value read into listbox columns in a popover anchored to a read-only combobox input; click and keyboard navigation with arrows, Home, End, Enter, Space, Escape and Tab, swapped under rtl; leaf-only commits shown as joined labels with input and change events; one form entry per level through a form-associated control; data-selected starting path, reset, required with i18n.required, aria-invalid and disabled state.",
+          "webAdaptation": "The author's nested lists stay hidden as the source. A manual popover opened with the input as its source uses CSS anchor positioning, and a form-associated expressive-cascader-control wraps the input and submits the path, so the browser handles reset, validity and disabled state.",
+          "limitations": [
+            "Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified. There is no search, type-ahead, multiple selection or lazy loading, and only a leaf commits."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the field a labelled input that reads as a combobox, name every column, show which options form the open path, reach every option from the keyboard in both directions, close without committing on Escape, and submit every level of the path."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A shipping form asks for country, region and city in one field: a .cascader with three levels submits place=us, place=ca and place=sf; a single country choice stays a select.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/ts/components/cascader.ts",
+            "sha256": "9ef77d466edd9c8cde4b66a043cecd8ef55da76ea544b8ef88831051fdabb544"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified.",
+            "nextStep": "Move through three columns and commit a leaf with NVDA in Firefox and VoiceOver in Safari."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/cascader-browser.test.js",
+            "name": "chromium: the roadmap check: choosing an option in each of three columns submits the three values as one path",
+            "scope": "Clicks through three columns, the joined labels in the input, and the three values in FormData and the submit event, through the wrapping control."
+          },
+          {
+            "file": "tests/cascader-browser.test.js",
+            "name": "chromium: the keyboard opens the field, moves through the columns, commits a leaf and closes",
+            "scope": "Each opening key, arrows without wrapping, Home and End, the next and previous column, Escape, Tab and Shift+Tab closing without committing, and Space committing a leaf."
+          }
+        ]
       }
     },
     {
@@ -13099,5 +13576,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "4f55797f9e6b54337d165cb76efdfabe9d8181fb"
+  "sourceRevision": "9e815704a0c88f2db77ed873588c89e61544c7a7"
 }

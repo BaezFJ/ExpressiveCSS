@@ -7,6 +7,29 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Show more. A `.show-more` holds text with a `line-clamp-1`, `-2` or
+  `-3` class and a `<button>`; the button shows the full text, reads
+  "Show less" while it is open (`i18n.showLess` or `data-show-less`) and
+  sets `aria-expanded` and `aria-controls`. The button hides while the
+  clamped text fits and comes back when a resize or a web font cuts it.
+  New semantics rules require a `<button type="button">` and clamped text.
+- Treemap chart. A `<figure class="treemap-chart">` draws each row of its
+  table's first value column as a rectangle whose area is its share of the
+  total, filling the plot in a squarified layout from the largest value
+  down, mirrored in right-to-left pages. Each rectangle shows its name and
+  cell when they fit, and rows with no positive value draw nothing. The plot
+  is one Tab stop whose arrow keys step through the rectangles in table
+  order, the tooltip adds each row's share, and it takes `update()` and
+  `data-watch` like the other charts. A new semantics rule asks for a
+  `<figure>` with a `<table>` and a `<figcaption>`.
+- Hover card. A link with `hover-card-trigger` names a `.popover` with
+  `popover="hint"` in `aria-details`, and once the pointer or keyboard
+  focus has rested on the link for 500 ms, that card shows against it.
+  The card stays while the pointer or focus is on the link or the card,
+  and hides 300 ms after both are left, or at once on Escape with focus
+  back on the link. A tap or click follows the link and shows no card.
+  Two new semantics rules keep the trigger an `<a href>` whose
+  `aria-details` names a `[popover]`.
 - Transfer list. A `.transfer-list` holds a `.transfer-available` and a
   `.transfer-chosen` list of checkbox rows with `data-transfer` buttons
   between them. `add` and `remove` move the checked rows, `add-all` and
@@ -44,6 +67,19 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   words set with `i18n`, and focus goes back to the control that had it
   when the region clears. A new semantics rule asks for a direct
   `.loading-indicator` child.
+- `Dialogs.confirm()` asks a yes-or-no question in a basic alert dialog
+  and returns a promise that resolves `true` on the confirm button and
+  `false` on Cancel, Escape or a scrim tap. Focus starts on Cancel and
+  returns to the opener, and the dialog is removed once it closes.
+  `Dialogs.i18n` holds the default labels, "OK" and "Cancel".
+- `.back-to-top` is an in-page link that appears once the window has
+  scrolled past `threshold`, one viewport height by default. Activating it
+  scrolls to the top, instantly under reduced motion, and focuses the
+  element its `href` names. The `BackToTop` component keeps it `inert`
+  while hidden and watches the threshold with an `IntersectionObserver`.
+  Without the script the link stays visible and jumps to its target. A
+  focused link stays until focus leaves, and modified clicks are left to
+  the browser.
 - `.defer-render` makes the browser skip layout and paint for a long
   list's off-screen rows through `content-visibility: auto`. Skipped rows
   reserve `--defer-render-row-size`, the list item height by default, and
@@ -325,6 +361,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   digit stays as typed and marks the field invalid, with a message `i18n`
   can replace. The instance's `value` returns the number. A new semantics
   rule keeps `data-currency` on text inputs.
+- Cascader. A `.field.cascader` with a named text input and nested
+  `ul.cascader-options` lists shows the options as columns in a popover,
+  where each choice opens the next column. Arrow keys, Home, End, Enter,
+  Space, Escape and Tab move through the columns, swapped under `rtl`.
+  Choosing a leaf shows the path in the input and fires `input` and
+  `change`, and the form gets one entry per level, such as `place=us`,
+  `place=ca`, `place=sf`, through a form-associated control. `data-selected`
+  on a leaf sets the starting path, which a reset brings back, and
+  `required` blocks submit until a path is chosen. New semantics rules keep
+  the source lists plain and every option valued.
 
 - A `data-draggable` map marker moves without a drag (WCAG 2.5.7). A tap
   picks it up and sets `aria-pressed`, and the next tap on the map drops it
@@ -1040,6 +1086,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   no styles. Use `isDateRange` for range selection.
 
 ### Changed
+
+- Chips' form-associated control moved to a shared core module, which the
+  cascader uses too. The control gained `checkValidity()` and
+  `reportValidity()`.
 
 - An open menu is a popover in the browser's top layer. This covers Menu,
   Select, Autocomplete, the menubar, Chips suggestions and the date

@@ -348,6 +348,7 @@ function unmount() {
 | `ScatterChart` | `.scatter-chart` |
 | `SankeyChart` | `.sankey-chart` |
 | `FunnelChart` | `.funnel-chart` |
+| `TreemapChart` | `.treemap-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
@@ -359,14 +360,18 @@ function unmount() {
 | `LoadingOverlay` | `.loading-overlay` |
 | `SwipeActions` | `.list.swipeable` |
 | `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
+| `ShowMore` | `.show-more` |
 | `CurrencyInput` | `input[data-currency]` of type text |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
+| `BackToTop` | `.back-to-top` |
 | `FormSelect` | `select` |
+| `Cascader` | `.cascader` |
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
+| `HoverCard` | `.hover-card-trigger` |
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
 
@@ -404,7 +409,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:create` | Autocomplete, from its `Add` row | `{ text }` |
 | `expressive:chip-add`, `chip-select`, `chip-delete` | Chips | `{ chip }` |
 | `expressive:change` | ButtonGroup, Menu checkbox and radio items, ScrollSpy (from the section), Tour | `{ button, pressed }`, `{ item, checked }`, `{ link }`, `{ step, index }` |
-| `expressive:open`, `expressive:close` | Tooltip, Snackbar, Tour | Tour's close: `{ completed }` |
+| `expressive:open`, `expressive:close` | Tooltip, HoverCard, Snackbar, Tour, ShowMore | Tour's close: `{ completed }` |
 | `expressive:action`, `expressive:closed` | Snackbar | none |
 | `expressive:copy` | Copy buttons | `{ text, copied }` |
 | `expressive:refresh` | Pull-to-refresh | `{ waitUntil }` |
@@ -3780,6 +3785,47 @@ A leading icon goes first in the summary, hidden from assistive technology. The 
 
 ---
 
+## Show more
+
+Clamped text with a button that shows the rest, and hides itself when the text already fits.
+
+A `.show-more` holds the text, with a `line-clamp-1`, `line-clamp-2` or `line-clamp-3` class, and a `<button type="button">` whose text is the collapsed label. `AutoInit()` starts every one. The component points the button at the text with `aria-controls`, adding an id to the text when it has none, and sets `aria-expanded`. Activating the button shows the full text and changes the label to "Show less"; activating it again clamps the text and puts the author's label back. Only the button's last text outside an `aria-hidden="true"` element changes, so an icon keeps its glyph. An icon-only button named by `aria-label` has no text to change: it keeps its name, and only `aria-expanded` says the text is open. Prefer a visible label.
+
+While the clamped text fits, the button gets `hidden`, so it is neither seen nor reached by Tab. The component checks again when the text's size changes and once web fonts have loaded, so `line-clamp-3 expanded:line-clamp-none` hides the button from Expanded windows up. A focused button stays until focus moves on, and open text keeps its button. Expanding sets `-webkit-line-clamp` and `line-clamp` inline, because a prefixed clamp class would beat `line-clamp-none`. The text opens and closes at once, without a transition.
+
+The clamp classes set `display`, so the text cannot also be a flex or grid container; put the clamp on a child. The browser's find-in-page does not open clamped text, so a match in the hidden lines is not shown until the person opens it.
+
+```html
+<div class="show-more">
+  <p class="line-clamp-3">A long product description that runs well past three lines...</p>
+  <button type="button" class="text">Show more</button>
+</div>
+```
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `onOpen` | Function | `null` | Called after the full text shows. |
+| `onClose` | Function | `null` | Called after the text is clamped again. |
+| `i18n` | Object | `{ showLess: 'Show less' }` | The button's label while the text is open. `data-show-less` on the button sets it for one control. |
+
+### Methods
+
+#### .open()
+
+Shows the full text.
+
+#### .close()
+
+Clamps the text again.
+
+#### .destroy()
+
+Removes the listeners, clamps the text without an event, and restores the button's label, `aria-expanded`, `aria-controls` and `hidden`, and the text's id.
+
+---
+
 ## Data table
 
 Rows of records in a scrolling table with a sticky header, sort state and row selection.
@@ -4100,6 +4146,48 @@ instance.destroy();
 ### Speed-dial migration
 
 Replace `.fab` and `.fixed-action-btn` wrappers with `.fab-menu` and labelled actions using the markup above. Remove `direction`, `hoverEnabled`, `toolbarEnabled`, their markup switches and speed-dial-only tokens. Hover opening, directional layouts and FAB-to-toolbar expansion have been removed. Use a current toolbar for persistent commands. Replace `circle extra small` with `circle extra`, and sizeless `extend` with `extend small`. Medium and large FABs, all three explicit extended sizes, and FAB menus remain supported. Use primary, secondary or tertiary container colors instead of surface-colored FABs; pair icon-only FAB colors with the matching on-container text role. General surface utilities remain supported outside FABs.
+
+---
+
+## Back to top
+
+A link that appears once a long page has scrolled down, and returns to the top with focus on the main content.
+
+Write an `<a class="back-to-top">` whose `href` names the page's main content, give it an `aria-label`, and add the FAB classes `button circle extra` for its look. `AutoInit()` starts every `.back-to-top`. The link sits in the bottom inline-end corner, `position: fixed`, and stays hidden until the window has scrolled past `threshold`, one viewport height by default. It hides again above it, unless it has focus: a focused link stays until focus leaves, so pressing Home on it does not drop focus to the body. Without the script the link is always visible and jumps to its target, as any in-page link does. Until the script starts it is also visible at the top of the page, so call `AutoInit()` before the first paint, from a script at the end of the body, to keep it from showing there.
+
+```html
+<main id="main">…</main>
+<a class="back-to-top button circle extra" href="#main" aria-label="Back to top">
+  <span class="material-symbols" aria-hidden="true">arrow_upward</span>
+</a>
+```
+
+Activating the link scrolls the window to the top and moves focus to the `href` target, so the next Tab reaches the first control after it. A target that does not take focus, such as a `<main>`, gets `tabindex="-1"` until it loses focus. An `href` of `#` or `#top`, or one that names no element, focuses the body. The script replaces the jump, so the address keeps its fragment. A click with Ctrl, Meta, Shift or Alt, or one a page handler already prevented, is left to the browser. The scroll is smooth, and instant under reduced motion.
+
+While hidden, the link is `inert` and `visibility: hidden`. Tab skips it, it takes no clicks, and screen readers do not list it. It fades in and hides at once, so a script that starts on a page already painted does not show it fading out. Under reduced motion it also appears at once. `inert` is the framework's state; don't write it in the markup.
+
+The script watches the window's scroll through an `IntersectionObserver` on an empty element at the threshold, absolutely positioned at the start of the body, so scrolling runs no script. A body with `position: relative` measures the threshold from its own top edge. A pane, dialog or `.scroll-area` that scrolls on its own is not supported. A `.fab-menu` sits in the same corner; on a page with both, raise one with `--md-comp-back-to-top-offset`.
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `threshold` | String | `'100vh'` | How far the window scrolls before the link shows, as a CSS length from the top of the page. Viewport units follow window resizes. A value that is not a CSS length falls back to `'100vh'` with a warning. |
+
+### Methods
+
+#### .destroy()
+
+Removes the observer and the threshold element, and any `tabindex` the script added, and shows the link again.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-back-to-top-offset` | 16px (from the bottom and inline-end edges) |
+| `--md-comp-back-to-top-z` | 997 |
+| `--md-comp-back-to-top-duration` | the fast effects spring's duration |
+| `--md-comp-back-to-top-easing` | fast effects spring |
 
 ---
 
@@ -5183,6 +5271,58 @@ Name an icon-only button for what it explains, not "Info". The panel follows the
 
 ---
 
+## Hover card
+
+Shows a card of preview content after a delay when a link is hovered or gets keyboard focus.
+
+Add `hover-card-trigger` to an `<a href>` and point its `aria-details` at the card, a `.popover` with `popover="hint"`. `AutoInit()` starts every `.hover-card-trigger`. Once the pointer or keyboard focus has rested on the link for `enterDelay`, 500 ms by default, the card shows against the link: below it with start edges aligned, flipped to the other side when it would not fit. A pointer that only passes over the link shows nothing.
+
+The card stays while the pointer is on the link or the card, and while focus is on either. When both are left, it hides after `exitDelay`, 300 ms by default, so a pointer that crosses the gap to the card keeps it open. Focus stays on the link when the card shows, and Tab moves into the card's links and buttons. Escape hides the card and takes focus in it back to the link. A click elsewhere hides it too. One hint card shows at a time, and a hover card leaves an open menu or popover alone. Several links can name the same card, such as a name mentioned twice, and the card shows against whichever link showed it last.
+
+A tap or click follows the link and shows no card, so the linked page has to hold the same content for touch screens. Keep the card a short preview of where the link goes, and put anything to act on in the page, a popover opened by a button or a dialog. Do not also give the link `interestfor`, which Chromium would handle on its own as well.
+
+```html
+<p>Written by <a class="hover-card-trigger" href="/people/ada" aria-details="ada-card">Ada Lovelace</a>.</p>
+<div id="ada-card" class="popover" popover="hint">
+  <h3>Ada Lovelace</h3>
+  <p>Mathematician. Wrote the first published program, for the Analytical Engine.</p>
+  <p><a href="/people/ada/articles">All articles by Ada</a></p>
+</div>
+```
+
+### Accessibility
+
+`aria-details` tells a screen reader that the link has more detail and lets it move there. Screen readers support it unevenly, and a hidden card is not in the reading order at all, which is another reason the linked page must hold the same content. Leave the role off the card: it can hold links, which a tooltip cannot.
+
+### Options
+
+Constructor and `init` options. `data-hover-card-options` sets them from the markup.
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `enterDelay` | Number | `500` | How long the pointer or keyboard focus rests on the link before the card shows, in milliseconds. |
+| `exitDelay` | Number | `300` | How long the card stays after the pointer and focus leave the link and the card, in milliseconds. |
+
+### Methods
+
+#### .open()
+
+Shows the card now, without `enterDelay`.
+
+#### .close()
+
+Hides the card now, without `exitDelay`.
+
+#### .destroy()
+
+Hides a card the instance showed and removes the listeners. The link and card keep the markup as written.
+
+### Events
+
+`expressive:open` and `expressive:close` fire from the link when the card shows and hides, also when the browser hides it on Escape or a click elsewhere.
+
+---
+
 ## Stepper
 
 Progress through a fixed sequence of steps, such as a checkout, with each step's state.
@@ -5973,6 +6113,47 @@ A `<figure class="funnel-chart">` takes a `<figcaption>` and a `<table>`. The fi
 
 ---
 
+## Treemap chart
+
+Parts of a whole drawn as rectangles whose areas follow their values, filling the plot.
+
+A `<figure class="treemap-chart">` takes the same `<figcaption>` and `<table>` as a pie chart. `AutoInit()` draws each row of the first value column as a rectangle whose share of the plot's area is its share of the total, with its name and cell written inside it, and a tooltip that follows the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
+
+```html
+<figure class="treemap-chart">
+  <figcaption>Budget by team</figcaption>
+  <table>
+    <thead>
+      <tr><th>Team</th><th>Budget</th></tr>
+    </thead>
+    <tbody>
+      <tr><th>Engineering</th><td>$600,000</td></tr>
+      <tr><th>Research</th><td>$300,000</td></tr>
+      <tr><th>Design</th><td>$120,000</td></tr>
+      <tr><th>Sales</th><td>$80,000</td></tr>
+    </tbody>
+  </table>
+</figure>
+```
+
+- The layout is squarified: rows are placed from the largest value to the smallest, equal values in table order, each strip chosen to keep its rectangles near square for the plot's shape. The largest starts at the top inline-start corner, so a right-to-left page, set by `dir` or CSS `direction`, mirrors the layout. A rectangle's place depends on its value, not its row, and the layout follows the plot when it changes shape.
+- Cells read as in the column chart. Zero, negative and non-numeric cells draw no rectangle and add nothing to the total; their rows stay in the table. Further value columns add lines to the tooltip.
+- Each rectangle shows its row name and its cell, as written, when both fit; one too small for them shows neither, and the tooltip names it. Long names end in an ellipsis. Rectangles take six colors in table order, then repeat, with text in each color's on-color. `--md-comp-treemap-chart-gap` parts neighbours inside each rectangle's area, so the areas stay exact.
+- The plot is one Tab stop named by the caption. Keyboard focus shows the first row with a rectangle. Right and down arrows move to the next such row in table order and left and up to the one before; the arrows keep their meaning in a right-to-left page. Home and End jump to the first and last, and Escape hides the tooltip. A tap or the pointer shows the rectangle under it.
+- The tooltip names the row, the value header with its cell and the row's share of the whole, in whole percentages with a tenth below 10%, in the page's `lang`. A ring in the gap marks the highlighted rectangle.
+- After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. Rectangles take their new places at once. It has the line chart's `show(index)`, which passes a row with no rectangle to the next one with one, and `destroy()`. There is no legend, axis or `sparkline`, and the `min` and `max` options do not apply.
+
+### Tokens
+
+| Token | Default |
+| --- | --- |
+| `--md-comp-treemap-chart-height` | 240px |
+| `--md-comp-treemap-chart-gap` | 4px between neighbours |
+| `--md-comp-treemap-chart-color-1` … `-6` | `primary`, `tertiary`, `secondary`, `on-surface-variant`, then `primary-container` and `tertiary-container` deepened toward `on-surface` |
+| `--md-comp-treemap-chart-on-color-1` … `-6` | `on-primary`, `on-tertiary`, `on-secondary`, `surface`, `surface`, `surface` |
+
+---
+
 ## Tree
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
@@ -6142,6 +6323,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `ScatterChart` | `.scatter-chart` |
 | `SankeyChart` | `.sankey-chart` |
 | `FunnelChart` | `.funnel-chart` |
+| `TreemapChart` | `.treemap-chart` |
 | `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
@@ -6153,14 +6335,18 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `LoadingOverlay` | `.loading-overlay` |
 | `SwipeActions` | `.list.swipeable` |
 | `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
+| `ShowMore` | `.show-more` |
 | `CurrencyInput` | `input[data-currency]` of type text |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
+| `BackToTop` | `.back-to-top` |
 | `FormSelect` | `select` |
+| `Cascader` | `.cascader` |
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
+| `HoverCard` | `.hover-card-trigger` |
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
 
@@ -6590,7 +6776,24 @@ Close the dialog.
 dialog.close();
 ```
 
-Clicking the scrim does not close it — that is how the Dialog API works. Call `close()` yourself if you want that, or put a cancel action in the form.
+A tap or click on the scrim also closes a basic dialog. Both ends of the gesture have to land outside the dialog's box, so a drag that starts on the dialog, such as selecting text or missing a button, cannot dismiss it. Set `closedby="none"` or `closedby="closerequest"` to opt out.
+
+### Confirm from script
+
+`Expressive.Dialogs.confirm()` asks a yes-or-no question and returns a promise. It builds a basic dialog with `role="alertdialog"`, opens it with `showModal()`, and removes it once it closes. The promise resolves `true` when the person picks the confirm button and `false` on Cancel, Escape or a scrim tap.
+
+```js
+const ok = await Expressive.Dialogs.confirm({
+  headline: 'Delete draft?',
+  text: 'The draft and its attachments are removed.',
+  confirm: 'Delete'
+});
+if (ok) deleteDraft();
+```
+
+`text` is the question and is required. `headline` is optional. With a headline, the dialog is named by it and described by the text; without one, the text names it. All four strings are set as text, so markup in them is shown, not parsed. If page code removes the open dialog, for example on a route change, the promise resolves `false`. Focus starts on Cancel, the less destructive action, and the browser returns it to the element that had focus before the call. Label the confirm button with the action it takes, such as "Delete" or "Discard", rather than the "OK" default.
+
+`confirm` and `cancel` set the button labels for one call. `Expressive.Dialogs.i18n` holds the defaults, `{ confirm: 'OK', cancel: 'Cancel' }`; assign to it to change them for every later call. With the modular entry, `confirm()` works without `Dialogs.Init()`, but a scrim tap closes the dialog only after `Init()` runs.
 
 ### Tokens
 
@@ -8943,6 +9146,81 @@ instance.destroy();
   <option value="1">Option 1</option>
 </select>
 ```
+
+---
+
+## Cascader
+
+Pick a path through nested options shown in columns, where each choice opens the next column, and submit the whole path.
+
+Write a `.field.cascader` holding a text `<input>` with a `name`, its `<label for>`, and a `ul.cascader-options` of nested lists. Each `<li>` holds a `data-value`, and its label is its own text outside any nested list. An `<li>` with a nested list of options is a branch; any other is a leaf. `AutoInit()` starts every `.cascader`. The lists stay in the page, hidden, and the script builds the columns from them; leave roles off them.
+
+The input becomes read-only, with `role="combobox"` and `aria-haspopup="dialog"`. A click, or Enter, Space, ArrowDown or Alt+ArrowDown, opens a popover below the field with `role="dialog"`. Each column is a listbox named by the field's label or by the option that opened it, and the options on the open path are `aria-selected="true"`. A branch ends in a chevron.
+
+| Key | In a column |
+| --- | --- |
+| ArrowDown, ArrowUp | Next or previous option, without wrapping |
+| Home, End | First or last option |
+| ArrowRight | On a branch, open the next column and move into it |
+| ArrowLeft | Back to the option that opened this column; the columns stay |
+| Enter, Space | On a branch, as ArrowRight; on a leaf, commit the path |
+| Escape, Tab, Shift+Tab | Close without committing, and return focus to the input |
+
+Under `dir="rtl"` the columns run right to left and ArrowLeft and ArrowRight swap. A click on a branch opens its column and keeps focus on the branch. A click on a leaf commits. A click outside closes without committing.
+
+Committing shows the path's labels in the input, such as `United States / California / San Francisco`, closes the popover, returns focus to the input and fires `input` and `change` on it. Committing the same path again fires nothing. The form gets one entry per level under the input's name, in order, through the form-associated `expressive-cascader-control` that wraps the input: `place=us&place=ca&place=sf`. With no path the form gets no entry.
+
+Mark a leaf `data-selected` to start with its path; the first marked leaf wins, and a marked branch is ignored. A form reset brings the starting path back without events. With `required` on the input, the field fails validation until a path is committed, with the message `Choose an option.`, and a failed submit or `checkValidity()` sets `aria-invalid="true"` on the input. A disabled input or fieldset submits nothing and does not open, and a popover open when the field is disabled closes on the next choice without committing. Options added after start need `destroy()` and a new `init`.
+
+```html
+<div class="field cascader">
+  <input id="place" name="place" type="text" required>
+  <label for="place">Place</label>
+  <ul class="cascader-options">
+    <li data-value="us">United States
+      <ul>
+        <li data-value="ca">California
+          <ul>
+            <li data-value="sf">San Francisco</li>
+            <li data-value="la">Los Angeles</li>
+          </ul>
+        </li>
+        <li data-value="wa">Washington</li>
+      </ul>
+    </li>
+    <li data-value="cn">Canada</li>
+  </ul>
+</div>
+```
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `i18n` | Object | `{ required: 'Choose an option.' }` | `required` is the validity message while a required field has no path. Markup sets it with `data-cascader-options='{"i18n":{"required":"Elige un lugar."}}'` on the `.cascader`. |
+
+### Properties
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `value` | Array | The committed path's values, such as `['us', 'ca', 'sf']`, or an empty array. |
+| `input` | Element | The text input that shows the path. |
+| `popover` | Element | The popover of columns. |
+| `isOpen` | Boolean | Whether the popover is open. |
+
+### Methods
+
+#### .open()
+
+Opens the popover at the committed path, with focus on its leaf or on the first option. A disabled field does not open.
+
+#### .close()
+
+Closes the popover and keeps the committed path.
+
+#### .destroy()
+
+Closes and removes the popover, unwraps the input, and gives back its name, `required` and attributes. The input keeps its text.
 
 ---
 
