@@ -72,7 +72,7 @@
   }
 
   > div > span {
-    width: calc(var(--width) * 1%);
+    width: calc(var(--width, 0) * 1%);
     height: var(--md-comp-funnel-chart-stage-height);
     margin-inline: auto;
     border-radius: var(--md-comp-funnel-chart-shape);

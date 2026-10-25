@@ -4191,7 +4191,7 @@
           },
           {
             "path": "src/sass/components/_funnel-chart.scss",
-            "sha256": "48c41e579247e2c6bceee2e595439bdba9a8dd5beb0c5d3cab492c9907dfc153"
+            "sha256": "8d5e737c1090062a8978bddd105fe485c2f56e16160c89c942caae3d1e641035"
           },
           {
             "path": "src/ts/components/funnelChart.ts",
