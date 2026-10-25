@@ -506,6 +506,13 @@ export const NAV: DocsGroup[] = [
           "Steps people take in order, each drawn as a stage as wide as the people who reach it.",
       },
       {
+        id: "sankey-chart",
+        label: "Sankey chart",
+        route: "/sankey-chart.html",
+        description:
+          "Flows between nodes, each link as thick as its value.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",
@@ -613,6 +620,13 @@ export const NAV: DocsGroup[] = [
         route: "/loading-indicator.html",
         description:
           "A shape that morphs while it spins, for waits under five seconds.",
+      },
+      {
+        id: "loading_overlay",
+        label: "Loading overlay",
+        route: "/loading-overlay.html",
+        description:
+          "Covers part of a page while it loads, so nothing inside takes input until the page clears it.",
       },
       {
         id: "skeleton",
