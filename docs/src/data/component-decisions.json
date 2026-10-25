@@ -5338,8 +5338,8 @@
         "support": "implemented",
         "sources": [
           {
-            "path": "src/ts/components/hoverCard.ts",
-            "sha256": "6e08cd305135d7280bc515e9e1b262f51c86959b3339270f312c7ae53a34e2bf"
+            "path": "src/sass/components/_popover.scss",
+            "sha256": "ea20e95c04b1ef46cfdd365edfae0441792f4e2c96412cfba853cf9114404616"
           }
         ],
         "gaps": [
@@ -5349,18 +5349,7 @@
             "nextStep": "Tab to a hover card link with VoiceOver and NVDA and confirm the details relationship is announced and the card is reachable."
           }
         ],
-        "browserChecks": [
-          {
-            "file": "tests/hover-card-browser.test.js",
-            "name": "chromium: hovering the link shows the card after the delay, and it stays while the pointer is on the card",
-            "scope": "Nothing before enterDelay, the card against the link's bottom edge plus the popover gap, staying open with the pointer on the card past exitDelay, and hiding once the pointer has left both."
-          },
-          {
-            "file": "tests/hover-card-browser.test.js",
-            "name": "chromium: keyboard focus shows the card, Tab moves into it, and Escape hides it with focus back on the link",
-            "scope": "Tab to the link shows the card after enterDelay with focus kept on the link, Tab into the card keeps it open, and Escape hides it with focus back on the link."
-          }
-        ]
+        "browserChecks": []
       }
     },
     {
@@ -12978,5 +12967,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "9ab551ef88e4f3f19391dec0558d0cc7698bc34d"
+  "sourceRevision": "0630992c4f318a4ade6166c064d07ec0ceed7e57"
 }
