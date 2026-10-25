@@ -84,6 +84,7 @@ export const AUTO_INIT_COMPONENTS = {
   CurrencyInput: { component: Components.CurrencyInput, selector: 'input[data-currency]:is(:not([type]), [type="text" i])' },
   Lightbox: { component: Components.Lightbox, selector: ".lightboxed" },
   ScrollSpy: { component: Components.ScrollSpy, selector: ".scrollspy" },
+  BackToTop: { component: Components.BackToTop, selector: ".back-to-top" },
   FormSelect: { component: Components.FormSelect, selector: "select" },
   NavigationRail: {
     component: Components.NavigationRail,

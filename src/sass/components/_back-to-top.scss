@@ -1,0 +1,38 @@
+// Back-to-top link. Pair it with the FAB classes, `button circle extra`, for
+// the look: this partial only places the link and hides it. `inert` is the
+// framework's. BackToTop sets it while the page is above the threshold, so
+// a page without the script keeps the link visible.
+//
+// The FAB menu sits in the same corner on the same offset. A page with both
+// raises one of them through `--md-comp-back-to-top-offset`.
+.back-to-top {
+  --md-comp-back-to-top-offset: 16px;
+  --md-comp-back-to-top-z: 997;
+  --md-comp-back-to-top-duration: var(--md-sys-motion-spring-fast-effects-duration);
+  --md-comp-back-to-top-easing: var(--md-sys-motion-spring-fast-effects);
+
+  position: fixed;
+  inset-inline-end: var(--md-comp-back-to-top-offset);
+  bottom: var(--md-comp-back-to-top-offset);
+  z-index: var(--md-comp-back-to-top-z);
+  transition: opacity var(--md-comp-back-to-top-duration) var(--md-comp-back-to-top-easing);
+
+  // It fades in, and hides at once. A fade out would also run when the
+  // script starts on a page already painted at the top, and show the link
+  // leaving a corner where nothing had scrolled. Visibility takes it off
+  // screen readers and the page's ARIA snapshot along with `inert`.
+  &[inert] {
+    visibility: hidden;
+    opacity: 0;
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back-to-top { transition: none; }
+}
+
+// A floating link would print over the content, as the FAB menu would.
+@media print {
+  .back-to-top { display: none !important; }
+}

@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**104 of 104 rows enforced; 0 remaining.**
+**105 of 105 rows enforced; 0 remaining.**
 
-99 of those rows are components - a part of the framework an author writes markup for.
+100 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 99 components declare conformance debt.**
+**2 of 100 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -116,6 +116,20 @@ Added with the avatar component. Initials and icon ligatures read as letters, so
 - **avatar-image-has-alt** - Give an avatar image alt text naming the person, or alt="" when their name is already beside it.
 - **avatar-is-an-image-or-hidden** - Initials read as separate letters and an icon reads as its ligature name. Give a non-image avatar role="img" and a name, or aria-hidden="true" when the person is named next to it.
 - **avatar-image-role-is-named** - An avatar with role="img" needs aria-label or aria-labelledby. Its initials are hidden from the name computation of an image.
+
+### back-to-top
+
+Added with the back-to-top component. An in-page link, so it jumps to its target without the script. BackToTop keeps it inert until the window scrolls past the threshold, then scrolls to the top and focuses the target. Inert is the framework's dynamic state.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `back-to-top-is-an-in-page-link` | forbid | `.back-to-top:not(a[href^="#"])` | must not match |
+| `back-to-top-is-named` | require-accessible-name | `.back-to-top` | must end up with an accessible name |
+| `back-to-top-inert-is-not-authored` | forbid | `.back-to-top[inert]` | must not match |
+
+- **back-to-top-is-an-in-page-link** - Make .back-to-top an <a> whose href names an element on the page, such as #main. The link works without the script, and the script focuses that element.
+- **back-to-top-is-named** - The link usually holds only an icon. Give it an aria-label such as "Back to top".
+- **back-to-top-inert-is-not-authored** - Hidden is dynamic state, so the framework owns it. BackToTop sets inert while the page is above the threshold and removes it past it; authoring it hides the link from a page without the script.
 
 ### badges
 

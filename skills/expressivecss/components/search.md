@@ -9,7 +9,7 @@ Component ID: `search`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `1b2271c3941c6b5fe038b8d217a566a3071a21a54c44f0cbd134e09dac883073`
+Contract SHA-256: `a96aaa75a2e5909ebd4b114f16733451e9e89314728c40e9675952ac976ce919`
 
 #### Selection and adaptation
 

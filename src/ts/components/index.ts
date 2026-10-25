@@ -46,6 +46,7 @@ export { MapView } from "./mapView";
 export { Lightbox } from "./lightbox";
 export { Slider } from "./slider";
 export { ScrollSpy } from "./scrollspy";
+export { BackToTop } from "./backToTop";
 export { FormSelect } from "./select";
 export { NavigationRail } from "./navigationRail";
 export { Tabs } from "./tabs";

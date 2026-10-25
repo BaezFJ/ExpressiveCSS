@@ -44,6 +44,7 @@ export type * from './components/sankeyChart';
 export type * from './components/treemapChart';
 export type * from './components/pullToRefresh';
 export type * from './components/loadingOverlay';
+export type * from './components/backToTop';
 export type * from './components/swipeActions';
 export type * from './components/inputMask';
 export type * from './components/hoverCard';

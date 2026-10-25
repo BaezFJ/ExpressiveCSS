@@ -190,6 +190,22 @@ Feature gap: The scrim does not follow the content of a region that scrolls itse
 
 Mapped browser scope: A mouse click, Tab and typing blocked while busy and a click restored mid-fade after aria-busy="false" or its removal, a region set busy twice, inert from the start, an author's inert kept, the status region outside the region with default and markup i18n words, focus returned, also inside a shadow root, kept after a move and skipped for a removed control, the scrim covering the region with the indicator centred, the scrim and indicator above z-index 4 content and isolated only while busy, and destroy() while busy and at rest. No spoken-output assertion.
 
+## [Back to top](../../components/back-to-top.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the control out of reach while it is hidden, move focus to the top of the content along with the scroll, honor reduced motion, and keep the link working without the script.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework shows and hides the link at the threshold, keeps it inert while hidden, scrolls to the top and moves focus to the href target; the page owns the link's name, its FAB look and the element it points to.
+
+Verification gap: The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit. Spoken output, forced colors and real phones remain unverified. Next check: Activate the link with VoiceOver and NVDA and confirm focus lands on the main content; check it in forced colors.
+
+Feature gap: Only the window's scroll is watched; a pane, dialog or scroll area that scrolls on its own is not supported. Next check: None planned.
+
+Mapped browser scope: Focus on the target and the next Tab after a click and after Enter, the temporary tabindex removed, the hidden link skipped by Tab, missed by elementFromPoint and absent from the ARIA snapshot before and after scrolling past the threshold, a focused link kept through Home and hidden once focus leaves, no fade out when the script starts after the first paint, smooth and instant scrolls, a 400px threshold from markup, the 16px corner in ltr and rtl and the offset token, and the link without the script. No spoken-output assertion.
+
 ## [Accordion](../../components/accordion.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

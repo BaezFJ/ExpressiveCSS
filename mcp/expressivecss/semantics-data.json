@@ -574,6 +574,32 @@
           }
         ]
       },
+      "back-to-top": {
+        "status": "enforced",
+        "note": "Added with the back-to-top component. An in-page link, so it jumps to its target without the script. BackToTop keeps it inert until the window scrolls past the threshold, then scrolls to the top and focuses the target. Inert is the framework's dynamic state.",
+        "rules": [
+          {
+            "id": "back-to-top-is-an-in-page-link",
+            "kind": "forbid",
+            "selector": ".back-to-top:not(a[href^=\"#\"])",
+            "fragmentSafe": true,
+            "message": "Make .back-to-top an <a> whose href names an element on the page, such as #main. The link works without the script, and the script focuses that element."
+          },
+          {
+            "id": "back-to-top-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".back-to-top",
+            "message": "The link usually holds only an icon. Give it an aria-label such as \"Back to top\"."
+          },
+          {
+            "id": "back-to-top-inert-is-not-authored",
+            "kind": "forbid",
+            "selector": ".back-to-top[inert]",
+            "fragmentSafe": true,
+            "message": "Hidden is dynamic state, so the framework owns it. BackToTop sets inert while the page is above the threshold and removes it past it; authoring it hides the link from a page without the script."
+          }
+        ]
+      },
       "forms/checkboxes": {
         "status": "enforced",
         "note": "Swept 0.8.0.",

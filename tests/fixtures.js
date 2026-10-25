@@ -186,6 +186,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<div id="section1" class="scrollspy section">one</div>`,
   },
   {
+    name: "BackToTop",
+    selector: ".back-to-top",
+    html: `<a class="back-to-top" href="#main" aria-label="Back to top"><span class="material-symbols" aria-hidden="true">arrow_upward</span></a>`,
+  },
+  {
     name: "FormSelect",
     selector: "select",
     html: `<div class="field"><select id="fs"><option value="" disabled selected>Choose</option><option value="1">One</option><option value="2">Two</option></select><label for="fs">Pick</label></div>`,
