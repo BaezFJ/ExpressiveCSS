@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 46, transfer list
 Branch: `feature/2026-10-25-transfer-list`
 Base: `origin/master` at `a9bbf77ad`, fetched 2026-10-25
-Status: specified 2026-10-25; group 1 implemented 2026-10-25
+Status: specified 2026-10-25; groups 1 and 2 implemented 2026-10-25
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 46](../../../../roadmap.md#phase-46-transfer-list). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -39,7 +39,7 @@ A `.transfer-list` holds an available list and a chosen list of checkbox rows, w
 - R7. Focus stays on the pressed button after a move.
 - R8. After a move, a polite live region beside the container announces how many rows moved and where, from `TransferList.i18n.moved`, which defaults to `'Moved {count} to {list}'`. `{list}` is the destination list's `aria-label`, or the text of its `aria-labelledby` element.
 - R9. After a move, the container fires a bubbling `expressive:transfer` event whose `detail` is `{ rows, from, to }`: the moved `<li>` elements in their new order, the source list and the destination list.
-- R10. At a container's first move, the behavior records both lists' rows in document order, available rows first. Resetting the form, by a reset button or `form.reset()`, puts every recorded row back in its recorded list and order. The checkboxes return to their default checked state as the browser resets them. A reset before any move changes nothing.
+- R10. At a container's first move, the behavior records both lists' rows in document order, available rows first. Resetting the form, by a reset button or `form.reset()`, puts every recorded row back in its recorded list and order. A row the page removed since stays removed, and a reset the page cancels moves nothing. The checkboxes return to their default checked state as the browser resets them. A reset before any move changes nothing.
 - R11. The lists sit side by side with the actions group between them, and the layout follows the page direction: in a right-to-left page the available list is on the right. Each button's icon points toward its destination list in both directions. Below the `medium` window size the two lists stack, with the actions group between them in a row. Each list scrolls inside a maximum block size so the buttons stay in reach.
 - R12. `semantics.json` gains a `transfer-list` row with four rules: a `.transfer-list` without `data-name`; a checkbox with a `name` inside a `.transfer-list`, which would submit its checked state; a `.transfer-available` or `.transfer-chosen` list with neither `aria-label` nor `aria-labelledby`; a `[data-transfer]` button without `type="button"`, which would also submit the form. The fourth rule was added after the 2026-10-25 code review. The semantics tests check the rules without starting components.
 - R13. The behavior lives in `src/ts/behaviors/transferList.ts` as `TransferList`, started by `TransferList.Init()` in `src/ts/index.ts` and exported from `src/ts/modular.ts`. Its listeners are delegated from the document, so a `.transfer-list` added to the page later works without a call. A second `Init()` adds nothing.

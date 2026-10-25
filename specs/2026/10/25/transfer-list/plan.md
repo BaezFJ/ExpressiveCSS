@@ -26,11 +26,11 @@ Outcome: every button moves rows as the requirements say, and focus, the announc
 
 Prerequisites: group 1.
 
-- [ ] Write V3 to V7 and V9, and record which fail.
-- [ ] Add `remove`, `add-all` and `remove-all`, the order record at the first move and the return to the original slot (R3, R4, R10). Keep each function below cyclomatic complexity 5, with a lookup table for the four buttons.
-- [ ] Add the empty-press guard (R6), the live region and `TransferList.i18n.moved` (R8), and the `expressive:transfer` event (R9). Check that focus stays on the button (R7).
-- [ ] Add a capture `reset` listener on the document that restores the recorded rows a task after the reset event, as `currencyInput.ts` waits for the form to reset its fields (R10).
-- [ ] Rebuild and rerun until V1 to V10 pass. Update the budget lines.
+- [x] Write V3 to V7 and V9, and record which fail.
+- [x] Add `remove`, `add-all` and `remove-all`, the order record at the first move and the return to the original slot (R3, R4, R10). Keep each function below cyclomatic complexity 5, with a lookup table for the four buttons.
+- [x] Add the empty-press guard (R6), the live region and `TransferList.i18n.moved` (R8), and the `expressive:transfer` event (R9). Check that focus stays on the button (R7).
+- [x] Add a capture `reset` listener on the document that restores the recorded rows a task after the reset event, as `currencyInput.ts` waits for the form to reset its fields (R10).
+- [x] Rebuild and rerun until V1 to V10 pass. Update the budget lines.
 
 Completion check: V1 to V9 pass, V10 and V11 pass, and a second `Init()` adds no listener (V3).
 

@@ -166,4 +166,204 @@ for (const [name, engine, test] of engines) {
       await browser.close();
     }
   });
+
+  test(`${name}: remove returns rows to their original slots, the all buttons skip disabled rows, and a second Init adds nothing`, { timeout: 30000 }, async () => {
+    const browser = await leaseBrowser(engine);
+    try {
+      const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
+      await p.setContent(page(form(transferList())));
+      await p.evaluate(() => {
+        Expressive.TransferList.Init();
+        Expressive.TransferList.Init();
+        window.__events = 0;
+        document.addEventListener('expressive:transfer', () => window.__events++);
+      });
+      await press(p, 'Add all toppings');
+      assert.deepEqual(await values(p, 'chosen'), ['olives', 'peppers', 'onions', 'basil']);
+      assert.equal(await p.evaluate(() => window.__events), 1, 'one event per press');
+      await check(p, 'Peppers');
+      await check(p, 'Olives');
+      await press(p, 'Remove checked toppings');
+      assert.deepEqual(await values(p, 'available'), ['olives', 'peppers']);
+      assert.deepEqual(await values(p, 'chosen'), ['onions', 'basil']);
+      assert.equal(await p.locator('#form input:checked').count(), 0, 'moved rows arrive unchecked');
+      await check(p, 'Peppers');
+      await press(p, 'Add checked toppings');
+      await check(p, 'Onions');
+      await press(p, 'Remove checked toppings');
+      assert.deepEqual(await values(p, 'available'), ['olives', 'onions']);
+      await p.getByRole('checkbox', { name: 'Basil' }).evaluate((box) => { box.disabled = true; });
+      await press(p, 'Remove all toppings');
+      assert.deepEqual(await values(p, 'available'), ['olives', 'peppers', 'onions'], 'a row goes back before the rows recorded after it');
+      assert.deepEqual(await values(p, 'chosen'), ['basil'], 'a disabled row stays');
+      assert.equal(await p.evaluate(() => window.__events), 5);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${name}: a press with nothing to move does nothing, and focus stays on the pressed button`, { timeout: 30000 }, async () => {
+    const browser = await leaseBrowser(engine);
+    try {
+      const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
+      await p.setContent(page(form(transferList())));
+      await p.evaluate(() => {
+        window.__events = 0;
+        document.addEventListener('expressive:transfer', () => window.__events++);
+      });
+      await press(p, 'Add checked toppings');
+      await press(p, 'Remove checked toppings');
+      await press(p, 'Remove all toppings');
+      assert.equal(await p.evaluate(() => window.__events), 0);
+      assert.equal(await p.locator('[aria-live="polite"]').count(), 0, 'nothing is announced');
+      assert.deepEqual(await values(p, 'available'), ['olives', 'peppers', 'onions', 'basil']);
+
+      for (const [key, row] of [['Enter', 'Olives'], ['Space', 'Peppers']]) {
+        await check(p, row);
+        await p.getByRole('button', { name: 'Add checked toppings' }).focus();
+        await p.keyboard.press(key);
+        assert.equal(await p.evaluate(() => document.activeElement.getAttribute('aria-label')), 'Add checked toppings', `${key}: focus stays on the button`);
+      }
+      assert.deepEqual(await values(p, 'chosen'), ['olives', 'peppers']);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${name}: a move is announced with the destination list's name`, { timeout: 30000 }, async () => {
+    const browser = await leaseBrowser(engine);
+    try {
+      const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
+      await p.setContent(page(form(transferList())));
+      const region = p.locator('.transfer-list + [aria-live="polite"]');
+      await check(p, 'Olives');
+      await check(p, 'Basil');
+      await press(p, 'Add checked toppings');
+      assert.equal(await region.textContent(), 'Moved 2 to Chosen toppings');
+      await p.evaluate(() => { Expressive.TransferList.i18n.moved = '{count} → {list}'; });
+      await check(p, 'Peppers');
+      await press(p, 'Add checked toppings');
+      assert.equal(await region.textContent(), '1 → Chosen toppings');
+      await p.evaluate(() => {
+        Expressive.TransferList.i18n.moved = 'Moved {count} to {list}';
+        const list = document.querySelector('.transfer-available');
+        list.removeAttribute('aria-label');
+        list.setAttribute('aria-labelledby', 'pantry missing');
+        document.body.insertAdjacentHTML('afterbegin', '<h2 id="pantry"> Pantry </h2>');
+      });
+      await check(p, 'Olives');
+      await press(p, 'Remove checked toppings');
+      assert.equal(await region.textContent(), 'Moved 1 to Pantry', 'the labelling text, trimmed, without the missing id');
+      assert.equal(await p.locator('[aria-live="polite"]').count(), 1, 'one region per list');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${name}: expressive:transfer bubbles with the moved rows and both lists`, { timeout: 30000 }, async () => {
+    const browser = await leaseBrowser(engine);
+    try {
+      const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
+      await p.setContent(page(form(transferList())));
+      await p.evaluate(() => {
+        document.addEventListener('expressive:transfer', (e) => {
+          window.__detail = {
+            target: e.target.className,
+            rows: e.detail.rows.map((row) => row.querySelector('input').value),
+            from: e.detail.from.className,
+            to: e.detail.to.className
+          };
+        });
+      });
+      await check(p, 'Peppers');
+      await check(p, 'Olives');
+      await press(p, 'Add checked toppings');
+      assert.deepEqual(await p.evaluate(() => window.__detail), {
+        target: 'transfer-list',
+        rows: ['olives', 'peppers'],
+        from: 'list transfer-available',
+        to: 'list transfer-chosen'
+      });
+      // Rows chosen as peppers then olives go back to their slots, and the detail lists them in that new order.
+      await press(p, 'Remove all toppings');
+      await check(p, 'Peppers');
+      await press(p, 'Add checked toppings');
+      await check(p, 'Olives');
+      await press(p, 'Add checked toppings');
+      await check(p, 'Peppers');
+      await check(p, 'Olives');
+      await press(p, 'Remove checked toppings');
+      assert.deepEqual(await p.evaluate(() => window.__detail), {
+        target: 'transfer-list',
+        rows: ['olives', 'peppers'],
+        from: 'list transfer-chosen',
+        to: 'list transfer-available'
+      });
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${name}: a form reset puts the rows back where they started`, { timeout: 30000 }, async () => {
+    const browser = await leaseBrowser(engine);
+    try {
+      const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
+      const markup = form(transferList({ chosen: ['mushrooms'] }))
+        .replace('value="mushrooms"', 'value="mushrooms" checked')
+        .replace('<button id="submit">', '<button type="reset" id="clear">Reset</button><button id="submit">');
+      await p.setContent(page(markup));
+      const settled = () => p.evaluate(() => new Promise((resolve) => setTimeout(resolve)));
+
+      await p.locator('#clear').click();
+      await settled();
+      assert.deepEqual(await values(p, 'available'), ['olives', 'peppers', 'onions', 'basil'], 'a reset before any move changes nothing');
+      assert.deepEqual(await values(p, 'chosen'), ['mushrooms']);
+
+      for (const reset of [() => p.locator('#clear').click(), () => p.evaluate(() => document.getElementById('form').reset())]) {
+        await check(p, 'Onions');
+        await press(p, 'Add checked toppings');
+        await press(p, 'Remove checked toppings');
+        await check(p, 'Basil');
+        await press(p, 'Add checked toppings');
+        assert.deepEqual(await values(p, 'chosen'), ['onions', 'basil']);
+        await reset();
+        await settled();
+        assert.deepEqual(await values(p, 'available'), ['olives', 'peppers', 'onions', 'basil']);
+        assert.deepEqual(await values(p, 'chosen'), ['mushrooms']);
+        assert.equal(await p.getByRole('checkbox', { name: 'Mushrooms' }).isChecked(), true, 'the default checked state returns');
+      }
+
+      // A row the page removed stays removed.
+      await check(p, 'Peppers');
+      await press(p, 'Add checked toppings');
+      await p.locator('[value="peppers"]').evaluate((box) => box.closest('li').remove());
+      await p.locator('#clear').click();
+      await settled();
+      assert.deepEqual(await values(p, 'available'), ['olives', 'onions', 'basil'], 'a removed row is not put back');
+
+      // A reset the page cancels leaves the rows where they are.
+      await p.evaluate(() => document.getElementById('form').addEventListener('reset', (e) => e.preventDefault()));
+      await check(p, 'Olives');
+      await press(p, 'Add checked toppings');
+      await p.locator('#clear').click();
+      await settled();
+      assert.deepEqual(await values(p, 'chosen'), ['mushrooms', 'olives'], 'a cancelled reset moves nothing');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${name}: a transfer list added after load works without a call`, { timeout: 30000 }, async () => {
+    const browser = await leaseBrowser(engine);
+    try {
+      const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
+      await p.setContent(page('<form id="form"></form>'));
+      await p.evaluate((list) => document.getElementById('form').insertAdjacentHTML('beforeend', list), transferList());
+      await check(p, 'Onions');
+      await press(p, 'Add checked toppings');
+      assert.deepEqual(await formValues(p), ['onions']);
+    } finally {
+      await browser.close();
+    }
+  });
 }
