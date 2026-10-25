@@ -70,6 +70,7 @@ export const AUTO_INIT_COMPONENTS = {
     selector: ".message-scroller",
   },
   PullToRefresh: { component: Components.PullToRefresh, selector: ".pull-to-refresh" },
+  LoadingOverlay: { component: Components.LoadingOverlay, selector: ".loading-overlay" },
   SwipeActions: { component: Components.SwipeActions, selector: ".list.swipeable" },
   // Only the input types with a caret: setSelectionRange() throws on the rest.
   InputMask: {

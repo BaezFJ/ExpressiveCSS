@@ -608,6 +608,13 @@ export const NAV: DocsGroup[] = [
           "A shape that morphs while it spins, for waits under five seconds.",
       },
       {
+        id: "loading_overlay",
+        label: "Loading overlay",
+        route: "/loading-overlay.html",
+        description:
+          "Covers part of a page while it loads, so nothing inside takes input until the page clears it.",
+      },
+      {
         id: "skeleton",
         label: "Skeleton",
         route: "/skeleton.html",
