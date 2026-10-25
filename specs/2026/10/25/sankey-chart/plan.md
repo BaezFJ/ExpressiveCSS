@@ -42,9 +42,9 @@ Outcome: every drawn link is reachable from the plot's tab stop and by pointer, 
 
 Prerequisites: group 1.
 
-- [ ] Add the V4 and V5 cases and confirm they fail.
-- [ ] Override `_count`, `show()`, `_place()`, `_keyTarget()` and `_indexAt()` with the link numbering from the requirements' proposals, and mark the active link.
-- [ ] Rebuild and rerun until they pass.
+- [x] Add the V4 and V5 cases and confirm they fail.
+- [x] Override `_count`, `show()`, `_place()`, `_keyTarget()` and `_indexAt()` with the link numbering from the requirements' proposals, and mark the active link.
+- [x] Rebuild and rerun until they pass.
 
 Completion check: V1 to V5 pass in all three engines.
 

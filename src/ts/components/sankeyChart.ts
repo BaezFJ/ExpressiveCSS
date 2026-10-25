@@ -40,6 +40,9 @@ interface Link {
   size: number;
 }
 
+/** A tooltip line part. */
+const span = (text: string) => Object.assign(document.createElement('span'), { textContent: text });
+
 /** A cell's trimmed text, or '' without the cell. */
 const text = (row: HTMLTableRowElement, column: number) => row.cells[column]?.textContent.trim() ?? '';
 
@@ -148,6 +151,8 @@ export class SankeyChart extends LineChart {
   private _nodes: Node[];
   /** The drawn links, in table order. */
   private _links: Link[];
+  /** The links' paths, in the same order. */
+  private _paths: SVGPathElement[];
 
   protected get _type() {
     return 'sankey-chart';
@@ -168,6 +173,58 @@ export class SankeyChart extends LineChart {
   }
 
   static key = 'Expressive_SankeyChart';
+
+  /** The links the keys and pointer reach. */
+  protected get _count() {
+    return this._links?.length ?? 0;
+  }
+
+  /** Highlights one link, numbered in table order among those drawn. Pass -1 to hide the tooltip. */
+  show(index: number) {
+    if (!this._tooltip || index === this.activeIndex) return;
+    this.activeIndex = index;
+    const link = this._links[index];
+    this._paths.forEach((path, i) => path.classList.toggle('active', i === index));
+    this._tooltip.hidden = !link;
+    if (link) this._fill(link);
+  }
+
+  /**
+   * Fills the tooltip beside the link's middle: its source and target under
+   * their column headers, with their nodes' colors, and the value cell's
+   * text, as the author wrote them. Past the middle it opens back over the plot.
+   */
+  private _fill({ flow, source, target, from, to, size }: Link) {
+    const x = this._across((source.x + NODE_WIDTH + target.x) / 2);
+    Object.assign(this._tooltip.style, { left: `${x}%`, top: `${(from + to + size) / 2}%` });
+    this._tooltip.classList.toggle('end', x > 50);
+    const [header, cells] = [this._header.map((cell) => cell.textContent.trim()), this._rows[flow.row].cells];
+    const [sourceName, targetName, value] = [span(header[0]), span(header[1]), span(header[2])];
+    sourceName.dataset.series = source.color;
+    targetName.dataset.series = target.color;
+    value.className = 'value';
+    this._tooltip.replaceChildren(sourceName, span(source.name), targetName, span(target.name), value, span(cells[2].textContent.trim()));
+  }
+
+  /** The link under the pointer, or -1 off every link. By position, since a touch keeps its first target as it drags. */
+  protected _indexAt(e: PointerEvent) {
+    const hits = (this.el.getRootNode() as Document | ShadowRoot).elementsFromPoint(e.clientX, e.clientY);
+    const link = hits.find((hit) => this._paths.includes(hit as SVGPathElement));
+    return this._paths.indexOf(link as SVGPathElement);
+  }
+
+  /**
+   * Steps through the links in table order. The arrows keep their meaning
+   * in a right-to-left chart, since table order is no direction on screen.
+   */
+  protected _keyTarget(key: string): number | undefined {
+    // With nothing shown, Escape is left to a dialog or sheet around the chart.
+    if (key === 'Escape') return this.activeIndex < 0 ? undefined : -1;
+    const last = this._links.length - 1;
+    const step = ({ ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>)[key];
+    if (step) return Math.min(last, Math.max(0, this.activeIndex + step));
+    return ({ Home: 0, End: last } as Record<string, number>)[key];
+  }
 
   /** Reads the flows and lays out their nodes and links. Without a link to draw, the chart draws nothing. */
   protected _read() {
@@ -208,8 +265,8 @@ export class SankeyChart extends LineChart {
       'aria-hidden': 'true',
       focusable: 'false'
     });
-    const links = this._links.map((link) =>
-      svgNode('path', { class: 'sankey-chart-link', 'data-series': link.source.color, d: this._linkPath(link) }));
+    const links = (this._paths = this._links.map((link) =>
+      svgNode('path', { class: 'sankey-chart-link', 'data-series': link.source.color, d: this._linkPath(link) }) as SVGPathElement));
     const nodes = this._nodes.map((node) =>
       svgNode('path', { class: 'sankey-chart-node', 'data-series': node.color, d: this._nodePath(node) }));
     svg.append(...links, ...nodes);

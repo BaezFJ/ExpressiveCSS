@@ -25,6 +25,7 @@ const html = `<style>${css}</style>
   <div style="width: 600px">
     ${chart('class="sankey-chart" id="ltr"', flows)}
     ${chart('class="sankey-chart" id="skips"', [...flows, ...skipped])}
+    ${chart('class="sankey-chart" id="keys"', [...flows.slice(0, 3), ...skipped, ...flows.slice(3)])}
   </div>
   <div style="width: 600px" dir="rtl">
     ${chart('class="sankey-chart" id="rtl"', flows)}
@@ -187,6 +188,97 @@ for (const [engine, browserType, browserTest] of engines) {
       const left = (chart, name) => chart.nodes[nodes.findIndex(([each]) => each === name)].box.left;
       assert.ok(left(rtl, 'Solar') > left(rtl, 'Grid') && left(rtl, 'Grid') > left(rtl, 'Homes'), 'the columns run from the right');
       laidOut(await drawn(page, '#rtl'), '#rtl', true);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: sankey chart arrow keys step through the drawn links in table order`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+      const plot = page.locator('#keys .sankey-chart-plot');
+      const tooltip = page.locator('#keys .sankey-chart-tooltip');
+      const text = async () => (await tooltip.isVisible()) ? (await tooltip.innerText()).replace(/\s+/g, ' ').trim() : null;
+      const active = () => page.locator('#keys').evaluate((el) =>
+        [...el.querySelectorAll('.sankey-chart-link')].flatMap((link, i) => (link.classList.contains('active') ? [i] : [])));
+
+      assert.equal(await plot.getAttribute('aria-roledescription'), 'sankey chart');
+      assert.equal(await plot.getAttribute('aria-label'), 'Energy flow');
+      // Keyboard focus, as Tab gives it, shows the first link.
+      await plot.focus();
+      await page.keyboard.press('Tab');
+      await page.keyboard.press('Shift+Tab');
+      assert.equal(await text(), 'Source Solar Target Grid Value 30');
+      assert.deepEqual(await active(), [0], 'the shown link is marked');
+      await page.keyboard.press('ArrowRight');
+      assert.equal(await text(), 'Source Wind Target Grid Value 50');
+      await page.keyboard.press('ArrowDown');
+      assert.equal(await text(), 'Source Grid Target Homes Value 60');
+      await page.keyboard.press('ArrowRight');
+      assert.equal(await text(), 'Source Grid Target Industry Value 20', 'the rows that draw nothing are skipped');
+      assert.deepEqual(await active(), [3]);
+      await page.keyboard.press('End');
+      assert.equal(await text(), 'Source Wind Target Storage Value 10');
+      await page.keyboard.press('ArrowUp');
+      assert.equal(await text(), 'Source Grid Target Industry Value 20');
+      await page.keyboard.press('Home');
+      await page.keyboard.press('ArrowLeft');
+      assert.equal(await text(), 'Source Solar Target Grid Value 30', 'the first link stays');
+      assert.equal(await tooltip.getAttribute('aria-live'), 'polite');
+      await page.keyboard.press('Escape');
+      assert.equal(await text(), null);
+      assert.deepEqual(await active(), [], 'Escape unmarks the link');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: sankey chart pointer highlights the link under it`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+      // A point just inside a link's source end, halfway down it, in page pixels.
+      const onLink = (id, index) => page.locator(id).evaluate((el, index) => {
+        const path = el.querySelectorAll('.sankey-chart-link')[index];
+        const [, x, top, bottom] = path.getAttribute('d').match(/^M([-\d.e]+),([-\d.e]+)C.* [-\d.e]+,([-\d.e]+)Z$/);
+        const at = (y) => new DOMPoint(Number(x), Number(y)).matrixTransform(path.getScreenCTM());
+        const rtl = getComputedStyle(el).direction === 'rtl';
+        return [at(top).x + (rtl ? -4 : 4), (at(top).y + at(bottom).y) / 2];
+      }, index);
+
+      for (const id of ['#ltr', '#rtl']) {
+        await page.locator(id).scrollIntoViewIfNeeded();
+        const tooltip = page.locator(`${id} .sankey-chart-tooltip`);
+        await page.mouse.move(...await onLink(id, 1));
+        assert.equal((await tooltip.innerText()).replace(/\s+/g, ' ').trim(), 'Source Wind Target Grid Value 50', id);
+        assert.equal(await page.locator(`${id} .sankey-chart-link.active`).count(), 1, `${id}: one link is marked`);
+        // In the gap between Solar and Wind, just past their edge, on no link.
+        const gap = await page.locator(id).evaluate((el) => {
+          const [solar, , wind] = [...el.querySelectorAll('.sankey-chart-node')].map((node) => node.getBoundingClientRect());
+          const rtl = getComputedStyle(el).direction === 'rtl';
+          return [rtl ? solar.left - 4 : solar.right + 4, (solar.bottom + wind.top) / 2];
+        });
+        await page.mouse.move(...gap);
+        assert.equal(await tooltip.isVisible(), false, `${id}: off every link hides the tooltip`);
+        await page.mouse.move(0, 0);
+      }
+
+      // A tap shows the link, and lifting the finger, which leaves the plot, keeps it.
+      await page.locator('#ltr').scrollIntoViewIfNeeded();
+      const [x, y] = await onLink('#ltr', 2);
+      const tapped = await page.locator('#ltr .sankey-chart-plot').evaluate((plot, [x, y]) => {
+        plot.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch', clientX: x, clientY: y }));
+        plot.dispatchEvent(new PointerEvent('pointerleave', { pointerType: 'touch' }));
+        return [Expressive.SankeyChart.getInstance(plot.parentElement).activeIndex, plot.querySelector('.sankey-chart-tooltip').hidden];
+      }, [x, y]);
+      assert.deepEqual(tapped, [2, false]);
     } finally {
       await browser.close();
     }

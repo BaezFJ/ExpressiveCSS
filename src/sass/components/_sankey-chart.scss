@@ -61,6 +61,25 @@
 .sankey-chart-link {
   fill: var(--sankey-chart-color);
   fill-opacity: var(--md-comp-sankey-chart-link-opacity);
+
+  // The link the keys or pointer picked.
+  &.active {
+    fill-opacity: 0.8;
+  }
+}
+
+// Level with the link's middle.
+.sankey-chart-tooltip {
+  translate: 12px -50%;
+
+  &.end {
+    translate: calc(-100% - 12px) -50%;
+  }
+
+  // The value header names a column, not a node, so it has no swatch.
+  > span.value::before {
+    content: none;
+  }
 }
 
 // Over the drawing, and out of the pointer's way, so a link under a name
