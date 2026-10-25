@@ -1,0 +1,84 @@
+# Back-to-top button
+
+Date: 2026-10-25
+Roadmap phase: Phase 44, back-to-top button
+Branch: `feature/2026-10-25-back-to-top`
+Base: `origin/master` at `a9bbf77ad9edd0f44ce584e71f07a485fe6f2933` (#425)
+Status: specified 2026-10-25; not implemented
+
+Follow the [mission's agreed scope for components and behaviors](../../../../mission.md#agreed-scope), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 44](../../../../roadmap.md#phase-44-back-to-top-button). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
+
+## Phase selection
+
+The user picked Phase 44. Phases 42 to 51 are being specified in parallel threads, so this spec skips the earliest-unfinished-phase pick. Phase 44 has no dependencies, and no later phase depends on it. This spec leaves the roadmap's completion state unchanged.
+
+## Current behavior
+
+These facts come from the base commit.
+
+- Nothing in `src/ts`, `src/sass` or `docs/src` provides a back-to-top control. A page that wants one writes its own scroll listener, styles and focus handling.
+- `AppBar` in `src/ts/components/appBar.ts` reacts to page scroll without a scroll listener. It inserts a zero-height, `aria-hidden` sentinel after the header and watches it with an `IntersectionObserver`. `ScrollSpy` also uses `IntersectionObserver`.
+- `Tabs`, `Tooltip`, `MessageScroller`, `Confetti` and `LineChart` read `prefers-reduced-motion: reduce` through `matchMedia`. `tabs.ts` picks `'instant'` or `'smooth'` from it.
+- A FAB is `button.circle.extra` (56dp). `.fab-menu` is `position: fixed` at `inset-inline-end` and `bottom` of `--md-comp-fab-menu-offset` (16px), with `--md-comp-fab-menu-z` (997).
+- The docs layout already has a skip link, `a.visually-hidden-focusable.button.filled.docs-skip-link` with `href="#docs-main"`, and `<main id="docs-main" tabindex="-1">`.
+- Following an in-page link scrolls to its target but does not move focus to a target that is not focusable. Without `tabindex="-1"` on the target, focus stays on the link.
+- Components join AutoInit through one line in `src/ts/components/registry.ts`, and `tests/fixtures.js` holds hand-written AutoInit fixtures.
+
+## Scope
+
+### Requirements
+
+- R1. Markup is an in-page link: `<a class="back-to-top" href="#main" aria-label="Back to top">` with an icon, styled as a FAB. Without the script it is an ordinary visible link that jumps to its target.
+- R2. A `BackToTop` component, started by `AutoInit()` from `.back-to-top`, keeps the link hidden while the window's scroll position is above the `threshold` option. Hidden means not painted, not reachable by Tab, not hit by the pointer and absent from the accessibility tree. The link appears once the page scrolls past the threshold and hides again when the page scrolls back above it.
+- R3. The component watches the threshold with an `IntersectionObserver` on a sentinel, like `AppBar`, and adds no scroll listener.
+- R4. `threshold` defaults to one viewport height and can be set from markup through `data-back-to-top-options` or from `BackToTop.init(el, options)`.
+- R5. Activating the link by click, Enter or a screen reader's activation scrolls the window to the top and moves focus to the element the `href` names. Focus moves without a second scroll jump, and the next Tab reaches the first focusable element after the target. If the target is not focusable, the component makes it focusable for this move only, so the target's Tab behavior does not change afterward.
+- R6. The scroll is smooth, and instant under `prefers-reduced-motion: reduce`. The show and hide motion follows the same preference.
+- R7. Styles: the link is fixed at the window's bottom inline-end corner, with offset and stacking custom properties so a page can move it away from a `.fab-menu` or a navigation bar. Its icon-holding box is sized in `rem()`.
+- R8. `destroy()` removes the sentinel, disconnects the observer, removes every attribute the component added, and leaves the markup as authored.
+- R9. `semantics.json` gains a `back-to-top` entry: the link needs an accessible name, and the hidden state is the framework's, so authors must not write it. `npm run build:semantics` and `npm run build:skill` regenerate the derived copies.
+- R10. A docs page, the `llm.md` section, the changelog's Added entry and a reviewed gzip budget line in `tests/selective-builds.test.js` document and account for the component.
+
+### Exclusions
+
+- Scroll containers. The component watches the window only. A pane, dialog or `.scroll-area` that scrolls on its own is out of scope; the docs say so.
+- A `<button>` form. A link works without the script and names its own focus target.
+- A scroll listener, scroll-driven animations or a progress ring that fills with the scroll position.
+- Hiding the link while the person scrolls down and showing it while they scroll up. It depends on position only.
+- Window-size prefixes. The control does not change the page layout.
+
+## Decisions
+
+### Confirmed in the interview on 2026-10-25
+
+- Plan: start with a three-engine probe, then the component, styles, tests and docs in five groups. WebKit scrolls asynchronously and a `focus()` call can cancel a smooth scroll, so engine behavior shapes the activation code before tests are written.
+- Markup and behavior: an enhanced in-page link (R1), hidden until the window scrolls past `threshold`, default one viewport height (R2, R4), watched by a sentinel `IntersectionObserver` (R3). Activation scrolls to the top, instantly under reduced motion, and focuses the `href` target (R5, R6). Window scrolling only.
+- Merge requires the three-engine roadmap test, the hidden-state checks, the reduced-motion check and the jsdom lifecycle tests, on top of the standard gates: docs, `llm.md`, the budget line, `build:skill`, `npm run verify`, the MCP tests and `npm run verify:packages`.
+
+### Proposals for implementation
+
+These follow from the code and can change during implementation if the probe or the code disagrees.
+
+- `threshold` is a CSS length string, default `'100vh'`, applied as the sentinel's `top`. The sentinel then tracks viewport resizes without script. The probe confirms that an absolutely positioned sentinel at the start of `<body>` measures from the document's top in all three engines.
+- The hidden state is the `inert` attribute, which takes the link out of the tab order, the pointer and the accessibility tree in one step. CSS styles `.back-to-top[inert]` as `visibility: hidden` with `opacity: 0`, so a page without the script never hides the link. Showing removes `inert`.
+- Activation calls `preventDefault()`, then `window.scrollTo({ top: 0, behavior })` and `target.focus({ preventScroll: true })`. The probe decides the order. If the target has no `tabindex` and is not focusable, the component sets `tabindex="-1"` and removes it on the target's next `blur`.
+- An `href` of `#` or `#top`, or one that names no element, scrolls to the top and focuses `document.body` through the same temporary `tabindex`. The docs recommend naming the main landmark.
+- Custom properties: `--md-comp-back-to-top-offset` (16px, matching the FAB menu) and `--md-comp-back-to-top-z` (997). The docs show raising the offset when a `.fab-menu` shares the corner.
+- Semantics rules: `require-accessible-name` on `.back-to-top`, and a `forbid` rule on `.back-to-top[inert]`. Whether a rule can also check that the `href` fragment names an id needs a look at the `require-idref` kind, which reads the attribute value as a bare id. If that needs a new rule kind, group 5 leaves it to the docs and records why.
+- Component options: `threshold` only. No `i18n`, since the author writes the accessible name.
+
+### Open decisions
+
+None.
+
+## Technical constraints
+
+- New functions stay below cyclomatic complexity 5 for the fallow pre-commit gate.
+- `components/` imports from `core/`, never the reverse. The component gets one export line in `components/index.ts` and one registry line.
+- Listeners take `this._events.signal`. The temporary `blur` listener on the target gets its own controller from `controllerFor(el)`.
+- jsdom has no layout or `IntersectionObserver` geometry, so jsdom tests cover structure and lifecycle. Visibility, scrolling and focus are browser tests.
+- `inert` hides the link from find-in-page as well as from the accessibility tree. That is acceptable for a control with no text of its own.
+
+## Dependencies
+
+None. No later phase depends on this one.
