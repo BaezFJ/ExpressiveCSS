@@ -9,7 +9,7 @@ Component ID: `buttons`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `3f411251c08b4508167b29ffc24f4efbe76fe596af7ad7402026600b18327dfa`
+Contract SHA-256: `3fd8d71cab79f67810f521826b4589ceb5fba4d3f38ae3461616f9217e1c3625`
 
 #### Selection and adaptation
 
