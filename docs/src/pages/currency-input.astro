@@ -1,0 +1,107 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "reading", label: "How typed amounts read" },
+  { id: "value", label: "The submitted value" },
+  { id: "validity", label: "Text with no amount" },
+  { id: "methods", label: "Options and methods" },
+]);
+---
+<DocsLayout page="currency_input" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          Add <code>data-currency</code> to a <a href={route('text_inputs')}>text field</a>
+          so the amount shows in the page's locale and currency once the field loses focus.
+        </p>
+        <p>
+          The attribute holds an ISO 4217 code, such as <code>EUR</code>, on an
+          <code>&lt;input&gt;</code> of type <code>text</code>. <code>AutoInit()</code>
+          starts every one. The locale comes from the nearest <code>lang</code>. While
+          the field has focus it shows the plain number, such as <code>1234,5</code>, and
+          when it loses focus it shows <code>1.234,50&nbsp;€</code>. Add
+          <code>inputmode="decimal"</code> so phones open a number pad with a decimal
+          key, and name the currency in the label.
+        </p>
+        <div class="mb-3" style="max-width: 24rem;">
+          <div class="field" lang="de">
+            <input id="demo-euro" type="text" inputmode="decimal" autocomplete="off" placeholder=" " data-currency="EUR" value="1234.5">
+            <label for="demo-euro">Preis in Euro</label>
+          </div>
+          <div class="field" lang="en-US">
+            <input id="demo-dollar" type="text" inputmode="decimal" autocomplete="off" placeholder=" " data-currency="USD">
+            <label for="demo-dollar">Price in US dollars</label>
+          </div>
+          <div class="field" lang="ja">
+            <input id="demo-yen" type="text" inputmode="decimal" autocomplete="off" placeholder=" " data-currency="JPY">
+            <label for="demo-yen">価格（円）</label>
+          </div>
+        </div>
+<Code code={`
+<div class="field">
+  <input id="price" name="price" type="text" inputmode="decimal" autocomplete="off"
+         placeholder=" " data-currency="EUR">
+  <label for="price">Price in euros</label>
+</div>
+`} />
+  </Section>
+  <Section {...S.reading}>
+        <p>
+          Typed and pasted text keeps its digits, <code>.</code>, <code>,</code> and a
+          leading minus, and drops spaces, signs and letters. The last <code>.</code> or
+          <code>,</code> is the decimal mark when it is followed by no more digits than
+          the currency shows; every other separator groups. So <code>1234.5</code>,
+          <code>1234,5</code>, <code>1.234,5</code> and <code>1,234.50</code> all read
+          1234.5, and <code>1.234</code> reads 1234 for euros. Yen has no fraction
+          digits, so every separator groups. Full-width digits from an input method
+          editor and the locale's own digits read as digits.
+        </p>
+  </Section>
+  <Section {...S.value}>
+        <p>
+          The form submits the plain number, <code>1234.5</code>, rounded as the field
+          shows it, so a submit and <code>new FormData(form)</code> read the same value,
+          also when the form is submitted with Enter while the field has focus. The field
+          keeps its <code>name</code>, and an empty field submits an empty string.
+        </p>
+        <p>
+          A saved value is formatted when the component starts, without an
+          <code>input</code> or <code>change</code> event, and again after a form reset.
+          It reads as a plain number first, so write saved amounts as
+          <code>value="1234.5"</code>; <code>value="1.234"</code> is 1.234. A value a
+          script sets shows formatted after the field next loses focus. A page's
+          <code>change</code> and <code>blur</code> listeners read the formatted text, and
+          the instance's <code>value</code> property gives the number.
+          <code>min</code>, <code>max</code> and <code>step</code> do not apply to a text
+          input. Do not combine <code>data-currency</code> with
+          <a href={route('input_mask')}><code>data-mask</code></a>.
+        </p>
+  </Section>
+  <Section {...S.validity}>
+        <p>
+          Text with no digit stays as typed, and the field reports itself invalid with
+          <code>Enter an amount.</code> until it holds an amount or is empty. A
+          <code>.validate</code> field shows the message when it loses focus.
+        </p>
+  </Section>
+  <Section {...S.methods}>
+        <p>
+          <code>i18n.invalid</code> replaces the validity message, from script or from
+          <code>data-currency-input-options</code>.
+        </p>
+<Code code={`
+<input type="text" data-currency="EUR"
+       data-currency-input-options='{"i18n":{"invalid":"Betrag eingeben."}}'>
+`} />
+<Code code={`
+const price = Expressive.CurrencyInput.getInstance(document.getElementById('price'));
+price.value;     // 1234.5, or null when the field is empty or holds no digit
+price.destroy(); // removes the listeners, clears the message, leaves the text
+`} />
+  </Section>
+</DocsLayout>

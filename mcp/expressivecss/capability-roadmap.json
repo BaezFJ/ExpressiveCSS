@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.15.0",
-  "sourceRevision": "35196509a7db9834442af3767152422e199faf0e",
+  "sourceRevision": "fd4ba7459e86756a6240b7fa921e97fb85a37b45",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-10-10",
@@ -4472,6 +4472,62 @@
           "file": "tests/input-mask-browser.test.js",
           "name": "chromium: the field waits for a composition to end, in either event order",
           "scope": "Composition dispatched with the last input before and after compositionend, and a CDP composition of full-width digits.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "currency-input",
+      "title": "Currency input",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-25",
+      "scope": "A data-currency ISO 4217 code on a text input; the amount shown with Intl.NumberFormat in the nearest lang and that currency on blur, the plain number in the locale's decimal mark on focus, typed and pasted amounts read in either decimal mark, a validity message for text with no digit that i18n can replace, saved and reset values formatted, a value property, and the plain number in the form data.",
+      "adaptation": "The native value holds the formatted text, and a capture-phase formdata listener on the document swaps the field's entry for the plain number, so submits and new FormData(form) read a number while the field keeps its name. setCustomValidity reports text with no amount, so constraint validation and .validate show the message.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-25",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the field a labelled native input that names the currency, show the amount in the reader's locale, let people edit a plain number, report text that holds no amount as invalid, and submit a number a server can read whatever the locale."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/ts/components/currencyInput.ts",
+          "sha256": "f2cefec405a6ae879b42d812b5d272809c7ce72eb35976486ff778a8db5ef110"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified.",
+          "nextStep": "Type an amount on iOS Safari and Android Chrome decimal keypads under lang=\"de\", and read the field with VoiceOver and NVDA."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/currency-input-browser.test.js",
+          "name": "chromium: a typed amount shows in the locale and currency after blur, and the form gets the number",
+          "scope": "Real keyboard typing under lang=\"de\" with euros formatted on blur, and the plain number in FormData and the submit event.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/currency-input-browser.test.js",
+          "name": "chromium: text that holds no amount stays as typed and marks the field invalid until it does",
+          "scope": "Text with no digit kept, the validity message and aria-invalid set, cleared once the field holds an amount, and the message replaced through data-currency-input-options.",
           "state": "not-recorded"
         }
       ],

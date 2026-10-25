@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 39, currency formatting in text fields
 Branch: `feature/2026-10-25-currency-input`
 Base: `origin/master` at `c9ccd0808`, fetched 2026-10-25
-Status: specified; not implemented
+Status: implemented 2026-10-25; not merged
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 39](../../../../roadmap.md#phase-39-currency-formatting-in-text-fields). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -87,7 +87,9 @@ None.
 - R10 originally also flagged a code that is not three ASCII letters. The semantics engine only takes selectors, so the rule flags an empty code and leaves the rest to R11; changed during group 1 on 2026-10-25.
 - A separator after the last digit is dropped before R4 applies, because some currency symbols carry dots (`1.234,50 kr.` in Danish, `ج.م.` in Egyptian Arabic) and would otherwise read as the decimal mark.
 - The parser maps the locale's own digits and decimal mark to Latin ones first, so a field under `lang="ar-EG"` reads back the Arabic-Indic digits Intl writes.
-- On master, `tests/expressivecss-component-decisions.test.js` fails because `sourceRevision` names `35196509a`, which the #422 squash dropped. Group 3's re-pin (R14) fixes it on this branch.
+- On master, `tests/expressivecss-component-decisions.test.js` fails because `sourceRevision` names `35196509a`, which the #422 squash dropped. Group 3's re-pin fixes it on this branch.
+- R14 asked for a `sourceRevision` on `master`, but the capability links need `currencyInput.ts` and its browser test at the pinned commit, and no master commit has them. The pin names this branch's group 2 commit `fd4ba7459`, as Phase 38 did. A squash merge drops it, so the follow-up `docs(roadmap)` pull request must re-pin to the merge commit.
+- The docs demo shows that typing `1234.5` into a yen field reads 12345, since yen has no fraction digits. That follows R4.
 
 ## Technical constraints
 

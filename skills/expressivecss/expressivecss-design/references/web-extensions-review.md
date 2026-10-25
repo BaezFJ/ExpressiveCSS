@@ -142,6 +142,22 @@ Feature gap: The form submits only the formatted value, and masks cannot change 
 
 Mapped browser scope: Typed and inserted digits formatted with the caret after the last one, form data and submit data, dropped letters, typed literals and overflow, letter and escaped-literal masks, Backspace and Delete next to a literal, a selection delete, a mid-value insert, composition dispatched in both event orders and through CDP, a saved value formatted without events and again after a reset button and form.reset(), field, form and document input listeners, Keypad keys, and destroy(). No spoken-output assertion.
 
+## [Currency input](../../components/currency-input.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the field a labelled native input that names the currency, show the amount in the reader's locale, let people edit a plain number, report text that holds no amount as invalid, and submit a number a server can read whatever the locale.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page writes the field, its label and the currency code; the framework formats the amount with Intl.NumberFormat on blur, shows a plain number on focus, reads typed and pasted amounts in either decimal mark, sets the validity message and swaps the form data entry for the plain number.
+
+Verification gap: Typing and blur under de with euros, focus editing, change and blur listener order, insertText pastes submitted with Enter under de and en, the validity message and its i18n replacement, saved values, reset and destroy() are checked in a browser, and the parsing rules in jsdom. Mobile decimal keypads and spoken output remain unverified. Next check: Type an amount on iOS Safari and Android Chrome decimal keypads under lang="de", and read the field with VoiceOver and NVDA.
+
+Feature gap: Formatting happens on blur, not while typing; there is no currency picker, no min or max check, and a form that repeats a currency field's name gets one entry for them. Next check: None planned.
+
+Mapped browser scope: A typed amount formatted on blur with the plain number in form data and submit data, the plain number on focus, change and blur listeners reading the formatted text, pasted amounts submitted with Enter under de and en, text with no digit kept and marked invalid with the default and replaced message, a saved value formatted without events and again after a reset button and form.reset(), and destroy() clearing the message. No spoken-output assertion.
+
 ## [Accordion](../../components/accordion.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

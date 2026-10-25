@@ -273,6 +273,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   it ends, and saved and reset values are formatted too. The form submits
   the value as shown. A new semantics rule keeps `data-mask` on input types
   that have a caret.
+- Currency input. A text field with `data-currency="EUR"` shows its
+  amount in the page's locale and that currency once it loses focus, such
+  as `1.234,50 €` under `lang="de"`, and the plain number `1234,5` while
+  it has focus. The last `.` or `,` is the decimal mark when no more than
+  the currency's fraction digits follow it, so `1234.5` and `1.234,5` read
+  the same. The form data holds the plain number, `1234.5`. Text with no
+  digit stays as typed and marks the field invalid, with a message `i18n`
+  can replace. The instance's `value` returns the number. A new semantics
+  rule keeps `data-currency` on text inputs.
 
 - A `data-draggable` map marker moves without a drag (WCAG 2.5.7). A tap
   picks it up and sets `aria-pressed`, and the next tap on the map drops it

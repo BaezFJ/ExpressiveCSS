@@ -43,12 +43,12 @@ Outcome: the component is documented, the pin and generated files are current, a
 
 Prerequisites: group 2.
 
-- [ ] Add a "Currency input" section after "Input mask" in `llm.md`, the types export in `modular.ts`, and a docs page with a live example, added to the docs catalogue and `docs/src/data/nav.ts`. Cover the attribute, the parsing rules, the submitted value, the `value` getter, `i18n.invalid`, `inputmode="decimal"`, a label that names the currency, and that `data-mask` and `data-currency` do not combine.
-- [ ] Add the component to `docs/src/data/component-decisions.json` with its capability entry, and pin `sourceRevision` to a commit on `master`.
-- [ ] Add an entry to `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`, and an Added entry to the Unreleased section of `CHANGELOG.md`.
-- [ ] Update the hardcoded guide counts in `tests/expressivecss-skill.test.js`, `tests/expressivecss-version-resolution.test.js` and `tests/expressivecss-component-decisions.test.js`, and the reading budget if it grows.
-- [ ] Run `npm run build`, confirm the budget line, then run `npm run build:skill` as the last generation step and `npm run check:generated`.
-- [ ] Record each result in validation.md.
+- [x] Add a "Currency input" section after "Input mask" in `llm.md`, the types export in `modular.ts`, and a docs page with a live example, added to the docs catalogue and `docs/src/data/nav.ts`. Cover the attribute, the parsing rules, the submitted value, the `value` getter, `i18n.invalid`, `inputmode="decimal"`, a label that names the currency, and that `data-mask` and `data-currency` do not combine.
+- [x] Add the component to `docs/src/data/component-decisions.json` with its capability entry, and pin `sourceRevision` to a commit on `master`.
+- [x] Add an entry to `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`, and an Added entry to the Unreleased section of `CHANGELOG.md`.
+- [x] Update the hardcoded guide counts in `tests/expressivecss-skill.test.js`, `tests/expressivecss-version-resolution.test.js` and `tests/expressivecss-component-decisions.test.js`, and the reading budget if it grows.
+- [x] Run `npm run build`, confirm the budget line, then run `npm run build:skill` as the last generation step and `npm run check:generated`.
+- [x] Record each result in validation.md.
 
 Completion check: `npm run check:generated` is clean, V9 and V10 pass, V11 runs on the pull request, and every check in validation.md shows a result.
 
