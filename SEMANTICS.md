@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**98 of 98 rows enforced; 0 remaining.**
+**99 of 99 rows enforced; 0 remaining.**
 
-93 of those rows are components - a part of the framework an author writes markup for.
+94 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 93 components declare conformance debt.**
+**2 of 94 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -640,6 +640,18 @@ Added with the heatmap chart component. The <table> is the chart's text alternat
 
 - **heatmap-chart-is-a-figure-with-a-table** - Write .heatmap-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
 - **heatmap-chart-has-a-caption** - Name a .heatmap-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
+
+### hover-card
+
+Added with the hover card component. The author writes a link with the hover-card-trigger class and points its aria-details at a .popover with popover="hint"; AutoInit shows that card after a delay when the link is hovered or gets keyboard focus. The card is extra detail, so it is not a tooltip and not the link's description.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `hover-card-trigger-is-a-link` | forbid | `.hover-card-trigger:not(a[href])` | must not match |
+| `hover-card-names-its-card` | require-idref | `.hover-card-trigger` | `aria-details` must reference `[popover]` inside `body` |
+
+- **hover-card-trigger-is-a-link** - Put hover-card-trigger on an <a href>. The card previews where the link goes, and a tap or click still has to follow it; a button already has a popover that opens on press.
+- **hover-card-names-its-card** - Point the trigger's aria-details at the id of its card, a [popover] element in the page. The component finds the card through it, and screen readers use it to reach the card.
 
 ### icon-buttons
 
