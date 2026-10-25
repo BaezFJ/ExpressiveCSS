@@ -9,7 +9,7 @@ Component ID: `lists`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `9287d844073060fccd4e240e381da7387a1d2b7798ae771825496dd40cba6a20`
+Contract SHA-256: `676fa5f0d10f291eca44ac48d6c0afd425457e5ef93ce3d343b8a69cf850691c`
 
 #### Selection and adaptation
 
@@ -64,7 +64,7 @@ Two variants: standard (the default) and `segmented`.
 
 #### Also documented
 
-The Lists section of the [API reference](https://www.expressivecss.com/llm.md) also covers Standard, Segmented, Text, Icons, Links, Sortable.
+The Lists section of the [API reference](https://www.expressivecss.com/llm.md) also covers Standard, Segmented, Text, Icons, Links, Sortable, Long lists.
 
 #### Rules
 

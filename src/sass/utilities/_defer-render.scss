@@ -1,0 +1,17 @@
+@use "../abstracts" as *;
+
+// The browser skips layout and paint for each child while it is off screen.
+// A skipped child reserves --defer-render-row-size, or the list item height
+// inside .list, and keeps its last rendered size after it has been on screen.
+// Paint containment clips what a child draws outside its box, so focus rings
+// inside a child are drawn inset, and rows with swipe actions, which wait past
+// the row's end, are left alone. Table rows ignore containment.
+.defer-render > :not(:has(> .swipe-actions)) {
+  content-visibility: auto;
+  contain-intrinsic-block-size: auto var(--defer-render-row-size, var(--md-comp-list-item-height, #{rem(56px)}));
+
+  // -3px is the focus-ring mixin's outline width.
+  :focus-visible {
+    outline-offset: -3px;
+  }
+}

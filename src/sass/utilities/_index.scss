@@ -8,3 +8,4 @@
 @forward "helpers";          // alignment, flex, truncate, responsive media
 @forward "scroll-area";      // native scrolling with themed scrollbars
 @forward "shapes";           // .shape-pebble, .shape-scallop-6, ... (masks)
+@forward "defer-render";     // skip layout and paint for off-screen rows
