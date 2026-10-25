@@ -1,5 +1,6 @@
 export * from './components';
 export { Dialogs } from './behaviors/dialogs';
+export type { ConfirmOptions } from './behaviors/dialogs';
 export { BottomSheets } from './behaviors/bottomSheets';
 export { SideSheets } from './behaviors/sideSheets';
 export { Forms } from './behaviors/forms';

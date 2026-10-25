@@ -52,6 +52,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   words set with `i18n`, and focus goes back to the control that had it
   when the region clears. A new semantics rule asks for a direct
   `.loading-indicator` child.
+- `Dialogs.confirm()` asks a yes-or-no question in a basic alert dialog
+  and returns a promise that resolves `true` on the confirm button and
+  `false` on Cancel, Escape or a scrim tap. Focus starts on Cancel and
+  returns to the opener, and the dialog is removed once it closes.
+  `Dialogs.i18n` holds the default labels, "OK" and "Cancel".
 - `.defer-render` makes the browser skip layout and paint for a long
   list's off-screen rows through `content-visibility: auto`. Skipped rows
   reserve `--defer-render-row-size`, the list item height by default, and
