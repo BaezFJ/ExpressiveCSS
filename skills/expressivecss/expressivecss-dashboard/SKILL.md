@@ -14,7 +14,7 @@ Read [analytics-overview.html](./assets/analytics-overview.html) before writing 
 Then read, as each becomes relevant:
 
 - the [charts guide](../expressivecss-charts/SKILL.md) before adding any chart. It owns chart choice, the table contract, number parsing, honest scales, chart tokens, sparklines and redrawing. This guide adds only dashboard rules.
-- the component guide for each component you place: [stat](../components/stat.md), [data table](../components/data-table.md), [cards](../components/cards.md), [chips](../components/chips.md), [select](../components/select.md), [menu](../components/menu.md), [skeleton](../components/skeleton.md), [empty state](../components/empty-state.md), [navigation rail](../components/navigation-rail.md), [navigation bar](../components/navigation-bar.md), and each selected chart.
+- the component guide for each component you place, before writing its markup. The reference page shows one arrangement; each guide holds its component's required structure and rules: [stat](../components/stat.md), [data table](../components/data-table.md), [cards](../components/cards.md), [chips](../components/chips.md), [select](../components/select.md), [menu](../components/menu.md), [skeleton](../components/skeleton.md), [empty state](../components/empty-state.md), [navigation rail](../components/navigation-rail.md), [navigation bar](../components/navigation-bar.md), and each selected chart.
 - [dashboard recipes](./references/recipes.md) when the page is an operations, sales, finance or admin dashboard, or to pick a card and table density.
 
 ## Workflow

@@ -13,6 +13,8 @@ metadata:
 
 You are the orchestrator. You do not review the interface yourself. You collect shared evidence once, hand each of five specialists a brief, check what they bring back, and write one report. The specialists exist so each lens gets a full context window and its own guides; your job is to keep them from overlapping, keep them honest, and turn their output into a short list of fixes a developer can act on.
 
+A review is read-only. Do not edit the files under review, even for a one-line fix; "fixes" in a request means the ranked fixes in the report. Apply them only when the user asks after reading it.
+
 The framework knowledge lives in the sibling skill at `../expressivecss/` (call it `<base>`). Its guides, component references, `semantics.json` rule IDs, and version resolver are the source of truth. This skill adds only the orchestration.
 
 ## 1. Pin the target
@@ -114,7 +116,7 @@ Blocked checks do not cost points, but name them under the score so a high numbe
 
 ## 6. Write the report
 
-Return the report as your reply, not as a file. Use this format exactly. Do not use tables. Keep the section emojis; they are part of the requested format. Each bullet names the location (`file:line`, selector, or screen region), what is wrong, and the fix in a few words. When a list has nothing confirmed, write "None found" and say what was checked, so an empty list reads as a result and not an omission. Cite `semantics.json` rule IDs and lint IDs where they apply. Section 5 has a single list, so start each of its bullets with `[critical]`, `[major]`, or `[polish]`.
+Return the report as your reply, not as a file, and stop there: leave the reviewed files unchanged, even when a fix is one line and instructions elsewhere tell you to act instead of asking. End by offering to apply the priorities. Use this format exactly. Do not use tables. Keep the section emojis; they are part of the requested format. Each bullet names the location (`file:line`, selector, or screen region), what is wrong, and the fix in a few words. When a list has nothing confirmed, write "None found" and say what was checked, so an empty list reads as a result and not an omission. Cite `semantics.json` rule IDs and lint IDs where they apply. Section 5 has a single list, so start each of its bullets with `[critical]`, `[major]`, or `[polish]`.
 
 ```markdown
 # ExpressiveCSS Orchestrated UI Review Report
