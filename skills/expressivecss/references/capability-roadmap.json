@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.15.0",
-  "sourceRevision": "b1422daead32f22ddbc0c87c0efbb03016192d50",
+  "sourceRevision": "5a108f6fe903117cf95c72396b71515af738f3fe",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-10-10",
@@ -3552,6 +3552,66 @@
         }
       ],
       "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "loading-overlay",
+      "title": "Loading overlay",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-25",
+      "scope": "A region the page marks aria-busy=\"true\" shows a surface scrim and its loading indicator and is made inert until the attribute goes, keeps an inert state the author set, announces the start and the finish in a status region after it with i18n strings, returns focus to the control that had it, and stops following the attribute on destroy().",
+      "adaptation": "The native inert attribute blocks pointer and keyboard input instead of script handlers. The page owns aria-busy, and the script follows it with a MutationObserver. Inert content leaves the accessibility tree, so the script adds a visually hidden role=\"status\" region outside the region.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-25",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Block input to the busy region only, report the busy state and its end to assistive technology, keep focus from being lost for good, and keep the content visibly unavailable in forced colors."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_loading-overlay.scss",
+          "sha256": "6bcd816fd03ee06982d551feccbbb0aebc7695c839b80cba12ff1466950f0222"
+        },
+        {
+          "path": "src/ts/components/loadingOverlay.ts",
+          "sha256": "a3f819b703bcf6b0b85219fe445499fe0f198ee5fa9d1f45eb01ba0810239509"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified.",
+          "nextStep": "Mark a region busy and clear it with VoiceOver and NVDA running, and view it under a Windows high-contrast theme."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/loading-overlay-browser.test.js",
+          "name": "chromium: a busy region takes no click or Tab, and clearing it gives both back",
+          "scope": "A real mouse click and Tab while aria-busy is \"true\", and again after it is set to \"false\" and after it is removed.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/loading-overlay-browser.test.js",
+          "name": "chromium: focus goes back to where it was when the region clears",
+          "scope": "Focus dropped by inert and returned on clear, a focus move made while busy kept, and a removed control not refocused. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

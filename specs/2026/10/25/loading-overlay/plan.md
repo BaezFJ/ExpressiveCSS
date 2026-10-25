@@ -67,13 +67,13 @@ Covers R1 to R7.
 
 Prerequisites: group 4.
 
-- [ ] Add `docs/src/pages/loading-overlay.astro` with a live region and a button that toggles it busy, the markup, `i18n`, the scrolling-region note from group 1, and the rule that the page owns `aria-busy`. Add it to the docs catalogue.
-- [ ] Add a Loading overlay section to `llm.md`, and the component to both AutoInit registry tables there and in `docs/src/pages/auto-init.astro`.
-- [ ] Add the hand-written entry to `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`, and update the hardcoded guide counts in the skill, version-resolution and component-decisions tests.
-- [ ] Add an Added entry to `CHANGELOG.md` under Unreleased.
-- [ ] Rebuild, measure CSS and JavaScript gzip sizes from the merge-base build, and add reviewed budget lines to `tests/selective-builds.test.js`.
-- [ ] Run `npm run build:skill` after the last edit, since the contract hash covers the changelog and tests, then `npm run check:generated` and `npm run verify`.
-- [ ] Run `npm test --prefix mcp/expressivecss` and `npm run verify:packages`.
+- [x] Add `docs/src/pages/loading-overlay.astro` with a live region and a button that toggles it busy, the markup, `i18n`, the scrolling-region note from group 1, and the rule that the page owns `aria-busy`. Add it to the docs catalogue.
+- [x] Add a Loading overlay section to `llm.md`, and the component to both AutoInit registry tables there and in `docs/src/pages/auto-init.astro`.
+- [x] Add the hand-written entry to `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`, and update the hardcoded guide counts in the skill, version-resolution and component-decisions tests.
+- [x] Add an Added entry to `CHANGELOG.md` under Unreleased.
+- [x] Rebuild, measure CSS and JavaScript gzip sizes from the merge-base build, and add reviewed budget lines to `tests/selective-builds.test.js`.
+- [x] Run `npm run build:skill` after the last edit, since the contract hash covers the changelog and tests, then `npm run check:generated` and `npm run verify`.
+- [x] Run `npm test --prefix mcp/expressivecss` and `npm run verify:packages`.
 
 Completion check: V8 to V10 pass.
 

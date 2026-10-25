@@ -2,7 +2,7 @@
 
 Roadmap phase: Phase 41, loading overlay. Requirements are in [requirements.md](requirements.md) and the work order in [plan.md](plan.md).
 
-The agent ran V1 to V7 on 2026-10-25 on this branch; mutation runs used Chromium. V8 to V10 are pending until plan group 5. Tests run against built bundles, so build first. Run suites one at a time, since parallel browser runs flake. The new test file names are proposals from plan group 4.
+The agent ran every check on 2026-10-25 on this branch; mutation runs used Chromium. Tests run against built bundles, so build first. Run suites one at a time, since parallel browser runs flake. The new test file names are proposals from plan group 4.
 
 ## Automated checks
 
@@ -15,15 +15,15 @@ The agent ran V1 to V7 on 2026-10-25 on this branch; mutation runs used Chromium
 | V5 | R3 | The V1 fixture in all three engines, plus a region that scrolls itself, scrolled to the bottom. | Read the computed opacity and box of the scrim and the indicator while busy and after clearing. | While busy, the scrim covers the region's visible box and the indicator is centred in it with opacity 1. After clearing, both have opacity 0 or are hidden. | Passed 2026-10-25 in all three engines. `margin: 0` on the indicator failed it. |
 | V6 | R6 | The built CSS. | Static checks in `tests/forced-colors.test.js` and the reduced-motion check. | A forced-colors rule keeps the indicator visible over the scrim, and the reduced-motion block sets `transition: none` on the scrim and indicator. Each fails if its rule is removed. | Passed 2026-10-25. Both checks are regex matches on the built CSS, so removing either rule fails them. |
 | V7 | R7 | Chromium, Firefox and WebKit, with a region started while busy and one started while not busy, each with and without `inert` set first. | Call `destroy()`, then toggle `aria-busy`. | The status element is gone, the region's `inert` matches its state before start, and toggling the attribute afterwards changes nothing. | Passed 2026-10-25 in all three engines. Not restoring `inert` in `destroy()` failed it. |
-| V8 | R9 | A fresh build, with the gzip base taken from the merge-base build. | `node --test tests/selective-builds.test.js` | Passes with reviewed budget lines naming this change and the new CSS and JavaScript gzip bytes. | Pending |
-| V9 | R8, R9 | Plan group 5 edits, with `npm run build:skill` run last. | `npm run check:generated` | Generation is clean, and the skill and MCP guides include the loading overlay guide. | Pending |
-| V10 | R1 to R9 | All changes in place. | `npm run verify` | Passes, including the semantics roster, AutoInit, docs and skill-count tests. | Pending |
+| V8 | R9 | A fresh build, with the gzip base taken from the merge-base build. | `node --test tests/selective-builds.test.js` | Passes with reviewed budget lines naming this change and the new CSS and JavaScript gzip bytes. | Passed 2026-10-25: CSS 87,040 gzip bytes (+196 from 86,844 at the merge-base `a9bbf77ad`) and JavaScript 95,566 (+260 from 95,306). The basic-button reading budget in the skill test went to 46,646 bytes (+365). |
+| V9 | R8, R9 | Plan group 5 edits, with `npm run build:skill` run last. | `npm run check:generated` | Generation is clean, and the skill and MCP guides include the loading overlay guide. | Passed 2026-10-25: all 90 guides are current. |
+| V10 | R1 to R9 | All changes in place. | `npm run verify` | Passes, including the semantics roster, AutoInit, docs and skill-count tests. | Passed 2026-10-25 in two parts. The full run had 2,850 tests and 2,849 passed. The one failure was `tests/color-roles.test.js`, because the forced-colors scrim mixed in `srgb`; it now mixes in `oklab`. After the fix, the touched suites passed, then `check:generated`, `docs:build:astro` (121 pages) and `docs:verify`. |
 
 ## Regression checks
 
 - `tests/pull-to-refresh-browser.test.js` and the loading indicator tests pass unchanged, since a `.loading-indicator` outside a `.loading-overlay` must not change.
 - `tests/autoinit.test.js` passes with the new fixture count, and `{ watch: true }` starts and destroys a `.loading-overlay` added and removed later.
-- The MCP package bundles the generated guides, so `npm test --prefix mcp/expressivecss` and `npm run verify:packages` pass before submitting, as `tech-stack.md` asks.
+- The MCP package bundles the generated guides, so `npm test --prefix mcp/expressivecss` and `npm run verify:packages` pass before submitting, as `tech-stack.md` asks. Both passed on 2026-10-25.
 
 ## Manual checks
 

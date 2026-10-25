@@ -86,7 +86,7 @@
 @media (forced-colors: active) {
   .loading-overlay::after {
     forced-color-adjust: none;
-    background-color: color-mix(in srgb, Canvas 70%, transparent);
+    background-color: color-mix(in oklab, Canvas 70%, transparent);
   }
 }
 
