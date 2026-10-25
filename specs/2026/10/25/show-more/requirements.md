@@ -61,7 +61,7 @@ These facts come from the base commit.
 
 These follow from the code and can change during implementation if the code or the probe disagrees.
 
-- Measure overflow by comparing the text element's `scrollHeight` with its `clientHeight` while clamped. Group 1 confirms this works under `-webkit-line-clamp` in all three engines, including with `line-height: normal` and rounding at fractional font sizes. If an engine reports no difference, fall back to comparing the clamped height with the height of the text with the clamp briefly removed.
+- Measure overflow while clamped as `scrollHeight - clientHeight > 1`. The 1px allowance absorbs Firefox's rounding at fractional line heights, found in the probe below; a cut line is always far more than 1px.
 - Unclamp with an inline `-webkit-line-clamp: unset` and `line-clamp: unset` on the text element, because the utilities layer beats any component rule and a prefixed class such as `medium:line-clamp-2` would beat an added `.line-clamp-none`. Collapse removes the inline properties.
 - While expanded, the button stays visible even if the text would now fit clamped, because collapsing is how the person gets back. The fit check runs only while the text is clamped.
 - Swap only the button's last non-empty text node, so a leading icon element survives the label change.
@@ -75,7 +75,17 @@ None.
 
 ## Technical constraints
 
-- `ResizeObserver` on the text element catches width changes. A web font that swaps in after init can change whether the text is cut without changing the clamped box, whose height stays at N lines, so the observer may not fire. The component also checks again once `document.fonts.ready` settles. Group 1 records whether that is enough.
+- `ResizeObserver` on the text element catches width changes. A web font that swaps in after init can change whether the text is cut without changing the clamped box, whose height stays at N lines, so the observer does not fire. The component also checks again once `document.fonts.ready` settles. A font whose load starts after `ready` has already settled is not caught; a later resize or toggle corrects the button.
+
+### Probe results on 2026-10-25
+
+Plan group 1 ran in Playwright's Chromium, Firefox and WebKit against the base build, with `.line-clamp-2` paragraphs in a 320px container at a 700px window width.
+
+- A five-line paragraph reported `scrollHeight` well above `clientHeight` in every engine (126/36 in Chromium, 184/46 in Firefox, 176/44 in WebKit at `line-height: normal`; 149/42 in all three at `15.5px` with `line-height: 1.37`). A one-line paragraph reported equal values at `line-height: normal`.
+- Two words at `15.5px` with `line-height: 1.37`, a 21.23px box, gave `scrollHeight` 22 and `clientHeight` 21 in Firefox, so a plain `>` comparison reports fitting text as cut there. Chromium and WebKit gave 21 and 21.
+- A `ResizeObserver` on the paragraph fired when the container widened to 1200px and again when it narrowed to 320px, in all three engines. After widening, the comparison reported the text as fitting; after narrowing, as cut.
+- Inline `-webkit-line-clamp: unset` and `line-clamp: unset` on a paragraph with `line-clamp-2 medium:line-clamp-2` showed the full text at the medium width in all three engines (48px to 168px in Chromium, 48px to 192px in Firefox and WebKit), and removing them restored 48px.
+- With a 24px line height and a web font held back by the test, an 80-character paragraph was cut in the monospace fallback (72/48) and fit once the font loaded (48/48), in all three engines. The clamped box stayed 48px, and the `ResizeObserver` did not fire. `document.fonts.ready` was pending while the font loaded and resolved after it, in all three engines. The `loadingdone` event fired in Chromium and Firefox but not in WebKit, so the component uses `ready`.
 - A clamp class sets `display`, so the text element cannot also be the flex or grid container. The Phase 25 docs already say to put the clamp on a child.
 - New functions stay below cyclomatic complexity 5 for the fallow gate.
 - A registered component needs its `semantics.json` row, `tests/fixtures.js` entry and `AUTO_INIT_FIXTURES.length` count in the first group that registers it, or the semantics roster and AutoInit tests fail.

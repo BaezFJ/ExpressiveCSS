@@ -10,11 +10,11 @@ Outcome: the spec records, for Chromium, Firefox and WebKit, whether `scrollHeig
 
 Prerequisites: none.
 
-- [ ] Run `npm run build`. In a throwaway Playwright script against the built CSS, put `.line-clamp-2` on a paragraph that needs five lines and on one that needs one line, at `line-height: normal` and at a fractional font size such as `15.5px`. Read `scrollHeight` and `clientHeight` for each in all three engines.
-- [ ] Narrow and widen the container and record whether a `ResizeObserver` on the paragraph fires each time.
-- [ ] Load a web font after the first measurement and record whether the observer fires and whether the measurement changes once `document.fonts.ready` settles.
-- [ ] Set inline `-webkit-line-clamp: unset` and `line-clamp: unset` on a paragraph that also has `medium:line-clamp-2`, at a medium window width, and confirm the full text shows.
-- [ ] Write the results in a "Probe results" section of requirements.md. If an engine contradicts a proposal there, update the proposal before group 2. Delete the script.
+- [x] Run `npm run build`. In a throwaway Playwright script against the built CSS, put `.line-clamp-2` on a paragraph that needs five lines and on one that needs one line, at `line-height: normal` and at a fractional font size such as `15.5px`. Read `scrollHeight` and `clientHeight` for each in all three engines.
+- [x] Narrow and widen the container and record whether a `ResizeObserver` on the paragraph fires each time.
+- [x] Load a web font after the first measurement and record whether the observer fires and whether the measurement changes once `document.fonts.ready` settles.
+- [x] Set inline `-webkit-line-clamp: unset` and `line-clamp: unset` on a paragraph that also has `medium:line-clamp-2`, at a medium window width, and confirm the full text shows.
+- [x] Write the results in a "Probe results" section of requirements.md. If an engine contradicts a proposal there, update the proposal before group 2. Delete the script.
 
 Completion check: requirements.md has probe results for all three engines, and the proposals agree with them.
 
