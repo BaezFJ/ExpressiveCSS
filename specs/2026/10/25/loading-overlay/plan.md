@@ -22,12 +22,12 @@ Covers R2, R3, R5, R6 (evidence only).
 
 Prerequisites: group 1.
 
-- [ ] Add `src/sass/components/_loading-overlay.scss` and forward it from `components/_index.scss`.
-- [ ] Draw the scrim and centre the `.loading-indicator` child while `[aria-busy="true"]`, hidden otherwise, with a fade on opacity. Use the surface-wash scrim colour the probe settled.
-- [ ] Use the technique group 1 found for regions that scroll themselves, or record the wrapper rule for the docs.
-- [ ] Add the forced-colors rule from group 1 and a reduced-motion `transition: none` block.
-- [ ] Style `.loading-overlay-status` with the `visually-hidden` mixin.
-- [ ] Run `npm run build:css` and confirm `dist/css/expressive.css` holds the rules.
+- [x] Add `src/sass/components/_loading-overlay.scss` and forward it from `components/_index.scss`.
+- [x] Draw the scrim and centre the `.loading-indicator` child while `[aria-busy="true"]`, hidden otherwise, with a fade on opacity. Use the surface-wash scrim colour the probe settled.
+- [x] Use the technique group 1 found for regions that scroll themselves, or record the wrapper rule for the docs.
+- [x] Add the forced-colors rule from group 1 and a reduced-motion `transition: none` block.
+- [x] Style `.loading-overlay-status` with the `visually-hidden` mixin.
+- [x] Run `npm run build:css` and confirm `dist/css/expressive.css` holds the rules.
 
 Completion check: the built CSS contains the `.loading-overlay` rules, and a `custom.scss` build without the partial does not.
 

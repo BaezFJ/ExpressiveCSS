@@ -403,5 +403,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the visually hidden pull-to-refresh status region: 86,567 gzip bytes (+33).
   // Reviewed swipe actions: the clipped list, the sliding row, the trailing toggle and the actions past the row's end: 86,736 gzip bytes (+169).
   // Reviewed .defer-render: content-visibility on off-screen rows except swipe rows, their reserved size and inset focus rings: 86,844 gzip bytes (+108).
-  assert.ok(sizes(css).gzip <= 86844, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the loading overlay: the surface scrim and centred indicator while busy, their fade, the forced-colors wash and the hidden status region: 87,040 gzip bytes (+196).
+  assert.ok(sizes(css).gzip <= 87040, `CSS gzip: ${sizes(css).gzip}`);
 });
