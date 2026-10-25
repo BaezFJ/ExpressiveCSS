@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `.defer-render` makes the browser skip layout and paint for a long
+  list's off-screen rows through `content-visibility: auto`. Skipped rows
+  reserve `--defer-render-row-size`, the list item height by default, and
+  focus rings inside a deferred row are drawn inset so the row does not
+  clip them. Table rows are not supported.
 - Line clamp utilities. `.line-clamp-1`, `.line-clamp-2` and
   `.line-clamp-3` cut text to that many lines and end the last one in an
   ellipsis, and `.line-clamp-none` shows every line again. All four take

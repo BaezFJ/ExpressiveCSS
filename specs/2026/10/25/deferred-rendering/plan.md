@@ -50,12 +50,12 @@ Covers R1, R2, R3, R4.
 
 Prerequisites: group 3.
 
-- [ ] Document `.defer-render` and `--defer-render-row-size` on `docs/src/pages/lists.astro`, with a live long list, the table limit, the clipping and containing-block effects, and when a virtual list is still needed.
-- [ ] Add the same text to the Lists section of `llm.md`.
-- [ ] Add an Added entry to `CHANGELOG.md` under Unreleased.
-- [ ] Rebuild, measure the CSS gzip size from the merge-base build, and add a reviewed budget line to `tests/selective-builds.test.js`.
-- [ ] Run `npm run build:skill` after the last edit, since the contract hash covers the changelog and tests, then `npm run check:generated` and `npm run verify`.
-- [ ] Run `npm test --prefix mcp/expressivecss` and `npm run verify:packages`.
+- [x] Document `.defer-render` and `--defer-render-row-size` on `docs/src/pages/lists.astro`, with a live long list, the table limit, the clipping and containing-block effects, and when a virtual list is still needed.
+- [x] Add the same text to the Lists section of `llm.md`.
+- [x] Add an Added entry to `CHANGELOG.md` under Unreleased.
+- [x] Rebuild, measure the CSS gzip size from the merge-base build, and add a reviewed budget line to `tests/selective-builds.test.js`.
+- [x] Run `npm run build:skill` after the last edit, since the contract hash covers the changelog and tests, then `npm run check:generated` and `npm run verify`.
+- [x] Run `npm test --prefix mcp/expressivecss` and `npm run verify:packages`.
 
 Completion check: V5 to V7 pass.
 

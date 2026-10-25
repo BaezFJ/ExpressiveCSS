@@ -3381,6 +3381,18 @@ Add `sortable` to a list to let people reorder it. Drag an item by its decorativ
 </ul>
 ```
 
+### Long lists
+
+Add `defer-render` to a long list so the browser skips layout and paint for rows that are off screen. Each direct child gets `content-visibility: auto`; it works on any container whose children stack, such as a column of cards. Off-screen rows stay in the DOM, so screen readers, find-in-page and scripts still reach them. A skipped row reserves `--defer-render-row-size`, which defaults to `--md-comp-list-item-height` inside a `.list` and to 3.5rem elsewhere; the browser remembers a row's real height once it has been on screen. Set the property to the average row height when rows differ, so the scrollbar stays close to the list's real length.
+
+```html
+<ul class="list defer-render" aria-label="Invoices" style="--defer-render-row-size: 4.5rem">
+  <li>…</li>
+</ul>
+```
+
+The browser clips anything a deferred row draws outside its box. Focus rings inside a row are drawn inset for that reason, but a box shadow or a badge that hangs over the edge is cut off. Each row is also the containing block for absolutely and fixed positioned content; menus and tooltips open in the top layer and are not affected. Tables are not supported, because browsers ignore `content-visibility` on table rows. When the rows are not in the DOM at all, such as a dataset too large to render as markup or one fetched a page at a time during scrolling, use a virtual list script; ExpressiveCSS does not ship one.
+
 ---
 
 ## Message

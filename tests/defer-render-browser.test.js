@@ -87,8 +87,10 @@ for (const [name, engine, test] of engines) {
       const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
       await page.setContent(markup);
       await settle(page);
-      assert.equal(await skipped(page.locator('#list > li a').nth(4999)), true, 'the row is skipped');
-      assert.match(await page.locator('#list').ariaSnapshot(), /Row 4999 zephyr/, 'the accessibility tree has the row');
+      const row = page.locator('#list > li').nth(4999);
+      assert.equal(await skipped(row.locator('a')), true, 'the row is skipped');
+      // A snapshot of the whole 5,000-row list takes over 30 seconds under load.
+      assert.match(await row.ariaSnapshot(), /link "Row 4999 zephyr"/, 'the accessibility tree has the row');
       assert.equal(await page.evaluate(() => window.find('zephyr')), true, 'find-in-page reaches the row');
     } finally {
       await browser.close();

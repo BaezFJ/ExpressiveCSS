@@ -14,6 +14,7 @@ const S = defineSections([
   { id: "media", label: "Avatars and images" },
   { id: "links", label: "Links and selection" },
   { id: "sortable", label: "Sortable" },
+  { id: "long", label: "Long lists" },
   { id: "tokens", label: "Tokens" },
 ]);
 ---
@@ -341,6 +342,50 @@ const S = defineSections([
   …
 </ul>
 `} />
+  </Section>
+  <Section {...S.long}>
+        <p>
+          Add <code>defer-render</code> to a long list so the browser skips
+          layout and paint for rows that are off screen. Each direct child
+          gets <code>content-visibility: auto</code>. It works on any
+          container whose children stack, such as a column of cards.
+        </p>
+        <p>
+          Off-screen rows stay in the page. Screen readers and find-in-page
+          still reach their text, and a script can still query them. A
+          skipped row reserves <code>--defer-render-row-size</code>, which
+          defaults to the list item height inside a <code>.list</code> and
+          to 3.5rem elsewhere. Once a row has been on screen, the browser
+          remembers its real height. Set the property to the average row
+          height when rows differ, so the scrollbar stays close to the
+          list's real length.
+        </p>
+        <div class="scroll-area mb-3" style="max-block-size: 20rem" tabindex="0" role="region" aria-label="Invoices, 300 rows">
+          <ul class="list defer-render" aria-label="Invoices">
+            {Array.from({ length: 300 }, (_, i) => <li>Invoice {i + 1}</li>)}
+          </ul>
+        </div>
+<Code code={`
+<ul class="list defer-render" aria-label="Invoices" style="--defer-render-row-size: 4.5rem">
+  <li>…</li>
+  …
+</ul>
+`} />
+        <p>
+          The browser clips anything a deferred row draws outside its box.
+          Focus rings inside a row are drawn inset for that reason, but a
+          box shadow or a badge that hangs over the edge is cut off. Each
+          row is also the containing block for absolutely and fixed
+          positioned content. Menus and tooltips open in the top layer and
+          are not affected.
+        </p>
+        <p>
+          Tables are not supported. Browsers ignore
+          <code>content-visibility</code> on table rows. When the rows are
+          not in the page at all, such as a dataset too large to render as
+          markup or one fetched a page at a time during scrolling, use a
+          virtual list script instead. ExpressiveCSS does not ship one.
+        </p>
   </Section>
   <Section {...S.tokens}>
         <p>Set these on the list (or on <code>:root</code>):</p>
