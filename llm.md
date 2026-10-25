@@ -4049,7 +4049,7 @@ Replace `.fab` and `.fixed-action-btn` wrappers with `.fab-menu` and labelled ac
 
 A link that appears once a long page has scrolled down, and returns to the top with focus on the main content.
 
-Write an `<a class="back-to-top">` whose `href` names the page's main content, give it an `aria-label`, and add the FAB classes `button circle extra` for its look. `AutoInit()` starts every `.back-to-top`. The link sits in the bottom inline-end corner, `position: fixed`, and stays hidden until the window has scrolled past `threshold`, one viewport height by default. It hides again above it. Without the script the link is always visible and jumps to its target, as any in-page link does.
+Write an `<a class="back-to-top">` whose `href` names the page's main content, give it an `aria-label`, and add the FAB classes `button circle extra` for its look. `AutoInit()` starts every `.back-to-top`. The link sits in the bottom inline-end corner, `position: fixed`, and stays hidden until the window has scrolled past `threshold`, one viewport height by default. It hides again above it, unless it has focus: a focused link stays until focus leaves, so pressing Home on it does not drop focus to the body. Without the script the link is always visible and jumps to its target, as any in-page link does. Until the script starts it is also visible at the top of the page, so call `AutoInit()` before the first paint, from a script at the end of the body, to keep it from showing there.
 
 ```html
 <main id="main">…</main>
@@ -4058,9 +4058,9 @@ Write an `<a class="back-to-top">` whose `href` names the page's main content, g
 </a>
 ```
 
-Activating the link scrolls the window to the top and moves focus to the `href` target, so the next Tab reaches the first control after it. A target that does not take focus, such as a `<main>`, gets `tabindex="-1"` until it loses focus. An `href` of `#` or `#top`, or one that names no element, focuses the body. The script replaces the jump, so the address keeps its fragment. The scroll is smooth, and instant under reduced motion.
+Activating the link scrolls the window to the top and moves focus to the `href` target, so the next Tab reaches the first control after it. A target that does not take focus, such as a `<main>`, gets `tabindex="-1"` until it loses focus. An `href` of `#` or `#top`, or one that names no element, focuses the body. The script replaces the jump, so the address keeps its fragment. A click with Ctrl, Meta, Shift or Alt, or one a page handler already prevented, is left to the browser. The scroll is smooth, and instant under reduced motion.
 
-While hidden, the link is `inert` and faded out. Tab skips it, it takes no clicks, and screen readers do not list it. Under reduced motion it appears and disappears at once. `inert` is the framework's state; don't write it in the markup.
+While hidden, the link is `inert` and `visibility: hidden`. Tab skips it, it takes no clicks, and screen readers do not list it. It fades in and hides at once, so a script that starts on a page already painted does not show it fading out. Under reduced motion it also appears at once. `inert` is the framework's state; don't write it in the markup.
 
 The script watches the window's scroll through an `IntersectionObserver` on an empty element at the threshold, absolutely positioned at the start of the body, so scrolling runs no script. A body with `position: relative` measures the threshold from its own top edge. A pane, dialog or `.scroll-area` that scrolls on its own is not supported. A `.fab-menu` sits in the same corner; on a page with both, raise one with `--md-comp-back-to-top-offset`.
 
@@ -4068,7 +4068,7 @@ The script watches the window's scroll through an `IntersectionObserver` on an e
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `threshold` | String | `'100vh'` | How far the window scrolls before the link shows, as a CSS length from the top of the page. Viewport units follow window resizes. |
+| `threshold` | String | `'100vh'` | How far the window scrolls before the link shows, as a CSS length from the top of the page. Viewport units follow window resizes. A value that is not a CSS length falls back to `'100vh'` with a warning. |
 
 ### Methods
 

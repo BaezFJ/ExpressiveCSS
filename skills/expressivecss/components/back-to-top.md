@@ -9,7 +9,7 @@ Component ID: `back-to-top`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `a1130c5b12cd980b671f491fc4d145c5e199670c245859087387713f5e5d85cc`
+Contract SHA-256: `3e47765bf57746163e4751ce02ff2d12821df11c2b7e49df15972318566c27d1`
 
 #### Selection and adaptation
 
@@ -25,17 +25,17 @@ Upstream: web-extension-inventory-reviewed (2026-10-25); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Support (2026-10-25, `llm.md#back-to-top`): An in-page link styled with the FAB classes, hidden and inert until the window scrolls past a threshold option (one viewport height by default), a smooth scroll to the top that is instant under reduced motion, focus moved to the href target with a temporary tabindex, the body as the fallback target, markup options, offset and stacking tokens, and a link that still jumps to its target without the script.
+Support (2026-10-25, `llm.md#back-to-top`): An in-page link styled with the FAB classes, hidden and inert until the window scrolls past a threshold option (one viewport height by default), a focused link kept until focus leaves, a smooth scroll to the top that is instant under reduced motion, focus moved to the href target with a temporary tabindex, the body as the fallback target, modified and already prevented clicks left to the browser, a threshold that is not a CSS length replaced by the default with a warning, markup options, offset and stacking tokens, and a link that still jumps to its target without the script.
 
-Web adaptation: An IntersectionObserver on an empty element at the threshold instead of a scroll listener. The hidden state is the inert attribute plus visibility: hidden after a fade, so a page without the script never hides the link.
+Web adaptation: An IntersectionObserver on an empty element at the threshold instead of a scroll listener. The hidden state is the inert attribute plus visibility: hidden, with a fade in and an immediate hide, so a script that starts after the first paint does not show the link fading out, and a page without the script never hides the link.
 
-Known boundary: The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched.
+Known boundary: The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#back-to-top).
 
 #### Contract
 
-Write an `<a class="back-to-top">` whose `href` names the page's main content, give it an `aria-label`, and add the FAB classes `button circle extra` for its look. `AutoInit()` starts every `.back-to-top`. The link sits in the bottom inline-end corner, `position: fixed`, and stays hidden until the window has scrolled past `threshold`, one viewport height by default. It hides again above it. Without the script the link is always visible and jumps to its target, as any in-page link does.
+Write an `<a class="back-to-top">` whose `href` names the page's main content, give it an `aria-label`, and add the FAB classes `button circle extra` for its look. `AutoInit()` starts every `.back-to-top`. The link sits in the bottom inline-end corner, `position: fixed`, and stays hidden until the window has scrolled past `threshold`, one viewport height by default. It hides again above it, unless it has focus: a focused link stays until focus leaves, so pressing Home on it does not drop focus to the body. Without the script the link is always visible and jumps to its target, as any in-page link does. Until the script starts it is also visible at the top of the page, so call `AutoInit()` before the first paint, from a script at the end of the body, to keep it from showing there.
 
 #### Syntax
 
@@ -50,7 +50,7 @@ Write an `<a class="back-to-top">` whose `href` names the page's main content, g
 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
-| `threshold` | String | `'100vh'` | How far the window scrolls before the link shows, as a CSS length from the top of the page. Viewport units follow window resizes. |
+| `threshold` | String | `'100vh'` | How far the window scrolls before the link shows, as a CSS length from the top of the page. Viewport units follow window resizes. A value that is not a CSS length falls back to `'100vh'` with a warning. |
 
 #### Methods
 

@@ -43,7 +43,9 @@ const S = defineSections([
 `} />
         <p>
           Without the script, the link is always visible and jumps to its target,
-          as any in-page link does.
+          as any in-page link does. Until the script starts it is also visible at
+          the top of the page, so call <code>AutoInit()</code> before the first
+          paint, from a script at the end of the body.
         </p>
   </Section>
   <Section {...S.focus}>
@@ -53,12 +55,16 @@ const S = defineSections([
           <code>&lt;main&gt;</code>, gets <code>tabindex="-1"</code> until it loses focus
           again. An <code>href</code> of <code>#</code> or <code>#top</code>, or one that
           names no element, focuses the body instead. The address bar keeps its
-          fragment, since the script replaces the jump.
+          fragment, since the script replaces the jump. A click with Ctrl, Meta,
+          Shift or Alt, or one a page handler already prevented, is left to the
+          browser.
         </p>
         <p>
           While hidden, the link is <code>inert</code>: Tab skips it, it takes no
           clicks, and screen readers do not list it. That state belongs to the
-          script, so don't write <code>inert</code> in the markup.
+          script, so don't write <code>inert</code> in the markup. A focused link
+          stays until focus leaves, so pressing Home on it does not drop focus
+          to the body.
         </p>
   </Section>
   <Section {...S.scrolling}>
@@ -72,8 +78,8 @@ const S = defineSections([
         </p>
         <p>
           The scroll to the top is smooth, and instant under reduced motion. The
-          link fades in and out, and under reduced motion it appears and disappears
-          at once.
+          link fades in and hides at once, and under reduced motion it also
+          appears at once.
         </p>
   </Section>
   <Section {...S.options}>
@@ -82,7 +88,7 @@ const S = defineSections([
             <td><code>threshold</code></td>
             <td>String</td>
             <td><code>'100vh'</code></td>
-            <td>How far the page scrolls before the link shows, as a CSS length from the top of the page. Viewport units follow window resizes.</td>
+            <td>How far the page scrolls before the link shows, as a CSS length from the top of the page. Viewport units follow window resizes. A value that is not a CSS length falls back to <code>'100vh'</code> with a warning.</td>
           </tr>
         </OptionsTable>
 <Code code={`

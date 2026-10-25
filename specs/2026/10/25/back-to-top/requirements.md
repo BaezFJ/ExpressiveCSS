@@ -33,10 +33,13 @@ These facts come from the base commit.
 - R3. The component watches the threshold with an `IntersectionObserver` on a sentinel, like `AppBar`, and adds no scroll listener.
 - R4. `threshold` defaults to one viewport height and can be set from markup through `data-back-to-top-options` or from `BackToTop.init(el, options)`.
 - R5. Activating the link by click, Enter or a screen reader's activation scrolls the window to the top and moves focus to the element the `href` names. Focus moves without a second scroll jump, and the next Tab reaches the first focusable element after the target. If the target is not focusable, the component makes it focusable for this move only, so the target's Tab behavior does not change afterward.
-- R6. The scroll is smooth, and instant under `prefers-reduced-motion: reduce`. The show and hide motion follows the same preference.
+- R6. The scroll is smooth, and instant under `prefers-reduced-motion: reduce`. The link fades in and hides at once; under reduced motion it also appears at once.
 - R7. Styles: the link is fixed at the window's bottom inline-end corner, with offset and stacking custom properties so a page can move it away from a `.fab-menu` or a navigation bar. Its icon-holding box is sized in `rem()`.
 - R8. `destroy()` removes the sentinel, disconnects the observer, removes every attribute the component added, and leaves the markup as authored.
 - R9. `semantics.json` gains a `back-to-top` entry: the link needs an accessible name, and the hidden state is the framework's, so authors must not write it. `npm run build:semantics` and `npm run build:skill` regenerate the derived copies.
+- R11. A focused link stays shown until it loses focus, so pressing Home on it does not drop focus to the body. Found in the code review on 2026-10-25.
+- R12. A click with Ctrl, Meta, Shift or Alt, or one a page handler already prevented, is left to the browser. Found in the code review on 2026-10-25.
+- R13. A `threshold` that is not a CSS length falls back to `'100vh'` with a console warning. Found in the code review on 2026-10-25.
 - R10. A docs page, the `llm.md` section, the changelog's Added entry and a reviewed gzip budget line in `tests/selective-builds.test.js` document and account for the component.
 
 ### Exclusions
@@ -75,6 +78,15 @@ These follow from the code and can change during implementation if the probe or 
 - The jsdom test landed with the component in group 2.
 - `component-decisions.json` pins `sourceRevision` to the group 4 commit `3945c159a`, the first that holds both source files and the browser test. The capability test requires the browser test at that revision. A squash merge drops branch commits, so the pin needs a follow-up re-pin to the merge commit, as Phases 36 and 37 needed.
 - The JavaScript gzip size rose from 95,306 to 95,790 bytes (+484), and the CSS from 86,844 to 86,966 (+122), both measured against a build of the merge-base `a9bbf77ad`.
+
+### Found in the code review on 2026-10-25
+
+- The `[inert]` rule faded the link out, so a script that started after the first paint showed the link in the corner of an unscrolled page, then faded it out. Delaying `AutoInit()` by 300ms left opacity between 0.06 and 0.19 one frame later in all three engines. The link now fades in and hides at once (R6). Before the script starts the link is still visible, which a page without the script needs; the docs say to call `AutoInit()` before the first paint.
+- Pressing Home with focus on the link scrolled to the top, the link turned inert, and focus dropped to the body. In WebKit the next Tab then went to the browser's own UI. The link now stays while focused and hides on blur (R11).
+- An invalid `threshold` was dropped by the style setter, which left the sentinel at the top of the body and showed the link after a few pixels (R13). jsdom's setter rejects the same values, so the fallback has a jsdom test.
+- Modified and already prevented clicks were taken over (R12). `Utils.plainKey` leaves out Shift on purpose, and Shift-click opens a new window, so the check is a local helper.
+- A 2,000px threshold on a short page did not add scrollable space in any engine; the zero-size sentinel adds no overflow.
+- The JavaScript gzip size rose to 95,929 bytes (+139) and the CSS fell to 86,955 (−11).
 
 ### Open decisions
 

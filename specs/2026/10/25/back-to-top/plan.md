@@ -80,3 +80,18 @@ Prerequisites: group 4.
 Completion check: V6 to V9 pass.
 
 Covers R9, R10.
+
+## Group 6: code review fixes
+
+Prerequisites: group 5.
+
+- [x] Hide `.back-to-top[inert]` at once, without the fade out, and keep the fade in.
+- [x] Keep a focused link shown, and hide it on `blur` when the window is above the threshold.
+- [x] Leave modified and already prevented clicks to the browser.
+- [x] Replace a `threshold` the style setter rejects with `'100vh'`, with a warning.
+- [x] Add browser cases for V11 and V12 and jsdom cases for V12 to V14, and confirm each fails with its fix reverted.
+- [x] Update the docs page, `llm.md`, the changelog, the decision record's pins and support text, the review entry and the budget lines, then run `npm run build:skill` last.
+
+Completion check: V1 to V14 pass, with the regression checks.
+
+Covers R6, R11, R12, R13.

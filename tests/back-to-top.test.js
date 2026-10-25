@@ -138,6 +138,58 @@ describe('BackToTop', () => {
     }
   });
 
+  test('a focused link stays shown until it loses focus', () => {
+    document.body.innerHTML = markup;
+    const link = document.querySelector('.back-to-top');
+    const instance = Expressive.BackToTop.init(link);
+    try {
+      observers[0].fire(false, -10);
+      link.focus();
+      observers[0].fire(true, 300);
+      assert.equal(link.hasAttribute('inert'), false, 'kept while focused, so focus is not dropped');
+      link.blur();
+      assert.ok(link.hasAttribute('inert'), 'hidden once focus leaves');
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a modified or already handled click is left to the browser', () => {
+    document.body.innerHTML = markup;
+    const link = document.querySelector('.back-to-top');
+    const instance = Expressive.BackToTop.init(link);
+    try {
+      for (const key of ['ctrlKey', 'metaKey', 'shiftKey', 'altKey']) {
+        const click = new window.MouseEvent('click', { bubbles: true, cancelable: true, [key]: true });
+        link.dispatchEvent(click);
+        assert.equal(click.defaultPrevented, false, `${key} keeps the browser's default`);
+      }
+      link.addEventListener('click', (e) => e.preventDefault(), { once: true, capture: true });
+      link.click();
+      assert.deepEqual(scrolls, [], 'no scroll for any of them');
+      assert.notEqual(document.activeElement, document.getElementById('main'));
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a threshold that is not a CSS length falls back to the default', () => {
+    const { warn } = console;
+    const warnings = [];
+    console.warn = (...args) => warnings.push(args[0]);
+    document.body.innerHTML = markup;
+    const link = document.querySelector('.back-to-top');
+    const instance = Expressive.BackToTop.init(link, { threshold: 'banana' });
+    try {
+      assert.equal(document.body.firstElementChild.style.top, '100vh');
+      assert.equal(warnings.length, 1);
+      assert.match(warnings[0], /threshold "banana"/);
+    } finally {
+      instance.destroy();
+      console.warn = warn;
+    }
+  });
+
   test('destroy leaves the markup as authored', () => {
     document.body.innerHTML = markup;
     const authored = document.body.innerHTML;

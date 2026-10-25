@@ -1941,10 +1941,10 @@
         "implementation": {
           "source": "llm.md#back-to-top",
           "reviewedOn": "2026-10-25",
-          "documentedSupport": "An in-page link styled with the FAB classes, hidden and inert until the window scrolls past a threshold option (one viewport height by default), a smooth scroll to the top that is instant under reduced motion, focus moved to the href target with a temporary tabindex, the body as the fallback target, markup options, offset and stacking tokens, and a link that still jumps to its target without the script.",
-          "webAdaptation": "An IntersectionObserver on an empty element at the threshold instead of a scroll listener. The hidden state is the inert attribute plus visibility: hidden after a fade, so a page without the script never hides the link.",
+          "documentedSupport": "An in-page link styled with the FAB classes, hidden and inert until the window scrolls past a threshold option (one viewport height by default), a focused link kept until focus leaves, a smooth scroll to the top that is instant under reduced motion, focus moved to the href target with a temporary tabindex, the body as the fallback target, modified and already prevented clicks left to the browser, a threshold that is not a CSS length replaced by the default with a warning, markup options, offset and stacking tokens, and a link that still jumps to its target without the script.",
+          "webAdaptation": "An IntersectionObserver on an empty element at the threshold instead of a scroll listener. The hidden state is the inert attribute plus visibility: hidden, with a fade in and an immediate hide, so a script that starts after the first paint does not show the link fading out, and a page without the script never hides the link.",
           "limitations": [
-            "The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched."
+            "The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched."
           ]
         },
         "relationship": "none",
@@ -1968,17 +1968,17 @@
         "sources": [
           {
             "path": "src/sass/components/_back-to-top.scss",
-            "sha256": "51d70cc5cfb6697a742e4c085f4800533268cddcd0519c404ab235445b660d23"
+            "sha256": "1c0afbbbf3ef51e1da38773d5f9c64d28a4e8244f46fefcaa9e19cac1e813f1e"
           },
           {
             "path": "src/ts/components/backToTop.ts",
-            "sha256": "439db9ba0ce2ba76246b66c81448ecda44d7043aaae6e02989ad475ddd0e9c00"
+            "sha256": "23ea9b49c6250aefa363eb85feb7703cab225aedc143e2d93445e595f609328f"
           }
         ],
         "gaps": [
           {
             "kind": "verification",
-            "description": "The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched.",
+            "description": "The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched.",
             "nextStep": "Activate the link with VoiceOver and NVDA and confirm focus lands on the main content; check it in forced colors."
           }
         ],

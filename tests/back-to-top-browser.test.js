@@ -17,8 +17,8 @@ ${script ? `<script>${js}</script><script>Expressive.AutoInit();</script>` : ''}
 
 const active = (p) => p.evaluate(() => document.activeElement.id || document.activeElement.tagName);
 const shown = (p) => p.locator('#top').evaluate((el) => !el.inert && getComputedStyle(el).visibility === 'visible');
-// The observer reports after the next frame, and visibility turns hidden
-// only once the fade has run, so a hide waits for both.
+// The observer reports after the next frame, so wait for inert and the
+// computed visibility to agree.
 const waitShown = (p, value) =>
   p.waitForFunction((value) => {
     const el = document.getElementById('top');
@@ -101,10 +101,48 @@ for (const [name, engine, test] of engines) {
       assert.deepEqual(await reachable(p), { hit: true, named: true }, 'shown past the threshold');
       assert.equal(await tabFromFirst(p), 'top', 'Tab reaches it');
 
+      // A focused link stays shown; that case has its own test.
+      await p.evaluate(() => document.activeElement.blur());
       await scrollTo(p, 100);
       await waitShown(p, false);
       assert.notEqual(await tabFromFirst(p), 'top', 'Tab skips it again');
       assert.deepEqual(await reachable(p), { hit: false, named: false }, 'hidden again above the threshold');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${name}: a script that starts after the first paint hides the link at once`, { timeout: 60000 }, async () => {
+    const { browser, p } = await open(engine, { script: false });
+    try {
+      await p.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
+      assert.equal(await shown(p), true, 'painted before the script runs');
+      await p.addScriptTag({ content: js });
+      const style = await p.evaluate(() => {
+        Expressive.AutoInit();
+        return new Promise((r) => requestAnimationFrame(() => {
+          const s = getComputedStyle(document.getElementById('top'));
+          r({ visibility: s.visibility, opacity: s.opacity });
+        }));
+      });
+      assert.deepEqual(style, { visibility: 'hidden', opacity: '0' }, 'no fade out at the top of the page');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  test(`${name}: a focused link stays until focus leaves, so Home does not drop focus`, { timeout: 60000 }, async () => {
+    const { browser, p } = await open(engine);
+    try {
+      await scrollTo(p, 2000);
+      await waitShown(p, true);
+      await p.locator('#top').focus();
+      await p.keyboard.press('Home');
+      assert.equal(await scrollEnd(p), 0, 'Home scrolled to the top');
+      assert.equal(await active(p), 'top', 'focus stays on the link');
+      assert.equal(await shown(p), true, 'the focused link is not hidden');
+      await p.keyboard.press('Shift+Tab');
+      await waitShown(p, false);
     } finally {
       await browser.close();
     }

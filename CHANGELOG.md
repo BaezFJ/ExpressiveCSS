@@ -12,7 +12,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   scrolls to the top, instantly under reduced motion, and focuses the
   element its `href` names. The `BackToTop` component keeps it `inert`
   while hidden and watches the threshold with an `IntersectionObserver`.
-  Without the script the link stays visible and jumps to its target.
+  Without the script the link stays visible and jumps to its target. A
+  focused link stays until focus leaves, and modified clicks are left to
+  the browser.
 - `.defer-render` makes the browser skip layout and paint for a long
   list's off-screen rows through `content-visibility: auto`. Skipped rows
   reserve `--defer-render-row-size`, the list item height by default, and

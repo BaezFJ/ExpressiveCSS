@@ -17,22 +17,19 @@
   z-index: var(--md-comp-back-to-top-z);
   transition: opacity var(--md-comp-back-to-top-duration) var(--md-comp-back-to-top-easing);
 
-  // Visibility waits for the fade, then takes the link off screen readers
-  // and the page's ARIA snapshot along with `inert`.
+  // It fades in, and hides at once. A fade out would also run when the
+  // script starts on a page already painted at the top, and show the link
+  // leaving a corner where nothing had scrolled. Visibility takes it off
+  // screen readers and the page's ARIA snapshot along with `inert`.
   &[inert] {
     visibility: hidden;
     opacity: 0;
-    transition:
-      opacity var(--md-comp-back-to-top-duration) var(--md-comp-back-to-top-easing),
-      visibility 0s linear var(--md-comp-back-to-top-duration);
+    transition: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .back-to-top,
-  .back-to-top[inert] {
-    transition: none;
-  }
+  .back-to-top { transition: none; }
 }
 
 // A floating link would print over the content, as the FAB menu would.
