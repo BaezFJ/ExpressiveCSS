@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**103 of 103 rows enforced; 0 remaining.**
+**104 of 104 rows enforced; 0 remaining.**
 
-98 of those rows are components - a part of the framework an author writes markup for.
+99 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 98 components declare conformance debt.**
+**2 of 99 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -1376,6 +1376,18 @@ Added with the tree component. Nested lists of native disclosures and links: eve
 
 - **tree-is-not-a-tree-widget** - A .tree takes no ARIA tree roles. It is lists of disclosures and links, which keep their own roles and keyboard behavior.
 - **tree-marks-current-not-selected** - Mark the open file or page with aria-current. aria-selected is not valid on a link or a list item.
+
+### treemap-chart
+
+Added with the treemap chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn rectangles and their text are aria-hidden.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `treemap-chart-is-a-figure-with-a-table` | forbid | `.treemap-chart:not(figure:has(> table))` | must not match |
+| `treemap-chart-has-a-caption` | forbid | `.treemap-chart:not(:has(> figcaption))` | must not match |
+
+- **treemap-chart-is-a-figure-with-a-table** - Write .treemap-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
+- **treemap-chart-has-a-caption** - Name a .treemap-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
 ## Exempt
 

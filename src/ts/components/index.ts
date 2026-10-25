@@ -33,6 +33,7 @@ export { MixedChart } from "./mixedChart";
 export { ScatterChart } from "./scatterChart";
 export { FunnelChart } from "./funnelChart";
 export { SankeyChart } from "./sankeyChart";
+export { TreemapChart } from "./treemapChart";
 export { Datepicker } from "./datepicker";
 export { Menu } from "./menu";
 export { Menubar } from "./menubar";

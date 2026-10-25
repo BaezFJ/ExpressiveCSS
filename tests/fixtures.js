@@ -106,6 +106,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<figure class="sankey-chart"><figcaption>Energy flow</figcaption><table><thead><tr><th>Source</th><th>Target</th><th>Value</th></tr></thead><tbody><tr><th>Solar</th><td>Grid</td><td>30</td></tr><tr><th>Grid</th><td>Homes</td><td>30</td></tr></tbody></table></figure>`,
   },
   {
+    name: "TreemapChart",
+    selector: ".treemap-chart",
+    html: `<figure class="treemap-chart"><figcaption>Budget by team</figcaption><table><thead><tr><th>Team</th><th>Budget</th></tr></thead><tbody><tr><th>Engineering</th><td>600</td></tr><tr><th>Design</th><td>120</td></tr></tbody></table></figure>`,
+  },
+  {
     name: "BarChart",
     selector: ".bar-chart",
     html: `<figure class="bar-chart"><figcaption>Revenue</figcaption><table><thead><tr><th>Month</th><th>Revenue</th></tr></thead><tbody><tr><th>Jan</th><td>1</td></tr><tr><th>Feb</th><td>2</td></tr></tbody></table></figure>`,

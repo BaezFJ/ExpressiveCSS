@@ -260,7 +260,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed hover card review fixes: a shared card handed between links on a named anchor, no state left by a failed showPopover, and Escape left to IME composition: 98,837 gzip bytes (+110).
   // Reviewed Dialogs.confirm(): a promise-based alert dialog with Dialogs.i18n labels, removed once it closes: 99,202 gzip bytes (+367).
   // Reviewed Dialogs.confirm() answering false when page code removes the open dialog: 99,221 gzip bytes (+19).
-  assert.ok(sizes(js).gzip <= 99221, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the treemap chart: rows squarified into rectangles whose areas follow their values: 99,867 gzip bytes (+646).
+  assert.ok(sizes(js).gzip <= 99867, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -419,5 +420,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the sankey chart: the shared chart parts, an unlined plot, filled nodes and links in six colors, the marked link, the tooltip and node names: 87,630 gzip bytes (+586).
   // Reviewed the funnel chart: the label column, centered stages that grow from their old width and keep their color in forced colors, and the row band: 88,205 gzip bytes (+620 over master's 87,585 build).
   // Reviewed the transfer list: two outlined lists that scroll, the buttons between them, stacking below medium and flipped icons in RTL: 88,345 gzip bytes (+140).
-  assert.ok(sizes(css).gzip <= 88345, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the treemap chart: the chart() plot and tooltip with absolutely placed rectangles: 88,714 gzip bytes (+369).
+  assert.ok(sizes(css).gzip <= 88714, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -1,0 +1,30 @@
+@use "../abstracts" as *;
+
+// Treemap chart. The same <figure>, <figcaption> and <table> as a pie
+// chart; TreemapChart draws each row of the first value column as a
+// rectangle whose area is its share of the whole, filling the plot, the
+// largest at the top inline-start corner. The plot and tooltip come from
+// chart(). The script places each rectangle with inset-inline-start, top,
+// width and height in percent, so a right-to-left page mirrors the layout.
+//
+// Tokens:
+//   --md-comp-treemap-chart-height   240px
+
+@include chart("treemap-chart");
+
+.treemap-chart-plot {
+  border: 0;
+  background: none;
+}
+
+.treemap-chart-boxes {
+  position: absolute;
+  inset: 0;
+}
+
+.treemap-chart-box {
+  position: absolute;
+  box-sizing: border-box;
+  overflow: hidden;
+  background-color: var(--treemap-chart-color);
+}

@@ -41,6 +41,7 @@ export type * from './components/mixedChart';
 export type * from './components/scatterChart';
 export type * from './components/funnelChart';
 export type * from './components/sankeyChart';
+export type * from './components/treemapChart';
 export type * from './components/pullToRefresh';
 export type * from './components/loadingOverlay';
 export type * from './components/swipeActions';
