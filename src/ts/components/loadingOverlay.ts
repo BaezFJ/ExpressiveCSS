@@ -53,6 +53,12 @@ export class LoadingOverlay extends Component<LoadingOverlayOptions> {
     this._observer = new MutationObserver(() => this._sync());
     this._observer.observe(el, { attributeFilter: ['aria-busy'] });
     this._sync();
+    // Screen readers often skip text a live region already holds when it is
+    // inserted, so a region busy from the start announces a frame later.
+    if (this._busy) {
+      this._status.textContent = '';
+      requestAnimationFrame(() => this._announceStart());
+    }
   }
 
   static get defaults(): LoadingOverlayOptions {
@@ -76,11 +82,16 @@ export class LoadingOverlay extends Component<LoadingOverlayOptions> {
   }
 
   private _start() {
-    const active = this.el.ownerDocument.activeElement;
-    // Read before inert drops it.
+    // The root's, so a region inside a shadow root sees its own focused control
+    // rather than the host. Read before inert drops it.
+    const active = (this.el.getRootNode() as Document | ShadowRoot).activeElement;
     this._focus = active instanceof HTMLElement && this.el.contains(active) ? active : null;
     this._wasInert = this.el.inert;
     this.el.inert = true;
+    // Inert alone is not enough for the focused control. WebKit reports the body
+    // as focused but still types into it, and every engine leaves focus inside a
+    // shadow root where it was.
+    this._focus?.blur();
     this._status.textContent = this.options.i18n.loading;
   }
 
@@ -91,5 +102,10 @@ export class LoadingOverlay extends Component<LoadingOverlayOptions> {
     this._focus = null;
     // Not over a move the person made while it loaded, and not to an element the page removed.
     if (focus?.isConnected && focusLost(this.el.ownerDocument)) focus.focus();
+  }
+
+  /** The deferred first announcement, unless the region cleared or the instance went first. */
+  private _announceStart() {
+    if (this._busy && this._status.isConnected) this._status.textContent = this.options.i18n.loading;
   }
 }

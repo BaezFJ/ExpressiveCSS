@@ -3626,9 +3626,9 @@ try {
 }
 ```
 
-Inert content leaves the accessibility tree, the indicator's status included. The indicator keeps the role and name every loading indicator has, and the script adds a visually hidden `.loading-overlay-status` region with `role="status"` just after the region, which announces "Loading" when the region becomes busy and "Loaded" when it clears; set the words with `i18n`. A control that had focus drops it when the region turns inert, and gets it back when the region clears, unless the person moved focus elsewhere meanwhile or the page removed the control.
+Inert content leaves the accessibility tree, the indicator's status included. The indicator keeps the role and name every loading indicator has, and the script adds a visually hidden `.loading-overlay-status` region with `role="status"` just after the region, which announces "Loading" when the region becomes busy and "Loaded" when it clears; set the words with `i18n`. The script takes focus from a control inside the region when it becomes busy, including one in a shadow root, and gives it back when the region clears, unless the person moved focus elsewhere meanwhile or the page removed the control. A region busy from the start announces "Loading" a frame after the status region is added, since screen readers often skip text a live region already holds.
 
-The scrim and indicator show from the attribute alone, before the script starts, but only the script blocks input. They fade in and out, and appear at once under reduced motion. In forced colors the scrim dims the content toward `Canvas`. The scrim scrolls with the content of a region that scrolls itself, so put the overlay on a wrapper around a scroller. The region gets `position: relative` unless a utility positions it.
+The scrim and indicator show from the attribute alone, before the script starts and after `destroy()`, but only the script blocks input. They sit at z-index 5 and 6, above anything a component stacks inside itself; content the page raises higher shows through. They fade in and out, and appear at once under reduced motion. In forced colors the scrim dims the content toward `Canvas`. The scrim scrolls with the content of a region that scrolls itself, so put the overlay on a wrapper around a scroller. The region gets `position: relative` unless a utility positions it.
 
 ```html
 <form class="loading-overlay">
@@ -3651,7 +3651,7 @@ The scrim and indicator show from the attribute alone, before the script starts,
 
 #### .destroy()
 
-Stops following `aria-busy`, removes the status region, and gives the region back the `inert` state it had before.
+Stops following `aria-busy`, removes the status region, and gives the region back the `inert` state it had before. The scrim still follows the attribute, so remove `aria-busy` too if the region should look available.
 
 ### Tokens
 

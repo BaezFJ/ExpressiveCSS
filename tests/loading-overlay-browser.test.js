@@ -22,13 +22,29 @@ const html = `<style>${css}</style>
     ${indicator}<button>Early</button>
   </div>
   <div class="loading-overlay" id="held" inert>${indicator}<button>Held</button></div>
+  <div class="loading-overlay" id="idle">${indicator}<button>Idle</button></div>
+  <!-- Not started: inert content is skipped by elementFromPoint, and this case checks only the CSS. -->
+  <div class="loading-overlay no-autoinit" id="stack" style="width:300px;height:200px;border-radius:16px">
+    ${indicator}
+    <div id="raised" style="position:absolute;inset:0;z-index:4">Raised content</div>
+  </div>
+  <div id="host"></div>
   <script>${js}</script>
-  <script>window.clicks = 0;</script>`;
+  <script>
+    window.clicks = 0;
+    // A region inside a shadow root, started by hand: AutoInit does not look there.
+    const root = document.getElementById('host').attachShadow({ mode: 'open' });
+    root.innerHTML = '<div class="loading-overlay" id="shadowed"><input id="inner" aria-label="Inner"></div>';
+    window.shadowed = root.getElementById('shadowed');
+  </script>`;
 
 async function open(browser) {
   const page = await browser.newPage({ viewport: { width: 600, height: 700 } });
   await page.setContent(html);
-  await page.evaluate(() => Expressive.AutoInit());
+  await page.evaluate(() => {
+    Expressive.AutoInit();
+    Expressive.LoadingOverlay.init(window.shadowed);
+  });
   return page;
 }
 
@@ -64,8 +80,8 @@ for (const [engine, browserType, browserTest] of engines) {
         await page.keyboard.press('Tab');
         assert.equal(await page.evaluate(() => document.activeElement.id), 'after', 'Tab skips the busy region');
 
+        // Straight away, while the scrim is still fading out: it must not take the click.
         await busy(page, 'region', clear);
-        await scrimHidden(page, 'region');
         await clickAt(page, '#save');
         assert.equal(await page.evaluate(() => window.clicks), 1, `a click counts after aria-busy is ${clear ?? 'removed'}`);
         await page.focus('#before');
@@ -89,6 +105,12 @@ for (const [engine, browserType, browserTest] of engines) {
       await busy(page, 'held', 'true');
       await busy(page, 'held', null);
       assert.equal(await page.evaluate(() => document.getElementById('held').inert), true, 'the author\'s inert is kept');
+
+      // Two overlapping requests may each mark the region busy; one clear still clears it.
+      await busy(page, 'idle', 'true');
+      await busy(page, 'idle', 'true');
+      await busy(page, 'idle', null);
+      assert.equal(await page.evaluate(() => document.getElementById('idle').inert), false, 'busy twice, then cleared');
     } finally {
       await browser.close();
     }
@@ -117,8 +139,21 @@ for (const [engine, browserType, browserTest] of engines) {
       await busy(page, 'region', null);
       assert.equal((await status('region')).text, 'Loaded');
 
-      // Words from the markup's options.
-      assert.equal((await status('early')).text, 'Cargando');
+      // Words from the markup's options. A region busy from the start holds
+      // no text when the status is inserted, and announces a frame later.
+      const first = await page.evaluate(async () => {
+        const late = document.createElement('div');
+        late.className = 'loading-overlay';
+        late.setAttribute('aria-busy', 'true');
+        document.body.append(late);
+        Expressive.LoadingOverlay.init(late);
+        const atInsert = late.nextElementSibling.textContent;
+        await new Promise(requestAnimationFrame);
+        await new Promise(requestAnimationFrame);
+        return [atInsert, late.nextElementSibling.textContent];
+      });
+      assert.deepEqual(first, ['', 'Loading']);
+      await page.waitForFunction(() => document.getElementById('early').nextElementSibling.textContent === 'Cargando');
       await busy(page, 'early', null);
       assert.equal((await status('early')).text, 'Listo');
     } finally {
@@ -135,6 +170,9 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.focus('#field');
       await busy(page, 'region', 'true');
       assert.equal(await active(), 'BODY', 'inert drops focus');
+      // WebKit still typed into a field that kept its caret before the script blurred it.
+      await page.keyboard.type('abc');
+      assert.equal(await page.evaluate(() => document.getElementById('field').value), '', 'typing does not reach the busy field');
       await busy(page, 'region', null);
       assert.equal(await active(), 'field', 'focus comes back');
 
@@ -150,6 +188,20 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.evaluate(() => document.getElementById('field').remove());
       await busy(page, 'region', null);
       assert.equal(await active(), 'BODY');
+
+      // Inside a shadow root, the document only sees the host as focused.
+      const back = await page.evaluate(async () => {
+        const root = window.shadowed.getRootNode();
+        root.getElementById('inner').focus();
+        window.shadowed.setAttribute('aria-busy', 'true');
+        await new Promise(requestAnimationFrame);
+        // Inert leaves focus inside a shadow root where it was; the script takes it.
+        if (root.activeElement) return 'kept while busy';
+        window.shadowed.removeAttribute('aria-busy');
+        await new Promise(requestAnimationFrame);
+        return root.activeElement?.id ?? null;
+      });
+      assert.equal(back, 'inner', 'focus comes back inside a shadow root');
     } finally {
       await browser.close();
     }
@@ -192,6 +244,34 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 
+  browserTest(`${engine}: the scrim and indicator stack over raised content, and the region isolates only while busy`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await open(browser);
+      // Both take no pointer input, so let them be hit for elementFromPoint.
+      await page.addStyleTag({ content: '#stack::after, #stack > .loading-indicator { pointer-events: auto }' });
+      const stack = () => page.evaluate(() => {
+        const region = document.getElementById('stack');
+        const spinner = region.querySelector('.loading-indicator').getBoundingClientRect();
+        const box = region.getBoundingClientRect();
+        const hit = (x, y) => document.elementFromPoint(x, y);
+        return {
+          isolation: getComputedStyle(region).isolation,
+          radius: getComputedStyle(region, '::after').borderTopLeftRadius,
+          // Near a corner, clear of the indicator: the scrim or the raised content.
+          corner: hit(box.x + 30, box.y + 30)?.id,
+          centre: hit(spinner.x + spinner.width / 2, spinner.y + spinner.height / 2)?.classList.contains('loading-indicator')
+        };
+      });
+      assert.equal((await stack()).isolation, 'auto', 'no stacking context at rest, so popups inside can rise over the page');
+      await page.evaluate(() => document.getElementById('stack').setAttribute('aria-busy', 'true'));
+      await page.waitForFunction(() => getComputedStyle(document.getElementById('stack'), '::after').opacity === '1');
+      assert.deepEqual(await stack(), { isolation: 'isolate', radius: '16px', corner: 'stack', centre: true });
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: destroy() removes the status region, gives inert back and stops following aria-busy`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
@@ -207,7 +287,9 @@ for (const [engine, browserType, browserTest] of engines) {
       }, id);
       await busy(page, 'region', 'true');
       assert.deepEqual(await after('region'), { inert: false, status: false, inertAfterToggle: false }, 'destroyed while busy');
-      assert.deepEqual(await after('held'), { inert: true, status: false, inertAfterToggle: true }, 'destroyed at rest keeps the author\'s inert');
+      await busy(page, 'held', 'true');
+      assert.deepEqual(await after('held'), { inert: true, status: false, inertAfterToggle: true }, 'destroyed while busy keeps the author\'s inert');
+      assert.deepEqual(await after('idle'), { inert: false, status: false, inertAfterToggle: false }, 'destroyed at rest stops following aria-busy');
     } finally {
       await browser.close();
     }

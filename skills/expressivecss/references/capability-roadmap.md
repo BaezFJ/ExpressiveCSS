@@ -1081,7 +1081,7 @@ Web adaptation: CSS-only; the author supplies an accessible waiting message.
 
 ## Loading overlay
 
-**implemented within the stated scope.** A region the page marks aria-busy="true" shows a surface scrim and its loading indicator and is made inert until the attribute goes, keeps an inert state the author set, announces the start and the finish in a status region after it with i18n strings, returns focus to the control that had it, and stops following the attribute on destroy().
+**implemented within the stated scope.** A region the page marks aria-busy="true" shows a surface scrim and its loading indicator and is made inert until the attribute goes, with focus taken from the control inside it, keeps an inert state the author set, announces the start and the finish in a status region after it with i18n strings, returns focus to the control that had it, and stops following the attribute on destroy().
 
 Source review: source-reviewed, 2026-10-25. [src/sass/components/_loading-overlay.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/5a108f6fe903117cf95c72396b71515af738f3fe/src/sass/components/_loading-overlay.scss), [src/ts/components/loadingOverlay.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/5a108f6fe903117cf95c72396b71515af738f3fe/src/ts/components/loadingOverlay.ts).
 

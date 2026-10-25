@@ -172,7 +172,7 @@ Verification gap: Input blocking by click and Tab, regions busy at start, the au
 
 Feature gap: The scrim does not follow the content of a region that scrolls itself, and there is no full-page mode or determinate progress. Next check: None planned.
 
-Mapped browser scope: A mouse click and Tab blocked while busy and restored after aria-busy="false" or its removal, inert from the start, an author's inert kept, the status region outside the region with default and markup i18n words, focus returned, kept after a move and skipped for a removed control, the scrim covering the region with the indicator centred, and destroy() while busy and at rest. No spoken-output assertion.
+Mapped browser scope: A mouse click, Tab and typing blocked while busy and a click restored mid-fade after aria-busy="false" or its removal, a region set busy twice, inert from the start, an author's inert kept, the status region outside the region with default and markup i18n words, focus returned, also inside a shadow root, kept after a move and skipped for a removed control, the scrim covering the region with the indicator centred, the scrim and indicator above z-index 4 content and isolated only while busy, and destroy() while busy and at rest. No spoken-output assertion.
 
 ## [Accordion](../../components/accordion.md)
 

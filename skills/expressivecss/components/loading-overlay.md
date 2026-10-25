@@ -9,7 +9,7 @@ Component ID: `loading-overlay`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `0813479438ae110f1fcf44a446a65acb4d3a49632c198d0626efdbf73cd34a60`
+Contract SHA-256: `a4c78c905e90552e6305f6716552108817a22917dae6953fbfffafc0a2af9efe`
 
 #### Selection and adaptation
 
@@ -25,7 +25,7 @@ Upstream: web-extension-inventory-reviewed (2026-10-25); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Support (2026-10-25, `llm.md#loading-overlay`): A region the page marks aria-busy="true" shows a surface scrim and its loading indicator and is made inert until the attribute goes, keeps an inert state the author set, announces the start and the finish in a status region after it with i18n strings, returns focus to the control that had it, and stops following the attribute on destroy().
+Support (2026-10-25, `llm.md#loading-overlay`): A region the page marks aria-busy="true" shows a surface scrim and its loading indicator and is made inert until the attribute goes, with focus taken from the control inside it, keeps an inert state the author set, announces the start and the finish in a status region after it with i18n strings, returns focus to the control that had it, and stops following the attribute on destroy().
 
 Web adaptation: The native inert attribute blocks pointer and keyboard input instead of script handlers. The page owns aria-busy, and the script follows it with a MutationObserver. Inert content leaves the accessibility tree, so the script adds a visually hidden role="status" region outside the region.
 
@@ -58,7 +58,7 @@ A `.loading-overlay` region holds a `.loading-indicator` as a direct child and t
 
 #### Methods
 
-- `.destroy()`: Stops following `aria-busy`, removes the status region, and gives the region back the `inert` state it had before.
+- `.destroy()`: Stops following `aria-busy`, removes the status region, and gives the region back the `inert` state it had before. The scrim still follows the attribute, so remove `aria-busy` too if the region should look available.
 
 #### Also documented
 

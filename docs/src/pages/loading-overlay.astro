@@ -73,13 +73,16 @@ try {
           "Loaded" when it clears. Set the words with the <code>i18n</code> option.
         </p>
         <p>
-          A focused control drops focus when its region turns inert. When the
-          region clears, focus goes back to that control, unless the person moved
-          focus somewhere else in the meantime or the page removed the control.
+          The script takes focus from a control inside the region when it becomes
+          busy, including one in a shadow root. When the region clears, focus goes
+          back to that control, unless the person moved focus somewhere else in the
+          meantime or the page removed the control.
         </p>
         <p>
           The scrim and the indicator show from the attribute alone, before the
-          script starts, but only the script blocks input. They fade in and out,
+          script starts and after <code>destroy()</code>, but only the script blocks
+          input. They stack above anything a component raises inside itself, at
+          z-index 5 and 6; content the page raises higher shows through. They fade in and out,
           and appear at once under reduced motion. In forced colors the scrim dims
           the content toward the system background, so it still looks unavailable.
         </p>
@@ -112,7 +115,8 @@ try {
   <Section {...S.methods}>
 <Code code={`
 const overlay = Expressive.LoadingOverlay.getInstance(document.querySelector('.loading-overlay'));
-overlay.destroy(); // stops following aria-busy, removes the status region, gives inert back
+overlay.destroy(); // stops following aria-busy, removes the status region, gives inert back;
+                   // the scrim still follows the attribute
 `} />
   </Section>
   <Section {...S.tokens}>

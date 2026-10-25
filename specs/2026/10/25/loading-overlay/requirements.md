@@ -58,13 +58,24 @@ These facts come from the base commit.
 
 These follow from the code and can change during implementation if the code or the probe disagrees.
 
-- Make the whole region inert, indicator included. Inert content leaves the accessibility tree, so the indicator's own `role="status"` goes quiet while busy and the status element from R4 does the announcing. The indicator keeps the markup it has everywhere else, so `semantics.json` needs no special case for it.
+- Make the whole region inert, indicator included, and blur the control that had focus (see the code review). Inert content leaves the accessibility tree, so the indicator's own `role="status"` goes quiet while busy and the status element from R4 does the announcing. The indicator keeps the markup it has everywhere else, so `semantics.json` needs no special case for it.
 - Put the styles in `src/sass/components/_loading-overlay.scss`, forwarded from `components/_index.scss` next to `pull-to-refresh`.
 - Key the CSS on `.loading-overlay[aria-busy="true"]`, so the scrim and indicator also show before the script starts. Input stays open until then.
 - Draw the scrim on the region's `::after` with `position: absolute; inset: 0`, and position the indicator the same way with `margin: auto`. The region gets `position: relative` unless it is already positioned. The probe settled the scrim colour as a surface wash; see the probe results.
 - Name the status element's class `.loading-overlay-status`, matching `.pull-to-refresh-status`.
 - Register the component as `LoadingOverlay` with the key `Expressive_LoadingOverlay`, and watch the attribute with a `MutationObserver` filtered to `aria-busy`, as `chips.ts` and `questionnaire.ts` filter theirs.
 - Give the component its own docs page, `docs/src/pages/loading-overlay.astro`, as pull-to-refresh has. Its catalogue id is `loading_overlay`, matching `loading_indicator` and `currency_input`.
+
+### Found in the code review on 2026-10-25
+
+An independent review and mutation runs found these, all fixed in plan group 6.
+
+- `isolation: isolate` on the region at rest trapped popups inside it, such as a docked date picker at `--expressive-z-menu`, under a sticky app bar outside it. `.field` skips isolation for a docked display for the same reason. The region now isolates only while busy, when it is inert and nothing inside is open.
+- The scrim (z-index 1) and indicator (2) sat under content that components raise inside themselves: card state layers and sticky data table columns at 2, carousel parts up to 4. They are now 5 and 6. Content a page raises higher still shows through, and the docs say so.
+- The scrim ignored the region's `border-radius`; it now inherits it, as the card state layer does.
+- WebKit reports `<body>` as focused once the focused control turns inert, but keeps typing into it, and in all three engines a control in a shadow root keeps focus inside an inert region. Both were probed on 2026-10-25. The script now calls `blur()` on the control it records, which stops typing in all three engines for inputs, textareas, `contenteditable` and shadow DOM, and it reads the focused control from the region's root node.
+- A region busy from the start wrote "Loading" into the status region as it was inserted, which screen readers often skip. That first write now waits a frame. Spoken output is still unverified.
+- Tests could not catch a second `aria-busy="true"` restarting the busy state (the region would stay inert after clearing), a missing `observer.disconnect()`, `destroy()` restoring `inert` to false, or the scrim taking clicks while it fades. Each now fails a test.
 
 ### Open decisions
 

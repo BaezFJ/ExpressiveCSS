@@ -26,9 +26,6 @@
   --md-comp-loading-overlay-motion: var(--md-sys-motion-spring-default-effects);
   --md-comp-loading-overlay-motion-duration: var(--md-sys-motion-spring-default-effects-duration);
 
-  // Keeps the scrim's stacking inside the region, so it never covers the page around it.
-  isolation: isolate;
-
   &::after,
   > .loading-indicator {
     position: absolute;
@@ -43,21 +40,31 @@
       visibility 0s linear var(--md-comp-loading-overlay-motion-duration);
   }
 
+  // Above the highest z-index any component sets inside itself (4, the
+  // carousel's), so card state layers and sticky table columns are dimmed too.
   &::after {
     content: "";
     inset: 0;
-    z-index: 1;
+    z-index: 5;
+    border-radius: inherit;
     background-color: var(--md-comp-loading-overlay-scrim-color);
   }
 
   > .loading-indicator {
     inset: 0;
-    z-index: 2;
+    z-index: 6;
     margin: auto;
 
     &::before {
       animation-play-state: paused;
     }
+  }
+
+  // Keeps the scrim's stacking inside the region, so it never covers the page
+  // around it. Only while busy: at rest, a popup inside the region, such as a
+  // docked date picker, has to rise over the page, as `.field` lets it.
+  &[aria-busy="true"] {
+    isolation: isolate;
   }
 
   &[aria-busy="true"]::after,

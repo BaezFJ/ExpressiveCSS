@@ -250,7 +250,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed currency input focus editing, the validity message, formatting after a form reset and destroy(): 95,276 gzip bytes (+160).
   // Reviewed currency input waiting for blur after Enter and listening in a shadow root: 95,306 gzip bytes (+30).
   // Reviewed the loading overlay: inert while aria-busy is "true", the status region after it and focus put back on clear: 95,566 gzip bytes (+260).
-  assert.ok(sizes(js).gzip <= 95566, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the loading overlay review fixes: the blurred control, its root node's focus and the deferred first announcement: 95,625 gzip bytes (+59).
+  assert.ok(sizes(js).gzip <= 95625, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -405,5 +406,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed swipe actions: the clipped list, the sliding row, the trailing toggle and the actions past the row's end: 86,736 gzip bytes (+169).
   // Reviewed .defer-render: content-visibility on off-screen rows except swipe rows, their reserved size and inset focus rings: 86,844 gzip bytes (+108).
   // Reviewed the loading overlay: the surface scrim and centred indicator while busy, their fade, the forced-colors wash and the hidden status region: 87,040 gzip bytes (+196).
-  assert.ok(sizes(css).gzip <= 87040, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the loading overlay review fixes: isolation only while busy, the scrim and indicator above component layers, and the inherited radius: 87,044 gzip bytes (+4).
+  assert.ok(sizes(css).gzip <= 87044, `CSS gzip: ${sizes(css).gzip}`);
 });

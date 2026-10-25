@@ -78,3 +78,17 @@ Prerequisites: group 4.
 Completion check: V8 to V10 pass.
 
 Covers R8, R9.
+
+## Group 6: review fixes
+
+Prerequisites: group 5.
+
+- [x] Isolate the region only while busy, raise the scrim and indicator to z-index 5 and 6, and give the scrim `border-radius: inherit`.
+- [x] Blur the recorded control when the region becomes busy, read it from the region's root node, and defer a busy-at-start region's first announcement by a frame.
+- [x] Add V11 and extend V1 to V4 and V7 with the cases the review found untested, and run each against its mutation.
+- [x] Document the z-index ceiling, the scrim after `destroy()`, and the focus handling in `llm.md` and the docs page.
+- [x] Re-pin both source hashes, re-measure the budgets, run `npm run build:skill` last, then `check:generated` and the affected suites.
+
+Completion check: V1 to V7 and V11 pass in all three engines, and each new case fails against its mutation.
+
+Covers R2, R3, R4, R5, R7.

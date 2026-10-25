@@ -5596,7 +5596,7 @@
         "implementation": {
           "source": "llm.md#loading-overlay",
           "reviewedOn": "2026-10-25",
-          "documentedSupport": "A region the page marks aria-busy=\"true\" shows a surface scrim and its loading indicator and is made inert until the attribute goes, keeps an inert state the author set, announces the start and the finish in a status region after it with i18n strings, returns focus to the control that had it, and stops following the attribute on destroy().",
+          "documentedSupport": "A region the page marks aria-busy=\"true\" shows a surface scrim and its loading indicator and is made inert until the attribute goes, with focus taken from the control inside it, keeps an inert state the author set, announces the start and the finish in a status region after it with i18n strings, returns focus to the control that had it, and stops following the attribute on destroy().",
           "webAdaptation": "The native inert attribute blocks pointer and keyboard input instead of script handlers. The page owns aria-busy, and the script follows it with a MutationObserver. Inert content leaves the accessibility tree, so the script adds a visually hidden role=\"status\" region outside the region.",
           "limitations": [
             "Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified. The scrim does not follow the content of a region that scrolls itself; the docs say to wrap the scroller."
@@ -5623,11 +5623,11 @@
         "sources": [
           {
             "path": "src/sass/components/_loading-overlay.scss",
-            "sha256": "6bcd816fd03ee06982d551feccbbb0aebc7695c839b80cba12ff1466950f0222"
+            "sha256": "4d8f10f145a92143a541e454c733756680162970a29382e24e603e849b8aca70"
           },
           {
             "path": "src/ts/components/loadingOverlay.ts",
-            "sha256": "a3f819b703bcf6b0b85219fe445499fe0f198ee5fa9d1f45eb01ba0810239509"
+            "sha256": "5544177df22e5fcc5aa30f2764414498b48620387f8df7cbc2de8170ed94240d"
           }
         ],
         "gaps": [
