@@ -7,6 +7,47 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Show more. A `.show-more` holds text with a `line-clamp-1`, `-2` or
+  `-3` class and a `<button>`; the button shows the full text, reads
+  "Show less" while it is open (`i18n.showLess` or `data-show-less`) and
+  sets `aria-expanded` and `aria-controls`. The button hides while the
+  clamped text fits and comes back when a resize or a web font cuts it.
+  New semantics rules require a `<button type="button">` and clamped text.
+- Treemap chart. A `<figure class="treemap-chart">` draws each row of its
+  table's first value column as a rectangle whose area is its share of the
+  total, filling the plot in a squarified layout from the largest value
+  down, mirrored in right-to-left pages. Each rectangle shows its name and
+  cell when they fit, and rows with no positive value draw nothing. The plot
+  is one Tab stop whose arrow keys step through the rectangles in table
+  order, the tooltip adds each row's share, and it takes `update()` and
+  `data-watch` like the other charts. A new semantics rule asks for a
+  `<figure>` with a `<table>` and a `<figcaption>`.
+- Hover card. A link with `hover-card-trigger` names a `.popover` with
+  `popover="hint"` in `aria-details`, and once the pointer or keyboard
+  focus has rested on the link for 500 ms, that card shows against it.
+  The card stays while the pointer or focus is on the link or the card,
+  and hides 300 ms after both are left, or at once on Escape with focus
+  back on the link. A tap or click follows the link and shows no card.
+  Two new semantics rules keep the trigger an `<a href>` whose
+  `aria-details` names a `[popover]`.
+- Transfer list. A `.transfer-list` holds a `.transfer-available` and a
+  `.transfer-chosen` list of checkbox rows with `data-transfer` buttons
+  between them. `add` and `remove` move the checked rows, `add-all` and
+  `remove-all` every row, and a row moved back returns to its original
+  place. The form submits the chosen rows' values under the container's
+  `data-name`, in the chosen list's order, and a form reset puts the rows
+  back. Each move fires `expressive:transfer` with `{ rows, from, to }`
+  and is announced through `TransferList.i18n.moved`. Four new semantics
+  rules ask for `data-name`, unnamed checkboxes, named lists and
+  `type="button"` on the move buttons.
+- Funnel chart. A `<figure class="funnel-chart">` draws each table row as
+  a stage, from the top down in table order, centered and as wide as its
+  value against the largest one. The tooltip adds each stage's percentage
+  of the first row, and further columns show in the tooltip. The plot is
+  one Tab stop whose up and down arrows move between rows, and it takes
+  `update()`, where stages move from their old widths, and `data-watch`
+  like the other charts. A new semantics rule asks for a `<figure>` with a
+  `<table>` and a `<figcaption>`.
 - Sankey chart. A `<figure class="sankey-chart">` draws each table row as
   a flow: the first column names the source node, the second the target
   node, and the third holds the value. Nodes stand in columns by their
@@ -26,6 +67,19 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   words set with `i18n`, and focus goes back to the control that had it
   when the region clears. A new semantics rule asks for a direct
   `.loading-indicator` child.
+- `Dialogs.confirm()` asks a yes-or-no question in a basic alert dialog
+  and returns a promise that resolves `true` on the confirm button and
+  `false` on Cancel, Escape or a scrim tap. Focus starts on Cancel and
+  returns to the opener, and the dialog is removed once it closes.
+  `Dialogs.i18n` holds the default labels, "OK" and "Cancel".
+- `.back-to-top` is an in-page link that appears once the window has
+  scrolled past `threshold`, one viewport height by default. Activating it
+  scrolls to the top, instantly under reduced motion, and focuses the
+  element its `href` names. The `BackToTop` component keeps it `inert`
+  while hidden and watches the threshold with an `IntersectionObserver`.
+  Without the script the link stays visible and jumps to its target. A
+  focused link stays until focus leaves, and modified clicks are left to
+  the browser.
 - `.defer-render` makes the browser skip layout and paint for a long
   list's off-screen rows through `content-visibility: auto`. Skipped rows
   reserve `--defer-render-row-size`, the list item height by default, and

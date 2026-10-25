@@ -6,7 +6,7 @@ Read the linked component guide for the ExpressiveCSS 0.15.0 markup and API cont
 
 ## Contents
 
-Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Data table, Avatar, Skeleton, Empty state, Alert, Stepper, Popover, Drop zone, Tree, Stat, Description list, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire, Marquee, Rich text editor, Confetti, Particles, Map, Mega menu, Menubar, Calendar, Tour, Image compare.
+Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Show more, Data table, Avatar, Skeleton, Empty state, Alert, Stepper, Popover, Drop zone, Tree, Stat, Description list, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire, Marquee, Rich text editor, Confetti, Particles, Map, Mega menu, Menubar, Calendar, Tour, Image compare.
 
 Each section lists the relationship, reviewed sections, requirements, and framework comparison, then any verification, feature, or integration gap and the mapped browser scope. Read only the selected component's section.
 
@@ -126,6 +126,22 @@ Feature gap: Actions only on the inline-end side, and no full swipe that runs an
 
 Mapped browser scope: Swipe reveal with no action run, the keyboard path through the toggle and its actions, short and over-long swipes, drags that do nothing, the toggle, outside tap, Escape and action close, one open row with matching events and callbacks, right-to-left pages, reduced motion with a :root duration override, and destroy() with a row open or mid-swipe. No spoken-output assertion.
 
+## [Transfer list](../../components/transfer-list.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Name both lists, keep every row and button reachable by keyboard, announce each move, keep focus on the pressed button, and submit the chosen options in a stable order.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework moves checked rows between the two lists, returns a row to its original slot, keeps the chosen order, announces each move, fires expressive:transfer and submits the chosen values under data-name; the page owns the rows, their values and the names of the lists and buttons.
+
+Verification gap: The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser. Spoken output and forced colors remain unverified. Next check: Move rows with NVDA in Firefox and VoiceOver in Safari and confirm each move is announced once; check the lists and icons in forced colors mode.
+
+Feature gap: No reordering inside the chosen list, no search over either list, no required validity, and no submission without the script. Next check: None planned.
+
+Mapped browser scope: Moving checked and all rows both ways, original slots, disabled rows and buttons, empty presses, focus after a move, the announcement and its i18n text, the event detail, form data from new FormData and a real submit, empty and missing data-name, disabled fieldsets, nested lists, reset by button and form.reset() including a cancelled reset, a list added after load, right-to-left pages and the narrow layout. No spoken-output assertion.
+
 ## [Input mask](../../components/input-mask.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
@@ -174,6 +190,22 @@ Feature gap: The scrim does not follow the content of a region that scrolls itse
 
 Mapped browser scope: A mouse click, Tab and typing blocked while busy and a click restored mid-fade after aria-busy="false" or its removal, a region set busy twice, inert from the start, an author's inert kept, the status region outside the region with default and markup i18n words, focus returned, also inside a shadow root, kept after a move and skipped for a removed control, the scrim covering the region with the indicator centred, the scrim and indicator above z-index 4 content and isolated only while busy, and destroy() while busy and at rest. No spoken-output assertion.
 
+## [Back to top](../../components/back-to-top.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the control out of reach while it is hidden, move focus to the top of the content along with the scroll, honor reduced motion, and keep the link working without the script.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework shows and hides the link at the threshold, keeps it inert while hidden, scrolls to the top and moves focus to the href target; the page owns the link's name, its FAB look and the element it points to.
+
+Verification gap: The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit. Spoken output, forced colors and real phones remain unverified. Next check: Activate the link with VoiceOver and NVDA and confirm focus lands on the main content; check it in forced colors.
+
+Feature gap: Only the window's scroll is watched; a pane, dialog or scroll area that scrolls on its own is not supported. Next check: None planned.
+
+Mapped browser scope: Focus on the target and the next Tab after a click and after Enter, the temporary tabindex removed, the hidden link skipped by Tab, missed by elementFromPoint and absent from the ARIA snapshot before and after scrolling past the threshold, a focused link kept through Home and hidden once focus leaves, no fade out when the script starts after the first paint, smooth and instant scrolls, a 400px threshold from markup, the 16px corner in ltr and rtl and the offset token, and the link without the script. No spoken-output assertion.
+
 ## [Cascader](../../components/cascader.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
@@ -203,6 +235,22 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: Tile corners, the chevron turn, exclusive groups and the expanded state Chromium reports are checked in a browser; the open animation, enlarged text and spoken output remain unverified. Next check: Toggle items with a screen reader in each engine and confirm the expanded state is announced; test enlarged text and reduced motion.
 
 Mapped browser scope: Outer, inner and open corner radii, chevron rotation, hidden native marker, exclusive name groups, Enter on a focused summary and the expanded state Chromium reports for each summary. No spoken-output assertion.
+
+## [Show more](../../components/show-more.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the control a native button named by visible text, report its expanded state, point it at the text it controls, and hide it from sight and the tab order when there is nothing more to show.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page writes the clamped text and the button; the framework sets aria-expanded and aria-controls, unclamps and clamps the text, swaps the label to "Show less", and hides the button while the clamped text fits, checking again on resize, after web fonts load and on blur.
+
+Verification gap: Click and Enter toggling, text that fits, a fractional line height, a container widened and narrowed, a window-size prefix, Tab order, a focused button kept through a resize and until blur, and a web-font swap are checked in a browser; labels, events and destroy() in jsdom. Spoken output remains unverified. Next check: Activate the button with VoiceOver and NVDA and confirm the expanded state and label are announced.
+
+Feature gap: The text opens without a transition, find-in-page does not open clamped text, only one to three lines can be clamped, and an icon-only button keeps its aria-label while open. Next check: None planned.
+
+Mapped browser scope: The text height before and after a click and Enter with aria-expanded and aria-controls, the hidden attribute on a button whose text fits, after widening and after narrowing, expanded:line-clamp-none at an Expanded width, Tab skipping hidden buttons, focus kept on a collapsed button through a resize and until Tab, a fractional line height that fits, and a held-back web font that makes the text fit, with a destroyed instance left alone. No spoken-output assertion.
 
 ## [Data table](../../components/data-table.md)
 
@@ -301,6 +349,20 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified. Next check: Open a toggletip with a screen reader in each engine and confirm the expanded state and the panel content are reachable; check an engine without anchor positioning.
 
 Mapped browser scope: Default, top and end placement against the button in LTR and RTL, both-axis flip at the viewport corner, Escape with focus return, outside click, staying open for an inner button, one auto popover at a time and the Chromium expanded state. No spoken-output assertion.
+
+## [Hover card](../../components/hover-card.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Show the card on hover and keyboard focus after a delay, keep it open while the pointer or focus is on the link or the card, hide it on Escape with focus back on the link, leave the link's click alone and relate the card to the link with aria-details.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory; the closest is the rich tooltip, which takes the tooltip role and so cannot hold links. The page writes the link, its aria-details and the card; the framework times showing and hiding, shows the card with the link as its source and takes Escape. The browser owns the top layer, the anchoring, the Tab order into the card and light dismiss.
+
+Verification gap: Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified. Next check: Tab to a hover card link with VoiceOver and NVDA and confirm the details relationship is announced and the card is reachable.
+
+Mapped browser scope: Hover with the delay, the card's place against the link, staying open on the card and hiding after exitDelay; keyboard focus, Tab into the card, Escape with focus return, focus leaving the card and a click that focuses the link. No spoken-output assertion.
 
 ## [Drop zone](../../components/drop-zone.md)
 
@@ -546,6 +608,38 @@ Verification gap: Link and node sizes, columns, skipped rows, names, colors, rig
 Feature gap: Nodes are not reached by keyboard or pointer, node order follows the table with no crossing reduction, and flows that close a cycle are not drawn. Next check: Reach nodes and their totals from the keyboard if readers need them; until then the table lists every flow.
 
 Mapped browser scope: Hidden table, the named plot and its role description, link thickness and node height on one scale, columns, stacking order, skipped rows, node names and colors, right-to-left mirroring, keyboard steps in table order, the link under the pointer and a touch tap, update() motion, reduced motion and data-watch. No spoken-output assertion.
+
+## [Funnel chart](../../components/funnel-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the data available as text, name the chart, label each stage, and let a keyboard reach every row the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the stages, their labels and the tooltip from the page's table with the line chart's runtime; the page owns the data, its order, its formatting and the caption.
+
+Verification gap: Stage widths, gaps, labels, the tooltip, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+
+Feature gap: There are no tapered stages, colors per row, step-to-step conversion rates or horizontal funnels. Next check: None planned.
+
+Mapped browser scope: Hidden table, the named plot and its role description, one centered stage per row as wide as its value against the largest in left-to-right and right-to-left pages, gaps, labels beside their stages, the tooltip and its percentages, keyboard steps, the row under the pointer, update() motion and data-watch. No spoken-output assertion.
+
+## [Treemap chart](../../components/treemap-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the data available as text, name the chart, keep each part identifiable without relying on color alone, and let a keyboard reach every part the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework lays out the rectangles, writes the names and cells that fit, and draws the tooltip from the page's table with the line chart's runtime; the page owns the data, its formatting and the caption.
+
+Verification gap: Areas, layout, gaps, colors, text fitting, keyboard steps, the pointer, the tooltip, update() and data-watch are checked in a browser; screen reader output, forced colors in a browser and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text in a browser.
+
+Feature gap: There is one level only, with no parent groups, legend, drill-down or animated update(). Next check: Add a parent column only when a page needs grouped regions.
+
+Mapped browser scope: Hidden table, the named plot and its role description, each rectangle's area in proportion to its value, the squarified layout in left-to-right and right-to-left pages, rows with no positive value, colors in table order, the inset gap, text only where it fits, keyboard steps in table order, the rectangle under the pointer, the tooltip with each row's share, update() and data-watch. No spoken-output assertion.
 
 ## [Timeline](../../components/timeline.md)
 

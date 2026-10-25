@@ -342,6 +342,13 @@ export const NAV: DocsGroup[] = [
           "A circular action that can open a menu of related shortcuts.",
       },
       {
+        id: "back-to-top",
+        label: "Back to top",
+        route: "/back-to-top.html",
+        description:
+          "A link that appears once a long page has scrolled down, and returns to the top with focus on the main content.",
+      },
+      {
         id: "cards",
         section: "Containment",
         label: "Cards",
@@ -398,6 +405,13 @@ export const NAV: DocsGroup[] = [
         route: "/accordion.html",
         description:
           "Stacked disclosures that open one section of content at a time, on native details.",
+      },
+      {
+        id: "show_more",
+        label: "Show more",
+        route: "/show-more.html",
+        description:
+          "Clamped text with a button that shows the rest, and hides itself when the text already fits.",
       },
       {
         id: "data_table",
@@ -499,11 +513,25 @@ export const NAV: DocsGroup[] = [
           "One measure plotted against another, with a point for each row.",
       },
       {
+        id: "funnel-chart",
+        label: "Funnel chart",
+        route: "/funnel-chart.html",
+        description:
+          "Steps people take in order, each drawn as a stage as wide as the people who reach it.",
+      },
+      {
         id: "sankey-chart",
         label: "Sankey chart",
         route: "/sankey-chart.html",
         description:
           "Flows between nodes, each link as thick as its value.",
+      },
+      {
+        id: "treemap-chart",
+        label: "Treemap chart",
+        route: "/treemap-chart.html",
+        description:
+          "Parts of a whole drawn as rectangles whose areas follow their values.",
       },
       {
         id: "timeline",
@@ -584,6 +612,13 @@ export const NAV: DocsGroup[] = [
         route: "/popover.html",
         description:
           "A panel that opens from a button and stays until dismissed, on the native popover attribute.",
+      },
+      {
+        id: "hover_card",
+        label: "Hover card",
+        route: "/hover-card.html",
+        description:
+          "Shows a card of preview content after a delay when a link is hovered or gets keyboard focus.",
       },
       {
         id: "tour",
@@ -785,6 +820,13 @@ export const NAV: DocsGroup[] = [
         route: "/checkboxes.html",
         description:
           "Material Design 3 checkboxes, from the HTML.",
+      },
+      {
+        id: "transfer_list",
+        label: "Transfer list",
+        route: "/transfer-list.html",
+        description:
+          "Moves options between an available list and a chosen list, and submits the chosen ones with the form.",
       },
       {
         id: "radio_buttons",

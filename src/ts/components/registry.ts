@@ -51,7 +51,9 @@ export const AUTO_INIT_COMPONENTS = {
   RadialChart: { component: Components.RadialChart, selector: ".radial-chart" },
   MixedChart: { component: Components.MixedChart, selector: ".mixed-chart" },
   ScatterChart: { component: Components.ScatterChart, selector: ".scatter-chart" },
+  FunnelChart: { component: Components.FunnelChart, selector: ".funnel-chart" },
   SankeyChart: { component: Components.SankeyChart, selector: ".sankey-chart" },
+  TreemapChart: { component: Components.TreemapChart, selector: ".treemap-chart" },
   CommandPalette: {
     component: Components.CommandPalette,
     selector: "dialog.command-palette",
@@ -78,10 +80,12 @@ export const AUTO_INIT_COMPONENTS = {
     component: Components.InputMask,
     selector: 'input[data-mask]:is(:not([type]), [type="text" i], [type="tel" i], [type="search" i], [type="url" i], [type="password" i])',
   },
+  ShowMore: { component: Components.ShowMore, selector: ".show-more" },
   // Only a text input can hold the formatted amount.
   CurrencyInput: { component: Components.CurrencyInput, selector: 'input[data-currency]:is(:not([type]), [type="text" i])' },
   Lightbox: { component: Components.Lightbox, selector: ".lightboxed" },
   ScrollSpy: { component: Components.ScrollSpy, selector: ".scrollspy" },
+  BackToTop: { component: Components.BackToTop, selector: ".back-to-top" },
   FormSelect: { component: Components.FormSelect, selector: "select" },
   Cascader: { component: Components.Cascader, selector: ".cascader" },
   NavigationRail: {
@@ -94,6 +98,7 @@ export const AUTO_INIT_COMPONENTS = {
     selector: ".time-picker",
   },
   Tooltip: { component: Components.Tooltip, selector: ".tooltipped" },
+  HoverCard: { component: Components.HoverCard, selector: ".hover-card-trigger" },
   FloatingActionButton: {
     component: Components.FloatingActionButton,
     selector: ".fab-menu",

@@ -234,7 +234,9 @@ function unmount() {
             <tr><td><code>RadialChart</code></td><td><code>.radial-chart</code></td></tr>
             <tr><td><code>MixedChart</code></td><td><code>.mixed-chart</code></td></tr>
             <tr><td><code>ScatterChart</code></td><td><code>.scatter-chart</code></td></tr>
+            <tr><td><code>FunnelChart</code></td><td><code>.funnel-chart</code></td></tr>
             <tr><td><code>SankeyChart</code></td><td><code>.sankey-chart</code></td></tr>
+            <tr><td><code>TreemapChart</code></td><td><code>.treemap-chart</code></td></tr>
             <tr><td><code>ColumnChart</code></td><td><code>.column-chart</code></td></tr>
             <tr><td><code>CommandPalette</code></td><td><code>dialog.command-palette</code></td></tr>
             <tr><td><code>Questionnaire</code></td><td><code>form.questionnaire</code></td></tr>
@@ -246,15 +248,18 @@ function unmount() {
             <tr><td><code>LoadingOverlay</code></td><td><code>.loading-overlay</code></td></tr>
             <tr><td><code>SwipeActions</code></td><td><code>.list.swipeable</code></td></tr>
             <tr><td><code>InputMask</code></td><td><code>input[data-mask]</code> of type text, tel, search, url or password</td></tr>
+            <tr><td><code>ShowMore</code></td><td><code>.show-more</code></td></tr>
             <tr><td><code>CurrencyInput</code></td><td><code>input[data-currency]</code> of type text</td></tr>
             <tr><td><code>Lightbox</code></td><td><code>.lightboxed</code></td></tr>
             <tr><td><code>NavigationRail</code></td><td><code>.navigation-rail</code></td></tr>
             <tr><td><code>ScrollSpy</code></td><td><code>.scrollspy</code></td></tr>
+            <tr><td><code>BackToTop</code></td><td><code>.back-to-top</code></td></tr>
             <tr><td><code>FormSelect</code></td><td><code>select</code></td></tr>
             <tr><td><code>Cascader</code></td><td><code>.cascader</code></td></tr>
             <tr><td><code>Tabs</code></td><td><code>.tabs</code></td></tr>
             <tr><td><code>Timepicker</code></td><td><code>.time-picker</code></td></tr>
             <tr><td><code>Tooltip</code></td><td><code>.tooltipped</code></td></tr>
+            <tr><td><code>HoverCard</code></td><td><code>.hover-card-trigger</code></td></tr>
             <tr><td><code>FloatingActionButton</code></td><td><code>.fab-menu</code></td></tr>
             <tr><td><code>Menubar</code></td><td><code>.menubar</code></td></tr>
           </tbody>
@@ -314,11 +319,12 @@ document.addEventListener('expressive:open', (event) => {
             <tr><td><code>expressive:create</code></td><td>Autocomplete, from its "Add" row</td><td><code>{"{ text }"}</code></td></tr>
             <tr><td><code>expressive:chip-add</code>, <code>chip-select</code>, <code>chip-delete</code></td><td>Chips</td><td><code>{"{ chip }"}</code></td></tr>
             <tr><td><code>expressive:change</code></td><td>ButtonGroup, Menu checkbox and radio items, ScrollSpy (from the section), Tour</td><td><code>{"{ button, pressed }"}</code>, <code>{"{ item, checked }"}</code>, <code>{"{ link }"}</code>, <code>{"{ step, index }"}</code></td></tr>
-            <tr><td><code>expressive:open</code>, <code>expressive:close</code></td><td>Tooltip, Snackbar, Tour</td><td>Tour's close: <code>{"{ completed }"}</code></td></tr>
+            <tr><td><code>expressive:open</code>, <code>expressive:close</code></td><td>Tooltip, HoverCard, Snackbar, Tour, ShowMore</td><td>Tour's close: <code>{"{ completed }"}</code></td></tr>
             <tr><td><code>expressive:action</code>, <code>expressive:closed</code></td><td>Snackbar</td><td>none</td></tr>
             <tr><td><code>expressive:copy</code></td><td>Copy buttons</td><td><code>{"{ text, copied }"}</code></td></tr>
             <tr><td><code>expressive:refresh</code></td><td>Pull-to-refresh</td><td><code>{"{ waitUntil }"}</code></td></tr>
             <tr><td><code>expressive:swipetoggle</code></td><td>Swipe actions</td><td><code>{"{ row, open }"}</code></td></tr>
+            <tr><td><code>expressive:transfer</code></td><td>Transfer list, from the container</td><td><code>{"{ rows, from, to }"}</code></td></tr>
             <tr><td><code>expressive:change</code>, <code>expressive:sort</code></td><td>Data tables, from the wrapper</td><td><code>{"{ selected }"}</code>, <code>{"{ header, column, direction }"}</code>; <code>sort</code> is cancelable</td></tr>
           </tbody>
         </table>
@@ -332,7 +338,7 @@ document.addEventListener('expressive:open', (event) => {
         </p>
         <p>
           Tooltip fires <code>expressive:open</code> and <code>expressive:close</code> when it
-          shows and hides, after its delays. A snackbar fires its events from the
+          shows and hides, after its delays, and so does a hover card, from its link. A snackbar fires its events from the
           snackbar itself. <code>expressive:closed</code> comes just before it leaves the page.
           Tour's <code>expressive:close</code> says whether the Done button finished it.
         </p>
