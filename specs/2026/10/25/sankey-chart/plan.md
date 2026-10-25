@@ -27,10 +27,10 @@ Outcome: each node shows its name on the correct side, nodes and links take thei
 
 Prerequisites: group 1.
 
-- [ ] Add the V3 case and confirm it fails.
-- [ ] Draw the labels as HTML spans placed by percent, set `data-series` on nodes and links, and mirror the columns when `_reversed` is set.
-- [ ] Add the label placement, colors and link opacity token to the Sass.
-- [ ] Rebuild, rerun the file, and update the budget lines.
+- [x] Add the V3 case and confirm it fails.
+- [x] Draw the labels as HTML spans placed by percent, set `data-series` on nodes and links, and mirror the columns when `_reversed` is set.
+- [x] Add the label placement, colors and link opacity token to the Sass.
+- [x] Rebuild, rerun the file, and update the budget lines.
 
 Completion check: V1 to V3 pass in all three engines.
 

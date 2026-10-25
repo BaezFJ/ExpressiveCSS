@@ -8,6 +8,8 @@ export type SankeyChartOptions = LineChartOptions;
 const NODE_WIDTH = 2;
 /** The gap between nodes in a column, in hundredths of the plot's height. */
 const NODE_GAP = 4;
+// ponytail: nodes past six repeat the colors, as pie chart rows do.
+const COLORS = 6;
 
 /** A row that draws a link: its index, its source and target names, and its value. */
 interface Flow {
@@ -17,9 +19,10 @@ interface Flow {
   value: number;
 }
 
-/** A node: its name, column and size in value units, and where it sits, in hundredths of the plot. */
+/** A node: its name, color, column and size in value units, and where it sits, in hundredths of the plot. */
 interface Node {
   name: string;
+  color: string;
   column: number;
   size: number;
   x: number;
@@ -75,11 +78,15 @@ function columnOf(name: string, flows: Flow[], columns: Map<string, number>): nu
   return columns.get(name)!;
 }
 
-/** The nodes in the order their names first appear, each sized by the larger of its in and out totals. */
+/**
+ * The nodes in the order their names first appear, each sized by the larger
+ * of its in and out totals, and colored in that order.
+ */
 function nodesOf(flows: Flow[]): Node[] {
   const columns = new Map<string, number>();
-  return [...new Set(flows.flatMap((flow) => [flow.source, flow.target]))].map((name) => ({
+  return [...new Set(flows.flatMap((flow) => [flow.source, flow.target]))].map((name, i) => ({
     name,
+    color: String((i % COLORS) + 1),
     column: columnOf(name, flows, columns),
     size: Math.max(sum(flows.filter((flow) => flow.target === name)), sum(flows.filter((flow) => flow.source === name))),
     x: 0,
@@ -201,10 +208,35 @@ export class SankeyChart extends LineChart {
       'aria-hidden': 'true',
       focusable: 'false'
     });
-    const links = this._links.map((link) => svgNode('path', { class: 'sankey-chart-link', d: this._linkPath(link) }));
-    const nodes = this._nodes.map((node) => svgNode('path', { class: 'sankey-chart-node', d: this._nodePath(node) }));
+    const links = this._links.map((link) =>
+      svgNode('path', { class: 'sankey-chart-link', 'data-series': link.source.color, d: this._linkPath(link) }));
+    const nodes = this._nodes.map((node) =>
+      svgNode('path', { class: 'sankey-chart-node', 'data-series': node.color, d: this._nodePath(node) }));
     svg.append(...links, ...nodes);
     return svg;
+  }
+
+  /**
+   * The node names, over the drawing, each level with its node and toward
+   * the plot's middle: after the node, or before it in the last column.
+   * They are placed from the inline start, so they need no mirroring.
+   */
+  protected _axes(): Element[] {
+    const names = document.createElement('div');
+    names.className = 'sankey-chart-names';
+    names.setAttribute('aria-hidden', 'true');
+    const last = Math.max(...this._nodes.map((node) => node.column));
+    names.append(...this._nodes.map((node) => this._name(node, node.column === last)));
+    return [names];
+  }
+
+  private _name({ name, x, top, height }: Node, last: boolean) {
+    const span = document.createElement('span');
+    span.className = last ? 'sankey-chart-name end' : 'sankey-chart-name';
+    span.textContent = name;
+    span.style.setProperty('--x', `${last ? x : x + NODE_WIDTH}%`);
+    span.style.setProperty('--y', `${top + height / 2}%`);
+    return span;
   }
 
   /** No row labels or legend: the nodes carry the names. */

@@ -26,6 +26,9 @@ const html = `<style>${css}</style>
     ${chart('class="sankey-chart" id="ltr"', flows)}
     ${chart('class="sankey-chart" id="skips"', [...flows, ...skipped])}
   </div>
+  <div style="width: 600px" dir="rtl">
+    ${chart('class="sankey-chart" id="rtl"', flows)}
+  </div>
   <script>${js}</script>`;
 
 /**
@@ -53,7 +56,7 @@ function drawing(el) {
 const drawn = (page, id) => page.locator(id).evaluate((el, source) => new Function(`return ${source}`)()(el), drawing.toString());
 
 /** Asserts V1's rules: one scale for links and nodes, columns, stacking, no overlap, and the tallest column filling the plot. */
-function laidOut({ plot, nodes: boxes, links }, message) {
+function laidOut({ plot, nodes: boxes, links }, message, rtl = false) {
   assert.equal(links.length, flows.length, `${message}: one link per flow`);
   assert.equal(boxes.length, nodes.length, `${message}: one node per name`);
   const unit = (links[0].source[1] - links[0].source[0]) / Number(flows[0][2]);
@@ -70,7 +73,8 @@ function laidOut({ plot, nodes: boxes, links }, message) {
   // Columns from the inline start, in order of first appearance down each one.
   const lefts = [0, 1, 2].map((column) => nodes.flatMap(([, c], i) => (c === column ? [boxes[i].left] : [])));
   lefts.forEach((column, c) => assert.ok(Math.max(...column) - Math.min(...column) <= 1, `${message}: column ${c} lines up`));
-  assert.ok(lefts[0][0] < lefts[1][0] && lefts[1][0] < lefts[2][0], `${message}: the columns run from the inline start`);
+  const order = rtl ? [2, 1, 0] : [0, 1, 2];
+  assert.ok(lefts[order[0]][0] < lefts[order[1]][0] && lefts[order[1]][0] < lefts[order[2]][0], `${message}: the columns run from the inline start`);
   assert.ok(boxes[0].top < boxes[2].top, `${message}: Solar above Wind`);
   assert.ok(boxes[3].top < boxes[4].top, `${message}: Homes above Industry`);
   assert.ok(boxes[1].top < boxes[5].top, `${message}: Grid above Storage`);
@@ -86,6 +90,22 @@ function laidOut({ plot, nodes: boxes, links }, message) {
     return Math.max(...inColumn.map((b) => b.top + b.height)) - Math.min(...inColumn.map((b) => b.top));
   }));
   assert.ok(Math.abs(tallest - plot.height) <= 1, `${message}: the tallest column is ${tallest}px in a ${plot.height}px plot`);
+}
+
+/** Runs in the page. Each node's name, color, box and label box, and each link's color, in drawn order. */
+function named(el) {
+  const box = (node) => {
+    const { left, right, top, height } = node.getBoundingClientRect();
+    return { left, right, middle: top + height / 2 };
+  };
+  const labels = [...el.querySelectorAll('.sankey-chart-name')];
+  return {
+    hidden: el.querySelector('.sankey-chart-names').getAttribute('aria-hidden'),
+    nodes: [...el.querySelectorAll('.sankey-chart-node')].map((node, i) => ({
+      color: node.dataset.series, box: box(node), name: labels[i].textContent, label: box(labels[i]),
+    })),
+    links: [...el.querySelectorAll('.sankey-chart-link')].map((link) => link.dataset.series),
+  };
 }
 
 for (const [engine, browserType, browserTest] of engines) {
@@ -134,6 +154,39 @@ for (const [engine, browserType, browserTest] of engines) {
       // The charts sit at different heights in the page, so their pixel edges round differently.
       skips.nodes.forEach((node, i) => assert.ok(Math.abs(node.height - ltr.nodes[i].height) <= 0.5,
         `node ${i}: ${node.height}px tall, ${ltr.nodes[i].height}px without the rows`));
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: sankey chart names and colors each node, and mirrors in a right-to-left page`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      const read = (id) => page.locator(id).evaluate((el, source) => new Function(`return ${source}`)()(el), named.toString());
+      const [ltr, rtl] = [await read('#ltr'), await read('#rtl')];
+      assert.equal(ltr.hidden, 'true', 'the names are hidden; the table carries them');
+      for (const [chart, id, rtlPage] of [[ltr, 'ltr', false], [rtl, 'rtl', true]]) {
+        assert.deepEqual(chart.nodes.map((node) => node.name), nodes.map(([name]) => name), `${id}: one name per node`);
+        assert.deepEqual(chart.nodes.map((node) => node.color), ['1', '2', '3', '4', '5', '6'], `${id}: nodes take colors in order`);
+        // Each link has its source node's color.
+        const color = (name) => chart.nodes[nodes.findIndex(([each]) => each === name)].color;
+        assert.deepEqual(chart.links, flows.map(([source]) => color(source)), `${id}: links take their source's color`);
+        chart.nodes.forEach(({ name, box, label }, i) => {
+          // Toward the plot's middle: after the node, or before it in the last column.
+          const after = (nodes[i][1] < 2) !== rtlPage;
+          const side = after ? label.left - box.right : box.left - label.right;
+          assert.ok(side >= -1 && side < 16, `${id}, ${name}: its name is ${side}px ${after ? 'after' : 'before'} the node`);
+          assert.ok(Math.abs(label.middle - box.middle) <= 1, `${id}, ${name}: its name is level with the node`);
+        });
+      }
+      const left = (chart, name) => chart.nodes[nodes.findIndex(([each]) => each === name)].box.left;
+      assert.ok(left(rtl, 'Solar') > left(rtl, 'Grid') && left(rtl, 'Grid') > left(rtl, 'Homes'), 'the columns run from the right');
+      laidOut(await drawn(page, '#rtl'), '#rtl', true);
     } finally {
       await browser.close();
     }
