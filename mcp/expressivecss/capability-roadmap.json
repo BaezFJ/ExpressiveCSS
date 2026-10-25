@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.15.0",
-  "sourceRevision": "0630992c4f318a4ade6166c064d07ec0ceed7e57",
+  "sourceRevision": "9ab551ef88e4f3f19391dec0558d0cc7698bc34d",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-10-10",
@@ -3405,8 +3405,8 @@
       "relationship": "none",
       "sources": [
         {
-          "path": "src/sass/components/_popover.scss",
-          "sha256": "ea20e95c04b1ef46cfdd365edfae0441792f4e2c96412cfba853cf9114404616"
+          "path": "src/ts/components/hoverCard.ts",
+          "sha256": "6e08cd305135d7280bc515e9e1b262f51c86959b3339270f312c7ae53a34e2bf"
         }
       ],
       "gaps": [
@@ -3416,8 +3416,21 @@
           "nextStep": "Tab to a hover card link with VoiceOver and NVDA and confirm the details relationship is announced and the card is reachable."
         }
       ],
-      "browserChecks": [],
-      "browserEvidence": "no-mapped-checks",
+      "browserChecks": [
+        {
+          "file": "tests/hover-card-browser.test.js",
+          "name": "chromium: hovering the link shows the card after the delay, and it stays while the pointer is on the card",
+          "scope": "Nothing before enterDelay, the card against the link's bottom edge plus the popover gap, staying open with the pointer on the card past exitDelay, and hiding once the pointer has left both.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/hover-card-browser.test.js",
+          "name": "chromium: keyboard focus shows the card, Tab moves into it, and Escape hides it with focus back on the link",
+          "scope": "Tab to the link shows the card after enterDelay with focus kept on the link, Tab into the card keeps it open, and Escape hides it with focus back on the link.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

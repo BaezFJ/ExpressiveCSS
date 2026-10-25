@@ -81,16 +81,6 @@ Prerequisites: group 5.
 Completion check: V13 and V15 pass, and V1 to V12 still pass on the final build.
 Covers: R9, R11; V13, V15.
 
-## 7. After the squash merge: restore the capability evidence
+## 7. After the merge train
 
-Outcome: the hover card's capability entry names its own source and browser checks.
-
-The capability test needs every listed file to exist at `sourceRevision`, which must be a master commit, and `hoverCard.ts` is on no master commit until this PR merges. So the PR pins `0630992c4` and lists only `src/sass/components/_popover.scss`, which styles the card, with no browser checks.
-
-- [ ] Pin `sourceRevision` to the squash commit, or a later master commit, in `docs/src/data/component-decisions.json`.
-- [ ] Set the hover card's `capabilityReview.sources` to `src/ts/components/hoverCard.ts` with its sha256 at that commit.
-- [ ] Add the two `tests/hover-card-browser.test.js` checks back: "chromium: hovering the link shows the card after the delay, and it stays while the pointer is on the card" and "chromium: keyboard focus shows the card, Tab moves into it, and Escape hides it with focus back on the link".
-- [ ] Run `npm run build:skill`, `npm run check:generated` and `tests/expressivecss-component-decisions.test.js`.
-
-Prerequisites: this PR merged.
-Completion check: the decisions test passes on master with the restored entry.
+`sourceRevision` pins this branch's merge commit, because the capability test needs every listed file, `hoverCard.ts` included, at the pinned revision. The squash merge drops that commit. The merge coordinator opens one re-pin PR to a squash commit after the phase 42 to 51 train finishes, so this branch opens no follow-up.
