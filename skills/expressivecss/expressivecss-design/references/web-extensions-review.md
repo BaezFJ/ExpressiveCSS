@@ -126,6 +126,22 @@ Feature gap: Actions only on the inline-end side, and no full swipe that runs an
 
 Mapped browser scope: Swipe reveal with no action run, the keyboard path through the toggle and its actions, short and over-long swipes, drags that do nothing, the toggle, outside tap, Escape and action close, one open row with matching events and callbacks, right-to-left pages, reduced motion with a :root duration override, and destroy() with a row open or mid-swipe. No spoken-output assertion.
 
+## [Transfer list](../../components/transfer-list.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Name both lists, keep every row and button reachable by keyboard, announce each move, keep focus on the pressed button, and submit the chosen options in a stable order.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework moves checked rows between the two lists, returns a row to its original slot, keeps the chosen order, announces each move, fires expressive:transfer and submits the chosen values under data-name; the page owns the rows, their values and the names of the lists and buttons.
+
+Verification gap: The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser. Spoken output and forced colors remain unverified. Next check: Move rows with NVDA in Firefox and VoiceOver in Safari and confirm each move is announced once; check the lists and icons in forced colors mode.
+
+Feature gap: No reordering inside the chosen list, no search over either list, no required validity, and no submission without the script. Next check: None planned.
+
+Mapped browser scope: Moving checked and all rows both ways, original slots, disabled rows and buttons, empty presses, focus after a move, the announcement and its i18n text, the event detail, form data from new FormData and a real submit, empty and missing data-name, disabled fieldsets, nested lists, reset by button and form.reset() including a cancelled reset, a list added after load, right-to-left pages and the narrow layout. No spoken-output assertion.
+
 ## [Input mask](../../components/input-mask.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
@@ -544,6 +560,22 @@ Verification gap: Link and node sizes, columns, skipped rows, names, colors, rig
 Feature gap: Nodes are not reached by keyboard or pointer, node order follows the table with no crossing reduction, and flows that close a cycle are not drawn. Next check: Reach nodes and their totals from the keyboard if readers need them; until then the table lists every flow.
 
 Mapped browser scope: Hidden table, the named plot and its role description, link thickness and node height on one scale, columns, stacking order, skipped rows, node names and colors, right-to-left mirroring, keyboard steps in table order, the link under the pointer and a touch tap, update() motion, reduced motion and data-watch. No spoken-output assertion.
+
+## [Funnel chart](../../components/funnel-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the data available as text, name the chart, label each stage, and let a keyboard reach every row the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the stages, their labels and the tooltip from the page's table with the line chart's runtime; the page owns the data, its order, its formatting and the caption.
+
+Verification gap: Stage widths, gaps, labels, the tooltip, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+
+Feature gap: There are no tapered stages, colors per row, step-to-step conversion rates or horizontal funnels. Next check: None planned.
+
+Mapped browser scope: Hidden table, the named plot and its role description, one centered stage per row as wide as its value against the largest in left-to-right and right-to-left pages, gaps, labels beside their stages, the tooltip and its percentages, keyboard steps, the row under the pointer, update() motion and data-watch. No spoken-output assertion.
 
 ## [Timeline](../../components/timeline.md)
 

@@ -11,6 +11,7 @@ export { Tour } from './behaviors/tour';
 export { Sortable } from './behaviors/sortable';
 export { Lists } from './behaviors/lists';
 export { DataTables } from './behaviors/dataTables';
+export { TransferList } from './behaviors/transferList';
 export { AutoInit } from './components/registry';
 export type { AutoInitOptions } from './components/registry';
 
@@ -37,6 +38,7 @@ export type * from './components/radarChart';
 export type * from './components/radialChart';
 export type * from './components/mixedChart';
 export type * from './components/scatterChart';
+export type * from './components/funnelChart';
 export type * from './components/sankeyChart';
 export type * from './components/pullToRefresh';
 export type * from './components/loadingOverlay';

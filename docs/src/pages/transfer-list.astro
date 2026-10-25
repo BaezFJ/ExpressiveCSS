@@ -1,0 +1,184 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "moving", label: "Moving rows" },
+  { id: "form", label: "The submitted value" },
+  { id: "events", label: "Events and announcements" },
+  { id: "limits", label: "Limits" },
+  { id: "tokens", label: "Tokens" },
+]);
+
+const available = ["Olives", "Peppers", "Onions", "Basil", "Pineapple", "Spinach"];
+const chosen = ["Mushrooms"];
+const row = (name: string) => name.toLowerCase();
+---
+<DocsLayout page="transfer_list" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A transfer list lets people pick several options by moving them from an
+          available list to a chosen list, and the form submits the chosen ones.
+        </p>
+        <p>
+          A <code>.transfer-list</code> holds a <code>.list.transfer-available</code>, a
+          <code>.transfer-actions</code> group of four buttons, and a
+          <code>.list.transfer-chosen</code>. Each row is a
+          <a href={route('lists')}>list</a> row with a <code>&lt;label&gt;</code> around a
+          <a href={route('checkboxes')}>checkbox</a> that has a <code>value</code> and no
+          <code>name</code>. Name each list with <code>aria-label</code> or
+          <code>aria-labelledby</code>, and give the container a <code>data-name</code>.
+          Check some rows below and press a button to move them.
+        </p>
+        <form id="demo-transfer" class="mb-3" style="max-width: 44rem;">
+          <div class="transfer-list" data-name="toppings">
+            <ul class="list transfer-available" aria-label="Available toppings">
+              {available.map((name) => <li><label><input type="checkbox" value={row(name)} /> {name}</label></li>)}
+            </ul>
+            <div class="transfer-actions">
+              <button type="button" class="icon-button" data-transfer="add" aria-label="Add checked toppings">
+                <span class="material-symbols" aria-hidden="true">chevron_right</span>
+              </button>
+              <button type="button" class="icon-button" data-transfer="add-all" aria-label="Add all toppings">
+                <span class="material-symbols" aria-hidden="true">keyboard_double_arrow_right</span>
+              </button>
+              <button type="button" class="icon-button" data-transfer="remove" aria-label="Remove checked toppings">
+                <span class="material-symbols" aria-hidden="true">chevron_left</span>
+              </button>
+              <button type="button" class="icon-button" data-transfer="remove-all" aria-label="Remove all toppings">
+                <span class="material-symbols" aria-hidden="true">keyboard_double_arrow_left</span>
+              </button>
+            </div>
+            <ul class="list transfer-chosen" aria-label="Chosen toppings">
+              {chosen.map((name) => <li><label><input type="checkbox" value={row(name)} /> {name}</label></li>)}
+            </ul>
+          </div>
+          <p class="mt-3">
+            <button class="filled">Submit</button>
+            <button type="reset" class="text">Reset</button>
+          </p>
+          <p>Submitted: <output id="demo-transfer-output">nothing yet</output></p>
+        </form>
+<Code code={`
+<form>
+  <div class="transfer-list" data-name="toppings">
+    <ul class="list transfer-available" aria-label="Available toppings">
+      <li><label><input type="checkbox" value="olives"> Olives</label></li>
+      <li><label><input type="checkbox" value="peppers"> Peppers</label></li>
+    </ul>
+    <div class="transfer-actions">
+      <button type="button" class="icon-button" data-transfer="add" aria-label="Add checked toppings">
+        <span class="material-symbols" aria-hidden="true">chevron_right</span>
+      </button>
+      <button type="button" class="icon-button" data-transfer="add-all" aria-label="Add all toppings">
+        <span class="material-symbols" aria-hidden="true">keyboard_double_arrow_right</span>
+      </button>
+      <button type="button" class="icon-button" data-transfer="remove" aria-label="Remove checked toppings">
+        <span class="material-symbols" aria-hidden="true">chevron_left</span>
+      </button>
+      <button type="button" class="icon-button" data-transfer="remove-all" aria-label="Remove all toppings">
+        <span class="material-symbols" aria-hidden="true">keyboard_double_arrow_left</span>
+      </button>
+    </div>
+    <ul class="list transfer-chosen" aria-label="Chosen toppings">
+      <li><label><input type="checkbox" value="mushrooms"> Mushrooms</label></li>
+    </ul>
+  </div>
+</form>
+`} />
+  </Section>
+  <Section {...S.moving}>
+        <p>
+          <code>data-transfer="add"</code> moves the checked rows of the available list
+          to the end of the chosen list, and <code>remove</code> moves the checked rows of
+          the chosen list back. <code>add-all</code> and <code>remove-all</code> move every
+          row. Moved rows arrive unchecked, and a row whose checkbox is disabled stays
+          where it is. The chosen list keeps the order rows arrived in, and a row moved
+          back returns to the place it had before the first move.
+        </p>
+        <p>
+          The rows are native checkboxes, so Tab reaches each one and Space checks it.
+          There is no listbox role or arrow-key model to learn. Focus stays on the button
+          after a move, and a button pressed with nothing to move does nothing. Give every
+          button <code>type="button"</code>, or it submits the form as well; a semantics
+          rule flags one without it.
+        </p>
+        <p>
+          The lists sit side by side and follow the page direction. In a right-to-left
+          page the icons flip so they keep pointing at the list they move rows to. Below
+          the medium window size the lists stack, with the buttons in a row between them.
+        </p>
+  </Section>
+  <Section {...S.form}>
+        <p>
+          When the form builds its data, each row of the chosen list adds its checkbox
+          value under the container's <code>data-name</code>, in the chosen list's order.
+          The checkboxes carry no <code>name</code>, because a checked box only means the
+          row is selected to move. A form reset puts every row back where it was before
+          the first move.
+        </p>
+        <p>
+          A list inside a <code>&lt;fieldset disabled&gt;</code> submits nothing, as the
+          fieldset's own fields do. A chosen row whose own checkbox is disabled cannot be
+          moved, but it still submits.
+        </p>
+  </Section>
+  <Section {...S.events}>
+        <p>
+          After each move the container fires a bubbling
+          <code>expressive:transfer</code> event whose <code>detail</code> is
+          <code>{"{ rows, from, to }"}</code>: the moved rows in their new order, then the
+          two lists. A polite live region after the container announces the move.
+          <code>Expressive.TransferList.i18n.moved</code> holds its text,
+          <code>Moved {"{count}"} to {"{list}"}</code> by default, where
+          <code>{"{list}"}</code> is the destination list's name.
+        </p>
+<Code code={`
+Expressive.TransferList.i18n.moved = '{count} moved to {list}';
+
+document.addEventListener('expressive:transfer', (event) => {
+  const { rows, to } = event.detail;
+  console.log(rows.length, 'rows moved to', to.getAttribute('aria-label'));
+});
+`} />
+        <p>
+          The root bundle starts the behavior on load. With the modular entry, call
+          <code>TransferList.Init()</code> once. The listeners are on the document, so a
+          transfer list added later needs no call.
+        </p>
+  </Section>
+  <Section {...S.limits}>
+        <p>
+          The script writes the values, so a page with the script blocked submits nothing
+          for the list. The list must sit inside its form. One that reaches a form
+          through a <code>form</code> attribute, or sits in a form inside a shadow root,
+          adds no entries and ignores resets. There is no <code>required</code> check, so
+          validate the chosen list on submit when it must not be empty.
+        </p>
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.transfer-list</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-transfer-list-gap</code></td><td>16px</td></tr>
+          <tr><td><code>--md-comp-transfer-list-max-block-size</code></td><td>20rem; a list scrolls past it</td></tr>
+          <tr><td><code>--md-comp-transfer-list-shape</code></td><td>the medium corner</td></tr>
+        </TokenTable>
+  </Section>
+<script is:inline>
+(() => {
+  const form = document.getElementById('demo-transfer');
+  const output = document.getElementById('demo-transfer-output');
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const values = new FormData(form).getAll('toppings');
+    output.textContent = values.length ? values.join(', ') : 'nothing chosen';
+  });
+  form.addEventListener('reset', () => { output.textContent = 'nothing yet'; });
+})();
+</script>
+</DocsLayout>

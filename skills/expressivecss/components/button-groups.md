@@ -9,7 +9,7 @@ Component ID: `button-groups`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `3fd8d71cab79f67810f521826b4589ceb5fba4d3f38ae3461616f9217e1c3625`
+Contract SHA-256: `a4502811a40a35a8d168220e99ac589763cf7593460a5cca86b912719a12d143`
 
 #### Selection and adaptation
 

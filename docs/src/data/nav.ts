@@ -499,6 +499,13 @@ export const NAV: DocsGroup[] = [
           "One measure plotted against another, with a point for each row.",
       },
       {
+        id: "funnel-chart",
+        label: "Funnel chart",
+        route: "/funnel-chart.html",
+        description:
+          "Steps people take in order, each drawn as a stage as wide as the people who reach it.",
+      },
+      {
         id: "sankey-chart",
         label: "Sankey chart",
         route: "/sankey-chart.html",
@@ -785,6 +792,13 @@ export const NAV: DocsGroup[] = [
         route: "/checkboxes.html",
         description:
           "Material Design 3 checkboxes, from the HTML.",
+      },
+      {
+        id: "transfer_list",
+        label: "Transfer list",
+        route: "/transfer-list.html",
+        description:
+          "Moves options between an available list and a chosen list, and submits the chosen ones with the form.",
       },
       {
         id: "radio_buttons",
