@@ -118,3 +118,13 @@ test('open() builds a column per level of the chosen path, named after the label
   // The label id was the component's, so it goes with it.
   assert.equal(document.querySelector('label').hasAttribute('id'), false);
 });
+
+test('destroy() on an open cascader closes it, so a later press outside leaves the input alone', () => {
+  const cascader = start();
+  const input = cascader.input;
+  cascader.open();
+  cascader.destroy();
+  document.body.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+  assert.equal(input.hasAttribute('aria-expanded'), false);
+  assert.equal(cascader.isOpen, false);
+});

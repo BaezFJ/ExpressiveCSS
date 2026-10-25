@@ -89,6 +89,10 @@ export class Cascader extends Component<CascaderOptions> {
   private _columns: HTMLElement[] = [];
   /** Each rendered option's node. */
   private _nodes = new Map<Element, CascaderNode>();
+  /** Each node's current option; choosing a branch again renders it anew. */
+  private _rendered = new Map<CascaderNode, HTMLElement>();
+  /** The last press inside the field, which the document listener lets through. */
+  private _insidePress: Event | null = null;
   /** Listeners that last while the popover is open. */
   private _openEvents: AbortController | null = null;
   /** What names the popover and the first column: the input's own aria-labelledby or its label's id. */
@@ -164,6 +168,7 @@ export class Cascader extends Component<CascaderOptions> {
     this.popover.replaceChildren();
     this._columns = [];
     this._nodes.clear();
+    this._rendered.clear();
     this.input.setAttribute('aria-expanded', 'false');
   }
 
@@ -188,7 +193,9 @@ export class Cascader extends Component<CascaderOptions> {
     (this.popover as HTMLElement & { showPopover(options?: { source?: HTMLElement }): void }).showPopover?.({ source: this.input });
     this.input.setAttribute('aria-expanded', 'true');
     this._openEvents = controllerFor(this.el);
-    document.addEventListener('pointerdown', this._handleOutsidePointer, { capture: true, signal: this._openEvents.signal });
+    const { signal } = this._openEvents;
+    this.el.addEventListener('pointerdown', this._handleInsidePointer, { signal });
+    document.addEventListener('pointerdown', this._handleOutsidePointer, { signal });
   }
 
   /** The id of the input's first label, given one if it has none, or null. */
@@ -234,13 +241,13 @@ export class Cascader extends Component<CascaderOptions> {
       option.append(chevron);
     }
     this._nodes.set(option, node);
+    this._rendered.set(node, option);
     return option;
   }
 
   /** The rendered option for `node`, if it is shown. */
   private _optionFor(node: CascaderNode | undefined): HTMLElement | undefined {
-    for (const [option, shown] of this._nodes) if (shown === node) return option as HTMLElement;
-    return undefined;
+    return this._rendered.get(node);
   }
 
   /**
@@ -340,6 +347,7 @@ export class Cascader extends Component<CascaderOptions> {
 
   /** Chooses an option: a branch opens its children, and a leaf commits the path. */
   private _pick(option: Element) {
+    if (this.input.matches(':disabled')) return this.close();
     const node = this._nodes.get(option);
     this._choose(this._columns.indexOf(option.parentElement), node);
     if (!node.children.length) this._commit();
@@ -359,7 +367,7 @@ export class Cascader extends Component<CascaderOptions> {
   /** Chooses a branch and moves focus to the first option of its column. */
   private _enter(option: HTMLElement) {
     this._pick(option);
-    this._focus(this._columns.at(-1).firstElementChild);
+    this._focus(this._columns.at(-1)?.firstElementChild);
   }
 
   /** Back to the option that opened this column, leaving the columns as they are. */
@@ -407,7 +415,8 @@ export class Cascader extends Component<CascaderOptions> {
   _handleOptionKeydown = (e: KeyboardEvent) => {
     const option = (e.target as Element).closest<HTMLElement>('[role="option"]');
     const action = option && this._keys[this._keyName(e)];
-    if (!action) return;
+    // Alt, Ctrl and Meta combinations belong to the browser; Shift+Tab still closes.
+    if (!action || !Utils.plainKey(e)) return;
     e.preventDefault();
     action(option, e);
   };
@@ -430,10 +439,15 @@ export class Cascader extends Component<CascaderOptions> {
     this._pick(option);
   };
 
+  // Marked rather than found on the composed path, which a document listener
+  // cannot see into when the field sits in a closed shadow root.
+  _handleInsidePointer = (e: PointerEvent) => {
+    this._insidePress = e;
+  };
+
   /** A press outside the field and the popover closes it, leaving focus where the press puts it. */
   _handleOutsidePointer = (e: PointerEvent) => {
-    const target = Utils.eventTarget(e);
-    if (!this.el.contains(target)) this.close();
+    if (e !== this._insidePress) this.close();
   };
 
   /** Shows the chosen path's labels in the input. */

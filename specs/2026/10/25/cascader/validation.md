@@ -27,6 +27,17 @@ The browser fixture is a `<form>` holding the three-level markup from requiremen
 
 V1 and V4 to V11 run in `tests/cascader-browser.test.js`, one test per check, except V11's forced colors part. V2 runs in `tests/cascader.test.js`.
 
+A code review on 2026-10-25, with an independent reviewer and 13 one-line mutations, found these gaps. Each is fixed on this branch with a browser test that fails without the fix.
+
+- Choosing a branch again left the old options in the node lookup, so the next column was named by a detached option and ArrowLeft focused nothing. Options are now looked up by node in a map that the newest render overwrites.
+- A document listener cannot see into a closed shadow root, so a press on an option there closed the popover before the click. Presses inside the field are now marked by a listener on the field, as Tooltip does.
+- Option keys with Alt, Ctrl or Meta ran their action and blocked the browser's shortcut. They are now left alone; Shift+Tab still closes.
+- A field disabled while the popover was open still committed a leaf. The next choice now closes the popover instead.
+- A label resting under `placeholder=" "` dropped while focus was in the popover. It now floats while the input has `aria-expanded="true"`.
+- Two mutations survived: clearing `aria-invalid` was masked by `Forms` on the `.validate` field, and `destroy()` on an open cascader was untested. V9 now checks a field without `.validate`, and a jsdom test destroys an open cascader and presses outside. A third survivor, the `level > 0` guard in ArrowLeft, is equivalent: the first column has no opener to focus.
+
+After the fixes the JavaScript budget is 97,342 gzip bytes (+52) and CSS 87,442 (+7). `npm run verify` passed apart from the known swipe-actions and docker-runner load flakes, which passed alone; `check:generated`, the docs build and verify, and the MCP tests passed.
+
 ## Manual checks
 
 These are not merge conditions.

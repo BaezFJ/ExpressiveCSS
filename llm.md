@@ -8824,7 +8824,7 @@ Under `dir="rtl"` the columns run right to left and ArrowLeft and ArrowRight swa
 
 Committing shows the path's labels in the input, such as `United States / California / San Francisco`, closes the popover, returns focus to the input and fires `input` and `change` on it. Committing the same path again fires nothing. The form gets one entry per level under the input's name, in order, through the form-associated `expressive-cascader-control` that wraps the input: `place=us&place=ca&place=sf`. With no path the form gets no entry.
 
-Mark a leaf `data-selected` to start with its path; the first marked leaf wins, and a marked branch is ignored. A form reset brings the starting path back without events. With `required` on the input, the field fails validation until a path is committed, with the message `Choose an option.`, and a failed submit or `checkValidity()` sets `aria-invalid="true"` on the input. A disabled input or fieldset submits nothing and does not open. Options added after start need `destroy()` and a new `init`.
+Mark a leaf `data-selected` to start with its path; the first marked leaf wins, and a marked branch is ignored. A form reset brings the starting path back without events. With `required` on the input, the field fails validation until a path is committed, with the message `Choose an option.`, and a failed submit or `checkValidity()` sets `aria-invalid="true"` on the input. A disabled input or fieldset submits nothing and does not open, and a popover open when the field is disabled closes on the next choice without committing. Options added after start need `destroy()` and a new `init`.
 
 ```html
 <div class="field cascader">

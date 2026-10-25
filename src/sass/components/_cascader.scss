@@ -25,14 +25,14 @@ $_chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' vie
 
 // The form control wraps the input with display: contents, so the field's
 // `input + label` rules no longer reach the label. The label floats here
-// instead while the input is focused or holds a path.
+// instead while the input is focused, open or holds a path.
 .field.cascader {
-  &:has(> expressive-cascader-control > input:is(:focus, :not([placeholder=" "]), :not(:placeholder-shown))) > label {
+  &:has(> expressive-cascader-control > input:is(:focus, [aria-expanded="true"], :not([placeholder=" "]), :not(:placeholder-shown))) > label {
     transform: scale(calc(12 / 16));
     top: rem(8px);
   }
 
-  &:has(> expressive-cascader-control > input:focus) > label {
+  &:has(> expressive-cascader-control > input:is(:focus, [aria-expanded="true"])) > label {
     color: var(--input-color);
   }
 }

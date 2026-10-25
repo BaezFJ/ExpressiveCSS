@@ -322,6 +322,12 @@ each('a required field fails until a path is committed, with its message on the 
   await page.click('#place');
   await option(page, 'Canada').click();
   assert.deepEqual(await check('place'), { valid: true, missing: false, message: '', required: [false, 'true'], invalid: null });
+
+  // Without .validate, Forms leaves aria-invalid alone, so the cascader clears it itself.
+  assert.equal((await check('lugar')).invalid, 'true');
+  await page.click('#lugar');
+  await option(page, 'Canada').click();
+  assert.deepEqual(await check('lugar'), { valid: true, missing: false, message: '', required: [false, 'true'], invalid: null });
 });
 
 each('a disabled input or fieldset submits nothing and does not open', async (page) => {
@@ -384,4 +390,62 @@ each('the source lists stay hidden, columns sit side by side, a long column scro
   await page.evaluate(() => (document.documentElement.style.fontSize = '200%'));
   const larger = await measure();
   assert.ok(Math.abs(larger.row - seen.row * 2) <= 1, `row ${seen.row} then ${larger.row}`);
+});
+
+each('choosing a branch again renders fresh options that still name the next column and take ArrowLeft back', async (page) => {
+  await page.focus('#place');
+  await press(page, 'Enter', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'ArrowRight');
+  assert.equal(await page.getByRole('listbox', { name: 'California', exact: true }).count(), 1);
+  await press(page, 'ArrowLeft');
+  assert.equal((await state(page)).focused, 'California');
+  // Ctrl and Meta combinations belong to the browser.
+  await press(page, 'Control+ArrowRight', 'Control+Enter');
+  const seen = await state(page);
+  assert.deepEqual([seen.open, seen.focused, seen.columns.length], [true, 'California', 3]);
+});
+
+each('presses inside a closed shadow root choose options, and a press outside closes', async (page) => {
+  const center = (box) => [box.x + box.width / 2, box.y + box.height / 2];
+  const rect = (label) => page.evaluate((label) => {
+    const option = [...window.closedRoot.querySelectorAll('[role="option"]')].find((o) => o.textContent === label);
+    const { x, y, width, height } = option.getBoundingClientRect();
+    return { x, y, width, height };
+  }, label);
+  await page.evaluate((markup) => {
+    const host = document.createElement('div');
+    document.body.prepend(host);
+    window.closedRoot = host.attachShadow({ mode: 'closed' });
+    window.closedRoot.innerHTML = `<form>${markup}</form>`;
+    window.shutCascader = Expressive.Cascader.init(window.closedRoot.querySelector('.cascader'));
+    window.shutCascader.open();
+  }, field('shut'));
+  await page.mouse.click(...center(await rect('United States')));
+  await page.mouse.click(...center(await rect('Washington')));
+  assert.deepEqual(await page.evaluate(() => [window.shutCascader.isOpen, window.shutCascader.value]), [false, ['us', 'wa']]);
+  await page.evaluate(() => window.shutCascader.open());
+  await page.mouse.click(2, 2);
+  assert.equal(await page.evaluate(() => window.shutCascader.isOpen), false);
+});
+
+each('a field disabled while open closes on the next choice without committing', async (page) => {
+  await load(page, `<form id="form"><fieldset id="set">${field('place')}</fieldset></form>`);
+  await page.evaluate(() => {
+    window.events = [];
+    for (const type of ['input', 'change']) document.getElementById('place').addEventListener(type, () => window.events.push(type));
+  });
+  await page.click('#place');
+  await page.evaluate(() => (document.getElementById('set').disabled = true));
+  await option(page, 'Canada').click();
+  assert.deepEqual(await page.evaluate(() => {
+    const cascader = Expressive.Cascader.getInstance(document.querySelector('.cascader'));
+    return [cascader.isOpen, cascader.value, window.events.length];
+  }), [false, [], 0]);
+});
+
+each('a resting label floats while the popover is open', async (page) => {
+  await load(page, `<form id="form">${field('place', 'placeholder=" "')}</form>`);
+  const transform = () => page.evaluate(() => getComputedStyle(document.querySelector('label[for="place"]')).transform);
+  assert.equal(await transform(), 'none');
+  await page.click('#place');
+  assert.notEqual(await transform(), 'none');
 });

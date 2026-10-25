@@ -254,7 +254,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed cascader keys: opening from the input, arrows, Home and End in a column, the next and previous column, Enter and Space, Escape and Tab, swapped under rtl: 96,909 gzip bytes (+324).
   // Reviewed moving Chips' form-associated control to core/formControl, with checkValidity() and reportValidity() on the control: 96,931 gzip bytes (+22).
   // Reviewed the cascader's form control: one entry per level of the path, reset to the starting path, required with i18n.required, aria-invalid and disabled state: 97,290 gzip bytes (+359).
-  assert.ok(sizes(js).gzip <= 97290, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed cascader review fixes: a re-chosen branch's fresh options name the next column, presses in a closed shadow root, modifier keys left to the browser, a field disabled while open: 97,342 gzip bytes (+52).
+  assert.ok(sizes(js).gzip <= 97342, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -411,5 +412,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the cascader's hidden source lists: 86,855 gzip bytes (+11).
   // Reviewed the cascader popover: menu surface and glass, side-by-side listbox columns, selected path, focus ring, chevron and forced colors: 87,340 gzip bytes (+485).
   // Reviewed the cascader popover's forced colors edge, and its label floating through the form control: 87,435 gzip bytes (+95).
-  assert.ok(sizes(css).gzip <= 87435, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the cascader label floating while the popover is open: 87,442 gzip bytes (+7).
+  assert.ok(sizes(css).gzip <= 87442, `CSS gzip: ${sizes(css).gzip}`);
 });
