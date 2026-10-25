@@ -76,7 +76,7 @@ These are open to change in review.
 - Node labels are HTML spans placed by percent, at the inline end of the node, or the inline start in the last column, so text is not stretched with the SVG.
 - Colors: six node colors through `data-series` as in `PieChart`, with links at a lower opacity from a `--md-comp-sankey-chart-link-opacity` token.
 - Numbering: `_count` is the number of drawn links, and index `k` is the `k`th drawn link in table order. `show()`, `_place()`, `_keyTarget()` and `_indexAt()` are overridden. `_indexAt()` uses `elementsFromPoint()` to find the link path under the pointer, which works while a touch drags, as the event target does not.
-- Transitions: links keep their table order inside the SVG and nodes keep their first-appearance order, so `morph()` pairs each shape with its old one. A shape with no old one appears without animating.
+- Transitions: `morph()` moves each link from the old link with the same source and target names, and each node from the old node with the same name, so a link still pairs with its old shape when rows move. A shape with no old one appears without animating.
 - Sass in `src/sass/components/_sankey-chart.scss`, with the plot height and link opacity as tokens. Label boxes follow the rem sizing rule.
 - If a `LineChart` member the subclass needs is private, make it protected without changing what it does, as the heatmap and scatter commits did.
 - Every new function stays below cyclomatic complexity 5 for the fallow pre-commit gate.

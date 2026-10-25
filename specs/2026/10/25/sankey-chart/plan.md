@@ -56,9 +56,9 @@ Outcome: links and nodes move on `update()`, and the chart redraws under `data-w
 
 Prerequisites: groups 2 and 3.
 
-- [ ] Add the V6 case and record what fails.
-- [ ] Fix what it shows in `sankeyChart.ts`, or in the shared `LineChart` code when the fault is there, keeping the other charts' behavior.
-- [ ] Rebuild, rerun the sankey file, then `tests/chart-update-browser.test.js`, `tests/chart-watch-browser.test.js` and `tests/chart-transition-browser.test.js`, one at a time.
+- [x] Add the V6 case and record what fails.
+- [x] Fix what it shows in `sankeyChart.ts`, or in the shared `LineChart` code when the fault is there, keeping the other charts' behavior.
+- [x] Rebuild, rerun the sankey file, then `tests/chart-update-browser.test.js`, `tests/chart-watch-browser.test.js` and `tests/chart-transition-browser.test.js`, one at a time.
 
 Completion check: V1 to V6 pass in all three engines, and the three existing chart files pass.
 

@@ -21,11 +21,17 @@ const skipped = [['Homes', 'Grid', '5'], ['Grid', 'Grid', '5'], ['Solar', 'Homes
 // The nodes in the order they first appear, each with its column and the larger of its in and out totals.
 const nodes = [['Solar', 0, 30], ['Grid', 1, 80], ['Wind', 0, 60], ['Homes', 2, 60], ['Industry', 2, 20], ['Storage', 1, 10]];
 
+const [defaultFlows, defaultNodes] = [flows, nodes];
+
 const html = `<style>${css}</style>
   <div style="width: 600px">
     ${chart('class="sankey-chart" id="ltr"', flows)}
     ${chart('class="sankey-chart" id="skips"', [...flows, ...skipped])}
     ${chart('class="sankey-chart" id="keys"', [...flows.slice(0, 3), ...skipped, ...flows.slice(3)])}
+  </div>
+  <div style="width: 600px">
+    ${chart('class="sankey-chart" id="update"', flows)}
+    ${chart('class="sankey-chart" id="watched" data-watch', flows)}
   </div>
   <div style="width: 600px" dir="rtl">
     ${chart('class="sankey-chart" id="rtl"', flows)}
@@ -56,8 +62,12 @@ function drawing(el) {
 
 const drawn = (page, id) => page.locator(id).evaluate((el, source) => new Function(`return ${source}`)()(el), drawing.toString());
 
+// Wind to Grid raised from 50 to 70: Grid takes 100 in, and Wind sends 80.
+const raised = flows.map((flow, i) => (i === 1 ? ['Wind', 'Grid', '70'] : flow));
+const raisedNodes = nodes.map(([name, column, total]) => [name, column, { Grid: 100, Wind: 80 }[name] ?? total]);
+
 /** Asserts V1's rules: one scale for links and nodes, columns, stacking, no overlap, and the tallest column filling the plot. */
-function laidOut({ plot, nodes: boxes, links }, message, rtl = false) {
+function laidOut({ plot, nodes: boxes, links }, message, rtl = false, [flows, nodes] = [defaultFlows, defaultNodes]) {
   assert.equal(links.length, flows.length, `${message}: one link per flow`);
   assert.equal(boxes.length, nodes.length, `${message}: one node per name`);
   const unit = (links[0].source[1] - links[0].source[0]) / Number(flows[0][2]);
@@ -279,6 +289,69 @@ for (const [engine, browserType, browserTest] of engines) {
         return [Expressive.SankeyChart.getInstance(plot.parentElement).activeIndex, plot.querySelector('.sankey-chart-tooltip').hidden];
       }, [x, y]);
       assert.deepEqual(tapped, [2, false]);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: sankey chart update() moves links and nodes to the changed values and keeps the shown link`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+      const plot = page.locator('#update .sankey-chart-plot');
+      await plot.focus();
+      await page.keyboard.press('Tab');
+      await page.keyboard.press('Shift+Tab');
+      await page.keyboard.press('ArrowRight');
+
+      const moved = await page.locator('#update').evaluate((el) => {
+        const shapes = () => [...el.querySelectorAll('.sankey-chart-link, .sankey-chart-node')];
+        const before = shapes().map((path) => path.getAttribute('d'));
+        el.querySelector('tbody').rows[1].cells[2].textContent = '70';
+        Expressive.SankeyChart.getInstance(el).update();
+        return {
+          focused: el.querySelector('.sankey-chart-plot') === document.activeElement,
+          active: Expressive.SankeyChart.getInstance(el).activeIndex,
+          tooltip: el.querySelector('.sankey-chart-tooltip').innerText.replace(/\s+/g, ' ').trim(),
+          animations: shapes().map((path, i) => {
+            const animate = path.querySelector('animate');
+            return animate && [animate.getAttribute('from') === before[i], animate.getAttribute('to') === path.getAttribute('d')];
+          }),
+        };
+      });
+      assert.equal(moved.focused, true, 'focus stays on the plot');
+      assert.equal(moved.active, 1, 'the second link stays shown');
+      assert.equal(moved.tooltip, 'Source Wind Target Grid Value 70');
+      // The scale changes, so every link and node moves from its old shape to its new one.
+      moved.animations.forEach((animation, i) => assert.deepEqual(animation, [true, true], `shape ${i} moves from its old shape`));
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: sankey chart redraws without motion under reduced motion, and on its own with data-watch`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      const animations = await page.locator('#update').evaluate((el) => {
+        el.querySelector('tbody').rows[1].cells[2].textContent = '70';
+        Expressive.SankeyChart.getInstance(el).update();
+        return el.querySelectorAll('animate').length;
+      });
+      assert.equal(animations, 0, 'nothing moves under reduced motion');
+      laidOut(await drawn(page, '#update'), '#update', false, [raised, raisedNodes]);
+
+      const before = await page.locator('#watched .sankey-chart-link').nth(1).getAttribute('d');
+      await page.locator('#watched tbody tr').nth(1).locator('td').nth(1).evaluate((cell) => { cell.textContent = '70'; });
+      await page.waitForFunction((before) =>
+        document.querySelectorAll('#watched .sankey-chart-link')[1]?.getAttribute('d') !== before, before);
+      laidOut(await drawn(page, '#watched'), '#watched', false, [raised, raisedNodes]);
     } finally {
       await browser.close();
     }

@@ -1,5 +1,5 @@
 import { svgNode } from '../core/utils';
-import { LineChart, LineChartOptions, cellValue } from './lineChart';
+import { LineChart, LineChartOptions, cellValue, morph, pace } from './lineChart';
 
 export type SankeyChartOptions = LineChartOptions;
 
@@ -153,6 +153,8 @@ export class SankeyChart extends LineChart {
   private _links: Link[];
   /** The links' paths, in the same order. */
   private _paths: SVGPathElement[];
+  /** Each drawn shape's path data, by its link's source and target names or its node's name, which update() moves from. */
+  private _shapes: Map<string, string>;
 
   protected get _type() {
     return 'sankey-chart';
@@ -257,7 +259,12 @@ export class SankeyChart extends LineChart {
       + `V${to + size}C${middle},${to + size} ${middle},${from + size} ${start},${from + size}Z`;
   }
 
-  /** The links, then the nodes over their ends. Neither has a stroke, so the stretched SVG keeps their sizes. */
+  /**
+   * The links, then the nodes over their ends. Neither has a stroke, so the
+   * stretched SVG keeps their sizes. After update(), each shape still in the
+   * table moves from where it was: a link found by its source and target
+   * names, a node by its name.
+   */
   protected _draw(): Element {
     const svg = svgNode('svg', {
       viewBox: '0 0 100 100',
@@ -265,11 +272,18 @@ export class SankeyChart extends LineChart {
       'aria-hidden': 'true',
       focusable: 'false'
     });
-    const links = (this._paths = this._links.map((link) =>
-      svgNode('path', { class: 'sankey-chart-link', 'data-series': link.source.color, d: this._linkPath(link) }) as SVGPathElement));
-    const nodes = this._nodes.map((node) =>
-      svgNode('path', { class: 'sankey-chart-node', 'data-series': node.color, d: this._nodePath(node) }));
-    svg.append(...links, ...nodes);
+    const [was, timing] = [this._shapes ?? new Map<string, string>(), this._before.length ? pace(this.el) : null];
+    this._shapes = new Map();
+    const shape = (className: string, key: string, color: string, d: string) => {
+      const path = svgNode('path', { class: className, 'data-series': color, d }) as SVGPathElement;
+      if (timing && was.has(key)) morph(path, was.get(key)!, timing);
+      this._shapes.set(key, d);
+      return path;
+    };
+    this._paths = this._links.map((link) =>
+      shape('sankey-chart-link', JSON.stringify([link.source.name, link.target.name]), link.source.color, this._linkPath(link)));
+    const nodes = this._nodes.map((node) => shape('sankey-chart-node', JSON.stringify(node.name), node.color, this._nodePath(node)));
+    svg.append(...this._paths, ...nodes);
     return svg;
   }
 
