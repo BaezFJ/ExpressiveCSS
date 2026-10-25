@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 49, funnel chart
 Branch: `feature/2026-10-25-funnel-chart`
 Base: `origin/master` at `a9bbf77ad`, fetched 2026-10-25
-Status: specified 2026-10-25; not implemented
+Status: implemented 2026-10-25 on the branch; not merged
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 49](../../../../roadmap.md#phase-49-funnel-chart). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -33,11 +33,11 @@ A `<figure class="funnel-chart">` draws each table row as a stage whose width fo
 
 - **R1.** `AutoInit()` starts `FunnelChart` on `.funnel-chart`, registered like the other charts. The `<figcaption>` and `<table>` take the same markup as a bar chart, and the table stays in the page, visually hidden, as the text alternative and the no-JavaScript fallback.
 - **R2.** Each body row draws one stage from its first value column, in table order from the top of the plot down. A stage's width is its value divided by the largest value in that column, times the plot's width, so the largest stage fills the plot. Each stage is centered on the plot's middle, in left-to-right and right-to-left pages alike.
-- **R3.** A row whose first value cell is not a number, or is zero or negative, draws no stage but keeps its place and its label. Such rows do not count toward the largest value. A table with no positive value draws no stages. None of these throw.
+- **R3.** A row whose first value cell is not a number, or is zero or negative, draws no stage but keeps its place and its label. Such rows do not count toward the largest value. A table whose value cells hold no number at all draws no chart, so the table stays visible, as for every chart; one whose numbers are all zero or below draws the plot with no stages. None of these throw.
 - **R4.** Each row's label sits beside its stage at the inline start, as bar chart labels do, so it moves to the right side in a right-to-left page.
 - **R5.** Every stage takes the first series color, `--md-comp-funnel-chart-color-1`. The chart shows no legend, even with more than one value column.
-- **R6.** The live tooltip shows the row label, the first value column's header and cell text, and after that text the stage's value as a percentage of the first row's value, such as "(25%)". The percentage uses `numberFormat()` with the page's language, in whole percentages with one decimal below 10%, as the pie chart's share does. It is left out when the row draws no stage or the first row's value is not positive. Each further value column adds its header and cell text without a percentage.
-- **R7.** The plot stays one tab stop with `aria-roledescription="funnel chart"` and the caption as its name. Keyboard focus highlights the first row. ArrowDown moves to the next row and ArrowUp to the previous one in both directions, Home and End go to the first and last row, and Escape hides the highlight. Rows R3 leaves without a stage stay reachable, so the tooltip can report their cell text.
+- **R6.** The live tooltip shows the row label, the first value column's header and cell text, and after that text the stage's value as a percentage of the first row's value, such as "(25%)". The percentage uses `numberFormat()` with the page's language, in whole percentages with one decimal below 10%, as the pie chart's share does. It is left out when the row draws no stage or the first row's value is not positive. A cell that is not a number is left out of the tooltip, as in every chart. Each further value column adds its header and cell text without a percentage.
+- **R7.** The plot stays one tab stop with `aria-roledescription="funnel chart"` and the caption as its name. Keyboard focus highlights the first row. ArrowDown moves to the next row and ArrowUp to the previous one in both directions, Home and End go to the first and last row, and Escape hides the highlight. Rows R3 leaves without a stage stay reachable, so the tooltip still reports their other cells.
 - **R8.** A pointer over the plot highlights the row whose band is under it. A touch tap does the same, and the highlight stays until the plot blurs, as in the other charts.
 - **R9.** `update()` redraws from the changed table, keeps focus on the plot and keeps the highlighted index while the table still has that row. Each stage changes from its old width to its new one, and a stage new to the chart grows from zero width. Under `prefers-reduced-motion: reduce` the stages take their new widths without motion. `data-watch` and the `watch` option redraw on table changes, as for every chart.
 - **R10.** Markup that does not use `.funnel-chart` renders and behaves exactly as on the base commit. Any `LineChart` member made reachable for the subclass keeps its behavior for the other charts.
@@ -63,9 +63,14 @@ A `<figure class="funnel-chart">` draws each table row as a stage whose width fo
 - Stages are centered rounded rectangles in one color, sized from the first value column, with row labels beside them. The tooltip adds each stage's percentage of the first stage, and further columns show only in the tooltip. The user chose this over tapered stages with row colors, and over a tooltip with cell text only.
 - The merge checks are the roadmap's width acceptance test in Chromium, Firefox and WebKit, one short case each for keyboard, pointer, tooltip text, `update()` and `data-watch` in the same file, and the regression suites: the related chart browser files one at a time, then `npm run verify`, the MCP tests and `npm run verify:packages`.
 
+### Changed during implementation
+
+- An all-gap table draws no chart rather than empty rows, because `LineChart` renders nothing for a table without numbers and the visible table is the better fallback. R3 and V2 say so.
+- The tooltip leaves a gap cell out, as `LineChart.show()` does for every chart, instead of reporting "n/a". R6, R7 and V6 say so.
+
 ### Proposals for implementation
 
-These are open to change in review.
+These were the plan; the code follows them unless noted above.
 
 - Read with the inherited `_read()`. Set `_horizontal` to true so rows run down the plot and the inherited keys and pointer hit testing apply, `_axis` to false and `_points` to false. Override `_guides()` to return the row labels without the legend.
 - Draw each stage as an HTML `<span>` in a `funnel-chart-stages` container with `aria-hidden="true"`, one row element per table row. Set the span's `--width` custom property to its percentage and size it with `inline-size: calc(var(--width) * 1%)` and `margin-inline: auto`, so the acceptance test can read each stage's box width directly.
