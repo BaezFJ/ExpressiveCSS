@@ -353,6 +353,17 @@ test('a mask goes only on an input with a caret', () => {
   assert.equal(broken('<input data-mask="000">'), 0);
 });
 
+test('a currency code goes only on a text input', () => {
+  const broken = (html) => violations(html, enforcedRules, data.compositeRoles, { fragmentSafe: true })
+    .filter((v) => v.rule.id === 'currency-input-needs-a-text-field').length;
+  assert.equal(broken('<input type="number" data-currency="EUR">'), 1);
+  assert.equal(broken('<textarea data-currency="EUR"></textarea>'), 1);
+  assert.equal(broken('<input type="text" data-currency="">'), 1);
+  assert.equal(broken('<input type="text" data-currency="EUR">'), 0);
+  assert.equal(broken('<input type="TEXT" data-currency="EUR">'), 0);
+  assert.equal(broken('<input data-currency="JPY">'), 0);
+});
+
 test('aria-labelledby names each id once, however often it repeats', () => {
   // Repeating one id made a small snippet walk a large subtree once per token.
   const { document } = new JSDOM(

@@ -136,6 +136,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<div class="field"><input id="phone" type="tel" inputmode="numeric" placeholder=" " data-mask="(000) 000-0000"><label for="phone">Phone</label></div>`,
   },
   {
+    name: "CurrencyInput",
+    selector: "input[data-currency]",
+    html: `<div class="field"><input id="price" type="text" inputmode="decimal" placeholder=" " data-currency="EUR"><label for="price">Price in euros</label></div>`,
+  },
+  {
     name: "CommandPalette",
     selector: "dialog.command-palette",
     html: `<dialog class="command-palette" aria-label="Commands"><input type="search" aria-label="Search commands"><ul><li><button type="button">New file</button></li></ul></dialog>`,

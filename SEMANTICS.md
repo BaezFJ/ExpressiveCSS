@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**97 of 97 rows enforced; 0 remaining.**
+**98 of 98 rows enforced; 0 remaining.**
 
-92 of those rows are components - a part of the framework an author writes markup for.
+93 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 92 components declare conformance debt.**
+**2 of 93 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -356,6 +356,16 @@ Added with the countdown component. The digits are generated content hidden from
 | `countdown-has-text` | forbid | `.countdown:empty` | must not match |
 
 - **countdown-has-text** - Write the number as the countdown's text, matching --md-comp-countdown-value. The rolling digits are hidden from screen readers, so an empty countdown reads as nothing.
+
+### currency-input
+
+Added with the currency input component. The author writes `data-currency` with an ISO 4217 code on a text field they already had; AutoInit shows the amount in the page's locale and that currency once the field loses focus, and the form submits the plain number. Only a text input can hold the formatted amount. A malformed code is caught at runtime, where the field stays a plain text input, because these rules are selectors.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `currency-input-needs-a-text-field` | forbid | `[data-currency]:not(input:is(:not([type]), [type="text" i])), [data-currency=""]` | must not match |
+
+- **currency-input-needs-a-text-field** - Put data-currency, with a currency code such as EUR, on an <input> of type text. Other input types reject a formatted amount such as 1.234,50 €, and AutoInit skips them; a <textarea> is not formatted.
 
 ### data-table
 

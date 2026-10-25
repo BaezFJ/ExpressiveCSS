@@ -42,6 +42,7 @@
   "additional": [
     "autocomplete",
     "character-counter",
+    "currency-input",
     "input-mask",
     "landmarks"
   ],
@@ -891,6 +892,19 @@
           "kind": "forbid",
           "selector": ".material-symbols:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-outlined:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-rounded:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-sharp:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]):not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby])",
           "message": "The ligature is real text and is read out verbatim. An icon is either decoration - aria-hidden=\"true\", with the enclosing control carrying the name - or an image in its own right, role=\"img\" with a label. It is never left as bare text."
+        }
+      ]
+    },
+    "currency-input": {
+      "status": "enforced",
+      "note": "Added with the currency input component. The author writes `data-currency` with an ISO 4217 code on a text field they already had; AutoInit shows the amount in the page's locale and that currency once the field loses focus, and the form submits the plain number. Only a text input can hold the formatted amount. A malformed code is caught at runtime, where the field stays a plain text input, because these rules are selectors.",
+      "rules": [
+        {
+          "id": "currency-input-needs-a-text-field",
+          "kind": "forbid",
+          "selector": "[data-currency]:not(input:is(:not([type]), [type=\"text\" i])), [data-currency=\"\"]",
+          "fragmentSafe": true,
+          "message": "Put data-currency, with a currency code such as EUR, on an <input> of type text. Other input types reject a formatted amount such as 1.234,50 €, and AutoInit skips them; a <textarea> is not formatted."
         }
       ]
     },

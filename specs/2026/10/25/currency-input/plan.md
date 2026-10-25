@@ -10,12 +10,12 @@ Outcome: under `lang="de"` with euros, typing `1234.5` and leaving the field sho
 
 Prerequisites: none.
 
-- [ ] Write V1 in a new `tests/currency-input-browser.test.js`, with real keyboard typing in Chromium, Firefox and WebKit, reusing the helpers in `tests/input-mask-browser.test.js`. Run `npm run build` and the file, and confirm V1 fails.
-- [ ] Add `src/ts/components/currencyInput.ts`: read the currency and `Utils.locale()`, parse text as R4 describes, format on blur, format a starting value on start, and replace the entry in a `formdata` listener on the form. Leave the field alone when `Intl.NumberFormat` rejects the code. Export it from `components/index.ts` and register it in `components/registry.ts` with a selector for text inputs with `data-currency`.
-- [ ] Write the parsing checks V2 in a new `tests/currency-input.test.js` (jsdom), driving the component through its `value` getter.
-- [ ] Add the `currency-input` row and its rule to `semantics.json`, through the roster's `additional` list as `input-mask` does, the `tests/fixtures.js` entry and the `AUTO_INIT_FIXTURES.length` count in `tests/autoinit.test.js`, and write V8 in `tests/semantics.test.js`. Run `npm run build:semantics`.
-- [ ] Add `CurrencyInput` to both registry tables in `llm.md` and to `docs/src/pages/auto-init.astro`, and run `npm run build:skill`.
-- [ ] Rebuild and rerun until V1 and V2 pass. Add the reviewed JavaScript budget line.
+- [x] Write V1 in a new `tests/currency-input-browser.test.js`, with real keyboard typing in Chromium, Firefox and WebKit, reusing the helpers in `tests/input-mask-browser.test.js`. Run `npm run build` and the file, and confirm V1 fails.
+- [x] Add `src/ts/components/currencyInput.ts`: read the currency and `Utils.locale()`, parse text as R4 describes, format on blur, format a starting value on start, and replace the entry in a `formdata` listener on the form. Leave the field alone when `Intl.NumberFormat` rejects the code. Export it from `components/index.ts` and register it in `components/registry.ts` with a selector for text inputs with `data-currency`.
+- [x] Write the parsing checks V2 in a new `tests/currency-input.test.js` (jsdom), driving the component through its `value` getter.
+- [x] Add the `currency-input` row and its rule to `semantics.json`, through the roster's `additional` list as `input-mask` does, the `tests/fixtures.js` entry and the `AUTO_INIT_FIXTURES.length` count in `tests/autoinit.test.js`, and write V8 in `tests/semantics.test.js`. Run `npm run build:semantics`.
+- [x] Add `CurrencyInput` to both registry tables in `llm.md` and to `docs/src/pages/auto-init.astro`, and run `npm run build:skill`.
+- [x] Rebuild and rerun until V1 and V2 pass. Add the reviewed JavaScript budget line.
 
 Completion check: V1 passes in Chromium, Firefox and WebKit, V2 passes, and `node --test tests/selective-builds.test.js tests/autoinit.test.js` passes.
 

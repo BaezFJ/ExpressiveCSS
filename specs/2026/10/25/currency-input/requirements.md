@@ -38,7 +38,7 @@ A text input with a `data-currency` attribute shows its amount in the page's loc
 - **R7.** A field with a value when the component starts shows it formatted, without firing `input` or `change`. That value reads with `Number()` first, the same format the form submits, so `value="1.234"` is 1.234 and not 1234. Text `Number()` rejects falls back to R4.
 - **R8.** A form reset shows the field's default value formatted, read as in R7.
 - **R9.** The instance's `value` getter returns the amount as a number, or `null` for an empty field or text that does not read as a number.
-- **R10.** `semantics.json` gains a `currency-input` row whose rule flags `data-currency` on an input of any type other than `text`, on a `<textarea>`, and with a value that is not three ASCII letters.
+- **R10.** `semantics.json` gains a `currency-input` row whose rule flags `data-currency` on an input of any type other than `text`, on a `<textarea>`, and with an empty value. Semantics rules are CSS selectors, which cannot test for three ASCII letters, so R11 catches any other malformed code at runtime.
 - **R11.** A currency code that `Intl.NumberFormat` rejects leaves the field alone: the component starts, adds no listeners, and the field behaves as a plain text input.
 - **R12.** `destroy()` removes every listener, clears the custom validity message, and leaves the text as it is.
 - **R13.** `llm.md` gains a "Currency input" section after "Input mask", with its own component guide, and a docs page documents the attribute, the parsing rules, the submitted value, the `value` getter and `i18n.invalid`, with a live example. The docs recommend `inputmode="decimal"` and a label that names the currency. The component decisions data, the changelog's Unreleased section and the hand-written web extensions review get entries, and `npm run build:skill` regenerates the derived files.
@@ -81,6 +81,13 @@ A text input with a `data-currency` attribute shows its amount in the page's loc
 ### Deferred
 
 None.
+
+### Implementation notes
+
+- R10 originally also flagged a code that is not three ASCII letters. The semantics engine only takes selectors, so the rule flags an empty code and leaves the rest to R11; changed during group 1 on 2026-10-25.
+- A separator after the last digit is dropped before R4 applies, because some currency symbols carry dots (`1.234,50 kr.` in Danish, `ج.م.` in Egyptian Arabic) and would otherwise read as the decimal mark.
+- The parser maps the locale's own digits and decimal mark to Latin ones first, so a field under `lang="ar-EG"` reads back the Arabic-Indic digits Intl writes.
+- On master, `tests/expressivecss-component-decisions.test.js` fails because `sourceRevision` names `35196509a`, which the #422 squash dropped. Group 3's re-pin (R14) fixes it on this branch.
 
 ## Technical constraints
 
