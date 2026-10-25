@@ -7040,6 +7040,96 @@
       }
     },
     {
+      "slug": "currency-input",
+      "title": "Currency input",
+      "aliases": [
+        "money input",
+        "amount field",
+        "price input",
+        "currency format"
+      ],
+      "guideSource": {
+        "pageId": "currency_input",
+        "heading": "Currency input",
+        "headingLevel": 2,
+        "semantics": [
+          "currency-input"
+        ]
+      },
+      "jobs": [
+        "Shows a typed amount in the page's locale and currency once the field loses focus, and submits the plain number."
+      ],
+      "useWhen": [
+        "A field for an amount of money in one known currency, such as a price, budget or payment amount, that should read in the visitor's locale."
+      ],
+      "avoidWhen": [
+        "Quantities without a currency, or a field whose currency people choose; use a number field, or a select beside a plain text field."
+      ],
+      "alternatives": [
+        "text-fields",
+        "input-mask"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/currency-input.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#currency-input",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "A data-currency ISO 4217 code on a text input; the amount shown with Intl.NumberFormat in the nearest lang and that currency on blur, the plain number in the locale's decimal mark on focus, typed and pasted amounts read in either decimal mark, a validity message for text with no digit that i18n can replace, saved and reset values formatted, a value property, and the plain number in the form data.",
+          "webAdaptation": "The native value holds the formatted text, and a capture-phase formdata listener on the document swaps the field's entry for the plain number, so submits and new FormData(form) read a number while the field keeps its name. setCustomValidity reports text with no amount, so constraint validation and .validate show the message.",
+          "limitations": [
+            "Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified. Formatting happens on blur only, and a form that repeats a currency field's name gets one entry for them."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the field a labelled native input that names the currency, show the amount in the reader's locale, let people edit a plain number, report text that holds no amount as invalid, and submit a number a server can read whatever the locale."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A price field in a German shop takes data-currency=\"EUR\" with inputmode=\"decimal\" under lang=\"de\" and shows 1.234,50 € after blur; a quantity field stays a number field.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/ts/components/currencyInput.ts",
+            "sha256": "a3c806c79bccdb2e96234d6428483ac3bec1be9c213a97df6e3008f00212c28b"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified.",
+            "nextStep": "Type an amount on iOS Safari and Android Chrome decimal keypads under lang=\"de\", and read the field with VoiceOver and NVDA."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/currency-input-browser.test.js",
+            "name": "chromium: a typed amount shows in the locale and currency after blur, and the form gets the number",
+            "scope": "Real keyboard typing under lang=\"de\" with euros formatted on blur, and the plain number in FormData and the submit event."
+          },
+          {
+            "file": "tests/currency-input-browser.test.js",
+            "name": "chromium: text that holds no amount stays as typed and marks the field invalid until it does",
+            "scope": "Text with no digit kept, the validity message and aria-invalid set, cleared once the field holds an amount, and the message replaced through data-currency-input-options."
+          }
+        ]
+      }
+    },
+    {
       "slug": "rich-text-editor",
       "title": "Rich text editor",
       "aliases": [
@@ -12600,5 +12690,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "35196509a7db9834442af3767152422e199faf0e"
+  "sourceRevision": "fd4ba7459e86756a6240b7fa921e97fb85a37b45"
 }

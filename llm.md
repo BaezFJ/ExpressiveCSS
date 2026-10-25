@@ -354,6 +354,7 @@ function unmount() {
 | `PullToRefresh` | `.pull-to-refresh` |
 | `SwipeActions` | `.list.swipeable` |
 | `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
+| `CurrencyInput` | `input[data-currency]` of type text |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
@@ -5995,6 +5996,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `PullToRefresh` | `.pull-to-refresh` |
 | `SwipeActions` | `.list.swipeable` |
 | `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
+| `CurrencyInput` | `input[data-currency]` of type text |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
@@ -8131,6 +8133,47 @@ Add `inputmode="numeric"` to a digit-only mask so phones open a number pad, and 
 #### .destroy()
 
 Removes the listeners and leaves the value as it is.
+
+---
+
+## Currency input
+
+Shows a typed amount in the page's locale and currency once the field loses focus, and submits the plain number.
+
+Add `data-currency` with an ISO 4217 code, such as `EUR`, to an `<input>` of type `text`. `AutoInit()` starts every one. The locale comes from the nearest `lang`, or the browser's language without one. A code `Intl.NumberFormat` rejects leaves the field a plain text input.
+
+When the field loses focus, it shows the amount rounded to the currency's fraction digits: under `lang="de"` with `EUR`, typing `1234.5` shows `1.234,50 €`. A page's `change` and `blur` listeners read the formatted text. When the field gains focus, it shows the plain number in the locale's decimal mark, without grouping or sign, such as `1234,5`, with the caret at the end.
+
+Typed and pasted text keeps its digits, `.`, `,` and a leading `-` or `−`, and drops anything else, such as spaces, signs and letters. The last `.` or `,` is the decimal mark when it is followed by no more digits than the currency shows; every other separator groups. So `1234.5`, `1234,5`, `1.234,5` and `1,234.50` all read 1234.5, `1.234` reads 1234 for euros, and with yen, which has no fraction digits, every separator groups. Full-width digits from an IME and the locale's own digits read as digits. Text with no digit stays as typed, and the field reports itself invalid with `Enter an amount.` until it holds an amount or is empty, so `.validate` shows the message.
+
+The form submits the plain number, `1234.5`, through a `formdata` listener, so a submit and `new FormData(form)` read the same value, also when the form is submitted with Enter while the field has focus. The field keeps its `name`. An empty field submits an empty string, and text with no digit submits as typed. A saved value is formatted when the component starts, without an `input` or `change` event, and again after a form reset. It reads as a plain number first, so `value="1.234"` is 1.234; write saved amounts that way. A value a script sets shows formatted after the field next loses focus. `min`, `max` and `step` do not apply to a text input; check the `value` property instead.
+
+Add `inputmode="decimal"` so phones open a number pad with a decimal key, and name the currency in the label. Do not combine `data-currency` with `data-mask` on one field.
+
+```html
+<div class="field">
+  <input id="price" name="price" type="text" inputmode="decimal" autocomplete="off" placeholder=" " data-currency="EUR">
+  <label for="price">Price in euros</label>
+</div>
+```
+
+### Options
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `i18n` | Object | `{ invalid: 'Enter an amount.' }` | `invalid` is the validity message for text that holds no amount. Markup sets it with `data-currency-input-options='{"i18n":{"invalid":"Betrag eingeben."}}'`. |
+
+### Properties
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `value` | Number or null | The amount the field holds, rounded as it shows, or `null` when it is empty or holds no digit. |
+
+### Methods
+
+#### .destroy()
+
+Removes the listeners, clears the validity message and leaves the text as it is.
 
 ---
 

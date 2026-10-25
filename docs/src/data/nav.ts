@@ -731,6 +731,13 @@ export const NAV: DocsGroup[] = [
           "Formats a text field's value to a pattern, such as a phone or card number, as people type, paste or compose.",
       },
       {
+        id: "currency_input",
+        label: "Currency input",
+        route: "/currency-input.html",
+        description:
+          "Shows a typed amount in the page's locale and currency once the field loses focus, and submits the plain number.",
+      },
+      {
         id: "rich_text_editor",
         label: "Rich text editor",
         route: "/rich-text-editor.html",
