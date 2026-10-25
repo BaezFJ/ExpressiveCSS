@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 45, hover card
 Branch: `feature/2026-10-25-hover-card`
 Base: `origin/master` at `a9bbf77ad` (#425)
-Status: specified 2026-10-25; not implemented
+Status: implemented and locally verified 2026-10-25 in local commits; not pushed, required CI and review pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 45](../../../../roadmap.md#phase-45-hover-card). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
