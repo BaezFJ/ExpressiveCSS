@@ -57,9 +57,9 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Radial chart](#radial-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Mixed chart](#mixed-chart) | unassessed | needs-review | needs-rerun | 0 |
 | [Scatter chart](#scatter-chart) | implemented | source-reviewed | incomplete | 0 |
-| [Funnel chart](#funnel-chart) | implemented | source-reviewed | incomplete | 0 |
-| [Sankey chart](#sankey-chart) | implemented | source-reviewed | incomplete | 0 |
-| [Treemap chart](#treemap-chart) | implemented | source-reviewed | incomplete | 0 |
+| [Funnel chart](#funnel-chart) | unassessed | needs-review | incomplete | 0 |
+| [Sankey chart](#sankey-chart) | unassessed | needs-review | incomplete | 0 |
+| [Treemap chart](#treemap-chart) | unassessed | needs-review | incomplete | 0 |
 | [Timeline](#timeline) | implemented | source-reviewed | needs-rerun | 0 |
 | [Calendar](#calendar) | implemented | source-reviewed | incomplete | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
@@ -871,9 +871,9 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 ## Funnel chart
 
-**implemented within the stated scope.** Stages drawn from a figure's data table, one per row from the second column in table order, centered and as wide as their value against the largest, gaps and values of zero or less left without a stage, row labels at the inline start, a pointer and keyboard tooltip that adds each stage's percentage of the first row, update() width motion and data-watch.
+**unassessed within the stated scope.** Stages drawn from a figure's data table, one per row from the second column in table order, centered and as wide as their value against the largest, gaps and values of zero or less left without a stage, row labels at the inline start, a pointer and keyboard tooltip that adds each stage's percentage of the first row, update() width motion and data-watch.
 
-Source review: source-reviewed, 2026-10-25. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/sass/abstracts/_mixins.scss), [src/sass/components/_funnel-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/sass/components/_funnel-chart.scss), [src/ts/components/funnelChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/ts/components/funnelChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/ts/components/lineChart.ts).
+Source review: needs-review, 2026-10-25. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/sass/abstracts/_mixins.scss), [src/sass/components/_funnel-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/sass/components/_funnel-chart.scss), [src/ts/components/funnelChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/ts/components/funnelChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/ts/components/lineChart.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
 
@@ -889,9 +889,9 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 ## Sankey chart
 
-**implemented within the stated scope.** Nodes and links drawn from a figure's data table of source, target and value columns, with nodes in columns by their longest path from a source, stacked in the order they first appear, links and nodes on one scale, rows skipped for values that are not positive, missing names, self links and cycles, node names and colors, right-to-left mirroring, update() motion, data-watch, and a pointer and keyboard tooltip that steps through links in table order.
+**unassessed within the stated scope.** Nodes and links drawn from a figure's data table of source, target and value columns, with nodes in columns by their longest path from a source, stacked in the order they first appear, links and nodes on one scale, rows skipped for values that are not positive, missing names, self links and cycles, node names and colors, right-to-left mirroring, update() motion, data-watch, and a pointer and keyboard tooltip that steps through links in table order.
 
-Source review: source-reviewed, 2026-10-25. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/sass/abstracts/_mixins.scss), [src/sass/components/_sankey-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/sass/components/_sankey-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/ts/components/lineChart.ts), [src/ts/components/sankeyChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/ts/components/sankeyChart.ts).
+Source review: needs-review, 2026-10-25. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/sass/abstracts/_mixins.scss), [src/sass/components/_sankey-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/sass/components/_sankey-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/ts/components/lineChart.ts), [src/ts/components/sankeyChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/ts/components/sankeyChart.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
 
@@ -906,9 +906,9 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 ## Treemap chart
 
-**implemented within the stated scope.** Rectangles drawn from a figure's data table, one per row of the first value column with its area in proportion to the total, in a squarified layout that mirrors in right-to-left pages, with names and cells written in rectangles that hold them, no rectangle for cells that are not positive numbers, six colors, update(), data-watch, and a pointer and keyboard tooltip with each row's share that steps through rows in table order.
+**unassessed within the stated scope.** Rectangles drawn from a figure's data table, one per row of the first value column with its area in proportion to the total, in a squarified layout that mirrors in right-to-left pages, with names and cells written in rectangles that hold them, no rectangle for cells that are not positive numbers, six colors, update(), data-watch, and a pointer and keyboard tooltip with each row's share that steps through rows in table order.
 
-Source review: source-reviewed, 2026-10-25. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/sass/abstracts/_mixins.scss), [src/sass/components/_treemap-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/sass/components/_treemap-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/ts/components/lineChart.ts), [src/ts/components/treemapChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/ts/components/treemapChart.ts).
+Source review: needs-review, 2026-10-25. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/sass/abstracts/_mixins.scss), [src/sass/components/_treemap-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/sass/components/_treemap-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/ts/components/lineChart.ts), [src/ts/components/treemapChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/797e5e4a91fee220908097f1cd6a639350fa9130/src/ts/components/treemapChart.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
 

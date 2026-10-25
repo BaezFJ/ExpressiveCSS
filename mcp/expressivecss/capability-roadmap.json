@@ -844,7 +844,7 @@
       "sources": [
         {
           "path": "src/sass/components/_tree.scss",
-          "sha256": "1691daf6d198490c69b9c2c16a6dc886033297b175af5043e5c212d69c120792"
+          "sha256": "9dfad0b0e61467f713c929116bf28df0ec9197124236f92daef14de58d77568b"
         }
       ],
       "gaps": [
@@ -2748,7 +2748,7 @@
       "sources": [
         {
           "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "47a0a21ff5ea47c1030e3730605cadb4498d868202a88d89670c3aa55cf09702"
+          "sha256": "2bfe4ddffa9ec7133cfcec15e2eddd2a1357a4226f48cbae47e5116210087888"
         },
         {
           "path": "src/sass/components/_scatter-chart.scss",
@@ -2801,9 +2801,9 @@
       "slug": "funnel-chart",
       "title": "Funnel chart",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-10-25",
       "scope": "Stages drawn from a figure's data table, one per row from the second column in table order, centered and as wide as their value against the largest, gaps and values of zero or less left without a stage, row labels at the inline start, a pointer and keyboard tooltip that adds each stage's percentage of the first row, update() width motion and data-watch.",
       "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the stages are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
@@ -2875,9 +2875,9 @@
       "slug": "sankey-chart",
       "title": "Sankey chart",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-10-25",
       "scope": "Nodes and links drawn from a figure's data table of source, target and value columns, with nodes in columns by their longest path from a source, stacked in the order they first appear, links and nodes on one scale, rows skipped for values that are not positive, missing names, self links and cycles, node names and colors, right-to-left mirroring, update() motion, data-watch, and a pointer and keyboard tooltip that steps through links in table order.",
       "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG and node names are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
@@ -2943,9 +2943,9 @@
       "slug": "treemap-chart",
       "title": "Treemap chart",
       "kind": "component",
-      "support": "implemented",
+      "support": "unassessed",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
+      "sourceReview": "needs-review",
       "reviewedOn": "2026-10-25",
       "scope": "Rectangles drawn from a figure's data table, one per row of the first value column with its area in proportion to the total, in a squarified layout that mirrors in right-to-left pages, with names and cells written in rectangles that hold them, no rectangle for cells that are not positive numbers, six colors, update(), data-watch, and a pointer and keyboard tooltip with each row's share that steps through rows in table order.",
       "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rectangles are aria-hidden and the plot is one Tab stop with a polite live tooltip.",

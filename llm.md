@@ -366,7 +366,8 @@ function unmount() {
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
 | `BackToTop` | `.back-to-top` |
-| `FormSelect` | `select` |
+| `FormSelect` | `select` without `data-tree` |
+| `TreeSelect` | `select[data-tree]` |
 | `Cascader` | `.cascader` |
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
@@ -6341,7 +6342,8 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
 | `BackToTop` | `.back-to-top` |
-| `FormSelect` | `select` |
+| `FormSelect` | `select` without `data-tree` |
+| `TreeSelect` | `select[data-tree]` |
 | `Cascader` | `.cascader` |
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |

@@ -86,7 +86,9 @@ export const AUTO_INIT_COMPONENTS = {
   Lightbox: { component: Components.Lightbox, selector: ".lightboxed" },
   ScrollSpy: { component: Components.ScrollSpy, selector: ".scrollspy" },
   BackToTop: { component: Components.BackToTop, selector: ".back-to-top" },
-  FormSelect: { component: Components.FormSelect, selector: "select" },
+  // A data-tree select is a tree select, not a flat one.
+  FormSelect: { component: Components.FormSelect, selector: "select:not([data-tree])" },
+  TreeSelect: { component: Components.TreeSelect, selector: "select[data-tree]" },
   Cascader: { component: Components.Cascader, selector: ".cascader" },
   NavigationRail: {
     component: Components.NavigationRail,

@@ -15,8 +15,6 @@
 //   --md-comp-tree-guide-color                outline-variant
 //   --md-comp-tree-selected-container-color   secondary-container
 
-$_tree-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 15.4 6 9.4 7.4 8l4.6 4.6L16.6 8 18 9.4z'/%3E%3C/svg%3E");
-
 .tree {
   --md-comp-tree-row-height: 40px;
   --md-comp-tree-row-shape: 100px;
@@ -87,14 +85,7 @@ $_tree-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
 
     // Points to the end edge while closed and down once open.
     &::before {
-      content: "";
-      flex: none;
-      width: 20px;
-      height: 20px;
-      background-color: currentColor;
-      mask: $_tree-chevron center / 20px no-repeat;
-      transform: rotate(-90deg);
-      transition: transform var(--md-sys-motion-duration-short3) ease-out;
+      @include tree-chevron;
     }
 
     &:dir(rtl)::before {

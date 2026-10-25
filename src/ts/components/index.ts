@@ -50,6 +50,7 @@ export { Slider } from "./slider";
 export { ScrollSpy } from "./scrollspy";
 export { BackToTop } from "./backToTop";
 export { FormSelect } from "./select";
+export { TreeSelect } from "./treeSelect";
 export { NavigationRail } from "./navigationRail";
 export { Tabs } from "./tabs";
 export { Timepicker } from "./timepicker";

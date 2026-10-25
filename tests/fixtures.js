@@ -202,8 +202,13 @@ export const AUTO_INIT_FIXTURES = [
   },
   {
     name: "FormSelect",
-    selector: "select",
+    selector: "select:not([data-tree])",
     html: `<div class="field"><select id="fs"><option value="" disabled selected>Choose</option><option value="1">One</option><option value="2">Two</option></select><label for="fs">Pick</label></div>`,
+  },
+  {
+    name: "TreeSelect",
+    selector: "select[data-tree]",
+    html: `<div class="field"><select id="ts" data-tree><option value="" disabled selected>Choose</option><option value="fruit" disabled>Fruit</option><option value="apple" data-parent="fruit">Apple</option></select><label for="ts">Food</label></div>`,
   },
   {
     name: "NavigationRail",
