@@ -9,7 +9,7 @@ Component ID: `keypad`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `ac7b2f7d9886e09ffd3bddf429b18f52b86c71e0b926513d84cb8070c3b41623`
+Contract SHA-256: `2fd63ea3ee33dcd3e4c8c064babb181b7e17f3fa3b626dbb66e568581ecbeff6`
 
 #### Selection and adaptation
 

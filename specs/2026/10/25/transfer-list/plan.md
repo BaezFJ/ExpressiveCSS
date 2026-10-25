@@ -42,11 +42,11 @@ Outcome: authors and agents can find the transfer list, its markup and its limit
 
 Prerequisites: group 2.
 
-- [ ] Add the "Transfer list" section to `llm.md` after "Lists" and its sortable and long list subsections (R14), with the markup, the four buttons, the form data, `TransferList.i18n.moved`, `expressive:transfer`, the modular `TransferList.Init()` call and the limits from the requirements' exclusions. Add `expressive:transfer` to the events tables in `llm.md` and `docs/src/pages/auto-init.astro` if they list behavior events.
-- [ ] Add `docs/src/pages/transfer-list.astro` with a live example in a form and a form data readout, and add it to the docs catalogue.
-- [ ] Add the component decisions entry, the changelog's Unreleased entry and the hand-written entry in `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`.
-- [ ] Update the hardcoded guide counts and reading budget in the skill, version-resolution and component-decisions tests, and set the capability `sourceRevision` pin.
-- [ ] Run `npm run build:skill` after the last edit, then V12.
+- [x] Add the "Transfer list" section to `llm.md` after "Lists" and its sortable and long list subsections (R14), with the markup, the four buttons, the form data, `TransferList.i18n.moved`, `expressive:transfer`, the modular `TransferList.Init()` call and the limits from the requirements' exclusions. Add `expressive:transfer` to the events tables in `llm.md` and `docs/src/pages/auto-init.astro` if they list behavior events.
+- [x] Add `docs/src/pages/transfer-list.astro` with a live example in a form and a form data readout, and add it to the docs catalogue.
+- [x] Add the component decisions entry, the changelog's Unreleased entry and the hand-written entry in `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`.
+- [x] Update the hardcoded guide counts and reading budget in the skill, version-resolution and component-decisions tests, and set the capability `sourceRevision` pin.
+- [x] Run `npm run build:skill` after the last edit, then V12.
 - [ ] Open the pull request and wait for V13.
 
 Completion check: V11 and V12 pass, `npm run docs:build:astro` passes, and V13 is green on the pull request.

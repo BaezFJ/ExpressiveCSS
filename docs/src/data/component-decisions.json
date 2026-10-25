@@ -7550,6 +7550,108 @@
       }
     },
     {
+      "slug": "transfer-list",
+      "title": "Transfer list",
+      "aliases": [
+        "dual list box",
+        "dual listbox",
+        "list builder",
+        "shuttle",
+        "pick list"
+      ],
+      "guideSource": {
+        "pageId": "transfer_list",
+        "heading": "Transfer list",
+        "headingLevel": 2,
+        "semantics": [
+          "transfer-list"
+        ]
+      },
+      "jobs": [
+        "Moves options between an available list and a chosen list, and submits the chosen ones with the form."
+      ],
+      "useWhen": [
+        "Let people pick several options from a long set and see their picks as a list of their own, in the order they chose them."
+      ],
+      "avoidWhen": [
+        "A short set of options people pick in place; use checkboxes, filter chips or a multiple select."
+      ],
+      "alternatives": [
+        "checkboxes",
+        "chips",
+        "select",
+        "autocomplete"
+      ],
+      "adaptive": [],
+      "runtime": "shared-runtime",
+      "guide": "../components/transfer-list.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#transfer-list",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "Two .list groups of labelled checkbox rows with add, add-all, remove and remove-all buttons between them, chosen rows kept in the order they arrived, rows returned to their original slots, the chosen values submitted under data-name in order, form reset, a polite announcement, an expressive:transfer event, and a layout that follows the page direction and stacks below the medium window size.",
+          "webAdaptation": "A document-delegated behavior moves the rows and appends the chosen values in a formdata listener, so the checkboxes carry no name. The rows stay native checkboxes rather than a listbox, so Tab and Space work without an arrow-key contract.",
+          "limitations": [
+            "The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser; spoken output and forced colors remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Name both lists, keep every row and button reachable by keyboard, announce each move, keep focus on the pressed button, and submit the chosen options in a stable order."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Choosing which of forty report columns to export, in the order they should appear, takes a transfer list; choosing two of five toppings takes checkboxes.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_transfer-list.scss",
+            "sha256": "2b6a2f8a42df55e7fb79c887cecb245c822c1b535d4a9c4caad9083abe13f73f"
+          },
+          {
+            "path": "src/ts/behaviors/transferList.ts",
+            "sha256": "e13632859b9e57b81c55f0f84d13e5ad5f974c699e54f05d17316d8d1c024aff"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser; spoken output and forced colors remain unverified.",
+            "nextStep": "Move rows with NVDA in Firefox and VoiceOver in Safari and confirm each move is announced once; check the lists and icons in forced colors mode."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/transfer-list-browser.test.js",
+            "name": "chromium: moving two options to the chosen list puts both in the form data, in order",
+            "scope": "Two checked rows moved one at a time arrive unchecked, and new FormData and a real submit both hold their values in the order they were moved."
+          },
+          {
+            "file": "tests/transfer-list-browser.test.js",
+            "name": "chromium: remove returns rows to their original slots, the all buttons skip disabled rows, and a second Init adds nothing",
+            "scope": "Rows moved back land in their recorded slots, add-all and remove-all leave a disabled row in place, and each press fires one event after repeated Init calls."
+          },
+          {
+            "file": "tests/transfer-list-browser.test.js",
+            "name": "chromium: a form reset puts the rows back where they started",
+            "scope": "A reset button and form.reset() restore both lists and the default checked state, a removed row stays removed, and a cancelled reset moves nothing. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "radio-buttons",
       "title": "Radio buttons",
       "aliases": [
@@ -12689,5 +12791,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "b1422daead32f22ddbc0c87c0efbb03016192d50"
+  "sourceRevision": "620d6dc6e210f1dd0ddbe7600c0db433b7cd5ace"
 }

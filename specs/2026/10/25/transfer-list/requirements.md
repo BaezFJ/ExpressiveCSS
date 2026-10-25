@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 46, transfer list
 Branch: `feature/2026-10-25-transfer-list`
 Base: `origin/master` at `a9bbf77ad`, fetched 2026-10-25
-Status: specified 2026-10-25; groups 1 and 2 implemented 2026-10-25
+Status: specified 2026-10-25; implemented 2026-10-25, pull request not opened
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 46](../../../../roadmap.md#phase-46-transfer-list). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -43,7 +43,7 @@ A `.transfer-list` holds an available list and a chosen list of checkbox rows, w
 - R11. The lists sit side by side with the actions group between them, and the layout follows the page direction: in a right-to-left page the available list is on the right. Each button's icon points toward its destination list in both directions. Below the `medium` window size the two lists stack, with the actions group between them in a row. Each list scrolls inside a maximum block size so the buttons stay in reach.
 - R12. `semantics.json` gains a `transfer-list` row with four rules: a `.transfer-list` without `data-name`; a checkbox with a `name` inside a `.transfer-list`, which would submit its checked state; a `.transfer-available` or `.transfer-chosen` list with neither `aria-label` nor `aria-labelledby`; a `[data-transfer]` button without `type="button"`, which would also submit the form. The fourth rule was added after the 2026-10-25 code review. The semantics tests check the rules without starting components.
 - R13. The behavior lives in `src/ts/behaviors/transferList.ts` as `TransferList`, started by `TransferList.Init()` in `src/ts/index.ts` and exported from `src/ts/modular.ts`. Its listeners are delegated from the document, so a `.transfer-list` added to the page later works without a call. A second `Init()` adds nothing.
-- R14. `llm.md` gains a "Transfer list" section with the markup, the buttons, the form data, the announcement, the event and the limits in the exclusions. A docs page documents the same with a live example. The component decisions data, the changelog's Unreleased section and the hand-written web extensions review get entries, and `npm run build:skill` regenerates the derived files.
+- R14. `llm.md` gains a "Transfer list" section with the markup, the buttons, the form data, the announcement, the event and the limits in the exclusions. A docs page, `docs/src/pages/transfer-list.astro`, documents the same with a live example and sits in the Forms catalogue after Checkboxes. The component decisions data, the changelog's Unreleased section and the hand-written web extensions review get entries, and `npm run build:skill` regenerates the derived files.
 - R15. `tests/selective-builds.test.js` has reviewed JavaScript and CSS gzip budget lines for this change, and the capability `sourceRevision` pin names a commit the test accepts.
 
 ### Exclusions
