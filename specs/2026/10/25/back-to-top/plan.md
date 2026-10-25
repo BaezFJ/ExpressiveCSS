@@ -22,12 +22,12 @@ Covers R2, R3, R5 (evidence only).
 
 Prerequisites: group 1.
 
-- [ ] Add `src/ts/components/backToTop.ts` with `BackToTop` (key `Expressive_BackToTop`) and a `threshold` option, default `'100vh'`.
-- [ ] Insert the sentinel, observe it, and toggle `inert` on the link from the observer callback. Start hidden.
-- [ ] Handle activation: prevent the default jump, scroll to the top with the behavior `prefers-reduced-motion` selects, and focus the `href` target in the order group 1 settled. Add a temporary `tabindex="-1"` to a target that is not focusable and remove it on `blur`. Fall back to `document.body` for `#`, `#top` or a missing id.
-- [ ] `destroy()` disconnects the observer, removes the sentinel and any temporary `tabindex`, and removes `inert`.
-- [ ] Export it from `src/ts/components/index.ts`, add `BackToTop: { component: Components.BackToTop, selector: '.back-to-top' }` to `registry.ts`, and add a fixture to `tests/fixtures.js`.
-- [ ] Keep every new function below cyclomatic complexity 5.
+- [x] Add `src/ts/components/backToTop.ts` with `BackToTop` (key `Expressive_BackToTop`) and a `threshold` option, default `'100vh'`.
+- [x] Insert the sentinel, observe it, and toggle `inert` on the link from the observer callback. Start hidden.
+- [x] Handle activation: prevent the default jump, scroll to the top with the behavior `prefers-reduced-motion` selects, and focus the `href` target in the order group 1 settled. Add a temporary `tabindex="-1"` to a target that is not focusable and remove it on `blur`. Fall back to `document.body` for `#`, `#top` or a missing id.
+- [x] `destroy()` disconnects the observer, removes the sentinel and any temporary `tabindex`, and removes `inert`.
+- [x] Export it from `src/ts/components/index.ts`, add `BackToTop: { component: Components.BackToTop, selector: '.back-to-top' }` to `registry.ts`, and add a fixture to `tests/fixtures.js`.
+- [x] Keep every new function below cyclomatic complexity 5.
 
 Completion check: `npm run build` and the typecheck pass, and `AutoInit()` on the fixture creates an instance.
 
@@ -56,7 +56,7 @@ Prerequisites: groups 2 and 3.
 - [ ] Case for V3: under emulated `reducedMotion: 'reduce'`, `scrollY` is 0 on the next frame after activation; without it, an intermediate frame shows a nonzero `scrollY`.
 - [ ] Case for V4: a `threshold` of `'400px'` from `data-back-to-top-options` shows the link after 400px.
 - [ ] Case for V10: the link's box sits at the bottom inline-end offset, flips under `dir="rtl"`, follows `--md-comp-back-to-top-offset`, and stays visible and working on a page that loads only the CSS.
-- [ ] Add `tests/back-to-top.test.js` (jsdom) for V5: AutoInit fixture, options from markup, the temporary `tabindex` added and removed, and `destroy()` leaving the markup as authored.
+- [x] Add `tests/back-to-top.test.js` (jsdom), written with group 2 so the component landed with a test, for V5: AutoInit fixture, options from markup, the temporary `tabindex` added and removed, and `destroy()` leaving the markup as authored.
 - [ ] Run each file against a build without group 2 and confirm it fails, then against the new build and confirm it passes. Tear down pages, components and timers in `finally` blocks.
 
 Completion check: both files pass in all three engines and fail against the base build.
