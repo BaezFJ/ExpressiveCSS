@@ -126,6 +126,22 @@ Feature gap: Actions only on the inline-end side, and no full swipe that runs an
 
 Mapped browser scope: Swipe reveal with no action run, the keyboard path through the toggle and its actions, short and over-long swipes, drags that do nothing, the toggle, outside tap, Escape and action close, one open row with matching events and callbacks, right-to-left pages, reduced motion with a :root duration override, and destroy() with a row open or mid-swipe. No spoken-output assertion.
 
+## [Input mask](../../components/input-mask.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the field a labelled native input, show the expected format in visible text, leave IME composition alone until it ends, keep the caret where the person is editing, and submit and validate the value the person sees.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page writes the field, its label, its format hint and the mask; the framework formats typed, pasted, autofilled and composed text to the mask, places the caret, deletes across literals and formats saved and reset values.
+
+Verification gap: Typing, insertText pastes, rejected and overflowing characters, letter and escaped masks, Backspace and Delete across literals, selection deletes, mid-value inserts, composition in both event orders, a CDP composition of full-width digits in Chromium, saved values, reset, listener order, Keypad keys and destroy() are checked in a browser. Real IMEs, Android keyboards, clipboard pastes and spoken output remain unverified, and undo after a formatted edit does nothing. Next check: Type into a masked field with a Japanese IME, Chinese pinyin and Gboard on Android, and read it with VoiceOver and NVDA.
+
+Feature gap: The form submits only the formatted value, and masks cannot change with the value, as card numbers whose grouping depends on the card type would need. Next check: None planned.
+
+Mapped browser scope: Typed and inserted digits formatted with the caret after the last one, form data and submit data, dropped letters, typed literals and overflow, letter and escaped-literal masks, Backspace and Delete next to a literal, a selection delete, a mid-value insert, composition dispatched in both event orders and through CDP, a saved value formatted without events and again after a reset button and form.reset(), field, form and document input listeners, Keypad keys, and destroy(). No spoken-output assertion.
+
 ## [Accordion](../../components/accordion.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

@@ -243,7 +243,10 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed swipe actions: a touch swipe that reveals a row's actions, the toggle, focus and Escape, one open row: 93,575 gzip bytes (+1,019).
   // Reviewed swipe actions destroy() also putting back a row part-way through a swipe: 93,590 gzip bytes (+15).
   // Reviewed swipe actions closing a row whose action removed it from the list at once: 93,587 gzip bytes (-3).
-  assert.ok(sizes(js).gzip <= 93587, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the input mask: typed, pasted and composed text formatted to a data-mask pattern, with the caret after the edit: 94,178 gzip bytes (+591).
+  // Reviewed input mask deletes across literals and formatting after a form reset: 94,451 gzip bytes (+273).
+  // Reviewed the input mask skipping a mask with no slot, which would erase a saved value: 94,461 gzip bytes (+10).
+  assert.ok(sizes(js).gzip <= 94461, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

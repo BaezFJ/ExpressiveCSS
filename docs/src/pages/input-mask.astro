@@ -1,0 +1,116 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "syntax", label: "Mask syntax" },
+  { id: "editing", label: "Typing, pasting and deleting" },
+  { id: "value", label: "The submitted value" },
+  { id: "composition", label: "IME composition" },
+  { id: "methods", label: "Methods" },
+]);
+---
+<DocsLayout page="input_mask" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          Add <code>data-mask</code> to a <a href={route('text_inputs')}>text field</a>
+          so what people type takes a pattern, such as a phone or card number.
+        </p>
+        <p>
+          The mask goes on an <code>&lt;input&gt;</code> of type <code>text</code>,
+          <code>tel</code>, <code>search</code>, <code>url</code> or <code>password</code>,
+          the types with a caret. <code>AutoInit()</code> starts every one. Show the
+          expected format in the supporting text, and add
+          <code>inputmode="numeric"</code> to a digit-only mask so phones open a number pad.
+        </p>
+        <div class="mb-3" style="max-width: 24rem;">
+          <div class="field">
+            <input id="demo-phone" type="tel" inputmode="numeric" autocomplete="off" placeholder=" " data-mask="(000) 000-0000" aria-describedby="demo-phone-help">
+            <label for="demo-phone">Phone</label>
+            <small id="demo-phone-help">Format: (555) 123-4567</small>
+          </div>
+          <div class="field">
+            <input id="demo-card" type="text" inputmode="numeric" autocomplete="off" placeholder=" " data-mask="0000 0000 0000 0000" aria-describedby="demo-card-help">
+            <label for="demo-card">Card number</label>
+            <small id="demo-card-help">16 digits</small>
+          </div>
+          <div class="field">
+            <input id="demo-postal" type="text" autocomplete="off" placeholder=" " data-mask="a0a 0a0" aria-describedby="demo-postal-help">
+            <label for="demo-postal">Postal code</label>
+            <small id="demo-postal-help">Format: K1A 0B1</small>
+          </div>
+        </div>
+<Code code={`
+<div class="field">
+  <input id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national"
+         placeholder=" " data-mask="(000) 000-0000" aria-describedby="phone_help">
+  <label for="phone">Phone</label>
+  <small id="phone_help">Format: (555) 123-4567</small>
+</div>
+`} />
+  </Section>
+  <Section {...S.syntax}>
+        <p>
+          In the mask, <code>0</code> takes a digit, <code>a</code> takes a letter and
+          <code>*</code> takes either. Every other character is a literal the mask
+          writes itself. A backslash makes the next character a literal, so
+          <code>\0</code> writes a zero and <code>\a</code> writes an a.
+        </p>
+  </Section>
+  <Section {...S.editing}>
+        <p>
+          Each character that fits fills the next slot, and the mask writes the
+          literals that come before it: typing <code>5551</code> into
+          <code>(000) 000-0000</code> shows <code>(555) 1</code>. A character that fits
+          no slot is dropped, as is one past the end. A paste or autofill keeps the
+          characters that fit and skips the rest, so <code>555.123.4567</code> becomes
+          <code>(555) 123-4567</code>. The caret stays after the last character the
+          edit added.
+        </p>
+        <p>
+          A typed character matches only the literal that comes next, so in a
+          <code>+1 (000) 000-0000</code> mask a typed leading 1 fills the first slot.
+          A paste or autofill that starts with <code>+1</code> matches the prefix.
+          Leave a country code out of the mask, or say in the supporting text not to
+          type it. A mask with no slot leaves the field alone.
+        </p>
+        <p>
+          Backspace right after a literal, or Delete right before one, removes the
+          digit across it, and the digits after it move back. <a href={route('keypad')}>Keypad</a>
+          keys format like typing; with the caret right after a literal, its Backspace
+          moves the caret before the literal, and a second press deletes the digit.
+          After a formatted edit, undo does not step back, because setting the value
+          clears the field's undo history.
+        </p>
+  </Section>
+  <Section {...S.value}>
+        <p>
+          The form submits the value as the field shows it, and <code>pattern</code>,
+          <code>required</code> and the length checks run on that value. A saved value
+          is formatted when the component starts, without an <code>input</code> or
+          <code>change</code> event, and again after a form reset. The component formats
+          before the page's own <code>input</code> listeners run, so they read the
+          formatted value. A value a script sets is formatted once the script fires an
+          <code>input</code> event. In a right-to-left page, add <code>dir="ltr"</code>
+          to a phone or card number field.
+        </p>
+  </Section>
+  <Section {...S.composition}>
+        <p>
+          While an input method editor composes, the field keeps what it writes and
+          formats once the composition ends. Full-width digits count as digits.
+          Android keyboards can treat ordinary typing as composition, so a letter mask
+          there may format only when a word ends; a number pad does not compose.
+        </p>
+  </Section>
+  <Section {...S.methods}>
+<Code code={`
+const mask = Expressive.InputMask.getInstance(document.getElementById('phone'));
+mask.destroy(); // removes the listeners and leaves the value as it is
+`} />
+  </Section>
+</DocsLayout>

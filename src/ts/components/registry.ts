@@ -71,6 +71,11 @@ export const AUTO_INIT_COMPONENTS = {
   },
   PullToRefresh: { component: Components.PullToRefresh, selector: ".pull-to-refresh" },
   SwipeActions: { component: Components.SwipeActions, selector: ".list.swipeable" },
+  // Only the input types with a caret: setSelectionRange() throws on the rest.
+  InputMask: {
+    component: Components.InputMask,
+    selector: 'input[data-mask]:is(:not([type]), [type="text" i], [type="tel" i], [type="search" i], [type="url" i], [type="password" i])',
+  },
   Lightbox: { component: Components.Lightbox, selector: ".lightboxed" },
   ScrollSpy: { component: Components.ScrollSpy, selector: ".scrollspy" },
   FormSelect: { component: Components.FormSelect, selector: "select" },

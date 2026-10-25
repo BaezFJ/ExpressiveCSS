@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**96 of 96 rows enforced; 0 remaining.**
+**97 of 97 rows enforced; 0 remaining.**
 
-91 of those rows are components - a part of the framework an author writes markup for.
+92 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 91 components declare conformance debt.**
+**2 of 92 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -672,6 +672,16 @@ Added with the image compare component. A native range input is the control, so 
 - **image-compare-has-a-range** - Put an <input type="range"> in the .image-compare. It is the control people use, by pointer or keyboard; without it the divider cannot move.
 - **image-compare-range-is-named** - Name the range, such as aria-label="Compare before and after". It is the only control and has no visible label.
 - **image-compare-images-have-alt** - Give each image alt text that says which it is, such as "Before: faded photo". The comparison means nothing if neither image is described.
+
+### input-mask
+
+Added with the input mask component. The author writes `data-mask` on a text field they already had; AutoInit formats its value to the pattern as people type, paste or compose, and the form submits the formatted text. The component needs a caret to place, which only the text, tel, search, url and password input types have.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `input-mask-needs-a-caret` | forbid | `[data-mask]:not(input:is(:not([type]), [type="text" i], [type="tel" i], [type="search" i], [type="url" i], [type="password" i]))` | must not match |
+
+- **input-mask-needs-a-caret** - Put data-mask on an <input> of type text, tel, search, url or password. Other input types have no caret to place and reject a formatted value, and AutoInit skips them; a <textarea> is not masked.
 
 ### keypad
 

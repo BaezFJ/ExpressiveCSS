@@ -12,6 +12,7 @@ export { Cards } from "./cards";
 export { ExpandingCard } from "./expandingCard";
 export { Carousel } from "./carousel";
 export { CharacterCounter } from "./characterCounter";
+export { InputMask } from "./inputMask";
 export { Confetti } from "./confetti";
 export { Particles } from "./particles";
 export { Keypad } from "./keypad";

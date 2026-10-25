@@ -42,6 +42,7 @@
   "additional": [
     "autocomplete",
     "character-counter",
+    "input-mask",
     "landmarks"
   ],
   "notComponents": {
@@ -890,6 +891,19 @@
           "kind": "forbid",
           "selector": ".material-symbols:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-outlined:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-rounded:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]), .material-symbols-sharp:not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby]):not([aria-hidden=\"true\"]):not([role=\"img\"][aria-label]):not([role=\"img\"][aria-labelledby])",
           "message": "The ligature is real text and is read out verbatim. An icon is either decoration - aria-hidden=\"true\", with the enclosing control carrying the name - or an image in its own right, role=\"img\" with a label. It is never left as bare text."
+        }
+      ]
+    },
+    "input-mask": {
+      "status": "enforced",
+      "note": "Added with the input mask component. The author writes `data-mask` on a text field they already had; AutoInit formats its value to the pattern as people type, paste or compose, and the form submits the formatted text. The component needs a caret to place, which only the text, tel, search, url and password input types have.",
+      "rules": [
+        {
+          "id": "input-mask-needs-a-caret",
+          "kind": "forbid",
+          "selector": "[data-mask]:not(input:is(:not([type]), [type=\"text\" i], [type=\"tel\" i], [type=\"search\" i], [type=\"url\" i], [type=\"password\" i]))",
+          "fragmentSafe": true,
+          "message": "Put data-mask on an <input> of type text, tel, search, url or password. Other input types have no caret to place and reject a formatted value, and AutoInit skips them; a <textarea> is not masked."
         }
       ]
     },
