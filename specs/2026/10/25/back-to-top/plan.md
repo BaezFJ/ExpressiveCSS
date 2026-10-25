@@ -69,11 +69,13 @@ Covers R1 to R8.
 
 Prerequisites: group 4.
 
-- [ ] Add a docs page under `docs/src/pages/` with a live example, the `threshold` option, the custom properties, the `.fab-menu` corner, and the window-only limit. Add it to the docs catalogue (`docs/src/data/nav.ts`) and, if it lists every component, `docs/src/data/component-decisions.json`.
-- [ ] Add the same reference to `llm.md` and an Added entry to `CHANGELOG.md` under Unreleased.
-- [ ] Rebuild, measure the CSS and JavaScript gzip sizes against the merge-base build, and add a reviewed budget line to `tests/selective-builds.test.js`.
-- [ ] Run `npm run build:skill` after the last edit, since the contract hash covers the changelog and tests, then `npm run check:generated` and `npm run verify`.
-- [ ] Run `npm test --prefix mcp/expressivecss` and `npm run verify:packages`.
+- [x] Add a docs page under `docs/src/pages/` with a live example, the `threshold` option, the custom properties, the `.fab-menu` corner, and the window-only limit. Add it to the docs catalogue (`docs/src/data/nav.ts`) and, if it lists every component, `docs/src/data/component-decisions.json`.
+- [x] Add the same reference to `llm.md` and an Added entry to `CHANGELOG.md` under Unreleased.
+- [x] Rebuild, measure the CSS and JavaScript gzip sizes against the merge-base build, and add a reviewed budget line to `tests/selective-builds.test.js`.
+- [x] Run `npm run build:skill` after the last edit, since the contract hash covers the changelog and tests, then `npm run check:generated` and `npm run verify`.
+- [x] Run `npm test --prefix mcp/expressivecss` and `npm run verify:packages`.
+
+- [x] Also, from the earlier component checklist: the `src/ts/modular.ts` type export, both AutoInit tables in `llm.md` and the one in `docs/src/pages/auto-init.astro`, the hand-written `web-extensions-review.md` entry, the guide counts in the skill, version and decisions tests, and the basic-button reading budget (46,596 bytes, +315).
 
 Completion check: V6 to V9 pass.
 

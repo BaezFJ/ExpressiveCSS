@@ -342,6 +342,13 @@ export const NAV: DocsGroup[] = [
           "A circular action that can open a menu of related shortcuts.",
       },
       {
+        id: "back-to-top",
+        label: "Back to top",
+        route: "/back-to-top.html",
+        description:
+          "A link that appears once a long page has scrolled down, and returns to the top with focus on the main content.",
+      },
+      {
         id: "cards",
         section: "Containment",
         label: "Cards",

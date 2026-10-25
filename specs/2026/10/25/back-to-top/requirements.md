@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 44, back-to-top button
 Branch: `feature/2026-10-25-back-to-top`
 Base: `origin/master` at `a9bbf77ad9edd0f44ce584e71f07a485fe6f2933` (#425)
-Status: specified 2026-10-25; not implemented
+Status: implemented and locally verified 2026-10-25; not pushed
 
 Follow the [mission's agreed scope for components and behaviors](../../../../mission.md#agreed-scope), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 44](../../../../roadmap.md#phase-44-back-to-top-button). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -28,7 +28,7 @@ These facts come from the base commit.
 
 ### Requirements
 
-- R1. Markup is an in-page link: `<a class="back-to-top" href="#main" aria-label="Back to top">` with an icon, styled as a FAB. Without the script it is an ordinary visible link that jumps to its target.
+- R1. Markup is an in-page link: `<a class="back-to-top button circle extra" href="#main" aria-label="Back to top">` with an icon. The FAB classes give it the look. Without the script it is an ordinary visible link that jumps to its target.
 - R2. A `BackToTop` component, started by `AutoInit()` from `.back-to-top`, keeps the link hidden while the window's scroll position is above the `threshold` option. Hidden means not painted, not reachable by Tab, not hit by the pointer and absent from the accessibility tree. The link appears once the page scrolls past the threshold and hides again when the page scrolls back above it.
 - R3. The component watches the threshold with an `IntersectionObserver` on a sentinel, like `AppBar`, and adds no scroll listener.
 - R4. `threshold` defaults to one viewport height and can be set from markup through `data-back-to-top-options` or from `BackToTop.init(el, options)`.
@@ -66,6 +66,15 @@ These follow from the code and can change during implementation if the probe or 
 - Custom properties: `--md-comp-back-to-top-offset` (16px, matching the FAB menu) and `--md-comp-back-to-top-z` (997). The docs show raising the offset when a `.fab-menu` shares the corner.
 - Semantics rules: `require-accessible-name` on `.back-to-top`, and a `forbid` rule on `.back-to-top[inert]`. Whether a rule can also check that the `href` fragment names an id needs a look at the `require-idref` kind, which reads the attribute value as a bare id. If that needs a new rule kind, group 5 leaves it to the docs and records why.
 - Component options: `threshold` only. No `i18n`, since the author writes the accessible name.
+
+### Found during implementation on 2026-10-25
+
+- The link takes its look from the FAB classes `button circle extra` instead of copying FAB styles into `_back-to-top.scss`. The partial only places and hides the link. FABs are in the buttons' fixed-slot list, so they get no common-button transition for the fade to override.
+- A third semantics rule, `back-to-top-is-an-in-page-link`, flags a `.back-to-top` that is not an `<a>` with an `href` starting with `#`. That covers most of what an `href` id check would, without a new rule kind. A fragment that names no element is not flagged; the script falls back to the body.
+- The `semantics.json` row landed with the styles in group 3, because the roster test fails for a Sass component without one.
+- The jsdom test landed with the component in group 2.
+- `component-decisions.json` pins `sourceRevision` to the group 4 commit `3945c159a`, the first that holds both source files and the browser test. The capability test requires the browser test at that revision. A squash merge drops branch commits, so the pin needs a follow-up re-pin to the merge commit, as Phases 36 and 37 needed.
+- The JavaScript gzip size rose from 95,306 to 95,790 bytes (+484), and the CSS from 86,844 to 86,966 (+122), both measured against a build of the merge-base `a9bbf77ad`.
 
 ### Open decisions
 

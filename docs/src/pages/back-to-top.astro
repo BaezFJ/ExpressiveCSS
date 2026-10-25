@@ -1,0 +1,112 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "focus", label: "Where focus goes" },
+  { id: "scrolling", label: "What scrolls" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="back-to-top" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          Use <code>.back-to-top</code> for a link that appears once a long page has
+          scrolled down, and takes the reader back to the top.
+        </p>
+        <p>
+          Write an <code>&lt;a&gt;</code> whose <code>href</code> names the page's main
+          content, give it an <code>aria-label</code>, and add the
+          <a href={route('floating_action_button')}>FAB</a> classes
+          <code>button circle extra</code> for its look. <code>AutoInit()</code> starts
+          every <code>.back-to-top</code>. The link stays hidden until the page has
+          scrolled one viewport height, then sits in the bottom inline-end corner.
+          Activating it scrolls to the top and moves focus to the element the
+          <code>href</code> names. Scroll this page down to see the one below.
+        </p>
+        <a class="back-to-top button circle extra" href="#docs-main" aria-label="Back to top" data-back-to-top-options='{"threshold": "200px"}'>
+          <span class="material-symbols" aria-hidden="true">arrow_upward</span>
+        </a>
+<Code code={`
+<main id="main">…</main>
+<a class="back-to-top button circle extra" href="#main" aria-label="Back to top">
+  <span class="material-symbols" aria-hidden="true">arrow_upward</span>
+</a>
+`} />
+        <p>
+          Without the script, the link is always visible and jumps to its target,
+          as any in-page link does.
+        </p>
+  </Section>
+  <Section {...S.focus}>
+        <p>
+          Focus moves to the <code>href</code> target, so the next Tab reaches the
+          first control after it. A target that does not take focus, such as a
+          <code>&lt;main&gt;</code>, gets <code>tabindex="-1"</code> until it loses focus
+          again. An <code>href</code> of <code>#</code> or <code>#top</code>, or one that
+          names no element, focuses the body instead. The address bar keeps its
+          fragment, since the script replaces the jump.
+        </p>
+        <p>
+          While hidden, the link is <code>inert</code>: Tab skips it, it takes no
+          clicks, and screen readers do not list it. That state belongs to the
+          script, so don't write <code>inert</code> in the markup.
+        </p>
+  </Section>
+  <Section {...S.scrolling}>
+        <p>
+          The link watches the window's scroll, through an
+          <code>IntersectionObserver</code> on an empty element at the threshold, so
+          scrolling runs no script. The threshold is measured from the top of the
+          body, so a body with <code>position: relative</code> adds its own top margin.
+          A pane, dialog or <a href={route('scroll-area')}>scroll area</a> that scrolls
+          on its own is not supported.
+        </p>
+        <p>
+          The scroll to the top is smooth, and instant under reduced motion. The
+          link fades in and out, and under reduced motion it appears and disappears
+          at once.
+        </p>
+  </Section>
+  <Section {...S.options}>
+        <OptionsTable>
+          <tr>
+            <td><code>threshold</code></td>
+            <td>String</td>
+            <td><code>'100vh'</code></td>
+            <td>How far the page scrolls before the link shows, as a CSS length from the top of the page. Viewport units follow window resizes.</td>
+          </tr>
+        </OptionsTable>
+<Code code={`
+<a class="back-to-top button circle extra" href="#main" aria-label="Back to top"
+   data-back-to-top-options='{"threshold": "400px"}'>…</a>
+`} />
+  </Section>
+  <Section {...S.methods}>
+<Code code={`
+const link = Expressive.BackToTop.getInstance(document.querySelector('.back-to-top'));
+link.destroy(); // removes the observer and the threshold element, and shows the link again
+`} />
+  </Section>
+  <Section {...S.tokens}>
+        <p>
+          Override these on the <code>.back-to-top</code>. A <code>.fab-menu</code> sits
+          in the same corner, so a page with both raises one of them, for example with
+          <code>--md-comp-back-to-top-offset: 88px</code>.
+        </p>
+        <TokenTable>
+          <tr><td><code>--md-comp-back-to-top-offset</code></td><td>16px</td></tr>
+          <tr><td><code>--md-comp-back-to-top-z</code></td><td>997</td></tr>
+          <tr><td><code>--md-comp-back-to-top-duration</code></td><td>the fast effects spring's duration</td></tr>
+          <tr><td><code>--md-comp-back-to-top-easing</code></td><td>fast effects spring</td></tr>
+        </TokenTable>
+  </Section>
+</DocsLayout>

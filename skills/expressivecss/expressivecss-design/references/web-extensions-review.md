@@ -158,6 +158,22 @@ Feature gap: Formatting happens on blur, not while typing; there is no currency 
 
 Mapped browser scope: A typed amount formatted on blur with the plain number in form data and submit data, the plain number on focus, change and blur listeners reading the formatted text, pasted amounts submitted with Enter under de and en, text with no digit kept and marked invalid with the default and replaced message, a saved value formatted without events and again after a reset button and form.reset(), and destroy() clearing the message. No spoken-output assertion.
 
+## [Back to top](../../components/back-to-top.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the control out of reach while it is hidden, move focus to the top of the content along with the scroll, honor reduced motion, and keep the link working without the script.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework shows and hides the link at the threshold, keeps it inert while hidden, scrolls to the top and moves focus to the href target; the page owns the link's name, its FAB look and the element it points to.
+
+Verification gap: The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit. Spoken output, forced colors and real phones remain unverified. Next check: Activate the link with VoiceOver and NVDA and confirm focus lands on the main content; check it in forced colors.
+
+Feature gap: Only the window's scroll is watched; a pane, dialog or scroll area that scrolls on its own is not supported. Next check: None planned.
+
+Mapped browser scope: Focus on the target and the next Tab after a click and after Enter, the temporary tabindex removed, the hidden link skipped by Tab, missed by elementFromPoint and absent from the ARIA snapshot before and after scrolling past the threshold, smooth and instant scrolls, a 400px threshold from markup, the 16px corner in ltr and rtl and the offset token, and the link without the script. No spoken-output assertion.
+
 ## [Accordion](../../components/accordion.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

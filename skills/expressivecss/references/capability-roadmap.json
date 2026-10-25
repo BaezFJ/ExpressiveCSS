@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.15.0",
-  "sourceRevision": "b1422daead32f22ddbc0c87c0efbb03016192d50",
+  "sourceRevision": "3945c159a2fe7a6420ca31fdb6e10c1c2de9a0e7",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-10-10",
@@ -1237,6 +1237,66 @@
         }
       ],
       "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "back-to-top",
+      "title": "Back to top",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-25",
+      "scope": "An in-page link styled with the FAB classes, hidden and inert until the window scrolls past a threshold option (one viewport height by default), a smooth scroll to the top that is instant under reduced motion, focus moved to the href target with a temporary tabindex, the body as the fallback target, markup options, offset and stacking tokens, and a link that still jumps to its target without the script.",
+      "adaptation": "An IntersectionObserver on an empty element at the threshold instead of a scroll listener. The hidden state is the inert attribute plus visibility: hidden after a fade, so a page without the script never hides the link.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-25",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the control out of reach while it is hidden, move focus to the top of the content along with the scroll, honor reduced motion, and keep the link working without the script."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_back-to-top.scss",
+          "sha256": "51d70cc5cfb6697a742e4c085f4800533268cddcd0519c404ab235445b660d23"
+        },
+        {
+          "path": "src/ts/components/backToTop.ts",
+          "sha256": "439db9ba0ce2ba76246b66c81448ecda44d7043aaae6e02989ad475ddd0e9c00"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched.",
+          "nextStep": "Activate the link with VoiceOver and NVDA and confirm focus lands on the main content; check it in forced colors."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/back-to-top-browser.test.js",
+          "name": "chromium: the link returns to the top and focuses its target, by click and by Enter",
+          "scope": "Scroll past the threshold, activate by click and by Enter, and find the page at the top, focus on the target, the next Tab on the first control and no tabindex left behind.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/back-to-top-browser.test.js",
+          "name": "chromium: the link is out of reach above the threshold",
+          "scope": "Above the threshold, before and after scrolling past it, the link is hidden, skipped by Tab, missed by hit testing and absent from the ARIA snapshot. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
