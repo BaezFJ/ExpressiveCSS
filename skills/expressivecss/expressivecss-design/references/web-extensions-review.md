@@ -222,6 +222,22 @@ Feature gap: No search, type-ahead, multiple selection, lazy-loaded children or 
 
 Mapped browser scope: Clicks through three columns with the joined labels, input and change once per new path, a click on a branch keeping focus, a click outside closing, each opening key, arrows, Home, End, the next and previous column, Escape, Tab and Shift+Tab, Enter after IME composition, column names and selected states, rtl columns and keys, form data and submit data, reset, required, disabled state, destroy(), hidden source lists, side-by-side columns, a scrolling column and rows sized by the root font size. No spoken-output assertion.
 
+## [Tree select](../../components/tree-select.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep a labelled native select as the form control, expose the hierarchy as an ARIA tree with its keyboard contract, let people choose only a leaf, and submit that leaf's value whatever the nesting.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page writes a native select whose flat options name their parent in data-parent; the framework builds a role="tree" list inside the Menu surface, handles the tree keys over visible, enabled rows, disables branch options so the form never submits one, and writes the chosen leaf into the native select.
+
+Verification gap: The arrows, Home, End, * and typeahead in both directions, Escape and Tab, pointer toggling, refresh() keeping open branches and focus, validation focus, form data without branches, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom. Spoken output and touch remain unverified. Next check: Move through the tree and choose a leaf with VoiceOver and NVDA, and tap branches and leaves on iOS Safari and Android Chrome.
+
+Feature gap: One leaf only; there is no search, no choosable branch, no children loaded on demand, and the field shows the leaf, not its path. Next check: None planned.
+
+Mapped browser scope: Opening with Enter, ArrowRight expanding branches and Enter choosing a leaf whose value reaches FormData and the submit event, the full key set mirrored under RTL, typeahead, Escape returning focus, a click toggling a branch while a disabled leaf's click toggles nothing, refresh() keeping open branches and moving focus off a disabled row, a failed reportValidity() focusing the field, a selected branch left out of form data, and indentation, sibling alignment, disabled colors and chevrons in both directions. No spoken-output assertion.
+
 ## [Accordion](../../components/accordion.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

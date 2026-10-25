@@ -808,6 +808,13 @@ export const NAV: DocsGroup[] = [
           "Choose one option, or several, from a styled menu.",
       },
       {
+        id: "tree_select",
+        label: "Tree select",
+        route: "/tree-select.html",
+        description:
+          "Choose one leaf from options nested as a tree, expanded with the keyboard or pointer.",
+      },
+      {
         id: "cascader",
         label: "Cascader",
         route: "/cascader.html",

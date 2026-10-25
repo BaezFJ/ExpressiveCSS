@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 47, tree select
 Branch: `feature/2026-10-25-tree-select`
 Base: `origin/master` at `a9bbf77ad`
-Status: groups 1 and 2 implemented 2026-10-25; docs pending; not merged
+Status: implemented 2026-10-25; not merged
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 47](../../../../roadmap.md#phase-47-tree-select). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -113,6 +113,7 @@ None.
 - The chevron is a `tree-chevron` mixin in `src/sass/abstracts/_mixins.scss`, used by `.tree` and the tree select; the compiled `.tree` CSS is byte-identical. The capability pins for `_tree.scss` and `_mixins.scss`, both current at the base commit, were re-pinned. The `select.ts` and `_select.scss` pins were already stale there and stay as they were.
 - `FormSelect.init()` on a tree select or a `browser-default` select returns an instance that built nothing, as before. Its `destroy()` used to unwrap the select and reset its tabindex, which broke a TreeSelect on the same control; it now leaves a skipped select alone.
 - The chosen row is where the popup opens, so it shows the focus layer over its selected fill. In forced colors its label keeps the Highlight outline and the row's own `<li>` takes a CanvasText ring; a chosen row is always a leaf, so that `<li>` is only its label.
+- `llm.md` documents TreeSelect's options in prose: a section with an `### Options` heading but no table breaks the guide generator's options check.
 - jsdom puts a disabled selected option in `FormData`, unlike browsers, so the check that a branch never submits runs in a browser.
 
 ## Technical constraints

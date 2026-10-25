@@ -9151,6 +9151,71 @@ instance.destroy();
 
 ---
 
+## Tree select
+
+Choose one leaf from options nested as a tree, expanded with the keyboard or pointer.
+
+A native `<select data-tree>` holds flat `<option>`s. A child names its parent option's value in `data-parent`; an option without one is a root, and an option another option names is a branch. `AutoInit()` starts every `select[data-tree]` as `TreeSelect`, a FormSelect subclass, so the field, labels, validation messages and reset work as in a select. The native select still owns the form value, reset, validity and the disabled state. HTML cannot nest `<optgroup>`s, so nesting comes only from `data-parent`.
+
+The popup is a `<ul role="tree">` inside the Menu surface, named as the field is: its `aria-labelledby`, then its `aria-label`, then its labels. Branch rows have `aria-expanded` and hold their children in a `ul[role="group"]`; leaf rows have `aria-selected`. Branches start collapsed, and each time the popup opens, the chosen leaf's branches open and focus goes to it.
+
+Only a leaf can be chosen. While the component runs, it sets `disabled` on every branch option, so the form never submits a branch; `destroy()` and `refresh()` restore that attribute. If the browser picked a branch only because nothing was `selected`, the first enabled leaf is chosen instead, as a form reset would pick. A branch the markup or a script selects shows in the field and submits nothing. Put `disabled` on branch options in the markup and start with a `value=""` placeholder, so the page also works without JavaScript.
+
+| Key | Action |
+| --- | --- |
+| Down, Up | Next or previous visible row, without wrapping. Disabled leaves are skipped. |
+| Right | Opens a closed branch, or moves to an open branch's first child. |
+| Left | Closes an open branch, or moves to the parent row. |
+| Home, End | First or last visible row. |
+| `*` | Opens every branch beside the focused row. |
+| Enter, Space | Chooses a leaf, or opens or closes a branch. |
+| A character | Moves to the next visible row whose text starts with the characters typed in the last second. |
+| Escape, Tab | Close the popup; Escape returns focus to the field. |
+
+Left and Right swap under `dir="rtl"`. A click on a branch opens or closes it and keeps the popup open; a click on a leaf chooses it, closes the popup and fires one native `change` event when the value changed.
+
+```html
+<div class="field">
+  <select id="place" name="place" data-tree>
+    <option value="" disabled selected>Choose a place</option>
+    <option value="europe" disabled>Europe</option>
+    <option value="france" data-parent="europe" disabled>France</option>
+    <option value="paris" data-parent="france">Paris</option>
+    <option value="lyon" data-parent="france">Lyon</option>
+    <option value="spain" data-parent="europe">Spain</option>
+    <option value="asia" disabled>Asia</option>
+    <option value="tokyo" data-parent="asia">Tokyo</option>
+  </select>
+  <label for="place">Place</label>
+</div>
+```
+
+There is no multiple selection, search field, choosable branch, `<optgroup>`, `data-icon` image or children loaded on demand. The field shows the leaf's text, not its path. To disable a subtree, disable each leaf.
+
+TreeSelect takes FormSelect's `classes` and `menuOptions`, which markup sets with `data-tree-select-options`.
+
+### Properties
+
+| Name | Type | Description |
+| --- | --- | --- |
+| `tree` | HTMLUListElement | The `role="tree"` list inside the popup. |
+
+### Methods
+
+#### .refresh()
+
+Rebuilds the tree from the native options after a page adds, removes or changes them. Branches whose value is still there stay open, and while the popup is open focus stays on the same row, or moves to the first enabled row when that row is gone or disabled.
+
+#### .getSelectedValues()
+
+The chosen value in an array, as in FormSelect.
+
+#### .destroy()
+
+Removes the tree and its listeners, restores the branch options' `disabled` attributes and the native select.
+
+---
+
 ## Cascader
 
 Pick a path through nested options shown in columns, where each choice opens the next column, and submit the whole path.

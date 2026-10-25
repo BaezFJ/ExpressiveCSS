@@ -1,0 +1,111 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "branches", label: "Branches and the form" },
+  { id: "keyboard", label: "Keyboard and pointer" },
+  { id: "methods", label: "Options and methods" },
+  { id: "limits", label: "What it does not do" },
+]);
+---
+<DocsLayout page="tree_select" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          Add <code>data-tree</code> to a <a href={route('select')}>select</a> whose options
+          nest, and people open branches to choose one leaf.
+        </p>
+        <p>
+          The options stay flat in the markup. A child names its parent option's value in
+          <code>data-parent</code>; an option without one is a root, and an option another
+          option names is a branch. <code>AutoInit()</code> starts every
+          <code>select[data-tree]</code> as a tree select, with the same field, labels and
+          validation messages as a select. The native select still holds the value the form
+          submits.
+        </p>
+        <div class="mb-3" style="max-width: 24rem;">
+          <div class="field">
+            <select id="demo-place" name="place" data-tree>
+              <option value="" disabled selected>Choose a place</option>
+              <option value="europe" disabled>Europe</option>
+              <option value="france" data-parent="europe" disabled>France</option>
+              <option value="paris" data-parent="france">Paris</option>
+              <option value="lyon" data-parent="france">Lyon</option>
+              <option value="spain" data-parent="europe">Spain</option>
+              <option value="asia" disabled>Asia</option>
+              <option value="tokyo" data-parent="asia">Tokyo</option>
+              <option value="kyoto" data-parent="asia">Kyoto</option>
+            </select>
+            <label for="demo-place">Place</label>
+          </div>
+        </div>
+<Code code={`
+<div class="field">
+  <select id="place" name="place" data-tree>
+    <option value="" disabled selected>Choose a place</option>
+    <option value="europe" disabled>Europe</option>
+    <option value="france" data-parent="europe" disabled>France</option>
+    <option value="paris" data-parent="france">Paris</option>
+    <option value="lyon" data-parent="france">Lyon</option>
+    <option value="spain" data-parent="europe">Spain</option>
+    <option value="asia" disabled>Asia</option>
+    <option value="tokyo" data-parent="asia">Tokyo</option>
+  </select>
+  <label for="place">Place</label>
+</div>
+`} />
+  </Section>
+  <Section {...S.branches}>
+        <p>
+          Only a leaf can be chosen. While the tree select runs, it disables every branch
+          option, so the form never submits a branch, and it restores them when it is
+          destroyed. If nothing is <code>selected</code>, the browser picks the first option,
+          often a branch; the tree select then chooses the first enabled leaf, as a form
+          reset would. Put <code>disabled</code> on branch options and start with a
+          <code>value=""</code> placeholder anyway, so the page works without JavaScript.
+        </p>
+        <p>
+          A form reset, a <code>required</code> attribute and a disabled select work as on a
+          select. To disable part of the tree, disable each leaf in it.
+        </p>
+  </Section>
+  <Section {...S.keyboard}>
+        <p>
+          The popup is an ARIA tree. Down and Up move between visible rows without wrapping,
+          and skip disabled leaves. Right opens a closed branch or moves into an open one;
+          Left closes an open branch or moves to its parent. Home and End go to the first and
+          last visible rows, <code>*</code> opens every branch beside the focused row, and
+          typing a few letters moves to the next row that starts with them. Enter and Space
+          choose a leaf or toggle a branch. Escape closes the popup and returns focus to the
+          field. Under <code>dir="rtl"</code> Left and Right swap.
+        </p>
+        <p>
+          A click on a branch opens or closes it and keeps the popup open. A click on a leaf
+          chooses it and fires one <code>change</code> event when the value changed.
+        </p>
+  </Section>
+  <Section {...S.methods}>
+        <p>
+          A tree select takes the select's <code>classes</code> and <code>menuOptions</code>,
+          from script or from <code>data-tree-select-options</code>. Call
+          <code>refresh()</code> after changing the options; open branches stay open.
+        </p>
+<Code code={`
+const place = Expressive.TreeSelect.getInstance(document.getElementById('place'));
+place.refresh();            // rebuild after adding, removing or changing options
+place.getSelectedValues();  // ['paris']
+place.destroy();            // restores the branch options and the native select
+`} />
+  </Section>
+  <Section {...S.limits}>
+        <p>
+          There is no multiple selection, search field, choosable branch, nested
+          <code>&lt;optgroup&gt;</code>, option image or children loaded on demand. The field
+          shows the chosen leaf's text, not its path.
+        </p>
+  </Section>
+</DocsLayout>

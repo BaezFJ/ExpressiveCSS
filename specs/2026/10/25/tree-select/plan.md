@@ -49,13 +49,15 @@ Outcome: the component is documented, the pin and generated files are current, a
 
 Prerequisites: group 2.
 
-- [ ] Add a "Tree select" section after "Select" in `llm.md`, and a note in the "Select" section that a `data-tree` select belongs to TreeSelect. Add a docs page with a live example whose branch options carry `disabled` and whose first option is a `value=""` placeholder, and add it to the docs catalogue and `docs/src/data/nav.ts`. Cover the markup, the keys, the branch rule, `refresh()` and the exclusions.
-- [ ] Add the component to `docs/src/data/component-decisions.json` with its capability entry, and pin `sourceRevision` to a commit that holds the new files.
-- [ ] Add an entry to `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`, and an Added entry to the Unreleased section of `CHANGELOG.md`.
-- [ ] Update the hardcoded guide counts in `tests/expressivecss-skill.test.js`, `tests/expressivecss-version-resolution.test.js` and `tests/expressivecss-component-decisions.test.js`, and the reading budget if it grows.
-- [ ] Run `npm run build`, confirm the budget lines, then run `npm run build:skill` as the last generation step and `npm run check:generated`.
-- [ ] Record each result in validation.md.
+- [x] Add a "Tree select" section after "Select" in `llm.md`, and a note in the "Select" section that a `data-tree` select belongs to TreeSelect. Add a docs page with a live example whose branch options carry `disabled` and whose first option is a `value=""` placeholder, and add it to the docs catalogue and `docs/src/data/nav.ts`. Cover the markup, the keys, the branch rule, `refresh()` and the exclusions.
+- [x] Add the component to `docs/src/data/component-decisions.json` with its capability entry, and pin `sourceRevision` to a commit that holds the new files.
+- [x] Add an entry to `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`, and an Added entry to the Unreleased section of `CHANGELOG.md`.
+- [x] Update the hardcoded guide counts in `tests/expressivecss-skill.test.js`, `tests/expressivecss-version-resolution.test.js` and `tests/expressivecss-component-decisions.test.js`, and the reading budget if it grows.
+- [x] Run `npm run build`, confirm the budget lines, then run `npm run build:skill` as the last generation step and `npm run check:generated`.
+- [x] Record each result in validation.md.
 
 Completion check: `npm run check:generated` is clean, V9 and V10 pass, V11 runs on the pull request, and every check in validation.md shows a result.
 
 Covers: R13, R14; V9, V10, V11.
+
+Done 2026-10-25, except V11, which runs on the pull request. `sourceRevision` pins branch commit `ebc36f235`, the first commit holding `treeSelect.ts` and its browser test after the rebase onto master at `abf25eb0f`, as Javier chose for the merge train (#431). A squash merge drops it; one re-pin pull request to a squash commit goes in after the whole train, so this branch opens no follow-up. The basic-button reading budget grew to 49,778 bytes (+296) on top of master.
