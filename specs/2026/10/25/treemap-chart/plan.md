@@ -1,8 +1,8 @@
 # Plan: treemap chart
 
-Roadmap phase: Phase 50, treemap chart. Branch `feature/2026-10-25-treemap-chart` from `origin/master` at `a9bbf77ad`. Requirements are in [requirements.md](requirements.md) and checks in [validation.md](validation.md).
+Roadmap phase: Phase 50, treemap chart. Branch `feature/2026-10-25-treemap-chart` from `origin/master` at `a9bbf77ad`, rebased onto `81b17cdbb` (#427), `0630992c4` (#429) and `451f2a594` (#428) on 2026-10-25. Requirements are in [requirements.md](requirements.md) and checks in [validation.md](validation.md).
 
-The groups run in order, and each ends in a state that can be committed. All four were implemented on 2026-10-25: group 1 as `681f26b4c`, group 2 as `dbd35c5c1`, group 3 as `0d087229b`, and group 4 in the commit that records these results. Budget lines go into whichever group first changes a bundle's size, because `tests/selective-builds.test.js` fails without them. The `semantics.json` row goes into group 1, because the semantics roster test fails for a registered component without one.
+The groups run in order, and each ends in a state that can be committed. All four were implemented on 2026-10-25: group 1 as `382c5d2d6`, group 2 as `fc2332b33`, group 3 as `94bf782d1`, and group 4 as `f0769cbd1`, after the third rebase. Budget lines go into whichever group first changes a bundle's size, because `tests/selective-builds.test.js` fails without them. The `semantics.json` row goes into group 1, because the semantics roster test fails for a registered component without one.
 
 ## 1. Register the chart and lay out the rectangles
 

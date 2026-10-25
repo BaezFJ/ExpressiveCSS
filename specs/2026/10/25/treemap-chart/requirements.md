@@ -3,7 +3,7 @@
 Date: 2026-10-25
 Roadmap phase: Phase 50, treemap chart
 Branch: `feature/2026-10-25-treemap-chart`
-Base: `origin/master` at `a9bbf77ad`
+Base: `origin/master` at `a9bbf77ad`, rebased on 2026-10-25 onto `81b17cdbb` (#427, loading overlay) then `0630992c4` (#429, sankey chart), and then `451f2a594` (#428, after #431, #430 and #432)
 Status: implemented 2026-10-25 in four commits on the branch; not pushed
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 50](../../../../roadmap.md#phase-50-treemap-chart). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
