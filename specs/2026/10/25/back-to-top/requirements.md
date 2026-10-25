@@ -61,7 +61,7 @@ These follow from the code and can change during implementation if the probe or 
 
 - `threshold` is a CSS length string, default `'100vh'`, applied as the sentinel's `top`. The sentinel then tracks viewport resizes without script. The probe confirms that an absolutely positioned sentinel at the start of `<body>` measures from the document's top in all three engines.
 - The hidden state is the `inert` attribute, which takes the link out of the tab order, the pointer and the accessibility tree in one step. CSS styles `.back-to-top[inert]` as `visibility: hidden` with `opacity: 0`, so a page without the script never hides the link. Showing removes `inert`.
-- Activation calls `preventDefault()`, then `window.scrollTo({ top: 0, behavior })` and `target.focus({ preventScroll: true })`. The probe decides the order. If the target has no `tabindex` and is not focusable, the component sets `tabindex="-1"` and removes it on the target's next `blur`.
+- Activation calls `preventDefault()`, then `target.focus({ preventScroll: true })`, then `window.scrollTo({ top: 0, behavior })`. The probe found both orders work. If the target has no `tabindex` and is not focusable, the component sets `tabindex="-1"` and removes it on the target's next `blur`.
 - An `href` of `#` or `#top`, or one that names no element, scrolls to the top and focuses `document.body` through the same temporary `tabindex`. The docs recommend naming the main landmark.
 - Custom properties: `--md-comp-back-to-top-offset` (16px, matching the FAB menu) and `--md-comp-back-to-top-z` (997). The docs show raising the offset when a `.fab-menu` shares the corner.
 - Semantics rules: `require-accessible-name` on `.back-to-top`, and a `forbid` rule on `.back-to-top[inert]`. Whether a rule can also check that the `href` fragment names an id needs a look at the `require-idref` kind, which reads the attribute value as a bare id. If that needs a new rule kind, group 5 leaves it to the docs and records why.
@@ -78,6 +78,16 @@ None.
 - Listeners take `this._events.signal`. The temporary `blur` listener on the target gets its own controller from `controllerFor(el)`.
 - jsdom has no layout or `IntersectionObserver` geometry, so jsdom tests cover structure and lifecycle. Visibility, scrolling and focus are browser tests.
 - `inert` hides the link from find-in-page as well as from the accessibility tree. That is acceptable for a control with no text of its own.
+
+### Probe results on 2026-10-25
+
+Plan group 1 ran in Playwright's Chromium, Firefox and WebKit on a bare page three viewports tall (800 by 600), without the framework.
+
+- With `tabindex="-1"` on `<main>`, both orders worked in every engine: `focus({ preventScroll: true })` before `scrollTo({ top: 0, behavior: 'smooth' })`, and after it. The page reached `scrollY` 0, `<main>` kept focus, and the next Tab focused the first button inside it. The smooth scroll took about 800ms in Chromium and Firefox and about 380ms in WebKit, and `scrollend` fired in all three. The component focuses first, so a focus side effect cannot interrupt the scroll that follows.
+- Two frames into a smooth scroll from 2,000px, `scrollY` was still above 1,500 in every engine, so V3 can tell smooth from instant by sampling frames.
+- `document.body` with a temporary `tabindex="-1"` took focus in every engine, and the next Tab reached the first button.
+- An absolutely positioned, zero-height sentinel at `top: 100vh` as the first child of an unpositioned `<body>` intersected at `scrollY` 0 and 300 and stopped at 700, with `boundingClientRect.top` at -100. Under `position: relative` with a 40px top margin on `<body>`, a `400px` sentinel stopped intersecting at 450 with `top` at -10, so it sat at 440px. A positioned `<body>` measures the threshold from the body's top edge; the docs say so.
+- `inert` on the fixed link removed it from Tab order and from `elementFromPoint` in every engine. Playwright's `ariaSnapshot()` still listed the inert link in all three, because Playwright computes the tree itself. The hidden-state test therefore depends on the `visibility: hidden` rule, which the snapshot does honor.
 
 ## Dependencies
 

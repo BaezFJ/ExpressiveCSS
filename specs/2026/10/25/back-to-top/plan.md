@@ -8,11 +8,11 @@ Work on `feature/2026-10-25-back-to-top`. Tests run against built bundles, so bu
 
 Prerequisites: none.
 
-- [ ] In Chromium, Firefox and WebKit through Playwright, scroll a tall page and run `window.scrollTo({ top: 0, behavior: 'smooth' })` with `target.focus({ preventScroll: true })` before it, and again after it. Record whether the page reaches `scrollY === 0` and where focus ends in each order.
-- [ ] Record when a smooth scroll finishes in each engine (`scrollend` event or polling), since WebKit scrolls asynchronously.
-- [ ] Put an absolutely positioned, zero-height sentinel with `top: 100vh` at the start of `<body>`, observe it, and record that it stops intersecting once the page scrolls past one viewport height. Repeat with `top: 400px` and with `position: relative` on `<body>`.
-- [ ] Check that `inert` on a fixed link removes it from Tab order and from Playwright's ARIA snapshot in all three engines.
-- [ ] Write the findings into the Technical constraints section of requirements.md, and update the activation proposal if an order fails in any engine.
+- [x] In Chromium, Firefox and WebKit through Playwright, scroll a tall page and run `window.scrollTo({ top: 0, behavior: 'smooth' })` with `target.focus({ preventScroll: true })` before it, and again after it. Record whether the page reaches `scrollY === 0` and where focus ends in each order.
+- [x] Record when a smooth scroll finishes in each engine (`scrollend` event or polling), since WebKit scrolls asynchronously.
+- [x] Put an absolutely positioned, zero-height sentinel with `top: 100vh` at the start of `<body>`, observe it, and record that it stops intersecting once the page scrolls past one viewport height. Repeat with `top: 400px` and with `position: relative` on `<body>`.
+- [x] Check that `inert` on a fixed link removes it from Tab order and from Playwright's ARIA snapshot in all three engines.
+- [x] Write the findings into the Technical constraints section of requirements.md, and update the activation proposal if an order fails in any engine.
 
 Completion check: requirements.md records each engine's result for the four probes, and the probe script is not committed.
 
