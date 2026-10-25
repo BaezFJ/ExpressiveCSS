@@ -44,8 +44,7 @@
     "character-counter",
     "currency-input",
     "input-mask",
-    "landmarks",
-    "show-more"
+    "landmarks"
   ],
   "notComponents": {
     "table_of_contents": "the list it styles is Scrollspy's markup, taught under Scrollspy in `llm.md` and rendered per page by the docs site's page scaffold. The partial stays in the sheet; `scrollspy` owns its rule."

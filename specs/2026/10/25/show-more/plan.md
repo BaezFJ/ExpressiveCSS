@@ -42,11 +42,11 @@ Outcome: the button hides when the text fits and comes back when the text is cut
 
 Prerequisites: group 2.
 
-- [ ] Write V2 in `tests/show-more-browser.test.js`, and V3, V4 and V5 in a new `tests/show-more.test.js`. Record which fail.
-- [ ] Add the fit check with a `ResizeObserver` on the text element and a recheck after `document.fonts.ready`, setting and clearing `hidden` on the button. Skip the check while expanded.
-- [ ] Swap the button's last non-empty text node to `data-show-less` or `i18n.showLess` on expand, and restore it on collapse.
-- [ ] Make `destroy()` restore the recorded attributes, label and clamp, remove a generated id, and disconnect the observer.
-- [ ] Keep each new function below cyclomatic complexity 5. Rebuild and rerun until V1 to V5 pass. Update the budget line.
+- [x] Write V2 in `tests/show-more-browser.test.js`, and V3, V4 and V5 in a new `tests/show-more.test.js`. Record which fail.
+- [x] Add the fit check with a `ResizeObserver` on the text element and a recheck after `document.fonts.ready`, setting and clearing `hidden` on the button. Skip the check while expanded.
+- [x] Swap the button's last non-empty text node to `data-show-less` or `i18n.showLess` on expand, and restore it on collapse.
+- [x] Make `destroy()` restore the recorded attributes, label and clamp, remove a generated id, and disconnect the observer.
+- [x] Keep each new function below cyclomatic complexity 5. Rebuild and rerun until V1 to V5 pass. Update the budget line.
 
 Completion check: V1 and V2 pass in Chromium, Firefox and WebKit, and V3 to V5 pass.
 

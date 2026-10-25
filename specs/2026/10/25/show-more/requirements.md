@@ -69,7 +69,10 @@ These follow from the code and can change during implementation if the code or t
 - Find the parts with `:scope > :is(.line-clamp-1, .line-clamp-2, .line-clamp-3)` and `:scope > button`. The selector for AutoInit is `.show-more`. Group 2 narrowed the text selector from `[class*="line-clamp-"]`, which also matched `line-clamp-none` and prefixed classes, to the classes the semantics rule names.
 - The semantics rule also requires `type="button"`, added in group 2, because a `<button>` without it submits the form it sits in.
 - `open()` and `close()` are public methods, as on ExpandingCard, since the click handler needs them anyway. Added in group 2.
-- If the component needs any CSS at all, for example a gap between the text and the button, it goes in a new `src/sass/components/_show-more.scss`. Otherwise the change is JavaScript only and needs no CSS budget line.
+- `src/sass/components/_show-more.scss` holds one rule, `.show-more > button[hidden] { display: none; }`. Group 3 found that every `<button>` gets `display: inline-flex` from the button mixin, which beats the browser's `[hidden]` rule, so a hidden button stayed visible and focusable. Tour keeps the same rule for its hidden buttons. With a partial, the `show-more` semantics row left the `additional` list.
+
+- The label is the button's last text node outside an `aria-hidden="true"` element, so an icon before or after the label keeps its ligature text.
+- A focused button stays visible even when the text fits, and the fit check runs again on blur. Without that, collapsing text after the container widened hid the button the person had just pressed, and focus fell back to the page. Found and fixed in group 3; V2 covers it.
 
 ### Open decisions
 
