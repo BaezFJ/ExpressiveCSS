@@ -54,10 +54,10 @@ Covers R1, R2, R4, R5, R7.
 
 Prerequisites: group 3.
 
-- [ ] Add `tests/loading-overlay-browser.test.js`, looping over Chromium, Firefox and WebKit, with cases for V1, V3, V4 and V5. Tear down components and pages in `finally` blocks.
-- [ ] Add `tests/loading-overlay.test.js` (jsdom) with cases for V2 and V7.
-- [ ] Add the forced-colors line to `tests/forced-colors.test.js` and the reduced-motion check for V6.
-- [ ] Run each new case against a build without group 3 or without the rule it covers, and confirm it fails.
+- [x] Add `tests/loading-overlay-browser.test.js`, looping over Chromium, Firefox and WebKit, with cases for V1 to V5 and V7. Tear down components and pages in `finally` blocks.
+- [x] ~~Add `tests/loading-overlay.test.js` (jsdom) with cases for V2 and V7.~~ Dropped: jsdom has no `inert`, so V2 and V7 run in the browser file.
+- [x] Add the forced-colors line to `tests/forced-colors.test.js` and the reduced-motion check for V6.
+- [x] Run each new case against a build without group 3 or without the rule it covers, and confirm it fails.
 
 Completion check: the new files pass in all three engines, and each case fails against its mutation.
 

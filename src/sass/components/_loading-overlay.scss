@@ -32,6 +32,9 @@
   &::after,
   > .loading-indicator {
     position: absolute;
+    // The script's inert blocks input while busy; these must not catch a
+    // click while they fade out after the region clears.
+    pointer-events: none;
     visibility: hidden;
     opacity: 0;
     // Hidden only once it has faded out.
