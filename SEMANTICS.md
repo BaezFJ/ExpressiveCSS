@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**99 of 99 rows enforced; 0 remaining.**
+**101 of 101 rows enforced; 0 remaining.**
 
-94 of those rows are components - a part of the framework an author writes markup for.
+96 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 94 components declare conformance debt.**
+**2 of 96 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -777,6 +777,16 @@ Short waits with unknown duration. The current framework contract uses a named s
 - **loading-indicator-reports-itself** - The current loading-indicator contract requires role="status". Provide meaningful waiting text updates and verify announcement delivery; a role alone does not prove spoken output.
 - **loading-indicator-is-named** - Name the waiting state with aria-label or aria-labelledby. Verify meaningful status updates separately from its accessible name.
 
+### loading-overlay
+
+Added with the loading overlay component. The page owns aria-busy on the region; while it is "true" the script makes the region inert, so nothing inside takes pointer or keyboard input, and announces the start and the finish in a visually hidden role="status" region it adds after the region, because inert content leaves the accessibility tree. The author's loading indicator keeps the role and name it has everywhere else.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `loading-overlay-has-an-indicator` | forbid | `.loading-overlay:not(:has(> .loading-indicator))` | must not match |
+
+- **loading-overlay-has-an-indicator** - Give a .loading-overlay a .loading-indicator as a direct child. It is what shows over the scrim while the region is busy.
+
 ### map
 
 Added with the map component. MapLibre draws the map on a canvas, so the frame needs a name for the region it is, and a marker that opens a popup has to be a button to be reached and activated from the keyboard. Icon-only controls are covered by icon-only-control-is-named.
@@ -1070,6 +1080,18 @@ Added with the rich text editor component. The script hides the textarea and giv
 | `rich-text-editor-textarea-is-named` | forbid | `.rich-text-editor > textarea:not([aria-label], [aria-labelledby], [id])` | must not match |
 
 - **rich-text-editor-textarea-is-named** - Name the textarea with a <label for>, aria-label or aria-labelledby. The editor copies that name to its editable area, which has none of its own. Its content is the starting HTML, not a name.
+
+### sankey-chart
+
+Added with the sankey chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn nodes, links and names are aria-hidden.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `sankey-chart-is-a-figure-with-a-table` | forbid | `.sankey-chart:not(figure:has(> table))` | must not match |
+| `sankey-chart-has-a-caption` | forbid | `.sankey-chart:not(:has(> figcaption))` | must not match |
+
+- **sankey-chart-is-a-figure-with-a-table** - Write .sankey-chart as a <figure> holding a <table> of the flows. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
+- **sankey-chart-has-a-caption** - Name a .sankey-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
 
 ### scatter-chart
 
