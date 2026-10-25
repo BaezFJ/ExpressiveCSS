@@ -59,7 +59,7 @@ Outcome: the component is documented, the generated files are current, and CI ca
 Prerequisites: group 3.
 
 - [x] Add a "Show more" section to `llm.md` and a docs page with a live example, added to the docs catalogue. Cover the markup, `data-show-less` and `i18n.showLess`, the window-size prefix case, the find-in-page limit and the clamp-on-a-child rule.
-- [x] Add the component to `docs/src/data/component-decisions.json` with its capability entry, and re-pin `sourceRevision`. No `master` commit holds `showMore.ts` yet, so the pin is the group 3 commit `19375f1c6`; re-pin it to the squash merge commit in a follow-up, as pull-to-refresh did.
+- [x] Add the component to `docs/src/data/component-decisions.json` with its capability entry, and re-pin `sourceRevision`. No `master` commit holds `showMore.ts` yet, so the pin was the group 3 commit `19375f1c6`, then the merge commit `42770bd16` once `master` added two more components; re-pin it to the squash merge commit in a follow-up, as pull-to-refresh did.
 - [x] Add an entry to `skills/expressivecss/expressivecss-design/references/web-extensions-review.md` and an Added entry to the Unreleased section of `CHANGELOG.md`.
 - [x] Update the hardcoded guide counts in `tests/expressivecss-skill.test.js`, `tests/expressivecss-version-resolution.test.js` and `tests/expressivecss-component-decisions.test.js`, and the reading budget if it grows.
 - [x] Run `npm run build` and confirm the budget lines, then run `npm run build:skill` as the last generation step and `npm run check:generated`.
