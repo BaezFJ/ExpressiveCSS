@@ -1,0 +1,45 @@
+# Validation: cascader
+
+Roadmap phase: Phase 48, cascader. Requirements are in [requirements.md](requirements.md) and the work in [plan.md](plan.md).
+
+Every result is pending, because the feature is not built yet. Browser checks run against built bundles after `npm run build`, one suite at a time. The commands `node --test tests/cascader.test.js` and `node --test tests/cascader-browser.test.js` follow the pattern of earlier test files and have not been run, since the files do not exist yet.
+
+The browser fixture is a `<form>` holding the three-level markup from requirements.md, with `United States` and `Canada` in the first column, two states under `United States`, and `San Francisco` and `Los Angeles` under `California`, plus a submit button, started by AutoInit. Each check names any extra fields. Every test destroys its components in a `finally` block.
+
+## Automated checks
+
+| ID | Covers | Setup and action | Expected result | Result |
+| --- | --- | --- | --- | --- |
+| V1 | R1, R3, R5, R8, R10 | The roadmap's completion check, in Chromium, Firefox and WebKit: click the input, click `United States`, click `California`, click `San Francisco`. Read `new FormData(form).getAll('place')` and the same entries in a `submit` handler's form data. | Three columns opened in turn. The input shows `United States / California / San Francisco`. Both reads return `['us', 'ca', 'sf']`. | Pending |
+| V2 | R1, R2, R11, R15, R16, R17 | In jsdom: start the fixture and read the parsed options, the input's attributes and `value`. Start one with `data-selected` on `la`, one with `data-selected` on two leaves, one on a branch, and one with an empty nested `ul`. Call `open()` and `close()`, then `destroy()`. | Branches and leaves match the markup, and labels exclude nested text. The input is `readonly` with `role="combobox"`, `aria-haspopup="dialog"`, `aria-expanded="false"` and `aria-controls` naming the popover. `value` is `[]`, then `['us', 'ca', 'la']`, then the first marked leaf's path; a marked branch gives `[]`, and the empty `ul` makes its `li` a leaf. `open()` sets `aria-expanded="true"`. After `destroy()` the input's attributes match the markup, the popover is gone and no listener remains. No control is created in jsdom. | Pending |
+| V3 | R18 | In `tests/semantics.test.js`, check markup with a `role` on `.cascader-options`, a `role` on one of its `li`, an `li` without `data-value`, an input with `type="number"`, an input with no label, and the valid fixture. | The rule flags the first five and passes the valid fixture. The check does not start components. | Pending |
+| V4 | R3, R5, R6, R9 | In all three engines: focus the input and open with each of Enter, Space, ArrowDown and Alt+ArrowDown. In a column press ArrowDown, ArrowUp, End, Home, then ArrowRight on a branch, ArrowLeft, ArrowLeft again in the first column, and ArrowRight on a leaf. Close with Escape, then reopen and press Tab, then reopen, press Shift+Tab, then reopen and click outside on a button. Repeat Enter with `{ isComposing: true }` and `{ keyCode: 229 }`. | Each open key opens with focus on the first option. Focus moves as R6 says, without wrapping. ArrowRight on a branch opens the next column with focus on its first option, ArrowLeft returns to the branch with the column still shown, and the two no-op keys change nothing. Escape, Tab and Shift+Tab close with focus on the input; the outside click closes with focus on the button. The committed path never changes. The composing Enters do not open the popover. | Pending |
+| V5 | R2, R4, R6 | In all three engines, open the popover, choose `United States` and `California` with the keyboard, and read the roles, names, states and `tabIndex` of the input, popover, columns and options. | The popover is `role="dialog"` named by the label. Columns are listboxes named by the label, `United States` and `California`. The two path options have `aria-selected="true"` and their siblings `false`. Branch options hold an `aria-hidden` chevron. Each column has exactly one option with `tabIndex` 0. The input has `aria-expanded="true"` while open and `false` after closing. | Pending |
+| V6 | R7 | Repeat the ArrowRight and ArrowLeft steps of V4 in a form with `dir="rtl"`, and read the columns' `getBoundingClientRect()`. | ArrowLeft opens the next column and ArrowRight goes back. Each later column sits to the left of the one before it. | Pending |
+| V7 | R5, R8, R9 | Attach `input` and `change` listeners to the input. Click through to `San Francisco`. Reopen and commit `San Francisco` again, then commit `Los Angeles` with Enter. Reopen, click `Canada`, press Escape. Also click a branch and read `document.activeElement`. | After the first commit each event fired once, with the joined labels in the input and focus on the input. Committing the same path again fires nothing. `Los Angeles` fires each event once more. Clicking a branch keeps focus on it. After `Canada` and Escape, the input still shows `United States / California / Los Angeles`. | Pending |
+| V8 | R11, R12 | Start a field with `data-selected` on `la`, with `input` and `change` listeners attached first. Commit `San Francisco`, then reset the form with the reset button and with `form.reset()`, once with the popover open. Repeat with no `data-selected`, and with the form inside an open shadow root. | On start the input shows the `Los Angeles` path and neither listener ran. Each reset brings back the `Los Angeles` path, or an empty input and no form entries without `data-selected`, closes the popover, and fires nothing. The shadow root case resets the same way. | Pending |
+| V9 | R13 | Add `required` to the input and `.validate` to the field. Submit with no path, then commit a path and submit. Repeat with `data-cascader-options='{"i18n":{"required":"Elige un lugar."}}'`. | Before the commit the control fails `checkValidity()` with `valueMissing` and the message `Choose an option.`, the input has `aria-required="true"` and `aria-invalid="true"`, and the submit is blocked. After the commit the field is valid and submits. The options case shows `Elige un lugar.` | Pending |
+| V10 | R14 | Commit a path, then add `disabled` to the input and read the form data and click the input. Repeat with the field inside a disabled `<fieldset>`, then enable the fieldset again. | While disabled the form data has no `place` entry and the popover stays closed. After the fieldset is enabled, the form data holds the path again. | Pending |
+| V11 | R4, R19 | In all three engines, open three columns and read `.cascader-options`' computed `display`, the columns' rectangles, and an option's height at the default and a 200% root font size. Give one column 40 options. Check the `forced-colors` rules in `tests/forced-colors.test.js`, which reads the built CSS. | The source list has `display: none`. Columns sit side by side in order, and the long column scrolls inside the popover's maximum height. The option height doubles with the root font size. The forced colors rules keep a visible border or outline on the selected path and focus ring. | Pending |
+| V12 | R1, R21 | `node --test tests/selective-builds.test.js tests/autoinit.test.js tests/docs-astro.test.js` | All pass with the reviewed JavaScript and CSS budget lines, the new AutoInit fixture count and the AutoInit tables listing `Cascader`. | Pending |
+| V13 | R20 | After `npm run build:skill` as the last generation step, run `npm run check:generated` and `node --test tests/expressivecss-skill.test.js tests/expressivecss-version-resolution.test.js tests/expressivecss-component-decisions.test.js`. | Generated files are clean and the guide counts match. | Pending |
+| V14 | R20, R21 | The repository's required CI checks on the pull request. | All pass. | Pending |
+
+V1 and V4 to V11 run in `tests/cascader-browser.test.js`, one test per check, except V11's forced colors part. V2 runs in `tests/cascader.test.js`.
+
+## Manual checks
+
+These are not merge conditions.
+
+| ID | Covers | Action | Expected result | Result |
+| --- | --- | --- | --- | --- |
+| M1 | R2, R4, R8, R13 | With NVDA in Firefox and VoiceOver in Safari, open the field, move through three columns, commit a leaf, and submit a required field empty. | The field reads as a combobox with a dialog popup. Each column is announced with its name, and the selected path options read as selected. The committed path is read on return to the input, and the required message is read with the field. | Pending |
+| M2 | R19 | Open the docs example in light and dark themes and in a narrow window. | The popover matches a menu's surface and shape, and the columns stay readable. | Pending |
+
+## Merge conditions
+
+- V1, the roadmap's completion check, passes in Chromium, Firefox and WebKit.
+- V2 and V3, the jsdom and semantics tests, pass.
+- V4 to V10, the keyboard, ARIA and form state browser tests, pass in all three engines.
+- V11 to V13 pass, so the styles, budget, AutoInit and generated-file checks hold.
+- V14, the repository's required CI checks and reviews, pass.
