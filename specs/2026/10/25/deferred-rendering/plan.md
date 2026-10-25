@@ -21,11 +21,11 @@ Covers R1, R3 (evidence only).
 
 Prerequisites: group 1.
 
-- [ ] Add `src/sass/utilities/_defer-render.scss` with `.defer-render > *` setting `content-visibility: auto` and `contain-intrinsic-size: auto var(--expressive-row-size, rem(56px))`.
-- [ ] Inside `.list.defer-render`, default `--expressive-row-size` to `var(--md-comp-list-item-height)`.
-- [ ] Give `:focus-visible` content inside deferred rows `outline-offset: -3px`, and check that the selector beats the `focus-visible` mixin's offset in `_list.scss`.
-- [ ] Forward the partial from `src/sass/utilities/_index.scss` with a one-line comment like its neighbours.
-- [ ] Run `npm run build:css` and confirm `dist/css/expressive.css` holds the rules.
+- [x] Add `src/sass/utilities/_defer-render.scss` with `.defer-render > *` setting `content-visibility: auto` and `contain-intrinsic-block-size: auto var(--defer-render-row-size, var(--md-comp-list-item-height, rem(56px)))`.
+- [x] Inside `.list`, fall back to `--md-comp-list-item-height` before `rem(56px)`.
+- [x] Give `:focus-visible` content inside deferred rows `outline-offset: -3px`, and check that it beats the `focus-visible` mixin's offset in `_list.scss`. It does through layer order: utilities come after components.
+- [x] Forward the partial from `src/sass/utilities/_index.scss` with a one-line comment like its neighbours.
+- [x] Run `npm run build:css` and confirm `dist/css/expressive.css` holds the rules.
 
 Completion check: the built CSS contains `.defer-render>*` with both declarations, and a `custom.scss` build without the partial does not.
 
@@ -37,7 +37,7 @@ Prerequisites: group 2.
 
 - [ ] Add `tests/defer-render-browser.test.js`, looping over Chromium, Firefox and WebKit, with a 5,000-row `.list.defer-render` fixture inside a fixed-height scroll container.
 - [ ] Case for V1: the link in an off-screen row reports `checkVisibility({ contentVisibilityAuto: true })` false, then true after it scrolls into view.
-- [ ] Case for V2: a skipped row's block size equals `--expressive-row-size`, and a custom value on the list changes it.
+- [ ] Case for V2: a skipped row's block size equals `--defer-render-row-size`, and a custom value on the list changes it.
 - [ ] Case for V3: tab to a link that fills a deferred row and check that the outline sits inside the row box.
 - [ ] Case for V4: an off-screen row's text appears in the list's ARIA snapshot and is found by `window.find()` where the engine has it.
 - [ ] Run the file against a build without group 2 and confirm V1 to V3 fail, then against the new build and confirm all cases pass. Tear down the page in `finally` blocks.
@@ -50,7 +50,7 @@ Covers R1, R2, R3, R4.
 
 Prerequisites: group 3.
 
-- [ ] Document `.defer-render` and `--expressive-row-size` on `docs/src/pages/lists.astro`, with a live long list, the table limit, the clipping and containing-block effects, and when a virtual list is still needed.
+- [ ] Document `.defer-render` and `--defer-render-row-size` on `docs/src/pages/lists.astro`, with a live long list, the table limit, the clipping and containing-block effects, and when a virtual list is still needed.
 - [ ] Add the same text to the Lists section of `llm.md`.
 - [ ] Add an Added entry to `CHANGELOG.md` under Unreleased.
 - [ ] Rebuild, measure the CSS gzip size from the merge-base build, and add a reviewed budget line to `tests/selective-builds.test.js`.
