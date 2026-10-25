@@ -8,11 +8,11 @@ Work on `feature/2026-10-25-loading-overlay`. Tests run against built bundles, s
 
 Prerequisites: none.
 
-- [ ] In Chromium, Firefox and WebKit through Playwright, set `inert` on a region holding a button and a text field. Record whether a click on the button fires its handler and whether Tab from a control before the region lands on a control after it.
-- [ ] Focus the text field, then set `inert` on the region. Record `document.activeElement` afterwards and whether `blur` or `focusout` fires.
-- [ ] Put an absolutely positioned `::after` with `inset: 0` on a region that scrolls itself, scroll it to the bottom, and screenshot whether the pseudo-element still covers the visible box.
-- [ ] In Firefox with forced colors on (see the forced-colors memory for the prefs), screenshot a translucent scrim over text with a `.loading-indicator` on top.
-- [ ] Write the findings into the Technical constraints section of requirements.md. If a result contradicts R2 or R5 in any engine, stop and ask the user before group 2.
+- [x] In Chromium, Firefox and WebKit through Playwright, set `inert` on a region holding a button and a text field. Record whether a click on the button fires its handler and whether Tab from a control before the region lands on a control after it.
+- [x] Focus the text field, then set `inert` on the region. Record `document.activeElement` afterwards and whether `blur` or `focusout` fires.
+- [x] Put an absolutely positioned `::after` with `inset: 0` on a region that scrolls itself, scroll it to the bottom, and screenshot whether the pseudo-element still covers the visible box.
+- [x] In Firefox with forced colors on (see the forced-colors memory for the prefs), screenshot a translucent scrim over text with a `.loading-indicator` on top.
+- [x] Write the findings into the Technical constraints section of requirements.md. If a result contradicts R2 or R5 in any engine, stop and ask the user before group 2.
 
 Completion check: requirements.md records each engine's result for the four probes, and the probe script is not committed.
 
@@ -23,7 +23,7 @@ Covers R2, R3, R5, R6 (evidence only).
 Prerequisites: group 1.
 
 - [ ] Add `src/sass/components/_loading-overlay.scss` and forward it from `components/_index.scss`.
-- [ ] Draw the scrim and centre the `.loading-indicator` child while `[aria-busy="true"]`, hidden otherwise, with a fade on opacity. Pick the scrim colour after looking at it over light and dark content.
+- [ ] Draw the scrim and centre the `.loading-indicator` child while `[aria-busy="true"]`, hidden otherwise, with a fade on opacity. Use the surface-wash scrim colour the probe settled.
 - [ ] Use the technique group 1 found for regions that scroll themselves, or record the wrapper rule for the docs.
 - [ ] Add the forced-colors rule from group 1 and a reduced-motion `transition: none` block.
 - [ ] Style `.loading-overlay-status` with the `visually-hidden` mixin.

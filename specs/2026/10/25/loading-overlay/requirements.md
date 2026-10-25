@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 41, loading overlay
 Branch: `feature/2026-10-25-loading-overlay`
 Base: `origin/master` at `a9bbf77ad` (#425)
-Status: specified; not implemented
+Status: in progress
 
 Follow the [mission's agreed scope for components and behaviors](../../../../mission.md#agreed-scope), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 41](../../../../roadmap.md#phase-41-loading-overlay). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -61,7 +61,7 @@ These follow from the code and can change during implementation if the code or t
 - Make the whole region inert, indicator included. Inert content leaves the accessibility tree, so the indicator's own `role="status"` goes quiet while busy and the status element from R4 does the announcing. The indicator keeps the markup it has everywhere else, so `semantics.json` needs no special case for it.
 - Put the styles in `src/sass/components/_loading-overlay.scss`, forwarded from `components/_index.scss` next to `pull-to-refresh`.
 - Key the CSS on `.loading-overlay[aria-busy="true"]`, so the scrim and indicator also show before the script starts. Input stays open until then.
-- Draw the scrim on the region's `::after` with `position: absolute; inset: 0`, and position the indicator the same way with `margin: auto`. The region gets `position: relative` unless it is already positioned. Whether the scrim colour is `--md-comp-scrim-color` or a surface tint is settled in plan group 2, by looking at it over light and dark content.
+- Draw the scrim on the region's `::after` with `position: absolute; inset: 0`, and position the indicator the same way with `margin: auto`. The region gets `position: relative` unless it is already positioned. The probe settled the scrim colour as a surface wash; see the probe results.
 - Name the status element's class `.loading-overlay-status`, matching `.pull-to-refresh-status`.
 - Register the component as `LoadingOverlay` with the key `Expressive_LoadingOverlay`, and watch the attribute with a `MutationObserver` filtered to `aria-busy`, as `chips.ts` and `questionnaire.ts` filter theirs.
 - Give the component its own docs page, `docs/src/pages/loading-overlay.astro`, as pull-to-refresh has.
@@ -79,6 +79,16 @@ None.
 - Under reduced motion, keep a per-component `transition: none`. The documented `:root` duration override beats the layered token zeroing in `tokens/_motion.scss`.
 - A new AutoInit component needs a `semantics.json` row first, a `tests/fixtures.js` entry and the `AUTO_INIT_FIXTURES.length` count in `tests/autoinit.test.js`, the hardcoded guide counts in the skill tests, both AutoInit registry tables in `llm.md`, `docs/src/pages/auto-init.astro`, and a hand-written entry in `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`.
 - New functions stay below cyclomatic complexity 5, or the fallow pre-commit gate fails.
+
+### Probe results on 2026-10-25
+
+Plan group 1 ran in Playwright's Chromium, Firefox and WebKit against the base build.
+
+- With `inert` on a region, a mouse click on its button fired no handler, and Tab from the button before the region landed on the button after it, in all three engines.
+- Setting `inert` on a region while its text field had focus fired `blur` and `focusout` on the field, and `document.activeElement` became `<body>`, in all three engines. Removing `inert` left focus on `<body>`. So R5 holds as written: the component records the focused element before it sets `inert`, and on clear it refocuses that element if focus is still on `<body>`.
+- In a region that scrolls itself, an `::after` with `position: absolute; inset: 0` scrolled away with the content: at the bottom of the scroll, none of the scrim was visible. The docs tell authors to put `.loading-overlay` on a wrapper around a scroller, and the component styles do not try to cover a scrolling region.
+- In forced colors (Firefox with `browser.display.document_color_use: 2`, and Chromium emulation), a translucent scrim disappeared entirely, and the `.loading-indicator` shape stayed visible. A scrim of `color-mix(in srgb, Canvas 70%, transparent)` with `forced-color-adjust: none` dimmed the text beneath it in both. The overlay uses that in forced colors, so the content still looks unavailable.
+- Scrim colour, settled from the probe: a surface wash, `color-mix(in oklab, var(--md-sys-color-surface) 70%, transparent)`, through a `--md-comp-loading-overlay-scrim-color` token. It matches the forced-colors scrim, dims the content the way disabled content looks, and avoids darkening part of a page the way the 32% modal scrim does.
 
 ## Dependencies
 
