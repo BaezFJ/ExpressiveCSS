@@ -421,5 +421,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the funnel chart: the label column, centered stages that grow from their old width and keep their color in forced colors, and the row band: 88,205 gzip bytes (+620 over master's 87,585 build).
   // Reviewed the transfer list: two outlined lists that scroll, the buttons between them, stacking below medium and flipped icons in RTL: 88,345 gzip bytes (+140).
   // Reviewed the treemap chart: the chart() plot and tooltip with absolutely placed rectangles: 88,714 gzip bytes (+369).
-  assert.ok(sizes(css).gzip <= 88714, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed treemap chart colors, the gap as an inset fill, names and cells that show only where they fit, and forced-color edges: 89,024 gzip bytes (+310).
+  assert.ok(sizes(css).gzip <= 89024, `CSS gzip: ${sizes(css).gzip}`);
 });

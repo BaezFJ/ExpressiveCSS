@@ -113,6 +113,54 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 
+  browserTest(`${engine}: treemap chart colors rectangles in table order, parts them by a gap and writes in those that fit`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      const drawn = await page.locator('#ltr').evaluate((el) => {
+        const gap = parseFloat(getComputedStyle(el).getPropertyValue('--md-comp-treemap-chart-gap'));
+        return [...el.querySelectorAll('.treemap-chart-box')].map((box) => {
+          const fill = getComputedStyle(box, '::before');
+          const outer = box.getBoundingClientRect();
+          return {
+            name: box.firstElementChild.textContent,
+            series: box.dataset.series,
+            inset: [fill.top, fill.right, fill.bottom, fill.left].map(parseFloat),
+            gap,
+            colored: fill.backgroundColor !== 'rgba(0, 0, 0, 0)',
+            text: [...box.children].map((span) => {
+              const inner = span.getBoundingClientRect();
+              return {
+                text: span.textContent,
+                visible: span.checkVisibility(),
+                inside: inner.left >= outer.left && inner.right <= outer.right && inner.top >= outer.top && inner.bottom <= outer.bottom,
+              };
+            }),
+          };
+        });
+      });
+
+      assert.deepEqual(drawn.map(({ name, series }) => [name, series]),
+        teams.map(([team], i) => [team, String(i + 1)]), 'six colors in table order');
+      for (const { name, inset, gap, colored } of drawn) {
+        assert.ok(gap > 0, 'the gap token is set');
+        assert.deepEqual(inset, [gap / 2, gap / 2, gap / 2, gap / 2], `${name}: the fill stops half the gap inside each edge`);
+        assert.ok(colored, `${name} is filled`);
+      }
+      const text = Object.fromEntries(drawn.map(({ name, text }) => [name, text]));
+      assert.deepEqual(text.Engineering, [
+        { text: 'Engineering', visible: true, inside: true },
+        { text: '600', visible: true, inside: true },
+      ], 'a large rectangle shows its name and cell');
+      assert.deepEqual(text.Legal.map(({ visible }) => visible), [false, false], 'a thin rectangle shows neither');
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: treemap chart draws nothing for a zero, negative or non-numeric row`, async () => {
     const browser = await leaseBrowser(browserType);
     try {

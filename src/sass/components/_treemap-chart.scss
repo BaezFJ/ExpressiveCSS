@@ -7,10 +7,44 @@
 // chart(). The script places each rectangle with inset-inline-start, top,
 // width and height in percent, so a right-to-left page mirrors the layout.
 //
+// The fill is a ::before inset by half the gap, so the boxes still tile the
+// plot and keep their areas. Each rectangle is a size
+// container: its row name and cell show when there is room for them, and
+// neither shows in a rectangle too small to hold them.
+//
 // Tokens:
-//   --md-comp-treemap-chart-height   240px
+//   --md-comp-treemap-chart-height       240px
+//   --md-comp-treemap-chart-gap          4px between neighbours
+//   --md-comp-treemap-chart-color-1..6   primary, tertiary, secondary,
+//                                        on-surface-variant, then primary- and
+//                                        tertiary-container deepened toward
+//                                        on-surface, as in the pie chart
+//   --md-comp-treemap-chart-on-color-1..6  on-primary, on-tertiary,
+//                                          on-secondary, surface, surface,
+//                                          surface; the text in each
 
 @include chart("treemap-chart");
+
+.treemap-chart {
+  --md-comp-treemap-chart-gap: 4px;
+  // As in the pie chart: the container roles mixed 45% with on-surface pass
+  // 3:1 on the surface (WCAG 1.4.11), and surface text on them passes too.
+  --md-comp-treemap-chart-color-5: color-mix(in oklab, var(--md-sys-color-primary-container) 45%, var(--md-sys-color-on-surface));
+  --md-comp-treemap-chart-color-6: color-mix(in oklab, var(--md-sys-color-tertiary-container) 45%, var(--md-sys-color-on-surface));
+  --md-comp-treemap-chart-on-color-1: var(--md-sys-color-on-primary);
+  --md-comp-treemap-chart-on-color-2: var(--md-sys-color-on-tertiary);
+  --md-comp-treemap-chart-on-color-3: var(--md-sys-color-on-secondary);
+  --md-comp-treemap-chart-on-color-4: var(--md-sys-color-surface);
+  --md-comp-treemap-chart-on-color-5: var(--md-sys-color-surface);
+  --md-comp-treemap-chart-on-color-6: var(--md-sys-color-surface);
+}
+
+@for $i from 1 through 6 {
+  .treemap-chart [data-series="#{$i}"] {
+    --treemap-chart-color: var(--md-comp-treemap-chart-color-#{$i});
+    --treemap-chart-on-color: var(--md-comp-treemap-chart-on-color-#{$i});
+  }
+}
 
 .treemap-chart-plot {
   border: 0;
@@ -23,8 +57,56 @@
 }
 
 .treemap-chart-box {
+  --treemap-chart-inset: calc(var(--md-comp-treemap-chart-gap) / 2);
+
   position: absolute;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
   overflow: hidden;
-  background-color: var(--treemap-chart-color);
+  color: var(--treemap-chart-on-color);
+  container-type: size;
+
+  // The fill, inset by half the gap. A border or padding would give a
+  // rectangle thinner than them a larger area than its value.
+  &::before {
+    content: "";
+    position: absolute;
+    inset: var(--treemap-chart-inset);
+    border-radius: var(--md-sys-shape-corner-small);
+    background-color: var(--treemap-chart-color);
+  }
+
+  > span {
+    position: relative;
+    overflow: hidden;
+    margin-inline: calc(var(--treemap-chart-inset) + 8px);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  > span:first-child {
+    margin-block-start: calc(var(--treemap-chart-inset) + 8px);
+    @include typescale("label-large");
+  }
+
+  > span:last-child {
+    @include typescale("body-small");
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// Room for both lines and a few letters of the name, inside the gap and margins.
+@container (width < #{rem(60px)}) or (height < #{rem(56px)}) {
+  .treemap-chart-box > span {
+    display: none;
+  }
+}
+
+@media (forced-colors: active) {
+  // The fill is painted as Canvas, so an edge just inside it marks each one.
+  .treemap-chart-box::before {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
 }
