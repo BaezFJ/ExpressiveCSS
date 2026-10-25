@@ -252,7 +252,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the loading overlay: inert while aria-busy is "true", the status region after it and focus put back on clear: 95,566 gzip bytes (+260).
   // Reviewed the loading overlay review fixes: the blurred control, its root node's focus and the deferred first announcement: 95,625 gzip bytes (+59).
   // Reviewed the sankey chart: flows read from the table, nodes in columns, links on one scale, node names and colors, link keys, pointer hits and tooltip, and update() motion: 97,012 gzip bytes (+1,387).
-  assert.ok(sizes(js).gzip <= 97012, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the funnel chart: a centered stage per row as wide as its value against the largest, and the tooltip's share of the first stage: 97,313 gzip bytes (+332 over master's 96,981 build).
+  assert.ok(sizes(js).gzip <= 97313, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -409,5 +410,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the loading overlay: the surface scrim and centred indicator while busy, their fade, the forced-colors wash and the hidden status region: 87,040 gzip bytes (+196).
   // Reviewed the loading overlay review fixes: isolation only while busy, the scrim and indicator above component layers, and the inherited radius: 87,044 gzip bytes (+4).
   // Reviewed the sankey chart: the shared chart parts, an unlined plot, filled nodes and links in six colors, the marked link, the tooltip and node names: 87,630 gzip bytes (+586).
-  assert.ok(sizes(css).gzip <= 87630, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the funnel chart: the label column, centered stages that grow from their old width and keep their color in forced colors, and the row band: 88,205 gzip bytes (+620 over master's 87,585 build).
+  assert.ok(sizes(css).gzip <= 88205, `CSS gzip: ${sizes(css).gzip}`);
 });

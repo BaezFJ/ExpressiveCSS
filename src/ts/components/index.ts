@@ -30,6 +30,7 @@ export { RadarChart } from "./radarChart";
 export { RadialChart } from "./radialChart";
 export { MixedChart } from "./mixedChart";
 export { ScatterChart } from "./scatterChart";
+export { FunnelChart } from "./funnelChart";
 export { SankeyChart } from "./sankeyChart";
 export { Datepicker } from "./datepicker";
 export { Menu } from "./menu";

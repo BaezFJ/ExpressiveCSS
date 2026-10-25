@@ -531,6 +531,22 @@ Feature gap: Nodes are not reached by keyboard or pointer, node order follows th
 
 Mapped browser scope: Hidden table, the named plot and its role description, link thickness and node height on one scale, columns, stacking order, skipped rows, node names and colors, right-to-left mirroring, keyboard steps in table order, the link under the pointer and a touch tap, update() motion, reduced motion and data-watch. No spoken-output assertion.
 
+## [Funnel chart](../../components/funnel-chart.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the data available as text, name the chart, label each stage, and let a keyboard reach every row the pointer can.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework draws the stages, their labels and the tooltip from the page's table with the line chart's runtime; the page owns the data, its order, its formatting and the caption.
+
+Verification gap: Stage widths, gaps, labels, the tooltip, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next check: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
+
+Feature gap: There are no tapered stages, colors per row, step-to-step conversion rates or horizontal funnels. Next check: None planned.
+
+Mapped browser scope: Hidden table, the named plot and its role description, one centered stage per row as wide as its value against the largest in left-to-right and right-to-left pages, gaps, labels beside their stages, the tooltip and its percentages, keyboard steps, the row under the pointer, update() motion and data-watch. No spoken-output assertion.
+
 ## [Timeline](../../components/timeline.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
