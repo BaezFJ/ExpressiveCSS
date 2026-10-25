@@ -77,6 +77,11 @@
     background-color: var(--treemap-chart-color);
   }
 
+  // The highlighted row's ring fills the gap round it.
+  &.active::before {
+    outline: var(--treemap-chart-inset) solid var(--md-sys-color-on-surface);
+  }
+
   > span {
     position: relative;
     overflow: hidden;
@@ -108,5 +113,10 @@
   .treemap-chart-box::before {
     outline: 1px solid CanvasText;
     outline-offset: -1px;
+  }
+
+  .treemap-chart-box.active::before {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
   }
 }

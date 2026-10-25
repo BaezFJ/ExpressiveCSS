@@ -1,4 +1,4 @@
-import { LineChart, LineChartOptions } from './lineChart';
+import { LineChart, LineChartOptions, numberFormat } from './lineChart';
 
 export type TreemapChartOptions = LineChartOptions;
 
@@ -7,6 +7,9 @@ type Box = [x: number, y: number, width: number, height: number];
 
 // ponytail: rows past six repeat the colors, so neighbours can match.
 const COLORS = 6;
+/** The keys that move to the next row and to the one before, in any direction. */
+const NEXT = ['ArrowRight', 'ArrowDown'];
+const PREVIOUS = ['ArrowLeft', 'ArrowUp'];
 
 const sum = (areas: number[]) => areas.reduce((total, area) => total + area, 0);
 
@@ -61,6 +64,18 @@ function squarify(areas: number[], free: Box): Box[] {
   return [...boxes, ...strip(row, free)[0]];
 }
 
+/** Whether a point, as fractions of the plot, lies in a box. */
+const inside = ([x, y, width, height]: Box, at: number, down: number) =>
+  at >= x && at < x + width && down >= y && down < y + height;
+
+/**
+ * The tooltip's top or bottom for a box: from its top in the plot's upper
+ * half, and up from its bottom in the lower half, so it stays in the plot.
+ */
+const hang = (y: number, height: number) => (y + height / 2 > 0.5
+  ? { top: 'auto', bottom: `${(1 - y - height) * 100}%` }
+  : { top: `${y * 100}%`, bottom: 'auto' });
+
 /**
  * Treemap chart. It reads its <table> like LineChart, but draws each row of
  * the first value column as a rectangle whose area is its share of the
@@ -95,6 +110,67 @@ export class TreemapChart extends LineChart {
   }
 
   static key = 'Expressive_TreemapChart';
+
+  /**
+   * Highlights one row: outlines its rectangle and fills the tooltip, with
+   * the row's share. A row with no rectangle passes to the next one with
+   * one, as when focus asks for the first row. Pass -1 to hide them.
+   */
+  show(index: number) {
+    const row = this._drawnFrom(index);
+    if (!this._tooltip || row === this.activeIndex) return;
+    this._boxes.forEach((box, i) => box?.classList.toggle('active', i === row));
+    super.show(row);
+    this._share(row);
+  }
+
+  /** The first row from `index` on with a rectangle, or -1. */
+  private _drawnFrom(index: number) {
+    return index < 0 ? index : this._boxes.findIndex((box, i) => i >= index && box);
+  }
+
+  /** Adds the row's share of the whole to its cell in the tooltip, as the pie chart writes it. */
+  private _share(row: number) {
+    if (row < 0) return;
+    const share = this._values[row] / sum(this._values);
+    // Whole percentages, with a tenth below 10% so a small part is not 0%.
+    const percent = numberFormat(this.el, { style: 'percent', maximumFractionDigits: share < 0.1 ? 1 : 0 });
+    this._tooltip.querySelector('span:nth-of-type(2)')!.textContent += ` (${percent.format(share)})`;
+  }
+
+  /**
+   * Opens the tooltip from the middle of the row's rectangle toward the
+   * middle of the plot.
+   */
+  protected _place(index: number) {
+    const [x, y, width, height] = this._places[index];
+    const middle = x + width / 2;
+    const left = this._reversed ? 1 - middle : middle;
+    Object.assign(this._tooltip.style, { left: `${left * 100}%`, ...hang(y, height) });
+    this._tooltip.classList.toggle('end', left > 0.5);
+  }
+
+  /** The row whose rectangle is under the pointer, or -1. */
+  protected _indexAt(e: PointerEvent) {
+    const box = this._plot.getBoundingClientRect();
+    const across = (e.clientX - box.left) / box.width;
+    const [at, down] = [this._reversed ? 1 - across : across, (e.clientY - box.top) / box.height];
+    return this._places.findIndex((place) => place && inside(place, at, down));
+  }
+
+  /**
+   * The arrows step through the rows with a rectangle in table order, which
+   * runs in no one direction on screen, so they do not swap in a
+   * right-to-left page. Home and End go to the first and last of them.
+   */
+  protected _keyTarget(key: string): number | undefined {
+    const drawn = this._boxes.flatMap((box, i) => (box ? [i] : []));
+    const [at, last] = [drawn.indexOf(this.activeIndex), drawn.length - 1];
+    const step = NEXT.includes(key) ? Math.min(at + 1, last)
+      : PREVIOUS.includes(key) ? Math.max(at - 1, 0)
+      : ({ Home: 0, End: last } as Record<string, number>)[key];
+    return step === undefined ? super._keyTarget(key) : drawn[step];
+  }
 
   destroy() {
     this._sizes?.disconnect();

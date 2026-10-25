@@ -16,14 +16,19 @@ const figure = (attrs, rows) => `<figure ${attrs}>
 
 // Six teams out of order, two of them equal, summing to 1,200.
 const teams = [['Design', '120'], ['Research', '300'], ['Sales', '80'], ['Support', '80'], ['Engineering', '600'], ['Legal', '20']];
+// The same with nothing for the first row, which then draws no rectangle.
+const noDesign = teams.map(([team, value]) => [team, team === 'Design' ? '0' : value]);
 
 const html = `<style>${css}</style>
   <div style="width: 600px">
     ${figure('class="treemap-chart" id="ltr"', teams)}
     ${figure('class="treemap-chart" id="gaps"', teams.map(([team, value]) => [team, { Research: '0', Sales: '-5', Legal: 'n/a' }[team] ?? value]))}
+    ${figure('class="treemap-chart" id="keys"', noDesign)}
+    ${figure('class="treemap-chart" id="watched" data-watch', teams)}
   </div>
   <div style="width: 600px" dir="rtl">
     ${figure('class="treemap-chart" id="rtl"', teams)}
+    ${figure('class="treemap-chart" id="rtl-keys"', noDesign)}
   </div>
   <script>${js}</script>`;
 
@@ -55,10 +60,10 @@ function proportional({ plot: [width, height], boxes: drawn }, values, message) 
     sum += w * h;
   }
   assert.ok(Math.abs(sum - width * height) <= width * height * 0.01, `${message}: the areas sum to the plot's, ${sum}`);
+  // Percent edges round to the engine's layout units, so neighbours may share a sliver.
   drawn.forEach(({ name, box: a }, i) => drawn.slice(i + 1).forEach(({ name: other, box: b }) => {
-    const overlap = Math.max(0, Math.min(a[0] + a[2], b[0] + b[2]) - Math.max(a[0], b[0]))
-      * Math.max(0, Math.min(a[1] + a[3], b[1] + b[3]) - Math.max(a[1], b[1]));
-    assert.ok(overlap <= 1, `${message}: ${name} and ${other} overlap by ${overlap}`);
+    const overlap = [0, 1].map((axis) => Math.min(a[axis] + a[axis + 2], b[axis] + b[axis + 2]) - Math.max(a[axis], b[axis]));
+    assert.ok(Math.min(...overlap) <= 0.5, `${message}: ${name} and ${other} overlap by ${overlap}`);
   }));
 }
 
@@ -72,6 +77,15 @@ const layout = {
   Support: [450, 168, 400 / 3, 72],
   Legal: [450 + 400 / 3, 96, 50 / 3, 144],
 };
+
+/** Runs in the page: the tooltip's text, or null while it is hidden, and the outlined rectangle's name. */
+const highlight = (page, id) => page.locator(id).evaluate((el) => {
+  const tooltip = el.querySelector('.treemap-chart-tooltip');
+  return {
+    tooltip: tooltip.hidden ? null : tooltip.innerText.replace(/\s+/g, ' ').trim(),
+    active: [...el.querySelectorAll('.treemap-chart-box.active')].map((box) => box.firstElementChild.textContent),
+  };
+});
 
 for (const [engine, browserType, browserTest] of engines) {
 
@@ -172,6 +186,104 @@ for (const [engine, browserType, browserTest] of engines) {
 
       proportional(await boxes(page, '#gaps'), { Design: 120, Support: 80, Engineering: 600 }, '#gaps');
       assert.deepEqual(errors, []);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: treemap chart steps through its rectangles by key in table order, in either direction`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      // 300 of 1,080 is 28%, and 20 is 1.9%.
+      const research = { tooltip: 'Research Budget 300 (28%)', active: ['Research'] };
+      const sales = { tooltip: 'Sales Budget 80 (7.4%)', active: ['Sales'] };
+      const legal = { tooltip: 'Legal Budget 20 (1.9%)', active: ['Legal'] };
+      for (const id of ['#keys', '#rtl-keys']) {
+        // Keyboard focus, as Tab gives it, shows the first row with a rectangle.
+        await page.locator(`${id} .treemap-chart-plot`).focus();
+        await page.keyboard.press('Shift+Tab');
+        await page.keyboard.press('Tab');
+        assert.deepEqual(await highlight(page, id), research, `${id}: focus skips the empty first row`);
+        await page.keyboard.press('ArrowRight');
+        assert.deepEqual(await highlight(page, id), sales, `${id}: ArrowRight`);
+        await page.keyboard.press('ArrowUp');
+        assert.deepEqual(await highlight(page, id), research, `${id}: ArrowUp`);
+        await page.keyboard.press('ArrowDown');
+        assert.deepEqual(await highlight(page, id), sales, `${id}: ArrowDown`);
+        await page.keyboard.press('End');
+        assert.deepEqual(await highlight(page, id), legal, `${id}: End`);
+        await page.keyboard.press('ArrowRight');
+        assert.deepEqual(await highlight(page, id), legal, `${id}: the last row stays put`);
+        await page.keyboard.press('Home');
+        assert.deepEqual(await highlight(page, id), research, `${id}: Home`);
+        await page.keyboard.press('ArrowLeft');
+        assert.deepEqual(await highlight(page, id), research, `${id}: the first row stays put`);
+        await page.keyboard.press('Escape');
+        assert.deepEqual(await highlight(page, id), { tooltip: null, active: [] }, `${id}: Escape`);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: treemap chart highlights the rectangle under the pointer, with the tooltip inside the plot`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      for (const id of ['#ltr', '#rtl']) {
+        await page.locator(id).scrollIntoViewIfNeeded();
+        const box = await page.locator(`${id} .treemap-chart-box`).nth(2).boundingBox();
+        await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+        assert.deepEqual(await highlight(page, id), { tooltip: 'Sales Budget 80 (6.7%)', active: ['Sales'] }, id);
+        const inside = await page.locator(id).evaluate((el) => {
+          const [plot, tip] = [el.querySelector('.treemap-chart-plot'), el.querySelector('.treemap-chart-tooltip')].map((part) => part.getBoundingClientRect());
+          return tip.left >= plot.left && tip.right <= plot.right && tip.top >= plot.top && tip.bottom <= plot.bottom;
+        });
+        assert.ok(inside, `${id}: the tooltip stays inside the plot`);
+        await page.mouse.move(0, 0);
+        assert.deepEqual(await highlight(page, id), { tooltip: null, active: [] }, `${id}: leaving the plot hides it`);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: treemap chart update() lays the rectangles out again in place, and data-watch redraws`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+
+      // Focus on the second row, then double its value.
+      await page.locator('#ltr .treemap-chart-plot').focus();
+      await page.keyboard.press('Tab');
+      await page.keyboard.press('Shift+Tab');
+      await page.keyboard.press('ArrowRight');
+      const after = await page.locator('#ltr').evaluate((el) => {
+        el.querySelectorAll('tbody td')[1].textContent = '600';
+        Expressive.TreemapChart.getInstance(el).update();
+        return {
+          focused: document.activeElement === el.querySelector('.treemap-chart-plot'),
+          animations: el.getAnimations({ subtree: true }).length,
+        };
+      });
+      assert.deepEqual(after, { focused: true, animations: 0 }, 'focus stays on the plot, and nothing animates');
+      assert.deepEqual(await highlight(page, '#ltr'), { tooltip: 'Research Budget 600 (40%)', active: ['Research'] });
+      const doubled = Object.fromEntries(teams.map(([team, value]) => [team, team === 'Research' ? 600 : Number(value)]));
+      proportional(await boxes(page, '#ltr'), doubled, 'after update()');
+
+      // data-watch redraws once the table changes, with no update() call: Engineering grows from half the width.
+      await page.locator('#watched').evaluate((el) => { el.querySelectorAll('tbody td')[4].textContent = '1200'; });
+      await page.waitForFunction(() => document.querySelector('#watched .treemap-chart-box:nth-child(5)').style.width !== '50%');
+      proportional(await boxes(page, '#watched'), Object.fromEntries(teams.map(([team, value]) => [team, team === 'Engineering' ? 1200 : Number(value)])), 'data-watch');
     } finally {
       await browser.close();
     }
