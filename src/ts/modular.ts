@@ -30,6 +30,7 @@ export type * from './components/particles';
 export type * from './components/keypad';
 export type * from './components/characterCounter';
 export type * from './components/chips';
+export type * from './components/cascader';
 export type * from './components/lineChart';
 export type * from './components/columnChart';
 export type * from './components/barChart';

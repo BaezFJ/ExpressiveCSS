@@ -16,6 +16,7 @@ export { InputMask } from "./inputMask";
 export { ShowMore } from "./showMore";
 export { HoverCard } from "./hoverCard";
 export { CurrencyInput } from "./currencyInput";
+export { Cascader } from "./cascader";
 export { Confetti } from "./confetti";
 export { Particles } from "./particles";
 export { Keypad } from "./keypad";

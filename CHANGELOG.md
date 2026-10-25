@@ -361,6 +361,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   digit stays as typed and marks the field invalid, with a message `i18n`
   can replace. The instance's `value` returns the number. A new semantics
   rule keeps `data-currency` on text inputs.
+- Cascader. A `.field.cascader` with a named text input and nested
+  `ul.cascader-options` lists shows the options as columns in a popover,
+  where each choice opens the next column. Arrow keys, Home, End, Enter,
+  Space, Escape and Tab move through the columns, swapped under `rtl`.
+  Choosing a leaf shows the path in the input and fires `input` and
+  `change`, and the form gets one entry per level, such as `place=us`,
+  `place=ca`, `place=sf`, through a form-associated control. `data-selected`
+  on a leaf sets the starting path, which a reset brings back, and
+  `required` blocks submit until a path is chosen. New semantics rules keep
+  the source lists plain and every option valued.
 
 - A `data-draggable` map marker moves without a drag (WCAG 2.5.7). A tap
   picks it up and sets `aria-pressed`, and the next tap on the map drops it
@@ -1069,6 +1079,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   no styles. Use `isDateRange` for range selection.
 
 ### Changed
+
+- Chips' form-associated control moved to a shared core module, which the
+  cascader uses too. The control gained `checkValidity()` and
+  `reportValidity()`.
 
 - An open menu is a popover in the browser's top layer. This covers Menu,
   Select, Autocomplete, the menubar, Chips suggestions and the date

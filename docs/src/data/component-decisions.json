@@ -8146,6 +8146,96 @@
       }
     },
     {
+      "slug": "cascader",
+      "title": "Cascader",
+      "aliases": [
+        "cascading select",
+        "column picker",
+        "nested select",
+        "path picker"
+      ],
+      "guideSource": {
+        "pageId": "cascader",
+        "heading": "Cascader",
+        "headingLevel": 2,
+        "semantics": [
+          "cascader"
+        ]
+      },
+      "jobs": [
+        "Picks a path through nested options shown in columns and submits every level."
+      ],
+      "useWhen": [
+        "A path through a known hierarchy of a few levels, such as country, region and city, where the server needs every level."
+      ],
+      "avoidWhen": [
+        "A flat list or one level of groups, which a select covers, a deep or searchable hierarchy, or several paths at once."
+      ],
+      "alternatives": [
+        "select",
+        "tree"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/cascader.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#cascader",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "Nested lists with data-value read into listbox columns in a popover anchored to a read-only combobox input; click and keyboard navigation with arrows, Home, End, Enter, Space, Escape and Tab, swapped under rtl; leaf-only commits shown as joined labels with input and change events; one form entry per level through a form-associated control; data-selected starting path, reset, required with i18n.required, aria-invalid and disabled state.",
+          "webAdaptation": "The author's nested lists stay hidden as the source. A manual popover opened with the input as its source uses CSS anchor positioning, and a form-associated expressive-cascader-control wraps the input and submits the path, so the browser handles reset, validity and disabled state.",
+          "limitations": [
+            "Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified. There is no search, type-ahead, multiple selection or lazy loading, and only a leaf commits."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the field a labelled input that reads as a combobox, name every column, show which options form the open path, reach every option from the keyboard in both directions, close without committing on Escape, and submit every level of the path."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A shipping form asks for country, region and city in one field: a .cascader with three levels submits place=us, place=ca and place=sf; a single country choice stays a select.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/ts/components/cascader.ts",
+            "sha256": "9ef77d466edd9c8cde4b66a043cecd8ef55da76ea544b8ef88831051fdabb544"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified.",
+            "nextStep": "Move through three columns and commit a leaf with NVDA in Firefox and VoiceOver in Safari."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/cascader-browser.test.js",
+            "name": "chromium: the roadmap check: choosing an option in each of three columns submits the three values as one path",
+            "scope": "Clicks through three columns, the joined labels in the input, and the three values in FormData and the submit event, through the wrapping control."
+          },
+          {
+            "file": "tests/cascader-browser.test.js",
+            "name": "chromium: the keyboard opens the field, moves through the columns, commits a leaf and closes",
+            "scope": "Each opening key, arrows without wrapping, Home and End, the next and previous column, Escape, Tab and Shift+Tab closing without committing, and Space committing a leaf."
+          }
+        ]
+      }
+    },
+    {
       "slug": "checkboxes",
       "title": "Checkboxes",
       "aliases": [
@@ -13485,5 +13575,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "e58a5f3e5415af86cfb165c364859291d1bd2b5e"
+  "sourceRevision": "9e815704a0c88f2db77ed873588c89e61544c7a7"
 }

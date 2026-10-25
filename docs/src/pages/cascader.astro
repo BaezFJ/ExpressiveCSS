@@ -1,0 +1,120 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "keyboard", label: "Keyboard" },
+  { id: "value", label: "The submitted path" },
+  { id: "methods", label: "Options and methods" },
+]);
+---
+<DocsLayout page="cascader" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A cascader picks a path through nested options shown in columns. Each choice
+          opens the next column, and the form submits the whole path.
+        </p>
+        <p>
+          Write a <a href={route('text_inputs')}>text field</a> with the
+          <code>cascader</code> class, holding a named <code>&lt;input&gt;</code>, its
+          label and a <code>ul.cascader-options</code> of nested lists. Each
+          <code>&lt;li&gt;</code> holds a <code>data-value</code>, and its label is its own
+          text. <code>AutoInit()</code> starts every <code>.cascader</code>; the lists stay
+          hidden, and the columns are built from them. Mark a leaf
+          <code>data-selected</code> to start with its path.
+        </p>
+        <div class="mb-3" style="max-width: 24rem;">
+          <div class="field cascader">
+            <input id="demo-place" name="place" type="text">
+            <label for="demo-place">Place</label>
+            <ul class="cascader-options">
+              <li data-value="us">United States
+                <ul>
+                  <li data-value="ca">California
+                    <ul>
+                      <li data-value="sf">San Francisco</li>
+                      <li data-value="la">Los Angeles</li>
+                    </ul>
+                  </li>
+                  <li data-value="ny">New York
+                    <ul>
+                      <li data-value="nyc">New York City</li>
+                      <li data-value="buf">Buffalo</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li data-value="mx">Mexico
+                <ul>
+                  <li data-value="jal">Jalisco
+                    <ul>
+                      <li data-value="gdl" data-selected>Guadalajara</li>
+                      <li data-value="pv">Puerto Vallarta</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+<Code code={`
+<div class="field cascader">
+  <input id="place" name="place" type="text" required>
+  <label for="place">Place</label>
+  <ul class="cascader-options">
+    <li data-value="us">United States
+      <ul>
+        <li data-value="ca">California
+          <ul>
+            <li data-value="sf">San Francisco</li>
+            <li data-value="la">Los Angeles</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li data-value="mx">Mexico</li>
+  </ul>
+</div>
+`} />
+  </Section>
+  <Section {...S.keyboard}>
+        <p>
+          Enter, Space or ArrowDown opens the columns. ArrowDown and ArrowUp move within a
+          column, and Home and End go to its ends. ArrowRight or Enter on a branch opens the
+          next column, and ArrowLeft goes back to the option that opened it. Enter or Space
+          on a leaf commits the path. Escape and Tab close without committing and return
+          focus to the field. Under <code>dir="rtl"</code> the columns run right to left and
+          the arrow keys swap.
+        </p>
+  </Section>
+  <Section {...S.value}>
+        <p>
+          The field shows the path's labels, such as
+          <code>United States / California / San Francisco</code>, and fires
+          <code>input</code> and <code>change</code> when the path changes. The form gets
+          one entry per level under the input's name, in order, so
+          <code>new FormData(form).getAll('place')</code> returns
+          <code>['us', 'ca', 'sf']</code>. A form reset brings back the starting path.
+          With <code>required</code>, the form does not submit until a path is chosen. A
+          disabled field submits nothing.
+        </p>
+  </Section>
+  <Section {...S.methods}>
+        <p>
+          <code>i18n.required</code> replaces the message a required field shows, from
+          script or from <code>data-cascader-options</code> on the
+          <code>.cascader</code>.
+        </p>
+<Code code={`
+const place = Expressive.Cascader.getInstance(document.querySelector('.cascader'));
+place.value;     // ['us', 'ca', 'sf'], or [] before a path is chosen
+place.open();    // opens the columns at the chosen path
+place.close();
+place.destroy(); // removes the columns and gives the input back its name
+`} />
+  </Section>
+</DocsLayout>

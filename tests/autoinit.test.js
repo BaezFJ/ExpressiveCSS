@@ -51,7 +51,7 @@ describe("AutoInit", () => {
       selectors.length,
       "duplicate selector in fixtures",
     );
-    assert.equal(AUTO_INIT_FIXTURES.length, 45);
+    assert.equal(AUTO_INIT_FIXTURES.length, 46);
   });
 
   test("skips elements marked .no-autoinit", () => {

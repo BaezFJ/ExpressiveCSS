@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**106 of 106 rows enforced; 0 remaining.**
+**107 of 107 rows enforced; 0 remaining.**
 
-101 of those rows are components - a part of the framework an author writes markup for.
+102 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 101 components declare conformance debt.**
+**2 of 102 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -288,6 +288,24 @@ Swept 0.8.0. Material 3 items remain exposed because several can be visible at o
 - **hidden-subtree-holds-nothing-focusable** - Hidden from assistive technology but still in the tab order: focus lands on a control the user has no way to perceive. Take away the tab stop (tabindex="-1"), or mark the subtree inert when it is genuinely not displayed - inert also removes it from hit-testing, which is wrong for anything still visible.
 - **carousel-not-a-composite-widget** - A carousel takes no composite role; it is a group of slides with independent controls.
 - **carousel-indicators-are-not-tabs** - Carousel indicators are independent controls, not tabs.
+
+### cascader
+
+Added with the cascader component. The author writes a text input, its label and a ul.cascader-options of nested lists with one data-value per option; AutoInit builds the columns, their listbox and option roles and their states in a popover, so the author's lists stay plain lists.
+
+**Rejected role:** `listbox` is not withheld but declined - the author's lists are only the source the script reads and are never shown; the listbox columns it builds in the popover carry the roles, states and arrow-key contract. `cascader-lists-take-no-roles` enforces that.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `cascader-lists-take-no-roles` | forbid | `.cascader-options[role], .cascader-options [role]` | must not match |
+| `cascader-option-has-value` | forbid | `.cascader-options li:not([data-value])` | must not match |
+| `cascader-needs-a-text-field` | forbid | `.cascader > input:not(:is(:not([type]), [type="text" i]))` | must not match |
+| `cascader-input-is-named` | forbid | `.cascader:not(:has(> label[for])) > input:not([aria-label]):not([aria-labelledby])` | must not match |
+
+- **cascader-lists-take-no-roles** - Leave roles off .cascader-options and its items. The lists are the source the script reads; it builds the listbox columns, with their roles and states, itself.
+- **cascader-option-has-value** - Give every option in .cascader-options a data-value. The form submits one value per level of the chosen path, and an option without one submits an empty string.
+- **cascader-needs-a-text-field** - A .cascader shows the chosen path in an <input> of type text, which the script makes read-only. Other input types reject the path's labels.
+- **cascader-input-is-named** - Name the cascader's input with a <label for> in the field, or aria-label. The popover and its first column take their name from the same label.
 
 ### character-counter
 

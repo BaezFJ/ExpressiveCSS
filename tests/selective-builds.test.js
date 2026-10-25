@@ -264,7 +264,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed treemap chart keys in table order, the rectangle under the pointer and the tooltip with each row's share: 100,184 gzip bytes (+370).
   // Reviewed BackToTop: the threshold sentinel, the inert link kept while focused, the scroll to the top, focus on the href target with a temporary tabindex, modified clicks left alone and the threshold check: 100,828 gzip bytes (+644).
   // Reviewed show more: the toggle, the fit check with its focus, blur and font rechecks, the swapped label and destroy(): 101,521 gzip bytes (+693).
-  assert.ok(sizes(js).gzip <= 101521, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the cascader: nested options in listbox columns, keys in both directions, the path submitted through the form control it now shares with Chips in core/formControl, and the review fixes: 103,607 gzip bytes (+2,086).
+  assert.ok(sizes(js).gzip <= 103607, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -428,5 +429,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the treemap chart's ring round the highlighted rectangle, in Highlight under forced colors: 89,019 gzip bytes (+28).
   // Reviewed .back-to-top: the fixed corner link, its offset and stacking tokens, and the inert link hidden at once after a fade in: 89,129 gzip bytes (+110).
   // Reviewed show more: the rule that keeps a hidden button hidden despite the button display rule: 89,143 gzip bytes (+14).
-  assert.ok(sizes(css).gzip <= 89143, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the cascader: the hidden source lists, the popover surface and columns, the selected path, chevron, forced colors and the label floating through the form control: 89,668 gzip bytes (+525).
+  assert.ok(sizes(css).gzip <= 89668, `CSS gzip: ${sizes(css).gzip}`);
 });

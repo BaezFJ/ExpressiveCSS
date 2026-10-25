@@ -1,6 +1,7 @@
 import { Utils, restoreAttribute } from '../core/utils';
 import { Autocomplete, AutocompleteOptions } from './autocomplete';
 import { Component, BaseOptions } from '../core/component';
+import { FormControl, formAssociated, wrapInControl, unwrapControl } from '../core/formControl';
 
 export interface ChipData {
   /**
@@ -19,40 +20,6 @@ export interface ChipData {
 
 /** The form control a named field submits through, wrapping its input. */
 const CONTROL = 'expressive-chips-control';
-
-interface ChipsControl extends HTMLElement {
-  readonly internals: ElementInternals;
-  /** Puts the field's starting chips back; set by its Chips instance. */
-  onFormReset: (() => void) | null;
-}
-
-/** Whether the browser has form-associated custom elements. jsdom does not. */
-const formAssociated = () => typeof ElementInternals !== 'undefined' && 'setFormValue' in ElementInternals.prototype;
-
-/**
- * Defines the control on first use, so importing the bundle needs no DOM, and
- * only once, so a second copy of the bundle on the page uses the first one's.
- * The form sees the control, so it answers what a field does; its anchor and
- * focus are the input it wraps.
- */
-function defineControl() {
-  if (customElements.get(CONTROL)) return;
-  customElements.define(CONTROL, class extends HTMLElement {
-    static formAssociated = true;
-    readonly internals = this.attachInternals();
-    onFormReset: (() => void) | null = null;
-    /** Called only for a reset no listener canceled, in the same task. */
-    formResetCallback() { this.onFormReset?.(); }
-    get form() { return this.internals.form; }
-    get name() { return this.getAttribute('name') ?? ''; }
-    get labels() { return this._input?.labels; }
-    get validity() { return this.internals.validity; }
-    get validationMessage() { return this.internals.validationMessage; }
-    get willValidate() { return this.internals.willValidate; }
-    focus(options?: FocusOptions) { this._input?.focus(options); }
-    private get _input() { return this.querySelector<HTMLInputElement>(':scope > input'); }
-  });
-}
 
 /** The values in pasted text, split by commas, tabs or lines. */
 const pastedValues = (e: ClipboardEvent) =>
@@ -163,9 +130,7 @@ export class Chips extends Component<ChipsOptions> {
   /** The input's own aria-required, or null, put back on destroy. */
   private _ariaRequired: string | null = null;
   /** The form control wrapping a named input, which the form reads instead of it. */
-  private _control: ChipsControl | null = null;
-  /** Copies the input's disabled and form attributes to the control, and checks its readonly again. */
-  private _mirror: MutationObserver | null = null;
+  private _control: FormControl | null = null;
   /** The named text input, whose form, disabled state and required the chips take over. */
   private _source: HTMLInputElement | null = null;
   private _required = false;
@@ -269,18 +234,10 @@ export class Chips extends Component<ChipsOptions> {
   private _wrap(input: HTMLInputElement) {
     this._source = input;
     this._takeRequired(input);
-    input.removeAttribute('name');
-    defineControl();
-    const control = document.createElement(CONTROL) as ChipsControl;
-    control.style.display = 'contents';
-    control.setAttribute('name', this._name);
-    control.onFormReset = () => this._resetChips();
-    input.replaceWith(control);
-    control.append(input);
-    this._control = control;
-    this._mirror = new MutationObserver(() => this._mirrorState());
-    this._mirror.observe(input, { attributeFilter: ['disabled', 'readonly', 'form'] });
-    this._mirrorState();
+    // The control follows the input's disabled state and form; a read-only input is not validated, so its required no longer counts.
+    this._control = wrapInControl(CONTROL, input, () => this._validate());
+    this._control.onFormReset = () => this._resetChips();
+    this._validate();
   }
 
   /**
@@ -294,20 +251,6 @@ export class Chips extends Component<ChipsOptions> {
   /** Where the text field ends: chips go before it, and it goes last. */
   private get _end() {
     return this._control ?? this._input;
-  }
-
-  /**
-   * The control is disabled with the input, or with a fieldset by itself, and
-   * submits to the input's form. A read-only input is not validated, so its
-   * required no longer counts.
-   */
-  private _mirrorState() {
-    ['disabled', 'form'].forEach((name) => this._copyAttribute(name));
-    this._validate();
-  }
-
-  private _copyAttribute(name: string) {
-    restoreAttribute(this._control, name, this._source.getAttribute(name));
   }
 
   /** After the chips change: give the form one value per chip and update a required field's validity. */
@@ -366,10 +309,8 @@ export class Chips extends Component<ChipsOptions> {
   /** Unwraps the input, with whatever else went in the control, and gives it its name and required back. */
   private _giveNameBack() {
     if (!this._control) return;
-    this._mirror.disconnect();
-    this._control.replaceWith(...this._control.childNodes);
+    unwrapControl(this._control, this._source);
     this._control = null;
-    this._source.setAttribute('name', this._name);
     if (!this._required) return;
     this._source.required = true;
     restoreAttribute(this._source, 'aria-required', this._ariaRequired);

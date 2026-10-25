@@ -1,0 +1,142 @@
+@use "../abstracts" as *;
+
+// Cascader. A .field holding a text input, its label and a ul.cascader-options
+// of nested lists, one <li data-value> per option. The script builds the
+// columns from those lists in a .cascader-popover, so the lists never show.
+//
+// The popover is a manual [popover] opened with the input as its source, so
+// CSS anchor positioning places it below the field and flips it where it
+// would not fit. Each column is a listbox; the options on the open path are
+// aria-selected, and a branch ends in a chevron.
+//
+// Tokens:
+//   --md-comp-cascader-container-color           surface-container
+//   --md-comp-cascader-container-shape           large (16px)
+//   --md-comp-cascader-column-width              rem(176px), the minimum
+//   --md-comp-cascader-max-height                rem(320px)
+//   --md-comp-cascader-option-height             rem(44px)
+//   --md-comp-cascader-selected-container-color  secondary-container
+
+$_chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9.4 18 8 16.6l4.6-4.6L8 7.4 9.4 6l6 6z'/%3E%3C/svg%3E");
+
+.cascader-options {
+  display: none;
+}
+
+// The form control wraps the input with display: contents, so the field's
+// `input + label` rules no longer reach the label. The label floats here
+// instead while the input is focused, open or holds a path.
+.field.cascader {
+  &:has(> expressive-cascader-control > input:is(:focus, [aria-expanded="true"], :not([placeholder=" "]), :not(:placeholder-shown))) > label {
+    transform: scale(calc(12 / 16));
+    top: rem(8px);
+  }
+
+  &:has(> expressive-cascader-control > input:is(:focus, [aria-expanded="true"])) > label {
+    color: var(--input-color);
+  }
+}
+
+.cascader-popover {
+  --md-comp-cascader-container-color: var(--md-sys-color-surface-container);
+  --md-comp-cascader-container-shape: var(--md-sys-shape-corner-large);
+  --md-comp-cascader-column-width: #{rem(176px)};
+  --md-comp-cascader-max-height: #{rem(320px)};
+  --md-comp-cascader-option-height: #{rem(44px)};
+  --md-comp-cascader-selected-container-color: var(--md-sys-color-secondary-container);
+
+  box-sizing: border-box;
+  max-width: calc(100vw - 16px);
+  max-height: min(var(--md-comp-cascader-max-height), calc(100vh - 16px));
+  inset: auto;
+  margin: 4px 0;
+  padding: 0;
+  overflow-x: auto;
+  border: 0;
+  border-radius: var(--md-comp-cascader-container-shape);
+  background-color: var(--md-comp-cascader-container-color);
+  color: var(--md-sys-color-on-surface);
+  @include z-depth("2");
+  @include glass(var(--md-comp-cascader-container-color));
+
+  position-area: block-end span-inline-end;
+  position-try-fallbacks: flip-block, flip-inline, flip-block flip-inline;
+
+  &:popover-open {
+    display: flex;
+  }
+
+  // Forced colors drop the shadow, so the surface keeps an edge.
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+
+  > [role="listbox"] {
+    box-sizing: border-box;
+    flex: none;
+    min-width: var(--md-comp-cascader-column-width);
+    max-height: inherit;
+    margin: 0;
+    padding: 8px 0;
+    overflow-y: auto;
+    list-style: none;
+
+    + [role="listbox"] {
+      border-inline-start: 1px solid var(--md-sys-color-outline-variant);
+    }
+  }
+
+  [role="option"] {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-sizing: border-box;
+    min-height: var(--md-comp-cascader-option-height);
+    margin: 0 4px;
+    padding: 8px 12px 8px 16px;
+    border-radius: var(--md-sys-shape-corner-medium);
+    cursor: pointer;
+    @include typescale("label-large");
+
+    &:hover {
+      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
+    }
+
+    &[aria-selected="true"] {
+      background-color: var(--md-comp-cascader-selected-container-color);
+      color: var(--md-sys-color-on-secondary-container);
+      @include forced-colors-selected;
+    }
+
+    &:focus-visible {
+      outline: 3px solid var(--md-sys-color-secondary);
+      outline-offset: -3px;
+    }
+  }
+
+  .cascader-chevron {
+    flex: none;
+    width: rem(20px);
+    height: rem(20px);
+    margin-inline-start: auto;
+    background-color: currentColor;
+    mask: $_chevron center / contain no-repeat;
+    @include forced-colors-fill;
+
+    &:dir(rtl) {
+      scale: -1 1;
+    }
+  }
+}
+
+// Without anchor positioning the browser ignores position-area, so the
+// popover is centered in the viewport, as a native popover is.
+@supports not (anchor-name: --a) {
+  .cascader-popover {
+    inset: 0;
+    width: fit-content;
+    height: fit-content;
+    margin: auto;
+  }
+}

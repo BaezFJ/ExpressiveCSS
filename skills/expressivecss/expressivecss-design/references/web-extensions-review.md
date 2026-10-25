@@ -206,6 +206,22 @@ Feature gap: Only the window's scroll is watched; a pane, dialog or scroll area 
 
 Mapped browser scope: Focus on the target and the next Tab after a click and after Enter, the temporary tabindex removed, the hidden link skipped by Tab, missed by elementFromPoint and absent from the ARIA snapshot before and after scrolling past the threshold, a focused link kept through Home and hidden once focus leaves, no fade out when the script starts after the first paint, smooth and instant scrolls, a 400px threshold from markup, the 16px corner in ltr and rtl and the offset token, and the link without the script. No spoken-output assertion.
 
+## [Cascader](../../components/cascader.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the field a labelled input that reads as a combobox, name every column, show which options form the open path, reach every option from the keyboard in both directions, close without committing on Escape, and submit every level of the path.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page writes the field, its label and nested lists with data-value; the framework builds listbox columns in a popover anchored to the input, moves focus through them by click and keyboard, shows the committed path in the input and submits one form entry per level through a form-associated control.
+
+Verification gap: Clicks and keys through three columns, rtl, roles, names and states, form data, reset with a starting path and in a shadow root, required with its i18n message, disabled input and fieldset, and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom. Spoken output remains unverified. Next check: Move through three columns and commit a leaf with NVDA in Firefox and VoiceOver in Safari.
+
+Feature gap: No search, type-ahead, multiple selection, lazy-loaded children or partial paths; only a leaf commits, and options added after start need a new init. Next check: None planned.
+
+Mapped browser scope: Clicks through three columns with the joined labels, input and change once per new path, a click on a branch keeping focus, a click outside closing, each opening key, arrows, Home, End, the next and previous column, Escape, Tab and Shift+Tab, Enter after IME composition, column names and selected states, rtl columns and keys, form data and submit data, reset, required, disabled state, destroy(), hidden source lists, side-by-side columns, a scrolling column and rows sized by the root font size. No spoken-output assertion.
+
 ## [Accordion](../../components/accordion.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

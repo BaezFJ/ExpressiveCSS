@@ -398,6 +398,45 @@
           }
         ]
       },
+      "cascader": {
+        "status": "enforced",
+        "note": "Added with the cascader component. The author writes a text input, its label and a ul.cascader-options of nested lists with one data-value per option; AutoInit builds the columns, their listbox and option roles and their states in a popover, so the author's lists stay plain lists.",
+        "rejects": {
+          "rejected_role": "listbox",
+          "because": "the author's lists are only the source the script reads and are never shown; the listbox columns it builds in the popover carry the roles, states and arrow-key contract",
+          "rule": "cascader-lists-take-no-roles"
+        },
+        "rules": [
+          {
+            "id": "cascader-lists-take-no-roles",
+            "kind": "forbid",
+            "selector": ".cascader-options[role], .cascader-options [role]",
+            "fragmentSafe": true,
+            "message": "Leave roles off .cascader-options and its items. The lists are the source the script reads; it builds the listbox columns, with their roles and states, itself."
+          },
+          {
+            "id": "cascader-option-has-value",
+            "kind": "forbid",
+            "selector": ".cascader-options li:not([data-value])",
+            "fragmentSafe": true,
+            "message": "Give every option in .cascader-options a data-value. The form submits one value per level of the chosen path, and an option without one submits an empty string."
+          },
+          {
+            "id": "cascader-needs-a-text-field",
+            "kind": "forbid",
+            "selector": ".cascader > input:not(:is(:not([type]), [type=\"text\" i]))",
+            "fragmentSafe": true,
+            "message": "A .cascader shows the chosen path in an <input> of type text, which the script makes read-only. Other input types reject the path's labels."
+          },
+          {
+            "id": "cascader-input-is-named",
+            "kind": "forbid",
+            "selector": ".cascader:not(:has(> label[for])) > input:not([aria-label]):not([aria-labelledby])",
+            "fragmentSafe": true,
+            "message": "Name the cascader's input with a <label for> in the field, or aria-label. The popover and its first column take their name from the same label."
+          }
+        ]
+      },
       "character-counter": {
         "status": "enforced",
         "kind": "behavior",
