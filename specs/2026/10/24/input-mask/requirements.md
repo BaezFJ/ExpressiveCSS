@@ -4,7 +4,7 @@ Date: 2026-10-24
 Roadmap phase: Phase 38, pattern input mask
 Branch: `feature/2026-10-24-input-mask`
 Base: `origin/master` at `953343153`, fetched 2026-10-24
-Status: specified; not implemented
+Status: implemented 2026-10-25; not merged
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 38](../../../../roadmap.md#phase-38-pattern-input-mask). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -66,7 +66,7 @@ A text input with a `data-mask` attribute formats typed, pasted and composed cha
 - The work splits into three groups: typing and paste with the acceptance test; then IME and edge cases; then docs and checks.
 - Merge conditions: the composition test and the edge-case checks are merge gates, along with the roadmap's completion check and the repository's required CI checks. The user did not pick the acceptance-test option in the interview, but V1 is the roadmap's completion check for this phase, so it stays a merge condition. A local `npm run verify` run is not a merge condition.
 
-### Proposed in this spec, open to review
+### Proposed in this spec, built as written on 2026-10-25, open to review
 
 - The backslash escape in R2. A mask such as `\07000 000000` needs a literal zero, and the escape costs one branch.
 - Typed and pasted text is normalized with `String.prototype.normalize('NFKC')` before matching, so full-width digits from a Japanese or Chinese IME fill digit slots.
@@ -80,6 +80,13 @@ None.
 ### Risk to record
 
 Android keyboards such as Gboard can report ordinary typing as composition. With R7, a letter mask on Android may format only when a word ends. A digit mask with `inputmode="numeric"` opens a keypad that does not compose. The manual check M2 in validation.md covers this.
+
+### Implementation notes
+
+- The `sourceRevision` pin in `docs/src/data/component-decisions.json` names this branch's group 2 commit `35196509a`, because no commit on `master` holds `inputMask.ts`. A squash merge drops that commit, so a follow-up must re-pin to the merge commit.
+- AutoInit's selector lists the caret-bearing input types itself, because `setSelectionRange()` throws on the others. The semantics rule flags the same markup.
+- A literal is matched only when it is the next token. Otherwise the `1` typed first into `+1 (000)` would be taken for the literal instead of a digit.
+- Undo, as recorded for the docs: after a formatted edit, Control+Z changes nothing in Chromium, Firefox or WebKit.
 
 ## Technical constraints
 

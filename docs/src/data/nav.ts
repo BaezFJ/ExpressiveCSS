@@ -724,6 +724,13 @@ export const NAV: DocsGroup[] = [
           "Material Design 3 text fields, from the HTML.",
       },
       {
+        id: "input_mask",
+        label: "Input mask",
+        route: "/input-mask.html",
+        description:
+          "Formats a text field's value to a pattern, such as a phone or card number, as people type, paste or compose.",
+      },
+      {
         id: "rich_text_editor",
         label: "Rich text editor",
         route: "/rich-text-editor.html",

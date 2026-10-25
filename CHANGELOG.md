@@ -265,6 +265,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   with `{ row, open }` and runs `onToggle`; `open(row)` and `close()` work
   from script. A new semantics rule asks for the toggle in every row with
   actions.
+- Input mask. A text field with `data-mask` formats what people type,
+  paste or compose to the pattern: `0` takes a digit, `a` a letter, `*`
+  either, and other characters are literals the mask writes, such as
+  `(000) 000-0000`. The caret stays after the edit, Backspace and Delete
+  remove the digit across a literal, an IME composition is formatted once
+  it ends, and saved and reset values are formatted too. The form submits
+  the value as shown. A new semantics rule keeps `data-mask` on input types
+  that have a caret.
 
 - A `data-draggable` map marker moves without a drag (WCAG 2.5.7). A tap
   picks it up and sets `aria-pressed`, and the next tap on the map drops it

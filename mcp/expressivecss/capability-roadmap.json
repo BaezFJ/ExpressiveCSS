@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.15.0",
-  "sourceRevision": "b2c561e544376f14089b9b3c0ee9cb3112276097",
+  "sourceRevision": "35196509a7db9834442af3767152422e199faf0e",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-10-10",
@@ -4420,6 +4420,62 @@
         }
       ],
       "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "input-mask",
+      "title": "Input mask",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-25",
+      "scope": "A data-mask pattern on a text, tel, search, url or password input, where 0 takes a digit, a a letter, * either and a backslash escapes a literal; typed, pasted, autofilled and composed text formatted with the caret after the edit, Backspace and Delete across literals, saved and reset values formatted, the formatted value submitted and validated, and formatting before the page's input listeners.",
+      "adaptation": "A capture-phase input listener rewrites the native value, so the form, constraint validation and FormData see what the field shows. Composing input is skipped and the field formats on compositionend, and a beforeinput listener turns a one-character delete next to a literal into a delete of the slot character across it.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-25",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the field a labelled native input, show the expected format in visible text, leave IME composition alone until it ends, keep the caret where the person is editing, and submit and validate the value the person sees."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/ts/components/inputMask.ts",
+          "sha256": "a40d802f80131458f27e66435458055673e46ca750c8fa40aabacb1a33bef854"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Typing, inserted pastes, deletes across literals, composition in both event orders, saved and reset values, listener order, Keypad keys and destroy() are checked in a browser; real IMEs, Android keyboards, clipboard pastes and spoken output remain unverified.",
+          "nextStep": "Type into a masked field with a Japanese IME, Chinese pinyin and Gboard on Android, and read it with VoiceOver and NVDA."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/input-mask-browser.test.js",
+          "name": "chromium: typed and pasted digits take the mask's pattern, and the form submits it",
+          "scope": "Real keyboard typing and an insertText paste formatted with the caret after the last digit, and the formatted value in FormData and the submit event.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/input-mask-browser.test.js",
+          "name": "chromium: the field waits for a composition to end, in either event order",
+          "scope": "Composition dispatched with the last input before and after compositionend, and a CDP composition of full-width digits.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

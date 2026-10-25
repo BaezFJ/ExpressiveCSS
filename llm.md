@@ -8106,6 +8106,34 @@ Expressive.CharacterCounter.init(
 
 ---
 
+## Input mask
+
+Formats a text field's value to a pattern, such as a phone or card number, as people type, paste or compose.
+
+Add `data-mask` to an `<input>` of type `text`, `tel`, `search`, `url` or `password`. `AutoInit()` starts every one. In the mask, `0` takes a digit, `a` takes a letter and `*` takes either. Every other character is a literal the mask writes itself, and a backslash makes the next character a literal, so `\0` writes a zero.
+
+As a person types, each character that fits fills the next slot, and the mask writes the literals that come before it: typing `5551` into `(000) 000-0000` shows `(555) 1`. A character that fits no slot is dropped, as is one past the end. A paste or autofill keeps the characters that fit and skips the rest, so `555.123.4567` becomes `(555) 123-4567`. The caret stays after the last character the edit added. Backspace right after a literal, or Delete right before one, removes the digit across it. Full-width digits from an IME count as digits, and while an IME composes, the field waits and formats once the composition ends.
+
+The form submits the value as the field shows it, `(555) 123-4567`, and `pattern`, `required` and the length checks run on that value. A saved value is formatted when the component starts, without an `input` or `change` event, and again after a form reset. The component formats before the page's own `input` listeners run, so they read the formatted value. A value a script sets is formatted once the script fires an `input` event. Keypad keys format like typing; with the caret right after a literal, the Keypad's Backspace moves the caret before the literal, and a second press deletes the digit.
+
+Add `inputmode="numeric"` to a digit-only mask so phones open a number pad, and show the expected format in the supporting text. In a right-to-left page, add `dir="ltr"` to a phone or card number field. After a formatted edit, undo does not step back in Chromium, Firefox or WebKit, because setting the value clears the field's undo history. Android keyboards can treat ordinary typing as composition, so a letter mask there may format only when a word ends; a number pad does not compose.
+
+```html
+<div class="field">
+  <input id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder=" " data-mask="(000) 000-0000" aria-describedby="phone_help">
+  <label for="phone">Phone</label>
+  <small id="phone_help">Format: (555) 123-4567</small>
+</div>
+```
+
+### Methods
+
+#### .destroy()
+
+Removes the listeners and leaves the value as it is.
+
+---
+
 ## Rich text editor
 
 A text field with a formatting toolbar for writing headings, lists and styled text, built on Tiptap.

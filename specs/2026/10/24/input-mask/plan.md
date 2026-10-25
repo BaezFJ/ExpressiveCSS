@@ -2,7 +2,7 @@
 
 Roadmap phase: Phase 38, pattern input mask. Branch `feature/2026-10-24-input-mask` from `origin/master` at `953343153`. Requirements are in [requirements.md](requirements.md) and checks in [validation.md](validation.md).
 
-The groups run in order, and each ends in a state that can be committed. Budget lines go into whichever group first changes a bundle's size, because `tests/selective-builds.test.js` fails without them. A registered component also needs its `semantics.json` coverage and AutoInit fixture in the first group, because the semantics roster and AutoInit tests fail without them.
+The groups run in order, and each ends in a state that can be committed. All three were implemented on 2026-10-25, one commit each after the spec commit `5c15957ff`: `859ce7af7`, `35196509a` and the group 3 commit. Group 2's commit missed its budget line (+273 gzip bytes for the `beforeinput` and reset code), so `tests/selective-builds.test.js` fails at that commit; group 3 adds the line. Budget lines go into whichever group first changes a bundle's size, because `tests/selective-builds.test.js` fails without them. A registered component also needs its `semantics.json` coverage and AutoInit fixture in the first group, because the semantics roster and AutoInit tests fail without them.
 
 ## 1. Typing and paste format the field
 
@@ -43,12 +43,12 @@ Outcome: the component is documented, the pin and generated files are current, a
 
 Prerequisites: group 2.
 
-- [ ] Add an "Input mask" section after Text Inputs in `llm.md`, the types export in `modular.ts`, and a docs page with a live example, added to the docs catalogue. Cover the syntax, the submitted value, `inputmode="numeric"`, format hints in supporting text, `dir="ltr"` in right-to-left pages, IME timing and the undo findings.
-- [ ] Add the component to `docs/src/data/component-decisions.json` with its capability entry, and re-pin `sourceRevision` to a commit on `master`.
-- [ ] Add an entry to `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`, and an Added entry to the Unreleased section of `CHANGELOG.md`.
-- [ ] Update the hardcoded guide counts in `tests/expressivecss-skill.test.js`, `tests/expressivecss-version-resolution.test.js` and `tests/expressivecss-component-decisions.test.js`, and the reading budget if it grows.
-- [ ] Run `npm run build`, confirm the budget line, then run `npm run build:skill` as the last generation step and `npm run check:generated`.
-- [ ] Record each result in validation.md.
+- [x] Add an "Input mask" section after Text Inputs in `llm.md`, the types export in `modular.ts`, and a docs page with a live example, added to the docs catalogue. Cover the syntax, the submitted value, `inputmode="numeric"`, format hints in supporting text, `dir="ltr"` in right-to-left pages, IME timing and the undo findings.
+- [x] Add the component to `docs/src/data/component-decisions.json` with its capability entry, and re-pin `sourceRevision` to a commit on `master`.
+- [x] Add an entry to `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`, and an Added entry to the Unreleased section of `CHANGELOG.md`.
+- [x] Update the hardcoded guide counts in `tests/expressivecss-skill.test.js`, `tests/expressivecss-version-resolution.test.js` and `tests/expressivecss-component-decisions.test.js`, and the reading budget if it grows.
+- [x] Run `npm run build`, confirm the budget line, then run `npm run build:skill` as the last generation step and `npm run check:generated`.
+- [x] Record each result in validation.md.
 
 Completion check: `npm run check:generated` is clean, V10 and V11 pass, V12 runs on the pull request, and every check in validation.md shows a result.
 
