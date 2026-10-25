@@ -4331,6 +4331,109 @@
       }
     },
     {
+      "slug": "treemap-chart",
+      "title": "Treemap chart",
+      "aliases": [
+        "tree map",
+        "treemap",
+        "squarified treemap",
+        "rectangle chart"
+      ],
+      "guideSource": {
+        "pageId": "treemap-chart",
+        "heading": "Treemap chart",
+        "headingLevel": 2,
+        "semantics": [
+          "treemap-chart"
+        ]
+      },
+      "jobs": [
+        "Parts of a whole drawn as rectangles whose areas follow their values."
+      ],
+      "useWhen": [
+        "Show how a total splits across many parts, such as a budget across teams or disk space across folders, where a pie would run out of room for slices."
+      ],
+      "avoidWhen": [
+        "Readers need to compare values precisely or the parts have an order; use a bar or column chart. Two to five parts read better as a pie chart."
+      ],
+      "alternatives": [
+        "pie-chart",
+        "bar-chart",
+        "data-table"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/treemap-chart.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#treemap-chart",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "Rectangles drawn from a figure's data table, one per row of the first value column with its area in proportion to the total, in a squarified layout that mirrors in right-to-left pages, with names and cells written in rectangles that hold them, no rectangle for cells that are not positive numbers, six colors, update(), data-watch, and a pointer and keyboard tooltip with each row's share that steps through rows in table order.",
+          "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rectangles are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+          "limitations": [
+            "Areas, the layout in left-to-right and right-to-left pages, gaps, colors, text fitting, keyboard steps, the rectangle under the pointer, the tooltip, update() and data-watch are checked in a browser, and the forced-colors edge is checked in the stylesheet; screen reader output and enlarged text remain unverified. There is one level only: no parent groups, legend, drill-down or animated update()."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the data available as text, name the chart, keep each part identifiable without relying on color alone, and let a keyboard reach every part the pointer can."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A budget split across twelve teams is a treemap chart. Revenue split across three plans is a pie chart.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/abstracts/_mixins.scss",
+            "sha256": "47a0a21ff5ea47c1030e3730605cadb4498d868202a88d89670c3aa55cf09702"
+          },
+          {
+            "path": "src/sass/components/_treemap-chart.scss",
+            "sha256": "a18d6c6bff6123070064a01ac0c6fabbbf4e248d02ebbdcddffcc2d20f3739e9"
+          },
+          {
+            "path": "src/ts/components/lineChart.ts",
+            "sha256": "06a7be0f88231c0368d299a6506643e9aac6fc9a99ac7143ae1d180f98541c71"
+          },
+          {
+            "path": "src/ts/components/treemapChart.ts",
+            "sha256": "146294b6f97121b990cca2e1de1dd96489707e38bdc4c969d52cddba6210be3f"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Areas, layout, gaps, colors, text fitting, keyboard steps, the pointer, the tooltip, update() and data-watch are checked in a browser; screen reader output, forced colors in a browser and enlarged text remain unverified.",
+            "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text in a browser."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/treemap-chart-browser.test.js",
+            "name": "chromium: treemap chart draws each row as a rectangle whose area follows its value",
+            "scope": "Hidden table, the named plot and its role description, separate instances from line charts, each rectangle's area in proportion to its value, the areas covering the plot without overlap, and the squarified layout in left-to-right and right-to-left pages. No spoken-output assertion."
+          },
+          {
+            "file": "tests/treemap-chart-browser.test.js",
+            "name": "chromium: treemap chart steps through its rectangles by key in table order, in either direction",
+            "scope": "Keyboard focus skips a row with no rectangle; arrows, Home, End and Escape step through rows in table order without swapping in a right-to-left page; the outlined rectangle and the live tooltip text with each row's share. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "timeline",
       "title": "Timeline",
       "aliases": [
@@ -13188,5 +13291,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "66e730fba883634dabaa669c302d84a7378282e3"
+  "sourceRevision": "94bf782d198bd232bc02c53d50a95d258189284c"
 }

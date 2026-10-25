@@ -513,6 +513,13 @@ export const NAV: DocsGroup[] = [
           "Flows between nodes, each link as thick as its value.",
       },
       {
+        id: "treemap-chart",
+        label: "Treemap chart",
+        route: "/treemap-chart.html",
+        description:
+          "Parts of a whole drawn as rectangles whose areas follow their values.",
+      },
+      {
         id: "timeline",
         label: "Timeline",
         route: "/timeline.html",
