@@ -7,6 +7,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Sankey chart. A `<figure class="sankey-chart">` draws each table row as
+  a flow: the first column names the source node, the second the target
+  node, and the third holds the value. Nodes stand in columns by their
+  longest path from a source and stack in the order they first appear.
+  Each link is as thick as its value, and each node as tall as the larger
+  of its in and out totals. Rows without a positive value or both names,
+  and rows that would close a cycle, draw nothing. The plot is one Tab
+  stop whose arrow keys step through the links in table order, and it
+  takes `update()` and `data-watch` like the other charts. A new
+  semantics rule asks for a `<figure>` with a `<table>` and a
+  `<figcaption>`.
 - `.defer-render` makes the browser skip layout and paint for a long
   list's off-screen rows through `content-visibility: auto`. Skipped rows
   reserve `--defer-render-row-size`, the list item height by default, and

@@ -70,12 +70,12 @@ Outcome: the chart has docs, generated files are fresh, and the contributor chec
 
 Prerequisites: group 4.
 
-- [ ] Add the "Sankey chart" section to `llm.md` and the chart to its two AutoInit tables, `docs/src/pages/sankey-chart.astro` with live examples, the nav entry in `docs/src/data/nav.ts`, the row in `docs/src/pages/auto-init.astro`, the entry in `docs/src/data/component-decisions.json` with its `sourceRevision` pin, and the hand-written entry in `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`.
-- [ ] Raise the hardcoded guide counts in `tests/expressivecss-skill.test.js`, `tests/expressivecss-version-resolution.test.js` and `tests/expressivecss-component-decisions.test.js`, and the basic-button reading budget.
-- [ ] Add an Added entry to the Unreleased section of `CHANGELOG.md`.
-- [ ] Run `npm run build`, confirm the budget lines, then run `npm run build:skill` as the last generation step and `npm run check:generated`.
-- [ ] Run `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`, one at a time. Rerun a failure alone before debugging it.
-- [ ] Record each result in validation.md.
+- [x] Add the "Sankey chart" section to `llm.md` and the chart to its two AutoInit tables, `docs/src/pages/sankey-chart.astro` with live examples, the nav entry in `docs/src/data/nav.ts`, the row in `docs/src/pages/auto-init.astro`, the entry in `docs/src/data/component-decisions.json` with its `sourceRevision` pin, and the hand-written entry in `skills/expressivecss/expressivecss-design/references/web-extensions-review.md`.
+- [x] Raise the hardcoded guide counts in `tests/expressivecss-skill.test.js`, `tests/expressivecss-version-resolution.test.js` and `tests/expressivecss-component-decisions.test.js`, and the basic-button reading budget.
+- [x] Add an Added entry to the Unreleased section of `CHANGELOG.md`.
+- [x] Run `npm run build`, confirm the budget lines, then run `npm run build:skill` as the last generation step and `npm run check:generated`.
+- [x] Run `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`, one at a time. Rerun a failure alone before debugging it.
+- [x] Record each result in validation.md.
 
 Completion check: every check in validation.md shows a result, and none failed for a reason this change caused.
 

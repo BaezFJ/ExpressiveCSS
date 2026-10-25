@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 51, sankey chart
 Branch: `feature/2026-10-25-sankey-chart`
 Base: `origin/master` at `a9bbf77ad`, fetched 2026-10-25
-Status: specified 2026-10-25, not implemented
+Status: implemented 2026-10-25, not merged
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 51](../../../../roadmap.md#phase-51-sankey-chart). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
