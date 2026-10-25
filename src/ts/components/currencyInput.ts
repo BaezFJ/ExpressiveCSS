@@ -1,7 +1,12 @@
 import { Component, BaseOptions } from '../core/component';
 import { Utils } from '../core/utils';
 
-const _defaults = Object.freeze({});
+export interface CurrencyInputOptions extends BaseOptions {
+  /** `invalid` is the validity message for text that holds no amount. */
+  i18n: Partial<{ invalid: string }>;
+}
+
+const _defaults: CurrencyInputOptions = Object.freeze({ i18n: Object.freeze({ invalid: 'Enter an amount.' }) });
 
 /** Latin digits in the order `_native` holds them, to map a locale's own digits back. */
 const LATIN = '9876543210';
@@ -34,12 +39,15 @@ function parse(text: string, digits: number): number | null {
 /**
  * Currency input. Shows a text field's amount in the page's locale and the
  * currency its `data-currency` attribute names once the field loses focus,
- * and puts the plain number in the form data.
+ * shows the plain number while it has focus, and puts the plain number in the
+ * form data.
  */
-export class CurrencyInput extends Component<BaseOptions> {
+export class CurrencyInput extends Component<CurrencyInputOptions> {
   declare el: HTMLInputElement;
   static key = 'Expressive_CurrencyInput';
   private _display: Intl.NumberFormat;
+  /** Writes an amount for editing: the locale's digits and mark, no grouping or sign. */
+  private _edit: Intl.NumberFormat;
   /** Writes an amount as the form submits it: Latin digits, a `.` mark, no grouping. */
   private _plain: Intl.NumberFormat;
   private _digits: number;
@@ -47,7 +55,7 @@ export class CurrencyInput extends Component<BaseOptions> {
   private _native: string;
   private _decimal: string;
 
-  constructor(el: HTMLInputElement, options: Partial<BaseOptions>) {
+  constructor(el: HTMLInputElement, options: Partial<CurrencyInputOptions>) {
     super(el, options);
     const locale = Utils.locale(el);
     try {
@@ -57,6 +65,7 @@ export class CurrencyInput extends Component<BaseOptions> {
       return;
     }
     this._digits = this._display.resolvedOptions().maximumFractionDigits;
+    this._edit = new Intl.NumberFormat(locale, { useGrouping: false, maximumFractionDigits: this._digits });
     this._plain = new Intl.NumberFormat('en', { useGrouping: false, maximumFractionDigits: this._digits });
     this._native = new Intl.NumberFormat(locale, { useGrouping: false }).format(9876543210);
     this._decimal = new Intl.NumberFormat(locale).formatToParts(0.5).find((part) => part.type === 'decimal').value;
@@ -65,12 +74,17 @@ export class CurrencyInput extends Component<BaseOptions> {
     // text. Blur covers a visit that changed nothing, which fires no change.
     el.addEventListener('change', this._format, { capture: true, signal });
     el.addEventListener('blur', this._format, { signal });
+    el.addEventListener('focus', this._onFocus, { signal });
+    el.addEventListener('input', this._validate, { signal });
     // On the document, so the listener follows the field into another form.
     el.ownerDocument.addEventListener('formdata', this._onFormData, { capture: true, signal });
+    // The form resets its fields after the reset event, so the field formats
+    // the restored value a task later.
+    el.ownerDocument.addEventListener('reset', this._onReset, { capture: true, signal });
     this._start();
   }
 
-  static get defaults(): BaseOptions {
+  static get defaults(): CurrencyInputOptions {
     return _defaults;
   }
 
@@ -106,7 +120,32 @@ export class CurrencyInput extends Component<BaseOptions> {
   /** Shows `amount` in the locale and currency, leaving text that reads as no amount as it is. */
   private _show(amount: number | null) {
     if (amount !== null) this.el.value = this._display.format(amount);
+    this._validate();
   }
+
+  /** Shows the amount as a plain number to edit, with the caret at the end. */
+  private _onFocus = () => {
+    const amount = this.value;
+    if (amount === null) return;
+    const text = this._edit.format(amount);
+    this.el.value = text;
+    this.el.setSelectionRange(text.length, text.length);
+  };
+
+  /** Marks text that holds no amount invalid, and clears the mark once it holds one or is empty. */
+  private _validate = () => {
+    const { el } = this;
+    const invalid = el.value.trim() !== '' && this.value === null;
+    el.setCustomValidity(invalid ? this.options.i18n.invalid : '');
+  };
+
+  private _onReset = (e: Event) => {
+    if (e.target === this.el.form) setTimeout(this._afterReset);
+  };
+
+  private _afterReset = () => {
+    if (!this._events.signal.aborted) this._start();
+  };
 
   /** Puts the plain number in the form data in place of the formatted text. */
   private _onFormData = (e: FormDataEvent) => {
@@ -120,5 +159,11 @@ export class CurrencyInput extends Component<BaseOptions> {
   private _submitsTo(form: EventTarget) {
     const { el } = this;
     return form === el.form && el.name !== '' && !el.matches(':disabled');
+  }
+
+  /** Stops formatting and clears the validity message, leaving the text as it is. */
+  destroy(): void {
+    super.destroy();
+    this.el.setCustomValidity('');
   }
 }

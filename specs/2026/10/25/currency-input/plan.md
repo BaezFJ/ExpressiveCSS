@@ -27,11 +27,11 @@ Outcome: focus, paste, invalid text, Enter submit, reset and `destroy()` behave 
 
 Prerequisites: group 1.
 
-- [ ] Add V3 to V7 and record which fail.
-- [ ] Show the plain number on focus with the caret at the end, and make sure page `change` and `blur` listeners read the formatted text.
-- [ ] Set and clear the custom validity message, with the `i18n.invalid` option.
-- [ ] Format the default value after a form reset, following InputMask's reset handling, and make `destroy()` remove every listener, including the one on the form, and clear the validity message.
-- [ ] Rebuild and rerun until V1 to V8 pass in all three engines. Update the budget line.
+- [x] Add V3 to V7 and record which fail.
+- [x] Show the plain number on focus with the caret at the end, and make sure page `change` and `blur` listeners read the formatted text.
+- [x] Set and clear the custom validity message, with the `i18n.invalid` option.
+- [x] Format the default value after a form reset, following InputMask's reset handling, and make `destroy()` remove every listener, including the one on the form, and clear the validity message.
+- [x] Rebuild and rerun until V1 to V8 pass in all three engines. Update the budget line.
 
 Completion check: V1 to V8 pass in Chromium, Firefox and WebKit.
 
