@@ -9,7 +9,7 @@ Component ID: `menubar`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `e4aae294e6bff63d6ebbe3a36892991546e5b773ed864234aa4d94ed3e6dad9c`
+Contract SHA-256: `0bb777b398b8450914ba98b57367e769be843c449553c3a2d13e7354135a98e5`
 
 #### Selection and adaptation
 

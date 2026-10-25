@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**101 of 101 rows enforced; 0 remaining.**
+**102 of 102 rows enforced; 0 remaining.**
 
-96 of those rows are components - a part of the framework an author writes markup for.
+97 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 96 components declare conformance debt.**
+**2 of 97 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -1324,6 +1324,22 @@ Added with the tour component. A manual popover the Tour behavior shows one sect
 - **tour-is-a-manual-popover** - Write the .tour with popover="manual". An auto popover closes on any outside click, which ends the tour while the user looks at the target.
 - **tour-is-a-dialog** - Give the .tour role="dialog". The behavior labels it with the current step's heading and moves focus to it, and the dialog role is what makes that name announced.
 - **tour-steps-name-a-target** - Each step <section> needs data-tour-target with the id of the element it explains. A step without one is never shown.
+
+### transfer-list
+
+Added with the transfer list behavior. The rows are native checkboxes in .list label rows, so Tab reaches each one and Space checks it; the [data-transfer] buttons move the checked rows, and no listbox role or arrow-key contract is involved. The checkboxes carry no name: when the form builds its data, the script adds each chosen row's value under the container's data-name, in the chosen list's order.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `transfer-list-needs-a-name` | forbid | `.transfer-list:not([data-name]), .transfer-list[data-name=""]` | must not match |
+| `transfer-list-checkbox-unnamed` | forbid | `.transfer-list input[type="checkbox"][name]` | must not match |
+| `transfer-list-lists-labelled` | forbid | `:is(.transfer-available, .transfer-chosen):not([aria-label], [aria-labelledby])` | must not match |
+| `transfer-list-buttons-typed` | forbid | `.transfer-list [data-transfer]:not([type="button" i])` | must not match |
+
+- **transfer-list-needs-a-name** - Give each .transfer-list a data-name. The chosen rows submit their values under it; without one the form gets nothing.
+- **transfer-list-checkbox-unnamed** - Leave the name off a transfer list's checkboxes. A checkbox's name submits whether it is checked, which only says what is selected to move; the script submits the chosen rows under the container's data-name.
+- **transfer-list-lists-labelled** - Name each transfer list with aria-label or aria-labelledby, such as "Available toppings" and "Chosen toppings". The name tells people which list a row is in, and the move announcement reads it.
+- **transfer-list-buttons-typed** - Give each [data-transfer] button type="button". A button in a form submits it by default, so an untyped move button would also send the form.
 
 ### transitions
 

@@ -370,7 +370,7 @@ function unmount() {
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
 
-`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, ImageCompare, Tour, and Sortable behaviors.
+`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, ImageCompare, Tour, Sortable, and TransferList behaviors.
 
 ## Component lifecycle
 
@@ -409,6 +409,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:copy` | Copy buttons | `{ text, copied }` |
 | `expressive:refresh` | Pull-to-refresh | `{ waitUntil }` |
 | `expressive:swipetoggle` | Swipe actions | `{ row, open }` |
+| `expressive:transfer` | Transfer list, from the container | `{ rows, from, to }` |
 | `expressive:change`, `expressive:sort`, `expressive:resize` | Data tables, from the wrapper | `{ selected }`, `{ header, column, direction }`, `{ header, column, width }`; `sort` is cancelable |
 
 An Autocomplete or Select input hosts a Menu, so it also fires that Menu's `expressive:open`, `expressive:close` and `expressive:select`. A callback that changes the choice again, such as an `onShow` that selects another tab, leaves only the event for the final choice.
@@ -421,7 +422,7 @@ The main bundle exports:
 
 - `AutoInit`, `Forms`, and `version`
 - `Copy` and `Theme`, the copy button and theme switch behaviors
-- `PaneResize`, `ImageCompare`, `Tour` and `Sortable` behaviors, and the `Menubar` component
+- `PaneResize`, `ImageCompare`, `Tour`, `Sortable` and `TransferList` behaviors, and the `Menubar` component
 - `Dialogs`, `BottomSheets`, and `SideSheets`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
 - `Chips`, `Datepicker`, `Menu`, and `Lightbox`
@@ -9421,6 +9422,50 @@ Add `aria-invalid="true"` or `class="invalid"` on the input. The box uses `error
 ```
 
 ---
+
+## Transfer list
+
+Moves options between an available list and a chosen list, and submits the chosen ones with the form.
+
+A `.transfer-list` holds a `.list.transfer-available`, a `.transfer-actions` group of four `type="button"` buttons, and a `.list.transfer-chosen`. Each row is a `<label>` around a checkbox with a `value` and no `name`. Name each list with `aria-label` or `aria-labelledby`, and give the container a `data-name`. The root bundle starts the behavior on load; with the modular entry, call `TransferList.Init()`. Its listeners are on the document, so a list added later needs no call.
+
+`data-transfer="add"` moves the checked rows of the available list to the end of the chosen list, and `remove` moves the checked rows of the chosen list back. `add-all` and `remove-all` move every row. Moved rows arrive unchecked, and a row whose checkbox is disabled stays where it is. The chosen list keeps the order rows arrived in, and a row moved back returns to the place it had before the first move. The rows are native checkboxes, so Tab reaches each one and Space checks it; there is no listbox role or arrow-key model. A button pressed with nothing to move does nothing, and focus stays on the button after a move.
+
+When the form builds its data, each row of the chosen list adds its checkbox value under the container's `data-name`, in the chosen list's order. A form reset puts every row back where it was before the first move. A list inside a `<fieldset disabled>` submits nothing, as the fieldset's own fields do, but a chosen row whose own checkbox is disabled still submits.
+
+After each move the container fires a bubbling `expressive:transfer` event whose `detail` is `{ rows, from, to }`: the moved rows in their new order, then the two lists. A polite live region after the container announces the move. `Expressive.TransferList.i18n.moved` holds its text, `Moved {count} to {list}` by default, where `{list}` is the destination list's name.
+
+```html
+<form>
+  <div class="transfer-list" data-name="toppings">
+    <ul class="list transfer-available" aria-label="Available toppings">
+      <li><label><input type="checkbox" value="olives"> Olives</label></li>
+      <li><label><input type="checkbox" value="peppers"> Peppers</label></li>
+    </ul>
+    <div class="transfer-actions">
+      <button type="button" class="icon-button" data-transfer="add" aria-label="Add checked toppings">
+        <span class="material-symbols" aria-hidden="true">chevron_right</span>
+      </button>
+      <button type="button" class="icon-button" data-transfer="add-all" aria-label="Add all toppings">
+        <span class="material-symbols" aria-hidden="true">keyboard_double_arrow_right</span>
+      </button>
+      <button type="button" class="icon-button" data-transfer="remove" aria-label="Remove checked toppings">
+        <span class="material-symbols" aria-hidden="true">chevron_left</span>
+      </button>
+      <button type="button" class="icon-button" data-transfer="remove-all" aria-label="Remove all toppings">
+        <span class="material-symbols" aria-hidden="true">keyboard_double_arrow_left</span>
+      </button>
+    </div>
+    <ul class="list transfer-chosen" aria-label="Chosen toppings">
+      <li><label><input type="checkbox" value="mushrooms"> Mushrooms</label></li>
+    </ul>
+  </div>
+</form>
+```
+
+The lists sit side by side and follow the page direction, and the icons flip in a right-to-left page so they keep pointing at the list they move rows to. Below the medium window size the lists stack, with the buttons in a row between them and their icons turned to point down and up. Each list scrolls once it is taller than `--md-comp-transfer-list-max-block-size` (20rem); `--md-comp-transfer-list-gap` (16px) spaces the parts and `--md-comp-transfer-list-shape` (the medium corner) rounds each list's outline.
+
+The script writes the values, so a page with the script blocked submits nothing for the list. The list must sit inside its form; one that reaches a form through a `form` attribute, or sits in a form inside a shadow root, adds no entries and ignores resets. There is no `required` check, so validate the chosen list on submit when it must not be empty.
 
 ## Autocomplete
 

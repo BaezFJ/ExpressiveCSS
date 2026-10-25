@@ -126,6 +126,22 @@ Feature gap: Actions only on the inline-end side, and no full swipe that runs an
 
 Mapped browser scope: Swipe reveal with no action run, the keyboard path through the toggle and its actions, short and over-long swipes, drags that do nothing, the toggle, outside tap, Escape and action close, one open row with matching events and callbacks, right-to-left pages, reduced motion with a :root duration override, and destroy() with a row open or mid-swipe. No spoken-output assertion.
 
+## [Transfer list](../../components/transfer-list.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Name both lists, keep every row and button reachable by keyboard, announce each move, keep focus on the pressed button, and submit the chosen options in a stable order.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework moves checked rows between the two lists, returns a row to its original slot, keeps the chosen order, announces each move, fires expressive:transfer and submits the chosen values under data-name; the page owns the rows, their values and the names of the lists and buttons.
+
+Verification gap: The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser. Spoken output and forced colors remain unverified. Next check: Move rows with NVDA in Firefox and VoiceOver in Safari and confirm each move is announced once; check the lists and icons in forced colors mode.
+
+Feature gap: No reordering inside the chosen list, no search over either list, no required validity, and no submission without the script. Next check: None planned.
+
+Mapped browser scope: Moving checked and all rows both ways, original slots, disabled rows and buttons, empty presses, focus after a move, the announcement and its i18n text, the event detail, form data from new FormData and a real submit, empty and missing data-name, disabled fieldsets, nested lists, reset by button and form.reset() including a cancelled reset, a list added after load, right-to-left pages and the narrow layout. No spoken-output assertion.
+
 ## [Input mask](../../components/input-mask.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.

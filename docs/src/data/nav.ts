@@ -787,6 +787,13 @@ export const NAV: DocsGroup[] = [
           "Material Design 3 checkboxes, from the HTML.",
       },
       {
+        id: "transfer_list",
+        label: "Transfer list",
+        route: "/transfer-list.html",
+        description:
+          "Moves options between an available list and a chosen list, and submits the chosen ones with the form.",
+      },
+      {
         id: "radio_buttons",
         label: "Radio",
         title: "Radio Buttons",

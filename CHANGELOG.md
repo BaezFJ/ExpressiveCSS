@@ -7,6 +7,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Transfer list. A `.transfer-list` holds a `.transfer-available` and a
+  `.transfer-chosen` list of checkbox rows with `data-transfer` buttons
+  between them. `add` and `remove` move the checked rows, `add-all` and
+  `remove-all` every row, and a row moved back returns to its original
+  place. The form submits the chosen rows' values under the container's
+  `data-name`, in the chosen list's order, and a form reset puts the rows
+  back. Each move fires `expressive:transfer` with `{ rows, from, to }`
+  and is announced through `TransferList.i18n.moved`. Four new semantics
+  rules ask for `data-name`, unnamed checkboxes, named lists and
+  `type="button"` on the move buttons.
 - Funnel chart. A `<figure class="funnel-chart">` draws each table row as
   a stage, from the top down in table order, centered and as wide as its
   value against the largest one. The tooltip adds each stage's percentage
