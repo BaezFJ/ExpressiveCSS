@@ -362,6 +362,7 @@ function unmount() {
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
+| `HoverCard` | `.hover-card-trigger` |
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
 
@@ -6016,6 +6017,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
+| `HoverCard` | `.hover-card-trigger` |
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
 
