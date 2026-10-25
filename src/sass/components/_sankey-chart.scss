@@ -1,0 +1,41 @@
+@use "../abstracts" as *;
+
+// Sankey chart. A <figure class="sankey-chart"> holds a <figcaption> and a
+// <table> of flows: the first column names each row's source node, the
+// second its target node, and the third holds the value. Without JavaScript
+// the table shows. SankeyChart draws the nodes in columns and each row as a
+// link between two of them, and hides the table visually, so a screen
+// reader still reads the flows as a table. The plot and tooltip come from
+// chart().
+//
+// The SVG stretches to the plot (preserveAspectRatio="none"). Nodes and
+// links are filled shapes with no stroke, so stretching keeps every link
+// as thick as its value and every node as tall as its total.
+//
+// Tokens:
+//   --md-comp-sankey-chart-height  240px
+
+@include chart("sankey-chart");
+
+// No grid lines or baseline: the nodes and links have no value axis.
+.sankey-chart-plot {
+  border: 0;
+  background: none;
+
+  > svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+}
+
+.sankey-chart-node {
+  fill: var(--md-sys-color-on-surface-variant);
+}
+
+.sankey-chart-link {
+  fill: var(--md-sys-color-on-surface-variant);
+  fill-opacity: 0.4;
+}

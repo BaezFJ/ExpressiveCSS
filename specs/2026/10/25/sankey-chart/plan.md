@@ -10,12 +10,12 @@ Outcome: `.sankey-chart` starts from AutoInit, reads source, target and value, a
 
 Prerequisites: none.
 
-- [ ] Add `tests/sankey-chart-browser.test.js` with the V1 and V2 cases, following `tests/scatter-chart-browser.test.js`. Run `npm run build` and the file, and confirm both fail.
-- [ ] Add the `sankey-chart` rules to `semantics.json` and run `npm run build:semantics`, because the semantics roster test fails for a registered component without a row.
-- [ ] Add `src/ts/components/sankeyChart.ts` with `SankeyChart extends LineChart`: `_type`, `_axis`, `_seriesFrom`, `_seriesTo`, the `_read()` override for targets, the layout function and `_draw()` for node and link paths.
-- [ ] Register it in `src/ts/components/registry.ts`, `index.ts` and `src/ts/modular.ts`, add the AutoInit fixture to `tests/fixtures.js`, and raise the fixture count in `tests/autoinit.test.js`.
-- [ ] Add `src/sass/components/_sankey-chart.scss`, forward it from `src/sass/components/_index.scss`, and add the class to `$_media-figure` in `_cards.scss` and the regexes in `tests/cards.test.js`.
-- [ ] Rebuild and rerun until V1 and V2 pass. Add the reviewed JavaScript and CSS budget lines.
+- [x] Add `tests/sankey-chart-browser.test.js` with the V1 and V2 cases, following `tests/scatter-chart-browser.test.js`. Run `npm run build` and the file, and confirm both fail.
+- [x] Add the `sankey-chart` rules to `semantics.json` and run `npm run build:semantics`, because the semantics roster test fails for a registered component without a row.
+- [x] Add `src/ts/components/sankeyChart.ts` with `SankeyChart extends LineChart`: `_type`, `_axis`, `_seriesFrom`, `_seriesTo`, the `_read()` override for targets, the layout function and `_draw()` for node and link paths.
+- [x] Register it in `src/ts/components/registry.ts`, `index.ts` and `src/ts/modular.ts`, add the AutoInit fixture to `tests/fixtures.js`, and raise the fixture count in `tests/autoinit.test.js`.
+- [x] Add `src/sass/components/_sankey-chart.scss`, forward it from `src/sass/components/_index.scss`, and add the class to `$_media-figure` in `_cards.scss` and the regexes in `tests/cards.test.js`.
+- [x] Rebuild and rerun until V1 and V2 pass. Add the reviewed JavaScript and CSS budget lines.
 
 Completion check: `node --test tests/sankey-chart-browser.test.js` passes V1 and V2 in Chromium, Firefox and WebKit, and `node --test tests/selective-builds.test.js tests/autoinit.test.js tests/semantics.test.js tests/cards.test.js` passes.
 
