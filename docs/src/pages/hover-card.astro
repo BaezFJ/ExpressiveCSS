@@ -1,0 +1,101 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "timing", label: "When it shows and hides" },
+  { id: "touch", label: "Touch and clicks" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "methods", label: "Options and methods" },
+]);
+---
+<DocsLayout page="hover_card" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A hover card previews where a link goes, such as a person or an article, when
+          the link is hovered or gets keyboard focus.
+        </p>
+        <p>
+          Add <code>hover-card-trigger</code> to an <code>&lt;a href&gt;</code> and point
+          its <code>aria-details</code> at the card, a <a href={route('popover')}>popover</a>
+          with <code>popover="hint"</code>. <code>AutoInit()</code> starts every
+          <code>.hover-card-trigger</code>. The card looks like a popover and sits below
+          the link with their start edges aligned, flipped to the other side when it
+          would not fit.
+        </p>
+        <p class="mb-3">
+          Written by <a class="hover-card-trigger" href="#ada" aria-details="demo-ada-card">Ada Lovelace</a>.
+        </p>
+        <div id="demo-ada-card" class="popover" popover="hint">
+          <h3>Ada Lovelace</h3>
+          <p>Mathematician. Wrote the first published program, for the Analytical Engine.</p>
+          <p><a href="#ada">All articles by Ada</a></p>
+        </div>
+<Code code={`
+<p>Written by <a class="hover-card-trigger" href="/people/ada"
+                 aria-details="ada-card">Ada Lovelace</a>.</p>
+<div id="ada-card" class="popover" popover="hint">
+  <h3>Ada Lovelace</h3>
+  <p>Mathematician. Wrote the first published program, for the Analytical Engine.</p>
+  <p><a href="/people/ada/articles">All articles by Ada</a></p>
+</div>
+`} />
+  </Section>
+  <Section {...S.timing}>
+        <p>
+          The card shows once the pointer or keyboard focus has rested on the link for
+          <code>enterDelay</code>, 500&nbsp;ms by default, so a pointer that only passes
+          over the link shows nothing. It stays while the pointer is on the link or the
+          card, and while focus is on either. When both are left, it hides after
+          <code>exitDelay</code>, 300&nbsp;ms by default, which is time enough for a
+          pointer to cross the gap to the card.
+        </p>
+        <p>
+          Focus stays on the link when the card shows, and Tab moves into the card's
+          links and buttons. Escape hides the card and takes focus in it back to the
+          link. A click elsewhere hides it too. One hint card shows at a time, and a hover
+          card leaves an open <a href={route('menu')}>menu</a> or popover alone.
+        </p>
+  </Section>
+  <Section {...S.touch}>
+        <p>
+          A tap or click follows the link and shows no card, so the linked page has to
+          hold the same content for touch screens. Keep the card a short preview, and put
+          anything to act on in the page, a popover opened by a button or a
+          <a href={route('dialogs')}>dialog</a>. Do not also give the link
+          <code>interestfor</code>, which Chromium would handle on its own as well.
+        </p>
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          <code>aria-details</code> tells a screen reader that the link has more detail
+          and lets it move there. Screen readers support it unevenly, and a hidden card is
+          not in the reading order at all, which is another reason the linked page must
+          hold the same content. Leave the role off the card: it can hold links, which a
+          <a href={route('tooltips')}>tooltip</a> cannot.
+        </p>
+  </Section>
+  <Section {...S.methods}>
+        <p>
+          <code>enterDelay</code> and <code>exitDelay</code> take milliseconds, from script
+          or from <code>data-hover-card-options</code>. The link fires
+          <code>expressive:open</code> and <code>expressive:close</code> when the card shows
+          and hides, also when the browser hides it.
+        </p>
+<Code code={`
+<a class="hover-card-trigger" href="/people/ada" aria-details="ada-card"
+   data-hover-card-options='{"enterDelay":300,"exitDelay":200}'>Ada Lovelace</a>
+<div id="ada-card" class="popover" popover="hint">…</div>
+`} />
+<Code code={`
+const card = Expressive.HoverCard.getInstance(document.querySelector('.hover-card-trigger'));
+card.open();    // shows the card now, without enterDelay
+card.close();   // hides it now, without exitDelay
+card.destroy(); // hides a card it showed and removes the listeners
+`} />
+  </Section>
+</DocsLayout>

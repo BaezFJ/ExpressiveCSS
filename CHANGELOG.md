@@ -7,6 +7,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Hover card. A link with `hover-card-trigger` names a `.popover` with
+  `popover="hint"` in `aria-details`, and once the pointer or keyboard
+  focus has rested on the link for 500 ms, that card shows against it.
+  The card stays while the pointer or focus is on the link or the card,
+  and hides 300 ms after both are left, or at once on Escape with focus
+  back on the link. A tap or click follows the link and shows no card.
+  Two new semantics rules keep the trigger an `<a href>` whose
+  `aria-details` names a `[popover]`.
 - `.defer-render` makes the browser skip layout and paint for a long
   list's off-screen rows through `content-visibility: auto`. Skipped rows
   reserve `--defer-render-row-size`, the list item height by default, and

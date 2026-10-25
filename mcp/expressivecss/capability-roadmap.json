@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.15.0",
-  "sourceRevision": "b1422daead32f22ddbc0c87c0efbb03016192d50",
+  "sourceRevision": "d4d8b5ae65005201605fb7306732ce3b83160d39",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-10-10",
@@ -3307,6 +3307,62 @@
         }
       ],
       "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "hover-card",
+      "title": "Hover card",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-25",
+      "scope": "A link with hover-card-trigger whose aria-details names a .popover with popover=\"hint\"; the card shows against the link after enterDelay of hover or keyboard focus, stays while the pointer or focus is on the link or card, hides after exitDelay or at once on Escape with focus back on the link, and a tap or click follows the link.",
+      "adaptation": "Script timers decide when the card shows, and showPopover({ source }) makes the link its anchor and invoker, so the browser places it, puts it next in the Tab order and light-dismisses it. Interest invokers (interestfor) exist only in Chromium, so they are not used.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-25",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Show the card on hover and keyboard focus after a delay, keep it open while the pointer or focus is on the link or the card, hide it on Escape with focus back on the link, leave the link's click alone and relate the card to the link with aria-details."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/ts/components/hoverCard.ts",
+          "sha256": "65fb569c5335552b907029aa81353072c3fc6af02cf24897016ce6bb8efd6ed4"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified.",
+          "nextStep": "Tab to a hover card link with VoiceOver and NVDA and confirm the details relationship is announced and the card is reachable."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/hover-card-browser.test.js",
+          "name": "chromium: hovering the link shows the card after the delay, and it stays while the pointer is on the card",
+          "scope": "Nothing before enterDelay, the card against the link's bottom edge plus the popover gap, staying open with the pointer on the card past exitDelay, and hiding once the pointer has left both.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/hover-card-browser.test.js",
+          "name": "chromium: keyboard focus shows the card, Tab moves into it, and Escape hides it with focus back on the link",
+          "scope": "Tab to the link shows the card after enterDelay with focus kept on the link, Tab into the card keeps it open, and Escape hides it with focus back on the link.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
