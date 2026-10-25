@@ -26,6 +26,7 @@ const html = `<style>${css}</style>
     ${funnel('class="funnel-chart" id="gap"', set({ Trial: 'n/a' }))}
     ${funnel('class="funnel-chart" id="nonpositive"', set({ Trial: '0', Paid: '-5' }))}
     ${funnel('class="funnel-chart" id="empty"', steps.map(([step]) => [step, 'n/a', 'n/a']))}
+    ${funnel('class="funnel-chart" id="watched" data-watch', steps)}
   </div>
   <div style="width: 600px" dir="rtl" lang="en">
     ${funnel('class="funnel-chart" id="rtl"', steps)}
@@ -83,12 +84,32 @@ async function tabTo(page, id) {
   await page.keyboard.press('Tab');
 }
 
+/**
+ * Runs in the page: sets a row's visitors in chart `id` to `value`, calls
+ * update(), and reads the row's stage width as a share of the plot: where
+ * its transition starts, or null without one, and where it ends.
+ */
+function change(id, row, value) {
+  const el = document.querySelector(id);
+  el.querySelector(`tbody tr:nth-child(${row + 1}) td`).textContent = value;
+  Expressive.FunnelChart.getInstance(el).update();
+  const stage = el.querySelectorAll('.funnel-chart-stages > div')[row].querySelector('span');
+  const share = () => stage.getBoundingClientRect().width / el.querySelector('.funnel-chart-plot').clientWidth;
+  const [transition] = stage.getAnimations();
+  if (!transition) return { from: null, to: share() };
+  transition.pause();
+  transition.currentTime = 0;
+  const from = share();
+  transition.finish();
+  return { from, to: share() };
+}
+
 /** A page with the fixture started, and any page errors it throws. */
-async function open(browser) {
+async function open(browser, reducedMotion = 'reduce') {
   const page = await browser.newPage();
   const errors = [];
   page.on('pageerror', (error) => errors.push(error));
-  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.emulateMedia({ reducedMotion });
   await page.setContent(html);
   await page.evaluate(() => Expressive.AutoInit());
   return [page, errors];
@@ -227,6 +248,52 @@ for (const [engine, browserType, browserTest] of engines) {
       // A gap is left out, as in every chart; zero and below have no share.
       assert.equal((await tips('#gap'))[2], 'Trial Revenue $500');
       assert.deepEqual((await tips('#nonpositive')).slice(2), ['Trial Visitors 0 Revenue $500', 'Paid Visitors -5 Revenue $4,500']);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: funnel chart update() moves each stage from its old width`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      for (const motion of ['no-preference', 'reduce']) {
+        const [page] = await open(browser, motion);
+        await tabTo(page, '#ltr');
+        await page.keyboard.press('ArrowDown');
+        // In one evaluate, so neither transition ends before it is read.
+        const [ltr, gap] = await page.evaluate((source) => {
+          const changed = new Function(`return ${source}`)();
+          return [changed('#ltr', 1, '800'), changed('#gap', 2, '300')];
+        }, change.toString());
+        assert.ok(Math.abs(ltr.to - 0.8) < 0.01, `${motion}: ends at 800 of 1000, at ${ltr.to}`);
+        if (motion === 'reduce') {
+          assert.deepEqual([ltr.from, gap.from], [null, null], 'no transition under reduced motion');
+        } else {
+          assert.ok(Math.abs(ltr.from - 0.6) < 0.01, `starts at its old 600 of 1000, at ${ltr.from}`);
+          assert.ok(gap.from < 0.01, `a stage new to the chart grows from nothing, at ${gap.from}`);
+        }
+        // update() keeps focus on the plot and the highlighted row.
+        const kept = await page.locator('#ltr').evaluate((el) =>
+          [el.querySelector('.funnel-chart-plot') === document.activeElement, Expressive.FunnelChart.getInstance(el).activeIndex]);
+        assert.deepEqual(kept, [true, 1], motion);
+        assert.match(await tip(page, '#ltr'), /^Signed up Visitors 800 \(80%\)/, motion);
+        await page.close();
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: funnel chart with data-watch redraws when its table changes`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const [page] = await open(browser);
+      await page.locator('#watched tbody tr:nth-child(3) td:first-of-type').evaluate((cell) => { cell.textContent = '500'; });
+      await page.waitForFunction(() => {
+        const el = document.querySelector('#watched');
+        const stage = el.querySelectorAll('.funnel-chart-stages > div')[2].querySelector('span');
+        return Math.abs(stage.getBoundingClientRect().width / el.querySelector('.funnel-chart-plot').clientWidth - 0.5) < 0.01;
+      });
     } finally {
       await browser.close();
     }

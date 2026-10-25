@@ -407,5 +407,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed .defer-render: content-visibility on off-screen rows except swipe rows, their reserved size and inset focus rings: 86,844 gzip bytes (+108).
   // Reviewed the funnel chart: the plot, tooltip and label column, and centered stages that keep their color in forced colors: 87,371 gzip bytes (+527).
   // Reviewed the funnel chart's row band and the tooltip beside the highlighted row: 87,427 gzip bytes (+56).
-  assert.ok(sizes(css).gzip <= 87427, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed funnel chart stages growing from their old width on update(), with no motion under reduced motion: 87,452 gzip bytes (+25).
+  assert.ok(sizes(css).gzip <= 87452, `CSS gzip: ${sizes(css).gzip}`);
 });

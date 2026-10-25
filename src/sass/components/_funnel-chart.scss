@@ -78,6 +78,18 @@
     border-radius: var(--md-comp-funnel-chart-shape);
     background-color: var(--funnel-chart-color);
   }
+
+  // Each stage grows from nothing, or after update() from its old width,
+  // which FunnelChart writes as --from-width.
+  @media (prefers-reduced-motion: no-preference) {
+    > div > span {
+      transition: width var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-standard);
+
+      @starting-style {
+        width: calc(var(--from-width, 0) * 1%);
+      }
+    }
+  }
 }
 
 // A band behind the highlighted row's stage.
