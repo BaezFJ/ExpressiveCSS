@@ -13,6 +13,12 @@ interface CascaderNode {
 /** The input attributes the component sets, put back by destroy(). */
 const INPUT_ATTRIBUTES = ['readonly', 'role', 'aria-haspopup', 'aria-expanded', 'aria-controls'];
 
+/** Keys that open the popover from the input; Alt+ArrowDown is ArrowDown too. */
+const OPEN_KEYS = ['Enter', ' ', 'ArrowDown'];
+
+/** Arrow keys swapped under dir="rtl", where the next column is to the left. */
+const RTL_KEYS: Record<string, string> = { ArrowLeft: 'ArrowRight', ArrowRight: 'ArrowLeft' };
+
 /** How the input shows a committed path. */
 const SEPARATOR = ' / ';
 
@@ -110,7 +116,9 @@ export class Cascader extends Component<CascaderOptions> {
     this._show();
     const { signal } = this._events;
     this.input.addEventListener('click', this._handleInputClick, { signal });
+    this.input.addEventListener('keydown', this._handleInputKeydown, { signal });
     this.popover.addEventListener('click', this._handleOptionClick, { signal });
+    this.popover.addEventListener('keydown', this._handleOptionKeydown, { signal });
   }
 
   static get defaults(): CascaderOptions {
@@ -263,6 +271,73 @@ export class Cascader extends Component<CascaderOptions> {
     this._choose(this._columns.indexOf(option.parentElement), node);
     if (!node.children.length) this._commit();
   }
+
+  /** Moves into the next column from a branch; a leaf has none. */
+  private _forward(option: HTMLElement) {
+    if (this._nodes.get(option).children.length) this._enter(option);
+  }
+
+  /** Enter and Space: a branch opens the next column, and a leaf commits. */
+  private _activate(option: HTMLElement) {
+    if (this._nodes.get(option).children.length) this._enter(option);
+    else this._pick(option);
+  }
+
+  /** Chooses a branch and moves focus to the first option of its column. */
+  private _enter(option: HTMLElement) {
+    this._pick(option);
+    this._focus(this._columns.at(-1).firstElementChild);
+  }
+
+  /** Back to the option that opened this column, leaving the columns as they are. */
+  private _back(option: HTMLElement) {
+    const level = this._columns.indexOf(option.parentElement);
+    if (level > 0) this._focus(this._optionFor(this._open[level - 1]));
+  }
+
+  /** Closes without committing and returns focus to the input. */
+  private _dismiss() {
+    this.close();
+    this.input.focus();
+  }
+
+  /** Up, Down, Home and End within a column, without wrapping. */
+  private _move(option: HTMLElement, e: KeyboardEvent) {
+    this._focus(Utils.focusTarget(Array.from(option.parentElement.children) as HTMLElement[], e, { ArrowDown: 1, ArrowUp: -1 }));
+  }
+
+  /** What each key does on an option, by its left-to-right name. */
+  private _keys: Record<string, (option: HTMLElement, e: KeyboardEvent) => void> = {
+    ArrowDown: (option, e) => this._move(option, e),
+    ArrowUp: (option, e) => this._move(option, e),
+    Home: (option, e) => this._move(option, e),
+    End: (option, e) => this._move(option, e),
+    ArrowRight: (option) => this._forward(option),
+    ArrowLeft: (option) => this._back(option),
+    Enter: (option) => this._activate(option),
+    ' ': (option) => this._activate(option),
+    Escape: () => this._dismiss(),
+    Tab: () => this._dismiss(),
+  };
+
+  /** The key's left-to-right name, so ArrowLeft and ArrowRight follow the columns under dir="rtl". */
+  private _keyName(e: KeyboardEvent) {
+    return getComputedStyle(this.el).direction === 'rtl' ? RTL_KEYS[e.key] ?? e.key : e.key;
+  }
+
+  _handleInputKeydown = Utils.ignoringComposition((e: KeyboardEvent) => {
+    if (this.isOpen || !OPEN_KEYS.includes(e.key)) return;
+    e.preventDefault();
+    this.open();
+  });
+
+  _handleOptionKeydown = (e: KeyboardEvent) => {
+    const option = (e.target as Element).closest<HTMLElement>('[role="option"]');
+    const action = option && this._keys[this._keyName(e)];
+    if (!action) return;
+    e.preventDefault();
+    action(option, e);
+  };
 
   _handleInputClick = () => {
     if (this.isOpen) this.close();

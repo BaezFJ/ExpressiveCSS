@@ -138,3 +138,104 @@ each('a click on the open field closes it', async (page) => {
   await page.click('#place');
   assert.equal((await state(page)).open, false);
 });
+
+/** Presses each key in turn. */
+const press = async (page, ...keys) => {
+  for (const key of keys) await page.keyboard.press(key);
+};
+
+each('the keyboard opens the field, moves through the columns, commits a leaf and closes', async (page) => {
+  for (const key of ['Enter', 'Space', 'ArrowDown', 'Alt+ArrowDown']) {
+    await page.focus('#place');
+    await press(page, key);
+    const seen = await state(page);
+    assert.deepEqual([seen.open, seen.focused], [true, 'United States'], key);
+    await press(page, 'Escape');
+    assert.deepEqual(await state(page).then((s) => [s.open, s.focused]), [false, 'input'], `${key} then Escape`);
+  }
+
+  await press(page, 'Enter', 'ArrowDown');
+  assert.equal((await state(page)).focused, 'Canada');
+  await press(page, 'ArrowDown');
+  assert.equal((await state(page)).focused, 'Canada', 'no wrap past the last option');
+  await press(page, 'ArrowUp');
+  assert.equal((await state(page)).focused, 'United States');
+  await press(page, 'End');
+  assert.equal((await state(page)).focused, 'Canada');
+  await press(page, 'Home', 'ArrowRight');
+  let seen = await state(page);
+  assert.deepEqual([seen.focused, seen.columns.length], ['California', 2]);
+  await press(page, 'ArrowLeft');
+  seen = await state(page);
+  assert.deepEqual([seen.focused, seen.columns.length], ['United States', 2], 'ArrowLeft keeps the column');
+  await press(page, 'ArrowLeft');
+  assert.equal((await state(page)).focused, 'United States', 'nothing before the first column');
+  await press(page, 'ArrowRight', 'ArrowRight', 'ArrowRight');
+  seen = await state(page);
+  assert.deepEqual([seen.focused, seen.columns.length], ['San Francisco', 3], 'ArrowRight on a leaf does nothing');
+
+  await press(page, 'Escape');
+  seen = await state(page);
+  assert.deepEqual([seen.open, seen.focused, seen.value, seen.events], [false, 'input', '', '']);
+
+  for (const key of ['Tab', 'Shift+Tab']) {
+    await press(page, 'Enter', key);
+    seen = await state(page);
+    assert.deepEqual([seen.open, seen.focused, seen.value], [false, 'input', ''], key);
+  }
+
+  await press(page, 'Enter', 'ArrowRight', 'Enter', 'ArrowDown', 'Space');
+  seen = await state(page);
+  assert.deepEqual([seen.open, seen.focused, seen.value, seen.events], [false, 'input', 'United States / California / Los Angeles', 'input,change']);
+  await press(page, 'Enter');
+  seen = await state(page);
+  assert.deepEqual([seen.focused, seen.selected], ['Los Angeles', ['United States', 'California', 'Los Angeles']], 'reopens at the committed leaf');
+});
+
+each('an Enter that confirms an IME candidate does not open the field', async (page) => {
+  const opened = await page.evaluate(() => {
+    const input = document.getElementById('place');
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', isComposing: true, bubbles: true }));
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', keyCode: 229, bubbles: true }));
+    return input.getAttribute('aria-expanded');
+  });
+  assert.equal(opened, 'false');
+});
+
+each('the input, popover, columns and options carry their roles, names and states', async (page) => {
+  await page.focus('#place');
+  await press(page, 'Enter', 'ArrowRight', 'ArrowRight');
+  assert.equal(await page.getAttribute('#place', 'aria-expanded'), 'true');
+  assert.equal(await page.getByRole('dialog', { name: 'place' }).count(), 1);
+  for (const name of ['place', 'United States', 'California']) {
+    assert.equal(await page.getByRole('listbox', { name, exact: true }).count(), 1, name);
+  }
+  const columns = await page.evaluate(() =>
+    [...document.querySelectorAll('.cascader-popover [role="listbox"]')].map((column) => ({
+      selected: [...column.querySelectorAll('[aria-selected="true"]')].map((o) => o.textContent),
+      unselected: column.querySelectorAll('[aria-selected="false"]').length,
+      stops: [...column.children].filter((o) => o.tabIndex === 0).length,
+      chevrons: [...column.querySelectorAll('.cascader-chevron[aria-hidden="true"]')].map((c) => c.parentElement.textContent),
+    })));
+  assert.deepEqual(columns, [
+    { selected: ['United States'], unselected: 1, stops: 1, chevrons: ['United States'] },
+    { selected: ['California'], unselected: 1, stops: 1, chevrons: ['California'] },
+    { selected: [], unselected: 2, stops: 1, chevrons: [] },
+  ]);
+  await press(page, 'Escape');
+  assert.equal(await page.getAttribute('#place', 'aria-expanded'), 'false');
+});
+
+each('under dir="rtl" the columns run right to left and the arrow keys swap', async (page) => {
+  await page.evaluate(() => (document.getElementById('form').dir = 'rtl'));
+  await page.focus('#place');
+  await press(page, 'Enter', 'ArrowLeft', 'ArrowLeft');
+  let seen = await state(page);
+  assert.deepEqual([seen.focused, seen.columns.length], ['San Francisco', 3]);
+  const lefts = await page.evaluate(() =>
+    [...document.querySelectorAll('.cascader-popover [role="listbox"]')].map((column) => column.getBoundingClientRect().left));
+  assert.ok(lefts[0] > lefts[1] && lefts[1] > lefts[2], `column lefts ${lefts}`);
+  await press(page, 'ArrowRight');
+  seen = await state(page);
+  assert.deepEqual([seen.focused, seen.columns.length], ['California', 3]);
+});
