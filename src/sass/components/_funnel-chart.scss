@@ -80,8 +80,33 @@
   }
 }
 
+// A band behind the highlighted row's stage.
+.funnel-chart-cursor {
+  z-index: -1;
+  inset-block: auto;
+  inset-inline: 0;
+  height: calc(100% / var(--rows, 1));
+  border-radius: var(--md-comp-funnel-chart-shape);
+  background-color: state-layer(var(--md-sys-color-on-surface), "hover");
+  translate: 0 -50%;
+}
+
+// Below the highlighted row, or above it in the lower half.
+.funnel-chart-tooltip {
+  left: 50%;
+  translate: -50% calc(var(--md-comp-funnel-chart-row-height) / 2);
+
+  &.end {
+    translate: -50% calc(-100% - var(--md-comp-funnel-chart-row-height) / 2);
+  }
+}
+
 @media (forced-colors: active) {
   .funnel-chart-stages > div > span {
     forced-color-adjust: none;
+  }
+
+  .funnel-chart-cursor {
+    outline: 1px solid CanvasText;
   }
 }

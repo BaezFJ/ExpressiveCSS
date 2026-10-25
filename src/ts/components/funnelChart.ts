@@ -1,4 +1,4 @@
-import { LineChart, LineChartOptions } from './lineChart';
+import { LineChart, LineChartOptions, numberFormat } from './lineChart';
 
 export type FunnelChartOptions = LineChartOptions;
 
@@ -24,7 +24,8 @@ function stage(width: number, from: number | null | undefined) {
  * Funnel chart. It reads its <table> like LineChart, but draws each row of
  * the first value column as a stage, top to bottom in table order, as wide
  * as its value against the largest one and centered on the plot. Further
- * columns show in the tooltip. The up and down arrows move the tooltip
+ * columns show in the tooltip, which also gives each stage's value as a
+ * percentage of the first row's. The up and down arrows move the tooltip
  * between rows.
  *
  * Call `update()` after changing the table, or start it with `watch` or
@@ -54,6 +55,33 @@ export class FunnelChart extends LineChart {
   protected _read() {
     super._read();
     for (const series of this.series) series.color = '1';
+  }
+
+  show(index: number) {
+    // Skipping a repeat keeps the percentage from being added twice.
+    if (!this._tooltip || index === this.activeIndex) return;
+    super.show(index);
+    this._addShare(index);
+  }
+
+  /** Writes a row's share after its first value in the tooltip. */
+  private _addShare(index: number) {
+    const share = this._share(index);
+    // A row with a share has a first value, so the first value text is its own.
+    const text = this._tooltip.querySelector('span:nth-of-type(2)');
+    if (share && text) text.textContent += ` (${share})`;
+  }
+
+  /**
+   * A row's value as a percentage of the first row's, in whole percentages
+   * with a tenth below 10%, or '' when either row has no stage.
+   */
+  private _share(index: number) {
+    const values = this.series[0].values;
+    const [first, value] = [values[0], values[index]];
+    if (!(first! > 0 && value! > 0)) return '';
+    const share = value! / first!;
+    return numberFormat(this.el, { style: 'percent', maximumFractionDigits: share < 0.1 ? 1 : 0 }).format(share);
   }
 
   /** A funnel has one series of stages, so it has no legend. */

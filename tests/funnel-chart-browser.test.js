@@ -20,13 +20,14 @@ const steps = [['Visited', '1000', '$0'], ['Signed up', '600', '$0'], ['Trial', 
 const set = (changes) => steps.map((row) => (row[0] in changes ? [row[0], changes[row[0]], row[2]] : row));
 
 const html = `<style>${css}</style>
-  <div style="width: 600px">
+  <button type="button">Before</button>
+  <div style="width: 600px" lang="en">
     ${funnel('class="funnel-chart" id="ltr"', steps)}
     ${funnel('class="funnel-chart" id="gap"', set({ Trial: 'n/a' }))}
     ${funnel('class="funnel-chart" id="nonpositive"', set({ Trial: '0', Paid: '-5' }))}
     ${funnel('class="funnel-chart" id="empty"', steps.map(([step]) => [step, 'n/a', 'n/a']))}
   </div>
-  <div style="width: 600px" dir="rtl">
+  <div style="width: 600px" dir="rtl" lang="en">
     ${funnel('class="funnel-chart" id="rtl"', steps)}
   </div>
   <script>${js}</script>`;
@@ -66,6 +67,20 @@ function proportional({ plot, stages }, shares, message) {
     assert.ok(stage.top >= above - 0.5 && stage.bottom <= plot.bottom + 0.5, `${message}, row ${i}: below the one before`);
     above = stage.bottom;
   });
+}
+
+/** Runs in the page: a tooltip's parts, a space between each. */
+const words = (tooltip) => [...tooltip.children].map((part) => part.textContent).join(' ');
+
+/** The tooltip's text, or null while it is hidden. */
+const tip = (page, id) => page.locator(`${id} .funnel-chart-tooltip`).evaluate((el, source) =>
+  (el.hidden ? null : new Function(`return ${source}`)()(el)), words.toString());
+
+/** Gives a chart's plot keyboard focus, through Tab, so it matches :focus-visible. */
+async function tabTo(page, id) {
+  await page.locator(`${id} .funnel-chart-plot`).focus();
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Tab');
 }
 
 /** A page with the fixture started, and any page errors it throws. */
@@ -112,6 +127,106 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.equal(empty.plot, null);
       assert.notEqual(empty.table, 'absolute', 'the table stays visible');
       assert.deepEqual(errors, []);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: funnel chart names its plot and puts each label beside its stage`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const [page] = await open(browser);
+      for (const [id, rtl] of [['#ltr', false], ['#rtl', true]]) {
+        const plot = await page.locator(`${id} .funnel-chart-plot`).evaluate((el) =>
+          [el.tabIndex, el.getAttribute('role'), el.getAttribute('aria-roledescription'), el.getAttribute('aria-label')]);
+        assert.deepEqual(plot, [0, 'group', 'funnel chart', 'Signup funnel'], id);
+        const drawn = await read(page, id);
+        const end = drawn.plot.left + drawn.plot.width;
+        drawn.labels.forEach((label, i) => {
+          assert.ok(rtl ? label.left >= end : label.right <= drawn.plot.left, `${id}: label ${i} at the inline start`);
+          const stage = drawn.stages[i];
+          assert.ok(Math.abs(label.middle - (stage.top + stage.bottom) / 2) <= 1, `${id}: label ${i} level with its stage`);
+        });
+      }
+      // Two value columns, but one series of stages, so no legend, and every stage in the first color.
+      const look = await page.locator('#ltr').evaluate((el) => {
+        const probe = document.createElement('span');
+        probe.style.backgroundColor = 'var(--md-sys-color-primary)';
+        el.append(probe);
+        const primary = getComputedStyle(probe).backgroundColor;
+        probe.remove();
+        const stages = [...el.querySelectorAll('.funnel-chart-stages span')].map((span) => getComputedStyle(span).backgroundColor);
+        return { legend: !!el.querySelector('.funnel-chart-legend'), primary, stages };
+      });
+      assert.equal(look.legend, false);
+      assert.deepEqual(look.stages, Array(4).fill(look.primary));
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: funnel chart moves between rows with the up and down arrows`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const [page] = await open(browser);
+      for (const id of ['#ltr', '#rtl']) {
+        await tabTo(page, id);
+        assert.match(await tip(page, id), /^Visited/, `${id}: focus shows the first row`);
+        await page.keyboard.press('ArrowDown');
+        assert.match(await tip(page, id), /^Signed up/, id);
+        await page.keyboard.press('End');
+        assert.match(await tip(page, id), /^Paid/, id);
+        await page.keyboard.press('Home');
+        assert.match(await tip(page, id), /^Visited/, id);
+        await page.keyboard.press('ArrowUp');
+        assert.match(await tip(page, id), /^Visited/, `${id}: the first row is the top`);
+        await page.keyboard.press('Escape');
+        assert.equal(await tip(page, id), null, id);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: funnel chart highlights the row under the pointer`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const [page] = await open(browser);
+      const box = await page.locator('#ltr .funnel-chart-plot').boundingBox();
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height * (2.5 / 4));
+      assert.match(await tip(page, '#ltr'), /^Trial/);
+      // A band behind the row, and the tooltip above it in the lower half.
+      const band = await page.locator('#ltr .funnel-chart-cursor').boundingBox();
+      assert.ok(Math.abs(band.height - box.height / 4) < 1 && Math.abs(band.y - (box.y + box.height / 2)) < 1, JSON.stringify(band));
+      const tooltip = await page.locator('#ltr .funnel-chart-tooltip').boundingBox();
+      assert.ok(tooltip.y + tooltip.height <= band.y + 1, 'the tooltip sits above the row');
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height + 200);
+      assert.equal(await tip(page, '#ltr'), null);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: funnel chart tooltip gives each stage's share of the first`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const [page] = await open(browser);
+      const tips = (id) => page.locator(id).evaluate((el, source) => {
+        const chart = Expressive.FunnelChart.getInstance(el);
+        return chart.labels.map((_, i) => {
+          chart.show(i);
+          return new Function(`return ${source}`)()(el.querySelector('.funnel-chart-tooltip'));
+        });
+      }, words.toString());
+      assert.deepEqual(await tips('#ltr'), [
+        'Visited Visitors 1000 (100%) Revenue $0',
+        'Signed up Visitors 600 (60%) Revenue $0',
+        'Trial Visitors 250 (25%) Revenue $500',
+        'Paid Visitors 45 (4.5%) Revenue $4,500',
+      ]);
+      // A gap is left out, as in every chart; zero and below have no share.
+      assert.equal((await tips('#gap'))[2], 'Trial Revenue $500');
+      assert.deepEqual((await tips('#nonpositive')).slice(2), ['Trial Visitors 0 Revenue $500', 'Paid Visitors -5 Revenue $4,500']);
     } finally {
       await browser.close();
     }
