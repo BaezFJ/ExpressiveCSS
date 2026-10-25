@@ -364,6 +364,15 @@ test('a currency code goes only on a text input', () => {
   assert.equal(broken('<input data-currency="JPY">'), 0);
 });
 
+test('a show-more needs a real button and clamped text', () => {
+  const broken = (html) => violations(html, enforcedRules, data.compositeRoles, { fragmentSafe: true })
+    .filter((v) => v.rule.id.startsWith('show-more-')).map((v) => v.rule.id);
+  assert.deepEqual(broken('<div class="show-more"><p class="line-clamp-2">Text</p><span role="button">Show more</span></div>'), ['show-more-needs-a-button']);
+  assert.deepEqual(broken('<div class="show-more"><p class="line-clamp-2">Text</p><button>Show more</button></div>'), ['show-more-needs-a-button']);
+  assert.deepEqual(broken('<div class="show-more"><p>Text</p><button type="button">Show more</button></div>'), ['show-more-needs-clamped-text']);
+  assert.deepEqual(broken('<div class="show-more"><p class="line-clamp-2">Text</p><button type="button">Show more</button></div>'), []);
+});
+
 test('a hover card trigger is a link that names its card', () => {
   const broken = (html, id) => violations(html, enforcedRules, data.compositeRoles)
     .filter((v) => v.rule.id === id).length;

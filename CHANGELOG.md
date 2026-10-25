@@ -7,6 +7,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Show more. A `.show-more` holds text with a `line-clamp-1`, `-2` or
+  `-3` class and a `<button>`; the button shows the full text, reads
+  "Show less" while it is open (`i18n.showLess` or `data-show-less`) and
+  sets `aria-expanded` and `aria-controls`. The button hides while the
+  clamped text fits and comes back when a resize or a web font cuts it.
+  New semantics rules require a `<button type="button">` and clamped text.
 - Treemap chart. A `<figure class="treemap-chart">` draws each row of its
   table's first value column as a rectangle whose area is its share of the
   total, filling the plot in a squarified layout from the largest value

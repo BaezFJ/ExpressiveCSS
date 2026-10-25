@@ -156,6 +156,11 @@ export const AUTO_INIT_FIXTURES = [
     html: `<div class="field"><input id="phone" type="tel" inputmode="numeric" placeholder=" " data-mask="(000) 000-0000"><label for="phone">Phone</label></div>`,
   },
   {
+    name: "ShowMore",
+    selector: ".show-more",
+    html: `<div class="show-more"><p class="line-clamp-2">A long description that runs past two lines.</p><button type="button">Show more</button></div>`,
+  },
+  {
     name: "HoverCard",
     selector: ".hover-card-trigger",
     html: `<p><a class="hover-card-trigger" href="#ada" aria-details="ada-card">Ada Lovelace</a></p><div id="ada-card" class="popover" popover="hint"><h3>Ada Lovelace</h3><p>Wrote the first published program.</p></div>`,

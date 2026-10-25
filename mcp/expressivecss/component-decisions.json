@@ -2771,6 +2771,106 @@
       }
     },
     {
+      "slug": "show-more",
+      "title": "Show more",
+      "aliases": [
+        "read more",
+        "expand text",
+        "truncated text",
+        "text collapse"
+      ],
+      "guideSource": {
+        "pageId": "show_more",
+        "heading": "Show more",
+        "headingLevel": 2,
+        "semantics": [
+          "show-more"
+        ]
+      },
+      "jobs": [
+        "Clamped text with a button that shows the rest, and hides itself when the text already fits."
+      ],
+      "useWhen": [
+        "A description, review or message that usually runs past a few lines, in a card or list where the full text would push the rest of the layout down."
+      ],
+      "avoidWhen": [
+        "Sections with headings or controls a person needs to find; use an accordion, whose panels the browser's find-in-page can open.",
+        "Text that is short or always matters in full; show all of it."
+      ],
+      "alternatives": [
+        "accordion",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/show-more.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#show-more",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "A .show-more holding text with a line-clamp-1, -2 or -3 class and a <button type=\"button\">; the button sets aria-expanded and aria-controls, shows the full text, reads \"Show less\" while it is open (i18n.showLess or data-show-less), and hides while the clamped text fits, checking again on resize, after web fonts load and on blur.",
+          "webAdaptation": "The component unclamps with inline -webkit-line-clamp and line-clamp, because the utilities layer and prefixed clamp classes beat any component rule. A ResizeObserver on the text and document.fonts.ready run the fit check, scrollHeight against clientHeight with 1px for Firefox's rounding.",
+          "limitations": [
+            "Toggling, the fit check across widths, fractional line heights and window-size prefixes, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output is unverified. Find-in-page does not open clamped text, a font that starts loading after document.fonts.ready has settled is not caught until the next resize, and an icon-only button keeps its aria-label while open."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the control a native button named by visible text, report its expanded state, point it at the text it controls, and hide it from sight and the tab order when there is nothing more to show."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A product card clamps its description to three lines with a Show more text button; a terms-of-service page with headed sections uses an accordion instead.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/ts/components/showMore.ts",
+            "sha256": "d6a961f6810f004ac7d5cdf1575717a2cdbd20cb4ca6d4e08e2ba413f00713d3"
+          },
+          {
+            "path": "src/sass/components/_show-more.scss",
+            "sha256": "430401c741e9628d553e836fb98078fd39a1f64e42f2fa49264a34427638e650"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Toggling, the fit check, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output with VoiceOver and NVDA is unverified.",
+            "nextStep": "Activate the button with VoiceOver and NVDA and check that the expanded state and label are announced."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/show-more-browser.test.js",
+            "name": "chromium: the button shows the full text and collapses it again",
+            "scope": "A click and Enter that unclamp and clamp the text, with aria-expanded and aria-controls."
+          },
+          {
+            "file": "tests/show-more-browser.test.js",
+            "name": "chromium: the button hides while the clamped text fits",
+            "scope": "Text that fits, a fractional line height, a container widened and narrowed, a window-size prefix, Tab order, and a focused button kept through a resize and until blur."
+          },
+          {
+            "file": "tests/show-more-browser.test.js",
+            "name": "chromium: a web font that swaps in hides the button once its text fits",
+            "scope": "A held-back web font that makes cut text fit, and an instance destroyed before the font loads."
+          }
+        ]
+      }
+    },
+    {
       "slug": "data-table",
       "title": "Data table",
       "aliases": [
@@ -13386,5 +13486,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "ace810af0e18bbc73150b910053adc41408b0f6a"
+  "sourceRevision": "e58a5f3e5415af86cfb165c364859291d1bd2b5e"
 }

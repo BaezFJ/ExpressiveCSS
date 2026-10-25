@@ -80,6 +80,7 @@ export const AUTO_INIT_COMPONENTS = {
     component: Components.InputMask,
     selector: 'input[data-mask]:is(:not([type]), [type="text" i], [type="tel" i], [type="search" i], [type="url" i], [type="password" i])',
   },
+  ShowMore: { component: Components.ShowMore, selector: ".show-more" },
   // Only a text input can hold the formatted amount.
   CurrencyInput: { component: Components.CurrencyInput, selector: 'input[data-currency]:is(:not([type]), [type="text" i])' },
   Lightbox: { component: Components.Lightbox, selector: ".lightboxed" },

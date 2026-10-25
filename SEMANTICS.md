@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**105 of 105 rows enforced; 0 remaining.**
+**106 of 106 rows enforced; 0 remaining.**
 
-100 of those rows are components - a part of the framework an author writes markup for.
+101 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 100 components declare conformance debt.**
+**2 of 101 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -1176,6 +1176,18 @@ The bar is a `<search>` landmark holding an `<input type="search">`; the view is
 
 - **search-view-not-a-composite-widget** - The search view takes no composite role. Its contents are links and buttons reached with Tab; the combobox and listbox belong to the Autocomplete on the bar's input.
 - **search-bar-holds-a-search-input** - The bar's control is a search input. `type="search"` is what tells assistive technology, the UA and the on-screen keyboard what the field is for, and it is static semantics, so the author states it.
+
+### show-more
+
+Added with the show-more component. The author writes clamped text and the button that expands it; AutoInit sets the button's aria-expanded and aria-controls, swaps its label while the text is open, and hides it when the text already fits.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `show-more-needs-a-button` | forbid | `.show-more:not(:has(> button[type="button" i]))` | must not match |
+| `show-more-needs-clamped-text` | forbid | `.show-more:not(:has(> :is(.line-clamp-1, .line-clamp-2, .line-clamp-3)))` | must not match |
+
+- **show-more-needs-a-button** - Give a .show-more a <button type="button"> child. A <span> or <div> with role="button" is not operable from the keyboard without script, and a <button> without type="button" submits the form it sits in.
+- **show-more-needs-clamped-text** - Give a .show-more a child with line-clamp-1, line-clamp-2 or line-clamp-3. That is the text the button expands; without it the component does nothing.
 
 ### side-sheet
 

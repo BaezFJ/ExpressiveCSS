@@ -248,6 +248,7 @@ function unmount() {
             <tr><td><code>LoadingOverlay</code></td><td><code>.loading-overlay</code></td></tr>
             <tr><td><code>SwipeActions</code></td><td><code>.list.swipeable</code></td></tr>
             <tr><td><code>InputMask</code></td><td><code>input[data-mask]</code> of type text, tel, search, url or password</td></tr>
+            <tr><td><code>ShowMore</code></td><td><code>.show-more</code></td></tr>
             <tr><td><code>CurrencyInput</code></td><td><code>input[data-currency]</code> of type text</td></tr>
             <tr><td><code>Lightbox</code></td><td><code>.lightboxed</code></td></tr>
             <tr><td><code>NavigationRail</code></td><td><code>.navigation-rail</code></td></tr>
@@ -317,7 +318,7 @@ document.addEventListener('expressive:open', (event) => {
             <tr><td><code>expressive:create</code></td><td>Autocomplete, from its "Add" row</td><td><code>{"{ text }"}</code></td></tr>
             <tr><td><code>expressive:chip-add</code>, <code>chip-select</code>, <code>chip-delete</code></td><td>Chips</td><td><code>{"{ chip }"}</code></td></tr>
             <tr><td><code>expressive:change</code></td><td>ButtonGroup, Menu checkbox and radio items, ScrollSpy (from the section), Tour</td><td><code>{"{ button, pressed }"}</code>, <code>{"{ item, checked }"}</code>, <code>{"{ link }"}</code>, <code>{"{ step, index }"}</code></td></tr>
-            <tr><td><code>expressive:open</code>, <code>expressive:close</code></td><td>Tooltip, HoverCard, Snackbar, Tour</td><td>Tour's close: <code>{"{ completed }"}</code></td></tr>
+            <tr><td><code>expressive:open</code>, <code>expressive:close</code></td><td>Tooltip, HoverCard, Snackbar, Tour, ShowMore</td><td>Tour's close: <code>{"{ completed }"}</code></td></tr>
             <tr><td><code>expressive:action</code>, <code>expressive:closed</code></td><td>Snackbar</td><td>none</td></tr>
             <tr><td><code>expressive:copy</code></td><td>Copy buttons</td><td><code>{"{ text, copied }"}</code></td></tr>
             <tr><td><code>expressive:refresh</code></td><td>Pull-to-refresh</td><td><code>{"{ waitUntil }"}</code></td></tr>

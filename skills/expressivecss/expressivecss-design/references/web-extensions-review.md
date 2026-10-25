@@ -6,7 +6,7 @@ Read the linked component guide for the ExpressiveCSS 0.15.0 markup and API cont
 
 ## Contents
 
-Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Data table, Avatar, Skeleton, Empty state, Alert, Stepper, Popover, Drop zone, Tree, Stat, Description list, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire, Marquee, Rich text editor, Confetti, Particles, Map, Mega menu, Menubar, Calendar, Tour, Image compare.
+Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Show more, Data table, Avatar, Skeleton, Empty state, Alert, Stepper, Popover, Drop zone, Tree, Stat, Description list, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire, Marquee, Rich text editor, Confetti, Particles, Map, Mega menu, Menubar, Calendar, Tour, Image compare.
 
 Each section lists the relationship, reviewed sections, requirements, and framework comparison, then any verification, feature, or integration gap and the mapped browser scope. Read only the selected component's section.
 
@@ -219,6 +219,22 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: Tile corners, the chevron turn, exclusive groups and the expanded state Chromium reports are checked in a browser; the open animation, enlarged text and spoken output remain unverified. Next check: Toggle items with a screen reader in each engine and confirm the expanded state is announced; test enlarged text and reduced motion.
 
 Mapped browser scope: Outer, inner and open corner radii, chevron rotation, hidden native marker, exclusive name groups, Enter on a focused summary and the expanded state Chromium reports for each summary. No spoken-output assertion.
+
+## [Show more](../../components/show-more.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Keep the control a native button named by visible text, report its expanded state, point it at the text it controls, and hide it from sight and the tab order when there is nothing more to show.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The page writes the clamped text and the button; the framework sets aria-expanded and aria-controls, unclamps and clamps the text, swaps the label to "Show less", and hides the button while the clamped text fits, checking again on resize, after web fonts load and on blur.
+
+Verification gap: Click and Enter toggling, text that fits, a fractional line height, a container widened and narrowed, a window-size prefix, Tab order, a focused button kept through a resize and until blur, and a web-font swap are checked in a browser; labels, events and destroy() in jsdom. Spoken output remains unverified. Next check: Activate the button with VoiceOver and NVDA and confirm the expanded state and label are announced.
+
+Feature gap: The text opens without a transition, find-in-page does not open clamped text, only one to three lines can be clamped, and an icon-only button keeps its aria-label while open. Next check: None planned.
+
+Mapped browser scope: The text height before and after a click and Enter with aria-expanded and aria-controls, the hidden attribute on a button whose text fits, after widening and after narrowing, expanded:line-clamp-none at an Expanded width, Tab skipping hidden buttons, focus kept on a collapsed button through a resize and until Tab, a fractional line height that fits, and a held-back web font that makes the text fit, with a destroyed instance left alone. No spoken-output assertion.
 
 ## [Data table](../../components/data-table.md)
 

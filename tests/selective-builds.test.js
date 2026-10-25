@@ -263,7 +263,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the treemap chart: rows squarified into rectangles whose areas follow their values: 99,814 gzip bytes (+593).
   // Reviewed treemap chart keys in table order, the rectangle under the pointer and the tooltip with each row's share: 100,184 gzip bytes (+370).
   // Reviewed BackToTop: the threshold sentinel, the inert link kept while focused, the scroll to the top, focus on the href target with a temporary tabindex, modified clicks left alone and the threshold check: 100,828 gzip bytes (+644).
-  assert.ok(sizes(js).gzip <= 100828, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed show more: the toggle, the fit check with its focus, blur and font rechecks, the swapped label and destroy(): 101,521 gzip bytes (+693).
+  assert.ok(sizes(js).gzip <= 101521, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -426,5 +427,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed treemap chart colors, the gap as an inset fill, names and cells that show only where they fit, and forced-color edges: 88,991 gzip bytes (+310).
   // Reviewed the treemap chart's ring round the highlighted rectangle, in Highlight under forced colors: 89,019 gzip bytes (+28).
   // Reviewed .back-to-top: the fixed corner link, its offset and stacking tokens, and the inert link hidden at once after a fade in: 89,129 gzip bytes (+110).
-  assert.ok(sizes(css).gzip <= 89129, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed show more: the rule that keeps a hidden button hidden despite the button display rule: 89,143 gzip bytes (+14).
+  assert.ok(sizes(css).gzip <= 89143, `CSS gzip: ${sizes(css).gzip}`);
 });
