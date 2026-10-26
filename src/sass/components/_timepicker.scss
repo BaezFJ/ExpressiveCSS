@@ -174,7 +174,7 @@ input[type=text].timepicker-input-seconds {
   height: 40px;
   position: absolute;
   cursor: pointer;
-  font-size: 15px;
+  font-size: rem(15px);
 }
 
 .timepicker-tick.active,
