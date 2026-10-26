@@ -28,7 +28,8 @@ $elevations: (
   // Read the system token, so a theme can change a level at runtime;
   // tokens/_elevation.scss emits one per key of this map.
   $shadow: var(--md-sys-elevation-level#{$key});
-  // Only the .z-depth-0 utility passes $important. Inside the components
+  // Only the .z-depth-0 utility and the map popup pass $important; the popup
+  // has to beat maplibre-gl.css, which is unlayered. Inside the components
   // layer an !important would beat every unlayered consumer rule, so a
   // component that cancels a shadow has to out-specify the rule that set it.
   @if $important {

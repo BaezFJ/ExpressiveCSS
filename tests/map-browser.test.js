@@ -93,6 +93,22 @@ for (const [name, engine, test] of engines) {
       assert.equal(await page.locator('.maplibregl-marker.map-marker').count(), 2, 'both markers are on the map');
       assert.equal(await page.locator('.maplibregl-popup .map-popup').count(), 1, 'the popup without a marker opens at init');
       assert.equal(await page.locator('.maplibregl-popup').textContent(), 'Depot×', 'the open popup is the depot');
+      // The popup's shadow follows the level 2 token and beats MapLibre's own.
+      const popupShadow = () => page.evaluate(() => {
+        const probe = document.createElement('span');
+        probe.style.boxShadow = 'var(--md-sys-elevation-level2)';
+        document.body.append(probe);
+        const level2 = getComputedStyle(probe).boxShadow;
+        probe.remove();
+        return { popup: getComputedStyle(document.querySelector('.maplibregl-popup-content')).boxShadow, level2 };
+      });
+      let shadow = await popupShadow();
+      assert.equal(shadow.popup, shadow.level2, 'the popup has the level 2 shadow');
+      await page.evaluate(() => document.documentElement.style.setProperty('--md-sys-elevation-level2', '0 0 0 3px rgb(255, 0, 0)'));
+      shadow = await popupShadow();
+      assert.match(shadow.level2, /255, 0, 0/);
+      assert.equal(shadow.popup, shadow.level2, 'the popup follows a changed level 2 token');
+      await page.evaluate(() => document.documentElement.style.removeProperty('--md-sys-elevation-level2'));
       const dot = await page.locator('.map-marker[data-draggable]').evaluate((el) => {
         const style = getComputedStyle(el);
         const probe = document.createElement('span');
