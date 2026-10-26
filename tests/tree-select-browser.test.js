@@ -312,9 +312,11 @@ for (const dir of ['ltr', 'rtl']) {
     })), dir);
     assert.ok(rows.Europe.start < rows.France.start && rows.France.start < rows.Paris.start, `${dir} indents`);
     // A branch's text starts after its chevron, where a leaf beside it starts.
-    assert.equal(rows.France.start, rows.Spain.start);
-    assert.equal(rows.Europe.start, rows['Choose a place'].start);
-    assert.equal(rows.Tokyo.start, rows.Kyoto.start);
+    // WebKit places RTL text at sub-pixel offsets that differ by a few hundredths.
+    const lineUp = (a, b) => assert.ok(Math.abs(rows[a].start - rows[b].start) < 0.5, `${dir} ${a} and ${b}: ${rows[a].start}, ${rows[b].start}`);
+    lineUp('France', 'Spain');
+    lineUp('Europe', 'Choose a place');
+    lineUp('Tokyo', 'Kyoto');
     // Disabled rows look the same at each depth, and unlike enabled ones.
     assert.equal(rows['Choose a place'].color, rows.Kyoto.color);
     assert.notEqual(rows.Kyoto.color, rows.Tokyo.color);
