@@ -314,10 +314,7 @@ article > .primary-action > #{$_media-figure} > figcaption {
   color: var(--md-comp-card-media-overlay-ink-color);
   background-color: var(--md-comp-card-media-overlay-container-color);
   border-radius: var(--md-comp-card-media-overlay-shape);
-  font-family: var(--md-sys-typescale-title-medium-font-family-name);
-  font-size: var(--md-sys-typescale-title-medium-font-size);
-  font-weight: var(--md-sys-typescale-title-medium-font-weight);
-  line-height: var(--md-sys-typescale-title-medium-line-height);
+  @include typescale("title-medium");
 }
 
 // Keep meaningful icons on the same opaque role pair as caption text. The

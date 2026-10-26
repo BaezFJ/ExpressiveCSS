@@ -15,6 +15,15 @@ function hasTypescale(body, role) {
   return body.includes(`var(--md-sys-typescale-${role}-font-size)`);
 }
 
+test('plain app bar form inputs consume the complete body-large role', () => {
+  const input = rules.find(r => r.selector === 'header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)) > :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > form input');
+  assert.ok(input, 'missing plain form input rule');
+  for (const property of ['font-family', 'font-size', 'font-weight', 'line-height', 'letter-spacing']) {
+    const token = property === 'font-family' ? 'font-family-name' : property;
+    assert.ok(input.body.includes(`${property}: var(--md-sys-typescale-body-large-${token})`), property);
+  }
+});
+
 test('top app bars are pinned without a fixed class', () => {
   const pinned = rules.find((r) =>
     r.selector === 'header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar))' &&
