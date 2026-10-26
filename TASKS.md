@@ -20,7 +20,7 @@ Fix the issues found by the 2026-10-26 CSS review of `src/sass` (140 partials, b
 
 ## HIGH priority
 
-- [ ] **H1. Icon glyphs sized in px.** The base icon rule uses `font-size: rem(24px)` (`components/_icons-material-design.scss:40`), but these icon rules use px, so their icons don't grow with the reader's font size. Change each to `rem(<same px>)`, and change the matching `width`/`height` on the same box where it sizes the icon:
+- [x] **H1. Icon glyphs sized in px.** The base icon rule uses `font-size: rem(24px)` (`components/_icons-material-design.scss:40`), but these icon rules use px, so their icons don't grow with the reader's font size. Change each to `rem(<same px>)`, and change the matching `width`/`height` on the same box where it sizes the icon:
   - `abstracts/_mixins.scss:213` (`header-icon-action`, 24px)
   - `components/_alert.scss:63` (24px)
   - `components/_command-palette.scss:90` (20px)
@@ -37,7 +37,7 @@ Fix the issues found by the 2026-10-26 CSS review of `src/sass` (140 partials, b
 
   Done when no `font-size: <n>px` remains under `src/sass/components` or `abstracts` apart from `$root-font-size`, and any test that asserted the old px value now asserts the `rem()` string.
 - [ ] **H2. Chip text box in px.** `components/_chips.scss:9` sets `--font-size: 14px`, `:10` sets `--font-size-icon: 18px`, `:22` sets `min-height: 32px`, and the chip input at `:172-173` uses `font-size: 16px; height: 32px`. Change the label size to `var(--md-sys-typescale-label-large-font-size)`, which is 14px at the default root size. Change the icon size, the 32px heights and the input font size to `rem()`. Keep the `24px` avatar and delete-target boxes at `:91` and `:105` in step with the icon size.
-- [ ] **H3. Timepicker tick text in px.** `components/_timepicker.scss:177` sets `font-size: 15px` on `.timepicker-tick`. Change it to `rem(15px)`. Leave the 40px tick box and the 270px plate at `:146-147` and `:173-174` alone, because the Timepicker script positions ticks from `dialRadius` in px.
+- [x] **H3. Timepicker tick text in px.** `components/_timepicker.scss:177` sets `font-size: 15px` on `.timepicker-tick`. Change it to `rem(15px)`. Leave the 40px tick box and the 270px plate at `:146-147` and `:173-174` alone, because the Timepicker script positions ticks from `dialRadius` in px.
 
 ## MEDIUM priority
 
@@ -70,4 +70,10 @@ These matched the review's patterns but are intentional:
 
 Record anything a later iteration needs: tests that asserted px values, gzip deltas, visual regressions, and tasks reverted with the reason.
 
--
+- 2026-10-26, H1 and H3 (roadmap Phase 52, branch `fix/rem-icon-font-sizes`). One test asserted a px value: `tests/regressions.test.js` expected `font-size: 24px` on the side sheet header icon, which comes from `header-icon-action`. It now expects `1.5rem`.
+- `components/forms/_file-input.scss` had no `@use "../../abstracts" as *;`, so Sass read `rem(20px)` as the CSS remainder function and failed with "2 arguments required". Check the import before adding `rem()` to a partial.
+- A rem badge needs rem clearances. The timeline row padding and connector offsets and the map popup's end padding became `calc()` of px and `rem()`, or text overlapped the grown badge and close button.
+- CSS gzip went from 90,048 to 90,074 bytes (+26).
+- The Codex review found two short timeline events overlapping their grown badges by 8px at a 32px root. The icon row got `min-block-size: calc(rem(32px) + 8px)`, which is 40px at 16px, the old height. The guard test now also catches a px `font:` shorthand.
+- The Sass edits made seven current `capabilityReview` pins stale (tree, message, scatter-chart through `_mixins.scss`, timeline, alert, command-palette, drop-zone). They were re-pinned to the branch file hashes. Stale pins were left alone.
+- H2 (chips) remains. `tests/rem-font-sizes.test.js` exempts `components/_chips.scss` until it lands.

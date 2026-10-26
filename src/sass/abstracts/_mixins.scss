@@ -210,10 +210,10 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   box-shadow: none;
 
   > #{$icon} {
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
+    font-size: rem(24px);
+    width: rem(24px);
+    height: rem(24px);
+    line-height: rem(24px);
   }
 
   &:hover {

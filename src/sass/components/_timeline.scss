@@ -76,17 +76,20 @@
     }
   }
 
-  // A leading icon takes the dot's place in a 32px tonal circle.
+  // A leading icon takes the dot's place in a 32dp tonal circle, sized in rem
+  // so it grows with the icon; the text and the line clear it. A short row
+  // still leaves 8px before the next event's circle.
   > li:has(> #{$icon}:first-child) {
-    padding-inline-start: 48px;
+    min-block-size: calc(#{rem(32px)} + 8px);
+    padding-inline-start: calc(#{rem(32px)} + 16px);
 
     &::before {
       content: none;
     }
 
     &::after {
-      inset-block-start: 36px;
-      inset-inline-start: 15.5px;
+      inset-block-start: calc(#{rem(32px)} + 4px);
+      inset-inline-start: calc(#{rem(16px)} - 0.5px);
     }
 
     > #{$icon}:first-child {
@@ -96,12 +99,12 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 32px;
-      height: 32px;
+      width: rem(32px);
+      height: rem(32px);
       border-radius: 50%;
       background-color: var(--md-sys-color-secondary-container);
       color: var(--md-sys-color-on-secondary-container);
-      font-size: 18px;
+      font-size: rem(18px);
     }
   }
 }

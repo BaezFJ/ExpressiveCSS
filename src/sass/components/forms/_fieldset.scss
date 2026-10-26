@@ -51,10 +51,10 @@ fieldset {
     @include typescale("title-small");
 
     > #{$icon} {
-      font-size: 18px;
-      width: 18px;
-      height: 18px;
-      line-height: 18px;
+      font-size: rem(18px);
+      width: rem(18px);
+      height: rem(18px);
+      line-height: rem(18px);
       margin-inline-end: 8px;
       vertical-align: -3px;
       color: var(--md-sys-color-on-surface-variant);

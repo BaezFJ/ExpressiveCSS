@@ -41,7 +41,7 @@
 
     > #{$icon} {
       margin-block-end: 8px;
-      font-size: 32px;
+      font-size: rem(32px);
       color: var(--md-sys-color-primary);
     }
 
