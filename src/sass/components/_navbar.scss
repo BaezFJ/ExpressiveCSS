@@ -252,10 +252,7 @@ header:has(> #{$_bar}) {
       background: transparent;
       box-shadow: none;
       color: inherit;
-      font-family: var(--md-sys-typescale-body-large-font-family-name);
-      font-size: var(--md-sys-typescale-body-large-font-size);
-      font-weight: var(--md-sys-typescale-body-large-font-weight);
-      line-height: var(--md-sys-typescale-body-large-line-height);
+      @include typescale("body-large");
 
       &:focus,
       &:focus-visible {

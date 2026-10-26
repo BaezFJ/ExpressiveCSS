@@ -2,6 +2,7 @@
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { parseRules } from './css.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const scss = readFileSync(new URL('../src/sass/components/_cards.scss', import.meta.url), 'utf8');
@@ -9,6 +10,18 @@ const cardsDocs = readFileSync(new URL('../docs/src/pages/cards.astro', import.m
 const llm = readFileSync(new URL('../llm.md', import.meta.url), 'utf8');
 
 describe('Cards CSS', () => {
+  test('both media caption forms consume the complete title-medium role', () => {
+    const captions = parseRules(css).find(r => r.selector.endsWith('> figcaption') && r.body.includes('var(--md-comp-card-media-overlay-container-color)'));
+    assert.ok(captions, 'missing media caption rule');
+    assert.equal(captions.selectors.length, 2);
+    assert.ok(captions.selectors.some(selector => selector.startsWith('article > figure:')));
+    assert.ok(captions.selectors.some(selector => selector.startsWith('article > .primary-action > figure:')));
+    for (const property of ['font-family', 'font-size', 'font-weight', 'line-height', 'letter-spacing']) {
+      const token = property === 'font-family' ? 'font-family-name' : property;
+      assert.ok(captions.body.includes(`${property}: var(--md-sys-typescale-title-medium-${token})`), property);
+    }
+  });
+
   test('maps the three variants to the M3 container roles', () => {
     assert.match(
       css,
