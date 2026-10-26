@@ -436,5 +436,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed icons, their boxes and the Timepicker tick text sized in rem, with the timeline and map popup clearances in calc() and a timeline icon row that holds its circle: 90,074 gzip bytes (+26).
   // Reviewed chip label-large font size and rem content boxes, with px spacing retained: 90,071 gzip bytes (-3).
   // Reviewed the map popup shadow reading the level 2 elevation token instead of an inlined shadow: 90,045 gzip bytes (-26).
-  assert.ok(sizes(css).gzip <= 90045, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed complete body-large and title-medium roles for app bar form inputs and card captions: 90,048 gzip bytes (+3).
+  assert.ok(sizes(css).gzip <= 90048, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -678,6 +678,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Navbar form inputs and card media captions use their complete body-large
+  and title-medium type roles, including letter-spacing. Existing captions
+  now use title-medium tracking, which can change their text width or wrapping.
 - The map popup's shadow reads `--md-sys-elevation-level2`, so a theme
   that changes that token changes the popup too. The shadow was written
   out in full, so the popup kept the default level 2 shadow while menus

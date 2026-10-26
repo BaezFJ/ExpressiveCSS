@@ -2701,7 +2701,7 @@ A static card has no hover treatment. To make the card an entry point, wrap its 
 
 ### Media
 
-A direct `<img>` is full-bleed across the top and its media surface has rounded corners matching the card. Wrap it in a `<figure>` if you want a caption on the image. The `<figcaption>` is an opaque, rounded bounding shape using the paired `surface` and `on-surface` roles, so image colors cannot reduce the contrast of its text or icons. Normal text must retain at least 4.5:1 contrast; large text and meaningful icons require at least 3:1. Recheck those ratios if you override either color token.
+A direct `<img>` is full-bleed across the top and its media surface has rounded corners matching the card. Wrap it in a `<figure>` if you want a caption on the image. The `<figcaption>` uses the complete title-medium type role, including letter-spacing. Its tracking follows the title-medium token and can affect text width or wrapping. The caption is an opaque, rounded bounding shape using the paired `surface` and `on-surface` roles, so image colors cannot reduce the contrast of its text or icons. Normal text must retain at least 4.5:1 contrast; large text and meaningful icons require at least 3:1. Recheck those ratios if you override either color token.
 
 ```html
 <article>
@@ -4484,7 +4484,7 @@ The search app bar is a `<search class="search-bar">` in the nav, in place of th
 </header>
 ```
 
-A `<form>` in the nav still fills the space between the leading action and anything after it. The input is unstyled against the bar — no extra field class.
+A `<form>` in the nav still fills the space between the leading action and anything after it. The input is unstyled against the bar and needs no extra field class. Its text uses the complete body-large type role, including letter-spacing, and follows overrides of that role's type tokens.
 
 ```html
 <header>

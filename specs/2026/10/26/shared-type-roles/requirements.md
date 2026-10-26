@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: Phase 55, use the type role mixin where type is written by hand
 Branch: `fix/shared-type-roles`
 Base: `origin/master` at `a5f90c8506d23fd7f5a55f18aaf59f9aadd8df20`
-Status: specification only; implementation pending
+Status: implementation and automated validation complete; BaezFJ visual approval pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules) and [success criteria](../../../../mission.md#success-criteria), the [framework constraints](../../../../tech-stack.md#framework-constraints), and [roadmap Phase 55](../../../../roadmap.md#phase-55-use-the-type-role-mixin-where-type-is-written-by-hand). Implementation tasks are in [plan.md](plan.md), and acceptance checks are in [validation.md](validation.md).
 
@@ -54,4 +54,4 @@ Use the existing Sass module structure described in `src/sass/README.md`. Tests 
 
 Run test suites sequentially. Regenerate derived files with `npm run build:semantics` and `npm run build:skill`; edit their source files only. If generated capability metadata reports stale source pins, review the affected records in `docs/src/data/component-decisions.json` before updating them. Generation does not establish new browser or visual evidence.
 
-There are no phase dependencies or deferred product decisions. Implementation, validation results and visual approval remain pending.
+There are no phase dependencies or deferred product decisions. Implementation and automated validation are complete. Visual captures are available for review; BaezFJ visual approval remains pending before merge.
