@@ -484,6 +484,15 @@ const S = defineSections([
           spring easing over another duration is no longer that spring.
         </p>
         <p>
+          Detail content starts after
+          <code>--md-comp-expanding-card-content-delay</code>, which reads
+          <code>--md-sys-motion-duration-short4</code> and defaults to 200ms.
+          Override the system token on the page, or set the component property
+          on the article to change this card's delay. A value of
+          <code>0ms</code> removes the delay. Reduced motion disables the
+          transitions even with a nonzero delay override.
+        </p>
+        <p>
           Closing waits for the actual clip transition, including cancellation.
           Zero duration and reduced motion close immediately. Reopening or
           destroying the instance invalidates pending close cleanup.

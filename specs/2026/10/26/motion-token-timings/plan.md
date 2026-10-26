@@ -39,8 +39,8 @@ Covers R1 to R4. Validation V1 to V6.
 
 Prerequisites: group 2 passes.
 
-- [ ] Update `docs/src/pages/timepicker.astro`, the expanding-card section of `docs/src/pages/cards.astro`, and their `llm.md` reference sections. Explain the system-token controls, the new card property, defaults and reduced motion. State that Timepicker's `duration` option and timers remain separate. Add an Unreleased changelog entry for both default changes.
-- [ ] Measure CSS gzip and add the reviewed budget line in `tests/selective-builds.test.js`. Regenerate with `npm run build:skill`, and use `npm run build:semantics` only if canonical semantics change. Review affected provenance and regenerate again after final fingerprinted edits.
+- [x] Update `docs/src/pages/timepicker.astro`, the expanding-card section of `docs/src/pages/cards.astro`, and their `llm.md` reference sections. Explain the system-token controls, the new card property, defaults and reduced motion. State that Timepicker's `duration` option and timers remain separate. Add an Unreleased changelog entry for both default changes.
+- [x] Measure CSS gzip and add the reviewed budget line in `tests/selective-builds.test.js`. Regenerate with `npm run build:skill`, and use `npm run build:semantics` only if canonical semantics change. Review affected provenance and regenerate again after final fingerprinted edits.
 - [ ] Run generated-data, full contributor, explicit browser, MCP and package checks from V8 sequentially. Record actual outcomes, skips and any isolated reruns in `validation.md`.
 - [ ] Run the repository's visual comparison, inspect the target effects with default and custom timings, and obtain BaezFJ's review of intended visual changes before merge. Record the review and report paths.
 - [ ] Confirm only the agreed changes ship, every requirement has passing evidence, required CI and reviews are satisfied, and the roadmap completion state remains unchanged by this specification.
