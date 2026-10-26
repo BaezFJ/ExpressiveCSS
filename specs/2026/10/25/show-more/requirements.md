@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 42, show-more text collapse
 Branch: `feature/2026-10-25-show-more`
 Base: `origin/master` at `a9bbf77ad9edd0f44ce584e71f07a485fe6f2933` (#425)
-Status: implemented and locally verified 2026-10-25; not pushed
+Status: implemented 2026-10-25; merged as #434
 
 Follow the [mission's agreed scope for components and behaviors](../../../../mission.md#agreed-scope), its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 42](../../../../roadmap.md#phase-42-show-more-text-collapse). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 

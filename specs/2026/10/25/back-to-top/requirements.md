@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 44, back-to-top button
 Branch: `feature/2026-10-25-back-to-top`
 Base: `origin/master` at `a9bbf77ad9edd0f44ce584e71f07a485fe6f2933` (#425)
-Status: implemented and locally verified 2026-10-25; not pushed
+Status: implemented 2026-10-25; merged as #433
 
 Follow the [mission's agreed scope for components and behaviors](../../../../mission.md#agreed-scope), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 44](../../../../roadmap.md#phase-44-back-to-top-button). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 

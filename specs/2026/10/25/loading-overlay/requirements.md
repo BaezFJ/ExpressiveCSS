@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 41, loading overlay
 Branch: `feature/2026-10-25-loading-overlay`
 Base: `origin/master` at `a9bbf77ad` (#425)
-Status: implemented and locally verified 2026-10-25; not pushed
+Status: implemented 2026-10-25; merged as #427
 
 Follow the [mission's agreed scope for components and behaviors](../../../../mission.md#agreed-scope), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 41](../../../../roadmap.md#phase-41-loading-overlay). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 

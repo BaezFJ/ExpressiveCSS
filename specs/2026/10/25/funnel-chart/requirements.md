@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 49, funnel chart
 Branch: `feature/2026-10-25-funnel-chart`
 Base: `origin/master` at `a9bbf77ad`, fetched 2026-10-25
-Status: implemented 2026-10-25 on the branch; not merged
+Status: implemented 2026-10-25; merged as #431
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 49](../../../../roadmap.md#phase-49-funnel-chart). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 

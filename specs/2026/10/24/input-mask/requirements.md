@@ -4,7 +4,7 @@ Date: 2026-10-24
 Roadmap phase: Phase 38, pattern input mask
 Branch: `feature/2026-10-24-input-mask`
 Base: `origin/master` at `953343153`, fetched 2026-10-24
-Status: implemented 2026-10-25; not merged
+Status: implemented 2026-10-25; merged as #422
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 38](../../../../roadmap.md#phase-38-pattern-input-mask). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
