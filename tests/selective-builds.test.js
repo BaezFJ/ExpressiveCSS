@@ -433,5 +433,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the cascader: the hidden source lists, the popover surface and columns, the selected path, chevron, forced colors and the label floating through the form control: 89,668 gzip bytes (+525).
   // Reviewed list rows centering a single line and no row gap, and the list row inset for the checkbox mark: 89,703 gzip bytes (+35).
   // Reviewed the tree select's rows under ul[role="tree"], the chevron shared with .tree through a mixin, guide lines, the focused chosen row, forced colors and reduced motion: 90,048 gzip bytes (+345 over master's 89,703 build).
-  assert.ok(sizes(css).gzip <= 90048, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed icons, their boxes and the Timepicker tick text sized in rem, with the timeline and map popup clearances in calc(): 90,069 gzip bytes (+21).
+  assert.ok(sizes(css).gzip <= 90069, `CSS gzip: ${sizes(css).gzip}`);
 });

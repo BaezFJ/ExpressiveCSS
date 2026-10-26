@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: Phase 52, size the remaining px font sizes in rem
 Branch: `fix/rem-icon-font-sizes`
 Base: `origin/master` at `2c6ff3711` (#439)
-Status: specified; not implemented
+Status: implemented on the branch; not merged
 
 Follow the [mission's success criteria](../../../../mission.md#success-criteria), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 52](../../../../roadmap.md#phase-52-size-the-remaining-px-font-sizes-in-rem). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -41,7 +41,7 @@ These facts come from the base commit.
 - `abstracts/_variables.scss` declares `$root-font-size: 16px !default`. It is a variable used for fluid type math, not a rule.
 - The Timepicker script positions ticks from `dialRadius` in px, so the 270px plate and the 40px tick box must stay in px.
 - `tests/css.js` exports a `rem(dp)` helper that returns the string the Sass `rem()` function produces. `tests/expressivecss-cross-browser.test.js` already doubles the root font size by setting `document.documentElement.style.fontSize`.
-- No test asserts any of the px values above. `tests/regressions.test.js` matches the snackbar icon rule with a regex that accepts any `font-size` value.
+- One test asserted a px value. `tests/regressions.test.js` expected `font-size: 24px` on the side sheet header icon, which `header-icon-action` sizes. The survey missed it; group 2 found it. The same file matches the snackbar icon rule with a regex that accepts any `font-size` value.
 
 A reader who raises the browser's font size gets larger text in these components but icons and tick digits at their 16px size.
 
@@ -56,6 +56,8 @@ Out of scope:
 - Margins, gaps, insets and borders, which stay px under the [framework constraints](../../../../tech-stack.md#framework-constraints).
 - The Timepicker plate, tick box and tick line height.
 - TypeScript changes.
+
+Two clearances outside the icon rules came into scope during group 3; see R8.
 
 ## Confirmed decisions
 
@@ -74,7 +76,13 @@ These came from the interview on 2026-10-26.
 - R4. The hidden file input's font size is `rem(20px)`. It stays transparent and covers its label, so a click still opens the file chooser.
 - R5. No rule under `src/sass/components` or `src/sass/abstracts` sets `font-size` to a px value, except in `components/_chips.scss` until Phase 53. `$root-font-size` is a variable and doesn't count.
 - R6. At a 16px root the compiled values equal the old px sizes, so the default rendering doesn't change. The compiled CSS writes each converted value as the string `rem(<px>)` produces, for example `1.5rem` for 24px.
+- R8. Text keeps clear of the two boxes that grow beside it. The timeline row's start padding is `calc(rem(32px) + 16px)`, and its connector line starts at `calc(rem(32px) + 4px)` and sits at `calc(rem(16px) - 0.5px)`, the badge's center. The map popup content's end padding is `calc(12px + rem(32px))`. At a 16px root these are the old 48px, 36px, 15.5px and 44px.
 - R7. `CHANGELOG.md` records the change under Unreleased, and `tests/selective-builds.test.js` records the CSS gzip change in a reviewed budget line. Generated guidance is current after `npm run build:skill`.
+
+## Decisions made during implementation
+
+- R8 was added in group 3. With only the badge in rem, a 64px timeline badge overlapped its text behind the 48px padding, and the connector line started inside it. The map popup's 44px end padding would have let text run under the 64px close button. The rem sizing rule already writes a clearance that sums px and rem as a `calc()`, so the fix follows it.
+- `components/forms/_file-input.scss` had no `@use` of abstracts, so Sass read `rem(20px)` as the CSS remainder function and the build failed. Group 4 added `@use "../../abstracts" as *;`, which emits no CSS.
 
 ## Technical constraints
 
