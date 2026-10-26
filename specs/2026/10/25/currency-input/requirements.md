@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 39, currency formatting in text fields
 Branch: `feature/2026-10-25-currency-input`
 Base: `origin/master` at `c9ccd0808`, fetched 2026-10-25
-Status: implemented 2026-10-25; not merged
+Status: implemented 2026-10-25; merged as #423
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 39](../../../../roadmap.md#phase-39-currency-formatting-in-text-fields). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 

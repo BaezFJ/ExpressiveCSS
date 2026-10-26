@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 43, promise-based confirm dialog
 Branch: `feature/2026-10-25-confirm-dialog`
 Base: `origin/master` at `a9bbf77ad9edd0f44ce584e71f07a485fe6f2933` (#425)
-Status: implemented and locally verified 2026-10-25; not pushed
+Status: implemented 2026-10-25; merged as #428
 
 Follow the [mission's agreed scope for components and behaviors](../../../../mission.md#agreed-scope), the [framework stack and constraints](../../../../tech-stack.md#framework-stack) and [roadmap Phase 43](../../../../roadmap.md#phase-43-promise-based-confirm-dialog). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 

@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 40, deferred rendering for long lists
 Branch: `feature/2026-10-25-deferred-rendering`
 Base: `origin/master` at `1ab798978e0200466a3b85d8af9a2783c6dc2b91` (#424)
-Status: implemented and locally verified 2026-10-25; not pushed
+Status: implemented 2026-10-25; merged as #425
 
 Follow the [mission's agreed scope for utilities](../../../../mission.md#agreed-scope), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 40](../../../../roadmap.md#phase-40-deferred-rendering-for-long-lists). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 

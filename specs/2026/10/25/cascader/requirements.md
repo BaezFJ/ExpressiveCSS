@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 48, cascader
 Branch: `feature/2026-10-25-cascader`
 Base: `origin/master` at `a9bbf77ad`
-Status: implemented 2026-10-25; not merged
+Status: implemented 2026-10-25; merged as #435
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 48](../../../../roadmap.md#phase-48-cascader). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 

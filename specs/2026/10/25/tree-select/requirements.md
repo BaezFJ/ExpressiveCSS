@@ -4,7 +4,7 @@ Date: 2026-10-25
 Roadmap phase: Phase 47, tree select
 Branch: `feature/2026-10-25-tree-select`
 Base: `origin/master` at `a9bbf77ad`
-Status: implemented 2026-10-25; not merged
+Status: implemented 2026-10-25; merged as #437
 
 Follow the [mission's agreed scope for components](../../../../mission.md#agreed-scope) and its [product rules](../../../../mission.md#product-rules), the [framework constraints](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 47](../../../../roadmap.md#phase-47-tree-select). Planned work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
