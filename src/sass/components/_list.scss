@@ -54,14 +54,25 @@
     transition: background-color var(--md-sys-motion-duration-short4) ease-out;
   }
 
+  // A checkbox draws its check on its label, from the label's inline start.
+  // When the label is the row, that edge is the row's padding away from the box.
+  > li > label:only-child {
+    --checkbox-mark-inset: var(--md-comp-list-item-padding);
+  }
+
   // The row grid lives on the item, or on a wrapping <a>/<label>.
   > li:not(:has(> :is(a, label):only-child)),
   > li > :is(a, label):only-child {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-rows: auto auto;
+    // Centred as a block, so an empty second row does not stretch and lift a
+    // single line of text above the leading element.
+    align-content: center;
     align-items: center;
-    column-gap: var(--md-comp-list-gap);
+    // Row gap zero as well: a checkbox or radio label brings a 12px gap that
+    // would open between the text and its empty second row.
+    gap: 0 var(--md-comp-list-gap);
     box-sizing: border-box;
     min-height: var(--md-comp-list-item-height);
     padding: 8px var(--md-comp-list-item-padding);

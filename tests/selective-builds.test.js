@@ -430,5 +430,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed .back-to-top: the fixed corner link, its offset and stacking tokens, and the inert link hidden at once after a fade in: 89,129 gzip bytes (+110).
   // Reviewed show more: the rule that keeps a hidden button hidden despite the button display rule: 89,143 gzip bytes (+14).
   // Reviewed the cascader: the hidden source lists, the popover surface and columns, the selected path, chevron, forced colors and the label floating through the form control: 89,668 gzip bytes (+525).
-  assert.ok(sizes(css).gzip <= 89668, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed list rows centering a single line and no row gap, and the list row inset for the checkbox mark: 89,703 gzip bytes (+35).
+  assert.ok(sizes(css).gzip <= 89703, `CSS gzip: ${sizes(css).gzip}`);
 });
