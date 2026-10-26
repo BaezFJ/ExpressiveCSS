@@ -61,7 +61,7 @@ for (const [name, engine, test] of engines) {
             ['--md-comp-chip-padding:13px;--font-size:20px;--md-comp-chip-icon-size:1.5rem;', [20, 13, size * 1.5]],
             [old + fresh, [size * 1.25, 13, size * 1.5]],
           ];
-          for (const [values, expected] of cases) {
+          for (const [values, [fontSize, padding, iconSize]] of cases) {
             await page.evaluate(values => {
               for (const chip of document.querySelectorAll('.chip')) chip.style.cssText = values;
             }, values);
@@ -70,7 +70,7 @@ for (const [name, engine, test] of engines) {
               return [parseFloat(style.fontSize), parseFloat(style.paddingLeft), parseFloat(style.paddingRight),
                 [...chip.children].filter(el => el.matches('[class^="material-symbols"]')).map(el => parseFloat(getComputedStyle(el).fontSize))];
             }));
-            for (const row of actual) assert.deepEqual(row, [expected[0], expected[1], expected[1], Array(4).fill(expected[2])], values || 'defaults');
+            for (const row of actual) assert.deepEqual(row, [fontSize, padding, padding, Array(4).fill(iconSize)], values || 'defaults');
             assert.deepEqual(await styles(page, '#field .close .material-symbols', ['fontSize']), close);
             assert.deepEqual(await styles(page, '#field img', ['width', 'height']), avatar);
             assert.deepEqual(await styles(page, '#field .input', ['fontSize', 'height', 'minWidth', 'maxWidth']), input);
