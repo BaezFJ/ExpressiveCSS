@@ -19,7 +19,7 @@ These facts come from the selected base and direct source inspection.
 - `src/sass/components/_chips.scss` sets `--font-size: 14px`, `--font-size-icon: 18px`, and a 32px minimum chip height. Avatars and close buttons are 24px square. The editable input has a 16px font, 32px height, and width limits of 100px and 200px.
 - The same stylesheet already supports span, button, and checkbox-label chips, outlined and selected states, and wrapping labels. It retains 4px block padding, an 8px chip content gap, and `--padding: 8px`.
 - `src/sass/abstracts/_mixins.scss` provides `rem($px)`, which converts a 16px-based dimension to rem. `src/sass/tokens/_reference.scss` defines label-large's font size as `0.875rem`, equivalent to 14px at the default root size.
-- `src/ts/components/chips.ts` renders `.chip` spans, optional images, and `.close` buttons with nested Material Symbols. Its editable input receives `.input`; named inputs can sit inside `expressive-chips-control`. The nested close glyph already follows the base icon's rem size and differs from the direct child icon's 18px size.
+- `src/ts/components/chips.ts` renders `.chip` spans, optional images, and `.close` buttons with nested Material Symbols. Its editable input receives `.input`; named inputs can sit inside `expressive-chips-control`. The nested close glyph follows the shared button icon's 20px rem size in the full sheet and differs from the direct child icon's 18px size.
 - `tests/rem-font-sizes.test.js` exempts `_chips.scss` until Phase 53. `tests/reflow-browser.test.js` checks chip height and wrapping in Chromium at the default size. `tests/chips.test.js`, `tests/chips-form.test.js`, and `tests/chips-form-browser.test.js` cover generated markup and behavior.
 
 The fixed chip sizes do not grow with the reader's root font size. The existing rem helper and type token cover the conversion without new helpers or runtime code.
@@ -54,7 +54,7 @@ Use the existing `rem()` helper for the following default dimensions. Interpolat
 | Editable input minimum width | 100px | 200px |
 | Editable input maximum width | 200px | 400px |
 
-The nested close glyph retains the base icon sizing, 24px and 48px respectively. Do not apply the direct child icon's 18px default to it.
+The nested close glyph retains the full sheet's shared button icon sizing, 20px and 40px respectively. Do not apply the direct child icon's 18px default to it. The first browser run corrected the specification's initial 24px/48px assumption; the existing button rule overrides the base icon size. No glyph styling change is needed.
 
 ### R3. Enlarged chips retain wrapping and input containment
 

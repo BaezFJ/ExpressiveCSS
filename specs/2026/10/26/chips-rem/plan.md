@@ -28,7 +28,7 @@ Outcome: default chip content grows with the root font size using the existing s
 Prerequisite: group 1 identifies the failing expectations. Delivers R1 to R4, checked by V1 to V4.
 
 - [ ] In `src/sass/components/_chips.scss`, make `--font-size` read the label-large font-size token and make `--font-size-icon` interpolate `rem(18px)`.
-- [ ] Convert chip minimum height, avatar and close-button dimensions, and editable input font size, height, and width limits to the rem equivalents in R2. Preserve the nested close glyph's existing base icon size.
+- [ ] Convert chip minimum height, avatar and close-button dimensions, and editable input font size, height, and width limits to the rem equivalents in R2. Preserve the nested close glyph's existing shared button icon size.
 - [ ] Keep existing px spacing, selectors, states, and custom-property names. Verify generated named-input chips as well as static spans, buttons, and checkbox labels. Fix any resulting containment issue in the shared chip rules without changing component behavior.
 - [ ] Build and run V1 to V4 sequentially. Retain the existing 16px-root reflow assertions; do not weaken them to permit unintended layout changes.
 

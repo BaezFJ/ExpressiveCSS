@@ -45,7 +45,7 @@ node scripts/check-browser.mjs
 node --test tests/chips-rem-browser.test.js
 ```
 
-Set `document.documentElement.style.fontSize` to 16px and 32px in turn. Use short static span/button chips, a checkbox-label chip, an outlined chip, a chip with a direct child icon, an avatar, and an initialized editable Chips field. Read computed styles and element bounds. Expect every R1/R2 value, including the nested close icon's 24px/48px default. Compare computed minimum height separately from actual height, since wrapped chips may grow.
+Set `document.documentElement.style.fontSize` to 16px and 32px in turn. Use short static span/button chips, a checkbox-label chip, an outlined chip, a chip with a direct child icon, an avatar, and an initialized editable Chips field. Read computed styles and element bounds. Expect every R1/R2 value, including the nested close icon's 20px/40px default from the shared button rule. Compare computed minimum height separately from actual height, since wrapped chips may grow.
 
 Override `--md-sys-typescale-label-large-font-size` and expect the default chip label to follow it. Then give a chip explicit `--font-size: 20px`, `--font-size-icon: 22px`, and `--padding: 12px`; expect those values at both root sizes. Overrides must be applied to the chip, where its existing defaults are declared. Result: pending in each engine.
 
