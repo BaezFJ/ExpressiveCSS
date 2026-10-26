@@ -261,3 +261,51 @@ Completed 2026-10-25. See [spec](2026/10/25/treemap-chart/).
 ### Phase 51: sankey chart
 
 Completed 2026-10-25. See [spec](2026/10/25/sankey-chart/).
+
+## Milestone: stylesheet review fixes
+
+Text and icons grow with the reader's font size, and components read the shared theme tokens instead of copying their values. These phases come from the `src/sass` review of 2026-10-26. Each phase stands alone unless it names a dependency.
+
+Deferred with no phase: a shared mixin for the overflow, ellipsis and nowrap declarations that 15 rules write by hand. It would not change the compiled CSS.
+
+### Phase 52: size the remaining px font sizes in rem
+
+No dependencies. Icons in dialogs, snackbars, alerts, lists, trees, timelines, the command palette, messages, the map popup, fieldset legends, file inputs and the drop zone grow with the browser's font size, the same way the base icon already does. So does the Timepicker's tick text. The dial and tick geometry stay in px, because the Timepicker script positions ticks in px.
+
+Completion check: with the browser font size at 32px, each of those icons and the tick text renders at twice its 16px size. No component or abstracts rule sets `font-size` in px.
+
+### Phase 53: size chips in rem
+
+No dependencies. A chip's label, icon, container height and inline input grow with the browser's font size. The chip label uses the label-large type size.
+
+Completion check: with the browser font size at 32px, a chip's label, icon and minimum height are twice their 16px values, and a chips input field keeps its text inside the chip.
+
+### Phase 54: read the elevation token in the map popup
+
+No dependencies. The map popup's shadow follows `--md-sys-elevation-level2`, so a theme that changes that token also changes the popup. The shadow still overrides MapLibre's own.
+
+Completion check: setting `--md-sys-elevation-level2` on the page changes the computed `box-shadow` of an open map popup.
+
+### Phase 55: use the type role mixin where type is written by hand
+
+No dependencies. The navbar search field and the card media overlay take their full M3 type role, letter-spacing included, from the shared type role mixin.
+
+Completion check: the computed `letter-spacing` of the navbar search field matches body-large, and the card media overlay's matches title-medium.
+
+### Phase 56: name chip custom properties under `--md-comp-chip`
+
+Depends on phase 53. Chips read `--md-comp-chip-*` properties for padding, label size and icon size. A page that sets the old `--padding`, `--font-size` or `--font-size-icon` on a chip keeps working, because the new properties fall back to the old names. The CHANGELOG marks the old names deprecated.
+
+Completion check: a chip styled through the new property names and a chip styled through the old names both render at the requested sizes.
+
+### Phase 57: read motion tokens for hardcoded transition timings
+
+No dependencies. The Timepicker's canvas fade and the expanding card's content delay take their timings from motion tokens, so a page that changes the motion tokens changes them too. Reduced motion still turns both off.
+
+Completion check: overriding the motion tokens changes the computed transition duration and delay of both elements, and under `prefers-reduced-motion: reduce` neither animates.
+
+### Phase 58: share chart base rules across chart types
+
+No dependencies. Rules that are the same for every chart type, such as the legend, labels, tooltip, cursor and visually hidden table, are written once instead of once per chart type. Specificity stays at one class per chart, and a build that loads a single chart still gets every rule it needs.
+
+Completion check: the full sheet shrinks by at least 1 KB gzip, and a selective build with one chart passes its tests. If the saving is smaller, the spec records the measurement and no CSS changes ship.
