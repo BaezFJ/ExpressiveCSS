@@ -2249,7 +2249,7 @@ describe('Icon selectors keyed on the <i> element', () => {
     assertIconIsAClass(
       'side-sheet',
       /\.side-sheet\b.*header/,
-      /font-size:\s*24px/
+      /font-size:\s*1\.5rem/
     );
   });
 

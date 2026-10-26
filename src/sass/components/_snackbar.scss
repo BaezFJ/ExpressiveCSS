@@ -124,10 +124,10 @@ $_bar: ".snackbar";
   // Optional leading icon. M3 snackbars have no leading icon.
   > #{$icon}:first-child {
     flex: 0 0 auto;
-    font-size: 24px;
-    width: 24px;
-    height: 24px;
-    line-height: 24px;
+    font-size: rem(24px);
+    width: rem(24px);
+    height: rem(24px);
+    line-height: rem(24px);
     color: var(--md-comp-snackbar-icon-color);
   }
 
@@ -193,10 +193,10 @@ $_bar: ".snackbar";
     box-shadow: none;
 
     > #{$icon} {
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
-      line-height: 24px;
+      font-size: rem(24px);
+      width: rem(24px);
+      height: rem(24px);
+      line-height: rem(24px);
     }
 
     &:hover {
