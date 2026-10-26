@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: Phase 56, name chip custom properties under `--md-comp-chip`
 Branch: `fix/chip-custom-properties`
 Base: `origin/master` at `a5f90c8506d23fd7f5a55f18aaf59f9aadd8df20`
-Status: groups 1 and 2 implemented; docs and final verification pending
+Status: implementation complete; clean required CI and maintainer visual approval pending
 
 Read [requirements.md](requirements.md) and [validation.md](validation.md). This plan follows the [mission](../../../../mission.md#product-rules), [technical constraints](../../../../tech-stack.md#framework-constraints), and [roadmap Phase 56](../../../../roadmap.md#phase-56-name-chip-custom-properties-under---md-comp-chip).
 
@@ -40,10 +40,13 @@ Outcome: authors can migrate using the documented mapping, and the change has re
 
 Prerequisite: group 2 passes focused checks. Delivers R5 through V4/V5 and verifies R1 to R4 in the required suites.
 
-- [ ] Update `docs/src/pages/chips.astro`, `llm.md`, and Unreleased `CHANGELOG.md`. Show the new names and precedence, mark old names deprecated, and state their continued support without a removal date.
-- [ ] Measure base/head minified CSS with the gzip method in `tests/selective-builds.test.js`. Record the measured size and delta in its reviewed budget lines; investigate an unexpected JavaScript change.
+- [x] Update `docs/src/pages/chips.astro`, `llm.md`, and Unreleased `CHANGELOG.md`. Show the new names and precedence, mark old names deprecated, and state their continued support without a removal date.
+- [x] Measure base/head minified CSS with the gzip method in `tests/selective-builds.test.js`. Record the measured size and delta in its reviewed budget lines; investigate an unexpected JavaScript change.
 - [ ] Regenerate with `npm run build:semantics` and `npm run build:skill`, review the generated diff and affected provenance, and pass V4's contributor, all-engine browser, MCP, and package commands sequentially.
 - [ ] Run V5's visual comparison against the recorded base and inspect chip fixtures at both root sizes. Record valid captures, differences, and BaezFJ's required visual review before merge.
-- [ ] Record actual command results and remaining blockers in validation.md. Keep the roadmap completion state unchanged during this specification workflow.
+- [x] Record actual command results and remaining blockers in validation.md. Keep the roadmap completion state unchanged during this specification workflow.
 
-Completion check: every requirement has passing mapped acceptance evidence, required CI and reviews are satisfied, and no missing or skipped required check appears as a pass. This specification does not authorize implementing, committing, pushing, opening a PR, merging, or publishing.
+Completion check: every requirement has passing mapped acceptance evidence, required CI and reviews are satisfied, and no missing or skipped required check appears as a pass. The subsequent implementation request authorizes implementation and local commits. Push, PR creation, merge, and publication remain outside this request.
+
+
+Groups 1 and 2 and the documentation work are complete. Group 3 retains two acceptance tasks because the broad commands were not clean passes and BaezFJ has not reviewed the visual differences. All affected feature checks, all 16 isolated rerun cases, generated-data/docs checks, MCP checks, and package checks passed. See validation.md for the broad failures and capture evidence. No unrelated test or component was changed to remove these failures.

@@ -5,6 +5,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Deprecated
+
+- Chip sizing properties `--padding`, `--font-size` and `--font-size-icon`.
+  Use `--md-comp-chip-padding`, `--md-comp-chip-label-size` and
+  `--md-comp-chip-icon-size` instead. Each new property takes priority over
+  its old counterpart. Old overrides on a chip remain supported as fallbacks,
+  defaults are unchanged, and there is no removal date.
+
 ### Added
 
 - Show more. A `.show-more` holds text with a `line-clamp-1`, `-2` or

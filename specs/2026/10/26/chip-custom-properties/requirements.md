@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: Phase 56, name chip custom properties under `--md-comp-chip`
 Branch: `fix/chip-custom-properties`
 Base: `origin/master` at `a5f90c8506d23fd7f5a55f18aaf59f9aadd8df20`
-Status: specification only; implementation and acceptance checks pending
+Status: implementation complete; clean required CI and maintainer visual approval pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules), [framework constraints](../../../../tech-stack.md#framework-constraints), and [roadmap Phase 56](../../../../roadmap.md#phase-56-name-chip-custom-properties-under---md-comp-chip). Work groups are in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -67,8 +67,8 @@ Regenerate committed guidance from its sources with `npm run build:semantics` an
 
 Implement the fallback in `src/sass/components/_chips.scss` using existing Sass helpers and CSS custom properties. Extend the existing chip test files and fixtures instead of creating another customization system. Follow [CONTRIBUTING.md](../../../../../CONTRIBUTING.md) and [Sass architecture](../../../../../src/sass/README.md). Tests use built bundles; build first and run suites sequentially. Close browser leases and destroy initialized components in `finally` blocks. Static semantics checks never initialize components.
 
-Excluded work includes removing legacy names, assigning a removal release, adding controls for other chip dimensions, changing the editable input's typography, changing other components, adding dependencies, runtime changes, and publication. This task creates the specification only. Implementation, commit, push, and PR creation require separate requests.
+Excluded work includes removing legacy names, assigning a removal release, adding controls for other chip dimensions, changing the editable input's typography, changing other components, adding dependencies, runtime changes, and publication. The original task created the specification only. The subsequent `incremental-implementation` request authorizes implementation and local commits. Push, PR creation, merge, and publication remain outside this request.
 
 ## Open decisions
 
-None. Phase 53's implementation is present at the base. All Phase 56 implementation tasks and acceptance results remain pending. Missing engines, failed captures, unresolved regressions, or missing required review block merge.
+None. Phase 53's implementation is present at the base. The implementation and feature checks are complete. Broad contributor/browser commands had unrelated timing failures that passed isolated reruns; clean required CI and maintainer visual approval remain merge conditions. Missing engines, failed captures, unresolved regressions, or missing required review block merge.

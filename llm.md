@@ -9479,9 +9479,9 @@ Small blocks for contacts, tags, and filters.
 
 A chip is a `.chip`, and **the element says which kind it is** — the four Material 3 chip types, plus a non-interactive display chip, across three root elements. Add `outlined` for a bordered style. Static chips are CSS. The JavaScript plugin lives on a `.chips` wrapper.
 
-A long label wraps and the chip grows from its minimum height, with 4px above and below the lines. It never grows wider than its parent.
+`--md-comp-chip-padding`, `--md-comp-chip-label-size`, and `--md-comp-chip-icon-size` control horizontal padding, label font size, and direct child Material Symbol font size. Each takes priority over its old counterpart, respectively `--padding`, `--font-size`, and `--font-size-icon`. Old overrides on a chip remain supported as fallbacks, including fixed px values. The old names are deprecated with no removal date. These properties leave block padding, avatars, close buttons, the nested close glyph, and editable input sizes unchanged.
 
-The label's default `--font-size` reads `--md-sys-typescale-label-large-font-size`. The chip minimum height, direct child icon font size, avatar and close-button boxes, and editable input font size, height and width limits use rem. At a 16px root the default label is 14px, icon is 18px and minimum height is 32px; at a 32px root they are 28px, 36px and 64px. The avatar and close-button boxes grow from 24px to 48px. Padding, gaps and borders stay in px. Existing `--font-size`, `--font-size-icon` and `--padding` overrides on a chip still work, including fixed px values. The nested close glyph keeps the shared button icon size.
+The label defaults to `--md-sys-typescale-label-large-font-size`. The chip minimum height, direct child icon font size, avatar and close-button boxes, and editable input font size, height and width limits use rem. At a 16px root the default label is 14px, icon is 18px and minimum height is 32px; at a 32px root they are 28px, 36px and 64px. The avatar and close-button boxes grow from 24px to 48px. Padding, gaps and borders stay in px. The nested close glyph keeps the shared button icon size. A long label wraps and the chip grows from its minimum height, with 4px above and below the lines. It never grows wider than its parent.
 
 | Type | Element | Why |
 | --- | --- | --- |
@@ -9513,6 +9513,19 @@ The label's default `--font-size` reads `--md-sys-typescale-label-large-font-siz
   <button type="button" class="close" aria-label="Remove Tag">
     <span class="material-symbols" aria-hidden="true">close</span>
   </button>
+</span>
+```
+
+| Chip property | Controls | Deprecated fallback | Default |
+| --- | --- | --- | --- |
+| `--md-comp-chip-padding` | Left and right padding | `--padding` | `8px` |
+| `--md-comp-chip-label-size` | Label font size | `--font-size` | Label-large font-size token |
+| `--md-comp-chip-icon-size` | Direct child Material Symbol font size | `--font-size-icon` | `1.125rem` |
+
+```html
+<span class="chip" style="--md-comp-chip-padding: 12px; --md-comp-chip-label-size: 1rem; --md-comp-chip-icon-size: 1.25rem;">
+  <span class="material-symbols" aria-hidden="true">info</span>
+  Custom sizing
 </span>
 ```
 
