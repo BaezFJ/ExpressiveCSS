@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: [Phase 58, share chart base rules across chart types](../../../../roadmap.md#phase-58-share-chart-base-rules-across-chart-types)
 Branch: `fix/chart-base-rules`
 Base: `origin/master` at `a5f90c8506d23fd7f5a55f18aaf59f9aadd8df20`
-Status: completed as a measurement-only result; final contributor verification pending
+Status: completed as a measurement-only result; verification and rerun evidence recorded
 
 Read [requirements.md](requirements.md) and [validation.md](validation.md) before implementation. No prerequisite phase blocks this work. The user confirmed these three groups on 2026-10-26. The size experiment ran before expanding browser fixtures, following the incremental-implementation skill's risk-first strategy. The 855-byte saving selected the documented fallback. Unchecked candidate-only tasks below are inapplicable, not unfinished implementation.
 
@@ -44,7 +44,7 @@ Prerequisite: group 2's size decision. Delivers R2, R3, R4 and R5 through V4, V5
 - [ ] Run the existing chart suites and selective-build checks sequentially. Record failures, focused reruns and skips. Complete V5 and resolve any browser behavior failures.
 - [ ] Update the CSS gzip budget and Unreleased CHANGELOG for a retained candidate. Update affected documentation and regenerate through `npm run build:semantics` and `npm run build:skill` when their inputs change. Review any capability provenance affected by the shared Sass file under the established source-review procedure.
 - [ ] Run contributor verification, browser checks, MCP tests and package verification as specified in V6. Complete the visual comparison and obtain BaezFJ's review in V7 before merge. For a measurement-only result, complete V8 and applicable repository checks without claiming a shipped optimization.
-- [ ] Fill in validation evidence and the final size decision. Confirm that the diff contains only this phase's work and that required CI, reviews and branch freshness satisfy the merge conditions. Leave roadmap completion unchanged in this specification task.
+- [x] Fill in validation evidence and the final size decision. Confirm that the diff contains only this phase's documentation and that production source and roadmap completion remain unchanged. Required PR checks and review remain pending until a PR is requested.
 
 Completion check: every applicable validation result is recorded and passes; any unmet condition blocks merge. Specification alone does not complete any task above or authorize implementation, commits, publication or a pull request.
 
@@ -52,6 +52,6 @@ Completion check: every applicable validation result is recorded and passes; any
 
 1. Group 1 completed the baseline build and existing selective-build suite. An isolated assertion-based probe compiled all twelve standalone chart selections, a custom chart name, empty selection, inert abstracts and default/full equality. The baseline artifact was preserved. Permanent fixture expansion stopped at the size decision.
 2. Group 2 evaluated the private write-once candidate under the same locked toolchain. It compiled and passed the probe, but saved only 855 gzip bytes. The candidate Sass was restored. Its patch, source and measurement artifacts remain ignored under `.cache/chart-base-rules/`.
-3. Group 3 verified a byte-for-byte match between restored production CSS and the baseline, and records the result here and in development notes. Full contributor verification is pending. Candidate browser parity, visual review, generated-data changes, CHANGELOG changes and a lower budget are inapplicable because no production code changes remain.
+3. Group 3 verified a byte-for-byte match between restored production CSS and the baseline, and records the result here and in development notes. The full contributor run reported six failures and two cancellations on unchanged production source. All eight affected checks passed in a sequential-file rerun with 18 selected tests and no skips. Generated-data checks and the docs build and verification passed separately. Candidate browser parity, visual review, generated-data changes, CHANGELOG changes and a lower budget are inapplicable because no production code changes remain.
 
-The original specification is committed as `cbc17bffc`. The experiment itself will not be committed. Roadmap completion remains unchanged.
+The original specification is committed as `cbc17bffc`. The measurement-only result is committed as `b11541644`. The candidate production Sass is not part of either commit. Roadmap completion remains unchanged.
