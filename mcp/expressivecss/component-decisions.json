@@ -4695,7 +4695,7 @@
         "sources": [
           {
             "path": "src/sass/components/_timeline.scss",
-            "sha256": "10a3f3037ccf58ccefe600e38b304736e6275e87b6a4e09d219277c7b8f82894"
+            "sha256": "4016dd3c8821db410a6af8d0ba7b6bb7e6c9423ba960e10dcc83913ff5b870b8"
           }
         ],
         "gaps": [

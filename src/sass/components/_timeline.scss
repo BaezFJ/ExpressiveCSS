@@ -77,8 +77,10 @@
   }
 
   // A leading icon takes the dot's place in a 32dp tonal circle, sized in rem
-  // so it grows with the icon; the text and the line clear it.
+  // so it grows with the icon; the text and the line clear it. A short row
+  // still leaves 8px before the next event's circle.
   > li:has(> #{$icon}:first-child) {
+    min-block-size: calc(#{rem(32px)} + 8px);
     padding-inline-start: calc(#{rem(32px)} + 16px);
 
     &::before {

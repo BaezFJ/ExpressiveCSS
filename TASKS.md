@@ -73,6 +73,7 @@ Record anything a later iteration needs: tests that asserted px values, gzip del
 - 2026-10-26, H1 and H3 (roadmap Phase 52, branch `fix/rem-icon-font-sizes`). One test asserted a px value: `tests/regressions.test.js` expected `font-size: 24px` on the side sheet header icon, which comes from `header-icon-action`. It now expects `1.5rem`.
 - `components/forms/_file-input.scss` had no `@use "../../abstracts" as *;`, so Sass read `rem(20px)` as the CSS remainder function and failed with "2 arguments required". Check the import before adding `rem()` to a partial.
 - A rem badge needs rem clearances. The timeline row padding and connector offsets and the map popup's end padding became `calc()` of px and `rem()`, or text overlapped the grown badge and close button.
-- CSS gzip went from 90,048 to 90,069 bytes (+21).
+- CSS gzip went from 90,048 to 90,074 bytes (+26).
+- The Codex review found two short timeline events overlapping their grown badges by 8px at a 32px root. The icon row got `min-block-size: calc(rem(32px) + 8px)`, which is 40px at 16px, the old height. The guard test now also catches a px `font:` shorthand.
 - The Sass edits made seven current `capabilityReview` pins stale (tree, message, scatter-chart through `_mixins.scss`, timeline, alert, command-palette, drop-zone). They were re-pinned to the branch file hashes. Stale pins were left alone.
 - H2 (chips) remains. `tests/rem-font-sizes.test.js` exempts `components/_chips.scss` until it lands.

@@ -16,6 +16,7 @@ const markup = `
   <span class="message-avatar">${icon('message-icon', 'person')}</span>
   <div class="map"><div id="map-popup" class="maplibregl-popup-content"><button id="map-close" type="button" class="maplibregl-popup-close-button" aria-label="Close popup">×</button><p>Depot</p></div></div>
   <ol class="timeline"><li id="timeline-row">${icon('timeline-icon', 'event')}<p>Shipped</p></li></ol>
+  <ol class="timeline"><li>${icon('short-icon-1', 'event')}<time>May 2</time></li><li>${icon('short-icon-2', 'event')}<time>May 1</time></li></ol>
   <div class="drop-zone"><label>${icon('drop-icon', 'upload')}Drop files<input type="file"></label></div>
   <fieldset><legend>${icon('legend-icon', 'tune')}Filters</legend></fieldset>
   <div class="file-field"><label id="file-label" class="button">Upload<input id="file-input" type="file"></label></div>
@@ -54,6 +55,12 @@ const measure = (page, wanted) => page.evaluate((wanted) => Object.fromEntries(
   })
 ), wanted);
 
+// Space between two short events' badges, which are absolutely placed.
+const badgeGap = (page) => page.evaluate(() => {
+  const box = (id) => document.getElementById(id).getBoundingClientRect();
+  return box('short-icon-2').top - box('short-icon-1').bottom;
+});
+
 // The connector line starts below the badge and runs through its centre.
 const connector = (page) => page.evaluate(() => {
   const line = getComputedStyle(document.getElementById('timeline-row'), '::after');
@@ -71,6 +78,7 @@ for (const [name, engine, test] of engines) {
         const wanted = expected(scale);
         assert.deepEqual(await measure(page, wanted), wanted, `root ${16 * scale}px`);
         assert.deepEqual(await connector(page), { top: 32 * scale + 4, left: 16 * scale - 0.5 }, `root ${16 * scale}px`);
+        assert.ok(await badgeGap(page) >= 8, `badges overlap at root ${16 * scale}px`);
       }
     } finally {
       await browser.close();

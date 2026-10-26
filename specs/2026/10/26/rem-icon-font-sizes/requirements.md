@@ -76,12 +76,13 @@ These came from the interview on 2026-10-26.
 - R4. The hidden file input's font size is `rem(20px)`. It stays transparent and covers its label, so a click still opens the file chooser.
 - R5. No rule under `src/sass/components` or `src/sass/abstracts` sets `font-size` to a px value, except in `components/_chips.scss` until Phase 53. `$root-font-size` is a variable and doesn't count.
 - R6. At a 16px root the compiled values equal the old px sizes, so the default rendering doesn't change. The compiled CSS writes each converted value as the string `rem(<px>)` produces, for example `1.5rem` for 24px.
-- R8. Text keeps clear of the two boxes that grow beside it. The timeline row's start padding is `calc(rem(32px) + 16px)`, and its connector line starts at `calc(rem(32px) + 4px)` and sits at `calc(rem(16px) - 0.5px)`, the badge's center. The map popup content's end padding is `calc(12px + rem(32px))`. At a 16px root these are the old 48px, 36px, 15.5px and 44px.
+- R8. Text keeps clear of the two boxes that grow beside it. The timeline row's start padding is `calc(rem(32px) + 16px)`, and its connector line starts at `calc(rem(32px) + 4px)` and sits at `calc(rem(16px) - 0.5px)`, the badge's center. The map popup content's end padding is `calc(12px + rem(32px))`. A timeline row with a leading icon has a `min-block-size` of `calc(rem(32px) + 8px)`, so two short events keep 8px between their badges. At a 16px root these are the old 48px, 36px, 15.5px, 44px and 40px.
 - R7. `CHANGELOG.md` records the change under Unreleased, and `tests/selective-builds.test.js` records the CSS gzip change in a reviewed budget line. Generated guidance is current after `npm run build:skill`.
 
 ## Decisions made during implementation
 
 - R8 was added in group 3. With only the badge in rem, a 64px timeline badge overlapped its text behind the 48px padding, and the connector line started inside it. The map popup's 44px end padding would have let text run under the 64px close button. The rem sizing rule already writes a clearance that sums px and rem as a `calc()`, so the fix follows it.
+- The Codex review on 2026-10-26 found that two time-only timeline events overlapped their badges by 8px at a 32px root, because each row was 56px and the badge 64px. The icon row's `min-block-size` was added for it. The review also showed the guard test missed a `font:` shorthand with px, so the guard now checks `font:` too and ignores px inside `rem()`.
 - `components/forms/_file-input.scss` had no `@use` of abstracts, so Sass read `rem(20px)` as the CSS remainder function and the build failed. Group 4 added `@use "../../abstracts" as *;`, which emits no CSS.
 
 ## Technical constraints

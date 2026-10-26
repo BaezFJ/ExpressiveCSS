@@ -684,7 +684,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   pane header actions. Their sizes were in px, so the text beside
   them grew and the icons didn't. Icon boxes in the same rules grow with
   them, and the timeline text and the map popup text clear the larger
-  badge and close button. The Timepicker's tick text grows too; its dial
+  badge and close button. A short timeline event stays tall enough that
+  its badge doesn't overlap the next one. The Timepicker's tick text grows too; its dial
   and ticks stay in px because the script places ticks in px. At the
   default 16px size nothing moves.
 - A single-line list row sits in the middle of the row. The row grid's
