@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: Phase 57, read motion tokens for hardcoded transition timings
 Branch: `fix/motion-token-timings`
 Base: local `origin/master` at `a5f90c8506d23fd7f5a55f18aaf59f9aadd8df20`
-Status: implemented on the branch; full verification and visual review are pending
+Status: implemented on the branch; verification recorded; visual captures completed with advisory differences; BaezFJ's visual approval is pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules) and [success criteria](../../../../mission.md#success-criteria), the [framework constraints](../../../../tech-stack.md#framework-constraints), and [roadmap Phase 57](../../../../roadmap.md#phase-57-read-motion-tokens-for-hardcoded-transition-timings). Work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 

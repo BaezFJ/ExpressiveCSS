@@ -6,7 +6,7 @@ Branch: `fix/motion-token-timings`
 Base: local `origin/master` at `a5f90c8506d23fd7f5a55f18aaf59f9aadd8df20`
 Requirements: [requirements.md](requirements.md). Validation: [validation.md](validation.md).
 
-All implementation tasks remain unchecked. Each group has one bounded outcome.
+Groups 1 and 2 are complete. Group 3 has completed local checks and retains the required visual approval as pending. Each group has one bounded outcome.
 
 ## 1. Establish failing timing regressions
 
@@ -41,10 +41,10 @@ Prerequisites: group 2 passes.
 
 - [x] Update `docs/src/pages/timepicker.astro`, the expanding-card section of `docs/src/pages/cards.astro`, and their `llm.md` reference sections. Explain the system-token controls, the new card property, defaults and reduced motion. State that Timepicker's `duration` option and timers remain separate. Add an Unreleased changelog entry for both default changes.
 - [x] Measure CSS gzip and add the reviewed budget line in `tests/selective-builds.test.js`. Regenerate with `npm run build:skill`, and use `npm run build:semantics` only if canonical semantics change. Review affected provenance and regenerate again after final fingerprinted edits.
-- [ ] Run generated-data, full contributor, explicit browser, MCP and package checks from V8 sequentially. Record actual outcomes, skips and any isolated reruns in `validation.md`.
-- [ ] Run the repository's visual comparison, inspect the target effects with default and custom timings, and obtain BaezFJ's review of intended visual changes before merge. Record the review and report paths.
-- [ ] Confirm only the agreed changes ship, every requirement has passing evidence, required CI and reviews are satisfied, and the roadmap completion state remains unchanged by this specification.
+- [x] Run generated-data, full contributor, explicit browser, MCP and package checks from V8 sequentially. Record actual outcomes, skips and any isolated reruns in `validation.md`.
+- [ ] Obtain BaezFJ's review of intended visual changes before merge. The affected-page comparison and built-docs timing checks have run; report and video paths are recorded in `validation.md`. Approval remains pending.
+- [x] Confirm the diff contains only agreed changes and the roadmap completion state is unchanged. Local results and isolated reruns are recorded. Required CI and visual approval remain pre-merge conditions; no PR has been opened.
 
-Completion check: V7 to V9 have recorded passing results and the merge conditions in `validation.md` are satisfied. Skipped browser engines and a pending visual review leave the associated conditions incomplete.
+Completion check: local results for V7 to V9 are recorded. BaezFJ's visual approval and implementation-PR checks remain required before merge. The original browser-run failures and passing isolated reruns stay visible in the record.
 
 Covers R5 and regressions for R1 to R4. Validation V6 to V9.
