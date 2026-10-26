@@ -11,6 +11,10 @@ const cancels = (pattern) =>
   reduced.some((r) => r.selectors.some((s) => pattern.test(s)) && /transition:\s*none/.test(r.body));
 
 describe('Reduced motion', () => {
+  test('the time picker canvas reads the short3 motion token', () => {
+    assert.match(sheet(), /\.timepicker-canvas\s*\{[^}]*transition:\s*opacity var\(--md-sys-motion-duration-short3\)/);
+  });
+
   const targets = {
     'floating label': /^\.field > label:not\(/,
     'switch handle': /^\.switch > \[type=checkbox\]$/,

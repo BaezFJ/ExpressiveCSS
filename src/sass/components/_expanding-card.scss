@@ -18,6 +18,7 @@ article.expanding-card {
   --md-comp-expanding-card-motion-duration: var(--md-sys-motion-spring-slow-spatial-duration);
   --md-comp-expanding-card-motion-easing: var(--md-sys-motion-spring-slow-spatial);
   --md-comp-expanding-card-content-duration: var(--md-sys-motion-spring-default-spatial-duration);
+  --md-comp-expanding-card-content-delay: var(--md-sys-motion-duration-short4);
   --md-comp-expanding-card-content-easing: var(--md-sys-motion-spring-default-spatial);
   --md-comp-expanding-card-fade-duration: var(--md-sys-motion-spring-fast-effects-duration);
   --md-comp-expanding-card-fade-easing: var(--md-sys-motion-spring-fast-effects);
@@ -153,7 +154,7 @@ dialog.expanding-card-dialog > .expanding-card-content {
 dialog.expanding-card-dialog.expanded > .expanding-card-content {
   opacity: 1;
   transform: translateY(0);
-  transition-delay: 180ms;
+  transition-delay: var(--md-comp-expanding-card-content-delay);
 }
 
 .expanding-card-detail-header {
