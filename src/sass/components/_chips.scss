@@ -23,9 +23,9 @@
   height: auto;
   // Keep a 4px inset for wrapped lines as the content boxes grow.
   padding-block: 4px;
-  padding-left: var(--padding);
-  padding-right: var(--padding);
-  font-size: var(--font-size);
+  padding-left: var(--md-comp-chip-padding, var(--padding));
+  padding-right: var(--md-comp-chip-padding, var(--padding));
+  font-size: var(--md-comp-chip-label-size, var(--font-size));
   line-height: 1.5;
   font-weight: 500;
   border-radius: var(--md-sys-shape-corner-small);
@@ -92,7 +92,7 @@
 }
 
 .chip > :is(.material-symbols, .material-symbols-outlined, .material-symbols-rounded, .material-symbols-sharp) {
-  font-size: var(--font-size-icon);
+  font-size: var(--md-comp-chip-icon-size, var(--font-size-icon));
   color: var(--md-sys-color-on-surface-variant);
 }
 

@@ -38,5 +38,11 @@ for (const [name, css] of [['full', sheet], ['selective', selective]]) {
     for (const declaration of ['--padding: 8px;', 'gap: 8px;', 'padding-block: 4px;', 'line-height: 1.5;']) {
       assert.ok(chip.includes(declaration), declaration);
     }
+    for (const side of ['left', 'right']) {
+      assert.ok(chip.includes(`padding-${side}: var(--md-comp-chip-padding, var(--padding));`));
+    }
+    assert.ok(chip.includes('font-size: var(--md-comp-chip-label-size, var(--font-size));'));
+    const icon = rules.find(rule => rule.selector.startsWith('.chip > :is('));
+    assert.ok(icon.body.includes('font-size: var(--md-comp-chip-icon-size, var(--font-size-icon));'));
   });
 }

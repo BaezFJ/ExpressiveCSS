@@ -1,9 +1,13 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { compileString } from 'sass';
 import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
+const selectiveCss = compileString('@use "custom" with ($components: ("icons-material-design", "chips"), $utilities: (), $expressive-include-fonts: false);', {
+  loadPaths: ['src/sass'],
+}).css;
 const icon = '<span class="material-symbols" aria-hidden="true">info</span>';
 const image = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
 const markup = `<span id="display" class="chip">Paid</span>
@@ -17,8 +21,8 @@ const styles = (page, selector, properties) => page.locator(selector).evaluate((
   return properties.map(property => parseFloat(style[property]));
 }, properties);
 
-const initialize = async page => {
-  await page.setContent(`<style>${css}</style>${markup}`);
+const initialize = async (page, stylesheet = css) => {
+  await page.setContent(`<style>${stylesheet}</style>${markup}`);
   await page.addScriptTag({ content: js });
   await page.evaluate(image => {
     window.chips = Expressive.Chips.init(document.getElementById('field'), {
@@ -28,6 +32,72 @@ const initialize = async page => {
 };
 
 for (const [name, engine, test] of engines) {
+  test(`${name}: chip property names fall back independently in full and selective sheets`, async () => {
+    const browser = await leaseBrowser(engine);
+    let page;
+    try {
+      page = await browser.newPage();
+      for (const stylesheet of [css, selectiveCss]) {
+        await initialize(page, stylesheet);
+        await page.evaluate(() => {
+          for (const chip of document.querySelectorAll('.chip')) {
+            chip.classList.add('selected');
+            for (const icon of chip.querySelectorAll(':scope > [class^="material-symbols"]')) icon.remove();
+            chip.insertAdjacentHTML('afterbegin', ['material-symbols', 'material-symbols-outlined', 'material-symbols-rounded', 'material-symbols-sharp']
+              .map(name => `<span class="${name}" aria-hidden="true">info</span>`).join(''));
+          }
+        });
+        for (const size of [16, 32]) {
+          await page.evaluate(size => { document.documentElement.style.fontSize = `${size}px`; }, size);
+          const close = await styles(page, '#field .close .material-symbols', ['fontSize']);
+          const avatar = await styles(page, '#field img', ['width', 'height']);
+          const input = await styles(page, '#field .input', ['fontSize', 'height', 'minWidth', 'maxWidth']);
+          const old = '--padding:12px;--font-size:20px;--font-size-icon:22px;';
+          const fresh = '--md-comp-chip-padding:13px;--md-comp-chip-label-size:1.25rem;--md-comp-chip-icon-size:1.5rem;';
+          const cases = [
+            ['', [size * 0.875, 8, size * 1.125]],
+            [old, [20, 12, 22]],
+            [fresh, [size * 1.25, 13, size * 1.5]],
+            ['--md-comp-chip-padding:13px;--font-size:20px;--md-comp-chip-icon-size:1.5rem;', [20, 13, size * 1.5]],
+            [old + fresh, [size * 1.25, 13, size * 1.5]],
+          ];
+          for (const [values, [fontSize, padding, iconSize]] of cases) {
+            await page.evaluate(values => {
+              for (const chip of document.querySelectorAll('.chip')) chip.style.cssText = values;
+            }, values);
+            const actual = await page.locator('.chip').evaluateAll(chips => chips.map(chip => {
+              const style = getComputedStyle(chip);
+              return [parseFloat(style.fontSize), parseFloat(style.paddingLeft), parseFloat(style.paddingRight),
+                [...chip.children].filter(el => el.matches('[class^="material-symbols"]')).map(el => parseFloat(getComputedStyle(el).fontSize))];
+            }));
+            for (const row of actual) assert.deepEqual(row, [fontSize, padding, padding, Array(4).fill(iconSize)], values || 'defaults');
+            assert.deepEqual(await styles(page, '#field .close .material-symbols', ['fontSize']), close);
+            assert.deepEqual(await styles(page, '#field img', ['width', 'height']), avatar);
+            assert.deepEqual(await styles(page, '#field .input', ['fontSize', 'height', 'minWidth', 'maxWidth']), input);
+          }
+          const expected = [size * 1.25, 13, size * 1.5];
+          for (const [property, index, fallback] of [['label-size', 0, 20], ['padding', 1, 12], ['icon-size', 2, 22]]) {
+            await page.evaluate(property => {
+              for (const chip of document.querySelectorAll('.chip')) chip.style.removeProperty(`--md-comp-chip-${property}`);
+            }, property);
+            expected[index] = fallback;
+            assert.deepEqual(await styles(page, '#assist', ['fontSize', 'paddingLeft']), expected.slice(0, 2));
+            assert.deepEqual(await styles(page, '#assist > .material-symbols', ['fontSize']), [expected[2]]);
+          }
+          await page.evaluate(() => {
+            for (const chip of document.querySelectorAll('.chip')) chip.removeAttribute('style');
+          });
+          assert.deepEqual(await styles(page, '#assist', ['fontSize', 'paddingLeft', 'minHeight']), [size * 0.875, 8, size * 2]);
+          assert.deepEqual(await styles(page, '#assist > .material-symbols', ['fontSize']), [size * 1.125]);
+        }
+        await page.evaluate(() => window.chips.destroy());
+      }
+    } finally {
+      try { await page?.evaluate(() => window.chips?.destroy()); }
+      finally { await browser.close(); }
+    }
+  });
+
   test(`${name}: chip content and editable inputs scale with the root font size`, async () => {
     const browser = await leaseBrowser(engine);
     let page;

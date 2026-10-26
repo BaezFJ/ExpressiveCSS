@@ -437,5 +437,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed chip label-large font size and rem content boxes, with px spacing retained: 90,071 gzip bytes (-3).
   // Reviewed the map popup shadow reading the level 2 elevation token instead of an inlined shadow: 90,045 gzip bytes (-26).
   // Reviewed complete body-large and title-medium roles for app bar form inputs and card captions: 90,048 gzip bytes (+3).
-  assert.ok(sizes(css).gzip <= 90048, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed chip component-prefixed sizing properties with legacy fallbacks: 90,067 gzip bytes (+19).
+  assert.ok(sizes(css).gzip <= 90067, `CSS gzip: ${sizes(css).gzip}`);
 });

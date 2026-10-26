@@ -9,7 +9,7 @@ Component ID: `currency-input`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `ac9c7421213739fbc01f16e131d37d9e5ed32a585042676e6bc39ee29e7c7e12`
+Contract SHA-256: `4263743afdd11d2bfcb11762ecd94d2d0800ce8921e399d31f0f4ce2db6c8797`
 
 #### Selection and adaptation
 
