@@ -43,7 +43,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   /** The field wrapper around the native select. */
   wrapper: HTMLDivElement;
   selectOptions: (HTMLOptionElement | HTMLOptGroupElement)[];
-  private _values: ValueStruct[];
+  protected _values: ValueStruct[];
   private _createdWrapper: boolean;
   private _originalLabels = new Map<HTMLLabelElement, { for: string | null; id: string | null }>();
   private _labelPlaceholder: Comment;
@@ -54,9 +54,11 @@ export class FormSelect extends Component<FormSelectOptions> {
 
   constructor(el: HTMLSelectElement, options: FormSelectOptions) {
     super(el, options);
-    // A browser-default select stays native, with no instance on it.
-    if (this.el.classList.contains('browser-default')) {
-      this.el[FormSelect.key] = undefined;
+    // A browser-default select stays native, with no instance on it, and a
+    // tree select belongs to TreeSelect, which a page's FormSelect.init() on
+    // every select must not wrap a second time.
+    if (this.el.classList.contains('browser-default') || (new.target === FormSelect && this.el.matches('[data-tree]'))) {
+      this.el[new.target.key] = undefined;
       return;
     }
 
@@ -77,6 +79,9 @@ export class FormSelect extends Component<FormSelectOptions> {
 
   destroy() {
     this._events.abort();
+    // A skipped select built nothing and holds no instance key. The control
+    // may belong to a TreeSelect, or to a later instance, so leave it alone.
+    if (!this.menuEl) return;
     clearTimeout(this._resetTimer);
     this._clearValidationError();
     // The Menu holds itself in the static Menu._menus registry
@@ -133,7 +138,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   }
 
   // A rebuild replaces the rows, and no event reaches the old ones.
-  private _setupOptionHandlers() {
+  protected _setupOptionHandlers() {
     const { signal } = this._events;
     this.menuEl.querySelectorAll('li:not(.optgroup)').forEach((el) => {
       el.addEventListener('click', this._handleOptionClick, { signal });
@@ -165,7 +170,8 @@ export class FormSelect extends Component<FormSelectOptions> {
   // Native reporting chooses the control; static checks never focus. Wait until
   // reporting finishes so Firefox dismisses its native popup when focus moves.
   private _handleNativeFocus = () => queueMicrotask(() => {
-    if (FormSelect.getInstance(this.el) === this && this.el.matches(':focus')) this.input.focus();
+    // The instance's own class: a TreeSelect sits under its own key.
+    if ((this.constructor as typeof FormSelect).getInstance(this.el) === this && this.el.matches(':focus')) this.input.focus();
   });
 
   private _syncValidationError() {
@@ -360,19 +366,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     const userOnOpenEnd = menuOptions.onOpenEnd;
     const userOnCloseEnd = menuOptions.onCloseEnd;
     menuOptions.onOpenEnd = () => {
-      const selectedOption = this.menuEl.querySelector('.selected');
-      if (selectedOption) {
-        this.menu.focusedIndex = [...selectedOption.parentNode.children].indexOf(selectedOption);
-        this.menu._focusFocusedItem();
-        if (this.menu.isScrollable) {
-          let scrollOffset =
-            selectedOption.getBoundingClientRect().top -
-            this.menuEl.getBoundingClientRect().top;
-          scrollOffset -= this.menuEl.clientHeight / 2;
-          this.menuEl.scrollTop = scrollOffset;
-        }
-        if (selectedOption.id) this.input.setAttribute('aria-activedescendant', selectedOption.id);
-      }
+      this._focusSelected();
       this.input.ariaExpanded = 'true';
       if (typeof userOnOpenEnd === 'function')
         userOnOpenEnd.call(this.menu, this.el);
@@ -387,13 +381,29 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.menu = Menu.init(this.input, menuOptions);
   }
 
-  private _nativeOptions(): (HTMLOptGroupElement | HTMLOptionElement)[] {
+  /** Moves focus to the selected row of the opened menu, centred when it scrolls. */
+  protected _focusSelected() {
+    const selectedOption = this.menuEl.querySelector('.selected');
+    if (!selectedOption) return;
+    this.menu.focusedIndex = [...selectedOption.parentNode.children].indexOf(selectedOption);
+    this.menu._focusFocusedItem();
+    if (this.menu.isScrollable) {
+      let scrollOffset =
+        selectedOption.getBoundingClientRect().top -
+        this.menuEl.getBoundingClientRect().top;
+      scrollOffset -= this.menuEl.clientHeight / 2;
+      this.menuEl.scrollTop = scrollOffset;
+    }
+    if (selectedOption.id) this.input.setAttribute('aria-activedescendant', selectedOption.id);
+  }
+
+  protected _nativeOptions(): (HTMLOptGroupElement | HTMLOptionElement)[] {
     return <(HTMLOptGroupElement | HTMLOptionElement)[]>(
       Array.from(this.el.children).filter((el) => ['OPTION', 'OPTGROUP'].includes(el.tagName))
     );
   }
 
-  private _buildOptions() {
+  protected _buildOptions() {
     this.selectOptions = this._nativeOptions();
     this._values = [];
     this.selectOptions.forEach((realOption) => {

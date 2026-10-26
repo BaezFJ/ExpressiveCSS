@@ -235,6 +235,23 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   }
 }
 
+// A tree branch's chevron, drawn as the row's ::before: it points to the end
+// edge while closed. The row turns it with `transform: none` once the branch
+// opens, and with rotate(90deg) under :dir(rtl). .tree and the tree select
+// share it.
+$_tree-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 15.4 6 9.4 7.4 8l4.6 4.6L16.6 8 18 9.4z'/%3E%3C/svg%3E");
+
+@mixin tree-chevron {
+  content: "";
+  flex: none;
+  width: 20px;
+  height: 20px;
+  background-color: currentColor;
+  mask: $_tree-chevron center / 20px no-repeat;
+  transform: rotate(-90deg);
+  transition: transform var(--md-sys-motion-duration-short3) ease-out;
+}
+
 @mixin forced-colors-fill($color: CanvasText) {
   @media (forced-colors: active) {
     forced-color-adjust: none;

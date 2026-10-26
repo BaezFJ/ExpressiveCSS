@@ -372,6 +372,16 @@ test('a cascader is a named text field over plain lists with a value on every op
   }
 });
 
+test('a tree select is a single select nested only through data-parent', () => {
+  const broken = (html) => violations(html, enforcedRules, data.compositeRoles, { fragmentSafe: true })
+    .filter((v) => v.rule.id === 'tree-select-is-a-single-select').length;
+  assert.equal(broken('<div data-tree></div>'), 1);
+  assert.equal(broken('<select data-tree multiple><option>A</option></select>'), 1);
+  assert.equal(broken('<select data-tree><optgroup label="G"><option>A</option></optgroup></select>'), 1);
+  assert.equal(broken('<select><option value="a">A</option><option data-parent="a">B</option></select>'), 1);
+  assert.equal(broken('<select data-tree><option value="" disabled selected>Choose</option><option value="a" disabled>A</option><option value="b" data-parent="a">B</option></select>'), 0);
+});
+
 test('a currency code goes only on a text input', () => {
   const broken = (html) => violations(html, enforcedRules, data.compositeRoles, { fragmentSafe: true })
     .filter((v) => v.rule.id === 'currency-input-needs-a-text-field').length;

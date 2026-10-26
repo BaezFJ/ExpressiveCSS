@@ -1325,7 +1325,7 @@
         "sources": [
           {
             "path": "src/sass/components/_tree.scss",
-            "sha256": "1691daf6d198490c69b9c2c16a6dc886033297b175af5043e5c212d69c120792"
+            "sha256": "9dfad0b0e61467f713c929116bf28df0ec9197124236f92daef14de58d77568b"
           }
         ],
         "gaps": [
@@ -4272,7 +4272,7 @@
         "sources": [
           {
             "path": "src/sass/abstracts/_mixins.scss",
-            "sha256": "47a0a21ff5ea47c1030e3730605cadb4498d868202a88d89670c3aa55cf09702"
+            "sha256": "2bfe4ddffa9ec7133cfcec15e2eddd2a1357a4226f48cbae47e5116210087888"
           },
           {
             "path": "src/sass/components/_scatter-chart.scss",
@@ -8143,6 +8143,97 @@
           }
         ],
         "inventorySha256": "621393b5463f16c154580894a55366ba25ac90e542a2a7798639d22e1f78c628"
+      }
+    },
+    {
+      "slug": "tree-select",
+      "title": "Tree select",
+      "aliases": [
+        "hierarchical select",
+        "nested select",
+        "tree picker"
+      ],
+      "guideSource": {
+        "pageId": "tree_select",
+        "heading": "Tree select",
+        "headingLevel": 2,
+        "semantics": [
+          "tree-select",
+          "forms/select"
+        ]
+      },
+      "jobs": [
+        "Choose one leaf from options nested as a tree, expanded with the keyboard or pointer."
+      ],
+      "useWhen": [
+        "One choice from a hierarchy deeper than one level, such as a place or a category."
+      ],
+      "avoidWhen": [
+        "Options one level deep, which a select with optgroups shows, or a tree people browse, which a tree of links shows."
+      ],
+      "alternatives": [
+        "select",
+        "tree",
+        "autocomplete"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/tree-select.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#tree-select",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "A native select[data-tree] whose flat options name their parent's value in data-parent; a role=\"tree\" popup with the ARIA tree keyboard contract over visible, enabled rows, mirrored under RTL; one leaf chosen into the native select; branch options disabled while it runs; refresh() keeping open branches and focus.",
+          "webAdaptation": "TreeSelect extends FormSelect, so the native select keeps the form value, reset, validity and disabled state. The popup is a ul role=\"tree\" inside the Menu surface, one list below the rows Menu styles, named as the field is.",
+          "limitations": [
+            "Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output and touch remain unverified. One leaf only, no search, no choosable branch, and the field shows the leaf, not its path."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep a labelled native select as the form control, expose the hierarchy as an ARIA tree with its keyboard contract, let people choose only a leaf, and submit that leaf's value whatever the nesting."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A destination field with continents, countries and cities takes a data-tree select whose cities are the leaves; a field of five countries stays a select.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/ts/components/treeSelect.ts",
+            "sha256": "0fefba309bbd4046963a2a4fd61a6352746beadb1dfc1a10675c4d9062fb2178"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output and touch remain unverified.",
+            "nextStep": "Move through the tree and choose a leaf with VoiceOver and NVDA, and tap branches and leaves on iOS Safari and Android Chrome."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/tree-select-browser.test.js",
+            "name": "chromium: ArrowRight expands a branch, Enter chooses a leaf, and the form submits its value",
+            "scope": "Opening with Enter, expanding two branches with ArrowRight, choosing a leaf with Enter, and its value in FormData and the submit event."
+          },
+          {
+            "file": "tests/tree-select-browser.test.js",
+            "name": "chromium: rtl: the arrows, Home, End and * follow the tree pattern over visible, enabled rows",
+            "scope": "Opening, entering, closing and leaving branches with the mirrored arrows, Home, End and *, skipping a disabled placeholder and leaf without wrapping."
+          }
+        ]
       }
     },
     {
@@ -13575,5 +13666,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "797e5e4a91fee220908097f1cd6a639350fa9130"
+  "sourceRevision": "ebc36f235412727b885b948f09a73c742da59f4b"
 }

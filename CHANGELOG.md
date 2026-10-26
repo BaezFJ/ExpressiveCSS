@@ -371,6 +371,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   on a leaf sets the starting path, which a reset brings back, and
   `required` blocks submit until a path is chosen. New semantics rules keep
   the source lists plain and every option valued.
+- Tree select. A `<select data-tree>` whose options name their parent's
+  value in `data-parent` opens an ARIA tree, where the arrows, Home, End,
+  `*` and typeahead move between visible rows and only a leaf can be
+  chosen. The native select keeps the form value, reset and validity, and
+  branch options are disabled while it runs, so the form never submits
+  one. `refresh()` keeps open branches and focus. AutoInit starts
+  `TreeSelect` on `select[data-tree]` and FormSelect on other selects, and
+  a new semantics rule keeps `data-tree` on single selects nested only
+  through `data-parent`.
 
 - A `data-draggable` map marker moves without a drag (WCAG 2.5.7). A tap
   picks it up and sets `aria-pressed`, and the next tap on the map drops it

@@ -23,6 +23,7 @@ describe('Reduced motion', () => {
     'open card reveal panel': /^article\.card-reveal-initialized > aside\.open$/,
     'loading overlay scrim': /^\.loading-overlay::after$/,
     'loading overlay indicator': /^\.loading-overlay > \.loading-indicator$/,
+    'tree select chevron': /^ul\[role=tree\] li\[role=treeitem\] > span::before$/,
   };
   for (const [name, pattern] of Object.entries(targets)) {
     test(`cancels the ${name} transition`, () => assert.ok(cancels(pattern), name));

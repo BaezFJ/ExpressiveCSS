@@ -36,6 +36,8 @@ describe('Forced colors', () => {
     'active carousel dot': [/^\.carousel \.indicators \.indicator-item:is\(\.active/, SYSTEM_FILL],
     'selected date': [/^\.is-selected \.datepicker-day-button$/, /background-color:\s*Highlight/],
     'cascader path option': [/^\.cascader-popover \[role=option\]\[aria-selected=true\]$/, OUTLINE],
+    'tree select chosen row': [/^ul\[role=tree\] li\[role=treeitem\]\[aria-selected=true\] > span$/, OUTLINE],
+    'tree select chevron': [/^ul\[role=tree\] li\[role=treeitem\]\[aria-expanded\] > span::before$/, SYSTEM_FILL],
   };
   for (const [name, [selector, body]] of Object.entries(selected)) {
     test(`keeps the ${name} visible`, () => assert.ok(has(selector, body), name));
@@ -46,6 +48,8 @@ describe('Forced colors', () => {
     checkbox: /^label:has\(> \[type=checkbox\]\):not\(\.switch\) > \[type=checkbox\]:focus-visible$/,
     radio: /^label:has\(> \[type=radio\]\) > \[type=radio\]:focus-visible$/,
     switch: /^\.switch > \[type=checkbox\]:focus-visible$/,
+    'tree select row': /^ul\[role=tree\] li\[role=treeitem\]:focus-visible > span$/,
+    'chosen tree select row': /^ul\[role=tree\] li\[role=treeitem\]\[aria-selected=true\]:focus-visible$/,
   })) {
     test(`gives a focused ${name} an outline`, () => assert.ok(has(selector, /outline:\s*2px solid CanvasText/), name));
   }

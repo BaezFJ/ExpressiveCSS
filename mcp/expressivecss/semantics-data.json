@@ -49,7 +49,8 @@
       "currency-input",
       "hover-card",
       "input-mask",
-      "landmarks"
+      "landmarks",
+      "tree-select"
     ],
     "notComponents": {
       "table_of_contents": "the list it styles is Scrollspy's markup, taught under Scrollspy in `llm.md` and rendered per page by the docs site's page scaffold. The partial stays in the sheet; `scrollspy` owns its rule."
@@ -876,6 +877,19 @@
             "kind": "forbid",
             "selector": "li[role=\"option\"]:not([aria-selected])",
             "message": "role=option promises a selection state. Without aria-selected the listbox never says which entry is chosen."
+          }
+        ]
+      },
+      "tree-select": {
+        "status": "enforced",
+        "note": "Added with the tree select component. The author writes a native <select data-tree> of flat options, each child naming its parent's value in `data-parent`; AutoInit builds a role=\"tree\" popup with the tested arrow-key contract, and the native select still submits the chosen leaf. Nesting comes only from data-parent, because HTML cannot nest optgroups, and only one leaf can be chosen.",
+        "rules": [
+          {
+            "id": "tree-select-is-a-single-select",
+            "kind": "forbid",
+            "selector": "[data-tree]:not(select), select[data-tree][multiple], select[data-tree] optgroup, select:not([data-tree]) option[data-parent]",
+            "fragmentSafe": true,
+            "message": "Put data-tree on a <select> without multiple, and nest its options only with data-parent naming the parent option's value. A tree select chooses one leaf, an <optgroup> cannot nest, and data-parent does nothing in a select without data-tree."
           }
         ]
       },

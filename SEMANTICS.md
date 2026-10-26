@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**107 of 107 rows enforced; 0 remaining.**
+**108 of 108 rows enforced; 0 remaining.**
 
-102 of those rows are components - a part of the framework an author writes markup for.
+103 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 102 components declare conformance debt.**
+**2 of 103 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -1420,6 +1420,16 @@ Added with the tree component. Nested lists of native disclosures and links: eve
 
 - **tree-is-not-a-tree-widget** - A .tree takes no ARIA tree roles. It is lists of disclosures and links, which keep their own roles and keyboard behavior.
 - **tree-marks-current-not-selected** - Mark the open file or page with aria-current. aria-selected is not valid on a link or a list item.
+
+### tree-select
+
+Added with the tree select component. The author writes a native <select data-tree> of flat options, each child naming its parent's value in `data-parent`; AutoInit builds a role="tree" popup with the tested arrow-key contract, and the native select still submits the chosen leaf. Nesting comes only from data-parent, because HTML cannot nest optgroups, and only one leaf can be chosen.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `tree-select-is-a-single-select` | forbid | `[data-tree]:not(select), select[data-tree][multiple], select[data-tree] optgroup, select:not([data-tree]) option[data-parent]` | must not match |
+
+- **tree-select-is-a-single-select** - Put data-tree on a <select> without multiple, and nest its options only with data-parent naming the parent option's value. A tree select chooses one leaf, an <optgroup> cannot nest, and data-parent does nothing in a select without data-tree.
 
 ### treemap-chart
 

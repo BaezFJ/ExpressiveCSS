@@ -251,8 +251,122 @@ menu[role="listbox"] li.optgroup-option {
   padding-inline-start: 1rem;
 }
 
+// Tree select. TreeSelect puts a ul[role="tree"] inside the Menu surface,
+// one list below the rows Menu styles, and nests each branch's rows in a
+// ul[role="group"] inside its treeitem. The row is the treeitem's label span:
+// painting the <li> would fill the branch's whole subtree. A branch row leads
+// with the chevron .tree uses, a leaf lines its text up after it, and each
+// level hangs a guide line from its parent's chevron, as in .tree.
+ul[role="tree"] {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  ul[role="group"] {
+    margin: 0;
+    margin-inline-start: calc(var(--md-comp-menu-item-leading-space) + 10px);
+    padding: 0;
+    padding-inline-start: 4px;
+    border-inline-start: 1px solid var(--md-sys-color-outline-variant);
+    list-style: none;
+  }
+
+  li[role="treeitem"] {
+    display: block;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+
+    > span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-sizing: border-box;
+      min-height: var(--md-comp-menu-item-container-height);
+      padding-block: 8px;
+      padding-inline: calc(var(--md-comp-menu-item-leading-space) + 28px) var(--md-comp-menu-item-trailing-space);
+      border-radius: var(--md-comp-menu-item-container-shape);
+      color: var(--md-comp-menu-item-label-text-color);
+      @include typescale("label-large");
+    }
+
+    > span:hover {
+      background-color: state-layer(var(--md-comp-menu-item-label-text-color), "hover");
+    }
+
+    &:focus-visible > span {
+      background-color: state-layer(var(--md-comp-menu-item-label-text-color), "focus");
+
+      // Forced colors drop the focus fill, and the row has no outline of its own.
+      @media (forced-colors: active) {
+        outline: 2px solid CanvasText;
+        outline-offset: -2px;
+      }
+    }
+
+    &[aria-expanded] > span {
+      padding-inline-start: var(--md-comp-menu-item-leading-space);
+
+      &::before {
+        @include tree-chevron;
+        @include forced-colors-fill;
+      }
+    }
+
+    // A closed branch points to the end edge, which is the left in RTL.
+    &[aria-expanded="false"]:dir(rtl) > span::before {
+      transform: rotate(90deg);
+    }
+
+    &[aria-expanded="true"] > span::before {
+      transform: none;
+    }
+
+    &[aria-selected="true"] > span {
+      background-color: var(--md-comp-menu-item-selected-container-color);
+      color: var(--md-comp-menu-item-selected-label-text-color);
+      @include forced-colors-selected;
+    }
+
+    // The chosen row is where the popup opens, so it shows focus too: the
+    // focus layer over the selected fill. In forced colors its Highlight
+    // outline takes the label's own outline, so focus rings the row itself;
+    // a chosen row is always a leaf, whose <li> is just its label.
+    &[aria-selected="true"]:focus-visible {
+      > span {
+        background-color: state-layer(
+          var(--md-comp-menu-item-selected-label-text-color),
+          "focus",
+          var(--md-comp-menu-item-selected-container-color)
+        );
+      }
+
+      @media (forced-colors: active) {
+        outline: 2px solid CanvasText;
+      }
+    }
+
+    // A disabled row takes no clicks: they reach its group, and TreeSelect
+    // ignores a click that lands on no row's label.
+    &.disabled {
+      cursor: default;
+      pointer-events: none;
+
+      > span {
+        background: none;
+        color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+      }
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .field:has(> .hide-select) .caret {
+    transition: none;
+  }
+
+  ul[role="tree"] li[role="treeitem"] > span::before {
     transition: none;
   }
 }

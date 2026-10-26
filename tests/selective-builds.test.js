@@ -265,7 +265,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed BackToTop: the threshold sentinel, the inert link kept while focused, the scroll to the top, focus on the href target with a temporary tabindex, modified clicks left alone and the threshold check: 100,828 gzip bytes (+644).
   // Reviewed show more: the toggle, the fit check with its focus, blur and font rechecks, the swapped label and destroy(): 101,521 gzip bytes (+693).
   // Reviewed the cascader: nested options in listbox columns, keys in both directions, the path submitted through the form control it now shares with Chips in core/formControl, and the review fixes: 103,607 gzip bytes (+2,086).
-  assert.ok(sizes(js).gzip <= 103607, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the tree select: a role="tree" list in the Menu surface over a data-tree select, the full tree keyboard contract in both directions, branch options kept out of the form, refresh() keeping open branches and focus, and FormSelect's hooks, focus redirect and skipped destroy(): 105,464 gzip bytes (+1,857 over master's 103,607 build).
+  assert.ok(sizes(js).gzip <= 105464, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -431,5 +432,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed show more: the rule that keeps a hidden button hidden despite the button display rule: 89,143 gzip bytes (+14).
   // Reviewed the cascader: the hidden source lists, the popover surface and columns, the selected path, chevron, forced colors and the label floating through the form control: 89,668 gzip bytes (+525).
   // Reviewed list rows centering a single line and no row gap, and the list row inset for the checkbox mark: 89,703 gzip bytes (+35).
-  assert.ok(sizes(css).gzip <= 89703, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the tree select's rows under ul[role="tree"], the chevron shared with .tree through a mixin, guide lines, the focused chosen row, forced colors and reduced motion: 90,048 gzip bytes (+345 over master's 89,703 build).
+  assert.ok(sizes(css).gzip <= 90048, `CSS gzip: ${sizes(css).gzip}`);
 });
