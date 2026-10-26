@@ -9,7 +9,7 @@ Component ID: `chips`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `f929207aa86faa7edcb2726800096e64b8b115d34c99df20c87418b82ebcc84e`
+Contract SHA-256: `cc05997a42c8de36faf3a3270daef1b134177062fdcd6790f7a74a2724693f18`
 
 #### Selection and adaptation
 
@@ -41,7 +41,9 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 A chip is a `.chip`, and **the element says which kind it is** — the four Material 3 chip types, plus a non-interactive display chip, across three root elements. Add `outlined` for a bordered style. Static chips are CSS. The JavaScript plugin lives on a `.chips` wrapper.
 
-A long label wraps and the chip grows from its 32dp minimum, with 4dp above and below the lines. It never grows wider than its parent.
+A long label wraps and the chip grows from its minimum height, with 4px above and below the lines. It never grows wider than its parent.
+
+The label's default `--font-size` reads `--md-sys-typescale-label-large-font-size`. The chip minimum height, direct child icon font size, avatar and close-button boxes, and editable input font size, height and width limits use rem. At a 16px root the default label is 14px, icon is 18px and minimum height is 32px; at a 32px root they are 28px, 36px and 64px. The avatar and close-button boxes grow from 24px to 48px. Padding, gaps and borders stay in px. Existing `--font-size`, `--font-size-icon` and `--padding` overrides on a chip still work, including fixed px values. The nested close glyph keeps the shared button icon size.
 
 #### Syntax
 
