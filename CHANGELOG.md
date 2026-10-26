@@ -678,6 +678,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Chips grow with the browser's font size. Labels read the label-large
+  font-size token, and the icon, minimum height, avatar, close-button box
+  and editable input use rem sizes. At a 32px root, the default label is
+  28px and minimum height is 64px. Default rendering at a 16px root,
+  px spacing and existing custom-property overrides remain unchanged.
 - Icons grow with the browser's font size in dialogs, snackbars, alerts,
   lists, trees, timelines, the command palette, message avatars, the map
   popup, fieldset legends, the drop zone and the dialog, side sheet and

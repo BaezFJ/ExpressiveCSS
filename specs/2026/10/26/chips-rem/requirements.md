@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: Phase 53, size chips in rem
 Branch: `fix/chips-rem`
 Base: `origin/master` at `e2481457f17e11ea6351616899ec8fd319aba35e`
-Status: specified; implementation pending
+Status: implemented and automated checks passed; maintainer visual approval pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules), [framework constraints](../../../../tech-stack.md#framework-constraints), and [roadmap Phase 53](../../../../roadmap.md#phase-53-size-chips-in-rem). Work groups are in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -66,7 +66,7 @@ Keep `.chip`, `.chips`, checkbox-label chips, outlined and selected styles, and 
 
 ### R5. Regression coverage and delivery records describe the change
 
-Remove the chips exemption from the font-size guard and cover the chip custom-property defaults so a px default cannot bypass it. Add focused compiled-CSS and browser regressions using existing helpers. Update the chips docs, `llm.md`, and Unreleased changelog with rem scaling and the retained px spacing. Record measured CSS gzip size and its delta in `tests/selective-builds.test.js`; regenerate guidance from its sources and pass the required checks and visual review in validation.md. All implementation and acceptance results remain pending at specification time.
+Remove the chips exemption from the font-size guard and cover the chip custom-property defaults so a px default cannot bypass it. Add focused compiled-CSS and browser regressions using existing helpers. Update the chips docs, `llm.md`, and Unreleased changelog with rem scaling and the retained px spacing. Record measured CSS gzip size and its delta in `tests/selective-builds.test.js`; regenerate guidance from its sources and pass the required checks and visual review in validation.md. Implementation evidence is recorded in validation.md; required visual approval remains pending.
 
 ## Scope and constraints
 
