@@ -678,6 +678,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- The map popup's shadow reads `--md-sys-elevation-level2`, so a theme
+  that changes that token changes the popup too. The shadow was written
+  out in full, so the popup kept the default level 2 shadow while menus
+  and cards followed the theme. It still overrides MapLibre's own shadow.
 - Chips grow with the browser's font size. Labels read the label-large
   font-size token, and the icon, minimum height, avatar, close-button box
   and editable input use rem sizes. At a 32px root, the default label is

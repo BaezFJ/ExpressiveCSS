@@ -1,4 +1,3 @@
-@use "sass:map";
 @use "../abstracts" as *;
 
 // Map. A MapLibre map in a .map frame. The page loads maplibre-gl.css; these
@@ -140,7 +139,7 @@
     background: var(--md-sys-color-surface-container-low) !important;
     color: var(--md-sys-color-on-surface);
     @include typescale("body-medium");
-    box-shadow: map.get($elevations, "2") !important;
+    @include z-depth(2, true);
 
     // !important to beat the padding shorthand above, which MapLibre's own
     // stylesheet forces it to carry.
