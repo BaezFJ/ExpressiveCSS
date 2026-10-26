@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: Phase 58, share chart base rules across chart types
 Branch: `fix/chart-base-rules`
 Base: `origin/master` at `a5f90c8506d23fd7f5a55f18aaf59f9aadd8df20`
-Status: specified; implementation and acceptance results pending
+Status: evaluated on 2026-10-26; candidate rejected by the size threshold; production Sass restored
 
 Follow the [mission's product rules](../../../../mission.md#product-rules), [framework constraints](../../../../tech-stack.md#framework-constraints), and [roadmap Phase 58](../../../../roadmap.md#phase-58-share-chart-base-rules-across-chart-types). Work groups are in [plan.md](plan.md); checks are in [validation.md](validation.md).
 
@@ -49,3 +49,7 @@ Follow [Sass architecture](../../../../../src/sass/README.md) and [development n
 The main risks are lost chart-specific variables, altered rule order, stronger selectors and missing standalone styles. Shared selectors must not cause one chart's rules to affect a neighboring or nested chart of another type. A no-chart build is a regression case because loading abstracts alone must remain inert.
 
 Tests read built bundles. Build before testing and run suites sequentially. Use Node 24 and the lockfile. Missing browser engines and skipped acceptance cases do not count as passes. Regenerate source-owned guidance through the established commands, and do not renew capability evidence or source pins without the review and checks those records require.
+
+## Implementation outcome on 2026-10-26
+
+The tested write-once candidate saved 855 gzip bytes, below the confirmed 1,024-byte threshold. R4 therefore selects the measurement-only outcome. Production Sass is restored and no CSS, runtime, budget or public API change ships. R1 to R3 and the retained-refactor parts of R5 are inapplicable to this result; their contracts remain requirements for any future attempt. See the measurements and remaining verification results in [validation.md](validation.md).
