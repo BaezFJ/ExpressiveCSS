@@ -772,6 +772,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Search popups resize after filtering so translated no-results feedback and
+  newly exposed tree paths fit, including inside transformed containers.
+- Search popups stay hidden for controls initialized while disabled. Enabling
+  the control and calling `refresh()` restores normal interaction.
 - Searchable selects preserve focus on a result reached before the opening
   animation finishes, so Enter still chooses that result in dialogs and shadow roots.
 - Escape dismisses an anchored menu while its opening animation still leaves

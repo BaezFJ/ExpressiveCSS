@@ -296,6 +296,8 @@ export class FormSelect extends Component<FormSelectOptions> {
     if (this.el.matches(':disabled')) this.wrapper.classList.add('disabled');
 
     this.menuEl = document.createElement(this._searchable ? 'div' : 'menu');
+    // Disabled controls skip Menu initialization but must keep their popup hidden.
+    this.menuEl.popover = 'manual';
     this.menuEl.id = `select-options-${Utils.guid()}`;
     this.menuEl.setAttribute('role', 'listbox');
     this.menuEl.ariaMultiSelectable = this.isMultiple.toString();
@@ -433,6 +435,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     this._filterSearch(query);
     this._searchStatus.textContent = this._values.some(({ optionEl }) => !optionEl.hidden) ? '' : this.options.i18n.noResults;
     this.input.removeAttribute('aria-activedescendant');
+    this.menu?.recalculateDimensions();
   };
 
   protected _filterSearch(query: string) {

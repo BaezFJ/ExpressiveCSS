@@ -703,3 +703,51 @@ treeSearch('keeps search fixed while enlarged RTL results scroll with forced-col
   assert.ok(geometry.searchTop >= geometry.top && geometry.searchBottom <= geometry.bottom, JSON.stringify(geometry));
   assert.ok(geometry.top >= 0 && geometry.right <= 361 && geometry.bottom <= 601, JSON.stringify(geometry));
 });
+
+
+treeSearch('keeps an initially disabled search hidden and enables its hierarchy through refresh', async ({ page }) => {
+  await page.evaluate(() => {
+    const select = treeSelect.el;
+    treeSelect.destroy();
+    select.disabled = true;
+    window.treeSelect = Expressive.TreeSelect.init(select, { searchable: true,
+      menuOptions: { inDuration: 0, outDuration: 0 } });
+  });
+  const search = searchInput(page);
+  await expect(search).toBeHidden();
+  await expect(treeTrigger(page)).toBeDisabled();
+  await page.evaluate(() => { treeSelect.el.disabled = false; treeSelect.refresh(); });
+  await treeTrigger(page).click();
+  await expect(search).toBeFocused();
+  await search.fill('par');
+  await page.keyboard.press('ArrowUp');
+  await focusOn(page, 'Paris');
+  await page.keyboard.press('Enter');
+  assert.equal(await page.locator('#place').inputValue(), 'paris');
+  assert.equal(await page.evaluate(() => changes), 1);
+});
+
+
+treeSearch('fits translated no-results feedback in a transformed narrow container', async ({ page }) => {
+  const message = 'Keine passenden Einträge gefunden. Bitte ändern Sie den Suchbegriff und versuchen Sie es erneut.';
+  await page.evaluate(message => {
+    const select = treeSelect.el;
+    treeSelect.destroy();
+    select.innerHTML = '<option value="group" disabled>Places</option><option value="paris" data-parent="group">Paris</option>';
+    Object.assign(select.form.style, { width: '160px', transform: 'translateX(1px)' });
+    window.treeSelect = Expressive.TreeSelect.init(select, { searchable: true,
+      i18n: { noResults: message }, menuOptions: { inDuration: 0, outDuration: 0 } });
+  }, message);
+  await treeTrigger(page).click();
+  const search = searchInput(page);
+  await expect(search).toBeFocused();
+  await search.fill('missing');
+  await expect(page.locator('.select-search-popup > [role="status"]')).toHaveText(message);
+  const geometry = await page.evaluate(() => {
+    const popup = treeSelect.menuEl.getBoundingClientRect();
+    const status = treeSelect.menuEl.querySelector('[role="status"]').getBoundingClientRect();
+    return { popupBottom: popup.bottom, statusBottom: status.bottom };
+  });
+  assert.ok(geometry.statusBottom <= geometry.popupBottom, JSON.stringify(geometry));
+  await expect(search).toBeFocused();
+});

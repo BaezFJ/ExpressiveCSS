@@ -321,7 +321,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed independent file-count limits through shared validation and all-file rejection snapshots: 109,541 gzip bytes (+90).
   // Reviewed search-result focus preserved when opening completes after navigation: 109,553 gzip bytes (+12).
   // Reviewed tree search through shared controls, retained leaf paths and pre-query expansion recovery: 109,867 gzip bytes (+314).
-  assert.ok(sizes(js).gzip <= 109867, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed native popup hiding before disabled controls can initialize Menu: 109,878 gzip bytes (+11).
+  // Reviewed search-surface resizing after result and localized-status updates: 109,888 gzip bytes (+10).
+  assert.ok(sizes(js).gzip <= 109888, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

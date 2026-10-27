@@ -283,3 +283,46 @@ multiple('picks within an open shadow root and dismisses outside without losing 
   await expect(page.locator('#before')).toBeFocused();
   assert.deepEqual(await page.evaluate(() => [instance.getSelectedValues(), instance.menuEl.querySelector('input').value]), [['paris', 'tokyo'], '']);
 });
+
+
+each('keeps an initially disabled search hidden and enables it through refresh', async page => {
+  const search = page.getByRole('searchbox', { name: 'Search options', includeHidden: true });
+  await expect(search).toBeHidden();
+  await expect(page.locator('.field > input')).toBeDisabled();
+  await page.locator('#before').focus();
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#after')).toBeFocused();
+  await page.evaluate(() => { instance.el.disabled = false; instance.refresh(); });
+  await page.locator('.field > input').click();
+  await expect(search).toBeFocused();
+  await search.fill('rome');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  assert.equal(await page.evaluate(() => instance.el.value), 'rome');
+  assert.equal(await page.evaluate(() => changes), 1);
+}, 'disabled');
+
+
+each('fits translated no-results feedback in a transformed narrow container', async page => {
+  const message = 'Keine passenden Einträge gefunden. Bitte ändern Sie den Suchbegriff und versuchen Sie es erneut.';
+  await page.evaluate(message => {
+    const select = instance.el;
+    instance.destroy();
+    select.replaceChildren(new Option('Paris', 'paris'));
+    Object.assign(select.form.style, { width: '160px', transform: 'translateX(1px)' });
+    window.instance = Expressive.FormSelect.init(select, { searchable: true,
+      i18n: { noResults: message }, menuOptions: { inDuration: 0, outDuration: 0 } });
+  }, message);
+  await page.locator('.field > input').click();
+  const search = page.getByRole('searchbox', { name: 'Search options' });
+  await expect(search).toBeFocused();
+  await search.fill('missing');
+  await expect(page.locator('.select-search-popup > [role="status"]')).toHaveText(message);
+  const geometry = await page.evaluate(() => {
+    const popup = instance.menuEl.getBoundingClientRect();
+    const status = instance.menuEl.querySelector('[role="status"]').getBoundingClientRect();
+    return { popupBottom: popup.bottom, statusBottom: status.bottom };
+  });
+  assert.ok(geometry.statusBottom <= geometry.popupBottom, JSON.stringify(geometry));
+  await expect(search).toBeFocused();
+});
