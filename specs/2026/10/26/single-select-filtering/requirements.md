@@ -4,7 +4,7 @@
 - Roadmap phase: Phase 63, filter single-select options
 - Branch: `feature/2026-10-26-single-select-filtering`
 - Base: `origin/master` at `6f74b3701af2347656aec1bae69af77396897609`
-- Status: specified; implementation pending
+- Status: implemented and locally verified on 2026-10-27; merge review pending
 
 This feature follows the [mission's product rules](../../../../mission.md#product-rules) and [component scope](../../../../mission.md#agreed-scope), the [technical constraints](../../../../tech-stack.md#framework-constraints) and [testing requirements](../../../../tech-stack.md#framework-testing), and [roadmap Phase 63](../../../../roadmap.md#phase-63-filter-single-select-options). Work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -28,7 +28,7 @@ The user confirmed all three interview groups on 2026-10-26. The work is Phase 6
 
 The confirmed matching policy is a case-insensitive substring of option text. Empty groups disappear, disabled matches remain unavailable, no-results feedback is accessible, and closing clears the query. The native select owns the submitted value. The user accepted the validation and merge checklist in `validation.md`.
 
-The API names and detailed focus rules below are specification design decisions based on the inspected implementation. They give the confirmed interaction a concrete contract; they do not describe code already written.
+The API names and detailed focus rules below are specification design decisions based on the inspected implementation. They define the implemented contract. The user subsequently authorized implementation through the incremental-implementation skill.
 
 ## Requirements
 
@@ -83,6 +83,6 @@ Update the select docs with a live grouped example and the complete keyboard con
 - Multiple-select search is Phase 64. TreeSelect search is Phase 75. This phase creates neither behavior, nor helpers or configuration solely for those phases.
 - Remote search, option creation, fuzzy/accent-insensitive matching, highlighting, virtualization, a clear button, result-count announcements and a new selection event are excluded.
 - Automatic mutation watching, replacement of Menu, a new component inventory, framework bindings and runtime dependencies are excluded.
-- Roadmap completion edits, implementation, commits, pushes, PRs, merges and releases are outside this specification task.
+- Roadmap completion edits, pushes, PRs, merges and releases are outside this local implementation request.
 
-Phase 63 has no roadmap prerequisite. Its implementation needs the existing native-form and Menu behavior described above. No interview decision remains unresolved. Implementation and all execution evidence remain pending.
+Phase 63 has no roadmap prerequisite. Its implementation needs the existing native-form and Menu behavior described above. No interview decision remains unresolved. Local implementation and automated checks are complete. The execution record in `validation.md` identifies the remaining human review and PR merge gates.

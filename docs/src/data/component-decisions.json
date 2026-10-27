@@ -8044,7 +8044,7 @@
         "href": "https://m3.material.io/components/menus/overview",
         "implementation": {
           "source": "llm.md#select",
-          "reviewedOn": "2026-10-26",
+          "reviewedOn": "2026-10-27",
           "documentedSupport": "Single/multiple selection, optgroups, browser-default fallback, and opt-in single-select search with a separate popup field and native form values.",
           "webAdaptation": "Native select enhanced by runtime; this is related to menu/text-field patterns.",
           "limitations": [
@@ -8078,7 +8078,7 @@
         "guidelinesHref": "https://m3.material.io/components/menus/guidelines"
       },
       "capabilityReview": {
-        "reviewedOn": "2026-10-26",
+        "reviewedOn": "2026-10-27",
         "support": "implemented",
         "sources": [
           {
@@ -8091,7 +8091,7 @@
           },
           {
             "path": "src/ts/components/select.ts",
-            "sha256": "987a021d2e97413bfffbd265aa97fc676ec81803179058ea71b17b24b91d6044"
+            "sha256": "a5e8b18896cd53c1ea18f919cc0602df4be63c1ee4bd12dcbc2ef1d24a338693"
           },
           {
             "path": "src/ts/components/menu.ts",
@@ -8167,7 +8167,7 @@
             "scope": "Scrolling results, visible search/focus ring, enlarged RTL text, forced colors and reduced motion. Programmatic font scaling does not prove native zoom or spoken output. Equivalent Firefox and WebKit cases run in the same file."
           }
         ],
-        "inventorySha256": "eff22edb306cf5c2a97ee2b59416095abe92986c40ab672d94169aa249c59b1d"
+        "inventorySha256": "6836ad6745febd1832c84731d76f6521315aa5a8fa9982357d25a9a43e6536db"
       }
     },
     {
@@ -13691,5 +13691,5 @@
     "inputsUnchanged": true,
     "reportSha256": "901697c1476a6369682ffc54fd0de71c0eed9db9a738b7f16d2c1780956ea287"
   },
-  "sourceRevision": "27204ad77b17de7e601d7d29a497f851696a0858"
+  "sourceRevision": "823ca3aa4c71a08cf4554f0204d4c464f2cb4f24"
 }

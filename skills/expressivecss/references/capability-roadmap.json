@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.15.0",
-  "sourceRevision": "27204ad77b17de7e601d7d29a497f851696a0858",
+  "sourceRevision": "823ca3aa4c71a08cf4554f0204d4c464f2cb4f24",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-10-10",
@@ -5111,7 +5111,7 @@
       "support": "implemented",
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-10-26",
+      "reviewedOn": "2026-10-27",
       "scope": "Single/multiple selection, optgroups, browser-default fallback, and opt-in single-select search with a separate popup field and native form values.",
       "adaptation": "Native select enhanced by runtime; this is related to menu/text-field patterns.",
       "upstream": {
@@ -5147,7 +5147,7 @@
         },
         {
           "path": "src/ts/components/select.ts",
-          "sha256": "987a021d2e97413bfffbd265aa97fc676ec81803179058ea71b17b24b91d6044"
+          "sha256": "a5e8b18896cd53c1ea18f919cc0602df4be63c1ee4bd12dcbc2ef1d24a338693"
         },
         {
           "path": "src/ts/components/menu.ts",

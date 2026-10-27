@@ -4,29 +4,29 @@
 - Roadmap phase: Phase 63, filter single-select options
 - Branch: `feature/2026-10-26-single-select-filtering`
 - Base: `origin/master` at `6f74b3701af2347656aec1bae69af77396897609`
-- Status: pending; no implementation or runtime checks executed
+- Status: local implementation and automated verification complete on 2026-10-27; human review and PR gates pending
 
-Validate [requirements.md](requirements.md) and [plan.md](plan.md) against the [mission's success criteria](../../../../mission.md#success-criteria), [technical testing constraints](../../../../tech-stack.md#framework-testing) and [Phase 63 completion check](../../../../roadmap.md#phase-63-filter-single-select-options). The user confirmed this acceptance and merge checklist. All results below are pending.
+Validate [requirements.md](requirements.md) and [plan.md](plan.md) against the [mission's success criteria](../../../../mission.md#success-criteria), [technical testing constraints](../../../../tech-stack.md#framework-testing) and [Phase 63 completion check](../../../../roadmap.md#phase-63-filter-single-select-options). The user confirmed this acceptance and merge checklist and subsequently requested incremental implementation. The execution record below separates completed checks from pending merge conditions.
 
 ## Setup and commands
 
 Use the contributor Node version from `.nvmrc` and install dependencies with `npm ci`. Tests consume built bundles, so run `npm run build` before direct `node --test` commands. Install the three Playwright engines and required system libraries using the contributor instructions, or use the documented container workflow. Run one suite at a time. Fixtures use actual native selects and form submission, not component internals alone. Tear down instances, timers and leased browsers in `finally`.
 
-`tests/select-search.test.js` and `tests/select-search-browser.test.js` are proposed new files. Their direct commands below cannot run until group 1 creates them. Existing npm commands were inspected in `package.json`; none was executed during specification. Missing engines or setup are blockers for required checks, not passes.
+`tests/select-search.test.js` and `tests/select-search-browser.test.js` now exist and follow the existing runner conventions. Commands below were unexecuted at specification time. The execution record identifies the checks run during implementation. Missing engines or setup are blockers for required checks, not passes.
 
 ## Requirement coverage
 
 | Requirement | Plan group | Validation | Result |
 | --- | --- | --- | --- |
-| R1, opt-in and exclusions | 1, 2, 3 | V1, V7, V9 | Pending |
-| R2, matching and groups | 1, 2 | V2, V4, V9 | Pending |
-| R3, native values and events | 1, 2 | V2, V4, V5, V9 | Pending |
-| R4, controls and accessible feedback | 1, 2, 3 | V3, V6, V8, V9 | Pending |
-| R5, keyboard and focus | 1, 2, 3 | V4, V5, V7, V8, V9 | Pending |
-| R6, lifecycle and native forms | 1, 3 | V5, V6, V7 | Pending |
-| R7, shared compatibility | 1, 3 | V1, V7, V10 | Pending |
-| R8, styling | 1, 3 | V6, V8, V10 | Pending |
-| R9, guidance and delivery evidence | 2, 3 | V9, V10 | Pending |
+| R1, opt-in and exclusions | 1, 2, 3 | V1, V7, V9 | Passed locally |
+| R2, matching and groups | 1, 2 | V2, V4, V9 | Passed locally |
+| R3, native values and events | 1, 2 | V2, V4, V5, V9 | Passed locally |
+| R4, controls and accessible feedback | 1, 2, 3 | V3, V6, V8, V9 | Automated pass; V8 pending |
+| R5, keyboard and focus | 1, 2, 3 | V4, V5, V7, V8, V9 | Automated pass; V8 pending |
+| R6, lifecycle and native forms | 1, 3 | V5, V6, V7 | Passed locally |
+| R7, shared compatibility | 1, 3 | V1, V7, V10 | Passed locally |
+| R8, styling | 1, 3 | V6, V8, V10 | Automated pass; V8 pending |
+| R9, guidance and delivery evidence | 2, 3 | V9, V10 | Local checks pass; merge gates pending |
 
 ## Automated checks
 
@@ -116,4 +116,38 @@ Before merge, all of the following must hold:
 4. Required PR CI passes, conversations are resolved, the branch is up to date, and repository review policy is satisfied. During the single-maintainer stage, the maintainer's own PR needs CI but not independent approval, as `CONTRIBUTING.md` states.
 5. Any remaining optional evidence limits are disclosed. No required decision or check remains deferred or blocked. No migration is needed because behavior is opt-in; if implementation changes existing behavior, revisit scope and compatibility before merge.
 
-All results remain pending. Writing this file does not establish implementation or merge readiness.
+## Execution record, 2026-10-26 to 2026-10-27
+
+The implementation uses Node 24.21.0 and the installed Chromium, Firefox and WebKit engines. Full suites run sequentially under `taskset -c 0-3` to bound browser concurrency. Baseline and final builds use the same lockfile and gzip normalization as `tests/selective-builds.test.js`.
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Base negative control | Both initial search regressions fail because search is absent. | `.cache/phase63/search-red.log` |
+| Grouped search, keyboard and lifecycle slices | Build and typecheck passed for each slice. The lifecycle run passed 283 checks without skips. | `.cache/phase63/lifecycle-tests.log` |
+| Broader popup and shared regressions | 421 checks passed without skips before the final small fixes. | `.cache/phase63/boundary-tests.log` |
+| Final dedicated search checks | All 31 checks pass, including all three engines, option-image classes and focus recovery. | `.cache/phase63/final-fixes.log` |
+| First full contributor attempt | 3,315 passes, one WebKit test assertion failure and three Firefox WebGL2 map skips. The failure immediately checked focus after Escape. Tests now use Playwright's waiting focus assertions. | `.cache/phase63/verify.log` |
+| Full contributor rerun | 3,317 passes, zero failures and three Firefox WebGL2 map skips. Build, typecheck, generated data and docs checks pass. | `.cache/phase63/verify-final.log` |
+| Explicit three-engine browser suite | 1,626 passes, zero failures and the same three map skips. All new search cases run in every engine. | `.cache/phase63/browser-final.log` |
+| MCP and isolated package consumers | Live MCP smoke passes, including eight tools, resources, completion and response budgets. Both isolated package consumers pass, including the final constructor type fixture. | `.cache/phase63/mcp-final.log`, `.cache/phase63/packages-final.log` |
+| Guidance and docs after final edits | All 48 guidance checks, generated-data checks, the Astro build and site verification pass. | `.cache/phase63/guidance-final.log` |
+| Legacy constructor options | Typecheck, the old constructor options shape and all 31 dedicated search checks pass. | `.cache/phase63/constructor-types-final.log` |
+| Visual comparison | All 20 base captures succeed. Four Select-page captures differ after the added section and options; 16 control captures are unchanged. The command exits 1 for these image differences. Human approval is pending. | `.cache/phase63/visual-final.log`, `visual/report/index.html` |
+
+The visual command was `VISUAL_BASE=6f74b3701 taskset -c 0-3 npm run test:visual -- --grep '(select|buttons) @' --workers 2`. It covers buttons, icon buttons, select, tree select and radio buttons at compact, expanded, large and large-dark settings. This is a focused visual comparison, not a whole-site visual pass.
+
+Source review also found that an option image carrying class `optgroup` could enter the group-heading lookup. A regression reproduced the null `aria-owns` failure. The shared filter now selects only direct `li.optgroup` headings. The filter correction is in commit `27204ad77`. The final capability source revision is `823ca3aa4`, which also includes the legacy constructor compatibility correction and its compile fixture. `.cache/phase63/image-class-red.log` retains the negative control.
+
+The full contributor and explicit browser runs preceded the final type-only constructor correction. The constructor now accepts `Partial<FormSelectOptions>` so calls using the previous `{ classes, menuOptions }` shape remain valid. The added fixture in `tests/fixtures/migration-consumer/app.mts` fails with TS2739 against the earlier required-field signature and passes against the final declarations. Final repository typechecking, the consumer compile, 31 search checks, guidance checks, MCP smoke and package consumers pass after this correction.
+
+Minified JavaScript and CSS remain byte-identical across that type-only correction. The before/after SHA-256 records are `.cache/phase63/runtime-hashes-before-types.json` and `.cache/phase63/runtime-hashes-after-types.json`. The post-change search tests exercise the rebuilt ESM and browser bundles, and package checks cover the final declarations and consumers. Local direct fixture compilation uses `--ignoreConfig`, which the installed TypeScript requires when a file is supplied from a directory containing `tsconfig.json`; the isolated package consumer has no conflicting config.
+
+Final reviewed sizes are 106,503 gzip bytes for minified JavaScript, up 1,039 from the confirmed base's 105,464, and 90,754 bytes for CSS, up 145 from 90,609. The source-map stripping matches the budget test. Raw artifact gzip sizes include source-map comments and are not these budget numbers. Measurements are in `.cache/phase63/size-comparison.json`.
+
+No new author-markup rule was needed in `semantics.json`: the existing JSON option attribute enables the feature, and runtime code owns the generated dialog and listbox. The generators synchronize all 99 component guides and contract metadata. The historical capability browser collection remains unchanged; generated guidance does not promote these local tests to renewed operator evidence.
+
+Agent review of the live docs verified grouped keyboard selection, trigger focus recovery and reset. Captures are `.cache/phase63/select-search-desktop.png` and `.cache/phase63/select-search-popup.png`. A component taken from that page and isolated from its navigation also fits a 375px viewport with RTL, dark colors, 32px root text and long translated labels/messages. Its popup spans x=16 to x=359 and y=187 to y=435 in a 375x812 viewport. The capture and measurements are `.cache/phase63/select-search-rtl-enlarged.png` and `.cache/phase63/rtl-review.json`. This is programmatic font scaling, not browser-native zoom.
+
+T3's collaborative snapshot operation timed out twice, so the installed Playwright workflow supplied these captures. Astro's agent background mode initially resolved the relative docs root into `docs/docs` and timed out; the foreground `--ignore-lock` invocation served the correct page. The misplaced generated files were moved into `.cache/phase63/astro-background-root`, preserving them outside the tracked source.
+
+Human visual approval, native browser zoom, spoken screen-reader output and physical-device checks have not been performed. PR CI and review are not available because this task does not open or push a PR. Those limits must remain explicit before merge. The supplemental Definition of Done file referenced by the incremental-implementation skill was absent at its resolved path; repository checks in `CONTRIBUTING.md` define the local verification here.
