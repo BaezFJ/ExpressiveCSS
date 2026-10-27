@@ -110,7 +110,7 @@ export class TreeSelect extends FormSelect {
   }
 
   protected _canSearch() {
-    return !this.el.multiple && this.options.searchable;
+    return this.options.searchable;
   }
 
   protected _searchList() { return this.tree; }
@@ -302,9 +302,10 @@ export class TreeSelect extends FormSelect {
 
   /** Opens the chosen leaf's branches and focuses it, or the first row a person can choose or open. */
   protected _focusSelected() {
-    const chosen = this._values.find(({ el, optionEl }) => el.selected && !optionEl.matches('.disabled'))?.optionEl;
-    this._expandTo(chosen);
-    this._focusRow(chosen ?? this._enabledRows()[0]);
+    // Opening may finish after the user has already focused a tree row.
+    if (!this.menu.options.autoFocus || Utils.focusIsIn(this.menuEl)) return;
+    const chosen = this._values.find(({ el, optionEl }) => el.selected && !optionEl.matches('.disabled'));
+    this._restoreFocus(chosen?.el);
   }
 
   /** Opens every branch around `row`. */

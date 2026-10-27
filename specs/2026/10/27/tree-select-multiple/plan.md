@@ -18,9 +18,9 @@ Completion V1-V2; all new functions stay below complexity five.
 
 Prerequisite: group 1 passes.
 
-- [ ] Enable existing search for multiple trees; replace the obsolete multiple-search exclusion with positive tree regressions while retaining browser-default exclusion.
-- [ ] Cover hidden selections across queries, branch-baseline restoration, refresh/caret/focus/removed or changed branches, native/canceled reset, required/disabled recovery, own shadow roots and instance isolation. Fix only shared owning paths where evidence requires it.
-- [ ] Run focused Node checks and real pointer/keyboard multi-toggle/submission/search tests in tests/tree-select-browser.test.js, retaining flat-search regressions. Check all R4/R6/R7 behavior with teardown in finally; commit a verified slice.
+- [x] Enable existing search for multiple trees; replace the obsolete multiple-search exclusion with positive tree regressions while retaining browser-default exclusion.
+- [x] Cover hidden selections across queries, branch-baseline restoration, refresh/caret/focus/removed or changed branches, native/canceled reset, required/disabled recovery, own shadow roots and instance isolation. Fix only shared owning paths where evidence requires it.
+- [x] Run focused Node checks and real pointer/keyboard multi-toggle/submission/search tests in tests/tree-select-multiple-browser.test.js, alongside tests/tree-select-browser.test.js, retaining flat-search regressions. Check all R4/R6/R7 behavior with teardown in finally; commit a verified slice.
 
 Completion V1-V3. No new search option, popup implementation or mode-switching support.
 
