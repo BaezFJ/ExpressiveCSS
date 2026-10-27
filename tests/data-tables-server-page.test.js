@@ -1,6 +1,6 @@
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { Expressive, resetBody } from './setup.js';
+import { Expressive, resetBody, window } from './setup.js';
 
 const markup = `<div class="data-table" data-sort data-page-size="2">
   <label>Records per page<select class="browser-default" data-table-page-size><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select></label>
@@ -126,4 +126,195 @@ test('server sync clears former local hiding and select-all only affects display
   assert.equal(document.querySelector('#secret input').checked, true);
   assert.equal(document.querySelector('#css-hidden input').checked, false);
   assert.equal(document.querySelector('#r3 button').getAttribute('aria-expanded'), 'true');
+});
+
+test('server buttons request pages without advancing accepted state, even without cancellation', () => {
+  accept();
+  const seen = [];
+  wrapper().addEventListener('expressive:page', (event) => {
+    seen.push(event.detail);
+    assert.equal(event.target, wrapper());
+    assert.equal(event.bubbles && event.composed && event.cancelable, true);
+  });
+  button('next').focus();
+  button('next').click();
+  assert.deepEqual(seen, [{ page: 3, pageSize: 2 }]);
+  assert.equal(status(), '2 / 4');
+  assert.deepEqual(displayed(), ['r3', 'r4']);
+  assert.equal(document.activeElement, button('next'));
+  button('previous').click();
+  assert.deepEqual(seen[1], { page: 1, pageSize: 2 });
+});
+
+test('a canceled native size pair requests once and leaves accepted page and size intact', () => {
+  accept();
+  const seen = [];
+  wrapper().addEventListener('expressive:page', (event) => { seen.push(event.detail); event.preventDefault(); });
+  const control = document.querySelector('[data-table-page-size]');
+  control.focus();
+  control.value = '4';
+  control.dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  control.dispatchEvent(new window.Event('change', { bubbles: true }));
+  assert.deepEqual(seen, [{ page: 2, pageSize: 4 }]);
+  assert.equal(wrapper().getAttribute('data-page-size'), '2');
+  assert.equal(status(), '2 / 4');
+  assert.equal(count(), '87');
+  assert.deepEqual(displayed(), ['r3', 'r4']);
+  assert.equal(document.activeElement, control);
+  control.dispatchEvent(new window.Event('change', { bubbles: true, composed: true }));
+  assert.equal(seen.length, 2);
+});
+
+test('a setter response inside a request supersedes the older local default', () => {
+  document.querySelector('[data-table-filter]').value = '';
+  wrapper().setAttribute('data-page-size', '1');
+  sync();
+  wrapper().addEventListener('expressive:page', () => accept({ page: 3, pageSize: 1, total: 12 }), { once: true });
+  button('next').click();
+  assert.equal(status(), '3 / 12');
+  assert.equal(wrapper().getAttribute('data-page-size'), '1');
+  assert.deepEqual(displayed(), ['r3', 'r4']);
+});
+
+test('a newer canceled nested request prevents an older local default', () => {
+  document.querySelector('[data-table-filter]').value = '';
+  wrapper().setAttribute('data-page-size', '1');
+  sync();
+  const seen = [];
+  wrapper().addEventListener('expressive:page', (event) => {
+    seen.push(event.detail);
+    if (seen.length === 1) {
+      const control = document.querySelector('[data-table-page-size]');
+      control.value = '2';
+      control.dispatchEvent(new window.Event('change', { bubbles: true, composed: true }));
+    } else event.preventDefault();
+  });
+  button('next').click();
+  assert.deepEqual(seen, [{ page: 2, pageSize: 1 }, { page: 1, pageSize: 2 }]);
+  assert.equal(status(), '1 / 2');
+  assert.equal(wrapper().getAttribute('data-page-size'), '1');
+});
+
+test('canceled local page and size requests preserve the entire accepted view', () => {
+  document.querySelector('[data-table-filter]').value = '';
+  wrapper().setAttribute('data-page-size', '1');
+  sync();
+  const seen = [];
+  wrapper().addEventListener('expressive:page', (event) => { seen.push(event.detail); event.preventDefault(); });
+  const before = wrapper().outerHTML;
+  button('next').focus();
+  button('next').click();
+  assert.equal(wrapper().outerHTML, before);
+  assert.equal(document.activeElement, button('next'));
+  const control = document.querySelector('[data-table-page-size]');
+  control.value = '4';
+  control.focus();
+  control.dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  control.dispatchEvent(new window.Event('change', { bubbles: true }));
+  assert.equal(wrapper().outerHTML, before);
+  assert.equal(control.value, '4');
+  assert.equal(document.activeElement, control);
+  assert.deepEqual(seen, [{ page: 2, pageSize: 1 }, { page: 1, pageSize: 4 }]);
+});
+
+test('an uncanceled deferred server size request waits for the application response', async () => {
+  accept();
+  const seen = [];
+  wrapper().addEventListener('expressive:page', (event) => seen.push(event.detail));
+  const control = document.querySelector('[data-table-page-size]');
+  control.value = '4';
+  control.dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  control.dispatchEvent(new window.Event('change', { bubbles: true }));
+  sync();
+  assert.equal(wrapper().getAttribute('data-page-size'), '2');
+  assert.equal(status(), '2 / 4');
+  assert.deepEqual(seen, [{ page: 2, pageSize: 4 }]);
+  await Promise.resolve();
+  accept({ ...seen[0], total: 7 });
+  assert.equal(status(), '2 / 2');
+  assert.equal(wrapper().getAttribute('data-page-size'), '4');
+  assert.deepEqual(displayed(), ['r3', 'r4']);
+  assert.equal(seen.length, 1);
+});
+
+test('server filter and sort requests preserve rows, count and accepted page', () => {
+  accept();
+  const seen = [];
+  for (const name of ['page', 'filter', 'sort']) wrapper().addEventListener(`expressive:${name}`, (event) => seen.push([name, event.detail.query]));
+  const field = document.querySelector('[data-table-filter]');
+  field.value = 'Delta';
+  field.dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  const sort = document.querySelector('th[data-filter] button');
+  sort.click();
+  sort.click();
+  sync();
+  assert.deepEqual(seen, [['filter', 'Delta'], ['sort', undefined], ['sort', undefined]]);
+  assert.equal(status(), '2 / 4');
+  assert.equal(count(), '87');
+  assert.deepEqual(displayed(), ['r3', 'r4']);
+  assert.equal(sort.parentElement.getAttribute('aria-sort'), 'descending');
+});
+
+test('boundary buttons and invalid, disabled or unchanged sizes make no request', () => {
+  accept({ page: 1, pageSize: 2, total: 1 });
+  const seen = events();
+  button('previous').click();
+  button('next').click();
+  accept();
+  button('next').disabled = true;
+  button('next').dispatchEvent(new window.MouseEvent('click', { bubbles: true, composed: true }));
+  const control = document.querySelector('[data-table-page-size]');
+  const input = () => control.dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  input();
+  for (const value of ['', 'invalid', '0', '-1', '1.5', 'Infinity', '9007199254740992']) {
+    control.add(new window.Option(value, value));
+    control.value = value;
+    input();
+  }
+  control.value = '4';
+  control.disabled = true;
+  input();
+  control.disabled = false;
+  control.multiple = true;
+  input();
+  control.multiple = false;
+  control.selectedOptions[0].disabled = true;
+  input();
+  assert.deepEqual(seen, []);
+  assert.equal(status(), '2 / 4');
+});
+
+test('an empty server size request uses page one and null preserves canceled filter ownership', () => {
+  accept({ page: 1, pageSize: 2, total: 0 });
+  const seen = [];
+  wrapper().addEventListener('expressive:page', (event) => { seen.push(event.detail); event.preventDefault(); });
+  const control = document.querySelector('[data-table-page-size]');
+  control.value = '4';
+  control.dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  assert.deepEqual(seen, [{ page: 1, pageSize: 4 }]);
+  const field = document.querySelector('[data-table-filter]');
+  wrapper().addEventListener('expressive:filter', (event) => event.preventDefault(), { once: true });
+  field.dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  accept(null);
+  assert.deepEqual(displayed(), ['r3', 'r4']);
+  assert.equal(count(), '87');
+  field.value = 'Delta';
+  field.dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  assert.deepEqual(displayed(), ['r4']);
+  assert.equal(count(), '1');
+});
+
+test('a newer accepted nested local request supersedes the older requested page', () => {
+  document.querySelector('[data-table-filter]').value = '';
+  wrapper().setAttribute('data-page-size', '1');
+  sync();
+  wrapper().addEventListener('expressive:page', () => {
+    const control = document.querySelector('[data-table-page-size]');
+    control.value = '4';
+    control.dispatchEvent(new window.Event('change', { bubbles: true, composed: true }));
+  }, { once: true });
+  button('next').click();
+  assert.equal(status(), '1 / 1');
+  assert.equal(wrapper().getAttribute('data-page-size'), '4');
+  assert.deepEqual(displayed(), ['r3', 'r4']);
 });

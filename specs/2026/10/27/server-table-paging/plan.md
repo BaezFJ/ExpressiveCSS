@@ -18,9 +18,9 @@ Delivers R1, R3 and R5. Completion check V1. Commit the verified increment.
 
 Prerequisite: group 1 passes.
 
-- [ ] Route existing page/size controls through cancelable `expressive:page` with valid requested state. Preserve local defaults, retain accepted server state, and prevent stale reentrant defaults.
-- [ ] Handle native input and FormSelect composed change without a duplicate request from native noncomposed change. Cover canceled/deferred sizes, boundaries, disabled controls, explicit composed script events and nested wrappers.
-- [ ] Test synchronous and asynchronous application responses, newer nested requests and authoritative setter calls inside dispatch. Reject a newly added condition mutation, restore source and rerun affected checks.
+- [x] Route existing page/size controls through cancelable `expressive:page` with valid requested state. Preserve local defaults, retain accepted server state, and prevent stale reentrant defaults.
+- [x] Handle native input and FormSelect composed change without a duplicate request from native noncomposed change. Cover canceled/deferred sizes, boundaries, disabled controls, explicit composed script events and nested wrappers.
+- [x] Test synchronous and asynchronous application responses, newer nested requests and authoritative setter calls inside dispatch. Reject a newly added condition mutation, restore source and rerun affected checks.
 
 Delivers R2-R5. Completion checks V1-V2. Commit the verified increment.
 

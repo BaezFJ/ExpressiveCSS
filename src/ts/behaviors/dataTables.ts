@@ -225,6 +225,7 @@ export class DataTables {
   private static _dragged = false;
   private static _serverFilters = new WeakMap<Element, Event>();
   private static _pages = new WeakMap<Element, PageView>();
+  private static _pageRequests = new WeakMap<Element, Event>();
 
   static Init() {
     if (DataTables._initialized || typeof document === 'undefined') return;
@@ -275,6 +276,7 @@ export class DataTables {
   static setPage(wrapper: Element, state: TablePageState | null): boolean {
     if (!wrapper?.matches?.('.data-table:has(> table)')) return false;
     if (!DataTables._storePage(wrapper, state)) return false;
+    DataTables._pageRequests.delete(wrapper);
     DataTables.sync(wrapper);
     return true;
   }
@@ -391,28 +393,44 @@ export class DataTables {
     if (!button) return;
     const wrapper = button.closest('.data-table');
     if (!pageSize(wrapper)) return;
-    DataTables._advancePage(wrapper, PAGE_STEP[button.dataset.tablePage]);
+    DataTables._advancePage(wrapper, PAGE_STEP[button.dataset.tablePage], e);
   };
 
-  private static _advancePage(wrapper: Element, step: number) {
-    const view = DataTables._pages.get(wrapper) ?? { page: 1, pageSize: pageSize(wrapper), total: 0 };
-    if (view.server) return;
-    DataTables._pages.set(wrapper, { ...view, page: view.page + step });
-    DataTables.sync(wrapper);
+  private static _advancePage(wrapper: Element, step: number, event: Event) {
+    const view = DataTables._pageState(wrapper);
+    const page = pageIndex(view.page + step, view.total, pageSize(wrapper));
+    if (page < 1 || page === view.page) return;
+    DataTables._requestPage(wrapper, { page, pageSize: pageSize(wrapper) }, event);
   }
 
   private static _onPageSize = (e: Event) => {
+    if (!e.composed) return;
     const control = Utils.closestInPath(e, `.data-table[data-page-size] ${PAGE_SIZE}`) as HTMLSelectElement;
     if (!control) return;
-    if (DataTables._pages.get(control.closest('.data-table'))?.server) return;
-    DataTables._setPageSize(control.closest('.data-table'), control.value);
+    DataTables._setPageSize(control.closest('.data-table'), control.value, e);
   };
 
-  private static _setPageSize(wrapper: Element, value: string) {
+  private static _setPageSize(wrapper: Element, value: string, event: Event) {
     const size = positivePageSize(value);
     if (!size || !pageSize(wrapper) || size === pageSize(wrapper)) return;
-    wrapper.setAttribute('data-page-size', String(size));
+    const view = DataTables._pageState(wrapper);
+    const page = Math.max(1, pageIndex(view.page, view.total, size));
+    DataTables._requestPage(wrapper, { page, pageSize: size }, event);
+  }
+
+  private static _requestPage(wrapper: Element, request: Pick<TablePageState, 'page' | 'pageSize'>, event: Event) {
+    const view = DataTables._pageState(wrapper);
+    DataTables._pageRequests.set(wrapper, event);
+    if (!Utils.emit(wrapper, 'page', request, true)) return;
+    if (DataTables._pageRequests.get(wrapper) !== event) return;
+    if (view.server) return;
+    wrapper.setAttribute('data-page-size', String(request.pageSize));
+    DataTables._pages.set(wrapper, { ...view, ...request });
     DataTables.sync(wrapper);
+  }
+
+  private static _pageState(wrapper: Element): PageView {
+    return DataTables._pages.get(wrapper) ?? { page: 1, pageSize: pageSize(wrapper), total: 0 };
   }
 
   /** Filter visibility is settled before paging; details consume no slots. */
