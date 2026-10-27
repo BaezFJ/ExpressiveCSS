@@ -153,10 +153,14 @@ export class TreeSelect extends FormSelect {
    */
   refresh() {
     const focused = this._focusedOption();
-    this._keepOpen = this._openValues();
+    this._keepOpen = this._searchOpen ?? this._openValues();
     super.refresh();
     this._keepOpen = undefined;
-    if (focused && this.menu?.isOpen) this._restoreFocus(focused);
+    this._restoreOpenFocus(focused);
+  }
+
+  private _restoreOpenFocus(option: HTMLOptionElement) {
+    if (option && this.menu?.isOpen) this._restoreFocus(option);
   }
 
   /** The option whose row has focus, if one does. */

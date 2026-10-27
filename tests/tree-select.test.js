@@ -374,3 +374,96 @@ test('filtered navigation skips own-hidden children and hidden branches cannot a
     assert.equal(row(instance, 'Lyon').tabIndex, -1);
   } finally { instance.destroy(); }
 });
+
+
+const treeTick = () => new Promise(resolve => setTimeout(resolve, 0));
+const searchSettings = { searchable: true, menuOptions: { inDuration: 0, outDuration: 0 } };
+
+test('refresh retains query, caret and the original expansion baseline while options change', async () => {
+  const instance = start(PLACES, '', searchSettings);
+  try {
+    instance._activate(row(instance, 'Asia'));
+    instance.menu.open();
+    await treeTick();
+    filterTree(instance, 'par');
+    const search = instance.menuEl.querySelector('input[type="search"]');
+    search.focus();
+    search.setSelectionRange(1, 1);
+    instance.refresh();
+    assert.equal(document.activeElement, search);
+    assert.equal(search.selectionStart, 1);
+    assert.deepEqual(visibleTree(instance), ['Europe', 'France', 'Paris']);
+    instance.el.querySelector('[value="asia"]').remove();
+    const ocean = new document.defaultView.Option('Oceania', 'ocean');
+    const leaf = new document.defaultView.Option('Paris Island', 'island');
+    leaf.dataset.parent = 'ocean';
+    instance.el.append(ocean, leaf);
+    instance.refresh();
+    assert.deepEqual(visibleTree(instance), ['Europe', 'France', 'Paris', 'Oceania', 'Paris Island']);
+    filterTree(instance, '');
+    assert.deepEqual(treeExpansion(instance), { Europe: 'false', France: 'false', Oceania: 'false' });
+    filterTree(instance, 'missing');
+    instance.refresh();
+    assert.equal(document.activeElement, search);
+    assert.equal(search.value, 'missing');
+  } finally { instance.destroy(); }
+});
+
+test('canceled reset retains tree search and native reset restores the pre-query branches silently', async () => {
+  const instance = start(PLACES, '', searchSettings);
+  let changes = 0;
+  instance.el.addEventListener('change', () => changes++);
+  try {
+    instance.el.value = 'lyon';
+    instance.refresh();
+    instance._activate(row(instance, 'Asia'));
+    const before = treeExpansion(instance);
+    instance.menu.open();
+    await treeTick();
+    filterTree(instance, 'par');
+    const during = treeExpansion(instance);
+    instance.el.form.addEventListener('reset', event => event.preventDefault(), { once: true });
+    instance.el.form.reset();
+    await treeTick();
+    assert.equal(instance.menuEl.querySelector('input[type="search"]').value, 'par');
+    assert.equal(instance.el.value, 'lyon');
+    assert.deepEqual(treeExpansion(instance), during);
+    instance.el.form.reset();
+    await treeTick();
+    assert.equal(instance.menu.isOpen, false);
+    assert.equal(instance.menuEl.querySelector('input[type="search"]').value, '');
+    assert.equal(instance.menuEl.querySelector('[role="status"]').textContent, '');
+    assert.equal(instance.el.value, '');
+    assert.deepEqual(treeExpansion(instance), before);
+    assert.equal(changes, 0);
+  } finally { instance.destroy(); }
+});
+
+for (const boundary of ['select', 'fieldset']) {
+  test(`disabling the ${boundary} during a query restores its original expansion on refresh`, async () => {
+    const instance = start(PLACES, '', searchSettings);
+    let disabled = instance.el;
+    try {
+      if (boundary === 'fieldset') {
+        disabled = document.createElement('fieldset');
+        instance.wrapper.before(disabled);
+        disabled.append(instance.wrapper);
+      }
+      instance._activate(row(instance, 'Asia'));
+      const before = treeExpansion(instance);
+      instance.menu.open();
+      await treeTick();
+      filterTree(instance, 'par');
+      disabled.disabled = true;
+      instance.refresh();
+      assert.equal(instance.menu.isOpen, false);
+      assert.equal(instance.input.disabled, true);
+      assert.equal(instance.menuEl.querySelector('input[type="search"]').value, '');
+      assert.deepEqual(treeExpansion(instance), before);
+      disabled.disabled = false;
+      instance.refresh();
+      assert.equal(instance.input.disabled, false);
+      assert.deepEqual(treeExpansion(instance), before);
+    } finally { instance.destroy(); }
+  });
+}

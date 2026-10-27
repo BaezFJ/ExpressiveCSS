@@ -20,7 +20,7 @@ Prerequisite: group 1 passes.
 
 - [x] Add failing leaf/ancestor/matching/hidden-navigation/native-value and exact expansion-baseline tests in tests/tree-select.test.js, including multiple queries, temporary toggles and refresh.
 - [x] Implement leaf/path filtering and one pre-query expansion snapshot in treeSelect.ts. Fix own-hidden navigation/child entry/sibling opening/activation and search-click handling in shared tree paths; preserve disabled and default behavior.
-- [ ] Complete refresh/reset/cancellation/focus fallback/isolation regressions. Mutate restoration to leave filter-expanded branches open, require its regression to fail, restore/build/rerun and commit.
+- [x] Complete refresh/reset/cancellation/focus fallback/isolation regressions. Mutate restoration to leave filter-expanded branches open, require its regression to fail, restore/build/rerun and commit.
 
 Delivers R2-R4/R6-R7. Completion checks V1-V2.
 
