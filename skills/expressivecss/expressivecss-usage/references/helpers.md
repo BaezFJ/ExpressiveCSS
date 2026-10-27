@@ -159,7 +159,7 @@ Never use display hiding as the only way to provide required content or actions.
 
 ## Flex helpers
 
-Apply one class per declaration to the container. `.flex-row` and `.flex-nowrap` restate the defaults so a window-size prefix can switch back to them. `.flex-1`, `.flex-none`, `.shrink-0`, `.self-*` and `.order-*` go on a child.
+Apply one class per declaration to the container. `.flex-row` and `.flex-nowrap` restate the defaults so a window-size prefix can switch back to them. `.flex-1`, `.flex-none`, `.flex-initial`, `.shrink-0`, `.shrink-1`, `.self-*` and `.order-*` go on a child.
 
 | Class | Declaration | Use carefully |
 | --- | --- | --- |
@@ -171,7 +171,9 @@ Apply one class per declaration to the container. `.flex-row` and `.flex-nowrap`
 | `.align-start`, `.align-center`, `.align-end`, `.align-stretch`, `.align-baseline` | `align-items` | `.align-center` on the container is the same as `.valign-wrapper`. |
 | `.flex-1` | `flex: 1 1 0` | The child takes remaining space; add `.min-w-0` if its text must truncate. |
 | `.flex-none` | `flex: none` | The child keeps its content size. |
+| `.flex-initial` | `flex: 0 1 auto` | Sizes from content, can shrink and does not grow. |
 | `.shrink-0` | `flex-shrink: 0` | Keeps an icon or avatar from squeezing. |
+| `.shrink-1` | `flex-shrink: 1` | Restores shrinking while keeping grow and basis. |
 | `.self-start`, `.self-center`, `.self-end`, `.self-stretch` | `align-self` | One child out of line with the rest. |
 | `.order-first`, `.order-last` | `order: -1`, `order: 1` | Visual only; keyboard and reading order follow the source, so do not reorder meaningful content. |
 | `.gap-0` to `.gap-6` | `gap`, `!important` | Spacing scale above; use `.g-*` on `.row` instead. |
@@ -189,7 +191,7 @@ Components that already lay out their children (app bars, toolbars, card `.actio
 
 ## Window-size prefixes
 
-Display, flex direction and wrap, `justify-*`, `align-*`, `.start-align`, `.center-align`, `.end-align`, `.gap-*`, `.gap-x-*`, `.gap-y-*`, margin and padding (all sides, `x`, `y`, `t`, `b`, `s`, `e`; not `l` or `r`) and `.hide` also take a `medium:`, `expanded:`, `large:` or `extra-large:` prefix. The prefixed class applies from that size class up (600, 840, 1200 and 1600px) and overrides the unprefixed one, like the grid's `m6` and `l4`.
+Display, flex direction and wrap, `.flex-1`, `.flex-none`, `.flex-initial`, `.shrink-0`, `.shrink-1`, `justify-*`, `align-*`, `.start-align`, `.center-align`, `.end-align`, `.gap-*`, `.gap-x-*`, `.gap-y-*`, margin and padding (all sides, `x`, `y`, `t`, `b`, `s`, `e`; not `l` or `r`) and `.hide` also take a `medium:`, `expanded:`, `large:` or `extra-large:` prefix. The prefixed class applies from that size class up (600, 840, 1200 and 1600px) and overrides the unprefixed one, like the grid's `m6` and `l4`.
 
 ```html
 <div class="flex flex-column gap-2 expanded:flex-row expanded:align-center expanded:justify-between">
@@ -197,6 +199,17 @@ Display, flex direction and wrap, `justify-*`, `align-*`, `.start-align`, `.cent
   <button type="button" class="tonal">Invite</button>
 </div>
 ```
+
+A child can change its share of the space too. This filename sizes from its content below Expanded and takes the remaining space from 840px up. The link keeps its size. `.min-w-0` lets the text shrink below its content minimum so it can truncate. Use `.min-h-0` for a child that must shrink inside a bounded column.
+
+```html
+<div class="flex align-center gap-3">
+  <span class="flex-initial expanded:flex-1 min-w-0 truncate">Quarterly report with a long filename.pdf</span>
+  <a class="button tonal flex-none" href="#overflow">Sizing guide</a>
+</div>
+```
+
+A prefixed `flex-*` shorthand sets grow, shrink and basis together, so `shrink-0 medium:flex-initial` allows shrinking from 600px up. Use `shrink-0 medium:shrink-1` to restore shrinking while keeping grow and basis. These resets assign explicit values; they do not recover an earlier component rule. Larger active prefixes win regardless of class order. Self-alignment, ordering and the other sizing helpers have no window-size prefixes.
 
 Prefixes are mobile first; there is no max-width form. To hide content at a size, use the `.hide-on-*` classes, which are `!important`. Escape the colon in Sass or CSS selectors: `.expanded\:flex-row`. `.medium:hide` hides from Medium up.
 

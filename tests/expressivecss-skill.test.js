@@ -407,7 +407,7 @@ describe('the ExpressiveCSS agent skill', () => {
       assert.match(spacingSass, new RegExp(`"${name}"\\s*:\\s*${value.replace('.', '\\.')}`));
       assert.ok(helpers.includes(`| \`${name}\` | \`${value}\` |`), `helpers reference has the wrong spacing value for ${name}`);
     }
-    const flexClasses = ['flex', 'inline-flex', 'flex-column', 'flex-wrap', 'justify-start', 'justify-center', 'justify-end', 'justify-between', 'align-start', 'align-center', 'align-end', 'align-stretch', 'flex-1', 'flex-none', ...Array.from({ length: 7 }, (_, i) => `gap-${i}`)];
+    const flexClasses = ['flex', 'inline-flex', 'flex-column', 'flex-wrap', 'justify-start', 'justify-center', 'justify-end', 'justify-between', 'align-start', 'align-center', 'align-end', 'align-stretch', 'flex-1', 'flex-none', 'flex-initial', 'shrink-0', 'shrink-1', ...Array.from({ length: 7 }, (_, i) => `gap-${i}`)];
     assert.match(helpers, /## Flex helpers/);
     assert.match(helpers, /`\.gap-0` to `\.gap-6`/);
     for (const className of flexClasses) {

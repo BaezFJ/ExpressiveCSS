@@ -161,7 +161,9 @@ const S = defineSections([
             <tr><td><code>.align-start</code>, <code>.align-center</code>, <code>.align-end</code>, <code>.align-stretch</code>, <code>.align-baseline</code></td><td><code>align-items</code></td></tr>
             <tr><td><code>.flex-1</code></td><td><code>flex: 1 1 0</code> on a child, so it takes the remaining space</td></tr>
             <tr><td><code>.flex-none</code></td><td><code>flex: none</code> on a child, so it keeps its content size</td></tr>
+            <tr><td><code>.flex-initial</code></td><td><code>flex: 0 1 auto</code> on a child, so it sizes from its content, can shrink and does not grow</td></tr>
             <tr><td><code>.shrink-0</code></td><td><code>flex-shrink: 0</code> on a child, so it never gets narrower than its basis</td></tr>
+            <tr><td><code>.shrink-1</code></td><td><code>flex-shrink: 1</code> on a child, restoring shrinking while keeping its grow factor and basis</td></tr>
             <tr><td><code>.self-start</code>, <code>.self-center</code>, <code>.self-end</code>, <code>.self-stretch</code></td><td><code>align-self</code> on a child</td></tr>
             <tr><td><code>.order-first</code>, <code>.order-last</code></td><td><code>order: -1</code>, <code>order: 1</code> on a child. This changes the visual order only. Keyboard and screen reader order still follow the source.</td></tr>
             <tr><td><code>.gap-0</code> to <code>.gap-6</code></td><td><code>gap</code> on the spacing scale, with <code>!important</code>. Also works on grid containers.</td></tr>
@@ -223,6 +225,8 @@ const S = defineSections([
   <Section {...S.prefixes}>
         <p>
           These classes also come with a window-size prefix: display, flex direction, wrap,
+          <code>.flex-1</code>, <code>.flex-none</code>, <code>.flex-initial</code>,
+          <code>.shrink-0</code>, <code>.shrink-1</code>,
           <code>justify-*</code>, <code>align-*</code>, text alignment (<code>.start-align</code>,
           <code>.center-align</code>, <code>.end-align</code>), <code>.line-clamp-*</code>,
           <code>.gap-*</code>, <code>.gap-x-*</code>, <code>.gap-y-*</code>, margin, padding and <code>.hide</code>. Prefixed margin and padding cover all sides,
@@ -250,6 +254,30 @@ const S = defineSections([
   <button class="tonal">Invite</button>
 </div>
 `} />
+        <p>
+          A child can change its share of the space too. This filename sizes from its content
+          below Expanded and takes the remaining space from 840px up. The link keeps its size.
+          <code>.min-w-0</code> lets the text shrink below its content minimum so it can truncate.
+          Use <code>.min-h-0</code> for a child that must shrink inside a bounded column.
+        </p>
+        <div id="responsive-child-sizing-demo" class="flex align-center gap-3 surface-container p-4">
+          <span class="flex-initial expanded:flex-1 min-w-0 truncate">Quarterly report with a long filename.pdf</span>
+          <a class="button tonal flex-none" href="#overflow">Sizing guide</a>
+        </div>
+<Code code={`
+<div class="flex align-center gap-3">
+  <span class="flex-initial expanded:flex-1 min-w-0 truncate">Quarterly report with a long filename.pdf</span>
+  <a class="button tonal flex-none" href="#overflow">Sizing guide</a>
+</div>
+`} />
+        <p>
+          A prefixed <code>flex-*</code> shorthand sets grow, shrink and basis together, so
+          <code>shrink-0 medium:flex-initial</code> allows shrinking from 600px up.
+          Use <code>shrink-0 medium:shrink-1</code> to restore shrinking while keeping grow and
+          basis. These resets assign explicit values; they do not recover an earlier component
+          rule. Larger active prefixes win regardless of class order. Self-alignment, ordering
+          and the other sizing helpers have no window-size prefixes.
+        </p>
         <p>
           In a Sass selector, escape the colon: <code>.expanded\:flex-row</code>.
           <code>.medium:hide</code> hides from Medium up. To show something only from a size up,

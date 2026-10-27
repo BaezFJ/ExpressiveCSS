@@ -1254,7 +1254,9 @@ One class per declaration, applied to the container. Row direction and start ali
 | `.align-start`, `.align-center`, `.align-end`, `.align-stretch`, `.align-baseline` | `align-items` |
 | `.flex-1` | `flex: 1 1 0` on a child, so it takes the remaining space |
 | `.flex-none` | `flex: none` on a child, so it keeps its content size |
+| `.flex-initial` | `flex: 0 1 auto` on a child, so it sizes from its content, can shrink and does not grow |
 | `.shrink-0` | `flex-shrink: 0` on a child, so it never gets narrower than its basis |
+| `.shrink-1` | `flex-shrink: 1` on a child, restoring shrinking while keeping its grow factor and basis |
 | `.self-start`, `.self-center`, `.self-end`, `.self-stretch` | `align-self` on a child |
 | `.order-first`, `.order-last` | `order: -1`, `order: 1` on a child. Visual order only: keyboard and screen reader order still follow the source. |
 | `.gap-0` to `.gap-6` | `gap` on the spacing scale, `!important`; also works on grid containers |
@@ -1292,7 +1294,7 @@ Both gaps start at `1rem`. From 600px, the column gap becomes `0.5rem` while the
 
 ### Window-size prefixes
 
-The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`), `.line-clamp-*`, `.gap-*`, `.gap-x-*`, `.gap-y-*`, margin and padding classes, and `.hide`, also come with a window-size prefix. Prefixed margin and padding cover all sides, `x`, `y`, top, bottom, start and end; use start and end rather than left and right. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
+The display, flex direction, wrap, `.flex-1`, `.flex-none`, `.flex-initial`, `.shrink-0`, `.shrink-1`, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`), `.line-clamp-*`, `.gap-*`, `.gap-x-*`, `.gap-y-*`, margin and padding classes, and `.hide`, also come with a window-size prefix. Prefixed margin and padding cover all sides, `x`, `y`, top, bottom, start and end; use start and end rather than left and right. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
 
 | Prefix | Applies from |
 | --- | --- |
@@ -1308,6 +1310,17 @@ The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.sta
   <button class="tonal">Invite</button>
 </div>
 ```
+
+A child can change its share of the space too. This filename sizes from its content below Expanded and takes the remaining space from 840px up. The link keeps its size. `.min-w-0` lets the text shrink below its content minimum so it can truncate. Use `.min-h-0` for a child that must shrink inside a bounded column.
+
+```html
+<div class="flex align-center gap-3">
+  <span class="flex-initial expanded:flex-1 min-w-0 truncate">Quarterly report with a long filename.pdf</span>
+  <a class="button tonal flex-none" href="#overflow">Sizing guide</a>
+</div>
+```
+
+A prefixed `flex-*` shorthand sets grow, shrink and basis together, so `shrink-0 medium:flex-initial` allows shrinking from 600px up. Use `shrink-0 medium:shrink-1` to restore shrinking while keeping grow and basis. These resets assign explicit values; they do not recover an earlier component rule. Larger active prefixes win regardless of class order. Self-alignment, ordering and the other sizing helpers have no window-size prefixes.
 
 In a Sass selector, escape the colon: `.expanded\:flex-row`. `.medium:hide` hides from Medium up. To show something only from a size up, use the hide-on classes; they are `!important`, so a prefixed display class does not undo them.
 

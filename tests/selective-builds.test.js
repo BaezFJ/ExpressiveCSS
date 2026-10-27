@@ -106,6 +106,29 @@ test('axis gaps ship with spacing alone and stay out of builds without spacing',
   assert.match(configured, /@media\(width >= 650px\)\{[^@]*\.medium\\:gap-x-1\{/);
 });
 
+test('child sizing variants belong to the helpers utility in full and selective builds', () => {
+  const options = { style: 'compressed', loadPaths: [`${root}/src/sass`], logger: { warn() {} } };
+  const full = readFileSync(`${root}/dist/css/expressive.min.css`, 'utf8');
+  const helpers = compileString('@use "custom" with ($components: (), $utilities: ("helpers",), $expressive-include-fonts: false);', options).css;
+  const empty = compileString('@use "custom" with ($components: (), $utilities: (), $expressive-include-fonts: false);', options).css;
+  const rules = { 'flex-1': 'flex:1 1 0', 'flex-none': 'flex:none', 'flex-initial': 'flex:0 1 auto', 'shrink-0': 'flex-shrink:0', 'shrink-1': 'flex-shrink:1' };
+  for (const css of [full, helpers]) {
+    for (const [name, declaration] of Object.entries(rules)) {
+      const base = `.${name}{${declaration}}`;
+      assert.equal(css.split(base).length - 1, 1, `${name} has one base declaration`);
+      assert.ok(css.indexOf(base) > css.indexOf('@layer utilities{'));
+      assert.ok(!empty.includes(base));
+      for (const [prefix, width] of [['medium', 600], ['expanded', 840], ['large', 1200], ['extra-large', 1600]]) {
+        const rule = `.${prefix}\\:${name}{${declaration}}`;
+        const index = css.indexOf(rule);
+        assert.ok(index > css.indexOf(`@media(width >= ${width}px){`), rule);
+        assert.ok(index > css.indexOf(base), rule);
+        assert.ok(!empty.includes(rule));
+      }
+    }
+  }
+});
+
 test('complete minified artifacts stay within the reviewed gzip budgets', () => {
   const js = readFileSync(`${root}/dist/js/expressive.min.js`, 'utf8').replace(/^\/\/# sourceMappingURL=.*\n?/m, '');
   const css = readFileSync(`${root}/dist/css/expressive.min.css`, 'utf8').replace(/\/\*# sourceMappingURL=.*?\*\//, '').trimEnd();
@@ -456,5 +479,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed chip component-prefixed sizing properties with legacy fallbacks: 90,067 gzip bytes (+19).
   // Reviewed the Timepicker canvas and expanding-card content delay reading motion tokens: 90,072 gzip bytes (+5).
   // Reviewed axis-specific gaps on the spacing scale with all four window-size prefixes: 90,374 gzip bytes (+302).
-  assert.ok(sizes(css).gzip <= 90374, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed responsive child sizing and both resets across four breakpoints: 90,471 gzip bytes (+97 over the Phase 59 base).
+  assert.ok(sizes(css).gzip <= 90471, `CSS gzip: ${sizes(css).gzip}`);
 });
