@@ -549,3 +549,119 @@ test('size validation skips disabled controls and refresh preserves unreadable a
   validate();
   assert.equal(input().validationMessage, 'Application while disabled');
 });
+
+const countLimit = (value = '2') => {
+  input().removeAttribute('data-validate-types');
+  input().removeAttribute('data-max-size');
+  input().setAttribute('data-max-files', value);
+};
+
+test('count-only validation accepts the exact count without requiring a list or changing multiple', () => {
+  countLimit();
+  input().multiple = false;
+  document.querySelector('.drop-zone-files').remove();
+  const files = Array.from({ length: 3 }, () => sizedFile('same.exe', 4));
+  for (const count of [0, 1, 2, 3]) {
+    choose(...files.slice(0, count));
+    validate();
+    assert.equal(input().validity.valid, count <= 2, `${count} file entries`);
+    assert.equal(input().multiple, false);
+  }
+  assert.match(input().validationMessage, /2/);
+});
+
+test('count limits share strict positive decimal parsing and ignore inactive hints', () => {
+  countLimit();
+  choose(...Array.from({ length: 3 }, () => sizedFile('same.pdf', 4)));
+  for (const value of ['', '0', '-1', '1.5', '2e0', '0x2', '+2', 'no limit', 'Infinity', '9007199254740992']) {
+    input().setAttribute('data-max-files', value);
+    validate();
+    assert.equal(input().validity.valid, true, value);
+  }
+  input().setAttribute('data-max-files', ' 002 ');
+  validate();
+  assert.equal(input().validity.customError, true);
+  input().setAttribute('data-max-files', '9007199254740991');
+  validate();
+  assert.equal(input().validity.valid, true);
+  input().removeAttribute('data-max-files');
+  validate();
+  assert.equal(input().validity.valid, true);
+});
+
+test('count failure retains every file and safely lists it with separate accessible feedback', () => {
+  countLimit();
+  const selected = choose(sizedFile('same.pdf', 4), sizedFile('same.pdf', 4), sizedFile('<img src=x>.pdf', 4));
+  const error = document.querySelector('[data-error]');
+  validate();
+  assert.equal(input().validity.customError, true);
+  assert.match(input().validationMessage, /2/);
+  assert.notEqual(input().validationMessage, error.getAttribute('data-error'));
+  assert.equal(document.getElementById('upload').checkValidity(), false);
+  assert.equal(input().files, selected);
+  assert.equal(error.textContent, input().validationMessage);
+  assert.equal(error.hidden, false);
+  assert.equal(input().getAttribute('aria-invalid'), 'true');
+  assert.equal(input().getAttribute('aria-describedby'), `hint ${error.id}`);
+  error.setAttribute('data-error-count', 'Choisissez au plus deux fichiers.');
+  validate();
+  assert.equal(input().validationMessage, 'Choisissez au plus deux fichiers.');
+  assert.equal(input().getAttribute('aria-describedby'), `hint ${error.id}`);
+  Expressive.Forms.listDropZoneFiles(document.querySelector('.drop-zone'), input());
+  assert.equal(document.querySelectorAll('.drop-zone-files > li').length, 3);
+  assert.equal(document.querySelector('.drop-zone-files img'), null);
+});
+
+test('combined file rules preserve type then size then count precedence', () => {
+  input().setAttribute('data-max-size', '4');
+  input().setAttribute('data-max-files', '2');
+  choose(sizedFile('bad.exe', 8), sizedFile('one.pdf', 8), sizedFile('two.pdf', 8));
+  validate();
+  assert.equal(input().validationMessage, 'Choose PDF or PNG files.');
+  choose(...Array.from({ length: 3 }, () => sizedFile('same.pdf', 8)));
+  validate();
+  assert.match(input().validationMessage, /size.*4/);
+  choose(...Array.from({ length: 3 }, () => sizedFile('same.pdf', 4)));
+  validate();
+  assert.match(input().validationMessage, /count.*2/);
+  choose(sizedFile('one.pdf', 4), sizedFile('two.pdf', 4));
+  validate();
+  assert.equal(input().validity.valid, true);
+});
+
+test('count recovery releases only owned errors and preserves application and required constraints', () => {
+  countLimit();
+  const files = Array.from({ length: 3 }, () => sizedFile('same.pdf', 4));
+  input().setCustomValidity('Application policy');
+  for (const count of [3, 2, 0]) {
+    choose(...files.slice(0, count));
+    validate();
+    assert.equal(input().validationMessage, 'Application policy');
+  }
+  input().setCustomValidity('');
+  choose(...files);
+  validate();
+  assert.equal(input().validity.customError, true);
+  input().setCustomValidity('A replacement application error');
+  choose(...files.slice(0, 2));
+  validate();
+  assert.equal(input().validationMessage, 'A replacement application error');
+  input().setCustomValidity('');
+  choose(...files);
+  validate();
+  input().setAttribute('data-max-files', '0');
+  validate();
+  assert.equal(input().validity.valid, true);
+  countLimit();
+  validate();
+  assert.equal(input().validity.customError, true);
+  input().removeAttribute('data-max-files');
+  validate();
+  assert.equal(input().validity.valid, true);
+  countLimit();
+  choose();
+  input().required = true;
+  validate();
+  assert.equal(input().validity.valueMissing, true);
+  assert.equal(input().validity.customError, false);
+});

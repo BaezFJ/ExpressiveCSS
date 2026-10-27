@@ -1,15 +1,15 @@
 import { Utils } from '../core/utils';
 
-const FILE_RULES = '.drop-zone input[type="file"]:is([data-validate-types], [data-max-size])';
+const FILE_RULES = '.drop-zone input[type="file"]:is([data-validate-types], [data-max-size], [data-max-files])';
 
 interface FileFailure {
   rejected: File[];
-  reason: 'type' | 'size';
+  reason: 'type' | 'size' | 'count';
   message: string;
 }
 
-function fileSizeLimit(input: HTMLInputElement) {
-  const value = (input.getAttribute('data-max-size') || '').trim();
+function fileLimit(input: HTMLInputElement, attribute: string) {
+  const value = (input.getAttribute(attribute) || '').trim();
   if (!/^\d+$/.test(value)) return 0;
   const limit = Number(value);
   return Number.isSafeInteger(limit) ? limit : 0;
@@ -154,9 +154,13 @@ export class Forms {
       return;
     }
     Forms._fileErrors.set(input, '');
-    const failure = Forms._typeFailure(input) ?? Forms._sizeFailure(input);
+    const failure = Forms._fileFailure(input);
     if (failure) Forms._setFileError(input, failure.message);
     return failure;
+  }
+
+  private static _fileFailure(input: HTMLInputElement) {
+    return Forms._typeFailure(input) ?? Forms._sizeFailure(input) ?? Forms._countFailure(input);
   }
 
   private static _typeFailure(input: HTMLInputElement): FileFailure | undefined {
@@ -166,7 +170,7 @@ export class Forms {
   }
 
   private static _sizeFailure(input: HTMLInputElement): FileFailure | undefined {
-    const limit = fileSizeLimit(input);
+    const limit = fileLimit(input, 'data-max-size');
     if (!limit) return;
     const rejected = Array.from(input.files ?? []).filter((file) => file.size > limit);
     if (!rejected.length) return;
@@ -175,6 +179,17 @@ export class Forms {
 
   private static _fileSizeMessage(input: HTMLInputElement, limit: number) {
     return Forms._fileError(input)?.getAttribute('data-error-size')?.trim() || `Maximum file size: ${limit} bytes.`;
+  }
+
+  private static _countFailure(input: HTMLInputElement): FileFailure | undefined {
+    const limit = fileLimit(input, 'data-max-files');
+    if (!limit) return;
+    const rejected = Array.from(input.files ?? []);
+    if (rejected.length > limit) return { rejected, reason: 'count', message: Forms._fileCountMessage(input, limit) };
+  }
+
+  private static _fileCountMessage(input: HTMLInputElement, limit: number) {
+    return Forms._fileError(input)?.getAttribute('data-error-count')?.trim() || `Maximum file count: ${limit}.`;
   }
 
   private static _clearFileError(input: HTMLInputElement) {
@@ -239,7 +254,7 @@ export class Forms {
   }
 
   private static _newFileSelection(input: HTMLInputElement, files: File[]) {
-    const constraints = JSON.stringify([input.hasAttribute('data-validate-types'), input.accept, fileSizeLimit(input)]);
+    const constraints = JSON.stringify([input.hasAttribute('data-validate-types'), input.accept, fileLimit(input, 'data-max-size')]);
     const previous = Forms._fileSelections.get(input);
     Forms._fileSelections.set(input, { files, constraints });
     return !previous || previous.constraints !== constraints || previous.files.length !== files.length ||

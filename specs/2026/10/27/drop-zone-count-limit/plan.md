@@ -8,9 +8,9 @@ Use feature-spec-auto, incremental-implementation, code-review-and-quality with 
 
 Prerequisite: independent specification review passes.
 
-- [ ] Add failing count-only boundary/parser/whole-selection tests in tests/drop-zone-validation.test.js, including duplicate names, no list, author-owned multiple, localized/fallback text, type > size > count and application validity.
-- [ ] Extend FileFailure/FILE_RULES in src/ts/behaviors/forms.ts. Reuse the decimal parser with an attribute parameter; add count failure and a small named precedence helper while retaining shared validity ownership, feedback, reset and silent public validation.
-- [ ] Build/typecheck, run focused Forms/drop-zone checks for R1-R3/R5 and commit the verified slice. Keep new functions below complexity five.
+- [x] Add failing count-only boundary/parser/whole-selection tests in tests/drop-zone-validation.test.js, including duplicate names, no list, author-owned multiple, localized/fallback text, type > size > count and application validity.
+- [x] Extend FileFailure/FILE_RULES in src/ts/behaviors/forms.ts. Reuse the decimal parser with an attribute parameter; add count failure and a small named precedence helper while retaining shared validity ownership, feedback, reset and silent public validation.
+- [x] Build/typecheck, run focused Forms/drop-zone checks for R1-R3/R5 and commit the verified slice. Keep new functions below complexity five.
 
 Completion check V1. No separate component, listener or error map.
 

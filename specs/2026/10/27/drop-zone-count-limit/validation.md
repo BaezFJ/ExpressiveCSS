@@ -24,3 +24,10 @@ Agent decisions are recorded in requirements.md: independent data-max-files, sha
 ## Evidence limits
 
 Physical OS picker/drop input, devices, native zoom and spoken output are unavailable. Chooser.setFiles after a real browse trigger does not prove physical picker interaction. A synthetic drop does not assign files; Chromium protocol native drop must be recorded separately. Firefox map tests may skip without WebGL2. Native validation can be bypassed by scripts or form settings, so server checks remain necessary. Required repository checks and external review gates remain in force.
+
+
+## Increment 1 evidence
+
+Five new count regressions failed against the Phase 73 bundle before implementation. Shared Forms eligibility now recognizes count-only inputs, reuses the strict decimal parser by attribute, and preserves explicit type > size > count failure precedence through a small named helper. Exact-count and duplicate-name cases use FileList entries, not unique names; over-limit selection remains intact without enabling multiple or type matching. Count feedback uses data-error-count or a limit fallback while preserving application custom validity and required-empty native invalidity.
+
+JS build, typecheck and all 59 focused Node checks pass, including the prior 54 checks. No new component, listener, ownership map, reset mechanism or public export was added. Logs are `/tmp/expressivecss-phase74-{count-red,count-build,count-typecheck,count-node}.log`. Constraint-aware count events, mutation, count lifecycle/browser/static/style/docs and final gates remain pending.
