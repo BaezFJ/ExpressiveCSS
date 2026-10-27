@@ -4,7 +4,7 @@
 - Roadmap phase: Phase 66, autocomplete option groups
 - Branch: `feature/2026-10-27-autocomplete-option-groups`
 - Base: `origin/master` at `db981aa4f83d0d2ee63e5877c1238cc698b2045e`
-- Status: groups 1 and 2 done on 2026-10-27; group 3 pending
+- Status: groups 1 and 2 done, group 3 done locally on 2026-10-27; PR gates pending
 
 Deliver [requirements.md](requirements.md) within the [mission](../../../../mission.md#product-rules), the [tech stack](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 66](../../../../roadmap.md#phase-66-autocomplete-option-groups). Check IDs refer to [validation.md](validation.md). The user confirmed these three groups on 2026-10-27.
 
@@ -45,9 +45,9 @@ Outcome: the change has a reviewed bundle cost and passes the checks the user ch
 
 Prerequisites: groups 1 and 2.
 
-- [ ] Measure JS and CSS gzip sizes against a build of the base, and record them in the budget lines of `tests/selective-builds.test.js`. Covers R9 with V8.
-- [ ] Run the V5 browser suite in Chromium, Firefox and WebKit, then `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`, one suite at a time. Covers V5 and V8.
-- [ ] Record results in `validation.md`, including any skipped engine or flaky rerun.
+- [x] Measure JS and CSS gzip sizes against a build of the base, and record them in the budget lines of `tests/selective-builds.test.js`. Covers R9 with V8.
+- [x] Run the V5 browser suite in Chromium, Firefox and WebKit, then `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`, one suite at a time. Covers V5 and V8.
+- [x] Record results in `validation.md`, including any skipped engine or flaky rerun.
 - [ ] Before merge, confirm PR CI, review conversations and branch freshness.
 
 Completion check: V1 through V8 pass, and the merge conditions in `validation.md` hold. The roadmap completion state stays unchanged.

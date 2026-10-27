@@ -4,7 +4,7 @@
 - Roadmap phase: Phase 66, autocomplete option groups
 - Branch: `feature/2026-10-27-autocomplete-option-groups`
 - Base: `origin/master` at `db981aa4f83d0d2ee63e5877c1238cc698b2045e`
-- Status: all checks pending
+- Status: V1 through V8 passed locally on 2026-10-27; PR merge conditions pending
 
 These checks validate [requirements.md](requirements.md) and [plan.md](plan.md) against the [mission's success criteria](../../../../mission.md#success-criteria), the [testing constraints](../../../../tech-stack.md#framework-testing) and the [Phase 66 completion check](../../../../roadmap.md#phase-66-autocomplete-option-groups). The user chose the merge checks on 2026-10-27.
 
@@ -12,21 +12,21 @@ These checks validate [requirements.md](requirements.md) and [plan.md](plan.md) 
 
 Use the Node version in `.nvmrc` and run `npm ci`, plus `npm ci --prefix mcp/expressivecss` in a worktree. Tests read the built bundles, so run `npm run build` before any direct `node --test` command. Run one suite at a time, because parallel browser runs flake. A missing engine blocks a required check; it does not count as a pass.
 
-`tests/regressions.test.js` and `tests/selective-builds.test.js` exist at the base. `tests/autocomplete-groups-browser.test.js` is new. The commands come from the Phase 65 validation and `CONTRIBUTING.md` and have not been run on this branch.
+`tests/regressions.test.js` and `tests/selective-builds.test.js` exist at the base. `tests/autocomplete-groups-browser.test.js` is new. The commands below ran on 2026-10-27.
 
 ## Requirement coverage
 
 | Requirement | Plan group | Checks | Result |
 | --- | --- | --- | --- |
-| R1, `group` field | 1, 2 | V2, V7 | Pending |
-| R2, labelled groups | 1 | V2 | Pending |
-| R3, heading appearance and pointer | 1 | V3, V5 | Pending |
-| R4, keyboard crosses headings | 1 | V1, V5 | Pending |
-| R5, result count | 1 | V1 | Pending |
-| R6, selection in groups | 1 | V3, V5 | Pending |
-| R7, rows outside groups | 1 | V4 | Pending |
-| R8, shared code and styles | 1, 3 | V2, V6, V8 | Pending |
-| R9, guidance and evidence | 2, 3 | V7, V8 | Pending |
+| R1, `group` field | 1, 2 | V2, V7 | Passed locally |
+| R2, labelled groups | 1 | V2 | Passed locally |
+| R3, heading appearance and pointer | 1 | V3, V5 | Passed locally |
+| R4, keyboard crosses headings | 1 | V1, V5 | Passed locally |
+| R5, result count | 1 | V1 | Passed locally |
+| R6, selection in groups | 1 | V3, V5 | Passed locally |
+| R7, rows outside groups | 1 | V4 | Passed locally |
+| R8, shared code and styles | 1, 3 | V2, V6, V8 | Passed locally |
+| R9, guidance and evidence | 2, 3 | V7, V8 | Passed locally |
 
 ## Automated checks
 
@@ -93,6 +93,14 @@ Setup: groups 1 and 2 complete.
 Action: record the measured gzip sizes in `tests/selective-builds.test.js`, then run `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`, one at a time.
 
 Expected: all pass, and the budget lines name this change with its measured JS and CSS sizes and deltas.
+
+## Results on 2026-10-27
+
+- V1 to V4: the 6 new cases in `tests/regressions.test.js` pass. Run against the base Autocomplete source, 5 of them fail, V1 included. The selection case passes on the base, because the base has no nested rows for `_toggleOption()` to miss. It stays as a guard.
+- V5: 12 of 12 pass in Chromium, Firefox and WebKit, with nothing skipped. A screenshot showed grouped rows narrower than the list: FormSelect's `menu[role="listbox"] > li` rule makes the group wrapper flex, which shrank the group to its widest row. The group list now takes `flex: 1 1 auto`, and the V5 heading case checks that a grouped row spans the list.
+- V6: 224 of 224 pass across `tests/regressions.test.js`, `tests/chips.test.js`, `tests/selection-events.test.js`, `tests/keyboard-focus.test.js` and `tests/autocomplete-disabled-browser.test.js`. Another 224 of 224 pass across the Menu and FormSelect suites: `tests/menu.test.js`, `tests/menu-checkbox-browser.test.js`, `tests/menu-radio-browser.test.js`, `tests/menu-field-browser.test.js`, `tests/select-search.test.js` and `tests/select-search-browser.test.js`.
+- V7: `npm run check:generated` passes. Regeneration changed only the contract hash in the skill guides and MCP data. The `autocomplete` record in `component-decisions.json` stayed unchanged, because its documented support names single and multi select only.
+- V8: measured against a build of the base, JS gzip is 106,724 bytes (+144) and CSS gzip is 90,826 bytes (+46), both recorded as reviewed budget lines. `npm run verify` ran 3,363 tests, and 3,362 passed. The failure was the Firefox case "Lightbox reports opened and closed when reduced motion cuts a transition short" in `tests/expressivecss-web-accessibility-browser.test.js`, a Lightbox test this branch does not touch. It passed rerun alone. The steps the failure skipped (`check:generated`, `docs:build:astro`, `docs:verify`) then passed. `npm test --prefix mcp/expressivecss` and `npm run verify:packages` passed.
 
 ## Manual checks
 
