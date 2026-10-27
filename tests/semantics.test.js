@@ -36,6 +36,18 @@ const root = new URL('../', import.meta.url);
 const read = (p) => readFileSync(new URL(p, root), 'utf8');
 const data = JSON.parse(read('semantics.json'));
 
+test('table page sizes require a named native single select without initialization', () => {
+  const rules = rulesOf(data).filter((rule) => rule.id.startsWith('data-table-page-size-'));
+  const broken = (html) => violations(`<div class="data-table" data-page-size="2">${html}</div>`, rules, data.compositeRoles).map(({ rule }) => rule.id);
+  assert.deepEqual(broken('<input data-table-page-size>'), ['data-table-page-size-is-select']);
+  assert.deepEqual(broken('<select data-table-page-size></select>'), ['data-table-page-size-is-named']);
+  assert.deepEqual(broken('<select data-table-page-size><option value="2">2</option></select>'), ['data-table-page-size-is-named']);
+  assert.deepEqual(broken('<label> <select data-table-page-size><option value="2">2</option></select></label>'), ['data-table-page-size-is-named']);
+  assert.deepEqual(broken('<select data-table-page-size multiple aria-label="Rows per page"></select>'), ['data-table-page-size-is-single']);
+  assert.deepEqual(broken('<label>Rows per page<select data-table-page-size><option value="2">2</option></select></label>'), []);
+  assert.deepEqual(broken('<span id="size-label">Rows per page</span><select data-table-page-size aria-labelledby="size-label"><option value="2">2</option></select>'), []);
+});
+
 test('table paging requires named native controls in navigation and a named polite status', () => {
   const rules = rulesOf(data).filter((rule) => rule.id.startsWith('data-table-page-'));
   const broken = (html) => violations(`<div class="data-table" data-page-size="2">${html}</div>`, rules, data.compositeRoles).map(({ rule }) => rule.id);

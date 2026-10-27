@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { Expressive, resetBody, window } from './setup.js';
 
 const markup = `<div class="data-table" data-sort data-page-size="2">
+  <label>Records per page<select class="browser-default" data-table-page-size><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select></label>
   <label>Search records<input type="search" data-table-filter></label>
   <output data-table-filter-count role="status" aria-live="polite" aria-label="Matching records"></output>
   <table><thead><tr><th><label><input type="checkbox" aria-label="Select all"></label></th><th data-filter><button type="button">Name</button></th></tr></thead><tbody>
@@ -30,6 +31,195 @@ const displayed = (owner = wrapper()) => [...owner.querySelectorAll(':scope > ta
   .filter((row) => !row.hidden && row.style.display !== 'none' && !row.hasAttribute('data-table-page-hidden') && !row.hasAttribute('data-table-filter-hidden')).map((row) => row.id);
 
 beforeEach(() => { resetBody(); document.body.innerHTML = markup; sync(); });
+
+test('page size clamps the last page and handles one native input/change pair once', () => {
+  for (let i = 0; i < 3; i++) button('next').click();
+  const control = document.querySelector('[data-table-page-size]');
+  const events = [];
+  for (const name of ['change', 'filter', 'sort', 'page']) wrapper().addEventListener(`expressive:${name}`, () => events.push(name));
+  control.focus();
+  const original = Expressive.DataTables.sync;
+  let calls = 0;
+  Expressive.DataTables.sync = (owner) => { calls++; original(owner); };
+  try {
+    control.value = '4';
+    input(control);
+    control.dispatchEvent(new window.Event('change', { bubbles: true, composed: true }));
+    assert.equal(wrapper().getAttribute('data-page-size'), '4');
+    assert.equal(status(), '2 / 2');
+    assert.deepEqual(displayed(), ['r5', 'r6', 'r7']);
+    assert.equal(count(), '7');
+    assert.equal(all().indeterminate, true);
+    assert.equal(box('r5').checked, true);
+    assert.equal(box('secret').checked, true);
+    assert.equal(document.activeElement, control);
+    assert.equal(calls, 1);
+    assert.deepEqual(events, []);
+  } finally {
+    Expressive.DataTables.sync = original;
+  }
+});
+
+test('page size preserves an available index when the size decreases', () => {
+  for (let i = 0; i < 3; i++) button('next').click();
+  const control = document.querySelector('[data-table-page-size]');
+  control.value = '3';
+  input(control);
+  assert.equal(status(), '3 / 3');
+  assert.deepEqual(displayed(), ['r7']);
+  control.value = '1';
+  control.dispatchEvent(new window.Event('change', { bubbles: true, composed: true }));
+  assert.equal(status(), '3 / 7');
+  assert.deepEqual(displayed(), ['r3']);
+});
+
+test('page size ignores invalid values and disabled or multiple controls', () => {
+  button('next').click();
+  const control = document.querySelector('[data-table-page-size]');
+  for (const value of ['', 'invalid', '0', '-2', '1.5', 'Infinity', '9007199254740992']) {
+    control.add(new window.Option(value, value));
+    control.value = value;
+    input(control);
+    assert.equal(wrapper().getAttribute('data-page-size'), '2', value);
+    assert.equal(status(), '2 / 4', value);
+    assert.deepEqual(displayed(), ['r3', 'r4'], value);
+  }
+  control.value = '4';
+  control.disabled = true;
+  input(control);
+  control.disabled = false;
+  control.multiple = true;
+  input(control);
+  control.multiple = false;
+  const fieldset = document.createElement('fieldset');
+  fieldset.disabled = true;
+  control.replaceWith(fieldset);
+  fieldset.append(control);
+  input(control);
+  assert.equal(wrapper().getAttribute('data-page-size'), '2');
+  fieldset.disabled = false;
+  control.value = '4';
+  control.selectedOptions[0].disabled = true;
+  input(control);
+  assert.equal(wrapper().getAttribute('data-page-size'), '2');
+  control.selectedOptions[0].disabled = false;
+  const group = document.createElement('optgroup');
+  group.disabled = true;
+  control.append(group);
+  group.append(control.selectedOptions[0]);
+  control.value = '4';
+  input(control);
+  assert.equal(wrapper().getAttribute('data-page-size'), '2');
+});
+
+test('page size keeps wrapper state authoritative for silent script changes', () => {
+  button('next').click();
+  const control = document.querySelector('[data-table-page-size]');
+  control.value = '4';
+  sync();
+  assert.equal(status(), '2 / 4');
+  assert.deepEqual(displayed(), ['r3', 'r4']);
+  wrapper().setAttribute('data-page-size', '4');
+  sync();
+  assert.equal(status(), '2 / 2');
+  assert.deepEqual(displayed(), ['r5', 'r6', 'r7']);
+  control.value = '3';
+  input(control);
+  assert.equal(status(), '2 / 3');
+  assert.deepEqual(displayed(), ['r4', 'r5', 'r6']);
+});
+
+test('page size preserves canceled server-filter count ownership and empty results', () => {
+  for (let i = 0; i < 3; i++) button('next').click();
+  wrapper().addEventListener('expressive:filter', (e) => {
+    e.preventDefault();
+    document.querySelector('[data-table-filter-count]').textContent = '87';
+  }, { once: true });
+  query('not a local match');
+  const control = document.querySelector('[data-table-page-size]');
+  control.value = '3';
+  input(control);
+  assert.equal(status(), '3 / 3');
+  assert.deepEqual(displayed(), ['r7']);
+  assert.equal(count(), '87');
+  query('no results');
+  control.value = '4';
+  input(control);
+  assert.equal(status(), '0 / 0');
+  assert.deepEqual(displayed(), []);
+  assert.equal(count(), '0');
+  for (const direction of ['previous', 'next']) assert.equal(button(direction).getAttribute('aria-disabled'), 'true');
+});
+
+test('page size keeps filtered sorted groups, details and authored hiding intact', () => {
+  const control = document.querySelector('[data-table-page-size]');
+  control.value = '3';
+  input(control);
+  document.querySelector('th button').click();
+  assert.deepEqual(displayed(), ['r2', 'r3', 'r1']);
+  assert.equal(document.getElementById('detail').hasAttribute('data-table-page-hidden'), false);
+  assert.equal(document.getElementById('more-detail').hidden, true);
+  button('next').click();
+  control.value = '4';
+  input(control);
+  assert.equal(status(), '2 / 2');
+  assert.deepEqual(displayed(), ['r5', 'r6', 'r7']);
+  assert.equal(count(), '7');
+  query('Cedar');
+  control.value = '1';
+  input(control);
+  assert.deepEqual(displayed(), ['r1']);
+  assert.equal(count(), '1');
+  assert.equal(document.getElementById('detail').hasAttribute('data-table-page-hidden'), false);
+  assert.equal(document.getElementById('secret').hidden, true);
+  assert.equal(document.getElementById('css-hidden').style.display, 'none');
+});
+
+test('page size controls isolate independent and nested wrappers', () => {
+  const other = wrapper().cloneNode(true);
+  document.body.append(other);
+  Expressive.DataTables.sync(other);
+  const control = other.querySelector('[data-table-page-size]');
+  control.value = '3';
+  input(control);
+  assert.equal(other.getAttribute('data-page-size'), '3');
+  assert.equal(wrapper().getAttribute('data-page-size'), '2');
+  assert.deepEqual(displayed(other), ['r1', 'r2', 'r3']);
+  const nested = document.createElement('div');
+  nested.className = 'data-table';
+  nested.innerHTML = '<label>Nested size<select data-table-page-size><option value="4">4</option></select></label>';
+  wrapper().append(nested);
+  const inner = nested.querySelector('select');
+  input(inner);
+  assert.equal(nested.hasAttribute('data-page-size'), false);
+  nested.setAttribute('data-page-size', '0');
+  input(inner);
+  assert.equal(nested.getAttribute('data-page-size'), '0');
+  nested.setAttribute('data-page-size', '2');
+  input(inner);
+  assert.equal(nested.getAttribute('data-page-size'), '4');
+  assert.equal(wrapper().getAttribute('data-page-size'), '2');
+});
+
+test('page size ignores unmarked controls, wrong elements and controls outside the wrapper', () => {
+  const control = document.querySelector('[data-table-page-size]');
+  control.value = '4';
+  control.removeAttribute('data-table-page-size');
+  input(control);
+  const outside = control.cloneNode(true);
+  outside.setAttribute('data-table-page-size', '');
+  outside.value = '4';
+  document.body.append(outside);
+  input(outside);
+  const wrong = document.createElement('input');
+  wrong.setAttribute('data-table-page-size', '');
+  wrong.value = '4';
+  wrapper().append(wrong);
+  input(wrong);
+  assert.equal(wrapper().getAttribute('data-page-size'), '2');
+  assert.equal(status(), '1 / 4');
+  assert.deepEqual(displayed(), ['r1', 'r2']);
+});
 
 test('local pages count records, keep details together and stop at both boundaries', () => {
   assert.deepEqual(displayed(), ['r1', 'r2']);

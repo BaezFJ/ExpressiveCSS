@@ -1312,6 +1312,26 @@
           "message": "Use aria-live=\"polite\" on the table result count so typing does not interrupt other speech."
         },
         {
+          "id": "data-table-page-size-is-select",
+          "kind": "forbid",
+          "selector": ".data-table[data-page-size] [data-table-page-size]:not(select)",
+          "fragmentSafe": true,
+          "message": "Use a native select for an authored table page-size control. The existing FormSelect enhancement reads and updates that same select."
+        },
+        {
+          "id": "data-table-page-size-is-single",
+          "kind": "forbid",
+          "selector": ".data-table[data-page-size] select[data-table-page-size][multiple]",
+          "fragmentSafe": true,
+          "message": "A table has one page size. Omit multiple from its page-size select."
+        },
+        {
+          "id": "data-table-page-size-is-named",
+          "kind": "require-accessible-name",
+          "selector": ".data-table[data-page-size] select[data-table-page-size]",
+          "message": "Label the table page-size select, for example Rows per page. Option values do not name the control."
+        },
+        {
           "id": "data-table-page-control-is-button",
           "kind": "forbid",
           "selector": ".data-table[data-page-size] [data-table-page]:not(button[type=\"button\"])",

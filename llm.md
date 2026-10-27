@@ -3872,6 +3872,8 @@ Add a labelled `input[type="search"][data-table-filter]` inside the wrapper for 
 
 Opt in to local paging with a positive safe-integer `data-page-size` on the wrapper. Authored Previous/Next `button[type="button"][data-table-page]` controls in a named `nav.pagination` move between filtered, sorted record groups. An optional named `output[data-table-page-status][role="status"][aria-live="polite"]` shows page numbers. Selection is page-scoped and retained across pages; silent `sync(wrapper)` clamps the current page after record changes. Ordinary pagination links keep their navigation behavior.
 
+Add a labelled single `select[data-table-page-size]` to change the size through a native select or FormSelect. A valid value updates the wrapper and preserves or clamps the current page, retaining selections and counts. Disabled controls, unavailable options and invalid values leave the working size unchanged.
+
 ```html
 <div class="data-table" data-sort>
   <table>
@@ -3963,10 +3965,17 @@ wrapper.addEventListener('expressive:filter', (event) => {
 
 ### Local paging
 
-Set `data-page-size="10"` on the `.data-table` wrapper to show a fixed number of local record groups per page. The value must be a positive safe integer; absent or invalid sizes leave records unpaged. Provide named native `button[type="button"]` controls with `data-table-page="previous"` and `data-table-page="next"` inside a named `nav.pagination` in that wrapper. The framework uses the existing pagination styles and leaves all anchors and unmarked controls alone.
+Set `data-page-size="10"` on the `.data-table` wrapper to set the initial number of local record groups per page. The value must be a positive safe integer; absent or invalid sizes leave records unpaged. Provide named native `button[type="button"]` controls with `data-table-page="previous"` and `data-table-page="next"` inside a named `nav.pagination` in that wrapper. The framework uses the existing pagination styles and leaves all anchors and unmarked controls alone.
 
 ```html
 <div class="data-table" data-page-size="2">
+  <label>Customers per page
+    <select class="browser-default" data-table-page-size>
+      <option value="1">1</option>
+      <option value="2" selected>2</option>
+      <option value="3">3</option>
+    </select>
+  </label>
   <table>
     <caption>Customers</caption>
     <thead><tr><th scope="col">Customer</th></tr></thead>
@@ -3985,6 +3994,10 @@ Set `data-page-size="10"` on the `.data-table` wrapper to show a fixed number of
   </nav>
 </div>
 ```
+
+An optional labelled single `select[data-table-page-size]` lets users choose a positive safe-integer size. Its native input or change updates the wrapper's `data-page-size` and preserves the current numeric page when available, otherwise clamps it to the last page. For seven records on page four at size two, choosing four shows page two of two and records five through seven. Size changes preserve details, selections and matching counts and emit no filter, sort, selection or page request. Native selects (`browser-default`) and the existing FormSelect enhancement work in documents and open shadow roots. Disabled controls or fieldsets, multiple selects, unavailable options and invalid values are ignored without changing the working size. Unmarked controls and fixed-size tables retain their behavior.
+
+The wrapper attribute remains authoritative for initial rendering and silent `sync(wrapper)`. Select the matching initial option. Changing only `select.value` from script is silent; dispatch a bubbling composed `input` or `change` event to apply it. Alternatively update the wrapper attribute and call sync, keeping the control's scripted value and presentation aligned yourself. DataTables does not synthesize events, refresh FormSelect or handle form resets.
 
 Filtering and sorting run before paging. Details consume no page slots and stay with their record; author hiding and expansion state remain unchanged. Filter counts include all matching records across pages. Select-all changes only enabled records on the displayed page, while other selections remain checked. Its existing selection event still reports all selected records. The framework reserves `data-table-page-hidden` for page state; do not author it.
 

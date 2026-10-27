@@ -23,10 +23,15 @@ const FILTERED = 'data-table-filter-hidden';
 const PAGED = 'data-table-page-hidden';
 const PAGE_BUTTON = 'button[type="button"]:is([data-table-page="previous"], [data-table-page="next"])';
 const PAGE_STEP: Record<string, number> = { previous: -1, next: 1 };
+const PAGE_SIZE = 'select[data-table-page-size]:not([multiple], :disabled):not(:has(option:checked:disabled))';
+
+function positivePageSize(value: string | null) {
+  const size = Number(value);
+  return Number.isSafeInteger(size) && size > 0 ? size : 0;
+}
 
 function pageSize(wrapper: Element) {
-  const size = Number(wrapper.getAttribute('data-page-size'));
-  return Number.isSafeInteger(size) && size > 0 ? size : 0;
+  return positivePageSize(wrapper.getAttribute('data-page-size'));
 }
 
 /** Controls belong to their nearest wrapper, never an enclosing table. */
@@ -199,6 +204,7 @@ function keyWidth(header: HTMLTableCellElement, e: KeyboardEvent) {
  * Cancel to keep records and counts server-owned across silent sync calls.
  * A positive `data-page-size` opts into local record-group paging through
  * authored Previous/Next buttons; selections on other pages stay checked.
+ * A marked single select changes the size while preserving a valid page.
  */
 export class DataTables {
   private static _initialized = false;
@@ -212,6 +218,8 @@ export class DataTables {
     // A checkbox's input event crosses shadow roots; its change event does not.
     document.addEventListener('input', DataTables._onChange);
     document.addEventListener('input', DataTables._onFilter);
+    document.addEventListener('input', DataTables._onPageSize);
+    document.addEventListener('change', DataTables._onPageSize);
     document.addEventListener('click', DataTables._onClick);
     document.addEventListener('click', DataTables._onPage);
     document.addEventListener('pointerdown', DataTables._onPointerDown);
@@ -347,6 +355,19 @@ export class DataTables {
     DataTables._pages.set(wrapper, (DataTables._pages.get(wrapper) ?? 1) + PAGE_STEP[button.dataset.tablePage]);
     DataTables.sync(wrapper);
   };
+
+  private static _onPageSize = (e: Event) => {
+    const control = Utils.closestInPath(e, `.data-table[data-page-size] ${PAGE_SIZE}`) as HTMLSelectElement;
+    if (!control) return;
+    DataTables._setPageSize(control.closest('.data-table'), control.value);
+  };
+
+  private static _setPageSize(wrapper: Element, value: string) {
+    const size = positivePageSize(value);
+    if (!size || !pageSize(wrapper) || size === pageSize(wrapper)) return;
+    wrapper.setAttribute('data-page-size', String(size));
+    DataTables.sync(wrapper);
+  }
 
   /** Filter visibility is settled before paging; details consume no slots. */
   private static _page(wrapper: Element, table: HTMLTableElement) {

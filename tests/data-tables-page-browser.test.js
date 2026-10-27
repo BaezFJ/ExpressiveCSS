@@ -6,6 +6,7 @@ import { leaseBrowser, engines } from './browser.js';
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 const table = `<div class="data-table" data-sort data-page-size="2">
+  <label>Records per page<select class="browser-default" data-table-page-size><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select></label>
   <label>Search records<input type="search" data-table-filter></label>
   <output data-table-filter-count role="status" aria-live="polite" aria-label="Matching records"></output>
   <table><caption>Records</caption><thead><tr><th><label><input type="checkbox" aria-label="Select all"></label></th><th scope="col" data-filter><button type="button">Name</button></th></tr></thead><tbody>
@@ -22,6 +23,81 @@ const table = `<div class="data-table" data-sort data-page-size="2">
   <nav class="pagination" aria-label="Server pages"><ol><li><a href="#server-page-2">Server page 2</a></li></ol></nav></div>`;
 
 for (const [engine, browserType, browserTest] of engines) {
+  browserTest(`${engine}: native table page size clamps the last page and retains control focus`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>${table}<script>${js}</script></body></html>`);
+      const status = page.getByRole('status', { name: 'Pages', exact: true });
+      const control = page.getByRole('combobox', { name: 'Records per page', exact: true });
+      for (let i = 0; i < 3; i++) await page.getByRole('button', { name: 'Next', exact: true }).click();
+      await expect(status).toHaveText('4 / 4');
+      await control.focus();
+      const customizable = await control.evaluate(el => getComputedStyle(el).appearance === 'base-select');
+      if (customizable) {
+        await control.click();
+        await page.getByRole('option', { name: '4', exact: true }).click();
+      } else {
+        // Firefox's OS popup is outside Playwright; its native inline list exposes options.
+        const native = page.locator('select[data-table-page-size]');
+        await native.evaluate(el => { el.size = 4; });
+        await page.getByRole('option', { name: '4', exact: true }).click();
+        await expect(native).toBeFocused();
+        await native.evaluate(el => el.removeAttribute('size'));
+      }
+      await expect(status).toHaveText('2 / 2');
+      await expect(control).toBeFocused();
+      for (const id of ['r5', 'r6', 'r7']) await expect(page.locator(`#${id}`)).toBeVisible();
+      await expect(page.locator('#r4')).toBeHidden();
+      await expect(page.locator('#r5 input')).toBeChecked();
+      await expect(page.locator('#secret input')).toBeChecked();
+      await expect(page.getByRole('status', { name: 'Matching records' })).toHaveText('7');
+      if (customizable) await control.press('Space');
+      await page.keyboard.press('ArrowUp');
+      await page.keyboard.press('Enter');
+      await expect(control).toHaveValue('3');
+      await expect(status).toHaveText('2 / 3');
+      await expect(page.locator('#r4')).toBeVisible();
+      await expect(page.locator('#r7')).toBeHidden();
+      await page.getByRole('searchbox', { name: 'Search records' }).fill('Cedar');
+      await control.selectOption('1');
+      await expect(status).toHaveText('1 / 1');
+      await expect(page.locator('#detail')).toBeVisible();
+      await expect(page.locator('#more-detail')).toBeHidden();
+      await expect(page.locator('#secret')).toBeHidden();
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: FormSelect page sizes use their composed native change`, async () => {
+    const browser = await leaseBrowser(browserType);
+    let page;
+    try {
+      page = await browser.newPage();
+      await page.setContent(`<!doctype html><html lang="en"><body><div id="host"></div><script>${js}</script></body></html>`);
+      await page.evaluate(({ css, table }) => {
+        const root = document.querySelector('#host').attachShadow({ mode: 'open' });
+        root.innerHTML = `<style>${css}</style>${table}`;
+        const control = root.querySelector('[data-table-page-size]');
+        control.classList.remove('browser-default');
+        window.sizeSelect = Expressive.FormSelect.init(control, { menuOptions: { inDuration: 0, outDuration: 0 } });
+        Expressive.DataTables.sync(root.querySelector('.data-table'));
+      }, { css, table });
+      for (let i = 0; i < 3; i++) await page.getByRole('button', { name: 'Next', exact: true }).click();
+      const control = page.getByRole('combobox', { name: 'Records per page', exact: true });
+      await control.press('Enter');
+      await page.getByRole('option', { name: '4', exact: true }).click();
+      await expect(page.getByRole('status', { name: 'Pages', exact: true })).toHaveText('2 / 2');
+      await expect(page.locator('#r5')).toBeVisible();
+      await expect(page.locator('#r7')).toBeVisible();
+      await expect(control).toBeFocused();
+    } finally {
+      await page?.evaluate(() => window.sizeSelect?.destroy());
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: local table pages preserve selection, details and boundary focus`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
@@ -101,6 +177,13 @@ for (const [engine, browserType, browserTest] of engines) {
       await expect(status).toHaveText('1 / 2');
       await expect(previous).toBeFocused();
       await expect(previous).toHaveAttribute('aria-disabled', 'true');
+      await expect(page.getByRole('status', { name: 'Matching records' })).toHaveText('87');
+      const size = page.getByRole('combobox', { name: 'Records per page', exact: true });
+      await size.focus();
+      await size.selectOption('3');
+      await expect(status).toHaveText('1 / 1');
+      await expect(size).toBeFocused();
+      await expect(page.locator('#remote1')).toBeVisible();
       await expect(page.getByRole('status', { name: 'Matching records' })).toHaveText('87');
       await page.evaluate(() => {
         const root = document.querySelector('#host').shadowRoot;
