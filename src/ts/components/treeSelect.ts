@@ -103,8 +103,14 @@ export class TreeSelect extends FormSelect {
 
   static key = 'Expressive_TreeSelect';
 
+  _setValueToInput() {
+    // Branches are navigation controls, not multiple-select values.
+    if (this.isMultiple) this._branches.forEach(option => { option.selected = false; });
+    super._setValueToInput();
+  }
+
   protected _canSearch() {
-    return !this.el.multiple && this.options.searchable;
+    return this.options.searchable;
   }
 
   protected _searchList() { return this.tree; }
@@ -212,6 +218,7 @@ export class TreeSelect extends FormSelect {
       this.tree.id = 'select-tree-' + Utils.guid();
       this.tree.setAttribute('role', 'tree');
     }
+    this.tree.ariaMultiSelectable = String(this.isMultiple);
     this.tree.replaceChildren(...optionTree(options).map((node) => this._row(node)));
     this.menuEl.append(this.tree);
   }
@@ -224,7 +231,7 @@ export class TreeSelect extends FormSelect {
    * after that a selected branch is one a script chose.
    */
   private _leaveImplicitBranch() {
-    if (!this._browserPickedBranch()) return;
+    if (this.isMultiple || !this._browserPickedBranch()) return;
     const leaf = Array.from(this.el.options).find((option) => !option.disabled);
     if (leaf) leaf.selected = true;
     else this.el.selectedIndex = -1;
@@ -295,9 +302,10 @@ export class TreeSelect extends FormSelect {
 
   /** Opens the chosen leaf's branches and focuses it, or the first row a person can choose or open. */
   protected _focusSelected() {
-    const chosen = this._values.find(({ el, optionEl }) => el.selected && !optionEl.matches('.disabled'))?.optionEl;
-    this._expandTo(chosen);
-    this._focusRow(chosen ?? this._enabledRows()[0]);
+    // Opening may finish after the user has already focused a tree row.
+    if (!this.menu.options.autoFocus || Utils.focusIsIn(this.menuEl)) return;
+    const chosen = this._values.find(({ el, optionEl }) => el.selected && !optionEl.matches('.disabled'));
+    this._restoreFocus(chosen?.el);
   }
 
   /** Opens every branch around `row`. */
