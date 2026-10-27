@@ -96,7 +96,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Currency input](#currency-input) | implemented | source-reviewed | incomplete | 0 |
 | [Rich text editor](#rich-text-editor) | unassessed | needs-review | needs-rerun | 0 |
 | [Drop zone](#drop-zone) | unassessed | needs-review | needs-rerun | 0 |
-| [Select](#select) | implemented | source-reviewed | needs-rerun | 0 |
+| [Select](#select) | unassessed | needs-review | needs-rerun | 0 |
 | [Tree select](#tree-select) | implemented | source-reviewed | incomplete | 0 |
 | [Cascader](#cascader) | implemented | source-reviewed | incomplete | 0 |
 | [Checkboxes](#checkboxes) | unassessed | needs-review | needs-rerun | 0 |
@@ -1533,9 +1533,9 @@ Web adaptation: The native input covers the label, so clicks, keys and drops are
 
 ## Select
 
-**implemented within the stated scope.** Single/multiple selection, optgroups, browser-default fallback, and opt-in single and multiple select search with a separate popup field and native form values.
+**unassessed within the stated scope.** Single/multiple selection, optgroups, browser-default fallback, and opt-in single and multiple select search with a separate popup field and native form values.
 
-Source review: source-reviewed, 2026-10-27. [src/sass/components/forms/_select.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/forms/_select.scss), [src/sass/components/_menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_menu.scss), [src/ts/components/select.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/select.ts), [src/ts/components/menu.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/menu.ts).
+Source review: needs-review, 2026-10-27. [src/sass/components/forms/_select.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/forms/_select.scss), [src/sass/components/_menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_menu.scss), [src/ts/components/select.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/select.ts), [src/ts/components/menu.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/menu.ts).
 
 Google relationship: related. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/menus/overview).
 

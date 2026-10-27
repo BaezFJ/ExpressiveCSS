@@ -9944,6 +9944,7 @@ The IIFE bundle exposes `Expressive.Autocomplete`. `data` is an array of objects
 - text — display label. The default search matches id and text.
 - image — image URL. Shown as a circle; not searched by default.
 - description — optional secondary line under the label.
+- disabled — `true` keeps the entry in the list, dimmed, but nobody can choose it.
 
 Extra properties are ignored by the default search. Filter them yourself in `onSearch`.
 
@@ -9971,6 +9972,22 @@ Expressive.Autocomplete.init(document.querySelector('#autocomplete-multi'), {
     { id: 12, text: 'Apple' },
     { id: 13, text: 'Microsoft' },
     { id: 42, text: 'Google', image: 'https://picsum.photos/id/64/250/250' }
+  ]
+});
+```
+
+A disabled entry stays in the results so people can see it exists. A click, Enter and `selectOption()` all leave it as it is, so no `change` or `expressive:autocomplete` fires. Up and Down skip it, and the announced result count leaves it out, so a list of only disabled matches announces `i18n.noResults`. The `selected` option and `setMenuItems(items, selected)` can still select one, which shows a choice the person cannot remove:
+
+```js
+Expressive.Autocomplete.init(document.querySelector('#autocomplete-disabled'), {
+  minLength: 0,
+  isMultiSelect: true,
+  selected: ['vienna'],
+  data: [
+    { id: 'lisbon', text: 'Lisbon' },
+    { id: 'oslo', text: 'Oslo', disabled: true },
+    { id: 'rome', text: 'Rome' },
+    { id: 'vienna', text: 'Vienna', disabled: true }
   ]
 });
 ```

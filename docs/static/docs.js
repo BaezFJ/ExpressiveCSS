@@ -333,14 +333,21 @@ document.addEventListener("DOMContentLoaded", () => {
       data: autocompleteData,
     });
   }
-  const autocompleteMulti = document.getElementById("autocomplete-multi");
-  if (autocompleteMulti) {
-    Expressive.Autocomplete.init(autocompleteMulti, {
-      minLength: 0,
-      isMultiSelect: true,
-      data: autocompleteData,
-    });
-  }
+  [
+    ["autocomplete-multi", { data: autocompleteData }],
+    ["autocomplete-disabled", {
+      selected: ["vienna"],
+      data: [
+        { id: "lisbon", text: "Lisbon" },
+        { id: "oslo", text: "Oslo", disabled: true },
+        { id: "rome", text: "Rome" },
+        { id: "vienna", text: "Vienna", disabled: true },
+      ],
+    }],
+  ].forEach(([id, options]) => {
+    const el = document.getElementById(id);
+    if (el) Expressive.Autocomplete.init(el, { minLength: 0, isMultiSelect: true, ...options });
+  });
 
   const chipsInitial = document.getElementById("chips-initial");
   if (chipsInitial) {
