@@ -416,7 +416,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:refresh` | Pull-to-refresh | `{ waitUntil }` |
 | `expressive:swipetoggle` | Swipe actions | `{ row, open }` |
 | `expressive:transfer` | Transfer list, from the container | `{ rows, from, to }` |
-| `expressive:reject` | Opted-in drop zones, from the wrapper | `{ input, files, rejected, reason: 'type' }`; noncancelable |
+| `expressive:reject` | Opted-in drop zones, from the wrapper | `{ input, files, rejected, reason: 'type' | 'size' }`; noncancelable |
 | `expressive:change`, `expressive:sort`, `expressive:resize`, `expressive:filter`, `expressive:page` | Data tables, from the wrapper | `{ selected }`, `{ header, column, direction }`, `{ header, column, width }`, `{ query }`, `{ page, pageSize }`; `sort`, `filter` and `page` are cancelable |
 
 An Autocomplete or Select input hosts a Menu, so it also fires that Menu's `expressive:open`, `expressive:close` and `expressive:select`. A callback that changes the choice again, such as an `onShow` that selects another tab, leaves only the event for the final choice.
@@ -8757,11 +8757,11 @@ Destroys the editor, removes its element and the button state, and shows the tex
 
 ## Drop zone
 
-A large target for choosing or dropping files, with an optional list and type validation.
+A large target for choosing or dropping files, with an optional list, type validation and per-file size limits.
 
 A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input covers the label, so clicking, keyboard input and file dropping reach the native control. Forms marks dragover and lists each selected file's name and localized size. The root bundle installs Forms on load; modular consumers call `Forms.Init()`. Document-level input/change handling also supports dynamically inserted zones and open shadow roots.
 
-A dropped file replaces the selection; add multiple to take several files. `accept` alone is a picker hint. Add data-validate-types for the checks below. Unmarked zones retain their existing behavior. Reset clears lists after dispatch/default handling; cancellation preserves the current view, and a newer selection keeps its state.
+A dropped file replaces the selection; add multiple to take several files. `accept` alone is a picker hint. Add data-validate-types for type checks or data-max-size for a per-file byte limit. Unmarked zones retain their existing behavior. Reset clears lists after dispatch/default handling; cancellation preserves the current view, and a newer selection keeps its state.
 
 ```html
 <div class="drop-zone">
@@ -8795,7 +8795,7 @@ Supply a direct zone-level data-error status area even without a file list. Rese
 
 One failing file invalidates the whole selection through native custom validity. Keep every file in the native FileList and rendered list; no subset is accepted, removed or uploaded. A pre-existing unowned application custom error is preserved instead of overwritten. The status can still explain the type mismatch separately. With no type mismatch, it reflects remaining native required/application errors or clears when valid. Optional empty choices are valid; required-empty native invalidity stays effective. Ordinary validated forms block submission; existing error summaries and native novalidate/formnovalidate behavior remain unchanged.
 
-Each changed type-rejected selection reports one bubbling, composed, noncancelable `expressive:reject` from its nearest wrapper with `{ input, files, rejected, reason: 'type' }`. The arrays are independent snapshots containing File objects. A native input/change pair reports once for unchanged files/accept; a genuinely new selection can report again. This is a notification, not a request that can permit invalid files. A listener may replace the selection and dispatch its new input without an older handler restoring stale state.
+Each changed type-rejected selection reports one bubbling, composed, noncancelable `expressive:reject` from its nearest wrapper with `{ input, files, rejected, reason: 'type' }`. The arrays are independent snapshots containing File objects. A native input/change pair reports once for unchanged files/constraints; a genuinely new selection or changed effective constraint can report again. This is a notification, not a request that can permit invalid files. A listener may replace the selection and dispatch its new input without an older handler restoring stale state.
 
 ```js
 zone.addEventListener('expressive:reject', ({ detail }) => {
@@ -8809,7 +8809,32 @@ input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
 
 Valid replacement, clearing, removal of the opt-in followed by validation, and an uncanceled reset release only framework-owned type validity. If the application replaces that message, recovery preserves its new value. Reset uses native form ownership, including controls associated through a form attribute outside the form subtree. Cleanup runs after dispatch/default handling, respects cancellation and leaves newer selections intact. Reset and silent validation emit no rejection event. Disabled controls and fieldsets remain inactive, including reset-time validity writes; call Forms.validateField after scripted enabling to refresh the current selection. Handled shadow-root forms follow the same reset contract.
 
-Size/count limits and uploads are outside this option. File names and MIME labels do not verify contents. Native validation can be bypassed by scripts or explicit form settings; always validate received data on the server.
+File-count limits and uploads are outside these options. File names and MIME labels do not verify contents. Native validation can be bypassed by scripts or explicit form settings; always validate received data on the server.
+
+### Per-file size limit
+
+Add `data-max-size="1048576"` to the native input for a maximum of 1,048,576 bytes (1 MiB) per file. This is independent of data-validate-types; accept remains a picker hint in a size-only zone. A file exactly at the limit passes; one oversized file invalidates the whole selection while retaining every File and list row. There is no combined-size limit.
+
+```html
+<div class="drop-zone">
+  <label>Drop files here or browse
+    <small>At most 1 MiB per file</small>
+    <input type="file" multiple data-max-size="1048576">
+  </label>
+  <p class="supporting-text" data-error
+     data-error-size="Choose files no larger than 1 MiB each."
+     role="status" aria-live="polite" hidden></p>
+  <ul class="drop-zone-files" aria-live="polite"></ul>
+</div>
+```
+
+Use positive decimal safe-integer bytes, with surrounding whitespace allowed. Missing, blank, zero, negative, fractional, exponent, hexadecimal, nonnumeric or unsafe values impose no size constraint. Leading zeros are allowed. Remove the attribute or change its value and call Forms.validateField to silently refresh validity and feedback; dispatch a bubbling composed input/change to refresh the list too.
+
+Combine both constraints on one input: `type="file" multiple data-validate-types accept=".pdf,.png" data-max-size="1048576"`. Supply the same direct polite data-error status area. A nonempty data-error-size value localizes size feedback; empty uses a message naming the exact byte limit. Existing data-error continues localizing type feedback. Type failures take precedence; only when all files match types does the size failure appear. With neither file failure, remaining native/application errors are shown or feedback clears when valid. Existing application custom validity is never overwritten.
+
+A changed size-rejected selection reports the same bubbling, composed, noncancelable `expressive:reject` with `{ input, files, rejected, reason: 'size' }`. Files contains the full selection; rejected contains only oversized files. Type failures retain reason:'type' and their type-rejected subset. Native input/change pairs deduplicate using File identities, the type opt-in, raw accept and effective parsed byte limit. Equivalent decimal limits do not report again; a changed effective constraint can report after an input/change event. Event arrays are independent snapshots, silent validation/reset report nothing, and newer reentrant selections stay authoritative.
+
+Valid replacement, clearing, removing/invalidating the size limit and successful reset release only owned file validity. Application messages, canceled reset, disabled-control refresh, native form association, shadow forms and newer-selection protection follow the type-validation recovery contract above. Ordinary native submission is blocked while invalid; native bypass settings remain native. Always enforce file type/size and contents on the server.
 
 ### Tokens
 

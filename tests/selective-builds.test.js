@@ -317,7 +317,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed atomic server page state, cancelable requests and newer-response precedence: 108,215 gzip bytes (+429).
   // Reviewed first activation of unsynced local pages without mutating canceled views: 108,250 gzip bytes (+35).
   // Reviewed opt-in drop-zone type matching, accessible feedback, rejection snapshots and native reset recovery: 109,246 gzip bytes (+996).
-  assert.ok(sizes(js).gzip <= 109246, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed independent per-file byte limits through shared file validity, messages and constraint-aware rejection: 109,451 gzip bytes (+205).
+  assert.ok(sizes(js).gzip <= 109451, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -500,5 +501,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed filter-owned row hiding that preserves author-hidden state: 90,834 gzip bytes (+8 over the Phase 66 base).
   // Reviewed page-owned row hiding alongside filter hiding: 90,848 gzip bytes (+14).
   // Reviewed drop-zone error borders and direct live feedback with existing theme tokens: 90,893 gzip bytes (+45).
-  assert.ok(sizes(css).gzip <= 90893, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the existing file-error selectors also covering size-only opt-ins: 90,904 gzip bytes (+11).
+  assert.ok(sizes(css).gzip <= 90904, `CSS gzip: ${sizes(css).gzip}`);
 });

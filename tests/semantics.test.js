@@ -36,18 +36,20 @@ const root = new URL('../', import.meta.url);
 const read = (p) => readFileSync(new URL(p, root), 'utf8');
 const data = JSON.parse(read('semantics.json'));
 
-test('opt-in drop-zone type feedback requires a direct live status without initialization', () => {
+test('opt-in drop-zone file feedback requires a direct live status without initialization', () => {
   const rules = rulesOf(data).filter((rule) => rule.id === 'drop-zone-type-error-is-live-status');
-  const field = '<label>Documents<input type="file" data-validate-types accept=".pdf"></label>';
   const broken = (html) => violations(html, rules, data.compositeRoles).map(({ rule }) => rule.id);
-  const wrap = (error) => `<div class="drop-zone">${field}${error}</div>`;
-  for (const error of ['', '<p data-error></p>', '<p data-error role="status"></p>', '<p data-error role="status" aria-live="assertive"></p>', '<div><p data-error role="status" aria-live="polite"></p></div>']) {
-    assert.deepEqual(broken(wrap(error)), ['drop-zone-type-error-is-live-status']);
+  for (const markers of ['data-validate-types', 'data-max-size="1024"', 'data-validate-types data-max-size="1024"']) {
+    const field = `<label>Documents<input type="file" ${markers} accept=".pdf"></label>`;
+    const wrap = (error) => `<div class="drop-zone">${field}${error}</div>`;
+    for (const error of ['', '<p data-error></p>', '<p data-error role="status"></p>', '<p data-error role="status" aria-live="assertive"></p>', '<div><p data-error role="status" aria-live="polite"></p></div>']) {
+      assert.deepEqual(broken(wrap(error)), ['drop-zone-type-error-is-live-status'], markers);
+    }
+    const valid = wrap('<p data-error role="status" aria-live="polite" hidden></p>');
+    assert.deepEqual(broken(valid), []);
+    assert.deepEqual(broken(`<div class="drop-zone"><label>Other<input type="file"></label>${valid}</div>`), []);
   }
-  const valid = wrap('<p data-error role="status" aria-live="polite" hidden></p>');
-  assert.deepEqual(broken(valid), []);
   assert.deepEqual(broken('<div class="drop-zone"><label>Files<input type="file" accept=".pdf"></label></div>'), []);
-  assert.deepEqual(broken(`<div class="drop-zone"><label>Other<input type="file"></label>${valid}</div>`), []);
 });
 
 test('table page sizes require a named native single select without initialization', () => {

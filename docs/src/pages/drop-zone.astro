@@ -10,6 +10,7 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "behavior", label: "Behavior" },
   { id: "validation", label: "Type validation" },
+  { id: "size", label: "Size limit" },
   { id: "tokens", label: "Tokens" },
 ]);
 ---
@@ -126,9 +127,65 @@ const S = defineSections([
       <code>{"{ input, files, rejected, reason: 'type' }"}</code>.
       File arrays are snapshots. A native input/change pair reports once;
       silent validation and reset report no rejection. This is a notification,
-      so canceling it cannot allow invalid files. Size/count limits and uploads
-      are outside this option. Native novalidate/formnovalidate bypasses remain
+      so canceling it cannot allow invalid files. Combine type validation with
+      the per-file size limit below. File-count limits and uploads are outside
+      these options. Native novalidate/formnovalidate bypasses remain
       native; always validate received files on the server.
+    </p>
+  </Section>
+  <Section {...S.size}>
+    <p>
+      Add <code>data-max-size="1048576"</code> to limit each file to 1 MiB.
+      A file exactly at the limit passes. One oversized file invalidates the
+      whole selection and blocks ordinary native form submission; all files
+      remain in the input and optional list. The live example checks size only.
+    </p>
+    <div class="drop-zone" style="max-width:32rem;">
+      <label>Drop files here or browse
+        <small>At most 1 MiB per file</small>
+        <input type="file" multiple data-max-size="1048576">
+      </label>
+      <p class="supporting-text" data-error data-error-size="Choose files no larger than 1 MiB each." role="status" aria-live="polite" hidden></p>
+      <ul class="drop-zone-files" aria-live="polite"></ul>
+    </div>
+    <p>This markup adds type checks to the same size limit:</p>
+    <Code code={`
+<div class="drop-zone">
+  <label>Drop documents here or browse
+    <small>PDF or PNG, at most 1 MiB per file</small>
+    <input type="file" multiple data-validate-types accept=".pdf,.png"
+           data-max-size="1048576">
+  </label>
+  <p class="supporting-text" data-error="Choose PDF or PNG files."
+     data-error-size="Choose files no larger than 1 MiB each."
+     role="status" aria-live="polite" hidden></p>
+  <ul class="drop-zone-files" aria-live="polite"></ul>
+</div>
+`} />
+    <p>
+      Use positive decimal safe-integer bytes; surrounding whitespace is allowed.
+      Missing, blank, zero, negative, fractional, exponent, hexadecimal, nonnumeric
+      or unsafe values impose no size limit. This limits each file separately,
+      not their combined size. A size-only input leaves <code>accept</code> as a
+      picker hint; add <code>data-validate-types</code> for type checking.
+    </p>
+    <p>
+      Reuse the direct polite <code>[data-error]</code> status area.
+      <code>data-error-size</code> customizes the size message; an empty value
+      uses a message naming the exact byte limit. If types fail, the type error
+      takes precedence. Otherwise oversized files report
+      <code>{"{ input, files, rejected, reason: 'size' }"}</code> through the
+      same noncancelable <code>expressive:reject</code> event. Its rejected
+      snapshot contains only oversized files, while files contains the whole
+      selection. Changing the type opt-in, accept or effective size limit can
+      report again after a file input/change event; equivalent byte limits
+      still deduplicate.
+    </p>
+    <p>
+      Script refresh, application-validity ownership, disabled controls, native
+      submission settings and reset recovery follow the type-validation contract
+      above. <code>Forms.validateField(input)</code> silently refreshes both
+      constraints. Always enforce received file limits on the server.
     </p>
   </Section>
   <Section {...S.tokens}>
