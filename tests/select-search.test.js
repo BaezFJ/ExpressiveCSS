@@ -41,7 +41,7 @@ test('grouped search filters generated rows and submits the chosen native value'
 
 for (const [name, attributes, options] of [
   ['default', '', { searchable: false }],
-  ['multiple', 'multiple', {}],
+  ['multiple', 'multiple', { searchable: false }],
   ['browser default', 'class="browser-default"', {}]
 ]) {
   test(`${name} select does not gain a search field`, () => {
@@ -53,6 +53,54 @@ for (const [name, attributes, options] of [
     }
   });
 }
+
+test('multiple search keeps picks hidden by the query and submits every value', () => {
+  const instance = fixture({}, 'multiple');
+  const select = instance.el;
+  let changes = 0;
+  select.addEventListener('change', () => changes++);
+  const visible = () => instance.menuEl.querySelector('[role="option"]:not([hidden])');
+  try {
+    const listbox = instance.menuEl.querySelector('[role="listbox"]');
+    assert.equal(instance.menuEl.getAttribute('role'), 'dialog');
+    assert.equal(instance.menuEl.hasAttribute('aria-multiselectable'), false);
+    assert.equal(listbox.getAttribute('aria-multiselectable'), 'true');
+    assert.equal(listbox.classList.contains('multiple-select-menu'), true);
+    search(instance, 'rom');
+    visible().click();
+    search(instance, 'tok');
+    assert.equal(changes, 1);
+    visible().click();
+    assert.equal(changes, 2);
+    assert.equal(instance.menuEl.querySelector('input[type="search"]').value, 'tok');
+    assert.equal(instance.input.value, 'Paris, Rome, Tokyo');
+    assert.deepEqual(new window.FormData(select.form).getAll('place'), ['paris', 'rome', 'tokyo']);
+    search(instance, '');
+    const rome = instance._values.find(({ el }) => el.value === 'rome').optionEl;
+    assert.equal(rome.ariaSelected, 'true');
+    assert.equal(rome.querySelector('input[type="checkbox"]').checked, true);
+    rome.click();
+    assert.equal(changes, 3);
+    assert.deepEqual(new window.FormData(select.form).getAll('place'), ['paris', 'tokyo']);
+  } finally {
+    instance.destroy();
+  }
+});
+
+test('multiple search reset restores defaults hidden by the query', async () => {
+  const instance = fixture({}, 'multiple');
+  try {
+    search(instance, 'tok');
+    instance.menuEl.querySelector('[role="option"]:not([hidden])').click();
+    instance.el.form.reset();
+    await new Promise(resolve => setTimeout(resolve, 0));
+    assert.equal(instance.menuEl.querySelector('input[type="search"]').value, '');
+    assert.deepEqual(instance.getSelectedValues(), ['paris']);
+    assert.equal(instance.input.value, 'Paris');
+  } finally {
+    instance.destroy();
+  }
+});
 
 test('AutoInit enables search, retains authored names, and restores label IDs', () => {
   document.body.innerHTML = `<label for="pick">Ignored name</label><select id="pick" aria-label="Chosen name"

@@ -306,7 +306,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the cascader: nested options in listbox columns, keys in both directions, the path submitted through the form control it now shares with Chips in core/formControl, and the review fixes: 103,607 gzip bytes (+2,086).
   // Reviewed the tree select: a role="tree" list in the Menu surface over a data-tree select, the full tree keyboard contract in both directions, branch options kept out of the form, refresh() keeping open branches and focus, and FormSelect's hooks, focus redirect and skipped destroy(): 105,464 gzip bytes (+1,857 over master's 103,607 build).
   // Reviewed opt-in single-select search, native selection, popup keyboard handling, reset and refresh: 106,503 gzip bytes (+1,039 over the Phase 62 base).
-  assert.ok(sizes(js).gzip <= 106503, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed opt-in multiple-select search, with the multi-select state on the inner listbox: 106,526 gzip bytes (+23 over the Phase 63 base).
+  assert.ok(sizes(js).gzip <= 106526, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

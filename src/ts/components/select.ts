@@ -13,7 +13,7 @@ export interface FormSelectOptions extends BaseOptions {
    * @default {}
    */
   menuOptions: Partial<MenuOptions>;
-  /** Show a separate popup search field for a plain single select. */
+  /** Show a separate popup search field for a plain single or multiple select. */
   searchable: boolean;
   i18n: Partial<{ searchLabel: string; noResults: string }>;
 }
@@ -88,7 +88,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   static key = 'Expressive_FormSelect';
 
   private _canSearch() {
-    return this.constructor === FormSelect && !this.isMultiple && this.options.searchable;
+    return this.constructor === FormSelect && this.options.searchable;
   }
 
   destroy() {
@@ -392,10 +392,13 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.menuEl.classList.add('select-search-popup');
     this.menuEl.setAttribute('role', 'dialog');
     this.menuEl.removeAttribute('aria-multiselectable');
+    this.menuEl.classList.remove('multiple-select-menu');
     this.input.setAttribute('aria-haspopup', 'dialog');
     this._listbox = document.createElement('menu');
     this._listbox.id = this.menuEl.id + '-list';
     this._listbox.setAttribute('role', 'listbox');
+    this._listbox.ariaMultiSelectable = this.isMultiple.toString();
+    this._listbox.classList.toggle('multiple-select-menu', this.isMultiple);
     this._listbox.append(...this.menuEl.childNodes);
     this._searchInput = document.createElement('input');
     this._searchInput.type = 'search';
