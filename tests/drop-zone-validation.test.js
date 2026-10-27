@@ -125,3 +125,174 @@ test('disabled inputs remain inactive and required-empty native invalidity is pr
   assert.equal(input().validity.valueMissing, true);
   assert.equal(input().validity.customError, false);
 });
+
+test('type feedback is real accessible text and recovery preserves authored descriptions', () => {
+  choose(file('bad.exe'));
+  validate();
+  const error = document.querySelector('[data-error]');
+  assert.equal(input().getAttribute('aria-invalid'), 'true');
+  assert.equal(input().classList.contains('invalid'), true);
+  assert.equal(error.hidden, false);
+  assert.equal(error.textContent, 'Choose PDF or PNG files.');
+  assert.ok(error.id);
+  assert.equal(input().getAttribute('aria-describedby'), `hint ${error.id}`);
+  validate();
+  assert.equal(input().getAttribute('aria-describedby'), `hint ${error.id}`);
+  choose(file('good.pdf'));
+  validate();
+  assert.equal(error.hidden, true);
+  assert.equal(error.textContent, '');
+  assert.equal(input().hasAttribute('aria-invalid'), false);
+});
+
+test('a native file event pair reports one noncancelable rejection with independent snapshots', () => {
+  const selected = choose(file('good.pdf'), file('bad.exe'));
+  const zone = document.querySelector('.drop-zone');
+  const seen = [];
+  zone.addEventListener('expressive:reject', (event) => {
+    seen.push(event);
+    assert.equal(event.target, zone);
+    assert.equal(event.bubbles && event.composed, true);
+    assert.equal(event.cancelable, false);
+    assert.equal(event.detail.input, input());
+    assert.deepEqual(event.detail.files, selected);
+    assert.deepEqual(event.detail.rejected, [selected[1]]);
+    assert.equal(event.detail.reason, 'type');
+    event.detail.files.length = 0;
+  });
+  input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  input().dispatchEvent(new window.Event('change', { bubbles: true }));
+  assert.equal(seen.length, 1);
+  assert.equal(input().files, selected);
+  assert.equal(document.querySelectorAll('.drop-zone-files > li').length, 2);
+  validate();
+  assert.equal(seen.length, 1);
+});
+
+test('a rejection listener can replace the selection without an older update overwriting it', () => {
+  const zone = document.querySelector('.drop-zone');
+  let calls = 0;
+  zone.addEventListener('expressive:reject', () => {
+    calls++;
+    choose(file('new.pdf'));
+    input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  });
+  choose(file('bad.exe'));
+  input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  assert.equal(calls, 1);
+  assert.equal(input().validity.valid, true);
+  assert.equal(document.querySelector('[data-error]').hidden, true);
+  assert.match(document.querySelector('.drop-zone-files').textContent, /^new.pdf/);
+});
+
+test('canceled reset preserves rejection and successful reset clears only owned state', async () => {
+  const selected = choose(file('bad.exe'));
+  const form = document.getElementById('upload');
+  const zone = document.querySelector('.drop-zone');
+  const error = document.querySelector('[data-error]');
+  let events = 0;
+  zone.addEventListener('expressive:reject', () => events++);
+  input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  zone.classList.add('dragover');
+  form.addEventListener('reset', (event) => event.preventDefault(), { once: true });
+  form.reset();
+  await Promise.resolve();
+  assert.equal(input().files, selected);
+  assert.equal(input().validity.customError, true);
+  assert.equal(error.hidden, false);
+  assert.equal(zone.classList.contains('dragover'), true);
+  assert.equal(document.querySelectorAll('.drop-zone-files > li').length, 1);
+  form.reset();
+  await Promise.resolve();
+  assert.equal(input().validity.customError, false);
+  assert.equal(error.hidden, true);
+  assert.equal(zone.classList.contains('dragover'), false);
+  assert.equal(document.querySelectorAll('.drop-zone-files > li').length, 0);
+  assert.equal(events, 1);
+});
+
+test('successful reset preserves application custom validity', async () => {
+  input().setCustomValidity('Application policy');
+  choose(file('bad.exe'));
+  input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  document.getElementById('upload').reset();
+  await Promise.resolve();
+  assert.equal(input().validationMessage, 'Application policy');
+  assert.equal(input().getAttribute('aria-invalid'), 'true');
+  assert.equal(document.querySelector('[data-error]').textContent, 'Application policy');
+});
+
+test('a handled shadow-root file input recovers on its native form reset', async () => {
+  document.body.innerHTML = '<div id="host"></div>';
+  const root = document.getElementById('host').attachShadow({ mode: 'open' });
+  root.innerHTML = markup;
+  const control = root.getElementById('files');
+  Object.defineProperty(control, 'files', { value: [file('bad.exe')] });
+  control.dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  assert.equal(control.validity.customError, true);
+  assert.equal(root.querySelector('[data-error]').hidden, false);
+  root.querySelector('form').reset();
+  await Promise.resolve();
+  assert.equal(control.validity.customError, false);
+  assert.equal(root.querySelector('[data-error]').hidden, true);
+});
+
+test('unmarked drop-zone files keep existing generic validate behavior', () => {
+  input().removeAttribute('data-validate-types');
+  input().classList.add('validate');
+  input().setCustomValidity('Application policy');
+  choose(file('anything.exe'));
+  input().dispatchEvent(new window.Event('change', { bubbles: true }));
+  assert.equal(input().getAttribute('aria-invalid'), 'true');
+  assert.equal(input().classList.contains('invalid'), true);
+  assert.equal(document.querySelector('[data-error]').hidden, true);
+});
+
+test('independent zones, fallback messages and changed selections keep their own rejection state', () => {
+  const original = input();
+  const other = document.querySelector('.drop-zone').cloneNode(true);
+  other.querySelector('input').id = 'other-files';
+  document.getElementById('upload').append(other);
+  choose(file('bad.exe'));
+  let events = 0;
+  document.querySelector('.drop-zone').addEventListener('expressive:reject', () => events++);
+  const dispatch = () => original.dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  dispatch();
+  assert.equal(other.querySelector('input').validity.valid, true);
+  assert.equal(other.querySelector('[data-error]').hidden, true);
+  choose(file('good.pdf'));
+  dispatch();
+  choose(file('another.exe'));
+  dispatch();
+  assert.equal(events, 2);
+  document.querySelector('.drop-zone > [data-error]').setAttribute('data-error', '');
+  validate();
+  assert.equal(input().validationMessage, 'Choose files matching: .pdf,.png.');
+});
+
+test('disabled owned validity stays inactive until an explicit validation after enabling', async () => {
+  choose(file('bad.exe'));
+  validate();
+  input().disabled = true;
+  input().setCustomValidity('Application changed this while disabled');
+  document.getElementById('upload').reset();
+  await Promise.resolve();
+  assert.equal(input().validity.customError, true);
+  choose();
+  input().disabled = false;
+  validate();
+  assert.equal(input().validationMessage, 'Application changed this while disabled');
+});
+
+test('an outer zone without its own list leaves a nested zone untouched', () => {
+  const outer = document.querySelector('.drop-zone');
+  const inner = outer.cloneNode(true);
+  inner.querySelector('input').id = 'inner-files';
+  outer.querySelector('.drop-zone-files').remove();
+  outer.append(inner);
+  choose(file('bad.exe'));
+  input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  assert.equal(inner.querySelectorAll('.drop-zone-files > li').length, 0);
+  assert.equal(inner.querySelector('[data-error]').hidden, true);
+  assert.equal(inner.querySelector('input').validity.valid, true);
+});

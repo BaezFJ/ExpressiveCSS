@@ -18,9 +18,9 @@ Completion check V1. Keep new helpers below cyclomatic complexity five.
 
 Prerequisite: group 1 passes.
 
-- [ ] Add composed native-input handling while retaining existing change paths. Deduplicate rejection reports for native input/change, snapshot event details before dispatch and cover reentrant selection updates.
-- [ ] Reuse Forms description helpers for zone-level authored feedback and implement deferred cancellation-aware reset cleanup, including handled shadow forms. Add minimal token-based error styling in src/sass/components/forms/_drop-zone.scss.
-- [ ] Cover valid/empty/reset/opt-out recovery, application validity, canceled reset, descriptions, independent zones and event contracts. Mutate a new condition, require regression failure, restore source and rerun affected checks. Commit the verified slice.
+- [x] Add composed native-input handling while retaining existing change paths. Deduplicate rejection reports for native input/change, snapshot event details before dispatch and cover reentrant selection updates.
+- [x] Reuse Forms description helpers for zone-level authored feedback and implement deferred cancellation-aware reset cleanup, including handled shadow forms. Add minimal token-based error styling in src/sass/components/forms/_drop-zone.scss.
+- [x] Cover valid/empty/reset/opt-out recovery, application validity, canceled reset, descriptions, independent zones and event contracts. Mutate a new condition, require regression failure, restore source and rerun affected checks. Commit the verified slice.
 
 Delivers R2-R5. Completion checks V1-V2.
 
