@@ -1,5 +1,19 @@
 import { Utils } from '../core/utils';
 
+const FILE_TYPES = '.drop-zone input[type="file"][data-validate-types]';
+
+function fileSpecifier(value: string) {
+  if (value.endsWith('/*')) return /^(image|audio|video)\/\*$/.test(value);
+  return /^\.[^\s/\\]+$/.test(value) ||
+    /^[!#$%&'*+.^_`|~0-9a-z-]+\/[!#$%&'*+.^_`|~0-9a-z-]+$/.test(value);
+}
+
+function fileMatches(file: File, specifier: string) {
+  if (specifier.startsWith('.')) return file.name.toLowerCase().endsWith(specifier);
+  if (specifier.endsWith('/*')) return file.type.toLowerCase().startsWith(specifier.slice(0, -1));
+  return file.type.toLowerCase() === specifier;
+}
+
 export class Forms {
   /**
    * Validates a `.validate` field: marks it `invalid` and `aria-invalid`
@@ -7,6 +21,8 @@ export class Forms {
    * passes. An empty optional field never fails. The field is described by
    * its `[data-error]` supporting text, so the error the CSS shows there is
    * read with it.
+   * Marked drop-zone file inputs also validate accept and synchronize their
+   * native custom validity and zone-level error text, without emitting events.
    * @param textfield
    */
   static validateField(textfield: HTMLInputElement) {
@@ -14,12 +30,19 @@ export class Forms {
       console.error('No text field element found');
       return;
     }
+    if (Forms._typedFile(textfield)) {
+      Forms._validateFileTypes(textfield);
+      return;
+    }
     if (!textfield.classList.contains('validate')) return;
-    const invalid = Forms._fails(textfield);
-    textfield.classList.toggle('invalid', invalid);
-    if (invalid) textfield.setAttribute('aria-invalid', 'true');
-    else textfield.removeAttribute('aria-invalid');
+    Forms._markInvalid(textfield, Forms._fails(textfield));
     Forms._describeByError(textfield);
+  }
+
+  private static _markInvalid(field: HTMLInputElement, invalid: boolean) {
+    field.classList.toggle('invalid', invalid);
+    if (invalid) field.setAttribute('aria-invalid', 'true');
+    else field.removeAttribute('aria-invalid');
   }
 
   /** Whether a field fails its constraints or is longer than `data-length`. */
@@ -89,6 +112,144 @@ export class Forms {
   }
 
   private static _initialized = false;
+  private static _fileTypeErrors = new WeakMap<HTMLInputElement, string>();
+  private static _fileSelections = new WeakMap<HTMLInputElement, { files: File[]; accept: string }>();
+  private static _fileResetForms = new WeakSet<HTMLFormElement>();
+
+  private static _typedFile(input: HTMLInputElement) {
+    return input.matches(FILE_TYPES) || Forms._fileTypeErrors.has(input);
+  }
+
+  private static _rejectedFiles(input: HTMLInputElement) {
+    const accepted = input.accept.split(',').map((value) => value.trim().toLowerCase()).filter(fileSpecifier);
+    if (!accepted.length) return [];
+    return Array.from(input.files ?? []).filter((file) => !accepted.some((specifier) => fileMatches(file, specifier)));
+  }
+
+  private static _validateFileTypes(input: HTMLInputElement) {
+    if (input.matches(':disabled')) return [];
+    Forms._bindFileReset(input);
+    const rejected = Forms._checkFileTypes(input);
+    Forms._showFileError(input, rejected.length ? Forms._fileTypeMessage(input) : input.validationMessage);
+    return rejected;
+  }
+
+  private static _checkFileTypes(input: HTMLInputElement) {
+    Forms._clearFileTypeError(input);
+    if (!input.matches(FILE_TYPES)) {
+      Forms._fileTypeErrors.delete(input);
+      return [];
+    }
+    Forms._fileTypeErrors.set(input, '');
+    const rejected = Forms._rejectedFiles(input);
+    if (rejected.length) Forms._setFileTypeError(input);
+    return rejected;
+  }
+
+  private static _clearFileTypeError(input: HTMLInputElement) {
+    const owned = Forms._fileTypeErrors.get(input);
+    if (owned && owned === input.validationMessage) input.setCustomValidity('');
+  }
+
+  private static _setFileTypeError(input: HTMLInputElement) {
+    if (input.validity.customError) return;
+    const message = Forms._fileTypeMessage(input);
+    input.setCustomValidity(message);
+    Forms._fileTypeErrors.set(input, message);
+  }
+
+  private static _fileTypeMessage(input: HTMLInputElement) {
+    const error = Forms._fileError(input);
+    return error?.getAttribute('data-error')?.trim() || `Choose files matching: ${input.accept}.`;
+  }
+
+  private static _fileError(input: HTMLInputElement) {
+    return Array.from(input.closest('.drop-zone')?.children ?? [])
+      .find((child) => child.hasAttribute('data-error')) as HTMLElement | undefined;
+  }
+
+  private static _showFileError(input: HTMLInputElement, message: string) {
+    Forms._markInvalid(input, !input.validity.valid);
+    const error = Forms._fileError(input);
+    if (!error) return;
+    Forms._addDescription(input, Forms._idOf(error));
+    error.textContent = message;
+    error.hidden = !message;
+  }
+
+  private static _onFileInput = (event: Event) => {
+    const input = Utils.closestInPath(event, '.drop-zone input[type="file"]') as HTMLInputElement;
+    if (!input) return;
+    if (input.matches(':disabled')) return;
+    Forms._updateDropZone(input);
+  };
+
+  private static _updateDropZone(input: HTMLInputElement) {
+    Forms._bindFileReset(input);
+    const zone = input.closest('.drop-zone');
+    const files = Array.from(input.files ?? []);
+    const rejected = Forms._validateDropZone(input);
+    Forms.listDropZoneFiles(zone, input);
+    Forms._reportFileRejection(input, files, rejected);
+  }
+
+  private static _validateDropZone(input: HTMLInputElement) {
+    if (Forms._typedFile(input)) return Forms._validateFileTypes(input);
+    Forms.validateField(input);
+    return [];
+  }
+
+  private static _reportFileRejection(input: HTMLInputElement, files: File[], rejected: File[]) {
+    if (!input.matches(FILE_TYPES)) {
+      Forms._fileSelections.delete(input);
+      return;
+    }
+    if (!Forms._newFileSelection(input, files)) return;
+    if (!rejected.length) return;
+    Utils.emit(input.closest('.drop-zone'), 'reject', { input, files: files.slice(), rejected: rejected.slice(), reason: 'type' });
+  }
+
+  private static _newFileSelection(input: HTMLInputElement, files: File[]) {
+    const previous = Forms._fileSelections.get(input);
+    Forms._fileSelections.set(input, { files, accept: input.accept });
+    return !previous || previous.accept !== input.accept || previous.files.length !== files.length ||
+      !previous.files.every((file, index) => file === files[index]);
+  }
+
+  private static _bindFileReset(input: HTMLInputElement) {
+    if (!(input.getRootNode() as ShadowRoot).host) return;
+    const form = input.form;
+    if (!form || Forms._fileResetForms.has(form)) return;
+    Forms._fileResetForms.add(form);
+    form.addEventListener('reset', Forms.resetFormExtras);
+  }
+
+  private static _resetFileInput(input: HTMLInputElement) {
+    if (input.files?.length) return;
+    Forms._fileSelections.delete(input);
+    Forms._resetFileList(input);
+    Forms._resetFileValidity(input);
+  }
+
+  private static _resetFileList(input: HTMLInputElement) {
+    const zone = input.closest('.drop-zone');
+    if (!zone) return;
+    Forms.listDropZoneFiles(zone, input);
+    zone.classList.remove('dragover');
+  }
+
+  private static _resetFileValidity(input: HTMLInputElement) {
+    if (input.matches(':disabled')) return;
+    if (!Forms._typedFile(input)) return;
+    Forms._clearFileTypeError(input);
+    Forms._fileTypeErrors.delete(input);
+    Forms._showFileError(input, input.validationMessage);
+  }
+
+  private static _resetDropZones(form: HTMLFormElement) {
+    Array.from(form.elements).filter((field): field is HTMLInputElement =>
+      field instanceof HTMLInputElement && field.type === 'file').forEach(Forms._resetFileInput);
+  }
 
   /**
    * Safe to call more than once: the root entry calls it on import, and a page
@@ -98,12 +259,13 @@ export class Forms {
     if (Forms._initialized) return;
     Forms._initialized = true;
     Utils.onDocumentReady(() => {
+      document.addEventListener('input', Forms._onFileInput);
       document.addEventListener('change', (e: Event) => {
-        const target = e.target;
+        const target = Utils.eventTarget(e);
         if (!(target instanceof HTMLInputElement)) return;
-        if (target.type === 'file') {
-          const zone = target.closest('.drop-zone');
-          if (zone) Forms.listDropZoneFiles(zone, target);
+        if (target.matches('.drop-zone input[type="file"]')) {
+          Forms._onFileInput(e);
+          return;
         }
         // The sibling-label loop that used to live here compared
         // `tagName == 'label'` (tagName is uppercase) so it never matched,
@@ -177,6 +339,7 @@ export class Forms {
    * submitted or reset, so it is never sent or autofilled as plain text and
    * a reset field does not stay revealed. A reset form also drops the file
    * lists it would otherwise leave showing: reset fires no change event.
+   * File cleanup waits for native reset and respects later cancellation.
    */
   static resetFormExtras(e: Event) {
     const form = e.target;
@@ -187,8 +350,10 @@ export class Forms {
       input.closest('.field')?.querySelector('.password-toggle')?.setAttribute('aria-pressed', 'false');
     });
     if (e.type === 'reset') {
-      form.querySelectorAll('.drop-zone-files').forEach((list) => list.replaceChildren());
-      form.querySelectorAll('.drop-zone.dragover').forEach((zone) => zone.classList.remove('dragover'));
+      // Native events can run microtasks between listeners, before a later cancellation.
+      setTimeout(() => {
+        if (!e.defaultPrevented) Forms._resetDropZones(form);
+      }, 0);
     }
   }
 
@@ -276,7 +441,7 @@ export class Forms {
 
   /** Lists the chosen files, name and size, in the zone's .drop-zone-files. */
   static listDropZoneFiles(zone: Element, input: HTMLInputElement) {
-    const list = zone.querySelector('.drop-zone-files');
+    const list = Array.from(zone.querySelectorAll('.drop-zone-files')).find((list) => list.closest('.drop-zone') === zone);
     if (!list) return;
     const size = (bytes: number) => {
       const [value, unit] =

@@ -9,6 +9,7 @@ import { route } from "../lib/catalogue";
 const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "behavior", label: "Behavior" },
+  { id: "validation", label: "Type validation" },
   { id: "tokens", label: "Tokens" },
 ]);
 ---
@@ -31,7 +32,7 @@ const S = defineSections([
           <label>
             <span class="material-symbols" aria-hidden="true">upload_file</span>
             Drop files here or browse
-            <small>PDF or PNG, up to 10 MB</small>
+            <small>PDF or PNG files</small>
             <input type="file" multiple accept=".pdf,.png">
           </label>
           <ul class="drop-zone-files" aria-live="polite"></ul>
@@ -41,7 +42,7 @@ const S = defineSections([
   <label>
     <span class="material-symbols" aria-hidden="true">upload_file</span>
     Drop files here or browse
-    <small>PDF or PNG, up to 10 MB</small>
+    <small>PDF or PNG files</small>
     <input type="file" multiple accept=".pdf,.png">
   </label>
   <ul class="drop-zone-files" aria-live="polite"></ul>
@@ -56,12 +57,79 @@ const S = defineSections([
           while files are over it. It fills <code>.drop-zone-files</code> with
           each file's name and size, formatted for the page's locale. It
           listens on the document, so zones added later work too. Resetting
-          the form empties the list.
+          the form empties the list after reset dispatch finishes; a canceled
+          reset preserves it. A newer selection keeps its list and feedback.
         </p>
         <p>
-          Check type and size where you use the files. The browser does not
-          apply <code>accept</code> to dropped files.
+          <code>accept</code> is a picker hint. Opt into the type validation
+          below for matching checks on both browse and drop selections.
+          Check received files on the server; metadata does not verify contents.
         </p>
+  </Section>
+  <Section {...S.validation}>
+    <p>
+      Add <code>data-validate-types</code> to the native input to check every
+      selected file against <code>accept</code>. One unsupported file
+      invalidates the whole selection and blocks normal native form submission.
+      Every selected file stays in the input and optional list. Unmarked zones
+      keep their existing picker-hint behavior.
+    </p>
+    <div class="drop-zone" style="max-width:32rem;">
+      <label>Drop documents here or browse
+        <small>PDF or PNG files</small>
+        <input type="file" multiple data-validate-types accept=".pdf,.png">
+      </label>
+      <p class="supporting-text" data-error="Choose PDF or PNG files." role="status" aria-live="polite" hidden></p>
+      <ul class="drop-zone-files" aria-live="polite"></ul>
+    </div>
+    <Code code={`
+<div class="drop-zone">
+  <label>Drop documents here or browse
+    <small>PDF or PNG files</small>
+    <input type="file" multiple data-validate-types accept=".pdf,.png">
+  </label>
+  <p class="supporting-text" data-error="Choose PDF or PNG files."
+     role="status" aria-live="polite" hidden></p>
+  <ul class="drop-zone-files" aria-live="polite"></ul>
+</div>
+`} />
+    <p>
+      Match extensions such as <code>.pdf</code> or <code>.tar.gz</code>, exact
+      MIME types without parameters, such as <code>application/pdf</code>, or <code>image/*</code>,
+      <code>audio/*</code> and <code>video/*</code>. Comma-separated alternatives
+      are trimmed and case-insensitive. Empty MIME types can match an explicit
+      extension, but do not match MIME-only rules. Unsupported tokens are ignored;
+      missing, empty or wholly unsupported accept values impose no type restriction.
+    </p>
+    <p>
+      Supply the direct <code>[data-error]</code> status area even without a
+      file list. Its data-error value customizes the type message; an empty
+      value uses a message naming accept. The runtime writes real text,
+      appends its id once to the input's <code>aria-describedby</code>, and
+      updates <code>aria-invalid</code> without moving focus. Required fields
+      and application custom errors remain effective. Existing application
+      custom validity takes precedence over the native type message; the status
+      can still explain a type mismatch.
+    </p>
+    <p>
+      Valid replacement, clearing or an uncanceled reset releases only the
+      framework's type error. Remaining native/application errors stay visible.
+      Canceled resets preserve the current view. Disabled controls remain
+      inactive; after enabling or changing files/constraints from script, call
+      <code>Expressive.Forms.validateField(input)</code> to refresh validity and
+      feedback silently. A bubbling composed input or change also refreshes
+      the file list. Both paths work in open shadow roots.
+    </p>
+    <p>
+      A changed invalid selection reports one bubbling, composed, noncancelable
+      <code>expressive:reject</code> from the zone with
+      <code>{"{ input, files, rejected, reason: 'type' }"}</code>.
+      File arrays are snapshots. A native input/change pair reports once;
+      silent validation and reset report no rejection. This is a notification,
+      so canceling it cannot allow invalid files. Size/count limits and uploads
+      are outside this option. Native novalidate/formnovalidate bypasses remain
+      native; always validate received files on the server.
+    </p>
   </Section>
   <Section {...S.tokens}>
         <p>Override these on the <code>.drop-zone</code>.</p>

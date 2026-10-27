@@ -15,6 +15,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Opt-in drop-zone type validation with `data-validate-types`, native form
+  prevention and accessible error feedback. Extensions, exact MIME types and
+  standard media wildcards match whole selections without filtering files.
+  Browse and drop share validation; `expressive:reject` reports invalid choices.
+  Recovery preserves application validity and supports open shadow roots.
+- File reset cleanup now follows native form ownership, including external
+  associated inputs, and runs after reset dispatch/default handling. Canceled
+  resets preserve current file state; newer selections retain their feedback.
 - Server-owned data table paging through silent validated `DataTables.setPage`
   state and cancelable `expressive:page` requests. Server responses retain
   every supplied record without local slicing, filtering or sorting. Local

@@ -416,6 +416,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:refresh` | Pull-to-refresh | `{ waitUntil }` |
 | `expressive:swipetoggle` | Swipe actions | `{ row, open }` |
 | `expressive:transfer` | Transfer list, from the container | `{ rows, from, to }` |
+| `expressive:reject` | Opted-in drop zones, from the wrapper | `{ input, files, rejected, reason: 'type' }`; noncancelable |
 | `expressive:change`, `expressive:sort`, `expressive:resize`, `expressive:filter`, `expressive:page` | Data tables, from the wrapper | `{ selected }`, `{ header, column, direction }`, `{ header, column, width }`, `{ query }`, `{ page, pageSize }`; `sort`, `filter` and `page` are cancelable |
 
 An Autocomplete or Select input hosts a Menu, so it also fires that Menu's `expressive:open`, `expressive:close` and `expressive:select`. A callback that changes the choice again, such as an `onShow` that selects another tab, leaves only the event for the final choice.
@@ -8756,23 +8757,59 @@ Destroys the editor, removes its element and the button state, and shows the tex
 
 ## Drop zone
 
-A large target for choosing or dropping files, with a list of what was chosen.
+A large target for choosing or dropping files, with an optional list and type validation.
 
-A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input is stretched invisibly over the whole label, so the browser takes a click, Enter, Space or a dropped file exactly as it does on a plain file input, and the label text names it. The Forms behavior adds `dragover` to the zone while files are dragged over it and lists each chosen file's name and size, formatted for the page's locale, in `.drop-zone-files`. The root bundle installs it on load, and the modular entry with `Forms.Init()`. It listens on the document, so zones added later work too. Resetting the form empties the list.
+A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input covers the label, so clicking, keyboard input and file dropping reach the native control. Forms marks dragover and lists each selected file's name and localized size. The root bundle installs Forms on load; modular consumers call `Forms.Init()`. Document-level input/change handling also supports dynamically inserted zones and open shadow roots.
 
-The browser does not apply `accept` to dropped files, so check type and size where the files are used. A dropped file replaces the selection, as it does on any file input; add `multiple` to take several at once.
+A dropped file replaces the selection; add multiple to take several files. `accept` alone is a picker hint. Add data-validate-types for the checks below. Unmarked zones retain their existing behavior. Reset clears lists after dispatch/default handling; cancellation preserves the current view, and a newer selection keeps its state.
 
 ```html
 <div class="drop-zone">
   <label>
     <span class="material-symbols" aria-hidden="true">upload_file</span>
     Drop files here or browse
-    <small>PDF or PNG, up to 10 MB</small>
+    <small>PDF or PNG files</small>
     <input type="file" multiple accept=".pdf,.png">
   </label>
   <ul class="drop-zone-files" aria-live="polite"></ul>
 </div>
 ```
+
+### Type validation
+
+Add `data-validate-types` to the native file input inside its zone. Each file must match at least one supported comma-separated accept token. Matching trims tokens and ignores case: extensions such as `.pdf` or `.tar.gz`, exact MIME types without parameters such as `application/pdf`, and the media wildcards `image/*`, `audio/*` and `video/*`. Other whole-subtype wildcards are unsupported. Ignore unsupported/malformed tokens; missing, empty or wholly unsupported accept values impose no type restriction. An empty MIME type can match an explicit extension, but never a MIME-only rule. Do not infer MIME from the filename.
+
+```html
+<div class="drop-zone">
+  <label>Drop documents here or browse
+    <small>PDF or PNG files</small>
+    <input type="file" multiple data-validate-types accept=".pdf,.png">
+  </label>
+  <p class="supporting-text" data-error="Choose PDF or PNG files."
+     role="status" aria-live="polite" hidden></p>
+  <ul class="drop-zone-files" aria-live="polite"></ul>
+</div>
+```
+
+Supply a direct zone-level data-error status area even without a file list. Reserve its contents for runtime messages. The nonempty data-error value localizes the type-rejection message; an empty value uses a message naming accept. The runtime writes real text, creates an id when needed and appends it once to aria-describedby after existing authored descriptions. It updates invalid/aria-invalid without moving focus. Error styling uses the existing error and supporting-text tokens.
+
+One failing file invalidates the whole selection through native custom validity. Keep every file in the native FileList and rendered list; no subset is accepted, removed or uploaded. A pre-existing unowned application custom error is preserved instead of overwritten. The status can still explain the type mismatch separately. With no type mismatch, it reflects remaining native required/application errors or clears when valid. Optional empty choices are valid; required-empty native invalidity stays effective. Ordinary validated forms block submission; existing error summaries and native novalidate/formnovalidate behavior remain unchanged.
+
+Each changed type-rejected selection reports one bubbling, composed, noncancelable `expressive:reject` from its nearest wrapper with `{ input, files, rejected, reason: 'type' }`. The arrays are independent snapshots containing File objects. A native input/change pair reports once for unchanged files/accept; a genuinely new selection can report again. This is a notification, not a request that can permit invalid files. A listener may replace the selection and dispatch its new input without an older handler restoring stale state.
+
+```js
+zone.addEventListener('expressive:reject', ({ detail }) => {
+  console.log(detail.reason, detail.rejected.map(file => file.name));
+});
+// Silent validity/feedback refresh after scripted files or constraint changes:
+Expressive.Forms.validateField(input);
+// To refresh the file list too, dispatch one bubbling composed input or change:
+input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
+```
+
+Valid replacement, clearing, removal of the opt-in followed by validation, and an uncanceled reset release only framework-owned type validity. If the application replaces that message, recovery preserves its new value. Reset uses native form ownership, including controls associated through a form attribute outside the form subtree. Cleanup runs after dispatch/default handling, respects cancellation and leaves newer selections intact. Reset and silent validation emit no rejection event. Disabled controls and fieldsets remain inactive, including reset-time validity writes; call Forms.validateField after scripted enabling to refresh the current selection. Handled shadow-root forms follow the same reset contract.
+
+Size/count limits and uploads are outside this option. File names and MIME labels do not verify contents. Native validation can be bypassed by scripts or explicit form settings; always validate received data on the server.
 
 ### Tokens
 
