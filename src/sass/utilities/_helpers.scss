@@ -71,6 +71,11 @@ $_layout: (
   "self-center": (align-self: center),
   "self-end": (align-self: flex-end),
   "self-stretch": (align-self: stretch),
+  // Child order moves a child on screen only: Tab and reading order still
+  // follow the source. .order-none puts it back in its source position.
+  "order-first": (order: -1),
+  "order-last": (order: 1),
+  "order-none": (order: 0),
   "start-align": (text-align: start),
   "center-align": (text-align: center),
   "end-align": (text-align: end),
@@ -103,10 +108,6 @@ $_layout: (
 }
 
 .contents { display: contents; }
-
-// On a flex or grid child.
-.order-first { order: -1; }
-.order-last { order: 1; }
 
 // Allow flex and grid children to shrink around their content.
 .min-w-0 { min-width: 0; }

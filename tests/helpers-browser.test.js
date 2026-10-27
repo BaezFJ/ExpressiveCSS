@@ -636,6 +636,51 @@ browserTest('window-size prefixes switch layout from their size class up', async
   }
 });
 
+for (const [engine, browserType, utilityTest] of engines) {
+  utilityTest(`prefixed order classes move a child visually while Tab follows the source (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      // Text inputs, because WebKit's Tab skips buttons and links by default.
+      await page.setContent(`<style>${css} input { width: 40px; }</style>
+        <input id="before">
+        <div class="flex">
+          <input id="a"><input id="b" class="order-last expanded:order-none"><input id="c" class="expanded:order-first">
+        </div>
+        <div class="flex"><span id="first" class="order-first"></span><span id="last" class="order-last"></span><span id="both" class="order-first order-last"></span></div>`);
+      const read = () => page.evaluate(() => {
+        const ids = ['a', 'b', 'c'];
+        const order = (id) => getComputedStyle(document.getElementById(id)).order;
+        const left = (id) => document.getElementById(id).getBoundingClientRect().left;
+        return {
+          orders: ids.map(order),
+          visual: [...ids].sort((x, y) => left(x) - left(y)),
+          unprefixed: ['first', 'last', 'both'].map(order),
+        };
+      });
+      const tabOrder = async () => {
+        await page.focus('#before');
+        const ids = [];
+        for (let i = 0; i < 3; i += 1) {
+          await page.keyboard.press('Tab');
+          ids.push(await page.evaluate(() => document.activeElement.id));
+        }
+        return ids;
+      };
+      await page.setViewportSize({ width: 839, height: 600 });
+      assert.deepEqual(await read(), { orders: ['0', '1', '0'], visual: ['a', 'c', 'b'], unprefixed: ['-1', '1', '1'] });
+      assert.deepEqual(await tabOrder(), ['a', 'b', 'c']);
+      await page.setViewportSize({ width: 840, height: 600 });
+      assert.deepEqual(await read(), { orders: ['0', '0', '-1'], visual: ['c', 'a', 'b'], unprefixed: ['-1', '1', '1'] });
+      assert.deepEqual(await tabOrder(), ['a', 'b', 'c']);
+      await page.setViewportSize({ width: 1600, height: 600 });
+      assert.deepEqual((await read()).unprefixed, ['-1', '1', '1']);
+    } finally {
+      await browser.close();
+    }
+  });
+}
+
 browserTest('links in running text are underlined and component links are not', async () => {
   const browser = await leaseBrowser(chromium);
   try {
