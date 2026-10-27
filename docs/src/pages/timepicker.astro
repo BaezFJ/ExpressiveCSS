@@ -57,6 +57,14 @@ const S = defineSections([
           takes the current hour, minute or second and leaves the selected AM/PM period as it is.
         </p>
         <p>Click the host input or press Enter in it to reload its current value into the clock. Changing the active clock field, or editing its value, cancels an older delayed clock update.</p>
+        <p>
+          The clock hand's canvas fades with
+          <code>--md-sys-motion-duration-short3</code>, which defaults to 150ms.
+          Override that token to change the CSS fade. The JavaScript
+          <code>duration</code> option and its view and clock-reset timers stay
+          separate; a CSS override does not reschedule them. Reduced motion
+          disables the fade, including when the token has a nonzero override.
+        </p>
   </Section>
 
   <Section {...S.initialization}>

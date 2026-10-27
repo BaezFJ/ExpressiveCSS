@@ -13,6 +13,7 @@ describe("Expanding card CSS", () => {
     assert.match(css, /--md-comp-expanding-card-motion-duration:\s*var\(--md-sys-motion-spring-slow-spatial-duration\)/);
     assert.match(css, /--md-comp-expanding-card-motion-easing:\s*var\(--md-sys-motion-spring-slow-spatial\)/);
     assert.match(css, /--md-comp-expanding-card-content-easing:\s*var\(--md-sys-motion-spring-default-spatial\)/);
+    assert.match(css, /--md-comp-expanding-card-content-delay:\s*var\(--md-sys-motion-duration-short4\)/);
     assert.match(css, /--md-comp-expanding-card-fade-easing:\s*var\(--md-sys-motion-spring-fast-effects\)/);
   });
 
@@ -34,7 +35,7 @@ describe("Expanding card CSS", () => {
     );
     assert.match(
       css,
-      /dialog\.expanding-card-dialog\.expanded\s*>\s*\.expanding-card-content\s*\{[^}]*opacity:\s*1[^}]*transform:\s*translateY\(0\)/s,
+      /dialog\.expanding-card-dialog\.expanded\s*>\s*\.expanding-card-content\s*\{[^}]*opacity:\s*1[^}]*transform:\s*translateY\(0\)[^}]*transition-delay:\s*var\(--md-comp-expanding-card-content-delay\)/s,
     );
   });
 

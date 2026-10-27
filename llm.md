@@ -2789,6 +2789,8 @@ An expanding card performs a shared-container transition from a compact feed ite
 
 The container morph and the hero run on the slow spatial spring (`--md-comp-expanding-card-motion-duration` and `-motion-easing`), the close button and detail content on the default spatial spring (`-content-duration`, `-content-easing`), and their fade on the fast effects spring (`-fade-duration`, `-fade-easing`), so `motion="expressive"` reaches all three. Override a duration together with its easing. `--md-comp-expanding-card-motion-duration` controls the container transition. Close cleanup follows the actual clip transition, including cancellation, and runs immediately with zero duration or reduced motion. Reopening or destroying the instance invalidates pending cleanup. `onClose` runs when closing starts.
 
+Detail content starts after `--md-comp-expanding-card-content-delay`, declared on `article.expanding-card` and backed by `--md-sys-motion-duration-short4`, which defaults to 200ms. Override the system token on the page or the component property on the article. `0ms` removes the delay. Reduced motion disables the transitions even with a nonzero delay override.
+
 ```html
 <article class="outlined expanding-card">
   <figure>
@@ -7997,6 +7999,8 @@ strings and accepts either case for AM/PM. No modal or dial-keyboard API is adde
 Clicking the host input or pressing Enter reloads its current value into the
 clock. Changing the active clock field or editing its value cancels an older
 delayed clock update.
+
+The clock hand's canvas fades with `--md-sys-motion-duration-short3`, which defaults to 150ms. Override that token to change the CSS fade. The JavaScript `duration` option and its view and clock-reset timers stay separate; a CSS override does not reschedule them. Reduced motion disables the fade even with a nonzero token override.
 
 ### Initialization
 

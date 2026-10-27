@@ -689,6 +689,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Navbar form inputs and card media captions use their complete body-large
   and title-medium type roles, including letter-spacing. Existing captions
   now use title-medium tracking, which can change their text width or wrapping.
+- The Timepicker canvas fade reads `--md-sys-motion-duration-short3`, changing
+  its default from 175ms to 150ms. Expanded card content reads the new
+  `--md-comp-expanding-card-content-delay` property, backed by
+  `--md-sys-motion-duration-short4`, changing its default delay from 180ms to
+  200ms. Both follow token overrides and keep their reduced-motion resets.
+  Timepicker's JavaScript timers and `duration` option are unchanged.
 - The map popup's shadow reads `--md-sys-elevation-level2`, so a theme
   that changes that token changes the popup too. The shadow was written
   out in full, so the popup kept the default level 2 shadow while menus
