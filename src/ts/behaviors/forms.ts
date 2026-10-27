@@ -254,7 +254,7 @@ export class Forms {
   }
 
   private static _newFileSelection(input: HTMLInputElement, files: File[]) {
-    const constraints = JSON.stringify([input.hasAttribute('data-validate-types'), input.accept, fileLimit(input, 'data-max-size')]);
+    const constraints = JSON.stringify([input.hasAttribute('data-validate-types'), input.accept, fileLimit(input, 'data-max-size'), fileLimit(input, 'data-max-files')]);
     const previous = Forms._fileSelections.get(input);
     Forms._fileSelections.set(input, { files, constraints });
     return !previous || previous.constraints !== constraints || previous.files.length !== files.length ||

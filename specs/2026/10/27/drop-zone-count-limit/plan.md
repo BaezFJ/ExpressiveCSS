@@ -18,9 +18,9 @@ Completion check V1. No separate component, listener or error map.
 
 Prerequisite: group 1 passes.
 
-- [ ] Add failing changed-count/native-pair/event-array-mutation/reentry checks; include the effective count limit in the existing selection snapshot and preserve independent event arrays with all chosen files rejected for count.
-- [ ] Extend count opt-out/required/disabled/reset/cancellation/external-form/newer-selection/isolation cases. Read Sass architecture before extending shared error selectors; retain existing tokens and focus.
-- [ ] Mutate count > limit to >=, require the exact-limit regression to fail, restore/rebuild/rerun focused checks and commit the verified slice.
+- [x] Add failing changed-count/native-pair/event-array-mutation/reentry checks; include the effective count limit in the existing selection snapshot and preserve independent event arrays with all chosen files rejected for count.
+- [x] Extend count opt-out/required/disabled/reset/cancellation/external-form/newer-selection/isolation cases. Read Sass architecture before extending shared error selectors; retain existing tokens and focus.
+- [x] Mutate count > limit to >=, require the exact-limit regression to fail, restore/rebuild/rerun focused checks and commit the verified slice.
 
 Delivers R2-R5. Completion checks V1-V2.
 
