@@ -129,6 +129,20 @@ test('TreeSelect ignores search and teardown leaves no extra Menu instance', () 
   assert.equal(document.querySelector('select').tabIndex, 0);
 });
 
+test('option image classes cannot become optgroup headings', () => {
+  const instance = fixture();
+  try {
+    instance.el.options[0].dataset.icon = '/photo.png';
+    instance.el.options[0].className = 'optgroup';
+    instance.refresh();
+    search(instance, 'paris');
+    assert.equal(instance.menuEl.querySelectorAll('li[role="option"]:not([hidden])').length, 1);
+    assert.equal(instance.menuEl.querySelector('img').className, 'optgroup');
+  } finally {
+    instance.destroy();
+  }
+});
+
 test('no matches and disabled matches never change selection', () => {
   const instance = fixture();
   try {

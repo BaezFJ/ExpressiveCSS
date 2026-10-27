@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 import { leaseBrowser, engines } from './browser.js';
 
@@ -60,7 +61,7 @@ each('keeps text editing separate from row navigation and restores focus', async
   await page.locator('.field > input').focus();
   await page.keyboard.press('Enter');
   await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
-  assert.equal(await page.getByRole('searchbox').evaluate(el => el === document.activeElement), true);
+  await expect(page.getByRole('searchbox')).toBeFocused();
   await page.keyboard.type('ro me');
   assert.equal(await page.getByRole('searchbox').inputValue(), 'ro me');
   await page.keyboard.press('Home');
@@ -70,21 +71,21 @@ each('keeps text editing separate from row navigation and restores focus', async
   assert.equal(await page.evaluate(() => window.submitted), undefined);
   await page.getByRole('searchbox').fill('o');
   await page.keyboard.press('ArrowDown');
-  assert.equal(await page.getByRole('option', { name: 'Rome' }).evaluate(el => el === document.activeElement), true);
+  await expect(page.getByRole('option', { name: 'Rome' })).toBeFocused();
   await page.keyboard.press('ArrowDown');
-  assert.equal(await page.getByRole('option', { name: 'Tokyo' }).evaluate(el => el === document.activeElement), true);
+  await expect(page.getByRole('option', { name: 'Tokyo' })).toBeFocused();
   await page.keyboard.press('Home');
   await page.keyboard.press('ArrowUp');
-  assert.equal(await page.getByRole('searchbox').evaluate(el => el === document.activeElement), true);
+  await expect(page.getByRole('searchbox')).toBeFocused();
   await page.keyboard.press('ArrowUp');
   await page.keyboard.press('Space');
   assert.equal(await page.evaluate(() => instance.el.value), 'tokyo');
-  assert.equal(await page.locator('.field > input').evaluate(el => el === document.activeElement), true);
+  await expect(page.locator('.field > input')).toBeFocused();
   await page.keyboard.press('Enter');
   await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
   assert.equal(await page.getByRole('searchbox').inputValue(), '');
   await page.keyboard.press('Escape');
-  assert.equal(await page.locator('.field > input').evaluate(el => el === document.activeElement), true);
+  await expect(page.locator('.field > input')).toBeFocused();
 });
 
 each('tabs through search and a result and exits after the trigger', async page => {
@@ -92,18 +93,18 @@ each('tabs through search and a result and exits after the trigger', async page 
   await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
   await page.getByRole('searchbox').fill('rome');
   await page.keyboard.press('Tab');
-  assert.equal(await page.getByRole('option', { name: 'Rome' }).evaluate(el => el === document.activeElement), true);
+  await expect(page.getByRole('option', { name: 'Rome' })).toBeFocused();
   await page.keyboard.press('Shift+Tab');
-  assert.equal(await page.getByRole('searchbox').evaluate(el => el === document.activeElement), true);
+  await expect(page.getByRole('searchbox')).toBeFocused();
   await page.keyboard.press('Tab');
   await page.keyboard.press('Tab');
-  assert.equal(await page.locator('#after').evaluate(el => el === document.activeElement), true);
+  await expect(page.locator('#after')).toBeFocused();
   assert.equal(await page.evaluate(() => instance.menu.isOpen), false);
   await page.locator('.field > input').click();
   await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
   await page.getByRole('searchbox').fill('missing');
   await page.keyboard.press('Tab');
-  assert.equal(await page.locator('#after').evaluate(el => el === document.activeElement), true);
+  await expect(page.locator('#after')).toBeFocused();
 });
 
 each('refreshes a live query, preserves the caret, and resets native state', async page => {
@@ -116,11 +117,11 @@ each('refreshes a live query, preserves the caret, and resets native state', asy
     instance.refresh();
   });
   assert.equal(await page.getByRole('searchbox').evaluate(el => el.selectionStart), 0);
-  assert.equal(await page.getByRole('searchbox').evaluate(el => el === document.activeElement), true);
+  await expect(page.getByRole('searchbox')).toBeFocused();
   assert.deepEqual(await page.getByRole('option').allTextContents(), ['Oslo', 'Lyon', 'Tokyo']);
   await page.keyboard.press('ArrowDown');
   await page.evaluate(() => { instance.el.options[1].disabled = true; instance.refresh(); });
-  assert.equal(await page.getByRole('searchbox').evaluate(el => el === document.activeElement), true);
+  await expect(page.getByRole('searchbox')).toBeFocused();
   await page.evaluate(() => {
     instance.el.form.addEventListener('reset', event => event.preventDefault(), { once: true });
     instance.el.form.reset();
@@ -155,7 +156,7 @@ each('works in a native modal dialog and an open shadow root', async page => {
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
     assert.equal(await page.evaluate(() => instance.el.value), 'tokyo');
-    assert.equal(await page.getByRole('combobox').evaluate(el => el === el.getRootNode().activeElement), true);
+    await expect(page.getByRole('combobox')).toBeFocused();
     assert.equal(await page.getByRole('combobox').getAttribute('aria-controls'), await page.evaluate(() => instance.menuEl.id));
     await page.evaluate(() => document.querySelector('dialog')?.close());
   }
@@ -199,16 +200,16 @@ each('respects autoFocus false, callbacks, composition, and outside dismissal', 
     instance.menu.open();
   });
   await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
-  assert.equal(await page.locator('#before').evaluate(el => el === document.activeElement), true);
+  await expect(page.locator('#before')).toBeFocused();
   await page.getByRole('combobox').focus();
   await page.keyboard.press('Tab');
-  assert.equal(await page.getByRole('searchbox').evaluate(el => el === document.activeElement), true);
+  await expect(page.getByRole('searchbox')).toBeFocused();
   await page.getByRole('searchbox').fill('rome');
   await page.getByRole('searchbox').dispatchEvent('keydown', { key: 'Enter', isComposing: true });
   assert.equal(await page.evaluate(() => instance.el.value), 'paris');
   await page.locator('#before').click();
   await page.waitForFunction(() => !instance.menu.isOpen);
-  assert.equal(await page.locator('#before').evaluate(el => el === document.activeElement), true);
+  await expect(page.locator('#before')).toBeFocused();
   assert.deepEqual(await page.evaluate(() => calls), ['open', 'close']);
   assert.equal(await page.evaluate(() => instance.menuEl.querySelector('input').value), '');
 });

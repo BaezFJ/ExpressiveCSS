@@ -432,7 +432,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   };
 
   private _filterGroups() {
-    for (const group of this._listbox.querySelectorAll<HTMLElement>('.optgroup')) {
+    for (const group of this._listbox.querySelectorAll<HTMLElement>(':scope > li.optgroup')) {
       const ids = new Set(group.getAttribute('aria-owns').split(' '));
       group.hidden = !this._values.some(({ optionEl }) => ids.has(optionEl.id) && !optionEl.hidden);
     }
