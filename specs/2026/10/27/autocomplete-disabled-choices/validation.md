@@ -4,7 +4,7 @@
 - Roadmap phase: Phase 65, autocomplete disabled choices
 - Branch: `feature/2026-10-27-autocomplete-disabled-choices`
 - Base: `origin/master` at `c8cf5a94306a83df874c49db9540c17abd1b1078`
-- Status: all checks pending; the feature is not built
+- Status: V1 through V8 passed locally on 2026-10-27; PR merge conditions pending
 
 These checks validate [requirements.md](requirements.md) and [plan.md](plan.md) against the [mission's success criteria](../../../../mission.md#success-criteria), the [testing constraints](../../../../tech-stack.md#framework-testing) and the [Phase 65 completion check](../../../../roadmap.md#phase-65-autocomplete-disabled-choices). The user chose the merge checks on 2026-10-27.
 
@@ -12,21 +12,21 @@ These checks validate [requirements.md](requirements.md) and [plan.md](plan.md) 
 
 Use the Node version in `.nvmrc` and run `npm ci`, plus `npm ci --prefix mcp/expressivecss` in a worktree. Tests read the built bundles, so run `npm run build` before any direct `node --test` command. Run one suite at a time, because parallel browser runs flake. A missing engine blocks a required check; it does not count as a pass.
 
-`tests/regressions.test.js` and `tests/selective-builds.test.js` exist at the base. `tests/autocomplete-disabled-browser.test.js` is new. The commands come from `CONTRIBUTING.md` and earlier phases' validation and have not been run for this phase.
+`tests/regressions.test.js` and `tests/selective-builds.test.js` exist at the base. `tests/autocomplete-disabled-browser.test.js` is new. The commands below ran on 2026-10-27.
 
 ## Requirement coverage
 
 | Requirement | Plan group | Checks | Result |
 | --- | --- | --- | --- |
-| R1, `disabled` field | 1, 2 | V2, V7 | Pending |
-| R2, disabled rows | 1 | V2, V5 | Pending |
-| R3, selection paths refuse | 1 | V1, V5 | Pending |
-| R4, keyboard skip | 1 | V3, V5 | Pending |
-| R5, result count | 1 | V3 | Pending |
-| R6, selection set by the app | 1 | V4 | Pending |
-| R7, create row | 1 | V3 | Pending |
-| R8, shared code and styles | 1, 3 | V5, V6, V8 | Pending |
-| R9, guidance and evidence | 2, 3 | V7, V8 | Pending |
+| R1, `disabled` field | 1, 2 | V2, V7 | Passed locally |
+| R2, disabled rows | 1 | V2, V5 | Passed locally |
+| R3, selection paths refuse | 1 | V1, V5 | Passed locally |
+| R4, keyboard skip | 1 | V3, V5 | Passed locally |
+| R5, result count | 1 | V3 | Passed locally |
+| R6, selection set by the app | 1 | V4 | Passed locally |
+| R7, create row | 1 | V3 | Passed locally |
+| R8, shared code and styles | 1, 3 | V5, V6, V8 | Passed locally |
+| R9, guidance and evidence | 2, 3 | V7, V8 | Passed locally |
 
 ## Automated checks
 
@@ -93,6 +93,14 @@ Setup: groups 1 and 2 complete.
 Action: record the measured gzip sizes in `tests/selective-builds.test.js`, then run `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`, one at a time.
 
 Expected: all pass, and the budget lines name this change with its measured JS and CSS sizes and deltas.
+
+## Results on 2026-10-27
+
+- V1 to V4: the 7 new cases in `tests/regressions.test.js` pass. Before the change, the 3 V1 and V2 cases and the 2 count cases in V3 failed. The create-row case and the V4 case already passed, because the base behaves as R6 and R7 state. They stay as guards.
+- V5: 9 of 9 pass in Chromium, Firefox and WebKit, with nothing skipped. Before the pointer fix, a click on a disabled row moved focus to the list and the browser fired its own `change`. In a multi-select, a click on any enabled row also makes the browser fire a native `change` while the field blurs for a moment. The base does this too, so the test counts only the component's own `change` events. The test checks separately, with `toBeFocused`, that focus stays in the field.
+- V6: 389 of 389 pass across the related Node and browser suites.
+- V7: `npm run check:generated` passes. Regeneration also moved Select's capability review to `needs-review`, because that review pins an `inventorySha256` of all of `src/`, which any source change alters. Select's own pinned sources are unchanged. The pin is left as generated, pending a maintainer decision.
+- V8: measured against a build of the base, JS gzip is 106,580 bytes (+54) and CSS gzip is 90,780 bytes (+26), both recorded as reviewed budget lines. `npm run verify` ran 3,345 tests, and 3,344 passed. The failure was the Chromium case "searchable select keeps text editing separate from row navigation and restores focus" in `tests/select-search-browser.test.js`, a Select test this branch does not touch. It passed 9 of 9 rerun alone in Chromium. The steps the failure skipped (`check:generated`, `docs:build:astro`, `docs:verify`) then passed. `npm test --prefix mcp/expressivecss` and `npm run verify:packages` passed.
 
 ## Manual checks
 
