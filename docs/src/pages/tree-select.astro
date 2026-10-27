@@ -69,8 +69,9 @@ const S = defineSections([
           destroyed. In single mode, if nothing is <code>selected</code>, the browser picks the first option,
           often a branch; the tree select then chooses the first enabled leaf, as a form
           reset would. Multiple mode starts empty unless leaves are selected; it clears
-          branch selections without choosing any descendants. Put <code>disabled</code> on branch options and start with a
-          <code>value=""</code> placeholder anyway, so the page works without JavaScript.
+          branch selections without choosing any descendants. Put <code>disabled</code> on branch
+          options so the page works without JavaScript. In single mode, also start
+          with a <code>value=""</code> placeholder. Multiple selects need no selected placeholder.
         </p>
         <p>
           A form reset, a <code>required</code> attribute and a disabled select work as on a

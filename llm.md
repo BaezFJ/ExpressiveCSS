@@ -9444,7 +9444,7 @@ A native `<select data-tree>` holds flat `<option>`s. A child names its parent o
 
 The popup is a `<ul role="tree">` inside the Menu surface, named as the field is: its `aria-labelledby`, then its `aria-label`, then its labels. Branch rows have `aria-expanded` and hold their children in a `ul[role="group"]`; leaf rows have `aria-selected`. Branches start collapsed. In default mode, opening reveals and focuses the first chosen enabled leaf, or the first enabled row; search mode focuses its separate search field.
 
-Only a leaf can be chosen. While the component runs, it sets `disabled` on every branch option, so the form never submits a branch; `destroy()` and `refresh()` restore that attribute. In single mode, if the browser picked a branch only because nothing was `selected`, the first enabled leaf is chosen instead, as a form reset would pick. In single mode, a branch the markup or a script selects shows in the field and submits nothing. Multiple mode clears selected branches before trigger synchronization and never selects replacement leaves; authored leaf choices and defaultSelected remain native-owned. Put `disabled` on branch options in the markup and start with a `value=""` placeholder, so the page also works without JavaScript.
+Only a leaf can be chosen. While the component runs, it sets `disabled` on every branch option, so the form never submits a branch; `destroy()` and `refresh()` restore that attribute. In single mode, if the browser picked a branch only because nothing was `selected`, the first enabled leaf is chosen instead, as a form reset would pick. In single mode, a branch the markup or a script selects shows in the field and submits nothing. Multiple mode clears selected branches before trigger synchronization and never selects replacement leaves; authored leaf choices and defaultSelected remain native-owned. Put `disabled` on branch options in markup so the native page cannot submit a branch. In single mode, also start with a `value=""` placeholder. Multiple selects need no selected placeholder.
 
 | Key | Action |
 | --- | --- |
@@ -9551,7 +9551,7 @@ Rebuilds the tree from the native options after a page adds, removes or changes 
 
 #### .getSelectedValues()
 
-The chosen value in an array, as in FormSelect.
+The selected native leaf values in option order, as in FormSelect.
 
 #### .destroy()
 

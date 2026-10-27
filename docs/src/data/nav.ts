@@ -812,7 +812,7 @@ export const NAV: DocsGroup[] = [
         label: "Tree select",
         route: "/tree-select.html",
         description:
-          "Choose one leaf from options nested as a tree, expanded with the keyboard or pointer.",
+          "Choose one or more leaves from a tree using the keyboard or pointer.",
       },
       {
         id: "cascader",
