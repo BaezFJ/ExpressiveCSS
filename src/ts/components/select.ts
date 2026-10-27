@@ -13,11 +13,16 @@ export interface FormSelectOptions extends BaseOptions {
    * @default {}
    */
   menuOptions: Partial<MenuOptions>;
+  /** Show a separate popup search field for a plain single select. */
+  searchable: boolean;
+  i18n: Partial<{ searchLabel: string; noResults: string }>;
 }
 
 const _defaults: FormSelectOptions = {
   classes: '',
-  menuOptions: {}
+  menuOptions: {},
+  searchable: false,
+  i18n: { searchLabel: 'Search options', noResults: 'No results' }
 };
 
 type ValueStruct = {
@@ -51,6 +56,10 @@ export class FormSelect extends Component<FormSelectOptions> {
   private _resetTimer: ReturnType<typeof setTimeout>;
   private _validationMessage: HTMLElement | null = null;
   nativeTabIndex: number;
+  private _searchable: boolean;
+  private _searchInput: HTMLInputElement;
+  private _listbox: HTMLElement;
+  private _searchStatus: HTMLElement;
 
   constructor(el: HTMLSelectElement, options: FormSelectOptions) {
     super(el, options);
@@ -63,6 +72,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     }
 
     this.isMultiple = this.el.multiple;
+    this._searchable = this._canSearch();
     this.nativeTabIndex = this.el.tabIndex;
     this.el.tabIndex = -1;
     this._values = [];
@@ -76,6 +86,10 @@ export class FormSelect extends Component<FormSelectOptions> {
   }
 
   static key = 'Expressive_FormSelect';
+
+  private _canSearch() {
+    return this.constructor === FormSelect && !this.isMultiple && this.options.searchable;
+  }
 
   destroy() {
     this._events.abort();
@@ -223,6 +237,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   };
 
   _selectOptionElement(virtualOption: HTMLElement) {
+    if (virtualOption.hidden) return;
     if (this.el.matches(':disabled')) return;
     if (
       !virtualOption.classList.contains('disabled') &&
@@ -267,7 +282,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     this._hideNativeSelect();
     if (this.el.matches(':disabled')) this.wrapper.classList.add('disabled');
 
-    this.menuEl = document.createElement('menu');
+    this.menuEl = document.createElement(this._searchable ? 'div' : 'menu');
     this.menuEl.id = `select-options-${Utils.guid()}`;
     this.menuEl.setAttribute('role', 'listbox');
     this.menuEl.ariaMultiSelectable = this.isMultiple.toString();
@@ -276,6 +291,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.wrapper.append(this.menuEl);
 
     this._buildInput();
+    if (this._searchable) this._buildSearch();
     this._buildCaret();
     this._initMenu();
     this._setSelectedStates();
@@ -359,6 +375,54 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.wrapper.prepend(caret);
   }
 
+  private _buildSearch() {
+    this.menuEl.classList.add('select-search-popup');
+    this.menuEl.setAttribute('role', 'dialog');
+    this.menuEl.removeAttribute('aria-multiselectable');
+    this.input.setAttribute('aria-haspopup', 'dialog');
+    this._listbox = document.createElement('menu');
+    this._listbox.id = this.menuEl.id + '-list';
+    this._listbox.setAttribute('role', 'listbox');
+    this._listbox.append(...this.menuEl.childNodes);
+    this._searchInput = document.createElement('input');
+    this._searchInput.type = 'search';
+    this._searchInput.setAttribute('aria-label', this.options.i18n.searchLabel);
+    this._searchStatus = document.createElement('div');
+    this._searchStatus.setAttribute('role', 'status');
+    this.menuEl.append(this._searchInput, this._searchStatus, this._listbox);
+    this._searchInput.addEventListener('input', this._filterOptions, { signal: this._events.signal });
+    this._nameSearch();
+    this._filterOptions();
+  }
+
+  private _nameSearch() {
+    const labels = Array.from(this._originalLabels.keys(), (label, index) => {
+      if (!label.id) label.id = this.input.id + '-label-' + index;
+      return label.id;
+    }).join(' ');
+    const attribute = this.input.hasAttribute('aria-labelledby') ? 'aria-labelledby' : 'aria-label';
+    const name = this.input.getAttribute(attribute);
+    [this.menuEl, this._listbox].forEach(el => el.setAttribute(name ? attribute : 'aria-labelledby', name || labels));
+  }
+
+  private _filterOptions = () => {
+    const query = this._searchInput.value.trim().toLowerCase();
+    this._values.forEach(({ el, optionEl }) => {
+      optionEl.hidden = !el.textContent.trim().toLowerCase().includes(query);
+      optionEl.tabIndex = optionEl.hidden || el.matches(':disabled') ? -1 : 0;
+    });
+    this._filterGroups();
+    this._searchStatus.textContent = this._values.some(({ optionEl }) => !optionEl.hidden) ? '' : this.options.i18n.noResults;
+    this.input.removeAttribute('aria-activedescendant');
+  };
+
+  private _filterGroups() {
+    for (const group of this._listbox.querySelectorAll<HTMLElement>('.optgroup')) {
+      const ids = new Set(group.getAttribute('aria-owns').split(' '));
+      group.hidden = !this._values.some(({ optionEl }) => ids.has(optionEl.id) && !optionEl.hidden);
+    }
+  }
+
   private _initMenu() {
     if (this.el.matches(':disabled')) return;
     const menuOptions = { ...this.options.menuOptions };
@@ -403,6 +467,10 @@ export class FormSelect extends Component<FormSelectOptions> {
     );
   }
 
+  private get _optionList() {
+    return this._listbox ?? this.menuEl;
+  }
+
   protected _buildOptions() {
     this.selectOptions = this._nativeOptions();
     this._values = [];
@@ -428,7 +496,7 @@ export class FormSelect extends Component<FormSelectOptions> {
         groupLabel.setAttribute('role', 'presentation');
         groupLabel.textContent = realOption.getAttribute('label') ?? '';
         groupParent.replaceChildren(groupLabel);
-        this.menuEl.append(groupParent);
+        this._optionList.append(groupParent);
 
         const groupChildren = [];
         const selectOptions = <HTMLOptionElement[]>(
@@ -445,7 +513,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   }
 
   private _rebuildOptions() {
-    this.menuEl.replaceChildren();
+    this._optionList.replaceChildren();
     this._buildOptions();
     this._setupOptionHandlers();
     this.menu?._makeMenuFocusable();
@@ -528,7 +596,7 @@ export class FormSelect extends Component<FormSelectOptions> {
       img.ariaHidden = 'true';
       li.prepend(img);
     }
-    this.menuEl.append(li);
+    this._optionList.append(li);
     return li;
   }
 
