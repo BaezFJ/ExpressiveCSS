@@ -310,7 +310,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed Autocomplete disabled entries: refused by every selection path, skipped by the arrows, left out of the result count, with presses on them cancelled: 106,580 gzip bytes (+54 over the Phase 64 base).
   // Reviewed Autocomplete option groups: entries gathered under labelled role="group" lists where each group first appears, rows found inside groups, and presses on headings cancelled: 106,724 gzip bytes (+144 over the Phase 65 base).
   // Reviewed table filtering with batched visibility reads, authored counts and visible-record selection: 107,109 gzip bytes (+385 over the Phase 66 base).
-  assert.ok(sizes(js).gzip <= 107109, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Escape dismissal from an opening menu's trigger, preserving IME keys: 107,136 gzip bytes (+27).
+  assert.ok(sizes(js).gzip <= 107136, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

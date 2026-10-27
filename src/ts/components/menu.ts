@@ -425,12 +425,14 @@ export class Menu extends Component<MenuOptions> {
     // A context region keeps its keys for its own content; the browser turns
     // the menu key and Shift+F10 into a contextmenu event.
     if (this.options.contextMenu) return;
+    // Opening focus is delayed, so Escape must work while the trigger still owns it.
+    if (e.key === 'Escape' && this.isOpen && Utils.plainKey(e) && !Utils.isComposing(e)) {
+      e.preventDefault();
+      this.close();
+      return;
+    }
     // M3: Space, Enter, Arrow Down, and Arrow Up open a closed menu.
-    const opensMenu =
-      e.key === SPACE ||
-      e.key === 'Enter' ||
-      e.key === 'ArrowDown' ||
-      e.key === 'ArrowUp';
+    const opensMenu = [SPACE, 'Enter', 'ArrowDown', 'ArrowUp'].includes(e.key);
     if (!opensMenu) return;
     if (!this.isOpen) {
       e.preventDefault();

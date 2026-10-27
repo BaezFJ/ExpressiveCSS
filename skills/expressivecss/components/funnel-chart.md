@@ -9,7 +9,7 @@ Component ID: `funnel-chart`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `cf1db12b53d23a2680b427d86bc6794a74d8f8e8beb5db80ecee944ccb105022`
+Contract SHA-256: `28b00fd47973775b7498708160f591c31fa7fde4f17042afce10b9599199bb65`
 
 #### Selection and adaptation
 
