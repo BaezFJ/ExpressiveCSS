@@ -28,6 +28,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   parent's `align-items`. `self-center expanded:self-auto` centers a child
   until Expanded and then follows the parent. The unprefixed classes are
   unchanged.
+- Responsive visual order. `.order-first`, `.order-last` and the new
+  `.order-none` (`order: 0`) take the `medium:`, `expanded:`, `large:` and
+  `extra-large:` prefixes. `order-last expanded:order-none` moves a child to
+  the end until Expanded and then back to its source position. The classes
+  change visual order only; Tab and reading order still follow the source.
 - Show more. A `.show-more` holds text with a `line-clamp-1`, `-2` or
   `-3` class and a `<button>`; the button shows the full text, reads
   "Show less" while it is open (`i18n.showLess` or `data-show-less`) and
