@@ -344,6 +344,15 @@ document.addEventListener("DOMContentLoaded", () => {
         { id: "vienna", text: "Vienna", disabled: true },
       ],
     }],
+    ["autocomplete-groups", {
+      isMultiSelect: false,
+      data: [
+        { id: "lisbon", text: "Lisbon", group: "Portugal" },
+        { id: "porto", text: "Porto", group: "Portugal" },
+        { id: "bergen", text: "Bergen", group: "Norway" },
+        { id: "oslo", text: "Oslo", group: "Norway" },
+      ],
+    }],
   ].forEach(([id, options]) => {
     const el = document.getElementById(id);
     if (el) Expressive.Autocomplete.init(el, { minLength: 0, isMultiSelect: true, ...options });

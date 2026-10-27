@@ -1945,6 +1945,158 @@ describe('Autocomplete disabled entries', () => {
   });
 });
 
+describe('Autocomplete option groups', () => {
+  beforeEach(() => resetBody());
+
+  const data = [
+    { id: 'apple', text: 'Apple', group: 'Fruit' },
+    { id: 'pear', text: 'Pear', group: 'Fruit' },
+    { id: 'carrot', text: 'Carrot', group: 'Vegetables' },
+    { id: 'leek', text: 'Leek', group: 'Vegetables', disabled: true }
+  ];
+  /** An open autocomplete whose every search returns `results`, logging every selection report. */
+  const setup = async (options = {}, results = data) => {
+    document.body.innerHTML = `<div class="field"><input class="autocomplete" type="text" id="ac"></div>`;
+    const el = document.getElementById('ac');
+    const log = [];
+    const instance = Expressive.Autocomplete.init(el, {
+      data: results,
+      menuOptions: { inDuration: 0, outDuration: 0 },
+      onSearch: (text, autocomplete) => autocomplete.setMenuItems(results),
+      onAutocomplete: () => log.push('callback'),
+      ...options
+    });
+    el.addEventListener('change', () => log.push('change'));
+    el.addEventListener('expressive:autocomplete', () => log.push('event'));
+    const key = (name) => el.dispatchEvent(new window.KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true }));
+    const row = (id) => instance.container.querySelector(`li[data-id="${id}"]`);
+    const ids = () => instance.selectedValues.map((entry) => entry.id);
+    el.focus();
+    el.value = 'x';
+    fire(el, 'input');
+    await sleep(10);
+    return { el, instance, log, key, row, ids };
+  };
+  /** Each top-level row as an option id, a group's heading and option ids, or a class name. */
+  const shape = (container) => [...container.children].map((li) => {
+    const group = li.querySelector(':scope > ul[role="group"]');
+    if (!group) return li.dataset.id ?? li.className;
+    const heading = document.getElementById(group.getAttribute('aria-labelledby'));
+    return [heading.textContent, ...[...group.querySelectorAll(':scope > li[role="option"]')].map((option) => option.dataset.id)];
+  });
+
+  test('the arrows cross a group heading and the count names only choices', async () => {
+    const { el, instance, key, row, ids } = await setup();
+    const groupOf = (id) => document.getElementById(row(id).parentElement.getAttribute('aria-labelledby'))?.textContent;
+    try {
+      assert.deepEqual([groupOf('pear'), groupOf('carrot')], ['Fruit', 'Vegetables']);
+      assert.equal(document.querySelector('.autocomplete-status').textContent, '3 results available.');
+      const active = [];
+      for (let i = 0; i < 4; i++) {
+        key('ArrowDown');
+        const id = el.getAttribute('aria-activedescendant');
+        assert.equal(document.getElementById(id).getAttribute('role'), 'option');
+        active.push(id);
+      }
+      assert.deepEqual(active, ['apple', 'pear', 'carrot', 'carrot'].map((id) => row(id).id));
+      key('Enter');
+      assert.deepEqual(ids(), ['carrot']);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('entries gather under labelled groups at their first appearance', async () => {
+    const results = [{ id: 'all', text: 'All' }, data[0], data[2], data[1]];
+    const { instance } = await setup({}, results);
+    try {
+      assert.deepEqual(shape(instance.container), ['all', ['Fruit', 'apple', 'pear'], ['Vegetables', 'carrot']]);
+      for (const wrapper of instance.container.querySelectorAll(':scope > li[role="none"]')) {
+        const heading = wrapper.querySelector(':scope > ul[role="group"] > li:first-child');
+        assert.equal(heading.getAttribute('role'), 'presentation');
+        assert.equal(heading.id, wrapper.firstElementChild.getAttribute('aria-labelledby'));
+      }
+      assert.equal(instance.container.querySelector('li[data-id="pear"]').getAttribute('aria-selected'), 'false');
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a group name is text even with allowUnsafeHTML, and ungrouped results stay flat', async () => {
+    const { instance } = await setup({ allowUnsafeHTML: true }, [{ id: 'bold', text: 'Bold', group: '<b>Bold</b>' }]);
+    try {
+      const heading = instance.container.querySelector('ul[role="group"] > li[role="presentation"]');
+      assert.equal(heading.textContent, '<b>Bold</b>');
+      assert.equal(heading.querySelector('b'), null);
+    } finally {
+      instance.destroy();
+    }
+    const flat = await setup({}, data.map(({ group, ...entry }) => entry));
+    try {
+      assert.deepEqual(shape(flat.instance.container), ['apple', 'pear', 'carrot', 'leek']);
+    } finally {
+      flat.instance.destroy();
+    }
+  });
+
+  test('a grouped entry is selected by click and selectOption(), and toggles in place', async () => {
+    const single = await setup();
+    try {
+      fire(single.row('pear'), 'click');
+      assert.deepEqual(single.ids(), ['pear']);
+      assert.deepEqual(single.log, ['change', 'callback', 'event']);
+    } finally {
+      single.instance.destroy();
+    }
+    const { instance, log, row, ids } = await setup({ isMultiSelect: true });
+    try {
+      const state = () => [row('carrot').getAttribute('aria-selected'), row('carrot').querySelector('input').checked];
+      instance.selectOption('carrot');
+      assert.deepEqual([ids(), state()], [['carrot'], ['true', true]]);
+      instance.selectOption('carrot');
+      assert.deepEqual([ids(), state()], [[], ['false', false]]);
+      instance.selectOption('leek');
+      assert.deepEqual(ids(), []);
+      assert.equal(log.filter((entry) => entry === 'change').length, 2);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a press on a group heading changes nothing and keeps the list open', async () => {
+    const { el, instance, log, ids } = await setup();
+    try {
+      const heading = instance.container.querySelector('li[role="presentation"]');
+      for (const type of ['mousedown', 'click']) {
+        const event = new window.MouseEvent(type, { bubbles: true, cancelable: true });
+        heading.dispatchEvent(event);
+        assert.equal(event.defaultPrevented, true, type);
+      }
+      assert.deepEqual(log, []);
+      assert.deepEqual(ids(), []);
+      assert.equal(instance.isOpen, true);
+      assert.equal(document.activeElement, el);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('the Add and no-results rows stay outside groups, and shown selections keep theirs', async () => {
+    const created = await setup({ allowCreate: true });
+    try {
+      assert.deepEqual(shape(created.instance.container).at(-1), 'autocomplete-create');
+    } finally {
+      created.instance.destroy();
+    }
+    const empty = await setup({ isMultiSelect: true, data, selected: ['pear', 'carrot'] }, []);
+    try {
+      assert.deepEqual(shape(empty.instance.container), ['autocomplete-no-results', ['Fruit', 'pear'], ['Vegetables', 'carrot']]);
+    } finally {
+      empty.instance.destroy();
+    }
+  });
+});
+
 describe('Autocomplete with delayed results', () => {
   for (const isMultiSelect of [false, true]) {
     test(`a new query clears the active result before its results arrive (isMultiSelect: ${isMultiSelect})`, async () => {

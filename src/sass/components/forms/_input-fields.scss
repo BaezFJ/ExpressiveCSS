@@ -408,6 +408,25 @@ textarea {
     pointer-events: auto;
     cursor: default;
   }
+
+  // FormSelect's listbox rule makes a group's wrapper flex, which would
+  // shrink the group to its widest row.
+  > li[role="none"] > ul[role="group"] {
+    flex: 1 1 auto;
+  }
+
+  // Menu's .label heading reaches direct rows only. The heading takes the
+  // press, as a disabled row does, so Autocomplete can cancel it.
+  > li > ul[role="group"] > li.autocomplete-group-label {
+    display: flex;
+    align-items: center;
+    min-height: rem(32px);
+    padding: 0 8px;
+    pointer-events: auto;
+    cursor: default;
+    color: var(--md-comp-menu-supporting-text-color);
+    @include typescale("label-large");
+  }
 }
 
 // Datepicker paints its formatted date over the native value with ::after.

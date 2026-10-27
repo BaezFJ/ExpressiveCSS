@@ -27,6 +27,12 @@ export interface AutocompleteData {
    * The `selected` option and `setMenuItems()` can still select it.
    */
   disabled?: boolean;
+  /**
+   * Lists the entry under this heading. Entries with the same group gather
+   * where the group first appears in the results; entries without one stay
+   * outside every group.
+   */
+  group?: string;
 }
 
 export interface AutocompleteOptions extends BaseOptions {
@@ -521,11 +527,11 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this._pointerDown = false;
   };
 
-  // The no-results row is not an option, and a disabled row cannot be chosen.
-  // A press on either would move focus to the list, which nothing hands back,
-  // and Menu would report the no-results row as chosen.
+  // The no-results row and group headings are not options, and a disabled row
+  // cannot be chosen. A press on any of them would move focus to the list,
+  // which nothing hands back, and Menu would report the row as chosen.
   _handleInertRowPress = (e: MouseEvent) => {
-    if (!(e.target instanceof Element) || !e.target.closest('.autocomplete-no-results, [aria-disabled="true"]')) return;
+    if (!(e.target instanceof Element) || !e.target.closest('.autocomplete-no-results, .autocomplete-group-label, [aria-disabled="true"]')) return;
     e.preventDefault();
     e.stopPropagation();
   };
@@ -684,9 +690,39 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     if (this.menuItems.length === 0) {
       this.menuItems = this.selectedValues; // Show selected Items
     }
-    this.container.append(...this.menuItems.map((entry) => this._createMenuItem(entry)));
+    const groups = new Map<string, HTMLElement>();
+    this.menuItems.forEach((entry) => this._groupList(entry.group, groups).append(this._createMenuItem(entry)));
     const createText = this._createText();
     if (createText) this.container.append(this._createRow(createText));
+  }
+
+  /** The list a row goes in: the listbox, or its group's list, made where the group first appears. */
+  private _groupList(name: string | undefined, groups: Map<string, HTMLElement>) {
+    if (!name) return this.container;
+    if (!groups.has(name)) groups.set(name, this._createGroup(name));
+    return groups.get(name);
+  }
+
+  /**
+   * A labelled group of options, as the APG grouped listbox nests it. The
+   * heading is not an option, so the arrow keys and the count pass over it.
+   * Its name is set as text: only an entry's own `text` may be HTML.
+   */
+  private _createGroup(name: string) {
+    const heading = document.createElement('li');
+    heading.id = `autocomplete-group-${Utils.guid()}`;
+    heading.setAttribute('role', 'presentation');
+    heading.classList.add('label', 'autocomplete-group-label');
+    heading.textContent = name;
+    const list = document.createElement('ul');
+    list.setAttribute('role', 'group');
+    list.setAttribute('aria-labelledby', heading.id);
+    list.append(heading);
+    const wrapper = document.createElement('li');
+    wrapper.setAttribute('role', 'none');
+    wrapper.append(list);
+    this.container.append(wrapper);
+    return list;
   }
 
   /** The typed text to offer as a new value, or '' when the option is off, the text is short or a suggestion matches it. */
@@ -846,7 +882,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     else this.selectedValues = this.selectedValues.filter((selectedEntry) => selectedEntry.id !== entry.id);
     // Update the row in place. Re-rendering the list dropped the active row,
     // and its reset of oldVal made the refocus below run a new search.
-    const row = Array.from(this.container.children).find((li) => li.getAttribute('data-id') === String(entry.id));
+    const row = Array.from(this.container.querySelectorAll('li[data-id]')).find((li) => li.getAttribute('data-id') === String(entry.id));
     if (row) {
       row.setAttribute('aria-selected', String(selected));
       row.querySelector('input').checked = selected;
