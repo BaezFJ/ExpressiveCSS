@@ -1,6 +1,6 @@
 # Data table text filtering plan
 
-Phase 67, 2026-10-27. Branch `feature/2026-10-27-data-table-text-filtering`, base `db981aa4f83d0d2ee63e5877c1238cc698b2045e`.
+Phase 67, 2026-10-27. Branch `feature/2026-10-27-data-table-text-filtering`, base `2ef8b19a21f8679debfd8bcdf4299e171e1d2ab6` after rebasing onto merged Phase 66. The original specification base was `db981aa4f83d0d2ee63e5877c1238cc698b2045e`.
 
 The user delegated requirements and verification through feature-spec-auto. Implement these groups sequentially using incremental-implementation, then review, fix findings, simplify, open the PR and merge only after required checks and conversations pass.
 

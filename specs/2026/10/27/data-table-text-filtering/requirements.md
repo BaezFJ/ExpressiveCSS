@@ -3,13 +3,13 @@
 - Date: 2026-10-27
 - Roadmap: Phase 67
 - Branch: `feature/2026-10-27-data-table-text-filtering`
-- Base: `db981aa4f83d0d2ee63e5877c1238cc698b2045e`, local `origin/master`, confirmed against the remote before writing
+- Base: `2ef8b19a21f8679debfd8bcdf4299e171e1d2ab6`, current `origin/master` after rebasing onto merged Phase 66. The original specification used `db981aa4f83d0d2ee63e5877c1238cc698b2045e`.
 
 This implements [Phase 67](../../../../roadmap.md#phase-67-data-table-text-filtering) under the [mission](../../../../mission.md#product-rules) and [technical constraints](../../../../tech-stack.md). The user delegated specification decisions, implementation, verification, review, PR monitoring and merge. The agent owns the checks. No user specification approval is claimed.
 
 ## Evidence and decisions
 
-`src/ts/behaviors/dataTables.ts` already sorts record/detail groups, delegates document events across open shadow roots, and synchronizes selection and column toggles. It has no per-table component lifecycle. Its select-all currently includes hidden records. Phases 59 through 65 have merged implementation evidence despite stale roadmap labels. Phase 66 is unfinished but Phase 67 has no dependencies. The user explicitly starts at Phase 67.
+`src/ts/behaviors/dataTables.ts` already sorts record/detail groups, delegates document events across open shadow roots, and synchronizes selection and column toggles. It has no per-table component lifecycle. Its select-all currently includes hidden records. Phases 59 through 65 have merged implementation evidence despite stale roadmap labels. At initial discovery, Phase 66 was unfinished. It has since merged as PR #455 and is included in the updated base. Phase 67 has no dependencies. The user explicitly starts at Phase 67.
 
 Under delegation, use an authored `input[type="search"][data-table-filter]` inside the wrapper. Mark searchable header cells with `data-filter`; headers must span one column. Reuse the existing header-column calculation and `data-value` override used by sorting. Search is a trimmed, locale-lowercased substring matched against any chosen column separately. An empty query restores only rows hidden by filtering. Without a marked column, a nonempty query matches no records.
 
