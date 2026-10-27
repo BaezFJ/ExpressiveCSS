@@ -46,10 +46,61 @@ function each(name, body) {
 
 each('filters grouped options and submits the chosen value by pointer', async page => {
   await page.locator('.field > input').click();
+  await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
   await page.getByRole('searchbox').fill('rOm');
   assert.deepEqual(await page.getByRole('option').allTextContents(), ['Rome']);
   await page.getByRole('option', { name: 'Rome' }).click();
   await page.locator('#after').click();
   assert.deepEqual(await page.evaluate(() => submitted), [['place', 'rome']]);
   assert.equal(await page.evaluate(() => changes), 1);
+});
+
+each('keeps text editing separate from row navigation and restores focus', async page => {
+  await page.locator('.field > input').focus();
+  await page.keyboard.press('Enter');
+  await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
+  assert.equal(await page.getByRole('searchbox').evaluate(el => el === document.activeElement), true);
+  await page.keyboard.type('ro me');
+  assert.equal(await page.getByRole('searchbox').inputValue(), 'ro me');
+  await page.keyboard.press('Home');
+  assert.equal(await page.getByRole('searchbox').evaluate(el => el.selectionStart), 0);
+  await page.keyboard.press('End');
+  await page.keyboard.press('Enter');
+  assert.equal(await page.evaluate(() => window.submitted), undefined);
+  await page.getByRole('searchbox').fill('o');
+  await page.keyboard.press('ArrowDown');
+  assert.equal(await page.getByRole('option', { name: 'Rome' }).evaluate(el => el === document.activeElement), true);
+  await page.keyboard.press('ArrowDown');
+  assert.equal(await page.getByRole('option', { name: 'Tokyo' }).evaluate(el => el === document.activeElement), true);
+  await page.keyboard.press('Home');
+  await page.keyboard.press('ArrowUp');
+  assert.equal(await page.getByRole('searchbox').evaluate(el => el === document.activeElement), true);
+  await page.keyboard.press('ArrowUp');
+  await page.keyboard.press('Space');
+  assert.equal(await page.evaluate(() => instance.el.value), 'tokyo');
+  assert.equal(await page.locator('.field > input').evaluate(el => el === document.activeElement), true);
+  await page.keyboard.press('Enter');
+  await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
+  assert.equal(await page.getByRole('searchbox').inputValue(), '');
+  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('.field > input').evaluate(el => el === document.activeElement), true);
+});
+
+each('tabs through search and a result and exits after the trigger', async page => {
+  await page.locator('.field > input').click();
+  await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
+  await page.getByRole('searchbox').fill('rome');
+  await page.keyboard.press('Tab');
+  assert.equal(await page.getByRole('option', { name: 'Rome' }).evaluate(el => el === document.activeElement), true);
+  await page.keyboard.press('Shift+Tab');
+  assert.equal(await page.getByRole('searchbox').evaluate(el => el === document.activeElement), true);
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  assert.equal(await page.locator('#after').evaluate(el => el === document.activeElement), true);
+  assert.equal(await page.evaluate(() => instance.menu.isOpen), false);
+  await page.locator('.field > input').click();
+  await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
+  await page.getByRole('searchbox').fill('missing');
+  await page.keyboard.press('Tab');
+  assert.equal(await page.locator('#after').evaluate(el => el === document.activeElement), true);
 });

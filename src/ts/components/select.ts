@@ -230,10 +230,11 @@ export class FormSelect extends Component<FormSelectOptions> {
   };
 
   private _handleOptionFocus = (e: FocusEvent) => {
+    if (this._searchInput) return;
     const target = e.target;
     if (!(target instanceof Element)) return;
     const li = target.closest('li[role="option"]');
-    if (li?.id) this.input.setAttribute('aria-activedescendant', li.id);
+    if (li) this.input.setAttribute('aria-activedescendant', li.id);
   };
 
   _selectOptionElement(virtualOption: HTMLElement) {
@@ -254,7 +255,7 @@ export class FormSelect extends Component<FormSelectOptions> {
           new Event('change', { bubbles: true, cancelable: true, composed: true })
         );
       // Only a real selection closes; a disabled option is inert.
-      if (!this.isMultiple) this.menu?.close();
+      if (!this.isMultiple) this._closeSingleSelect();
     }
   }
 
@@ -264,6 +265,11 @@ export class FormSelect extends Component<FormSelectOptions> {
       this._setSelectedStates();
     }
   };
+
+  private _closeSingleSelect() {
+    this.menu?.close();
+    if (this._searchInput) this.input.focus();
+  }
 
   _setupMenu() {
     // The DOM already knows which labels belong to this control. Building a
@@ -391,6 +397,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     this._searchStatus.setAttribute('role', 'status');
     this.menuEl.append(this._searchInput, this._searchStatus, this._listbox);
     this._searchInput.addEventListener('input', this._filterOptions, { signal: this._events.signal });
+    this.menuEl.addEventListener('keydown', this._handleSearchKeydown, { signal: this._events.signal, capture: true });
     this._nameSearch();
     this._filterOptions();
   }
@@ -423,14 +430,105 @@ export class FormSelect extends Component<FormSelectOptions> {
     }
   }
 
+  private _searchRows() {
+    return this._values.map(({ optionEl }) => optionEl).filter(row => row.tabIndex !== -1);
+  }
+
+  private _handleSearchKeydown = (e: KeyboardEvent) => {
+    e.stopPropagation();
+    if (!Utils.plainKey(e) || Utils.isComposing(e)) return;
+    if (this._searchDismissKey(e)) return;
+    this._searchNavigate(e);
+  };
+
+  private _searchDismissKey(e: KeyboardEvent) {
+    if (e.key === 'Tab') {
+      this._searchTab(e);
+      return true;
+    }
+    if (e.key !== 'Escape') return false;
+    e.preventDefault();
+    this._closeSingleSelect();
+    return true;
+  }
+
+  private _searchTab(e: KeyboardEvent) {
+    if (e.shiftKey) {
+      e.preventDefault();
+      this._searchBackwardTab(e);
+      return;
+    }
+    const first = this._searchRows()[0];
+    if (e.target === this._searchInput && first) {
+      e.preventDefault();
+      first.focus();
+      return;
+    }
+    // Let the browser advance from the trigger, including across shadow roots.
+    this._closeSingleSelect();
+  }
+
+  private _searchBackwardTab(e: KeyboardEvent) {
+    if (e.target === this._searchInput) this._closeSingleSelect();
+    else this._searchInput.focus();
+  }
+
+  private _searchNavigate(e: KeyboardEvent) {
+    if (e.target === this._searchInput) {
+      this._searchInputKey(e);
+      return;
+    }
+    this._searchRowKey(e);
+  }
+
+  private _searchInputKey(e: KeyboardEvent) {
+    if (e.key === 'Enter') e.preventDefault();
+    if (!['ArrowDown', 'ArrowUp'].includes(e.key)) return;
+    e.preventDefault();
+    const rows = this._searchRows();
+    this._focusSearchRow(rows[e.key === 'ArrowUp' ? rows.length - 1 : 0]);
+  }
+
+  private _focusSearchRow(row: HTMLElement) {
+    if (row) row.focus();
+  }
+
+  private _searchRowKey(e: KeyboardEvent) {
+    if (['Enter', ' '].includes(e.key)) {
+      e.preventDefault();
+      this._selectOptionElement(e.target as HTMLElement);
+      return;
+    }
+    const target = Utils.focusTarget([this._searchInput, ...this._searchRows()], e, { ArrowDown: 1, ArrowUp: -1 });
+    if (!target) return;
+    e.preventDefault();
+    if (e.key === 'Home') this._searchRows()[0]?.focus();
+    else target.focus();
+  }
+
+  private _clearSearch() {
+    if (!this._searchInput) return;
+    this._searchInput.value = '';
+    this._filterOptions();
+  }
+
+  private _bindSearchClose(options: Partial<MenuOptions>) {
+    const onCloseStart = options.onCloseStart;
+    options.onCloseStart = () => {
+      this._clearSearch();
+      return onCloseStart?.call(this.menu, this.el);
+    };
+  }
+
   private _initMenu() {
     if (this.el.matches(':disabled')) return;
     const menuOptions = { ...this.options.menuOptions };
+    if (this._searchInput) this._bindSearchClose(menuOptions);
     menuOptions.coverTrigger = false;
     const userOnOpenEnd = menuOptions.onOpenEnd;
     const userOnCloseEnd = menuOptions.onCloseEnd;
     menuOptions.onOpenEnd = () => {
-      this._focusSelected();
+      this._focusMenu();
       this.input.ariaExpanded = 'true';
       if (typeof userOnOpenEnd === 'function')
         userOnOpenEnd.call(this.menu, this.el);
@@ -443,6 +541,11 @@ export class FormSelect extends Component<FormSelectOptions> {
     };
     menuOptions.closeOnClick = false;
     this.menu = Menu.init(this.input, menuOptions);
+  }
+
+  private _focusMenu() {
+    if (!this._searchInput) return this._focusSelected();
+    if (this.menu.options.autoFocus) this._searchInput.focus();
   }
 
   /** Moves focus to the selected row of the opened menu, centred when it scrolls. */
