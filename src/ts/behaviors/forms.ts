@@ -1,5 +1,18 @@
 import { Utils } from '../core/utils';
 
+const FILE_TYPES = '.drop-zone input[type="file"][data-validate-types]';
+
+function fileSpecifier(value: string) {
+  return /^\.[^\s/\\]+$/.test(value) || /^(image|audio|video)\/\*$/.test(value) ||
+    /^[!#$%&'+.^_`|~0-9a-z-]+\/[!#$%&'+.^_`|~0-9a-z-]+$/.test(value);
+}
+
+function fileMatches(file: File, specifier: string) {
+  if (specifier.startsWith('.')) return file.name.toLowerCase().endsWith(specifier);
+  if (specifier.endsWith('/*')) return file.type.toLowerCase().startsWith(specifier.slice(0, -1));
+  return file.type.toLowerCase() === specifier;
+}
+
 export class Forms {
   /**
    * Validates a `.validate` field: marks it `invalid` and `aria-invalid`
@@ -14,12 +27,16 @@ export class Forms {
       console.error('No text field element found');
       return;
     }
+    if (Forms._typedFile(textfield)) return Forms._validateFileTypes(textfield);
     if (!textfield.classList.contains('validate')) return;
-    const invalid = Forms._fails(textfield);
-    textfield.classList.toggle('invalid', invalid);
-    if (invalid) textfield.setAttribute('aria-invalid', 'true');
-    else textfield.removeAttribute('aria-invalid');
+    Forms._markInvalid(textfield, Forms._fails(textfield));
     Forms._describeByError(textfield);
+  }
+
+  private static _markInvalid(field: HTMLInputElement, invalid: boolean) {
+    field.classList.toggle('invalid', invalid);
+    if (invalid) field.setAttribute('aria-invalid', 'true');
+    else field.removeAttribute('aria-invalid');
   }
 
   /** Whether a field fails its constraints or is longer than `data-length`. */
@@ -89,6 +106,45 @@ export class Forms {
   }
 
   private static _initialized = false;
+  private static _fileTypeErrors = new WeakMap<HTMLInputElement, string>();
+
+  private static _typedFile(input: HTMLInputElement) {
+    return input.matches(FILE_TYPES) || Forms._fileTypeErrors.has(input);
+  }
+
+  private static _rejectedFiles(input: HTMLInputElement) {
+    const accepted = input.accept.split(',').map((value) => value.trim().toLowerCase()).filter(fileSpecifier);
+    if (!accepted.length) return [];
+    return Array.from(input.files ?? []).filter((file) => !accepted.some((specifier) => fileMatches(file, specifier)));
+  }
+
+  private static _validateFileTypes(input: HTMLInputElement) {
+    if (input.matches(':disabled')) return;
+    Forms._clearFileTypeError(input);
+    if (!input.matches(FILE_TYPES)) {
+      Forms._fileTypeErrors.delete(input);
+      return;
+    }
+    Forms._fileTypeErrors.set(input, '');
+    if (Forms._rejectedFiles(input).length) Forms._setFileTypeError(input);
+  }
+
+  private static _clearFileTypeError(input: HTMLInputElement) {
+    const owned = Forms._fileTypeErrors.get(input);
+    if (owned && owned === input.validationMessage) input.setCustomValidity('');
+  }
+
+  private static _setFileTypeError(input: HTMLInputElement) {
+    if (input.validity.customError) return;
+    const message = Forms._fileTypeMessage(input);
+    input.setCustomValidity(message);
+    Forms._fileTypeErrors.set(input, message);
+  }
+
+  private static _fileTypeMessage(input: HTMLInputElement) {
+    const error = input.closest('.drop-zone').querySelector(':scope > [data-error]');
+    return error?.getAttribute('data-error')?.trim() || `Choose files matching: ${input.accept}.`;
+  }
 
   /**
    * Safe to call more than once: the root entry calls it on import, and a page
