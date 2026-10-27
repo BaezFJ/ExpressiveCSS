@@ -38,8 +38,8 @@ Delivers R1-R6. Completion checks V2-V3.
 
 Prerequisite: groups 1-3 pass.
 
-- [ ] Run contributor-equivalent checks sequentially against built bundles, including the full suite, generated data, Astro/site, MCP and both isolated packages; record failures/skips accurately.
-- [ ] Compare all four drop-zone docs layouts against the merged base and inspect count-error light/dark captures with readable real text, retained files and keyboard focus.
+- [x] Run contributor-equivalent checks sequentially against built bundles, including the full suite, generated data, Astro/site, MCP and both isolated packages; record failures/skips accurately.
+- [x] Compare all four drop-zone docs layouts against the merged base and inspect count-error light/dark captures with readable real text, retained files and keyboard focus.
 - [ ] Obtain independent R1-R6 source/evidence review, fix findings, perform a separate simplification pass, open/watch the PR and merge only after exact-head CI/conversation/current-master/clean-worktree gates pass.
 
 Delivers R6. Completion checks V4-V6. Preserve separate post-merge roadmap/evidence documentation.
