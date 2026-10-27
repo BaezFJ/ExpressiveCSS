@@ -16,9 +16,16 @@ The [mission](mission.md) covers the framework and its MCP server. Both stay in 
 - Follow the [TypeScript conventions](../src/ts/README.md). `components/` and `behaviors/` import from `core/`, never the reverse. A component an author starts goes in the AutoInit registry; a behavior is delegated from the document.
 - A new function must stay below cyclomatic complexity 5, or the fallow pre-commit gate fails. Split logic into small helpers or tables.
 - Each change to the bundles records its gzip size in the reviewed budget lines of `tests/selective-builds.test.js`.
-- Text- and icon-holding boxes are sized in `rem()`; borders and gaps stay in pixels.
 - Custom elements take the `expressive-` prefix. The first is Chips' form-associated `expressive-chips-control`.
 - Browser support follows the `browserslist` in `package.json`: the last five Chrome and Firefox versions, plus current WebKit through the tests.
+
+### Styling contracts
+
+- Font sizes and boxes containing text or icons use `rem()`; fixed component borders and gaps stay in pixels. The Timepicker's dial and tick geometry remain in pixels because its script positions ticks in pixels. See the [icon sizing](2026/10/26/rem-icon-font-sizes/) and [chip sizing](2026/10/26/chips-rem/) specs.
+- Use complete shared M3 typography roles, including letter-spacing. See the [type roles spec](2026/10/26/shared-type-roles/).
+- Read shared theme tokens for component styling, including elevation, while preserving required overrides of vendor styles. See the [popup elevation spec](2026/10/26/map-popup-elevation-token/).
+- Read motion tokens for transition timings and suppress nonessential motion under reduced motion. See the [motion timings spec](2026/10/26/motion-token-timings/).
+- Resolve renamed component CSS custom properties through their documented legacy fallbacks. See the [chip properties spec](2026/10/26/chip-custom-properties/).
 
 ### Framework testing
 
