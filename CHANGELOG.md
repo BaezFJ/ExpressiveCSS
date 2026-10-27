@@ -772,6 +772,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Searchable tree rows inherit the shared menu tokens, preserving visible
+  keyboard focus, selected colors and row spacing in light and dark themes.
 - Search popups resize after filtering so translated no-results feedback and
   newly exposed tree paths fit, including inside transformed containers.
 - Search popups stay hidden for controls initialized while disabled. Enabling

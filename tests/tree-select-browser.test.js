@@ -751,3 +751,24 @@ treeSearch('fits translated no-results feedback in a transformed narrow containe
   assert.ok(geometry.statusBottom <= geometry.popupBottom, JSON.stringify(geometry));
   await expect(search).toBeFocused();
 });
+
+treeSearch('paints keyboard focus on filtered leaf labels in light and dark themes', async ({ page }) => {
+  await treeTrigger(page).click();
+  const search = searchInput(page);
+  await search.fill('par');
+  for (const theme of ['light', 'dark']) {
+    await page.evaluate(theme => document.documentElement.setAttribute('theme', theme), theme);
+    await search.focus();
+    await search.press('ArrowUp');
+    const label = treeLabel(page, 'Paris');
+    await expect(label.locator('..')).toBeFocused();
+    const paint = await label.evaluate(el => ({
+      focused: el.parentElement.matches(':focus-visible'),
+      background: getComputedStyle(el).backgroundColor,
+      height: el.offsetHeight
+    }));
+    assert.equal(paint.focused, true);
+    assert.ok(!['transparent', 'rgba(0, 0, 0, 0)'].includes(paint.background), JSON.stringify(paint));
+    assert.ok(paint.height >= 44, JSON.stringify(paint));
+  }
+});
