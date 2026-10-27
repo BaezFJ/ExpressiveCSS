@@ -291,15 +291,13 @@ test('AutoInit tree search names its popup and tree without putting search insid
   assert.equal(document.querySelector('label').htmlFor, 'search-tree');
 });
 
-for (const attributes of ['class="browser-default"']) {
-  test(`tree search leaves unsupported ${attributes} mode unchanged`, () => {
-    const instance = start(PLACES, attributes, { searchable: true });
-    try {
-      assert.equal(document.querySelector('input[type="search"]'), null);
-      if (instance.menuEl) assert.equal(instance.input.getAttribute('aria-haspopup'), 'tree');
-    } finally { instance.destroy(); }
-  });
-}
+test('tree search leaves browser-default mode unchanged', () => {
+  const instance = start(PLACES, 'class="browser-default"', { searchable: true });
+  try {
+    assert.equal(document.querySelector('input[type="search"]'), null);
+    if (instance.menuEl) assert.equal(instance.input.getAttribute('aria-haspopup'), 'tree');
+  } finally { instance.destroy(); }
+});
 
 
 function filterTree(instance, query) {
