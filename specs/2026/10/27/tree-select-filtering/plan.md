@@ -40,6 +40,10 @@ Prerequisite: groups 1-3 pass.
 
 - [x] Complete independent source/evidence review against R1-R8, fix confirmed findings and run a separate code-simplification pass. Rerun affected checks after any change.
 - [x] Run full contributor-equivalent build/typecheck/tests/generated/Astro/site checks, MCP and isolated packages sequentially. Inspect tree-select/select compact/expanded/large/large-dark comparisons and live search light/dark/forced-color focus evidence; state limits honestly.
-- [ ] Open/push/link/watch the PR, fix CI/review issues, verify exact head/all-required checks/conversations/current master/clean worktree and merge. Record actual merge proof in the separate completion documentation PR.
+- [x] Open/push/link/watch the PR, fix CI/review issues, verify exact head/all-required checks/conversations/current master/clean worktree and merge. Record actual merge proof in the separate completion documentation PR.
 
 Completion checks V4-V6. No package publication.
+
+## Post-merge completion record
+
+[PR #464](https://github.com/BaezFJ/ExpressiveCSS/pull/464) merged on 2026-10-27T18:45:03Z as `9e5686eb6d512d6c7fe0d4382a2eef6830b43a47`. The exact final head `e84189bfbc0e74991ca1bfa92cf2933bf1368f1e` has all 17 checks successful and no unresolved review threads, with hasNextPage false. The final delivery task is complete. See the [current-source requirement audit](../roadmap-completion/audit.md) and [primary merge evidence](../roadmap-completion/merge-evidence.json).

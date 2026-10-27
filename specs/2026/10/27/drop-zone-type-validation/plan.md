@@ -40,6 +40,10 @@ Prerequisite: groups 1-3 pass.
 
 - [x] Run contributor-equivalent checks sequentially against built bundles, including the full suite, generated data, docs/site verification, MCP smoke and both clean package consumers. Record failures and unavailable evidence accurately.
 - [x] Compare drop-zone docs against the merged base in compact, expanded, large and large-dark layouts, and inspect actual invalid-feedback captures in light/dark layouts. Disclose intended differences rather than claiming a zero-diff pass.
-- [ ] Obtain independent R1-R6 implementation/evidence review, fix findings, perform a separate simplification pass, then open/watch the PR and merge only after exact-head CI/conversation/current-master/clean-worktree gates pass.
+- [x] Obtain independent R1-R6 implementation/evidence review, fix findings, perform a separate simplification pass, then open/watch the PR and merge only after exact-head CI/conversation/current-master/clean-worktree gates pass.
 
 Delivers R6. Completion checks V4-V6. Preserve the separate post-merge roadmap/evidence documentation step.
+
+## Post-merge completion record
+
+[PR #461](https://github.com/BaezFJ/ExpressiveCSS/pull/461) merged on 2026-10-27T15:21:14Z as `caae9ab049576b73df0e2874d3e1751c067130da`. The exact final head `be7b261e55111254fdeb8104e04be144b482ccb4` has all 17 checks successful and no unresolved review threads, with hasNextPage false. The final delivery task is complete. See the [current-source requirement audit](../roadmap-completion/audit.md) and [primary merge evidence](../roadmap-completion/merge-evidence.json).

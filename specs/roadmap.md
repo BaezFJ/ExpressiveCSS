@@ -364,41 +364,23 @@ Authors can filter and page records through the existing data table, with applic
 
 ### Phase 67: data table text filtering
 
-No dependencies. An opt-in text search filters explicitly chosen columns. Each detail row stays with its record, and author-hidden rows remain hidden. Select-all affects only enabled records visible in the current table view.
-
-Completion check: filtering a table with expanded details and an author-hidden record leaves only matching visible record groups, and select-all selects only their enabled records.
-
-Open for spec: how authors identify searchable columns and how the result count is announced.
+Completed 2026-10-27. See [spec](2026/10/27/data-table-text-filtering/).
 
 ### Phase 68: server-owned table filtering
 
-Depends on phase 67. A cancelable filter event lets an application handle the query while preventing local filtering. The framework does not fetch records.
-
-Completion check: an application cancels a filter request, receives the requested query and replaces the records itself while the framework leaves the existing rows unfiltered.
-
-Open for spec: the event detail and its relationship to the existing server-sort event.
+Completed 2026-10-27. See [spec](2026/10/27/server-table-filtering/).
 
 ### Phase 69: data table paging
 
-Depends on phase 67. Opt-in page controls show a page of local records after filtering and sorting. Select-all is page-scoped, and detail rows stay with their records. Ordinary server-rendered pagination links retain their existing behavior.
-
-Completion check: after filtering and sorting a table, moving to the next page shows the expected record groups and select-all changes only enabled records on that page.
-
-Open for spec: page-control markup, focus behavior and the treatment of existing selections on other pages.
+Completed 2026-10-27. See [spec](2026/10/27/data-table-paging/).
 
 ### Phase 70: data table page size
 
-Depends on phase 69. Authors provide a page-size control that updates the displayed page and keeps its index within the available page range.
-
-Completion check: increasing the page size while on the last page updates the page count and leaves a valid page showing the expected records.
+Completed 2026-10-27. See [spec](2026/10/27/data-table-page-size/).
 
 ### Phase 71: server-owned table paging
 
-Depends on phases 68 and 70. An application supplies page records and the total count through an opt-in server paging contract. Canceling a page request prevents local paging, and selection remains scoped to the displayed page.
-
-Completion check: a canceled page request lets an application replace the displayed records and total count, with the controls reflecting that page and no local row slicing.
-
-Open for spec: page request details and how the application supplies page state and total count.
+Completed 2026-10-27. See [spec](2026/10/27/server-table-paging/).
 
 ## Milestone: validated file choices
 
@@ -406,23 +388,15 @@ Authors can reject invalid file selections through the existing drop zone and fo
 
 ### Phase 72: drop-zone type validation
 
-No dependencies. A drop zone checks declared accepted types and explains a rejected selection through native validity and accessible error feedback.
-
-Completion check: choosing an unsupported file through either browse or drop gives the same type error and prevents the form from submitting the invalid selection.
-
-Open for spec: extension and MIME matching, empty MIME types and rejection event details.
+Completed 2026-10-27. See [spec](2026/10/27/drop-zone-type-validation/).
 
 ### Phase 73: drop-zone size limit
 
-Depends on phase 72. An optional per-file size limit uses the same invalid-selection feedback.
-
-Completion check: a selection containing an oversized file reports the limit violation and blocks submission of the whole selection.
+Completed 2026-10-27. See [spec](2026/10/27/drop-zone-size-limit/).
 
 ### Phase 74: drop-zone count limit
 
-Depends on phase 72. An optional file-count limit uses the same invalid-selection feedback.
-
-Completion check: choosing more files than allowed reports the count violation and blocks submission of the whole selection.
+Completed 2026-10-27. See [spec](2026/10/27/drop-zone-count-limit/).
 
 ## Milestone: searchable tree choices
 
@@ -430,16 +404,12 @@ Authors can filter a hierarchy and choose multiple leaves through the existing t
 
 ### Phase 75: tree-select filtering
 
-Depends on phase 63. An opt-in search retains the ancestors of matching leaves. Clearing the query restores the person's prior expansion state.
-
-Completion check: searching for a leaf under a closed branch exposes the matching path, and clearing the query restores the branch's previous state.
-
-Open for spec: the tree search field's keyboard and focus contract.
+Completed 2026-10-27. See [spec](2026/10/27/tree-select-filtering/).
 
 ### Phase 76: tree-select multiple leaf selection
 
-Depends on phase 64. TreeSelect can select multiple leaves backed by a native multiple select. Branches remain navigation controls, with no parent-to-child selection propagation. The existing single-leaf mode remains the default.
+Completed 2026-10-27. See [spec](2026/10/27/tree-select-multiple/).
 
-Completion check: choosing two leaves submits both native option values while their parent branch contributes no form value.
+## Completion evidence for phases 67-76
 
-Open for spec: multiple-selection activation and popup close behavior.
+The [requirement audit](2026/10/27/roadmap-completion/audit.md) maps all 64 requirements to current source and assertions. [Primary GitHub records](2026/10/27/roadmap-completion/merge-evidence.json) identify each merged PR, exact successful head and resolved conversations. Physical capability limits remain explicit; no package was published.

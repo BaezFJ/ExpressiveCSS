@@ -40,6 +40,10 @@ Prerequisite: groups 1-3 pass.
 
 - [x] Independently trace R1-R8 to source and evidence, fix confirmed findings and complete a separate code-simplification pass. Rerun affected checks after changes.
 - [x] Run all contributor-equivalent, MCP and isolated-package checks sequentially, then independent final evidence review. Record exact commands, results, failures and limits.
-- [ ] Push/open/link/watch the PR. Fix CI/review issues; verify exact head, all and required checks, conversations, current master and clean worktrees before merge. Record merge proof and remaining completion audit in the separate docs PR.
+- [x] Push/open/link/watch the PR. Fix CI/review issues; verify exact head, all and required checks, conversations, current master and clean worktrees before merge. Record merge proof and remaining completion audit in the separate docs PR.
 
 Completion V4-V6. No release or publication.
+
+## Post-merge completion record
+
+[PR #465](https://github.com/BaezFJ/ExpressiveCSS/pull/465) merged on 2026-10-27T19:59:31Z as `16eeb22019c5a9830a8f50c040798695c0fdc6ef`. The exact final head `b24132a06cbf305abda6614d855443bf15c024f2` has all 17 checks successful and no unresolved review threads, with hasNextPage false. The final delivery task is complete. See the [current-source requirement audit](../roadmap-completion/audit.md) and [primary merge evidence](../roadmap-completion/merge-evidence.json).

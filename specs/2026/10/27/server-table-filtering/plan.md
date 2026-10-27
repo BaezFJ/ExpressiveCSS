@@ -30,6 +30,10 @@ Prerequisite: groups 1 and 2 pass.
 
 - [x] Measure bundle gzip sizes and update the reviewed JavaScript budget in `tests/selective-builds.test.js`.
 - [x] Run required contributor, browser, MCP and package checks. Record actual results and limitations in validation.
-- [ ] Obtain independent final review, fix confirmed findings and perform the separate simplification pass. Open and monitor the PR, fix issues and merge only with passing required CI, resolved conversations and current master.
+- [x] Obtain independent final review, fix confirmed findings and perform the separate simplification pass. Open and monitor the PR, fix issues and merge only with passing required CI, resolved conversations and current master.
 
 Delivers R6. Completion checks V4-V6. Package publication is excluded. Record the merged phase in the separate post-merge roadmap documentation work.
+
+## Post-merge completion record
+
+[PR #457](https://github.com/BaezFJ/ExpressiveCSS/pull/457) merged on 2026-10-27T11:08:12Z as `963198f89c37d2a5312c9a353d91dc94973b937f`. The exact final head `e086915baed83545b1f1ed4d78ce5b5c7e9af0cd` has all 17 checks successful and no unresolved review threads, with hasNextPage false. The final delivery task is complete. See the [current-source requirement audit](../roadmap-completion/audit.md) and [primary merge evidence](../roadmap-completion/merge-evidence.json).

@@ -1,0 +1,1700 @@
+{
+  "repository": "BaezFJ/ExpressiveCSS",
+  "capturedAt": "2026-10-27T20:00:47.315249+00:00",
+  "auditedSource": "16eeb22019c5a9830a8f50c040798695c0fdc6ef",
+  "phasePullRequests": {
+    "p456": {
+      "url": "https://github.com/BaezFJ/ExpressiveCSS/pull/456",
+      "state": "MERGED",
+      "mergedAt": "2026-10-27T10:37:50Z",
+      "headRefOid": "2aaef8bb5e178838063e5fedeadb47795e23b8b0",
+      "mergeCommit": {
+        "oid": "b2bff6ec0649a69f7cee3427edc1ef379fa8853b"
+      },
+      "reviewThreads": {
+        "totalCount": 0,
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "2aaef8bb5e178838063e5fedeadb47795e23b8b0",
+              "statusCheckRollup": {
+                "state": "SUCCESS",
+                "contexts": {
+                  "nodes": [
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (20)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137039781"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (22)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137039869"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (24)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137039861"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (22.22.2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137039636"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (24.15.0)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137040111"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (26)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137039703"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "docs",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137039609"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "generated",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137039207"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (chromium 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137039814"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 1/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137039652"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 2/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137039829"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (webkit 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137039688"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "dependency-review",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137039514"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (javascript-typescript)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137039684"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (actions)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122137039593"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "required",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40488742335/job/122140071619"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "CodeQL",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/runs/122137239583"
+                    }
+                  ],
+                  "pageInfo": {
+                    "hasNextPage": false
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "p457": {
+      "url": "https://github.com/BaezFJ/ExpressiveCSS/pull/457",
+      "state": "MERGED",
+      "mergedAt": "2026-10-27T11:08:12Z",
+      "headRefOid": "e086915baed83545b1f1ed4d78ce5b5c7e9af0cd",
+      "mergeCommit": {
+        "oid": "963198f89c37d2a5312c9a353d91dc94973b937f"
+      },
+      "reviewThreads": {
+        "totalCount": 0,
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "e086915baed83545b1f1ed4d78ce5b5c7e9af0cd",
+              "statusCheckRollup": {
+                "state": "SUCCESS",
+                "contexts": {
+                  "nodes": [
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (20)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018482"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (22)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018519"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (24)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018642"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (22.22.2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018594"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (24.15.0)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018652"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (26)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018516"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "docs",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018631"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "generated",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018556"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (chromium 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018497"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 1/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018627"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 2/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018522"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (webkit 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018575"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "dependency-review",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018167"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (javascript-typescript)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018608"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (actions)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122151018861"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "required",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40492906725/job/122153941512"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "CodeQL",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/runs/122151309908"
+                    }
+                  ],
+                  "pageInfo": {
+                    "hasNextPage": false
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "p458": {
+      "url": "https://github.com/BaezFJ/ExpressiveCSS/pull/458",
+      "state": "MERGED",
+      "mergedAt": "2026-10-27T12:08:49Z",
+      "headRefOid": "1f18afc97ec86c2c97aeaf4916cab0dd49e4e653",
+      "mergeCommit": {
+        "oid": "dd7649d024c10d00614ce115db4bbe8fcb4d2b4c"
+      },
+      "reviewThreads": {
+        "totalCount": 0,
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "1f18afc97ec86c2c97aeaf4916cab0dd49e4e653",
+              "statusCheckRollup": {
+                "state": "SUCCESS",
+                "contexts": {
+                  "nodes": [
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (20)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177186994"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (22)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177186763"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (24)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177187114"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (22.22.2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177188523"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (24.15.0)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177186743"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (26)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177186960"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "docs",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177186428"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "generated",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177186902"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (chromium 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177186895"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 1/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177186838"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 2/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177187096"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (webkit 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177186915"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "dependency-review",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177186879"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (javascript-typescript)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177186774"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (actions)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122177186880"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "required",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40500650364/job/122179785996"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "CodeQL",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/runs/122177459146"
+                    }
+                  ],
+                  "pageInfo": {
+                    "hasNextPage": false
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "p459": {
+      "url": "https://github.com/BaezFJ/ExpressiveCSS/pull/459",
+      "state": "MERGED",
+      "mergedAt": "2026-10-27T12:49:01Z",
+      "headRefOid": "b990f35cac1d26506f5f3cf197ad9a1622e053f9",
+      "mergeCommit": {
+        "oid": "8ed6a0f4d5416ff62ae9ab84df1decbf988e3675"
+      },
+      "reviewThreads": {
+        "totalCount": 0,
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "b990f35cac1d26506f5f3cf197ad9a1622e053f9",
+              "statusCheckRollup": {
+                "state": "SUCCESS",
+                "contexts": {
+                  "nodes": [
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (20)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194482867"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (22)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194482671"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (24)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194482776"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (22.22.2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194482954"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (24.15.0)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194482620"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (26)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194482786"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "docs",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194482773"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "generated",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194482889"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (chromium 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194482810"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 1/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194483015"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 2/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194482766"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (webkit 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194482764"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "dependency-review",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194482074"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (javascript-typescript)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194482595"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (actions)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122194482770"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "required",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40505744633/job/122197618748"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "CodeQL",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/runs/122194743954"
+                    }
+                  ],
+                  "pageInfo": {
+                    "hasNextPage": false
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "p460": {
+      "url": "https://github.com/BaezFJ/ExpressiveCSS/pull/460",
+      "state": "MERGED",
+      "mergedAt": "2026-10-27T13:54:48Z",
+      "headRefOid": "0ad7cf9425a0988969ecdf77e67f9015d35715f5",
+      "mergeCommit": {
+        "oid": "cd7a3c1e262f217a05f337bfab4c8935fdc8f8d5"
+      },
+      "reviewThreads": {
+        "totalCount": 0,
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "0ad7cf9425a0988969ecdf77e67f9015d35715f5",
+              "statusCheckRollup": {
+                "state": "SUCCESS",
+                "contexts": {
+                  "nodes": [
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (20)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226557576"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (22)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226557642"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (24)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226557748"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (22.22.2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226557717"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (24.15.0)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226557982"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (26)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226557690"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "docs",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226557578"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "generated",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226557188"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (chromium 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226557868"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 1/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226558044"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 2/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226557846"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (webkit 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226557669"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "dependency-review",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226557674"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (javascript-typescript)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226557666"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (actions)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122226559883"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "required",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40515009989/job/122230181021"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "CodeQL",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/runs/122226810815"
+                    }
+                  ],
+                  "pageInfo": {
+                    "hasNextPage": false
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "p461": {
+      "url": "https://github.com/BaezFJ/ExpressiveCSS/pull/461",
+      "state": "MERGED",
+      "mergedAt": "2026-10-27T15:21:14Z",
+      "headRefOid": "be7b261e55111254fdeb8104e04be144b482ccb4",
+      "mergeCommit": {
+        "oid": "caae9ab049576b73df0e2874d3e1751c067130da"
+      },
+      "reviewThreads": {
+        "totalCount": 0,
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "be7b261e55111254fdeb8104e04be144b482ccb4",
+              "statusCheckRollup": {
+                "state": "SUCCESS",
+                "contexts": {
+                  "nodes": [
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (20)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275786083"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (22)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275785747"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (24)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275785967"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (22.22.2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275786024"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (24.15.0)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275785955"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (26)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275786005"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "docs",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275785851"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "generated",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275786210"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (chromium 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275786438"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 1/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275786085"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 2/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275786117"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (webkit 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275786113"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "dependency-review",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275786132"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (javascript-typescript)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275786095"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (actions)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122275785842"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "required",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40528856235/job/122279916519"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "CodeQL",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/runs/122276158543"
+                    }
+                  ],
+                  "pageInfo": {
+                    "hasNextPage": false
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "p462": {
+      "url": "https://github.com/BaezFJ/ExpressiveCSS/pull/462",
+      "state": "MERGED",
+      "mergedAt": "2026-10-27T15:59:33Z",
+      "headRefOid": "0f85681bf9c83890dc152ac559d8e6a9cfddfbbd",
+      "mergeCommit": {
+        "oid": "c427ab5311373e09b90d6c44a7595f22b72f5ed6"
+      },
+      "reviewThreads": {
+        "totalCount": 0,
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "0f85681bf9c83890dc152ac559d8e6a9cfddfbbd",
+              "statusCheckRollup": {
+                "state": "SUCCESS",
+                "contexts": {
+                  "nodes": [
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (20)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299543809"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (22)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299528251"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (24)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299479157"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (22.22.2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299553656"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (24.15.0)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299546948"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (26)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299479273"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "docs",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299545476"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "generated",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299569850"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (chromium 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299476397"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 1/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299478387"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 2/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299477749"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (webkit 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299479857"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "dependency-review",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299561561"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (javascript-typescript)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299554393"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (actions)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122299563454"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "required",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40534165853/job/122302202041"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "CodeQL",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/runs/122295302266"
+                    }
+                  ],
+                  "pageInfo": {
+                    "hasNextPage": false
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "p463": {
+      "url": "https://github.com/BaezFJ/ExpressiveCSS/pull/463",
+      "state": "MERGED",
+      "mergedAt": "2026-10-27T16:59:38Z",
+      "headRefOid": "5e3e3d00f9f44bc755d96574bf944c5514217fc7",
+      "mergeCommit": {
+        "oid": "37246fefc2e781f11cac784ee37b9d68776e0180"
+      },
+      "reviewThreads": {
+        "totalCount": 0,
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "5e3e3d00f9f44bc755d96574bf944c5514217fc7",
+              "statusCheckRollup": {
+                "state": "SUCCESS",
+                "contexts": {
+                  "nodes": [
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (20)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333968101"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (22)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333968037"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (24)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333968262"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (22.22.2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333967493"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (24.15.0)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333968504"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (26)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333968050"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "docs",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333968145"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "generated",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333968111"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (chromium 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333968240"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 1/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333968496"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 2/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333968029"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (webkit 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333968368"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "dependency-review",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333967965"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (javascript-typescript)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333968270"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (actions)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122333968021"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "required",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40545239611/job/122337432643"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "CodeQL",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/runs/122334312229"
+                    }
+                  ],
+                  "pageInfo": {
+                    "hasNextPage": false
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "p464": {
+      "url": "https://github.com/BaezFJ/ExpressiveCSS/pull/464",
+      "state": "MERGED",
+      "mergedAt": "2026-10-27T18:45:03Z",
+      "headRefOid": "e84189bfbc0e74991ca1bfa92cf2933bf1368f1e",
+      "mergeCommit": {
+        "oid": "9e5686eb6d512d6c7fe0d4382a2eef6830b43a47"
+      },
+      "reviewThreads": {
+        "totalCount": 0,
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "e84189bfbc0e74991ca1bfa92cf2933bf1368f1e",
+              "statusCheckRollup": {
+                "state": "SUCCESS",
+                "contexts": {
+                  "nodes": [
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (20)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392088839"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (22)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392088874"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (24)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392095498"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (22.22.2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392088964"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (24.15.0)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392088762"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (26)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392088894"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "docs",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392088924"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "generated",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392088336"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (chromium 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392088740"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 1/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392088877"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 2/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392088694"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (webkit 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392088937"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "dependency-review",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392088769"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (javascript-typescript)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392088806"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (actions)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122392088782"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "required",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40561686697/job/122395557879"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "CodeQL",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/runs/122392450600"
+                    }
+                  ],
+                  "pageInfo": {
+                    "hasNextPage": false
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "p465": {
+      "url": "https://github.com/BaezFJ/ExpressiveCSS/pull/465",
+      "state": "MERGED",
+      "mergedAt": "2026-10-27T19:59:31Z",
+      "headRefOid": "b24132a06cbf305abda6614d855443bf15c024f2",
+      "mergeCommit": {
+        "oid": "16eeb22019c5a9830a8f50c040798695c0fdc6ef"
+      },
+      "reviewThreads": {
+        "totalCount": 0,
+        "nodes": [],
+        "pageInfo": {
+          "hasNextPage": false
+        }
+      },
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "b24132a06cbf305abda6614d855443bf15c024f2",
+              "statusCheckRollup": {
+                "state": "SUCCESS",
+                "contexts": {
+                  "nodes": [
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (20)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605168"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (22)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605677"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "build (24)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605338"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (22.22.2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605403"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (24.15.0)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605408"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "mcp (26)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605738"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "docs",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605728"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "generated",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605510"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (chromium 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605457"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 1/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605164"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (firefox 2/2)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605389"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "browser (webkit 1/1)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605709"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "dependency-review",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431604957"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (javascript-typescript)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605416"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "codeql (actions)",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605851"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "required",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122435285584"
+                    },
+                    {
+                      "__typename": "CheckRun",
+                      "name": "CodeQL",
+                      "status": "COMPLETED",
+                      "conclusion": "SUCCESS",
+                      "detailsUrl": "https://github.com/BaezFJ/ExpressiveCSS/runs/122431891657"
+                    }
+                  ],
+                  "pageInfo": {
+                    "hasNextPage": false
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "prerequisites": {
+    "p452": {
+      "url": "https://github.com/BaezFJ/ExpressiveCSS/pull/452",
+      "state": "MERGED",
+      "mergedAt": "2026-10-27T06:14:10Z",
+      "mergeCommit": {
+        "oid": "165ce2c04e03d738503898ca7eb5a34f565d668f"
+      },
+      "headRefOid": "36fc8ed171e5c631ccfc0061f8e3ba1536428400",
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "36fc8ed171e5c631ccfc0061f8e3ba1536428400",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "p453": {
+      "url": "https://github.com/BaezFJ/ExpressiveCSS/pull/453",
+      "state": "MERGED",
+      "mergedAt": "2026-10-27T07:34:25Z",
+      "mergeCommit": {
+        "oid": "c8cf5a94306a83df874c49db9540c17abd1b1078"
+      },
+      "headRefOid": "24ad6aaf6c51b77a57552003b0fb66de65392f28",
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "24ad6aaf6c51b77a57552003b0fb66de65392f28",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "p455": {
+      "url": "https://github.com/BaezFJ/ExpressiveCSS/pull/455",
+      "state": "MERGED",
+      "mergedAt": "2026-10-27T09:43:44Z",
+      "mergeCommit": {
+        "oid": "2ef8b19a21f8679debfd8bcdf4299e171e1d2ab6"
+      },
+      "headRefOid": "14d0d59b957a8b85bcd785220bab8e2e0a86b997",
+      "commits": {
+        "nodes": [
+          {
+            "commit": {
+              "oid": "14d0d59b957a8b85bcd785220bab8e2e0a86b997",
+              "statusCheckRollup": {
+                "state": "SUCCESS"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "prerequisitesCapturedAt": "2026-10-27T19:56:15.376925+00:00",
+  "phase76BrowserEvidence": {
+    "source": "Completed GitHub Actions spec-reporter logs",
+    "runId": 40572916893,
+    "head": "b24132a06cbf305abda6614d855443bf15c024f2",
+    "jobs": [
+      {
+        "name": "chromium",
+        "jobId": 122431605457,
+        "url": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605457",
+        "passedMultipleTreeCases": [
+          "chromium: multiple tree toggles leaves by keyboard and pointer, preserves branch choices and submits both native values",
+          "chromium: multiple tree search keeps hidden choices, query and expansion while native submission retains both leaves",
+          "chromium: multiple tree nonsearch opening honors autoFocus false and preserves a leaf reached before completion",
+          "chromium: multiple tree search refresh, reset and disabled recovery preserve native leaf ownership and caret",
+          "chromium: multiple tree search respects autoFocus false, callback context and uncovered outside focus",
+          "chromium: multiple tree search retains both native values and timed focus inside modal dialogs and shadow roots",
+          "chromium: multiple tree search separates chosen and focused rows while enlarged RTL results scroll in forced colors"
+        ],
+        "profileSummary": {
+          "tests": 642,
+          "pass": 639,
+          "fail": 0,
+          "skipped": 3
+        }
+      },
+      {
+        "name": "firefox-1",
+        "jobId": 122431605164,
+        "url": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605164",
+        "passedMultipleTreeCases": [],
+        "profileSummary": {
+          "tests": 392,
+          "pass": 381,
+          "fail": 0,
+          "skipped": 11
+        }
+      },
+      {
+        "name": "firefox-2",
+        "jobId": 122431605389,
+        "url": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605389",
+        "passedMultipleTreeCases": [
+          "firefox: multiple tree toggles leaves by keyboard and pointer, preserves branch choices and submits both native values",
+          "firefox: multiple tree search keeps hidden choices, query and expansion while native submission retains both leaves",
+          "firefox: multiple tree nonsearch opening honors autoFocus false and preserves a leaf reached before completion",
+          "firefox: multiple tree search refresh, reset and disabled recovery preserve native leaf ownership and caret",
+          "firefox: multiple tree search respects autoFocus false, callback context and uncovered outside focus",
+          "firefox: multiple tree search retains both native values and timed focus inside modal dialogs and shadow roots",
+          "firefox: multiple tree search separates chosen and focused rows while enlarged RTL results scroll in forced colors"
+        ],
+        "profileSummary": {
+          "tests": 247,
+          "pass": 225,
+          "fail": 0,
+          "skipped": 22
+        }
+      },
+      {
+        "name": "webkit",
+        "jobId": 122431605709,
+        "url": "https://github.com/BaezFJ/ExpressiveCSS/actions/runs/40572916893/job/122431605709",
+        "passedMultipleTreeCases": [
+          "webkit: multiple tree toggles leaves by keyboard and pointer, preserves branch choices and submits both native values",
+          "webkit: multiple tree search keeps hidden choices, query and expansion while native submission retains both leaves",
+          "webkit: multiple tree nonsearch opening honors autoFocus false and preserves a leaf reached before completion",
+          "webkit: multiple tree search refresh, reset and disabled recovery preserve native leaf ownership and caret",
+          "webkit: multiple tree search respects autoFocus false, callback context and uncovered outside focus",
+          "webkit: multiple tree search retains both native values and timed focus inside modal dialogs and shadow roots",
+          "webkit: multiple tree search separates chosen and focused rows while enlarged RTL results scroll in forced colors"
+        ],
+        "profileSummary": {
+          "tests": 639,
+          "pass": 609,
+          "fail": 0,
+          "skipped": 30
+        }
+      }
+    ],
+    "runAttempt": 1
+  },
+  "phase76SecurityReview": {
+    "url": "https://github.com/BaezFJ/ExpressiveCSS/pull/465#issuecomment-6452045486",
+    "head": "b24132a06cbf305abda6614d855443bf15c024f2",
+    "status": "completed",
+    "hasFindings": false,
+    "hasUnresolvedFindings": false
+  }
+}

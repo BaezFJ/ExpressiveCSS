@@ -9,7 +9,7 @@ Component ID: `tree-select`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `274792c3c7ae1e8afa89a85bbe8cd6bb6e3068a5e0c57572446b7c39b17c35ce`
+Contract SHA-256: `2180d3ca576eadb15d79f3aeddcacce11ab4f95e60073de836c2d808135cf207`
 
 #### Selection and adaptation
 
@@ -62,7 +62,7 @@ The popup is a `<ul role="tree">` inside the Menu surface, named as the field is
 #### Methods
 
 - `.refresh()`: Rebuilds the tree from the native options after a page adds, removes or changes them. Without search, branches whose value is still there stay open. An active query is reapplied without overwriting its saved expansion baseline. While open, focus stays on a surviving enabled visible row, moves to an enabled visible row, or returns to search when none remains.
-- `.getSelectedValues()`: The selected native leaf values in option order, as in FormSelect.
+- `.getSelectedValues()`: The selected native option values in option order, as in FormSelect.
 - `.destroy()`: Removes the tree and its listeners, restores the branch options' `disabled` attributes and the native select.
 
 #### Also documented
