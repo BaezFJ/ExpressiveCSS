@@ -98,6 +98,37 @@ test('matching is literal option text and cannot expose hidden rows or inject ma
   }
 });
 
+test('duplicate values retain option identity and value-based change events', () => {
+  const instance = fixture();
+  let changes = 0;
+  instance.el.addEventListener('change', () => changes++);
+  try {
+    instance.el.append(new window.Option('Paris alternative', 'paris'));
+    instance.refresh();
+    search(instance, 'alternative');
+    instance.menuEl.querySelector('[role="option"]:not([hidden])').click();
+    assert.equal(instance.el.selectedIndex, 4);
+    assert.equal(instance.input.value, 'Paris alternative');
+    assert.equal(changes, 0);
+  } finally {
+    instance.destroy();
+  }
+});
+
+test('TreeSelect ignores search and teardown leaves no extra Menu instance', () => {
+  document.body.innerHTML = '<label for="tree">Place</label><select id="tree" data-tree><option value="a">Paris</option></select>';
+  const before = Expressive.Menu._menus.length;
+  const instance = Expressive.TreeSelect.init(document.querySelector('select'), { searchable: true });
+  try {
+    assert.equal(instance.menuEl.querySelector('input[type="search"]'), null);
+    assert.equal(instance.input.getAttribute('aria-haspopup'), 'tree');
+  } finally {
+    instance.destroy();
+  }
+  assert.equal(Expressive.Menu._menus.length, before);
+  assert.equal(document.querySelector('select').tabIndex, 0);
+});
+
 test('no matches and disabled matches never change selection', () => {
   const instance = fixture();
   try {

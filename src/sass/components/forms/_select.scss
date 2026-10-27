@@ -271,7 +271,14 @@ menu[role="listbox"] li.optgroup-option {
     width: 100%;
     min-height: rem(48px);
     padding: 8px;
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--md-sys-shape-corner-small);
     @include typescale("body-large");
+
+    &:focus-visible {
+      outline: 2px solid var(--md-sys-color-primary);
+      outline-offset: -2px;
+    }
   }
 
   > [role="status"] {
@@ -293,6 +300,10 @@ menu[role="listbox"] li.optgroup-option {
   }
 
   > menu > li[hidden] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .select-search-popup { transition: none !important; }
 }
 
 // Tree select. TreeSelect puts a ul[role="tree"] inside the Menu surface,

@@ -399,6 +399,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     this._listbox.append(...this.menuEl.childNodes);
     this._searchInput = document.createElement('input');
     this._searchInput.type = 'search';
+    this._searchInput.placeholder = this.options.i18n.searchLabel;
     this._searchInput.setAttribute('aria-label', this.options.i18n.searchLabel);
     this._searchStatus = document.createElement('div');
     this._searchStatus.setAttribute('role', 'status');

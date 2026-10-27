@@ -135,3 +135,80 @@ each('refreshes a live query, preserves the caret, and resets native state', asy
   assert.equal(await page.evaluate(() => instance.menu.isOpen), false);
   assert.equal(await page.locator('.field > input').isDisabled(), true);
 });
+
+each('works in a native modal dialog and an open shadow root', async page => {
+  for (const kind of ['dialog', 'shadow']) {
+    await page.evaluate(kind => {
+      const select = instance.el;
+      instance.destroy();
+      const label = select.labels[0];
+      const host = document.createElement(kind === 'dialog' ? 'dialog' : 'div');
+      document.body.append(host);
+      const root = kind === 'shadow' ? host.attachShadow({ mode: 'open' }) : host;
+      root.append(document.querySelector('style').cloneNode(true), select, label);
+      if (kind === 'dialog') host.showModal();
+      window.instance = Expressive.FormSelect.init(select, { searchable: true, menuOptions: { inDuration: 0, outDuration: 0 } });
+    }, kind);
+    await page.getByRole('combobox').click();
+    await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
+    await page.getByRole('searchbox').fill('tok');
+    await page.keyboard.press('ArrowDown');
+    await page.keyboard.press('Enter');
+    assert.equal(await page.evaluate(() => instance.el.value), 'tokyo');
+    assert.equal(await page.getByRole('combobox').evaluate(el => el === el.getRootNode().activeElement), true);
+    assert.equal(await page.getByRole('combobox').getAttribute('aria-controls'), await page.evaluate(() => instance.menuEl.id));
+    await page.evaluate(() => document.querySelector('dialog')?.close());
+  }
+});
+
+each('keeps search visible while results scroll with enlarged RTL text and forced colors', async page => {
+  await page.setViewportSize({ width: 360, height: 600 });
+  await page.emulateMedia({ forcedColors: 'active', reducedMotion: 'reduce' });
+  await page.evaluate(() => {
+    document.documentElement.dir = 'rtl';
+    document.documentElement.style.fontSize = '32px';
+    for (let index = 0; index < 120; index++) instance.el.append(new Option('Item ' + index, String(index)));
+    instance.refresh();
+  });
+  await page.getByRole('combobox').click();
+  await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
+  await page.getByRole('searchbox').fill('Item');
+  assert.notEqual(await page.getByRole('searchbox').evaluate(el => getComputedStyle(el).outlineStyle), 'none');
+  await page.keyboard.press('ArrowUp');
+  const geometry = await page.evaluate(() => {
+    const popup = instance.menuEl.getBoundingClientRect();
+    const input = instance.menuEl.querySelector('input').getBoundingClientRect();
+    const list = instance.menuEl.querySelector('[role="listbox"]');
+    return { top: popup.top, right: popup.right, bottom: popup.bottom, inputTop: input.top, inputBottom: input.bottom, scrolled: list.scrollTop > 0, focused: document.activeElement.textContent };
+  });
+  assert.equal(geometry.focused, 'Item 119');
+  assert.equal(geometry.scrolled, true);
+  assert.ok(geometry.inputTop >= geometry.top && geometry.inputBottom <= geometry.bottom);
+  assert.ok(geometry.top >= 0 && geometry.right <= 361 && geometry.bottom <= 601, JSON.stringify(geometry));
+});
+
+each('respects autoFocus false, callbacks, composition, and outside dismissal', async page => {
+  await page.evaluate(() => {
+    instance.destroy();
+    window.calls = [];
+    window.instance = Expressive.FormSelect.init(document.querySelector('select'), {
+      searchable: true, menuOptions: { inDuration: 0, outDuration: 0, autoFocus: false,
+        onOpenEnd() { calls.push('open'); }, onCloseStart() { calls.push('close'); } }
+    });
+    document.getElementById('before').focus();
+    instance.menu.open();
+  });
+  await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
+  assert.equal(await page.locator('#before').evaluate(el => el === document.activeElement), true);
+  await page.getByRole('combobox').focus();
+  await page.keyboard.press('Tab');
+  assert.equal(await page.getByRole('searchbox').evaluate(el => el === document.activeElement), true);
+  await page.getByRole('searchbox').fill('rome');
+  await page.getByRole('searchbox').dispatchEvent('keydown', { key: 'Enter', isComposing: true });
+  assert.equal(await page.evaluate(() => instance.el.value), 'paris');
+  await page.locator('#before').click();
+  await page.waitForFunction(() => !instance.menu.isOpen);
+  assert.equal(await page.locator('#before').evaluate(el => el === document.activeElement), true);
+  assert.deepEqual(await page.evaluate(() => calls), ['open', 'close']);
+  assert.equal(await page.evaluate(() => instance.menuEl.querySelector('input').value), '');
+});
