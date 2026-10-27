@@ -336,3 +336,216 @@ test('native form-associated controls outside the form recover their owned state
   await settleReset(0);
   assert.equal(input().validationMessage, 'Application policy');
 });
+
+const sizedFile = (name, bytes) => new window.File([new Uint8Array(bytes)], name);
+
+const sizeLimit = (value = '1024') => {
+  input().removeAttribute('data-validate-types');
+  input().setAttribute('data-max-size', value);
+};
+
+test('size-only validation accepts exact-limit files and leaves accept as a picker hint', () => {
+  sizeLimit();
+  document.querySelector('.drop-zone-files').remove();
+  for (const bytes of [0, 1023, 1024, 1025]) {
+    choose(sizedFile('program.exe', bytes));
+    validate();
+    assert.equal(input().validity.valid, bytes <= 1024, `${bytes} bytes`);
+  }
+  assert.match(input().validationMessage, /1024/);
+});
+
+test('size limits use trimmed positive decimal safe-integer bytes and ignore malformed hints', () => {
+  sizeLimit();
+  choose(sizedFile('large.pdf', 1025));
+  for (const value of ['', '0', '-1', '1.5', '1e3', '0x400', '+1024', 'no limit', 'Infinity', '9007199254740992']) {
+    input().setAttribute('data-max-size', value);
+    validate();
+    assert.equal(input().validity.valid, true, value);
+  }
+  input().setAttribute('data-max-size', ' 001024 ');
+  validate();
+  assert.equal(input().validity.customError, true);
+  input().setAttribute('data-max-size', '9007199254740991');
+  validate();
+  assert.equal(input().validity.valid, true);
+});
+
+test('one oversized file invalidates the complete retained list with separate accessible size feedback', () => {
+  sizeLimit();
+  const selected = choose(sizedFile('exact.pdf', 1024), sizedFile('<img src=x>.pdf', 1025));
+  const error = document.querySelector('[data-error]');
+  validate();
+  assert.equal(input().validity.customError, true);
+  assert.match(input().validationMessage, /1024/);
+  assert.notEqual(input().validationMessage, error.getAttribute('data-error'));
+  assert.equal(document.getElementById('upload').checkValidity(), false);
+  assert.equal(input().files, selected);
+  assert.equal(error.textContent, input().validationMessage);
+  assert.equal(error.hidden, false);
+  assert.equal(input().getAttribute('aria-invalid'), 'true');
+  assert.equal(input().getAttribute('aria-describedby'), `hint ${error.id}`);
+  error.setAttribute('data-error-size', 'Chaque fichier doit faire 1 Ko au maximum.');
+  validate();
+  assert.equal(input().validationMessage, 'Chaque fichier doit faire 1 Ko au maximum.');
+  assert.equal(input().getAttribute('aria-describedby'), `hint ${error.id}`);
+  Expressive.Forms.listDropZoneFiles(document.querySelector('.drop-zone'), input());
+  assert.equal(document.querySelectorAll('.drop-zone-files > li').length, 2);
+  assert.equal(document.querySelector('.drop-zone-files img'), null);
+});
+
+test('type errors take precedence over size errors without enabling type checks for size-only zones', () => {
+  input().setAttribute('data-max-size', '4');
+  choose(sizedFile('bad.exe', 8));
+  validate();
+  assert.equal(input().validationMessage, 'Choose PDF or PNG files.');
+  choose(sizedFile('large.pdf', 8));
+  validate();
+  assert.match(input().validationMessage, /4/);
+  sizeLimit('4');
+  choose(sizedFile('small.exe', 4));
+  validate();
+  assert.equal(input().validity.valid, true);
+});
+
+test('size recovery clears only owned validity and keeps required and application errors effective', () => {
+  sizeLimit('4');
+  choose(sizedFile('large.pdf', 8));
+  validate();
+  assert.equal(input().validity.customError, true);
+  for (const files of [[sizedFile('exact.pdf', 4)], []]) {
+    choose(...files);
+    validate();
+    assert.equal(input().validity.valid, true);
+  }
+  choose(sizedFile('large.pdf', 8));
+  validate();
+  input().removeAttribute('data-max-size');
+  validate();
+  assert.equal(input().validity.valid, true);
+  sizeLimit('4');
+  input().setCustomValidity('Application policy');
+  for (const files of [[sizedFile('large.pdf', 8)], [sizedFile('small.pdf', 4)], []]) {
+    choose(...files);
+    validate();
+    assert.equal(input().validationMessage, 'Application policy');
+  }
+  input().setCustomValidity('');
+  input().required = true;
+  validate();
+  assert.equal(input().validity.valueMissing, true);
+  assert.equal(input().validity.customError, false);
+});
+
+test('size rejection snapshots deduplicate native pairs and track effective constraint changes', () => {
+  sizeLimit('4');
+  const selected = choose(sizedFile('small.pdf', 4), sizedFile('large.pdf', 8));
+  const seen = [];
+  document.querySelector('.drop-zone').addEventListener('expressive:reject', event => {
+    seen.push({ reason: event.detail.reason, files: event.detail.files.slice(), rejected: event.detail.rejected.slice() });
+    assert.equal(event.bubbles && event.composed, true);
+    assert.equal(event.cancelable, false);
+    assert.equal(event.detail.input, input());
+    event.detail.files.length = 0;
+    event.detail.rejected.length = 0;
+  });
+  const emit = () => input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  emit();
+  input().dispatchEvent(new window.Event('change', { bubbles: true }));
+  assert.equal(seen.length, 1);
+  assert.deepEqual(seen[0], { reason: 'size', files: selected, rejected: [selected[1]] });
+  input().setAttribute('data-max-size', '3');
+  emit();
+  assert.equal(seen.length, 2);
+  assert.deepEqual(seen[1].rejected, selected);
+  input().setAttribute('data-max-size', ' 003 ');
+  emit();
+  assert.equal(seen.length, 2);
+  input().setAttribute('data-validate-types', '');
+  emit();
+  assert.equal(seen.length, 3);
+  input().accept = '.png';
+  emit();
+  assert.equal(seen.length, 4);
+  assert.equal(seen[3].reason, 'type');
+  validate();
+  assert.equal(seen.length, 4);
+  assert.equal(input().files, selected);
+});
+
+test('a size rejection listener can replace the selection without stale validity or feedback', () => {
+  sizeLimit('4');
+  let calls = 0;
+  document.querySelector('.drop-zone').addEventListener('expressive:reject', event => {
+    assert.equal(event.detail.reason, 'size');
+    calls++;
+    choose(sizedFile('new.pdf', 4));
+    input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  });
+  choose(sizedFile('old.pdf', 8));
+  input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  assert.equal(calls, 1);
+  assert.equal(input().validity.valid, true);
+  assert.equal(document.querySelector('[data-error]').hidden, true);
+  assert.match(document.querySelector('.drop-zone-files').textContent, /^new.pdf/);
+});
+
+test('size reset honors cancellation, external form ownership and newer selections', async () => {
+  sizeLimit('4');
+  const form = document.getElementById('upload');
+  const zone = document.querySelector('.drop-zone');
+  form.after(zone);
+  input().setAttribute('form', form.id);
+  let events = 0;
+  zone.addEventListener('expressive:reject', () => events++);
+  const emit = () => input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  choose(sizedFile('large.pdf', 8));
+  emit();
+  zone.classList.add('dragover');
+  form.addEventListener('reset', event => event.preventDefault(), { once: true });
+  form.reset();
+  await settleReset(0);
+  assert.equal(input().validity.customError, true);
+  assert.equal(zone.classList.contains('dragover'), true);
+  assert.equal(document.querySelector('[data-error]').hidden, false);
+  form.reset();
+  choose(sizedFile('new.pdf', 8));
+  emit();
+  await settleReset(0);
+  assert.equal(input().validity.customError, true);
+  assert.match(zone.querySelector('.drop-zone-files').textContent, /^new.pdf/);
+  choose();
+  form.reset();
+  await settleReset(0);
+  assert.equal(input().validity.valid, true);
+  assert.equal(zone.classList.contains('dragover'), false);
+  assert.equal(document.querySelector('[data-error]').hidden, true);
+  assert.equal(events, 2);
+  input().setCustomValidity('Application policy');
+  form.reset();
+  await settleReset(0);
+  assert.equal(input().validationMessage, 'Application policy');
+});
+
+test('size validation skips disabled controls and refresh preserves unreadable application validity', async () => {
+  sizeLimit('4');
+  choose(sizedFile('large.pdf', 8));
+  const fieldset = document.createElement('fieldset');
+  const label = input().parentElement;
+  label.before(fieldset);
+  fieldset.append(label);
+  fieldset.disabled = true;
+  validate();
+  assert.equal(input().validity.customError, false);
+  fieldset.disabled = false;
+  validate();
+  assert.equal(input().validity.customError, true);
+  input().disabled = true;
+  input().setCustomValidity('Application while disabled');
+  choose();
+  document.getElementById('upload').reset();
+  await settleReset(0);
+  input().disabled = false;
+  validate();
+  assert.equal(input().validationMessage, 'Application while disabled');
+});

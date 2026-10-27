@@ -1,6 +1,19 @@
 import { Utils } from '../core/utils';
 
-const FILE_TYPES = '.drop-zone input[type="file"][data-validate-types]';
+const FILE_RULES = '.drop-zone input[type="file"]:is([data-validate-types], [data-max-size])';
+
+interface FileFailure {
+  rejected: File[];
+  reason: 'type' | 'size';
+  message: string;
+}
+
+function fileSizeLimit(input: HTMLInputElement) {
+  const value = (input.getAttribute('data-max-size') || '').trim();
+  if (!/^\d+$/.test(value)) return 0;
+  const limit = Number(value);
+  return Number.isSafeInteger(limit) ? limit : 0;
+}
 
 function fileSpecifier(value: string) {
   if (value.endsWith('/*')) return /^(image|audio|video)\/\*$/.test(value);
@@ -21,7 +34,7 @@ export class Forms {
    * passes. An empty optional field never fails. The field is described by
    * its `[data-error]` supporting text, so the error the CSS shows there is
    * read with it.
-   * Marked drop-zone file inputs also validate accept and synchronize their
+   * Marked drop-zone file inputs also validate type/size rules and synchronize their
    * native custom validity and zone-level error text, without emitting events.
    * @param textfield
    */
@@ -30,8 +43,8 @@ export class Forms {
       console.error('No text field element found');
       return;
     }
-    if (Forms._typedFile(textfield)) {
-      Forms._validateFileTypes(textfield);
+    if (Forms._validatedFile(textfield)) {
+      Forms._validateFiles(textfield);
       return;
     }
     if (!textfield.classList.contains('validate')) return;
@@ -112,50 +125,67 @@ export class Forms {
   }
 
   private static _initialized = false;
-  private static _fileTypeErrors = new WeakMap<HTMLInputElement, string>();
-  private static _fileSelections = new WeakMap<HTMLInputElement, { files: File[]; accept: string }>();
+  private static _fileErrors = new WeakMap<HTMLInputElement, string>();
+  private static _fileSelections = new WeakMap<HTMLInputElement, { files: File[]; constraints: string }>();
   private static _fileResetForms = new WeakSet<HTMLFormElement>();
 
-  private static _typedFile(input: HTMLInputElement) {
-    return input.matches(FILE_TYPES) || Forms._fileTypeErrors.has(input);
+  private static _validatedFile(input: HTMLInputElement) {
+    return input.matches(FILE_RULES) || Forms._fileErrors.has(input);
   }
 
-  private static _rejectedFiles(input: HTMLInputElement) {
+  private static _rejectedTypes(input: HTMLInputElement) {
     const accepted = input.accept.split(',').map((value) => value.trim().toLowerCase()).filter(fileSpecifier);
     if (!accepted.length) return [];
     return Array.from(input.files ?? []).filter((file) => !accepted.some((specifier) => fileMatches(file, specifier)));
   }
 
-  private static _validateFileTypes(input: HTMLInputElement) {
-    if (input.matches(':disabled')) return [];
+  private static _validateFiles(input: HTMLInputElement) {
+    if (input.matches(':disabled')) return;
     Forms._bindFileReset(input);
-    const rejected = Forms._checkFileTypes(input);
-    Forms._showFileError(input, rejected.length ? Forms._fileTypeMessage(input) : input.validationMessage);
-    return rejected;
+    const failure = Forms._checkFiles(input);
+    Forms._showFileError(input, failure?.message ?? input.validationMessage);
+    return failure;
   }
 
-  private static _checkFileTypes(input: HTMLInputElement) {
-    Forms._clearFileTypeError(input);
-    if (!input.matches(FILE_TYPES)) {
-      Forms._fileTypeErrors.delete(input);
-      return [];
+  private static _checkFiles(input: HTMLInputElement) {
+    Forms._clearFileError(input);
+    if (!input.matches(FILE_RULES)) {
+      Forms._fileErrors.delete(input);
+      return;
     }
-    Forms._fileTypeErrors.set(input, '');
-    const rejected = Forms._rejectedFiles(input);
-    if (rejected.length) Forms._setFileTypeError(input);
-    return rejected;
+    Forms._fileErrors.set(input, '');
+    const failure = Forms._typeFailure(input) ?? Forms._sizeFailure(input);
+    if (failure) Forms._setFileError(input, failure.message);
+    return failure;
   }
 
-  private static _clearFileTypeError(input: HTMLInputElement) {
-    const owned = Forms._fileTypeErrors.get(input);
+  private static _typeFailure(input: HTMLInputElement): FileFailure | undefined {
+    if (!input.hasAttribute('data-validate-types')) return;
+    const rejected = Forms._rejectedTypes(input);
+    if (rejected.length) return { rejected, reason: 'type', message: Forms._fileTypeMessage(input) };
+  }
+
+  private static _sizeFailure(input: HTMLInputElement): FileFailure | undefined {
+    const limit = fileSizeLimit(input);
+    if (!limit) return;
+    const rejected = Array.from(input.files ?? []).filter((file) => file.size > limit);
+    if (!rejected.length) return;
+    return { rejected, reason: 'size', message: Forms._fileSizeMessage(input, limit) };
+  }
+
+  private static _fileSizeMessage(input: HTMLInputElement, limit: number) {
+    return Forms._fileError(input)?.getAttribute('data-error-size')?.trim() || `Maximum file size: ${limit} bytes.`;
+  }
+
+  private static _clearFileError(input: HTMLInputElement) {
+    const owned = Forms._fileErrors.get(input);
     if (owned && owned === input.validationMessage) input.setCustomValidity('');
   }
 
-  private static _setFileTypeError(input: HTMLInputElement) {
+  private static _setFileError(input: HTMLInputElement, message: string) {
     if (input.validity.customError) return;
-    const message = Forms._fileTypeMessage(input);
     input.setCustomValidity(message);
-    Forms._fileTypeErrors.set(input, message);
+    Forms._fileErrors.set(input, message);
   }
 
   private static _fileTypeMessage(input: HTMLInputElement) {
@@ -188,31 +218,31 @@ export class Forms {
     Forms._bindFileReset(input);
     const zone = input.closest('.drop-zone');
     const files = Array.from(input.files ?? []);
-    const rejected = Forms._validateDropZone(input);
+    const failure = Forms._validateDropZone(input);
     Forms.listDropZoneFiles(zone, input);
-    Forms._reportFileRejection(input, files, rejected);
+    Forms._reportFileRejection(input, files, failure);
   }
 
   private static _validateDropZone(input: HTMLInputElement) {
-    if (Forms._typedFile(input)) return Forms._validateFileTypes(input);
+    if (Forms._validatedFile(input)) return Forms._validateFiles(input);
     Forms.validateField(input);
-    return [];
   }
 
-  private static _reportFileRejection(input: HTMLInputElement, files: File[], rejected: File[]) {
-    if (!input.matches(FILE_TYPES)) {
+  private static _reportFileRejection(input: HTMLInputElement, files: File[], failure?: FileFailure) {
+    if (!input.matches(FILE_RULES)) {
       Forms._fileSelections.delete(input);
       return;
     }
     if (!Forms._newFileSelection(input, files)) return;
-    if (!rejected.length) return;
-    Utils.emit(input.closest('.drop-zone'), 'reject', { input, files: files.slice(), rejected: rejected.slice(), reason: 'type' });
+    if (!failure) return;
+    Utils.emit(input.closest('.drop-zone'), 'reject', { input, files: files.slice(), rejected: failure.rejected.slice(), reason: failure.reason });
   }
 
   private static _newFileSelection(input: HTMLInputElement, files: File[]) {
+    const constraints = JSON.stringify([input.hasAttribute('data-validate-types'), input.accept, fileSizeLimit(input)]);
     const previous = Forms._fileSelections.get(input);
-    Forms._fileSelections.set(input, { files, accept: input.accept });
-    return !previous || previous.accept !== input.accept || previous.files.length !== files.length ||
+    Forms._fileSelections.set(input, { files, constraints });
+    return !previous || previous.constraints !== constraints || previous.files.length !== files.length ||
       !previous.files.every((file, index) => file === files[index]);
   }
 
@@ -240,9 +270,9 @@ export class Forms {
 
   private static _resetFileValidity(input: HTMLInputElement) {
     if (input.matches(':disabled')) return;
-    if (!Forms._typedFile(input)) return;
-    Forms._clearFileTypeError(input);
-    Forms._fileTypeErrors.delete(input);
+    if (!Forms._validatedFile(input)) return;
+    Forms._clearFileError(input);
+    Forms._fileErrors.delete(input);
     Forms._showFileError(input, input.validationMessage);
   }
 

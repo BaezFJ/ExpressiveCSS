@@ -15,6 +15,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Optional per-file drop-zone byte limits through `data-max-size`, independent
+  of type checking. Exact-limit files pass; one oversized file invalidates the
+  whole retained selection with accessible feedback and `expressive:reject`
+  reason `size`. Combined rules preserve type-first feedback and application
+  custom validity. Constraint-aware deduplication, reset and shadow handling
+  reuse the existing Forms path.
 - Opt-in drop-zone type validation with `data-validate-types`, native form
   prevention and accessible error feedback. Extensions, exact MIME types and
   standard media wildcards match whole selections without filtering files.

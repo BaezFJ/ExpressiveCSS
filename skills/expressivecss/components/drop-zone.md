@@ -9,7 +9,7 @@ Component ID: `drop-zone`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `a6171730fa00c7123d63fae95a856638968d1913d2b76b5be33ba20a39ec8f66`
+Contract SHA-256: `528b23d48c6285476a68f39244694d9029de59c1b355e2ca0eee7e69ae8aa023`
 
 #### Selection and adaptation
 
@@ -35,11 +35,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-A large target for choosing or dropping files, with an optional list and type validation.
+A large target for choosing or dropping files, with an optional list, type validation and per-file size limits.
 
 A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input covers the label, so clicking, keyboard input and file dropping reach the native control. Forms marks dragover and lists each selected file's name and localized size. The root bundle installs Forms on load; modular consumers call `Forms.Init()`. Document-level input/change handling also supports dynamically inserted zones and open shadow roots.
 
-A dropped file replaces the selection; add multiple to take several files. `accept` alone is a picker hint. Add data-validate-types for the checks below. Unmarked zones retain their existing behavior. Reset clears lists after dispatch/default handling; cancellation preserves the current view, and a newer selection keeps its state.
+A dropped file replaces the selection; add multiple to take several files. `accept` alone is a picker hint. Add data-validate-types for type checks or data-max-size for a per-file byte limit. Unmarked zones retain their existing behavior. Reset clears lists after dispatch/default handling; cancellation preserves the current view, and a newer selection keeps its state.
 
 #### Syntax
 
@@ -57,10 +57,10 @@ A dropped file replaces the selection; add multiple to take several files. `acce
 
 #### Also documented
 
-The Drop zone section of the [API reference](https://www.expressivecss.com/llm.md) also covers Type validation, Tokens.
+The Drop zone section of the [API reference](https://www.expressivecss.com/llm.md) also covers Type validation, Per-file size limit, Tokens.
 
 #### Rules
 
 - `drop-zone-input-is-in-the-label`: Put the file input inside the .drop-zone <label>. The label names the input and the input covers the label; a loose input is neither named nor a drop target.
 - `drop-zone-files-are-a-list`: Write .drop-zone-files as a <ul>. The behavior fills it with one <li> per file, and a list tells assistive technology how many files were chosen.
-- `drop-zone-type-error-is-live-status`: An opted-in type-validation zone needs a direct [data-error] area with role="status" and aria-live="polite". The runtime writes real error text there and describes the file input with it.
+- `drop-zone-type-error-is-live-status`: An opted-in file-validation zone needs a direct [data-error] area with role="status" and aria-live="polite". The runtime writes real error text there and describes the file input with it.

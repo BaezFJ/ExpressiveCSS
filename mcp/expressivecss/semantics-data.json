@@ -673,9 +673,9 @@
           {
             "id": "drop-zone-type-error-is-live-status",
             "kind": "forbid",
-            "selector": ".drop-zone:has(> label input[type=\"file\"][data-validate-types]):not(:has(> [data-error])), .drop-zone:has(> label input[type=\"file\"][data-validate-types]) > [data-error]:not([role=\"status\"][aria-live=\"polite\"])",
+            "selector": ".drop-zone:has(> label input[type=\"file\"]:is([data-validate-types], [data-max-size])):not(:has(> [data-error])), .drop-zone:has(> label input[type=\"file\"]:is([data-validate-types], [data-max-size])) > [data-error]:not([role=\"status\"][aria-live=\"polite\"])",
             "fragmentSafe": true,
-            "message": "An opted-in type-validation zone needs a direct [data-error] area with role=\"status\" and aria-live=\"polite\". The runtime writes real error text there and describes the file input with it."
+            "message": "An opted-in file-validation zone needs a direct [data-error] area with role=\"status\" and aria-live=\"polite\". The runtime writes real error text there and describes the file input with it."
           }
         ]
       },
