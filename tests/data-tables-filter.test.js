@@ -110,6 +110,25 @@ test('later server sync preserves author hiding and counts while selecting only 
   assert.equal(requests, 1);
 });
 
+test('an older default action cannot overwrite a newer canceled filter request', () => {
+  wrapper().addEventListener('expressive:filter', (e) => {
+    if (e.detail.query === 'outer') {
+      query('newer');
+      return;
+    }
+    e.preventDefault();
+    document.querySelector('tbody').innerHTML = '<tr id="server"><td><input type="checkbox" checked></td><th>Server result</th><td>Ready</td></tr>';
+    document.querySelector('[data-table-filter-count]').textContent = '87';
+    Expressive.DataTables.sync(wrapper());
+  });
+  query('outer');
+  assert.equal(search().value, 'newer');
+  assert.equal(filtered('server'), false);
+  assert.equal(count(), '87');
+  Expressive.DataTables.sync(wrapper());
+  assert.equal(count(), '87', 'the newer request keeps ownership after dispatch');
+});
+
 test('server filter ownership stays within its wrapper and is independent of sort cancellation', () => {
   const server = wrapper();
   const local = server.cloneNode(true);

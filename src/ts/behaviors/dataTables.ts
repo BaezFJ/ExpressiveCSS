@@ -193,7 +193,7 @@ function keyWidth(header: HTMLTableCellElement, e: KeyboardEvent) {
 export class DataTables {
   private static _initialized = false;
   private static _dragged = false;
-  private static _serverFilters = new WeakSet<Element>();
+  private static _serverFilters = new WeakMap<Element, Event>();
 
   static Init() {
     if (DataTables._initialized || typeof document === 'undefined') return;
@@ -284,12 +284,12 @@ export class DataTables {
   };
 
   private static _onFilter = (e: Event) => {
-    const input = Utils.eventTarget(e);
-    const wrapper = input?.closest('.data-table');
-    if (!wrapper || !input.matches(FILTER)) return;
-    // A listener may replace rows and sync before dispatch returns.
-    DataTables._serverFilters.add(wrapper);
-    if (Utils.emit(wrapper, 'filter', { query: (input as HTMLInputElement).value.trim() }, true)) {
+    const input = Utils.closestInPath(e, `.data-table ${FILTER}`) as HTMLInputElement;
+    if (!input) return;
+    const wrapper = input.closest('.data-table');
+    // A listener may replace rows, sync or dispatch a newer request before returning.
+    DataTables._serverFilters.set(wrapper, e);
+    if (Utils.emit(wrapper, 'filter', { query: input.value.trim() }, true) && DataTables._serverFilters.get(wrapper) === e) {
       DataTables._serverFilters.delete(wrapper);
       DataTables.sync(wrapper);
     }

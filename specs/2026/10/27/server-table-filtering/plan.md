@@ -28,8 +28,8 @@ Delivers R1, R3-R6. Completion checks V2 and V3; commit the tested increment.
 
 Prerequisite: groups 1 and 2 pass.
 
-- [ ] Measure bundle gzip sizes and update the reviewed JavaScript budget in `tests/selective-builds.test.js`.
-- [ ] Run required contributor, browser, MCP and package checks. Record actual results and limitations in validation.
+- [x] Measure bundle gzip sizes and update the reviewed JavaScript budget in `tests/selective-builds.test.js`.
+- [x] Run required contributor, browser, MCP and package checks. Record actual results and limitations in validation.
 - [ ] Obtain independent final review, fix confirmed findings and perform the separate simplification pass. Open and monitor the PR, fix issues and merge only with passing required CI, resolved conversations and current master.
 
 Delivers R6. Completion checks V4-V6. Package publication is excluded. Record the merged phase in the separate post-merge roadmap documentation work.
