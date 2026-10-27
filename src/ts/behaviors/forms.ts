@@ -224,7 +224,20 @@ export class Forms {
   }
 
   private static _resetFileInput(input: HTMLInputElement) {
+    if (input.files?.length) return;
     Forms._fileSelections.delete(input);
+    Forms._resetFileList(input);
+    Forms._resetFileValidity(input);
+  }
+
+  private static _resetFileList(input: HTMLInputElement) {
+    const zone = input.closest('.drop-zone');
+    if (!zone) return;
+    Forms.listDropZoneFiles(zone, input);
+    zone.classList.remove('dragover');
+  }
+
+  private static _resetFileValidity(input: HTMLInputElement) {
     if (input.matches(':disabled')) return;
     if (!Forms._typedFile(input)) return;
     Forms._clearFileTypeError(input);
@@ -234,8 +247,6 @@ export class Forms {
 
   private static _resetDropZones(form: HTMLFormElement) {
     form.querySelectorAll<HTMLInputElement>('input[type="file"]').forEach(Forms._resetFileInput);
-    form.querySelectorAll('.drop-zone-files').forEach((list) => list.replaceChildren());
-    form.querySelectorAll('.drop-zone.dragover').forEach((zone) => zone.classList.remove('dragover'));
   }
 
   /**
@@ -337,9 +348,10 @@ export class Forms {
       input.closest('.field')?.querySelector('.password-toggle')?.setAttribute('aria-pressed', 'false');
     });
     if (e.type === 'reset') {
-      queueMicrotask(() => {
+      // Native events can run microtasks between listeners, before a later cancellation.
+      setTimeout(() => {
         if (!e.defaultPrevented) Forms._resetDropZones(form);
-      });
+      }, 0);
     }
   }
 

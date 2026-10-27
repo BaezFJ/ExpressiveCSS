@@ -1,5 +1,6 @@
 import { beforeEach, test } from 'node:test';
 import assert from 'node:assert/strict';
+import { setTimeout as settleReset } from 'node:timers/promises';
 import { Expressive, resetBody, window } from './setup.js';
 
 const markup = `<form id="upload"><div class="drop-zone"><label>Choose documents
@@ -196,14 +197,15 @@ test('canceled reset preserves rejection and successful reset clears only owned 
   zone.classList.add('dragover');
   form.addEventListener('reset', (event) => event.preventDefault(), { once: true });
   form.reset();
-  await Promise.resolve();
+  await settleReset(0);
   assert.equal(input().files, selected);
   assert.equal(input().validity.customError, true);
   assert.equal(error.hidden, false);
   assert.equal(zone.classList.contains('dragover'), true);
   assert.equal(document.querySelectorAll('.drop-zone-files > li').length, 1);
+  choose();
   form.reset();
-  await Promise.resolve();
+  await settleReset(0);
   assert.equal(input().validity.customError, false);
   assert.equal(error.hidden, true);
   assert.equal(zone.classList.contains('dragover'), false);
@@ -215,8 +217,9 @@ test('successful reset preserves application custom validity', async () => {
   input().setCustomValidity('Application policy');
   choose(file('bad.exe'));
   input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  choose();
   document.getElementById('upload').reset();
-  await Promise.resolve();
+  await settleReset(0);
   assert.equal(input().validationMessage, 'Application policy');
   assert.equal(input().getAttribute('aria-invalid'), 'true');
   assert.equal(document.querySelector('[data-error]').textContent, 'Application policy');
@@ -227,12 +230,13 @@ test('a handled shadow-root file input recovers on its native form reset', async
   const root = document.getElementById('host').attachShadow({ mode: 'open' });
   root.innerHTML = markup;
   const control = root.getElementById('files');
-  Object.defineProperty(control, 'files', { value: [file('bad.exe')] });
+  Object.defineProperty(control, 'files', { configurable: true, value: [file('bad.exe')] });
   control.dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
   assert.equal(control.validity.customError, true);
   assert.equal(root.querySelector('[data-error]').hidden, false);
+  Object.defineProperty(control, 'files', { value: [] });
   root.querySelector('form').reset();
-  await Promise.resolve();
+  await settleReset(0);
   assert.equal(control.validity.customError, false);
   assert.equal(root.querySelector('[data-error]').hidden, true);
 });
@@ -276,7 +280,7 @@ test('disabled owned validity stays inactive until an explicit validation after 
   input().disabled = true;
   input().setCustomValidity('Application changed this while disabled');
   document.getElementById('upload').reset();
-  await Promise.resolve();
+  await settleReset(0);
   assert.equal(input().validity.customError, true);
   choose();
   input().disabled = false;
@@ -295,4 +299,17 @@ test('an outer zone without its own list leaves a nested zone untouched', () => 
   assert.equal(inner.querySelectorAll('.drop-zone-files > li').length, 0);
   assert.equal(inner.querySelector('[data-error]').hidden, true);
   assert.equal(inner.querySelector('input').validity.valid, true);
+});
+
+test('older deferred reset cleanup leaves a newer file selection intact', async () => {
+  choose(file('old.exe'));
+  input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  document.getElementById('upload').reset();
+  const newer = choose(file('new-after-reset.exe'));
+  input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  await settleReset(0);
+  assert.equal(input().files, newer);
+  assert.equal(input().validity.customError, true);
+  assert.equal(document.querySelector('[data-error]').hidden, false);
+  assert.match(document.querySelector('.drop-zone-files').textContent, /^new-after-reset.exe/);
 });
