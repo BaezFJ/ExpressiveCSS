@@ -54,7 +54,7 @@ test('page size clamps the last page and handles one native input/change pair on
     assert.equal(box('secret').checked, true);
     assert.equal(document.activeElement, control);
     assert.equal(calls, 1);
-    assert.deepEqual(events, []);
+    assert.deepEqual(events, ['page']);
   } finally {
     Expressive.DataTables.sync = original;
   }

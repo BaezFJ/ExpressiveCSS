@@ -314,7 +314,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed cancelable filtering, silent server ownership and newer-request precedence: 107,235 gzip bytes (+99).
   // Reviewed local record-group paging, retained selections and authored page controls: 107,683 gzip bytes (+448).
   // Reviewed authored page-size controls through shared paging and native input/change: 107,786 gzip bytes (+103).
-  assert.ok(sizes(js).gzip <= 107786, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed atomic server page state, cancelable requests and newer-response precedence: 108,215 gzip bytes (+429).
+  // Reviewed first activation of unsynced local pages without mutating canceled views: 108,250 gzip bytes (+35).
+  assert.ok(sizes(js).gzip <= 108250, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

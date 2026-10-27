@@ -25,6 +25,20 @@ const PAGE_BUTTON = 'button[type="button"]:is([data-table-page="previous"], [dat
 const PAGE_STEP: Record<string, number> = { previous: -1, next: 1 };
 const PAGE_SIZE = 'select[data-table-page-size]:not([multiple], :disabled):not(:has(option:checked:disabled))';
 
+interface TablePageState { page: number; pageSize: number; total: number; }
+type PageView = TablePageState & { server?: boolean };
+
+function validPageState(state: TablePageState) {
+  if (!state) return false;
+  return [[state.page, 1], [state.pageSize, 1], [state.total, 0]].every(
+    ([value, minimum]) => Number.isSafeInteger(value) && value >= minimum
+  );
+}
+
+function pageIndex(page: number, total: number, size: number) {
+  return Math.min(Math.max(page, 1), Math.ceil(total / size));
+}
+
 function positivePageSize(value: string | null) {
   const size = Number(value);
   return Number.isSafeInteger(size) && size > 0 ? size : 0;
@@ -205,12 +219,15 @@ function keyWidth(header: HTMLTableCellElement, e: KeyboardEvent) {
  * A positive `data-page-size` opts into local record-group paging through
  * authored Previous/Next buttons; selections on other pages stay checked.
  * A marked single select changes the size while preserving a valid page.
+ * Page/size controls request cancelable `expressive:page` before a local
+ * default. setPage accepts server state whose records stay application-owned.
  */
 export class DataTables {
   private static _initialized = false;
   private static _dragged = false;
   private static _serverFilters = new WeakMap<Element, Event>();
-  private static _pages = new WeakMap<Element, number>();
+  private static _pages = new WeakMap<Element, PageView>();
+  private static _pageRequests = new WeakMap<Element, Event>();
 
   static Init() {
     if (DataTables._initialized || typeof document === 'undefined') return;
@@ -240,11 +257,16 @@ export class DataTables {
    * after a canceled filter request. It fires no events.
    * Local paging preserves the current page where possible and clamps it
    * after record changes, before synchronizing the page's select-all state.
+   * Accepted server pages retain all supplied visible records and use their
+   * application total for status and bounds, without local filtering.
    */
   static sync(wrapper: Element) {
     const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
     if (table) {
       table.querySelectorAll(`:scope > tbody > tr[${PAGED}]`).forEach((row) => row.removeAttribute(PAGED));
+      if (DataTables._pages.get(wrapper)?.server) {
+        table.querySelectorAll(`:scope > tbody > tr[${FILTERED}]`).forEach((row) => row.removeAttribute(FILTERED));
+      }
       DataTables._filter(wrapper, table);
       DataTables._page(wrapper, table);
       DataTables._select(DataTables._all(table), DataTables._enabled(table), false);
@@ -252,6 +274,28 @@ export class DataTables {
     (wrapper.getRootNode() as ParentNode).querySelectorAll(TOGGLE).forEach((item) => {
       if (wrapper.contains(toggledHeader(item))) applyToggle(item);
     });
+  }
+
+  /** Accepts application page state without slicing its records; null restores local paging. */
+  static setPage(wrapper: Element, state: TablePageState | null): boolean {
+    if (!wrapper?.matches?.('.data-table:has(> table)')) return false;
+    if (!DataTables._storePage(wrapper, state)) return false;
+    DataTables._pageRequests.delete(wrapper);
+    DataTables.sync(wrapper);
+    return true;
+  }
+
+  private static _storePage(wrapper: Element, state: TablePageState | null) {
+    if (state === null) {
+      DataTables._pages.delete(wrapper);
+      return true;
+    }
+    if (!state) return false;
+    const accepted = { page: state.page, pageSize: state.pageSize, total: state.total };
+    if (!validPageState(accepted)) return false;
+    wrapper.setAttribute('data-page-size', String(accepted.pageSize));
+    DataTables._pages.set(wrapper, { ...accepted, server: true });
+    return true;
   }
 
   /** A column's width in pixels, read from its header cell. */
@@ -315,8 +359,7 @@ export class DataTables {
     DataTables._serverFilters.set(wrapper, e);
     if (Utils.emit(wrapper, 'filter', { query: input.value.trim() }, true) && DataTables._serverFilters.get(wrapper) === e) {
       DataTables._serverFilters.delete(wrapper);
-      DataTables._pages.delete(wrapper);
-      DataTables.sync(wrapper);
+      DataTables._resetPage(wrapper);
     }
   };
 
@@ -325,7 +368,7 @@ export class DataTables {
     const input = tableControl(wrapper, FILTER) as HTMLInputElement;
     if (!input) return;
     const locale = Utils.locale(table);
-    const query = DataTables._serverFilters.has(wrapper) ? '' : input.value.trim().toLocaleLowerCase(locale);
+    const query = DataTables._serverRecords(wrapper) ? '' : input.value.trim().toLocaleLowerCase(locale);
     const headers = table.tHead ? [...headerColumns(table.tHead)] : [];
     const columns = headers.filter(([cell]) => cell.hasAttribute('data-filter') && (cell as HTMLTableCellElement).colSpan === 1).map(([, column]) => column);
     const groups = DataTables._records(table);
@@ -338,9 +381,13 @@ export class DataTables {
 
   /** A server-filtered table's count belongs to the application. */
   private static _filterCount(wrapper: Element, locale: string, matches: number) {
-    if (DataTables._serverFilters.has(wrapper)) return;
+    if (DataTables._serverRecords(wrapper)) return;
     const count = tableControl(wrapper, '[data-table-filter-count]');
     if (count) count.textContent = new Intl.NumberFormat(locale).format(matches);
+  }
+
+  private static _serverRecords(wrapper: Element) {
+    return DataTables._pages.get(wrapper)?.server || DataTables._serverFilters.has(wrapper);
   }
 
   private static _matches(row: HTMLTableRowElement, columns: number[], query: string, locale: string) {
@@ -352,21 +399,48 @@ export class DataTables {
     if (!button) return;
     const wrapper = button.closest('.data-table');
     if (!pageSize(wrapper)) return;
-    DataTables._pages.set(wrapper, (DataTables._pages.get(wrapper) ?? 1) + PAGE_STEP[button.dataset.tablePage]);
-    DataTables.sync(wrapper);
+    DataTables._advancePage(wrapper, PAGE_STEP[button.dataset.tablePage], e);
   };
+
+  private static _advancePage(wrapper: Element, step: number, event: Event) {
+    const view = DataTables._pageState(wrapper);
+    const page = pageIndex(view.page + step, view.total, pageSize(wrapper));
+    if (page < 1 || page === view.page) return;
+    DataTables._requestPage(wrapper, { page, pageSize: pageSize(wrapper) }, event);
+  }
 
   private static _onPageSize = (e: Event) => {
+    if (!e.composed) return;
     const control = Utils.closestInPath(e, `.data-table[data-page-size] ${PAGE_SIZE}`) as HTMLSelectElement;
     if (!control) return;
-    DataTables._setPageSize(control.closest('.data-table'), control.value);
+    DataTables._setPageSize(control.closest('.data-table'), control.value, e);
   };
 
-  private static _setPageSize(wrapper: Element, value: string) {
+  private static _setPageSize(wrapper: Element, value: string, event: Event) {
     const size = positivePageSize(value);
     if (!size || !pageSize(wrapper) || size === pageSize(wrapper)) return;
-    wrapper.setAttribute('data-page-size', String(size));
+    const view = DataTables._pageState(wrapper);
+    const page = Math.max(1, pageIndex(view.page, view.total, size));
+    DataTables._requestPage(wrapper, { page, pageSize: size }, event);
+  }
+
+  private static _requestPage(wrapper: Element, request: Pick<TablePageState, 'page' | 'pageSize'>, event: Event) {
+    const view = DataTables._pageState(wrapper);
+    DataTables._pageRequests.set(wrapper, event);
+    if (!Utils.emit(wrapper, 'page', request, true)) return;
+    if (DataTables._pageRequests.get(wrapper) !== event) return;
+    if (view.server) return;
+    wrapper.setAttribute('data-page-size', String(request.pageSize));
+    DataTables._pages.set(wrapper, { ...view, ...request });
     DataTables.sync(wrapper);
+  }
+
+  private static _pageState(wrapper: Element): PageView {
+    const previous = DataTables._pages.get(wrapper);
+    if (previous) return previous;
+    const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
+    const total = table ? DataTables._records(table).filter(([row]) => visibleRecord(row)).length : 0;
+    return { page: 1, pageSize: pageSize(wrapper), total };
   }
 
   /** Filter visibility is settled before paging; details consume no slots. */
@@ -375,12 +449,18 @@ export class DataTables {
     if (!size) return;
     const groups = DataTables._records(table);
     const eligible = groups.filter(([row]) => visibleRecord(row));
-    const pages = Math.ceil(eligible.length / size);
-    const page = Math.min(Math.max(DataTables._pages.get(wrapper) ?? 1, 1), pages);
-    DataTables._pages.set(wrapper, page);
-    const shown = new Set(eligible.slice((page - 1) * size, page * size).map(([row]) => row));
+    const view = DataTables._pageView(wrapper, eligible.length, size);
+    DataTables._pages.set(wrapper, view);
+    const displayed = view.server ? eligible : eligible.slice((view.page - 1) * size, view.page * size);
+    const shown = new Set(displayed.map(([row]) => row));
     groups.forEach((group) => group.forEach((row) => row.toggleAttribute(PAGED, !shown.has(group[0]))));
-    DataTables._pageControls(wrapper, page, pages);
+    DataTables._pageControls(wrapper, view.page, Math.ceil(view.total / size));
+  }
+
+  private static _pageView(wrapper: Element, total: number, size: number): PageView {
+    const previous = DataTables._pages.get(wrapper) ?? { page: 1, pageSize: size, total };
+    const records = previous.server ? previous.total : total;
+    return { ...previous, page: pageIndex(previous.page, records, size), pageSize: size, total: records };
   }
 
   private static _pageControls(wrapper: Element, page: number, pages: number) {
@@ -399,6 +479,11 @@ export class DataTables {
   /** Sorting resets only opted-in tables; ordinary table behavior stays unchanged. */
   private static _firstPage(wrapper: Element) {
     if (!pageSize(wrapper)) return;
+    DataTables._resetPage(wrapper);
+  }
+
+  private static _resetPage(wrapper: Element) {
+    if (DataTables._pages.get(wrapper)?.server) return;
     DataTables._pages.delete(wrapper);
     DataTables.sync(wrapper);
   }
@@ -510,6 +595,7 @@ export class DataTables {
    * row before it.
    */
   private static _sort(table: HTMLTableElement, header: HTMLTableCellElement, column: number, order: number) {
+    if (DataTables._pages.get(table.closest('.data-table'))?.server) return;
     const compare = DataTables._compare(table, header);
     for (const body of Array.from(table.tBodies)) {
       const groups = DataTables._groups(body);

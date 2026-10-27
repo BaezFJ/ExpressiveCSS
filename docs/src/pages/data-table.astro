@@ -12,6 +12,7 @@ const S = defineSections([
   { id: "selection", label: "Row selection" },
   { id: "filtering", label: "Text filtering" },
   { id: "paging", label: "Local paging" },
+  { id: "server-paging", label: "Server paging" },
   { id: "bulk-actions", label: "Bulk actions" },
   { id: "expansion", label: "Row expansion" },
   { id: "scrolling", label: "Scrolling" },
@@ -259,8 +260,8 @@ wrapper.addEventListener('expressive:filter', (event) => {
       After cancellation it skips query matching and count writes, restores
       only filter-owned hiding and synchronizes selection and columns.
       Author-hidden records and their details stay hidden. Sync also works
-      inside the canceling listener. The next uncanceled input restores local
-      filtering and counts for that wrapper.
+      inside the canceling listener. For tables without accepted server page state, the next uncanceled input
+      restores local filtering and counts for that wrapper.
     </p>
   </Section>
   <Section {...S.paging}>
@@ -355,8 +356,9 @@ wrapper.addEventListener('expressive:filter', (event) => {
       the size, call <code>Expressive.DataTables.sync(wrapper)</code>. It
       preserves a valid current page, clamps it when needed and emits no
       events. Local paging can slice server-filtered DOM records without
-      changing the application's filter count; it does not request server
-      pages or use server totals.
+      changing the application's filter count. It uses DOM record totals.
+      Page and size controls request <code>expressive:page</code>
+      before their local default; cancel it to preserve the accepted view.
     </p>
     <p>
       Page buttons keep focus at boundaries. The framework sets
@@ -367,6 +369,67 @@ wrapper.addEventListener('expressive:filter', (event) => {
       <code>0 / 0</code> for no records. Supply its accessible name and
       surrounding language. No numbered buttons or page-size selector is
       generated. Standalone pagination stays CSS-only.
+    </p>
+  </Section>
+  <Section {...S["server-paging"]}>
+    <p>
+      Accept an application-supplied page with
+      <code>Expressive.DataTables.setPage(wrapper, {"{ page, pageSize, total }"})</code>.
+      Use the same native table, page buttons, status and optional size select
+      shown above. The setter returns true for a valid data-table wrapper with
+      a direct table and numeric safe integers. Page and pageSize must be
+      positive; total must be nonnegative. Invalid state returns false without
+      changing the table. The setter copies state, clamps the page, writes the
+      wrapper's size and silently synchronizes controls and selection.
+    </p>
+    <Code code={`
+const wrapper = document.getElementById('orders');
+// Render the response records and matching-count text before accepting state.
+Expressive.DataTables.setPage(wrapper, { page: 2, pageSize: 20, total: 87 });
+wrapper.addEventListener('expressive:page', event => {
+  event.preventDefault();
+  loadPage(event.detail);
+});
+// After a later response has replaced the records and matching count:
+Expressive.DataTables.setPage(wrapper, { page: 3, pageSize: 20, total: 87 });
+// Return to local paging from page one, retaining the current size:
+Expressive.DataTables.setPage(wrapper, null);
+`} />
+    <p>
+      Each valid changed page or size requests a bubbling, composed, cancelable
+      <code>expressive:page</code> with <code>{"{ page, pageSize }"}</code>.
+      Requested pages are one-based and bounded by the known total. An empty
+      table's size request asks for page one. Boundary or disabled buttons,
+      unchanged sizes and invalid controls make no request. Native input and
+      its noncomposed change produce one request; scripted size changes use
+      one bubbling, composed input or change event.
+    </p>
+    <p>
+      A server table keeps its accepted state until the application calls the
+      setter again, even when no listener cancels the request. Cancellation
+      also prevents a local table's default. A native select may already show
+      the requested value. The application keeps select or FormSelect
+      presentation aligned with accepted responses. Newer nested requests or
+      setter calls inside a listener supersede an older request's default.
+    </p>
+    <p>
+      <code>loadPage</code> is application code. It fetches records, handles
+      errors and response ordering, updates the matching count and accepts
+      the response state. Build records with safe DOM methods. The framework
+      never fetches or infers totals from the supplied rows. Every supplied
+      author-visible record stays displayed, including on page two or when
+      the response contains more than pageSize records. A zero total shows
+      <code>0 / 0</code> without hiding supplied records; render an empty body
+      when the response is empty.
+    </p>
+    <p>
+      Filter and sort events remain requests in server mode. They do not
+      filter, reorder or reset the accepted page; sorting still marks its
+      requested direction. Accept page one with the response when appropriate.
+      Sync and the setter emit no events, preserve application counts and keep
+      details, author hiding and selection intact. Select-all affects enabled
+      displayed records. A null reset preserves independent canceled-filter
+      ownership until a later uncanceled filter input restores local filtering.
     </p>
   </Section>
   <Section {...S["bulk-actions"]}>
