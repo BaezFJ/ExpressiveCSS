@@ -33,7 +33,18 @@ for (const [engine, browserType, browserTest] of engines) {
       for (let i = 0; i < 3; i++) await page.getByRole('button', { name: 'Next', exact: true }).click();
       await expect(status).toHaveText('4 / 4');
       await control.focus();
-      await control.selectOption('4');
+      const customizable = await control.evaluate(el => getComputedStyle(el).appearance === 'base-select');
+      if (customizable) {
+        await control.click();
+        await page.getByRole('option', { name: '4', exact: true }).click();
+      } else {
+        // Firefox's OS popup is outside Playwright; its native inline list exposes options.
+        const native = page.locator('select[data-table-page-size]');
+        await native.evaluate(el => { el.size = 4; });
+        await page.getByRole('option', { name: '4', exact: true }).click();
+        await expect(native).toBeFocused();
+        await native.evaluate(el => el.removeAttribute('size'));
+      }
       await expect(status).toHaveText('2 / 2');
       await expect(control).toBeFocused();
       for (const id of ['r5', 'r6', 'r7']) await expect(page.locator(`#${id}`)).toBeVisible();
@@ -41,7 +52,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await expect(page.locator('#r5 input')).toBeChecked();
       await expect(page.locator('#secret input')).toBeChecked();
       await expect(page.getByRole('status', { name: 'Matching records' })).toHaveText('7');
-      if (await control.evaluate(el => getComputedStyle(el).appearance === 'base-select')) await control.press('Space');
+      if (customizable) await control.press('Space');
       await page.keyboard.press('ArrowUp');
       await page.keyboard.press('Enter');
       await expect(control).toHaveValue('3');

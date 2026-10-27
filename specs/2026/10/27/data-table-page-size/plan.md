@@ -28,8 +28,8 @@ Delivers R1-R6. Completion checks V2-V3. Commit the verified increment.
 
 Prerequisite: groups 1 and 2 pass.
 
-- [ ] Run the contributor-equivalent checks sequentially, including the full suite, generated data, docs build/verification, MCP smoke and isolated packages. Record failures and unavailable checks.
-- [ ] Run the data-table visual comparison against the merged Phase 69 base and inspect every changed viewport; distinguish intended changes from a no-difference pass.
+- [x] Run the contributor-equivalent checks sequentially, including the full suite, generated data, docs build/verification, MCP smoke and isolated packages. Record failures and unavailable checks.
+- [x] Run the data-table visual comparison against the merged Phase 69 base and inspect every changed viewport; distinguish intended changes from a no-difference pass.
 - [ ] Obtain independent final review mapping R1-R6 to source and validation evidence. Fix findings, apply a separate simplification pass, then open and monitor the PR. Merge only after required CI passes, conversations are resolved and the branch includes current master.
 
 Delivers R6. Completion checks V4-V6. Preserve the separate post-merge roadmap/evidence documentation step; package publication is excluded.
