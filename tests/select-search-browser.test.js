@@ -30,13 +30,13 @@ async function open(browser, attributes = '', options = {}) {
   return page;
 }
 
-function each(name, body) {
+function each(name, body, attributes = '') {
   for (const [engine, type, test] of engines) {
     test(`${engine}: searchable select ${name}`, async () => {
       const browser = await leaseBrowser(type);
       let page;
       try {
-        page = await open(browser);
+        page = await open(browser, attributes);
         await body(page, engine);
       } finally {
         await page?.evaluate(() => instance.destroy());
@@ -212,4 +212,66 @@ each('respects autoFocus false, callbacks, composition, and outside dismissal', 
   await expect(page.locator('#before')).toBeFocused();
   assert.deepEqual(await page.evaluate(() => calls), ['open', 'close']);
   assert.equal(await page.evaluate(() => instance.menuEl.querySelector('input').value), '');
+});
+
+const multiple = (name, body) => each(`multiple ${name}`, body, 'multiple');
+const openPopup = async page => {
+  await page.getByRole('combobox').click();
+  await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
+};
+const checked = page => page.evaluate(() => instance._values.map(({ el, optionEl }) =>
+  [el.value, el.selected, optionEl.querySelector('input')?.checked ?? null]));
+
+multiple('picks across queries, keeps the query and focus, and submits every value', async page => {
+  await openPopup(page);
+  await page.getByRole('searchbox').fill('rom');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Space');
+  await expect(page.getByRole('option', { name: 'Rome' })).toBeFocused();
+  assert.equal(await page.getByRole('searchbox').inputValue(), 'rom');
+  await page.getByRole('searchbox').fill('tok');
+  await page.keyboard.press('ArrowDown');
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('option', { name: 'Tokyo' })).toBeFocused();
+  assert.equal(await page.evaluate(() => [changes, instance.menu.isOpen, instance.input.value].join()), '2,true,Paris, Rome, Tokyo');
+  const tokyo = page.getByRole('option', { name: 'Tokyo' });
+  assert.equal(await tokyo.evaluate(el => getComputedStyle(el, '::after').content), 'none');
+  // The drawn box is the label text's ::before; the native checkbox is invisible.
+  await tokyo.locator('label span').click({ position: { x: 4, y: 8 } });
+  assert.equal(await page.evaluate(() => instance.el.options[3].selected), false);
+  await tokyo.click();
+  assert.equal(await page.evaluate(() => changes), 4);
+  assert.deepEqual(await checked(page), [['paris', true, true], ['rome', true, true], ['lyon', false, null], ['tokyo', true, true]]);
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('combobox')).toBeFocused();
+  await openPopup(page);
+  assert.equal(await page.getByRole('searchbox').inputValue(), '');
+  assert.equal(await page.getByRole('option', { selected: true }).count(), 3);
+  await page.getByRole('searchbox').fill('rome');
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Tab');
+  await expect(page.locator('#after')).toBeFocused();
+  assert.equal(await page.evaluate(() => instance.menu.isOpen), false);
+  await page.keyboard.press('Enter');
+  assert.deepEqual(await page.evaluate(() => submitted), [['place', 'paris'], ['place', 'rome'], ['place', 'tokyo']]);
+});
+
+multiple('picks within an open shadow root and dismisses outside without losing picks', async page => {
+  await page.evaluate(() => {
+    const select = instance.el;
+    const label = select.labels[0];
+    instance.destroy();
+    const host = document.createElement('div');
+    document.body.append(host);
+    host.attachShadow({ mode: 'open' }).append(document.querySelector('style').cloneNode(true), label, select);
+    window.instance = Expressive.FormSelect.init(select, { searchable: true, menuOptions: { inDuration: 0, outDuration: 0 } });
+  });
+  await openPopup(page);
+  await page.getByRole('searchbox').fill('tok');
+  await page.getByRole('option', { name: 'Tokyo' }).click();
+  await expect(page.getByRole('option', { name: 'Tokyo' })).toBeFocused();
+  await page.locator('#before').click();
+  await page.waitForFunction(() => !instance.menu.isOpen);
+  await expect(page.locator('#before')).toBeFocused();
+  assert.deepEqual(await page.evaluate(() => [instance.getSelectedValues(), instance.menuEl.querySelector('input').value]), [['paris', 'tokyo'], '']);
 });

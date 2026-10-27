@@ -183,7 +183,7 @@ Expressive.AutoInit(document.body, {
 `} />
   </Section>
   <Section {...S.search}>
-    <p>Set <code>searchable: true</code> for a single select, or use the existing
+    <p>Set <code>searchable: true</code> for a single or multiple select, or use the existing
       <code>data-form-select-options</code> attribute. A separate search field in
       the popup filters option text. The read-only trigger keeps showing the chosen
       value, and the native select still supplies the form value.</p>
@@ -204,6 +204,23 @@ Expressive.AutoInit(document.body, {
         <label for="search-destination">Destination</label>
       </div>
       <button type="reset">Reset destination</button>
+    </form>
+    <form>
+      <div class="field mb-3">
+        <select id="search-stops" name="stops" multiple data-form-select-options='{"searchable":true}'>
+          <optgroup label="Europe">
+            <option value="paris" selected>Paris</option>
+            <option value="rome">Rome</option>
+            <option value="oslo" disabled>Oslo, unavailable</option>
+          </optgroup>
+          <optgroup label="Asia">
+            <option value="tokyo">Tokyo</option>
+            <option value="seoul">Seoul</option>
+          </optgroup>
+        </select>
+        <label for="search-stops">Stops</label>
+      </div>
+      <button type="reset">Reset stops</button>
     </form>
     <Code code={`<select name="destination" aria-label="Destination"
   data-form-select-options='{"searchable":true}'>
@@ -232,19 +249,24 @@ Expressive.FormSelect.init(select, { searchable: true });`} />
         <tr><td>Type, paste, Home, End, horizontal arrows, composition</td><td>Edit search normally. Enter in search neither chooses nor submits.</td></tr>
         <tr><td>ArrowDown / ArrowUp from search</td><td>Focus the first / last enabled visible result. Stay in search if none exists.</td></tr>
         <tr><td>Arrows, Home / End on a result</td><td>Move among enabled visible results without wrapping. Up from the first returns to search.</td></tr>
-        <tr><td>Enter / Space on a result</td><td>Choose it, close and return focus to the trigger.</td></tr>
+        <tr><td>Enter / Space on a result</td><td>Single select: choose it, close and return focus to the trigger. Multiple select: toggle it and keep the popup open, the query and focus on the row.</td></tr>
         <tr><td>Tab / Shift+Tab</td><td>Tab from search enters the first enabled result; Tab from a result exits to the next control. Without enabled results, Tab exits from search. Shift+Tab from a result returns to search; from search it closes and focuses the trigger.</td></tr>
         <tr><td>Escape / outside click</td><td>Close without changing selection. Escape focuses the trigger; an outside click keeps focus on its target.</td></tr>
       </tbody>
     </table>
-    <p>Search is off by default and ignored for multiple, tree and browser-default
+    <p>On a multiple select, the listbox is multi-selectable and each pick fires one
+      <code>change</code>. The popup stays open with the query unchanged, so several
+      matches can be picked in a row. An option the query hides stays selected,
+      stays in the trigger text and is submitted. Escape, Tab or an outside click
+      closes the popup, clears the query and keeps every selection.</p>
+    <p>Search is off by default and ignored for tree and browser-default
       selects. Remote search, creating options, fuzzy matching and virtualization
       are outside this mode. With <code>autoFocus: false</code>, opening keeps
       existing focus and Tab from the trigger can still reach search.</p>
   </Section>
   <Section {...S.options}>
         <OptionsTable>
-            <tr><td><code>searchable</code></td><td>Boolean</td><td><code>false</code></td><td>Add a popup search field to an enhanced plain single select.</td></tr>
+            <tr><td><code>searchable</code></td><td>Boolean</td><td><code>false</code></td><td>Add a popup search field to an enhanced plain single or multiple select.</td></tr>
             <tr><td><code>i18n</code></td><td>Object</td><td><code>searchLabel: "Search options", noResults: "No results"</code></td><td>Override either search label or empty-result message. Omitted strings retain their defaults.</td></tr>
             <tr>
               <td><code>classes</code></td>

@@ -9089,9 +9089,9 @@ Add `browser-default` to skip the menu and keep the native select.
 </select>
 ```
 
-### Single-select search
+### Select search
 
-Set `searchable: true` on FormSelect or use `data-form-select-options='{"searchable":true}'` on a plain single select. The read-only trigger continues to show the chosen option. Its popup is a named nonmodal `dialog` containing a labelled search field and a separately named `listbox`; the trigger has `aria-haspopup="dialog"`. Search and the polite no-results status are outside the listbox.
+Set `searchable: true` on FormSelect or use `data-form-select-options='{"searchable":true}'` on a plain single or multiple select. The read-only trigger continues to show the chosen option. Its popup is a named nonmodal `dialog` containing a labelled search field and a separately named `listbox`; the trigger has `aria-haspopup="dialog"`. Search and the polite no-results status are outside the listbox.
 
 ```html
 <select name="destination" aria-label="Destination" data-form-select-options='{"searchable":true}'>
@@ -9121,13 +9121,23 @@ Typing and clearing never change native selection, even when the chosen option i
 | ArrowDown / ArrowUp in search | Focus the first / last visible enabled result, or stay in search if none exists. |
 | ArrowDown / ArrowUp on results | Move without wrapping, skipping hidden/disabled options and headings. Up from the first result returns to search. |
 | Home / End on results | Focus the first / last visible enabled result. |
-| Enter / Space on a result | Choose it, close and focus the trigger. |
+| Enter / Space on a result | Single select: choose it, close and focus the trigger. Multiple select: toggle it and keep the popup open, the query and focus on the row. |
 | Tab / Shift+Tab | Tab from search focuses the first enabled result; Tab from a result exits to the next control. Without enabled results, Tab exits from search. Shift+Tab from a result returns to search; from search it closes and focuses the trigger. |
 | Escape / outside click | Close without changing selection. Escape focuses the trigger; outside dismissal keeps its target's focus. |
 
 Every close clears the query and restores the unfiltered list. A successful native reset closes search and restores defaults; a canceled reset preserves state. `refresh()` reapplies an open query, preserves search focus/caret or a surviving enabled result, and returns focus to search when that result disappears. Disabling the control or its fieldset and refreshing closes it. `menuOptions.autoFocus: false` leaves existing focus alone on open; Tab from the trigger can still reach search. Existing open/close callbacks remain supported.
 
-Search defaults to off and is ignored for multiple, tree and `browser-default` selects. Multiple and tree filtering are separate roadmap phases. This mode has no remote search, option creation, fuzzy matching, highlighting, virtualization or mutation observer.
+On a multiple select, the inner listbox has `aria-multiselectable="true"`. Pointer, Enter or Space toggles a result, fires one `change` when the selection changes, and leaves the popup open with the query unchanged and focus on that row, so several matches can be picked in a row. An option hidden by the query stays selected, stays in the trigger text and is submitted. Escape, Tab or an outside click closes the popup, clears the query and keeps every selection.
+
+```html
+<select name="places" multiple aria-label="Places" data-form-select-options='{"searchable":true}'>
+  <option value="paris">Paris</option>
+  <option value="rome">Rome</option>
+  <option value="tokyo">Tokyo</option>
+</select>
+```
+
+Search defaults to off and is ignored for tree and `browser-default` selects. Tree filtering is a separate roadmap phase. Multiple search has no select-all for matches or summary of hidden selections. This mode has no remote search, option creation, fuzzy matching, highlighting, virtualization or mutation observer.
 
 ### Initialization
 

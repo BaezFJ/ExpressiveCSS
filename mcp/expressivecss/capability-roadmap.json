@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.15.0",
-  "sourceRevision": "823ca3aa4c71a08cf4554f0204d4c464f2cb4f24",
+  "sourceRevision": "165ce2c04e03d738503898ca7eb5a34f565d668f",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-10-10",
@@ -5112,7 +5112,7 @@
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
       "reviewedOn": "2026-10-27",
-      "scope": "Single/multiple selection, optgroups, browser-default fallback, and opt-in single-select search with a separate popup field and native form values.",
+      "scope": "Single/multiple selection, optgroups, browser-default fallback, and opt-in single and multiple select search with a separate popup field and native form values.",
       "adaptation": "Native select enhanced by runtime; this is related to menu/text-field patterns.",
       "upstream": {
         "source": "https://m3.material.io/components/menus/overview",
@@ -5147,7 +5147,7 @@
         },
         {
           "path": "src/ts/components/select.ts",
-          "sha256": "a5e8b18896cd53c1ea18f919cc0602df4be63c1ee4bd12dcbc2ef1d24a338693"
+          "sha256": "2d66f7211e68fb92c061ab4df6e872ba9853fb858111ec43e00833639783c3f7"
         },
         {
           "path": "src/ts/components/menu.ts",
@@ -5232,6 +5232,18 @@
           "file": "tests/select-search-browser.test.js",
           "name": "chromium: searchable select keeps search visible while results scroll with enlarged RTL text and forced colors",
           "scope": "Scrolling results, visible search/focus ring, enlarged RTL text, forced colors and reduced motion. Programmatic font scaling does not prove native zoom or spoken output. Equivalent Firefox and WebKit cases run in the same file.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/select-search-browser.test.js",
+          "name": "chromium: searchable select multiple picks across queries, keeps the query and focus, and submits every value",
+          "scope": "Multiple-select search: keyboard, box and row picks across queries, retained query and row focus, checkbox state, Escape, Tab exit and native FormData with every chosen value. Equivalent Firefox and WebKit cases run in the same file.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/select-search-browser.test.js",
+          "name": "chromium: searchable select multiple picks within an open shadow root and dismisses outside without losing picks",
+          "scope": "Multiple-select search inside an open shadow root, pointer picks and outside dismissal that clears the query and keeps selections. Equivalent Firefox and WebKit cases run in the same file.",
           "state": "not-recorded"
         }
       ],
