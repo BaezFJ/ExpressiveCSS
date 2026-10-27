@@ -84,20 +84,35 @@ export class TreeSelect extends FormSelect {
     // A browser-default select stays native.
     if (!this.menuEl) return;
     const { signal } = this._events;
-    this.menuEl.setAttribute('role', 'presentation');
+    if (!this._searchInput) {
+      this.menuEl.setAttribute('role', 'presentation');
+      this.input.setAttribute('aria-haspopup', 'tree');
+      this.input.setAttribute('aria-controls', this.tree.id);
+    }
     this.menuEl.removeAttribute('aria-multiselectable');
-    this.input.setAttribute('aria-haspopup', 'tree');
-    this.input.setAttribute('aria-controls', this.tree.id);
     this._nameTree();
     this._leaveImplicitBranch();
     this._handleSelectChange();
     // Capture, so the tree's keys and clicks are handled before Menu's own
     // listeners on the same element.
-    this.menuEl.addEventListener('keydown', this._handleTreeKeydown, { signal, capture: true });
+    if (!this._searchInput) this.menuEl.addEventListener('keydown', this._handleTreeKeydown, { signal, capture: true });
     this.menuEl.addEventListener('click', this._handleTreeClick, { signal, capture: true });
   }
 
   static key = 'Expressive_TreeSelect';
+
+  protected _canSearch() {
+    return !this.el.multiple && this.options.searchable;
+  }
+
+  protected _searchList() { return this.tree; }
+
+  protected _searchRows() { return this._enabledRows(); }
+
+  protected _searchNavigate(e: KeyboardEvent) {
+    if (e.target === this._searchInput) super._searchNavigate(e);
+    else this._handleTreeKeydown(e);
+  }
 
   destroy() {
     clearTimeout(this._typedTimer);

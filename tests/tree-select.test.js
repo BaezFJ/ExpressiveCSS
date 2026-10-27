@@ -20,12 +20,12 @@ const PLACES = `<option value="" disabled selected>Choose a place</option>
   <option value="kyoto" data-parent="asia" disabled>Kyoto</option>`;
 
 /** Starts a tree select holding `options` in a form and returns its instance. */
-function start(options = PLACES, attributes = '') {
+function start(options = PLACES, attributes = '', settings = {}) {
   document.body.innerHTML = `<form><div class="field">
     <select id="place" name="place" data-tree ${attributes}>${options}</select>
     <label for="place">Place</label>
   </div></form>`;
-  return Expressive.TreeSelect.init(document.getElementById('place'));
+  return Expressive.TreeSelect.init(document.getElementById('place'), settings);
 }
 
 /** The rows under `list` as text, with each branch's rows nested after it. */
@@ -264,3 +264,37 @@ test('typeahead moves past the focused row on a new search and stays on it while
     instance.destroy();
   }
 });
+
+
+test('AutoInit tree search names its popup and tree without putting search inside the tree', () => {
+  document.body.innerHTML = `<label for="search-tree">Destination</label><select id="search-tree" data-tree
+    aria-label="Chosen place" data-tree-select-options='{"searchable":true,"i18n":{"searchLabel":"Find leaves","noResults":"Nothing here"}}'>${PLACES}</select>`;
+  const before = Expressive.Menu._menus.length;
+  Expressive.AutoInit();
+  const instance = Expressive.TreeSelect.getInstance(document.getElementById('search-tree'));
+  try {
+    const search = instance.menuEl.querySelector('input[type="search"]');
+    assert.ok(search);
+    assert.equal(search.getAttribute('aria-label'), 'Find leaves');
+    assert.equal(search.hasAttribute('name'), false);
+    assert.equal(instance.menuEl.getAttribute('aria-label'), 'Chosen place');
+    assert.equal(instance.tree.getAttribute('aria-label'), 'Chosen place');
+    assert.equal(instance.tree.contains(search), false);
+    assert.equal(instance.tree.contains(instance.menuEl.querySelector('[role="status"]')), false);
+    assert.equal(instance.tree.getAttribute('role'), 'tree');
+    assert.equal(instance.tree.querySelector('[role="treeitem"]').tagName, 'LI');
+  } finally { instance.destroy(); }
+  assert.equal(Expressive.Menu._menus.length, before);
+  assert.equal(document.querySelector('input[type="search"]'), null);
+  assert.equal(document.querySelector('label').htmlFor, 'search-tree');
+});
+
+for (const attributes of ['multiple', 'class="browser-default"']) {
+  test(`tree search leaves unsupported ${attributes} mode unchanged`, () => {
+    const instance = start(PLACES, attributes, { searchable: true });
+    try {
+      assert.equal(document.querySelector('input[type="search"]'), null);
+      if (instance.menuEl) assert.equal(instance.input.getAttribute('aria-haspopup'), 'tree');
+    } finally { instance.destroy(); }
+  });
+}

@@ -189,13 +189,18 @@ test('duplicate values retain option identity and value-based change events', ()
   }
 });
 
-test('TreeSelect ignores search and teardown leaves no extra Menu instance', () => {
+test('TreeSelect reuses search controls around its tree and leaves no extra Menu instance', () => {
   document.body.innerHTML = '<label for="tree">Place</label><select id="tree" data-tree><option value="a">Paris</option></select>';
   const before = Expressive.Menu._menus.length;
   const instance = Expressive.TreeSelect.init(document.querySelector('select'), { searchable: true });
   try {
-    assert.equal(instance.menuEl.querySelector('input[type="search"]'), null);
-    assert.equal(instance.input.getAttribute('aria-haspopup'), 'tree');
+    assert.ok(instance.menuEl.querySelector('input[type="search"]'));
+    assert.equal(instance.menuEl.getAttribute('role'), 'dialog');
+    assert.equal(instance.tree.getAttribute('role'), 'tree');
+    assert.equal(instance.tree.parentElement, instance.menuEl);
+    assert.equal(instance.menuEl.querySelector('[role="listbox"]'), null);
+    assert.equal(instance.input.getAttribute('aria-haspopup'), 'dialog');
+    assert.equal(instance.input.getAttribute('aria-controls'), instance.menuEl.id);
   } finally {
     instance.destroy();
   }

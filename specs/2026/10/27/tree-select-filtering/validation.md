@@ -24,3 +24,10 @@ Agent decisions are recorded in requirements.md. Independent review by phase_his
 ## Evidence limits
 
 Physical devices, physical OS input including native OS IME composition, native browser zoom and spoken screen-reader output are unavailable. Automated browser focus/role/geometry checks and emulation do not establish those checks. Firefox map tests may skip without WebGL2. Static semantics never initialize components. Required repository checks and external reviews remain in force; generated metadata alone supplies no browser or accessibility approval.
+
+
+## Increment 1 evidence
+
+The two opt-in regressions failed against the built Phase 74 bundle because TreeSelect created no search field. Search-enabled single trees now use the existing labelled search/status/dialog shell around the tree, without creating a listbox. Five narrow protected hooks separate actual flat/tree result construction, eligibility, filtering and navigation; search lifecycle, names, localization and delayed-opening focus protection stay shared. Tree search routes row keys through the existing tree handler once. Default trees retain their original popup/keys, and multiple/browser-default trees do not gain search.
+
+Build/typecheck and all 77 focused tree/select/form/selection Node checks pass. All 66 existing tree/flat-search browser checks pass in Chromium/Firefox/WebKit with no skips, including the delayed-opening focus regression. New instances clean up in finally and leave no extra Menu. Logs are /tmp/expressivecss-phase75-{base-build,search-red,search-build,search-typecheck,search-node,search-browser}.log. This slice establishes opt-in structure and compatibility; hierarchy filtering/restoration, full search-tree interaction, styling/guidance and final acceptance remain pending.

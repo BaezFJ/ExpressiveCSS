@@ -8,9 +8,9 @@ Use feature-spec-auto, incremental-implementation, code-review-and-quality with 
 
 Prerequisite: independent specification review passes.
 
-- [ ] Add failing opt-in/default/AutoInit/accessible-structure/teardown checks, replacing the obsolete TreeSelect-ignores-search expectation in tests/select-search.test.js.
-- [ ] Add narrow FormSelect hooks in src/ts/components/select.ts for actual result-list/filter/navigation consumers. Reuse its search control, names, localization, lifecycle and focus guard. Let TreeSelect provide its existing tree, single-select opt-in and tree-aware navigation; preserve default/flat behavior.
-- [ ] Build/typecheck and run focused tree/select/form/selection checks for R1/R4-R7; commit a verified slice. Keep new functions below complexity five.
+- [x] Add failing opt-in/default/AutoInit/accessible-structure/teardown checks, replacing the obsolete TreeSelect-ignores-search expectation in tests/select-search.test.js.
+- [x] Add narrow FormSelect hooks in src/ts/components/select.ts for actual result-list/filter/navigation consumers. Reuse its search control, names, localization, lifecycle and focus guard. Let TreeSelect provide its existing tree, single-select opt-in and tree-aware navigation; preserve default/flat behavior.
+- [x] Build/typecheck and run focused tree/select/form/selection checks for R1/R4-R7; commit a verified slice. Keep new functions below complexity five.
 
 Completion checks V1-V2; no new component, option or Menu implementation.
 
