@@ -270,42 +270,176 @@ Deferred with no phase: a shared mixin for the overflow, ellipsis and nowrap dec
 
 ### Phase 52: size the remaining px font sizes in rem
 
-No dependencies. Icons in dialogs, snackbars, alerts, lists, trees, timelines, the command palette, messages, the map popup, fieldset legends, file inputs and the drop zone grow with the browser's font size, the same way the base icon already does. So does the Timepicker's tick text. The dial and tick geometry stay in px, because the Timepicker script positions ticks in px.
-
-Completion check: with the browser font size at 32px, each of those icons and the tick text renders at twice its 16px size. No component or abstracts rule sets `font-size` in px.
+Completed 2026-10-26. See [spec](2026/10/26/rem-icon-font-sizes/).
 
 ### Phase 53: size chips in rem
 
-No dependencies. A chip's label, icon, container height and inline input grow with the browser's font size. The chip label uses the label-large type size.
-
-Completion check: with the browser font size at 32px, a chip's label, icon and minimum height are twice their 16px values, and a chips input field keeps its text inside the chip.
+Completed 2026-10-26. See [spec](2026/10/26/chips-rem/).
 
 ### Phase 54: read the elevation token in the map popup
 
-No dependencies. The map popup's shadow follows `--md-sys-elevation-level2`, so a theme that changes that token also changes the popup. The shadow still overrides MapLibre's own.
-
-Completion check: setting `--md-sys-elevation-level2` on the page changes the computed `box-shadow` of an open map popup.
+Completed 2026-10-26. See [spec](2026/10/26/map-popup-elevation-token/).
 
 ### Phase 55: use the type role mixin where type is written by hand
 
-No dependencies. The navbar search field and the card media overlay take their full M3 type role, letter-spacing included, from the shared type role mixin.
-
-Completion check: the computed `letter-spacing` of the navbar search field matches body-large, and the card media overlay's matches title-medium.
+Completed 2026-10-26. See [spec](2026/10/26/shared-type-roles/).
 
 ### Phase 56: name chip custom properties under `--md-comp-chip`
 
-Depends on phase 53. Chips read `--md-comp-chip-*` properties for padding, label size and icon size. A page that sets the old `--padding`, `--font-size` or `--font-size-icon` on a chip keeps working, because the new properties fall back to the old names. The CHANGELOG marks the old names deprecated.
-
-Completion check: a chip styled through the new property names and a chip styled through the old names both render at the requested sizes.
+Completed 2026-10-26. See [spec](2026/10/26/chip-custom-properties/).
 
 ### Phase 57: read motion tokens for hardcoded transition timings
 
-No dependencies. The Timepicker's canvas fade and the expanding card's content delay take their timings from motion tokens, so a page that changes the motion tokens changes them too. Reduced motion still turns both off.
-
-Completion check: overriding the motion tokens changes the computed transition duration and delay of both elements, and under `prefers-reduced-motion: reduce` neither animates.
+Completed 2026-10-26. See [spec](2026/10/26/motion-token-timings/).
 
 ### Phase 58: share chart base rules across chart types
 
-No dependencies. Rules that are the same for every chart type, such as the legend, labels, tooltip, cursor and visually hidden table, are written once instead of once per chart type. Specificity stays at one class per chart, and a build that loads a single chart still gets every rule it needs.
+Completed 2026-10-26. See [spec](2026/10/26/chart-base-rules/).
 
-Completion check: the full sheet shrinks by at least 1 KB gzip, and a selective build with one chart passes its tests. If the saving is smaller, the spec records the measurement and no CSS changes ship.
+## Milestone: responsive layout refinements
+
+Authors can control each gap axis and adapt individual children to the window size. These phases cover G1 and G2 from the framework gap review.
+
+### Phase 59: axis-specific gap utilities
+
+No dependencies. Authors set row and column gaps independently on the existing spacing scale, with the same window-size prefixes as other spacing helpers.
+
+Completion check: a wrapping grid combines a base gap with an axis-specific breakpoint override, and its computed row and column gaps match the requested values on either side of that breakpoint.
+
+### Phase 60: responsive child sizing
+
+No dependencies. Existing flex sizing helpers gain window-size variants, so a child can change how it shares available space without page CSS.
+
+Completion check: a flex child changes from its base sizing to a prefixed sizing at the selected breakpoint while its sibling retains its requested space.
+
+Open for spec: which reset values are needed to reverse the existing sizing helpers without changing their unprefixed behavior.
+
+### Phase 61: responsive self-alignment
+
+No dependencies. Authors override an individual child's alignment at a window-size breakpoint and can return it to the parent's alignment.
+
+Completion check: one child follows its base self-alignment below a breakpoint and the requested prefixed alignment above it, without changing its siblings' alignment.
+
+### Phase 62: responsive visual ordering
+
+No dependencies. Authors change a child's visual order at a window-size breakpoint and can restore its normal order. DOM and keyboard order stay unchanged.
+
+Completion check: a child moves to its requested visual position across a breakpoint while keyboard focus still follows the authored DOM order.
+
+## Milestone: filtered choices
+
+Authors can search native select options and present richer autocomplete results. These phases cover G3 and G4 from the framework gap review.
+
+### Phase 63: filter single-select options
+
+No dependencies. An opt-in search narrows a FormSelect's single-choice list while the native select continues to own its submitted value.
+
+Completion check: a person filters a grouped select, chooses a matching option and submits the form; the submitted value is the option's value, not the search query.
+
+Open for spec: whether search edits the combobox or uses a separate popup field, including its keyboard and ARIA contract.
+
+### Phase 64: filter multiple-select options
+
+Depends on phase 63. The same opt-in search works with multiple selection, retaining choices that the current query does not show.
+
+Completion check: a person selects an option, changes the query and selects another; the native multiple select submits both values.
+
+### Phase 65: autocomplete disabled choices
+
+No dependencies. Autocomplete entries can remain visible while unavailable for selection. Pointer, keyboard and programmatic selection follow the same disabled policy.
+
+Completion check: attempting to select a disabled suggestion through each selection path leaves the chosen values unchanged.
+
+### Phase 66: autocomplete option groups
+
+Depends on phase 65. Autocomplete results can have labelled groups whose headings are excluded from selection and result counts.
+
+Completion check: keyboard navigation crosses a group heading to reach the next selectable result, with the active option and announced result count identifying only actual choices.
+
+Open for spec: group metadata and the labelled listbox structure.
+
+## Milestone: filtered table pages
+
+Authors can filter and page records through the existing data table, with application-owned server operations when needed. These phases cover G5 and G6 from the framework gap review.
+
+### Phase 67: data table text filtering
+
+No dependencies. An opt-in text search filters explicitly chosen columns. Each detail row stays with its record, and author-hidden rows remain hidden. Select-all affects only enabled records visible in the current table view.
+
+Completion check: filtering a table with expanded details and an author-hidden record leaves only matching visible record groups, and select-all selects only their enabled records.
+
+Open for spec: how authors identify searchable columns and how the result count is announced.
+
+### Phase 68: server-owned table filtering
+
+Depends on phase 67. A cancelable filter event lets an application handle the query while preventing local filtering. The framework does not fetch records.
+
+Completion check: an application cancels a filter request, receives the requested query and replaces the records itself while the framework leaves the existing rows unfiltered.
+
+Open for spec: the event detail and its relationship to the existing server-sort event.
+
+### Phase 69: data table paging
+
+Depends on phase 67. Opt-in page controls show a page of local records after filtering and sorting. Select-all is page-scoped, and detail rows stay with their records. Ordinary server-rendered pagination links retain their existing behavior.
+
+Completion check: after filtering and sorting a table, moving to the next page shows the expected record groups and select-all changes only enabled records on that page.
+
+Open for spec: page-control markup, focus behavior and the treatment of existing selections on other pages.
+
+### Phase 70: data table page size
+
+Depends on phase 69. Authors provide a page-size control that updates the displayed page and keeps its index within the available page range.
+
+Completion check: increasing the page size while on the last page updates the page count and leaves a valid page showing the expected records.
+
+### Phase 71: server-owned table paging
+
+Depends on phases 68 and 70. An application supplies page records and the total count through an opt-in server paging contract. Canceling a page request prevents local paging, and selection remains scoped to the displayed page.
+
+Completion check: a canceled page request lets an application replace the displayed records and total count, with the controls reflecting that page and no local row slicing.
+
+Open for spec: page request details and how the application supplies page state and total count.
+
+## Milestone: validated file choices
+
+Authors can reject invalid file selections through the existing drop zone and form feedback. These phases cover G7 from the framework gap review. Validation is opt-in, treats browse and drop consistently, and invalidates the whole selection when any file fails. Uploading files and filtering a FileList are outside this milestone; the server still validates received files.
+
+### Phase 72: drop-zone type validation
+
+No dependencies. A drop zone checks declared accepted types and explains a rejected selection through native validity and accessible error feedback.
+
+Completion check: choosing an unsupported file through either browse or drop gives the same type error and prevents the form from submitting the invalid selection.
+
+Open for spec: extension and MIME matching, empty MIME types and rejection event details.
+
+### Phase 73: drop-zone size limit
+
+Depends on phase 72. An optional per-file size limit uses the same invalid-selection feedback.
+
+Completion check: a selection containing an oversized file reports the limit violation and blocks submission of the whole selection.
+
+### Phase 74: drop-zone count limit
+
+Depends on phase 72. An optional file-count limit uses the same invalid-selection feedback.
+
+Completion check: choosing more files than allowed reports the count violation and blocks submission of the whole selection.
+
+## Milestone: searchable tree choices
+
+Authors can filter a hierarchy and choose multiple leaves through the existing tree select. These phases cover G8 and G9 from the framework gap review.
+
+### Phase 75: tree-select filtering
+
+Depends on phase 63. An opt-in search retains the ancestors of matching leaves. Clearing the query restores the person's prior expansion state.
+
+Completion check: searching for a leaf under a closed branch exposes the matching path, and clearing the query restores the branch's previous state.
+
+Open for spec: the tree search field's keyboard and focus contract.
+
+### Phase 76: tree-select multiple leaf selection
+
+Depends on phase 64. TreeSelect can select multiple leaves backed by a native multiple select. Branches remain navigation controls, with no parent-to-child selection propagation. The existing single-leaf mode remains the default.
+
+Completion check: choosing two leaves submits both native option values while their parent branch contributes no form value.
+
+Open for spec: multiple-selection activation and popup close behavior.
