@@ -24,7 +24,7 @@
 .start-0 { inset-inline-start: 0; }
 .end-0 { inset-inline-end: 0; }
 
-// Display and flex layout. One declaration each; combine on the container,
+// Display and flex layout. One declaration each; combine on the container or child,
 // and pair with .gap-* from _spacing.scss for the space between items.
 //
 // Every class in this map also comes with a window-size prefix, emitted at
@@ -58,6 +58,12 @@ $_layout: (
   "align-end": (align-items: flex-end),
   "align-stretch": (align-items: stretch),
   "align-baseline": (align-items: baseline),
+  // Child sizing: shorthands precede shrink-only overrides.
+  "flex-1": (flex: 1 1 0),
+  "flex-none": (flex: none),
+  "flex-initial": (flex: 0 1 auto),
+  "shrink-0": (flex-shrink: 0),
+  "shrink-1": (flex-shrink: 1),
   "start-align": (text-align: start),
   "center-align": (text-align: center),
   "end-align": (text-align: end),
@@ -92,9 +98,6 @@ $_layout: (
 .contents { display: contents; }
 
 // On a flex or grid child.
-.flex-1 { flex: 1 1 0; }
-.flex-none { flex: none; }
-.shrink-0 { flex-shrink: 0; }
 .self-start { align-self: flex-start; }
 .self-center { align-self: center; }
 .self-end { align-self: flex-end; }

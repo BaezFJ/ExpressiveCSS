@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: [Phase 60, responsive child sizing](../../../../roadmap.md#phase-60-responsive-child-sizing)
 Branch: `feature/2026-10-26-responsive-child-sizing`
 Base: `origin/master` at `3b9703956823c9c445a0835067915a0e322152a5`
-Status: specified, implementation pending
+Status: group 1 complete, groups 2 and 3 pending
 
 The three groups run in order. Requirements are in [requirements.md](requirements.md); acceptance checks are in [validation.md](validation.md). Leave the roadmap unfinished until implementation is complete.
 
@@ -14,10 +14,10 @@ Outcome: the existing child sizing helpers and both resets work at every window-
 
 Prerequisites: the confirmed interview; no earlier roadmap phase is required.
 
-- [ ] Add the three existing sizing helpers and `.flex-initial` and `.shrink-1` to the existing generation pattern in `src/sass/utilities/_helpers.scss`. Remove duplicate standalone definitions. Preserve the relative order of existing flex shorthands and shrink overrides, normal importance and the final ascending breakpoint loop.
-- [ ] Extend `tests/helpers-browser.test.js` using its `engines` loop. Cover all five helper families just below and at every breakpoint, later-prefix precedence, reversed class attribute order, row and column geometry, and fixed siblings. Retain existing nested sizing checks and close each browser in `finally`.
-- [ ] Add base-combination and consumer-override checks, including `flex-1 shrink-0`, `flex-1 flex-none`, prefixed shorthand resets and shrink-only resets. Assert computed longhands as well as geometry so tests detect a rule that exists but loses in the cascade.
-- [ ] Extend `tests/selective-builds.test.js` with a focused helpers-only Sass compile check for base and prefixed forms, and their absence when helpers are excluded. Reuse the installed Sass API and existing compile configuration.
+- [x] Add the three existing sizing helpers and `.flex-initial` and `.shrink-1` to the existing generation pattern in `src/sass/utilities/_helpers.scss`. Remove duplicate standalone definitions. Preserve the relative order of existing flex shorthands and shrink overrides, normal importance and the final ascending breakpoint loop.
+- [x] Extend `tests/helpers-browser.test.js` using its `engines` loop. Cover all five helper families just below and at every breakpoint, later-prefix precedence, reversed class attribute order, row and column geometry, and fixed siblings. Retain existing nested sizing checks and close each browser in `finally`.
+- [x] Add base-combination and consumer-override checks, including `flex-1 shrink-0`, `flex-1 flex-none`, prefixed shorthand resets and shrink-only resets. Assert computed longhands as well as geometry so tests detect a rule that exists but loses in the cascade.
+- [x] Extend `tests/selective-builds.test.js` with a focused helpers-only Sass compile check for base and prefixed forms, and their absence when helpers are excluded. Reuse the installed Sass API and existing compile configuration.
 
 Completion check: after `npm run build`, `node --test tests/helpers-browser.test.js` passes in Chromium, Firefox and WebKit with the new cases executed, and the focused selective-build checks pass. Run suites sequentially. Record the actual commands and results in validation during implementation.
 

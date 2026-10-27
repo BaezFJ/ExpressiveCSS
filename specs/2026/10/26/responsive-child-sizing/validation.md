@@ -4,9 +4,9 @@ Date: 2026-10-26
 Roadmap phase: [Phase 60, responsive child sizing](../../../../roadmap.md#phase-60-responsive-child-sizing)
 Branch: `feature/2026-10-26-responsive-child-sizing`
 Base: `origin/master` at `3b9703956823c9c445a0835067915a0e322152a5`
-Status: pending, no implementation checks have run
+Status: V1 through V4 pass, remaining checks pending
 
-Checks map to [requirements.md](requirements.md) and the groups in [plan.md](plan.md). All results below are pending. Spec review does not establish runtime or merge readiness.
+Checks map to [requirements.md](requirements.md) and the groups in [plan.md](plan.md). Results distinguish completed checks from pending checks. Spec review does not establish runtime or merge readiness.
 
 ## Setup
 
@@ -26,7 +26,7 @@ Action: after building, run `node --test tests/helpers-browser.test.js`. For eac
 
 Expected: only the base rule applies just below a boundary; the prefixed declaration applies at the boundary and remains active above it until another prefix overrides it. `.flex-1` has longhands `1 1 0px`, `.flex-none` has `0 0 auto`, and `.flex-initial` has `0 1 auto`. Shrink helpers change only shrink to 0 or 1. The fixed sibling retains its requested main-axis size within 1 CSS pixel. Assert equivalent normalized longhand values if an engine serializes zero differently.
 
-Result: pending.
+Result: Pass, 2026-10-26. The breakpoint test passed in Chromium, Firefox and WebKit for all five families, both axes and all four boundaries, including resizing back below each boundary. Fixed siblings retained 80px.
 
 ### V2. Resets and larger prefixes compose correctly
 
@@ -38,7 +38,7 @@ Action: use the V1 command, resizing across the selected boundaries and back bel
 
 Expected: the 400px target changes between 320px remaining-space sizing and 80px initial/content sizing. In the constrained row, shrink-0 retains a 160px target and causes the fixture's expected overflow; shrink-1 permits a 120px target beside the unchanged 80px sibling. Equivalent column main-axis measurements follow the same rule. Larger active prefixes win regardless of token order, and resizing down restores the earlier rule. A shorthand assigns all three flex longhands; `.shrink-1` retains grow and basis.
 
-Result: pending.
+Result: Pass, 2026-10-26. Breakpoint geometry and prefix-order tests passed in all three engines, including reversed tokens, shorthand resets and shrink-only resets.
 
 ### V3. Existing classes and consumer overrides retain their contract
 
@@ -50,7 +50,7 @@ Action: run the V1 command and compare the relevant base and changed measurement
 
 Expected: existing longhands and dimensions match the base. `.flex-none` wins over `.flex-1`; `.shrink-0` disables shrinking on a shorthand-sized child. Existing nested scrolling and other responsive helper checks pass. Consumer CSS wins over normal utility declarations. No new `!important` changes that result.
 
-Result: pending.
+Result: Pass, 2026-10-26. Base combinations and unlayered overrides matched the expected longhands from the original declarations in all three engines. All 51 helper browser checks passed, including existing nested flex/grid scrolling and unrelated responsive helpers. No skips.
 
 ### V4. Selective builds emit exactly the requested helpers
 
@@ -62,7 +62,7 @@ Action: run `node --test tests/selective-builds.test.js` after building. Check s
 
 Expected: full and helpers-only builds contain those rules with the same declarations and breakpoint ordering. The build excluding helpers omits them. No duplicate standalone sizing rules or new TypeScript exports are required.
 
-Result: pending.
+Result: Pass, 2026-10-26. All five selective-build tests passed, including the new full/helpers-only/excluded sizing check, existing custom Sass configuration tests and the updated gzip budget. The build and typecheck also passed.
 
 ### V5. Documentation and helper guidance agree
 
@@ -115,3 +115,15 @@ Result: pending. No visual or browser review occurred during specification.
 - Contributor, browser, MCP and package checks pass. After integration changes, rerun the affected checks and remeasure any changed bundle.
 - Required CI passes, review conversations are resolved, the branch is up to date and the visual review is recorded under `CONTRIBUTING.md`.
 - Any new material decision is resolved or explicitly deferred with dependent work marked blocked. There are currently no open interview decisions. This specification authorizes no implementation, commit, push, PR, merge or publication.
+
+
+## Implementation evidence
+
+Group 1 used the documented Docker runner. Logs are local ignored artifacts:
+
+- `.cache/phase60/slice1-boundaries.log`: build and the new boundary test, 3 passes, no failures or skips.
+- `.cache/phase60/slice1-regressions.log`: build, all 51 helper browser tests and 2 focused selective Sass checks, all passing.
+- `.cache/phase60/slice1-size.log`: compiled the base Sass from Git and the changed Sass in the same container, measuring 90,072 and 90,177 gzip bytes. The fatal-deprecation Sass compile passed.
+- `.cache/phase60/slice1-selective.log`: build, all 5 selective-build tests and typecheck passed. The measured 105-byte increase was recorded during group 1 so the intermediate commit passes its budget check.
+
+The first group-1 commit attempt was blocked by Fallow because the combined boundary test had cognitive complexity 22 and local `dist/` was absent. Splitting boundary/axis cases into named tests removed the complexity finding; a container build supplied local ignored artifacts for analysis. The revised helper suite passed all 72 tests with no skips in `.cache/phase60/slice1-split.log`.

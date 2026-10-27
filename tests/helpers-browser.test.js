@@ -197,6 +197,80 @@ for (const [engine, browserType, utilityTest] of engines) {
     }
   });
 
+  for (const axis of ['row', 'column']) {
+    for (const [prefix, boundary] of [['medium', 600], ['expanded', 840], ['large', 1200], ['extra-large', 1600]]) {
+      utilityTest(`child sizing switches at ${boundary}px in a ${axis} (${engine})`, async () => {
+        const browser = await leaseBrowser(browserType);
+        try {
+          const page = await browser.newPage();
+          const cases = [
+            ['flex-1', 'flex-none', 400, 80, ['0', '0', 'auto', 80], ['1', '1', '0px', 320]],
+            ['flex-none', 'flex-1', 400, 80, ['1', '1', '0px', 320], ['0', '0', 'auto', 80]],
+            ['flex-initial', 'flex-1', 400, 80, ['1', '1', '0px', 320], ['0', '1', 'auto', 80]],
+            ['shrink-0', 'flex-initial', 200, 160, ['0', '1', 'auto', 120], ['0', '0', 'auto', 160]],
+            ['shrink-1', 'flex-none shrink-0', 200, 160, ['0', '0', 'auto', 160], ['0', '1', 'auto', 120]],
+          ];
+          const dimension = axis === 'row' ? 'width' : 'height';
+          await page.setContent(`<style>${css}</style>${cases.map(([name, base, size, basis]) => `
+            <div class="flex flex-${axis}" style="${dimension}: ${size}px">
+              <div class="target ${base} ${prefix}:${name} min-w-0 min-h-0" style="${dimension}: ${basis}px"></div>
+              <div class="sibling flex-none" style="${dimension}: 80px"></div>
+            </div>`).join('')}`);
+          for (const [active, expectedIndex] of [[false, 4], [true, 5], [false, 4]]) {
+            await page.setViewportSize({ width: boundary - Number(!active), height: 900 });
+            const actual = await page.locator('.target').evaluateAll((elements, dimension) => elements.map(el => {
+              const style = getComputedStyle(el);
+              return [style.flexGrow, style.flexShrink, style.flexBasis, el.getBoundingClientRect()[dimension], el.nextElementSibling.getBoundingClientRect()[dimension]];
+            }), dimension);
+            for (const [i, entry] of actual.entries()) {
+              const expected = cases[i][expectedIndex];
+              const label = `${axis} ${prefix}:${cases[i][0]} at ${page.viewportSize().width}px`;
+              assert.deepEqual(entry.slice(0, 3), expected.slice(0, 3), label);
+              assert.ok(Math.abs(entry[3] - expected[3]) < 1, label);
+              assert.ok(Math.abs(entry[4] - 80) < 1, `${label}: fixed sibling`);
+            }
+          }
+        } finally {
+          await browser.close();
+        }
+      });
+    }
+  }
+
+  utilityTest(`child sizing preserves base combinations and follows prefix order (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      const base = [
+        ['flex-1', ['1', '1', '0px']], ['flex-none', ['0', '0', 'auto']],
+        ['shrink-0', ['0', '0', 'auto']], ['flex-1 shrink-0', ['1', '0', '0px']],
+        ['shrink-0 flex-1', ['1', '0', '0px']], ['flex-1 flex-none', ['0', '0', 'auto']],
+        ['flex-none flex-1', ['0', '0', 'auto']], ['flex-none shrink-0', ['0', '0', 'auto']],
+      ];
+      const chain = 'flex-none medium:flex-1 expanded:flex-initial large:flex-none extra-large:flex-1';
+      await page.setContent(`<style>${css} .consumer { flex: 2 0 25px; }</style>
+        ${base.map(([classes]) => `<div class="base ${classes}"></div>`).join('')}
+        <div id="chain" class="${chain}"></div><div id="reversed" class="${chain.split(' ').reverse().join(' ')}"></div>
+        <div id="shorthand" class="shrink-0 medium:flex-1"></div>
+        <div id="shrink" class="flex-1 shrink-0 medium:shrink-1"></div>
+        <div id="consumer" class="consumer flex-1 medium:flex-initial"></div>`);
+      const longhands = selector => page.locator(selector).evaluateAll(elements => elements.map(el => {
+        const style = getComputedStyle(el);
+        return [style.flexGrow, style.flexShrink, style.flexBasis];
+      }));
+      for (const [width, expected] of [[599, ['0', '0', 'auto']], [600, ['1', '1', '0px']], [840, ['0', '1', 'auto']], [1200, ['0', '0', 'auto']], [1600, ['1', '1', '0px']]]) {
+        await page.setViewportSize({ width, height: 900 });
+        assert.deepEqual(await longhands('.base'), base.map(([, values]) => values), `base classes at ${width}px`);
+        assert.deepEqual(await longhands('#chain, #reversed'), [expected, expected], `prefix order at ${width}px`);
+        assert.deepEqual(await longhands('#shorthand'), [width < 600 ? ['0', '0', 'auto'] : ['1', '1', '0px']]);
+        assert.deepEqual(await longhands('#shrink'), [['1', width < 600 ? '0' : '1', '0px']]);
+        assert.deepEqual(await longhands('#consumer'), [['2', '0', '25px']]);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
   utilityTest(`opacity helpers set their documented values and beat component opacity (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
