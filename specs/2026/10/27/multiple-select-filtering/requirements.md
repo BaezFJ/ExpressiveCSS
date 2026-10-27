@@ -4,7 +4,7 @@
 - Roadmap phase: Phase 64, filter multiple-select options
 - Branch: `feature/2026-10-27-multiple-select-filtering`
 - Base: `origin/master` at `165ce2c04e03d738503898ca7eb5a34f565d668f`
-- Status: specified; implementation not started
+- Status: implemented and verified locally on 2026-10-27; PR and merge gates pending
 
 This feature follows the [mission's product rules](../../../../mission.md#product-rules) and [component scope](../../../../mission.md#agreed-scope), the [technical constraints](../../../../tech-stack.md#framework-constraints) and [testing requirements](../../../../tech-stack.md#framework-testing), and [roadmap Phase 64](../../../../roadmap.md#phase-64-filter-multiple-select-options). Work is in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
