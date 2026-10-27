@@ -319,7 +319,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed opt-in drop-zone type matching, accessible feedback, rejection snapshots and native reset recovery: 109,246 gzip bytes (+996).
   // Reviewed independent per-file byte limits through shared file validity, messages and constraint-aware rejection: 109,451 gzip bytes (+205).
   // Reviewed independent file-count limits through shared validation and all-file rejection snapshots: 109,541 gzip bytes (+90).
-  assert.ok(sizes(js).gzip <= 109541, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed search-result focus preserved when opening completes after navigation: 109,553 gzip bytes (+12).
+  assert.ok(sizes(js).gzip <= 109553, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

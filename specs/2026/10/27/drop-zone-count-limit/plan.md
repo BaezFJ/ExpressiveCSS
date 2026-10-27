@@ -43,3 +43,5 @@ Prerequisite: groups 1-3 pass.
 - [ ] Obtain independent R1-R6 source/evidence review, fix findings, perform a separate simplification pass, open/watch the PR and merge only after exact-head CI/conversation/current-master/clean-worktree gates pass.
 
 Delivers R6. Completion checks V4-V6. Preserve separate post-merge roadmap/evidence documentation.
+
+CI repair: preserve an already focused search result when opening completes. The timed modal/shadow regression, source guard, changelog, size budget and generated fingerprints pass focused checks; final contributor revalidation and independent review are pending.

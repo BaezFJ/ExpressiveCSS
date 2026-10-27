@@ -138,22 +138,28 @@ each('refreshes a live query, preserves the caret, and resets native state', asy
 });
 
 each('works in a native modal dialog and an open shadow root', async page => {
+  await page.clock.install({ time: 0 });
+  await page.clock.pauseAt(1000);
   for (const kind of ['dialog', 'shadow']) {
     await page.evaluate(kind => {
       const select = instance.el;
       instance.destroy();
+      select.value = 'paris';
       const label = select.labels[0];
       const host = document.createElement(kind === 'dialog' ? 'dialog' : 'div');
       document.body.append(host);
       const root = kind === 'shadow' ? host.attachShadow({ mode: 'open' }) : host;
       root.append(document.querySelector('style').cloneNode(true), select, label);
       if (kind === 'dialog') host.showModal();
-      window.instance = Expressive.FormSelect.init(select, { searchable: true, menuOptions: { inDuration: 0, outDuration: 0 } });
+      window.instance = Expressive.FormSelect.init(select, { searchable: true, menuOptions: { inDuration: 100, outDuration: 0 } });
     }, kind);
     await page.getByRole('combobox').click();
     await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
     await page.getByRole('searchbox').fill('tok');
     await page.keyboard.press('ArrowDown');
+    await expect(page.getByRole('option', { name: 'Tokyo' })).toBeFocused();
+    // Finish opening after navigation, before Enter commits the focused result.
+    await page.clock.runFor(100);
     await page.keyboard.press('Enter');
     assert.equal(await page.evaluate(() => instance.el.value), 'tokyo');
     await expect(page.getByRole('combobox')).toBeFocused();

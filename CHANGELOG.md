@@ -767,6 +767,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Searchable selects preserve focus on a result reached before the opening
+  animation finishes, so Enter still chooses that result in dialogs and shadow roots.
 - Escape dismisses an anchored menu while its opening animation still leaves
   focus on the trigger, including a searchable select reopened from the keyboard.
   A closed menu leaves Escape available to its surrounding dialog or page.

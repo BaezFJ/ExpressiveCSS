@@ -562,7 +562,8 @@ export class FormSelect extends Component<FormSelectOptions> {
 
   private _focusMenu() {
     if (!this._searchInput) return this._focusSelected();
-    if (this.menu.options.autoFocus) this._searchInput.focus();
+    // Opening can finish after the user has already reached a result.
+    if (this.menu.options.autoFocus && !Utils.focusIsIn(this.menuEl)) this._searchInput.focus();
   }
 
   /** Moves focus to the selected row of the opened menu, centred when it scrolls. */
