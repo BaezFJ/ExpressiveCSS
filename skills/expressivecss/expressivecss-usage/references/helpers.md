@@ -175,6 +175,7 @@ Apply one class per declaration to the container. `.flex-row` and `.flex-nowrap`
 | `.shrink-0` | `flex-shrink: 0` | Keeps an icon or avatar from squeezing. |
 | `.shrink-1` | `flex-shrink: 1` | Restores shrinking while keeping grow and basis. |
 | `.self-start`, `.self-center`, `.self-end`, `.self-stretch` | `align-self` | One child out of line with the rest. |
+| `.self-auto` | `align-self: auto` | Hand a child back to the parent's `align-*`, usually with a prefix: `self-center expanded:self-auto`. |
 | `.order-first`, `.order-last` | `order: -1`, `order: 1` | Visual only; keyboard and reading order follow the source, so do not reorder meaningful content. |
 | `.gap-0` to `.gap-6` | `gap`, `!important` | Spacing scale above; use `.g-*` on `.row` instead. |
 | `.gap-x-0` to `.gap-x-6` | `column-gap`, `!important` | Changes only the column gap. |
@@ -191,7 +192,7 @@ Components that already lay out their children (app bars, toolbars, card `.actio
 
 ## Window-size prefixes
 
-Display, flex direction and wrap, `.flex-1`, `.flex-none`, `.flex-initial`, `.shrink-0`, `.shrink-1`, `justify-*`, `align-*`, `.start-align`, `.center-align`, `.end-align`, `.gap-*`, `.gap-x-*`, `.gap-y-*`, margin and padding (all sides, `x`, `y`, `t`, `b`, `s`, `e`; not `l` or `r`) and `.hide` also take a `medium:`, `expanded:`, `large:` or `extra-large:` prefix. The prefixed class applies from that size class up (600, 840, 1200 and 1600px) and overrides the unprefixed one, like the grid's `m6` and `l4`.
+Display, flex direction and wrap, `.flex-1`, `.flex-none`, `.flex-initial`, `.shrink-0`, `.shrink-1`, `justify-*`, `align-*`, `self-*`, `.start-align`, `.center-align`, `.end-align`, `.gap-*`, `.gap-x-*`, `.gap-y-*`, margin and padding (all sides, `x`, `y`, `t`, `b`, `s`, `e`; not `l` or `r`) and `.hide` also take a `medium:`, `expanded:`, `large:` or `extra-large:` prefix. The prefixed class applies from that size class up (600, 840, 1200 and 1600px) and overrides the unprefixed one, like the grid's `m6` and `l4`.
 
 ```html
 <div class="flex flex-column gap-2 expanded:flex-row expanded:align-center expanded:justify-between">

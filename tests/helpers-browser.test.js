@@ -569,6 +569,39 @@ test('line clamp classes come with every window-size prefix', () => {
   }
 });
 
+test('self-alignment classes come with every window-size prefix', () => {
+  assert.match(css, /\.self-auto \{\s*align-self: auto;/);
+  for (const size of ['medium', 'expanded', 'large', 'extra-large']) {
+    for (const name of ['self-auto', 'self-start', 'self-center', 'self-end', 'self-stretch']) {
+      assert.match(css, new RegExp(`@media \\(width >= \\d+px\\) \\{[^@]*\\.${size}\\\\:${name} \\{`), `${size}:${name}`);
+    }
+  }
+});
+
+browserTest('a prefixed self-alignment moves one child and leaves its siblings', async () => {
+  const browser = await leaseBrowser(chromium);
+  try {
+    const page = await browser.newPage();
+    await page.setContent(`<style>${css} #row > span { height: 20px; }</style>
+      <div id="row" class="flex align-center" style="height: 100px">
+        <span class="self-start expanded:self-end">A</span>
+        <span class="self-end expanded:self-auto">B</span>
+        <span>C</span>
+      </div>`);
+    const read = () => page.evaluate(() => {
+      const row = document.querySelector('#row');
+      const top = row.getBoundingClientRect().top;
+      return [...row.children].map((child) => [getComputedStyle(child).alignSelf, child.getBoundingClientRect().top - top]);
+    });
+    await page.setViewportSize({ width: 839, height: 600 });
+    assert.deepEqual(await read(), [['flex-start', 0], ['flex-end', 80], ['auto', 40]]);
+    await page.setViewportSize({ width: 840, height: 600 });
+    assert.deepEqual(await read(), [['flex-end', 80], ['auto', 40], ['auto', 40]]);
+  } finally {
+    await browser.close();
+  }
+});
+
 browserTest('window-size prefixes switch layout from their size class up', async () => {
   const browser = await leaseBrowser(chromium);
   try {
