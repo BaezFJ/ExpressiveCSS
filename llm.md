@@ -416,7 +416,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:refresh` | Pull-to-refresh | `{ waitUntil }` |
 | `expressive:swipetoggle` | Swipe actions | `{ row, open }` |
 | `expressive:transfer` | Transfer list, from the container | `{ rows, from, to }` |
-| `expressive:change`, `expressive:sort`, `expressive:resize` | Data tables, from the wrapper | `{ selected }`, `{ header, column, direction }`, `{ header, column, width }`; `sort` is cancelable |
+| `expressive:change`, `expressive:sort`, `expressive:resize`, `expressive:filter` | Data tables, from the wrapper | `{ selected }`, `{ header, column, direction }`, `{ header, column, width }`, `{ query }`; `sort` and `filter` are cancelable |
 
 An Autocomplete or Select input hosts a Menu, so it also fires that Menu's `expressive:open`, `expressive:close` and `expressive:select`. A callback that changes the choice again, such as an `onShow` that selects another tab, leaves only the event for the final choice.
 
@@ -3868,7 +3868,7 @@ A `.data-table` is a `<div>` around one native `<table>`. The wrapper scrolls an
 
 Put a `<button>` in each sortable `<th>` and set `aria-sort="ascending"` or `"descending"` on the header of the sorted column. The framework draws the arrow. Add `data-sort` to the wrapper and the framework sorts too: a header button reorders the rows by its column and moves `aria-sort`. A `numeric` header compares numbers (`$1,200.00` after `$87.00`); other columns compare text in the page's language, with 9 before 10. A cell's `data-value` stands in for its text, and a `tr.data-table-detail` moves with its row. Each press fires a cancelable `expressive:sort` from the wrapper with `{ header, column, direction }`; a server-paged table cancels it and loads the sorted page, with `aria-sort` already moved. Without `data-sort`, the page reorders the rows and moves `aria-sort` itself.
 
-Add a labelled `input[type="search"][data-table-filter]` inside the wrapper for text filtering, and put `data-filter` on each searchable single-column header. A named `output[data-table-filter-count]` with `role="status"` and `aria-live="polite"` receives the matching record count. Filtering keeps record details together and preserves author-hidden rows. Select-all changes only enabled records visible in the current view, while hidden records keep their selections. `Expressive.DataTables.sync(wrapper)` reapplies the current query after script edits or replacement records.
+Add a labelled `input[type="search"][data-table-filter]` inside the wrapper for text filtering, and put `data-filter` on each searchable single-column header. A named `output[data-table-filter-count]` with `role="status"` and `aria-live="polite"` receives the matching record count. Filtering keeps record details together and preserves author-hidden rows. Select-all changes only enabled records visible in the current view, while hidden records keep their selections. Each edit fires cancelable `expressive:filter` with `{ query }`. Cancel synchronously for server filtering, then replace records, write the count and call `Expressive.DataTables.sync(wrapper)`. Sync stays silent and preserves server records and counts until the next uncanceled input; otherwise it reapplies the local query.
 
 ```html
 <div class="data-table" data-sort>
@@ -3947,6 +3947,17 @@ An optional named `output[data-table-filter-count]` inside the same wrapper, wit
   </table>
 </div>
 ```
+
+Each marked search input edit fires a bubbling, composed, cancelable `expressive:filter` from its wrapper, before local filtering. Its `{ query }` is trimmed but keeps its case; clearing the input requests `''`. For server filtering, call `preventDefault()` synchronously, before awaiting a response. Cancellation leaves the current view, order, count and focus unchanged. Filtering and sorting are separate cancelable requests.
+
+```js
+wrapper.addEventListener('expressive:filter', (event) => {
+  event.preventDefault();
+  loadPage({ query: event.detail.query });
+});
+```
+
+`loadPage` is application code. The application handles fetching, failures and response ordering, replaces records, writes its server count and calls `Expressive.DataTables.sync(wrapper)`. Under server ownership, sync skips query matching and count writes, restores filter-owned hiding and synchronizes visible-record selection and columns. Author-hidden records and their details stay hidden. Sync also works inside the canceling listener and never emits filter, selection or sort events. Changing the input from script stays silent. The next uncanceled input restores local filtering and counts for that wrapper.
 
 ### Bulk actions
 

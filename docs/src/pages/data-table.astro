@@ -236,6 +236,31 @@ table.addEventListener('expressive:sort', (event) => {
       author-visible records; a nonempty query with no marked columns matches
       none. Detail text never contributes to search.
     </p>
+    <p>
+      Each edit fires a bubbling, composed, cancelable
+      <code>expressive:filter</code> from the wrapper before local filtering.
+      Its <code>{`{ query }`}</code> is trimmed but keeps its case, including an
+      empty string when cleared. For server filtering, cancel synchronously
+      before awaiting a response. Cancellation leaves the current rows, order,
+      count and focus unchanged. Filter and sort requests cancel independently.
+    </p>
+    <Code lang="js" code={`
+wrapper.addEventListener('expressive:filter', (event) => {
+  event.preventDefault();
+  loadPage({ query: event.detail.query });
+});
+`} />
+    <p>
+      <code>loadPage</code> is your application code. It handles fetching,
+      failures and response ordering, replaces records, writes the server
+      count and calls <code>Expressive.DataTables.sync(wrapper)</code>.
+      Sync never requests a filter or emits selection or sort events.
+      After cancellation it skips query matching and count writes, restores
+      only filter-owned hiding and synchronizes selection and columns.
+      Author-hidden records and their details stay hidden. Sync also works
+      inside the canceling listener. The next uncanceled input restores local
+      filtering and counts for that wrapper.
+    </p>
   </Section>
   <Section {...S["bulk-actions"]}>
         <p>

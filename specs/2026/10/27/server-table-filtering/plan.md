@@ -18,9 +18,9 @@ Delivers R1-R5. Completion check V1; commit the tested increment.
 
 Prerequisite: group 1 passes.
 
-- [ ] Extend the existing filtering browser fixture for real input, application replacement, focus, server counts, visible record groups and open shadow-root requests in Chromium, Firefox and WebKit.
-- [ ] Update `llm.md` event and filtering sections, `docs/src/pages/data-table.astro` and `CHANGELOG.md`. Explain synchronous cancellation, app-owned operations and silent synchronization.
-- [ ] Regenerate guidance through `npm run build:skill`, and check generated data. Existing static markup rules stay unchanged.
+- [x] Extend the existing filtering browser fixture for real input, application replacement, focus, server counts, visible record groups and open shadow-root requests in Chromium, Firefox and WebKit.
+- [x] Update `llm.md` event and filtering sections, `docs/src/pages/data-table.astro` and `CHANGELOG.md`. Explain synchronous cancellation, app-owned operations and silent synchronization.
+- [x] Regenerate guidance through `npm run build:skill`, and check generated data. Existing static markup rules stay unchanged.
 
 Delivers R1, R3-R6. Completion checks V2 and V3; commit the tested increment.
 

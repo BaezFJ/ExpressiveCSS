@@ -187,6 +187,8 @@ function keyWidth(header: HTMLTableCellElement, e: KeyboardEvent) {
  * and fires `expressive:resize` with `{ header, column, width }`. A menu
  * checkbox item with `data-column` naming a first-row header cell's id
  * hides that column while it is unchecked.
+ * Marked search inputs request `expressive:filter` with `{ query }`.
+ * Cancel to keep records and counts server-owned across silent sync calls.
  */
 export class DataTables {
   private static _initialized = false;
@@ -214,6 +216,8 @@ export class DataTables {
    * after checking rows from script, which fires no change. It also shows
    * and hides the columns that column toggles name, as their
    * `aria-checked` says.
+   * It reapplies a local query, or preserves application records and counts
+   * after a canceled filter request. It fires no events.
    */
   static sync(wrapper: Element) {
     const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
