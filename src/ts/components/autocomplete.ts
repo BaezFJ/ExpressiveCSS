@@ -21,6 +21,12 @@ export interface AutocompleteData {
    * Optional attributes which describes the option.
    */
   description?: string;
+  /**
+   * Shows the entry dimmed and keeps every selection path from choosing or
+   * removing it. The arrow keys skip it, and the result count leaves it out.
+   * The `selected` option and `setMenuItems()` can still select it.
+   */
+  disabled?: boolean;
 }
 
 export interface AutocompleteOptions extends BaseOptions {
@@ -523,9 +529,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     e.stopPropagation();
   };
 
-  /** The rows that can be chosen. The no-results row is not one. */
+  /** The rows that can be chosen. The no-results row and disabled rows are not. */
   private _options() {
-    return this.container.querySelectorAll<HTMLElement>('li[role="option"]');
+    return this.container.querySelectorAll<HTMLElement>('li[role="option"]:not([aria-disabled="true"])');
   }
 
   _resetCurrentElementPosition() {
@@ -561,6 +567,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     const isSelected = this.selectedValues.some((sel) => sel.id === entry.id);
     item.setAttribute('aria-selected', isSelected ? 'true' : 'false');
     item.setAttribute('data-id', <string>entry.id);
+    Autocomplete._markDisabled(item, entry);
     item.setAttribute(
       'style',
       'display:grid; grid-auto-flow: column; user-select: none; align-items: center;'
@@ -575,6 +582,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       checkbox.type = 'checkbox';
       checkbox.tabIndex = -1;
       checkbox.checked = isSelected;
+      checkbox.disabled = entry.disabled === true;
       const spacer = document.createElement('span');
       spacer.style.paddingLeft = '21px';
       selection.append(checkbox, spacer);
@@ -619,6 +627,11 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     };
     item.style.gridTemplateColumns = getGridConfig();
     return item;
+  }
+
+  /** Menu already ignores a click on an aria-disabled row. */
+  private static _markDisabled(item: HTMLElement, entry: AutocompleteData) {
+    if (entry.disabled === true) item.setAttribute('aria-disabled', 'true');
   }
 
   _createLabel(entry: AutocompleteData) {
@@ -878,7 +891,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
    * @param id The id of a data-entry.
    */
   selectOption(id: number | string) {
-    const entry = this.menuItems.find((item) => item.id == id);
+    // A disabled entry is never found, so it is neither chosen nor removed.
+    const entry = this.menuItems.find((item) => item.id == id && item.disabled !== true);
     if (!entry) return;
     if (this.options.isMultiSelect) this._toggleOption(entry);
     else this._selectSingle(entry);
