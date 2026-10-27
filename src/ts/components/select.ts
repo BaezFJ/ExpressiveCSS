@@ -61,7 +61,7 @@ export class FormSelect extends Component<FormSelectOptions> {
   private _listbox: HTMLElement;
   private _searchStatus: HTMLElement;
 
-  constructor(el: HTMLSelectElement, options: FormSelectOptions) {
+  constructor(el: HTMLSelectElement, options: Partial<FormSelectOptions>) {
     super(el, options);
     // A browser-default select stays native, with no instance on it, and a
     // tree select belongs to TreeSelect, which a page's FormSelect.init() on

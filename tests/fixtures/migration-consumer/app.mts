@@ -3,6 +3,7 @@ import {
   ButtonGroup,
   Dialogs,
   FloatingActionButton,
+  FormSelect,
   NavigationRail,
   Snackbar,
   Tooltip,
@@ -14,6 +15,7 @@ import {
 
 export const manualDatepicker: Partial<DatepickerOptions> = { autoSubmit: false };
 export const manualTimepicker: Partial<TimepickerOptions> = { autoSubmit: false };
+export const legacySelectOptions: ConstructorParameters<typeof FormSelect>[1] = { classes: "", menuOptions: {} };
 const deleteQuestion: ConfirmOptions = { headline: "Delete draft?", text: "The draft is removed.", confirm: "Delete" };
 export const confirmDelete = (): Promise<boolean> => Dialogs.confirm(deleteQuestion);
 
