@@ -119,3 +119,20 @@ Physical devices, native browser zoom, OS IME and spoken screen-reader output re
 Independent reviewer phase_history confirmed all 64 unique requirements, exact-head successful checks, merge ancestry/tree equality and preserved evidence limits. Reviewer phase70_review found two overbroad new technical rules: branch normalization applies only in multiple mode, and delayed-opening focus preservation is established for searchable FormSelect and TreeSelect, not every Menu/nonsearch FormSelect path. Both statements are now scoped to their implemented paths. A source read also confirmed getSelectedValues returns native selected option values, so the API reference now says option rather than leaf; single mode can preserve an authored/scripted selected branch while its disabled option remains excluded from submission. This corrects guidance without changing runtime behavior. Regenerated copies come from the source.
 
 The review fixes are independently confirmed. The separate simplification pass found no warranted removal or abstraction: the 64 mappings, per-phase closures, primary records and historical checkpoints serve different purposes. No runtime, test or dependency changes are included. Final contributor checks and this documentation PR's own CI/merge gates remain pending at this checkpoint.
+
+## Final documentation verification
+
+All contributor-equivalent commands passed sequentially on documentation source head 2451611ecb5dbc50bf9aa8d4570b9e782e2d6d44. The fresh full run passes 3601 of 3604 checks with zero failures and three known Firefox WebGL2 skips, in 252.64 seconds. Runtime/test/build/site source Git objects match merged Phase 76. The runtime minified hash remains the reviewed 92eab3ad7fa113d3413629cdca8477e88e47fedf1e7af58109e543cfad523987. API source and both generated formats use selected native option values. All 128 relative specification links resolve. No new interaction or layout is introduced, so existing inspected phase visuals retain their scope.
+
+| Command | Result | Seconds |
+| --- | --- | --- |
+| `npm run build` | Passed | 2.68 |
+| `npm run typecheck` | Passed | 0.24 |
+| `node --test --test-concurrency=8` | Passed | 252.64 |
+| `npm run check:generated` | Passed | 0.44 |
+| `npm run docs:build:astro` | Passed | 6.84 |
+| `npm run docs:verify` | Passed | 30.22 |
+| `npm test --prefix mcp/expressivecss` | Passed | 36.9 |
+| `npm run verify:packages` | Passed | 81.24 |
+
+The primary evidence also records the seven named multiple-tree passes in every CI engine, the successful Phase 76 run at attempt 1 and the completed same-head security review with no findings. Full check logs are /tmp/expressivecss-completion-final-*.log; command exits/durations are /tmp/expressivecss-completion-final-checks.json. Only completion-evidence bookkeeping follows the reviewed and tested documentation source. This documentation PR still requires exact-head CI, conversation, current-master and clean-worktree checks before merge. Its actual merge is proved by GitHub state and recorded in the shared project note after it happens. No package has been published.
