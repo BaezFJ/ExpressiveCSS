@@ -30,6 +30,10 @@ Prerequisite: groups 1 and 2 pass.
 
 - [x] Record measured gzip delta in `tests/selective-builds.test.js`.
 - [x] Run the required checks, review the diff independently and fix confirmed issues. Perform the separate code-simplification pass without unrelated refactors.
-- [ ] Record actual results in `validation.md`, open a focused PR, monitor required CI and reviews, fix issues, and merge only when green and current with master.
+- [x] Record actual results in `validation.md`, open a focused PR, monitor required CI and reviews, fix issues, and merge only when green and current with master.
 
 Delivers R6. Completion checks V4 through V6. Do not publish a package.
+
+## Post-merge completion record
+
+[PR #456](https://github.com/BaezFJ/ExpressiveCSS/pull/456) merged on 2026-10-27T10:37:50Z as `b2bff6ec0649a69f7cee3427edc1ef379fa8853b`. The exact final head `2aaef8bb5e178838063e5fedeadb47795e23b8b0` has all 17 checks successful and no unresolved review threads, with hasNextPage false. The final delivery task is complete. See the [current-source requirement audit](../roadmap-completion/audit.md) and [primary merge evidence](../roadmap-completion/merge-evidence.json).

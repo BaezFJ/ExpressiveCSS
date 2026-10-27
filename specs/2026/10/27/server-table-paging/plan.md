@@ -40,8 +40,12 @@ Prerequisite: groups 1-3 pass.
 
 - [x] Run contributor-equivalent checks sequentially, including the full suite, generated data, docs/site verification, MCP smoke and isolated packages. Record failures and unavailable checks accurately.
 - [x] Compare the data-table docs against the merged base in compact, expanded, large and large-dark layouts; inspect changed captures and distinguish expected differences from a no-difference pass.
-- [ ] Obtain independent final review mapping R1-R6 to source and evidence. Fix findings, perform a separate simplification pass, then open and monitor the PR. Merge only after required CI, conversations, clean worktree and current-master gates pass.
+- [x] Obtain independent final review mapping R1-R6 to source and evidence. Fix findings, perform a separate simplification pass, then open and monitor the PR. Merge only after required CI, conversations, clean worktree and current-master gates pass.
 
 Delivers R6. Completion checks V4-V6. Preserve the separate post-merge roadmap/evidence documentation step.
 
 Local implementation, contributor verification, visual inspection, independent final review and separate simplification are complete. The remaining combined task is PR monitoring and green merge. Completion labels and merge evidence remain for the separate post-merge documentation PR.
+
+## Post-merge completion record
+
+[PR #460](https://github.com/BaezFJ/ExpressiveCSS/pull/460) merged on 2026-10-27T13:54:48Z as `cd7a3c1e262f217a05f337bfab4c8935fdc8f8d5`. The exact final head `0ad7cf9425a0988969ecdf77e67f9015d35715f5` has all 17 checks successful and no unresolved review threads, with hasNextPage false. The final delivery task is complete. See the [current-source requirement audit](../roadmap-completion/audit.md) and [primary merge evidence](../roadmap-completion/merge-evidence.json).

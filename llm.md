@@ -9551,7 +9551,7 @@ Rebuilds the tree from the native options after a page adds, removes or changes 
 
 #### .getSelectedValues()
 
-The selected native leaf values in option order, as in FormSelect.
+The selected native option values in option order, as in FormSelect.
 
 #### .destroy()
 

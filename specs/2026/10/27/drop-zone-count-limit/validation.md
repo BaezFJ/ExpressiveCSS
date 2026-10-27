@@ -79,3 +79,9 @@ The final contributor-equivalent chain passed sequentially on production head f1
 The remote master still equals base c427ab5311373e09b90d6c44a7595f22b72f5ed6. PR #463 has no review threads, with hasNextPage false. Its initial security review found no issues at 446aede7f73549ffae9debcd06128beffe1d83fb; that review predates the independently reviewed focus repair. New-head CI, current conversations and all merge gates remain pending. Only validation/plan bookkeeping changes after the reviewed production head.
 
 Independent final evidence review approved all eight revalidation logs and the bookkeeping changes without inconsistency. It did not rerun checks or independently verify remote state.
+
+## Post-merge acceptance on 2026-10-27
+
+[PR #463](https://github.com/BaezFJ/ExpressiveCSS/pull/463) merged at 2026-10-27T16:59:38Z as `37246fefc2e781f11cac784ee37b9d68776e0180`, from exact head `5e3e3d00f9f44bc755d96574bf944c5514217fc7`. Fresh primary GitHub evidence confirms all 17 head checks successful, including the required aggregate, and zero unresolved review threads with hasNextPage false. Before merge, the PR was current with master, conversations were inspected and the worktrees were clean; its watch is now off and the default checkout includes the merge. Independent review/fixes and the separate simplification are recorded above. The final plan delivery task is complete.
+
+Earlier pending/open-PR statements and failed runs remain historical checkpoints. This acceptance closes their remote delivery gates; it does not turn skipped or unavailable checks into passes. Later accepted phases intentionally extend prior behavior as the [current-source audit](../roadmap-completion/audit.md) records. All 64 requirements for phases 67-76 have current source/assertion mappings, backed by the final runtime and guidance checks and [exact-head merge evidence](../roadmap-completion/merge-evidence.json).

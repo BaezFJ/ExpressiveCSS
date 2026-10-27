@@ -25,6 +25,10 @@ Every phase keeps these:
 - A change to how existing markup behaves is opt-in, or it ships with a migration note. A page should not have to change because a component learned something new.
 - Generated guidance agrees with its sources, as [data ownership](tech-stack.md#data-ownership) assigns them.
 
+Native controls own submitted values, validity, disabled state and defaults. Enhanced choice popups keep focus separate from selection; navigation-only branches never become submitted choices. Filtering a displayed view does not erase hidden selections.
+
+Applications own server data operations. Cancelable table requests expose intent before local defaults; the framework does not fetch records. File validation reports an invalid complete selection without filtering the `FileList` or taking ownership of application errors.
+
 ## Agreed scope
 
 | Area | Outcome |
