@@ -18,9 +18,9 @@ Delivers R1-R5. Completion check V1. Build and test the increment, then commit.
 
 Prerequisite: group 1 passes.
 
-- [ ] Add `tests/data-tables-page-browser.test.js` with real pointer and keyboard activation, focus, rendered detail visibility, filtering/sorting/selection and open shadow roots in all three engines. Verify ordinary pagination links still navigate.
-- [ ] Add source rules in `semantics.json` and static regressions in `tests/semantics.test.js`. Update `llm.md`, `docs/src/pages/data-table.astro` through its existing section catalogue, and `CHANGELOG.md`.
-- [ ] Run `npm run build:semantics` and `npm run build:skill`. Check generated guidance and inspect relevant browser/visual evidence.
+- [x] Add `tests/data-tables-page-browser.test.js` with real pointer and keyboard activation, focus, rendered detail visibility, filtering/sorting/selection and open shadow roots in all three engines. Verify ordinary pagination links still navigate.
+- [x] Add source rules in `semantics.json` and static regressions in `tests/semantics.test.js`. Update `llm.md`, `docs/src/pages/data-table.astro` through its existing section catalogue, and `CHANGELOG.md`.
+- [x] Run `npm run build:semantics` and `npm run build:skill`. Check generated guidance and browser results. The final visual comparison is in group 3.
 
 Delivers R1-R6. Completion checks V2-V3. Commit the verified increment.
 

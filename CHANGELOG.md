@@ -15,6 +15,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Local data table paging through a fixed `data-page-size` and authored
+  Previous/Next buttons. Paging follows filtering and sorting, keeps details
+  with records, scopes select-all to the displayed page and preserves
+  selections on other pages. Silent sync clamps the current page after row
+  changes. Ordinary pagination links retain their navigation behavior.
 - Server-owned data table filtering through cancelable `expressive:filter`
   requests with a trimmed, case-preserving query. Cancel synchronously to
   preserve the current view, then replace records and call

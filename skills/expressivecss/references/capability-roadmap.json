@@ -1870,7 +1870,7 @@
       "lastReviewedSupport": "implemented",
       "sourceReview": "needs-review",
       "reviewedOn": "2026-10-06",
-      "scope": "Scrolling native table with sticky headers, numeric and dense rows, sorting, view-scoped selection, column resizing and visibility, and opt-in text filtering with record/detail grouping and an authored result count.",
+      "scope": "Scrolling native tables with sticky headers, numeric/dense rows, sorting, page-scoped selection, column resizing/visibility, text filtering and local paging with record/detail groups and authored counts.",
       "adaptation": "A plain div wraps a native table. Shared DataTables handlers own opt-in sorting, filtering, select-all and column operations; authors name controls and the scroll region, and keep native row and header semantics.",
       "upstream": {
         "source": "https://m3.material.io/components",

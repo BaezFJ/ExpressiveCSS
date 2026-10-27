@@ -197,6 +197,8 @@ function keyWidth(header: HTMLTableCellElement, e: KeyboardEvent) {
  * hides that column while it is unchecked.
  * Marked search inputs request `expressive:filter` with `{ query }`.
  * Cancel to keep records and counts server-owned across silent sync calls.
+ * A positive `data-page-size` opts into local record-group paging through
+ * authored Previous/Next buttons; selections on other pages stay checked.
  */
 export class DataTables {
   private static _initialized = false;
@@ -228,6 +230,8 @@ export class DataTables {
    * `aria-checked` says.
    * It reapplies a local query, or preserves application records and counts
    * after a canceled filter request. It fires no events.
+   * Local paging preserves the current page where possible and clamps it
+   * after record changes, before synchronizing the page's select-all state.
    */
   static sync(wrapper: Element) {
     const table = wrapper.querySelector<HTMLTableElement>(':scope > table');

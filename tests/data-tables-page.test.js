@@ -5,11 +5,11 @@ import { Expressive, resetBody, window } from './setup.js';
 const markup = `<div class="data-table" data-sort data-page-size="2">
   <label>Search records<input type="search" data-table-filter></label>
   <output data-table-filter-count role="status" aria-live="polite" aria-label="Matching records"></output>
-  <table><thead><tr><th><input type="checkbox" aria-label="Select all"></th><th data-filter><button type="button">Name</button></th></tr></thead><tbody>
-    ${['Cedar', 'Amber', 'Birch', 'Delta', 'Elm', 'Fir', 'Grove'].map((name, i) => `<tr id="r${i + 1}"><td><input type="checkbox" aria-label="Select ${name}" ${i === 4 ? 'checked' : ''}><button type="button" aria-expanded="true">Details</button></td><th>${name}</th></tr>${i === 0 ? '<tr id="detail" class="data-table-detail"><td colspan="2">Cedar details</td></tr><tr id="more-detail" class="data-table-detail" hidden><td colspan="2">Private detail</td></tr>' : ''}`).join('')}
-    <tr id="secret" hidden><td><input type="checkbox" checked></td><th>Cedar secret</th></tr>
+  <table><thead><tr><th><label><input type="checkbox" aria-label="Select all"></label></th><th data-filter><button type="button">Name</button></th></tr></thead><tbody>
+    ${['Cedar', 'Amber', 'Birch', 'Delta', 'Elm', 'Fir', 'Grove'].map((name, i) => `<tr id="r${i + 1}"><td><label><input type="checkbox" aria-label="Select ${name}" ${i === 4 ? 'checked' : ''}></label><button type="button" aria-expanded="true">Details</button></td><th>${name}</th></tr>${i === 0 ? '<tr id="detail" class="data-table-detail"><td colspan="2">Cedar details</td></tr><tr id="more-detail" class="data-table-detail" hidden><td colspan="2">Private detail</td></tr>' : ''}`).join('')}
+    <tr id="secret" hidden><td><label><input type="checkbox" checked></label></td><th>Cedar secret</th></tr>
     <tr id="secret-detail" class="data-table-detail"><td colspan="2">Secret</td></tr>
-    <tr id="css-hidden" style="display:none"><td><input type="checkbox"></td><th>Cedar CSS</th></tr>
+    <tr id="css-hidden" style="display:none"><td><label><input type="checkbox"></label></td><th>Cedar CSS</th></tr>
   </tbody></table>
   <nav class="pagination" aria-label="Record pages"><ol>
     <li><button type="button" data-table-page="previous">Previous</button></li>
@@ -72,9 +72,9 @@ test('filtering and sorting reset the page and count matches across previously h
 test('select-all changes the displayed enabled records and retains every other selection', () => {
   const fieldset = document.createElement('fieldset');
   fieldset.disabled = true;
-  box('r4').replaceWith(fieldset);
-  fieldset.append(document.createElement('input'));
-  fieldset.firstElementChild.type = 'checkbox';
+  const label = box('r4').closest('label');
+  label.replaceWith(fieldset);
+  fieldset.append(label);
   button('next').click();
   let selected;
   wrapper().addEventListener('expressive:change', (e) => { selected = e.detail.selected.map((row) => row.id); });
@@ -193,4 +193,12 @@ test('outer sync does not clear nested table page markers or rewrite its control
   wrapper().querySelector(':scope > nav [data-table-page="previous"]').click();
   assert.deepEqual(displayed(nested), ['r1', 'r2', 'r3']);
   assert.equal(nested.querySelector('[data-table-page-status]').textContent, '1 / 3');
+});
+
+test('page status uses localized numbers in the wrapper language', () => {
+  wrapper().setAttribute('lang', 'ar-EG');
+  sync();
+  assert.equal(status(), '١ / ٤');
+  button('next').click();
+  assert.equal(status(), '٢ / ٤');
 });

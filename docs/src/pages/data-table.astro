@@ -11,6 +11,7 @@ const S = defineSections([
   { id: "sorting", label: "Sorting" },
   { id: "selection", label: "Row selection" },
   { id: "filtering", label: "Text filtering" },
+  { id: "paging", label: "Local paging" },
   { id: "bulk-actions", label: "Bulk actions" },
   { id: "expansion", label: "Row expansion" },
   { id: "scrolling", label: "Scrolling" },
@@ -260,6 +261,82 @@ wrapper.addEventListener('expressive:filter', (event) => {
       Author-hidden records and their details stay hidden. Sync also works
       inside the canceling listener. The next uncanceled input restores local
       filtering and counts for that wrapper.
+    </p>
+  </Section>
+  <Section {...S.paging}>
+    <p>
+      Set <code>data-page-size="2"</code> on the wrapper to page local records.
+      Use a positive safe integer; absent or invalid sizes leave records
+      unpaged. Put named Previous and Next buttons in a named
+      <code>nav.pagination</code> inside that wrapper. Ordinary pagination
+      links keep their navigation behavior.
+    </p>
+    <div class="data-table" data-sort data-page-size="2">
+      <div class="field"><input id="paged-customer-query" type="search" data-table-filter /><label for="paged-customer-query">Search paged customers</label></div>
+      <span>Matching records: <output data-table-filter-count role="status" aria-live="polite" aria-label="Matching paged customers"></output></span>
+      <table>
+        <caption>Paged customers</caption>
+        <thead><tr><th scope="col"><label><input type="checkbox" aria-label="Select all customers on this page" /></label></th><th scope="col" data-filter><button type="button">Customer</button></th><th scope="col">Status</th></tr></thead>
+        <tbody>
+          <tr><td><label><input type="checkbox" aria-label="Select paged Alvin" /></label><button type="button" aria-label="Alvin details" aria-expanded="true">Details</button></td><th scope="row">Alvin</th><td>Shipped</td></tr>
+          <tr class="data-table-detail"><td colspan="3">Alvin's delivery details stay with the record.</td></tr>
+          <tr><td><label><input type="checkbox" aria-label="Select paged Alan" /></label></td><th scope="row">Alan</th><td>Pending</td></tr>
+          <tr><td><label><input type="checkbox" aria-label="Select paged Jonathan" checked /></label></td><th scope="row">Jonathan</th><td>Delivered</td></tr>
+          <tr hidden><td><label><input type="checkbox" aria-label="Select private customer" /></label></td><th scope="row">Private customer</th><td>Hidden</td></tr>
+        </tbody>
+      </table>
+      <nav class="pagination" aria-label="Paged customer pages"><ol>
+        <li><button type="button" data-table-page="previous">Previous</button></li>
+        <li><output data-table-page-status role="status" aria-live="polite" aria-label="Customer pages"></output></li>
+        <li><button type="button" data-table-page="next">Next</button></li>
+      </ol></nav>
+    </div>
+    <Code code={`
+<div class="data-table" data-page-size="2">
+  <table>
+    <caption>Customers</caption>
+    <thead><tr><th scope="col">Customer</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Alvin</th></tr>
+      <tr><th scope="row">Alan</th></tr>
+      <tr><th scope="row">Jonathan</th></tr>
+    </tbody>
+  </table>
+  <nav class="pagination" aria-label="Customer pages">
+    <ol>
+      <li><button type="button" data-table-page="previous">Previous</button></li>
+      <li><output data-table-page-status role="status" aria-live="polite" aria-label="Pages"></output></li>
+      <li><button type="button" data-table-page="next">Next</button></li>
+    </ol>
+  </nav>
+</div>
+`} />
+    <p>
+      Filtering and sorting run before paging. Details consume no page slots,
+      and author hiding and expansion stay unchanged. Filter counts cover all
+      matching records. Select-all changes only enabled records on the
+      displayed page; other selections stay checked, and selection events
+      still report every selected record. The framework reserves
+      <code>data-table-page-hidden</code> for its page state. Do not author it.
+    </p>
+    <p>
+      An uncanceled filter input or a local sort returns to the first page.
+      Canceled requests apply no reset. After changing records or removing
+      the size, call <code>Expressive.DataTables.sync(wrapper)</code>. It
+      preserves a valid current page, clamps it when needed and emits no
+      events. Local paging can slice server-filtered DOM records without
+      changing the application's filter count; it does not request server
+      pages or use server totals.
+    </p>
+    <p>
+      Page buttons keep focus at boundaries. The framework sets
+      <code>aria-disabled="true"</code> and ignores unavailable activation,
+      while keeping the buttons in the Tab order. Page changes emit no filter,
+      sort or selection event. The optional named status shows localized
+      numbers such as <code>1 / 3</code> in the wrapper's language, or
+      <code>0 / 0</code> for no records. Supply its accessible name and
+      surrounding language. No numbered buttons or page-size selector is
+      generated. Standalone pagination stays CSS-only.
     </p>
   </Section>
   <Section {...S["bulk-actions"]}>

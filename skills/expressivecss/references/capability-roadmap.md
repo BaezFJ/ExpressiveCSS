@@ -627,7 +627,7 @@ Web adaptation: The component unclamps with inline -webkit-line-clamp and line-c
 
 ## Data table
 
-**unassessed within the stated scope.** Scrolling native table with sticky headers, numeric and dense rows, sorting, view-scoped selection, column resizing and visibility, and opt-in text filtering with record/detail grouping and an authored result count.
+**unassessed within the stated scope.** Scrolling native tables with sticky headers, numeric/dense rows, sorting, page-scoped selection, column resizing/visibility, text filtering and local paging with record/detail groups and authored counts.
 
 Source review: needs-review, 2026-10-06. [src/sass/components/_data-table.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_data-table.scss).
 

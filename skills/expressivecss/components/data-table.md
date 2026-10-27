@@ -9,7 +9,7 @@ Component ID: `data-table`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `f994ba228a56e30603681c9edd301aeac00f18c2f0f2c28974c8174122ebb40a`
+Contract SHA-256: `9957a434173649d641ae18e9972432677422e6049affdf016e5622e3cb233801`
 
 #### Selection and adaptation
 
@@ -25,7 +25,7 @@ Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Support (2026-10-27, `llm.md#data-table`): Scrolling native table with sticky headers, numeric and dense rows, sorting, view-scoped selection, column resizing and visibility, and opt-in text filtering with record/detail grouping and an authored result count.
+Support (2026-10-27, `llm.md#data-table`): Scrolling native tables with sticky headers, numeric/dense rows, sorting, page-scoped selection, column resizing/visibility, text filtering and local paging with record/detail groups and authored counts.
 
 Web adaptation: A plain div wraps a native table. Shared DataTables handlers own opt-in sorting, filtering, select-all and column operations; authors name controls and the scroll region, and keep native row and header semantics.
 
@@ -72,7 +72,7 @@ Add a labelled `input[type="search"][data-table-filter]` inside the wrapper for 
 
 #### Also documented
 
-The Data table section of the [API reference](https://www.expressivecss.com/llm.md) also covers Row selection, Text filtering, Bulk actions, Row expansion, Scrolling, Sticky first column, Column resize, Column visibility, Tokens.
+The Data table section of the [API reference](https://www.expressivecss.com/llm.md) also covers Row selection, Text filtering, Local paging, Bulk actions, Row expansion, Scrolling, Sticky first column, Column resize, Column visibility, Tokens.
 
 #### Rules
 
@@ -85,3 +85,11 @@ The Data table section of the [API reference](https://www.expressivecss.com/llm.
 - `data-table-filter-count-is-named`: Name the result count, for example aria-label="Matching records", so its number has context.
 - `data-table-filter-count-is-status`: Give the table result count role="status" so changes are announced without moving focus.
 - `data-table-filter-count-is-polite`: Use aria-live="polite" on the table result count so typing does not interrupt other speech.
+- `data-table-page-control-is-button`: Use a native button with type="button" for a local table page control. Ordinary pagination links keep their navigation behavior.
+- `data-table-page-control-is-named`: Name each table page button, for example Previous or Next, using visible text or an accessible label.
+- `data-table-page-control-is-in-pagination`: Put local table page buttons in a named nav.pagination inside their table wrapper.
+- `data-table-page-navigation-is-named`: Name the table's pagination navigation so it is distinct from other navigation on the page.
+- `data-table-page-direction-is-known`: Set data-table-page to previous or next. Local table paging does not generate numbered page controls.
+- `data-table-page-status-is-named`: Name the page status, for example aria-label="Pages", so its numbers have context.
+- `data-table-page-status-is-status`: Give the table page status role="status" so page changes are announced without moving focus.
+- `data-table-page-status-is-polite`: Use aria-live="polite" on the table page status so page changes do not interrupt other speech.
