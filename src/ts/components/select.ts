@@ -130,8 +130,14 @@ export class FormSelect extends Component<FormSelectOptions> {
     if (this.menu) this.menu.focusedIndex = -1;
     if (this.menu?.isOpen) {
       this.menu.recalculateDimensions();
-      if (focused) (this._values.find(value => value.el === focused)?.optionEl ?? this.input).focus();
+      this._restoreOptionFocus(focused);
     }
+  }
+
+  private _restoreOptionFocus(option: HTMLOptionElement) {
+    if (!option) return;
+    const rows = this._values.filter(({ el, optionEl }) => el === option && optionEl.tabIndex === 0).map(({ optionEl }) => optionEl);
+    (rows[0] || this._searchInput || this.input).focus();
   }
 
   _setupEventHandlers() {
@@ -210,6 +216,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     clearTimeout(this._resetTimer);
     this._resetTimer = setTimeout(() => {
       if (!e.defaultPrevented) {
+        this._resetSearch();
         this._handleSelectChange();
         this._clearValidationError();
       }
@@ -512,6 +519,12 @@ export class FormSelect extends Component<FormSelectOptions> {
     this._filterOptions();
   }
 
+  private _resetSearch() {
+    if (!this._searchInput) return;
+    this.menu?.close();
+    this._clearSearch();
+  }
+
   private _bindSearchClose(options: Partial<MenuOptions>) {
     const onCloseStart = options.onCloseStart;
     options.onCloseStart = () => {
@@ -620,6 +633,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     this._buildOptions();
     this._setupOptionHandlers();
     this.menu?._makeMenuFocusable();
+    if (this._searchInput) this._filterOptions();
   }
 
   _removeMenu() {

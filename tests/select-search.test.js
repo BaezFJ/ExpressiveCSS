@@ -4,8 +4,8 @@ import { Expressive, resetBody, window } from './setup.js';
 
 beforeEach(resetBody);
 
-function fixture(options = {}) {
-  document.body.innerHTML = `<form><label for="choice">Destination</label><select id="choice" name="place">
+function fixture(options = {}, attributes = '') {
+  document.body.innerHTML = `<form><label for="choice">Destination</label><select id="choice" name="place" ${attributes}>
     <option value="paris" selected>Paris</option>
     <optgroup label="Europe"><option value="rome">Rome</option><option value="lyon" disabled>Lyon</option></optgroup>
     <optgroup label="Asia"><option value="tokyo">Tokyo</option></optgroup>
@@ -34,6 +34,65 @@ test('grouped search filters generated rows and submits the chosen native value'
     assert.equal(select.value, 'rome');
     assert.equal(changes, 1);
     assert.deepEqual([...new window.FormData(select.form)], [['place', 'rome']]);
+  } finally {
+    instance.destroy();
+  }
+});
+
+for (const [name, attributes, options] of [
+  ['default', '', { searchable: false }],
+  ['multiple', 'multiple', {}],
+  ['browser default', 'class="browser-default"', {}]
+]) {
+  test(`${name} select does not gain a search field`, () => {
+    const instance = fixture(options, attributes);
+    try {
+      assert.equal(document.querySelector('.select-search-popup'), null);
+    } finally {
+      instance.destroy();
+    }
+  });
+}
+
+test('AutoInit enables search, retains authored names, and restores label IDs', () => {
+  document.body.innerHTML = `<label for="pick">Ignored name</label><select id="pick" aria-label="Chosen name"
+    data-form-select-options='{"searchable":true,"i18n":{"searchLabel":"Find a place"}}'><option>Paris</option></select>`;
+  Expressive.AutoInit();
+  const instance = Expressive.FormSelect.getInstance(document.querySelector('select'));
+  try {
+    assert.equal(instance.input.readOnly, true);
+    assert.equal(instance.input.getAttribute('aria-haspopup'), 'dialog');
+    assert.equal(instance.menuEl.getAttribute('aria-label'), 'Chosen name');
+    assert.equal(instance.menuEl.querySelector('[role="listbox"]').getAttribute('aria-label'), 'Chosen name');
+    assert.equal(instance.menuEl.querySelector('input').getAttribute('aria-label'), 'Find a place');
+    search(instance, 'missing');
+    assert.equal(instance.menuEl.querySelector('[role="status"]').textContent, 'No results');
+  } finally {
+    instance.destroy();
+  }
+  assert.equal(document.querySelector('label').hasAttribute('id'), false);
+  assert.equal(document.querySelector('label').htmlFor, 'pick');
+});
+
+test('matching is literal option text and cannot expose hidden rows or inject markup', () => {
+  const instance = fixture({ i18n: { noResults: '<img src=x onerror=alert(1)>' } });
+  try {
+    const option = document.createElement('option');
+    option.value = 'value-only';
+    option.textContent = 'Café [1]';
+    instance.el.append(option);
+    instance.refresh();
+    search(instance, 'Europe');
+    assert.equal(instance.menuEl.querySelectorAll('[role="option"]:not([hidden])').length, 0);
+    search(instance, '[1]');
+    assert.equal(instance.menuEl.querySelectorAll('[role="option"]:not([hidden])').length, 1);
+    instance.menuEl.querySelector('[role="option"][hidden]').click();
+    assert.equal(instance.el.value, 'paris');
+    search(instance, 'cafe');
+    assert.equal(instance.menuEl.querySelector('[role="status"]').textContent, '<img src=x onerror=alert(1)>');
+    assert.equal(instance.menuEl.querySelector('[role="status"] img'), null);
+    search(instance, 'value-only');
+    assert.equal(instance.menuEl.querySelectorAll('[role="option"]:not([hidden])').length, 0);
   } finally {
     instance.destroy();
   }

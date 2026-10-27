@@ -7,6 +7,7 @@ const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'u
 
 async function open(browser, attributes = '', options = {}) {
   const page = await browser.newPage();
+  page.setDefaultTimeout(10_000);
   await page.setContent(`<style>${css}</style><form style="padding:2rem;max-width:30rem">
     <button id="before" type="button">Before</button>
     <label for="choice">Destination</label><select id="choice" name="place" ${attributes}>
@@ -103,4 +104,34 @@ each('tabs through search and a result and exits after the trigger', async page 
   await page.getByRole('searchbox').fill('missing');
   await page.keyboard.press('Tab');
   assert.equal(await page.locator('#after').evaluate(el => el === document.activeElement), true);
+});
+
+each('refreshes a live query, preserves the caret, and resets native state', async page => {
+  await page.locator('.field > input').click();
+  await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
+  await page.getByRole('searchbox').fill('o');
+  await page.evaluate(() => {
+    document.activeElement.setSelectionRange(0, 0);
+    instance.el.options[1].textContent = 'Oslo';
+    instance.refresh();
+  });
+  assert.equal(await page.getByRole('searchbox').evaluate(el => el.selectionStart), 0);
+  assert.equal(await page.getByRole('searchbox').evaluate(el => el === document.activeElement), true);
+  assert.deepEqual(await page.getByRole('option').allTextContents(), ['Oslo', 'Lyon', 'Tokyo']);
+  await page.keyboard.press('ArrowDown');
+  await page.evaluate(() => { instance.el.options[1].disabled = true; instance.refresh(); });
+  assert.equal(await page.getByRole('searchbox').evaluate(el => el === document.activeElement), true);
+  await page.evaluate(() => {
+    instance.el.form.addEventListener('reset', event => event.preventDefault(), { once: true });
+    instance.el.form.reset();
+  });
+  assert.equal(await page.getByRole('searchbox').inputValue(), 'o');
+  await page.evaluate(() => instance.el.form.reset());
+  await page.waitForFunction(() => !instance.menu.isOpen);
+  assert.deepEqual(await page.evaluate(() => [instance.el.value, instance.input.value, instance.menuEl.querySelector('input').value]), ['paris', 'Paris', '']);
+  await page.locator('.field > input').click();
+  await page.waitForFunction(() => instance.input.ariaExpanded === 'true');
+  await page.evaluate(() => { instance.el.disabled = true; instance.refresh(); });
+  assert.equal(await page.evaluate(() => instance.menu.isOpen), false);
+  assert.equal(await page.locator('.field > input').isDisabled(), true);
 });
