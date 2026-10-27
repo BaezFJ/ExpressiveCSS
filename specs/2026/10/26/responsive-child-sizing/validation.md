@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: [Phase 60, responsive child sizing](../../../../roadmap.md#phase-60-responsive-child-sizing)
 Branch: `feature/2026-10-26-responsive-child-sizing`
 Base: `origin/master` at `3b9703956823c9c445a0835067915a0e322152a5`
-Status: V1 through V4 pass, remaining checks pending
+Status: V1 through V6 pass, V7 and V8 pending
 
 Checks map to [requirements.md](requirements.md) and the groups in [plan.md](plan.md). Results distinguish completed checks from pending checks. Spec review does not establish runtime or merge readiness.
 
@@ -72,7 +72,7 @@ Action: run `node --test tests/expressivecss-skill.test.js` after building and r
 
 Expected: all sources name the same five families and four prefixes with the agreed declarations and widths. They explain explicit resets, shorthand behavior and content minimums, and show a flexible child beside a fixed sibling. They make no new prefix claim for excluded sizing, self-alignment or ordering classes. The docs build and helper-guidance assertions pass.
 
-Result: pending.
+Result: Pass, 2026-10-26. All 33 helper/skill guidance tests passed with no skips. Astro built 130 routes; docs verification confirmed 136 HTML pages, 11 aliases and 119 Markdown counterparts. The three maintained references and the changelog agree on the five families and reset contract.
 
 ### V6. Gzip size is reviewed and generated data is current
 
@@ -82,7 +82,7 @@ Action: build and record the actual full CSS gzip size and merge-base delta in t
 
 Expected: the recorded numbers match measured artifacts and the budget test passes. Generated guidance and contract metadata match their sources, without hand edits to derived copies. Rerun generation and measurement after integration changes that affect their inputs.
 
-Result: pending. Size and delta are unknown until implementation.
+Result: Pass, 2026-10-26. CSS measures 90,177 gzip bytes, 105 bytes above base 3b9703956. The reviewed budget passes. `npm run build:skill` and `npm run check:generated` pass; generated changes update the shared contract hashes in the component guides and MCP data.
 
 ### V7. Contributor, browser and package checks pass
 
@@ -127,3 +127,5 @@ Group 1 used the documented Docker runner. Logs are local ignored artifacts:
 - `.cache/phase60/slice1-selective.log`: build, all 5 selective-build tests and typecheck passed. The measured 105-byte increase was recorded during group 1 so the intermediate commit passes its budget check.
 
 The first group-1 commit attempt was blocked by Fallow because the combined boundary test had cognitive complexity 22 and local `dist/` was absent. Splitting boundary/axis cases into named tests removed the complexity finding; a container build supplied local ignored artifacts for analysis. The revised helper suite passed all 72 tests with no skips in `.cache/phase60/slice1-split.log`.
+
+Group 2 evidence: `.cache/phase60/slice2-docs.log` records the passing build, 33 guidance tests, Astro build and docs verification. `.cache/phase60/generate.log` and `generated-check.log` record generation and drift checks. The T3 preview loaded the page, but two snapshot calls returned `Preview automation snapshot timed out after 15000ms.` Its requested 839px viewport still reported 1280px. Visual review uses the repository Playwright workflow instead; those preview calls establish no breakpoint or screenshot result.

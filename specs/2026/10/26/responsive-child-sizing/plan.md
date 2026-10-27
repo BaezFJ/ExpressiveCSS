@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: [Phase 60, responsive child sizing](../../../../roadmap.md#phase-60-responsive-child-sizing)
 Branch: `feature/2026-10-26-responsive-child-sizing`
 Base: `origin/master` at `3b9703956823c9c445a0835067915a0e322152a5`
-Status: group 1 complete, groups 2 and 3 pending
+Status: groups 1 and 2 complete, group 3 pending
 
 The three groups run in order. Requirements are in [requirements.md](requirements.md); acceptance checks are in [validation.md](validation.md). Leave the roadmap unfinished until implementation is complete.
 
@@ -29,10 +29,10 @@ Outcome: the docs and agent guidance name the same classes and explain the reset
 
 Prerequisites: group 1 establishes the tested declarations and cascade.
 
-- [ ] Update the Flex and Window-size prefixes sections in `docs/src/pages/helpers.astro` and `llm.md`. Add reset rows and a base-to-prefixed child example beside a fixed sibling, with a short explanation of minimum sizes and shorthand resets.
-- [ ] Update the corresponding sections in `skills/expressivecss/expressivecss-usage/references/helpers.md`, which is a maintained source. Extend the existing helper assertions in `tests/expressivecss-skill.test.js` to cover the documented class names and prefix contract.
-- [ ] Add an Unreleased entry to `CHANGELOG.md`. Keep descriptions limited to Phase 60's five sizing families.
-- [ ] Run `npm run build:skill`, then `npm run check:generated`. Review the resulting generated diff; make corrections in the sources and regenerate.
+- [x] Update the Flex and Window-size prefixes sections in `docs/src/pages/helpers.astro` and `llm.md`. Add reset rows and a base-to-prefixed child example beside a fixed sibling, with a short explanation of minimum sizes and shorthand resets.
+- [x] Update the corresponding sections in `skills/expressivecss/expressivecss-usage/references/helpers.md`, which is a maintained source. Extend the existing helper assertions in `tests/expressivecss-skill.test.js` to cover the documented class names and prefix contract.
+- [x] Add an Unreleased entry to `CHANGELOG.md`. Keep descriptions limited to Phase 60's five sizing families.
+- [x] Run `npm run build:skill`, then `npm run check:generated`. Review the resulting generated diff; make corrections in the sources and regenerate.
 
 Completion check: V5 passes, the docs agree on the five families and breakpoint values, and generated data has no drift. The rendered example remains subject to V8 in group 3.
 

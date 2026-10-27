@@ -19,6 +19,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `.gap-y-0` through `.gap-y-6` set row gaps on the existing rem spacing scale.
   Both support all four window-size prefixes and override the gap shorthand
   at the same breakpoint. Existing gap utilities retain their behavior.
+- Responsive child sizing. `.flex-1`, `.flex-none` and `.shrink-0` now take
+  window-size prefixes. New `.flex-initial` and `.shrink-1` classes restore
+  content sizing and shrinking, with the same four prefixes.
 - Show more. A `.show-more` holds text with a `line-clamp-1`, `-2` or
   `-3` class and a `<button>`; the button shows the full text, reads
   "Show less" while it is open (`i18n.showLess` or `data-show-less`) and
