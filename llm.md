@@ -1258,6 +1258,8 @@ One class per declaration, applied to the container. Row direction and start ali
 | `.self-start`, `.self-center`, `.self-end`, `.self-stretch` | `align-self` on a child |
 | `.order-first`, `.order-last` | `order: -1`, `order: 1` on a child. Visual order only: keyboard and screen reader order still follow the source. |
 | `.gap-0` to `.gap-6` | `gap` on the spacing scale, `!important`; also works on grid containers |
+| `.gap-x-0` to `.gap-x-6` | `column-gap` only, `!important` |
+| `.gap-y-0` to `.gap-y-6` | `row-gap` only, `!important` |
 
 ```html
 <div class="flex align-center justify-between gap-3">
@@ -1273,9 +1275,24 @@ One class per declaration, applied to the container. Row direction and start ali
 
 `justify-*` and `align-*` use `flex-start` and `flex-end`, so they follow the writing direction and mirror in RTL. Components that already lay out their children (app bars, toolbars, card `.actions`, button groups) do not need these classes.
 
+The gap scale is `0`, `0.25rem`, `0.5rem`, `0.75rem`, `1rem`, `1.5rem` and `3rem`. `.gap-x-*` and `.gap-y-*` keep the native meanings of `column-gap` and `row-gap` in grid and flex layouts, including RTL and column-direction flex. There are no `auto` gap values. The grid's `.g-*` classes use a separate scale.
+
+```html
+<div class="grid-auto-fill gap-4 medium:gap-x-2" style="--grid-column-min: 8rem">
+  <div class="surface-container p-3">Monday</div>
+  <div class="surface-container p-3">Tuesday</div>
+  <div class="surface-container p-3">Wednesday</div>
+  <div class="surface-container p-3">Thursday</div>
+  <div class="surface-container p-3">Friday</div>
+  <div class="surface-container p-3">Saturday</div>
+</div>
+```
+
+Both gaps start at `1rem`. From 600px, the column gap becomes `0.5rem` while the row gap stays `1rem`. At the same breakpoint, an axis class overrides `.gap-*` regardless of HTML class order. A later breakpoint's `.gap-*` resets both axes; a later axis class changes only its axis. Use `0` to remove a gap. Avoid conflicting values from the same family at the same breakpoint.
+
 ### Window-size prefixes
 
-The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`), `.line-clamp-*`, `.gap-*`, margin and padding classes, and `.hide`, also come with a window-size prefix. Prefixed margin and padding cover all sides, `x`, `y`, top, bottom, start and end; use start and end rather than left and right. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
+The display, flex direction, wrap, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`), `.line-clamp-*`, `.gap-*`, `.gap-x-*`, `.gap-y-*`, margin and padding classes, and `.hide`, also come with a window-size prefix. Prefixed margin and padding cover all sides, `x`, `y`, top, bottom, start and end; use start and end rather than left and right. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
 
 | Prefix | Applies from |
 | --- | --- |

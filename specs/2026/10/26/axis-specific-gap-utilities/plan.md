@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: Phase 59, axis-specific gap utilities
 Branch: `feature/2026-10-26-axis-specific-gap-utilities`
 Base: `origin/master` at `3b9703956823c9c445a0835067915a0e322152a5`
-Status: Group 1 complete; Groups 2 and 3 pending
+Status: Groups 1 and 2 complete; Group 3 pending
 
 Use the [mission](../../../../mission.md#agreed-scope), [technical constraints](../../../../tech-stack.md#framework-stack) and [roadmap Phase 59](../../../../roadmap.md#phase-59-axis-specific-gap-utilities). The confirmed contract is in [requirements.md](requirements.md); checks are in [validation.md](validation.md). The groups below are the three groups confirmed by the user. Checkboxes record completed implementation work; validation.md records the evidence.
 
@@ -27,10 +27,10 @@ Outcome: page authors and agents receive the same class names and cascade contra
 
 Prerequisites: Group 1 implements the confirmed behavior. Inspect the relevant generator inputs before changing derived guidance.
 
-- [ ] Update the helper table and prefix guidance in `docs/src/pages/helpers.astro`; add a live wrapping-grid example using `gap-4 medium:gap-x-2` and explain its unchanged row gap.
-- [ ] Update `llm.md` with both families, the scale, all four prefixes, native property meanings, zero resets and shorthand precedence. Distinguish these utilities from the base grid's `.g-*` classes.
-- [ ] Add an Unreleased entry to `CHANGELOG.md`. Run `npm run build:semantics` and `npm run build:skill`, keeping source-owned metadata accurate and reviewing generated changes. Do not update source pins or capability evidence without the reviews and checks they require.
-- [ ] Run `npm run check:generated` and review the generated helper guidance for agreement with the docs and R1 through R5.
+- [x] Update the helper table and prefix guidance in `docs/src/pages/helpers.astro`; add a live wrapping-grid example using `gap-4 medium:gap-x-2` and explain its unchanged row gap.
+- [x] Update `llm.md` with both families, the scale, all four prefixes, native property meanings, zero resets and shorthand precedence. Distinguish these utilities from the base grid's `.g-*` classes.
+- [x] Add an Unreleased entry to `CHANGELOG.md`. Run `npm run build:semantics` and `npm run build:skill`, keeping source-owned metadata accurate and reviewing generated changes. Do not update source pins or capability evidence without the reviews and checks they require.
+- [x] Run `npm run check:generated` and review the generated helper guidance for agreement with the docs and R1 through R5.
 
 Delivers R5 and the guidance portion of R6. Completion check: V7 passes, the live example demonstrates the roadmap outcome, and generated copies contain no conflicting guidance.
 
