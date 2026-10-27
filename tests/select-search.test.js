@@ -102,6 +102,32 @@ test('multiple search reset restores defaults hidden by the query', async () => 
   }
 });
 
+test('multiple search keeps the query on refresh, validates, closes when disabled and tears down', () => {
+  const before = Expressive.Menu._menus.length;
+  const instance = fixture({}, 'multiple required');
+  const search = instance.menuEl.querySelector('input[type="search"]');
+  try {
+    instance.el.options[0].selected = false;
+    instance.refresh();
+    assert.equal(instance.el.checkValidity(), false);
+    assert.equal(instance.input.getAttribute('aria-invalid'), 'true');
+    assert.match(instance.input.getAttribute('aria-describedby'), /-error$/);
+    search.value = 'o';
+    search.dispatchEvent(new window.Event('input', { bubbles: true }));
+    instance.el.options[1].textContent = 'Oslo';
+    instance.refresh();
+    assert.equal(search.value, 'o');
+    assert.deepEqual([...instance.menuEl.querySelectorAll('[role="option"]:not([hidden])')].map(row => row.textContent), ['Oslo', 'Lyon', 'Tokyo']);
+    instance.el.disabled = true;
+    instance.refresh();
+    assert.equal(instance.input.disabled, true);
+  } finally {
+    instance.destroy();
+  }
+  assert.equal(Expressive.Menu._menus.length, before);
+  assert.equal(document.querySelector('input[type="search"]'), null);
+});
+
 test('AutoInit enables search, retains authored names, and restores label IDs', () => {
   document.body.innerHTML = `<label for="pick">Ignored name</label><select id="pick" aria-label="Chosen name"
     data-form-select-options='{"searchable":true,"i18n":{"searchLabel":"Find a place"}}'><option>Paris</option></select>`;
