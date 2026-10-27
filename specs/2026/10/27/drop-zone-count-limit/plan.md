@@ -28,9 +28,9 @@ Delivers R2-R5. Completion checks V1-V2.
 
 Prerequisite: groups 1-2 pass.
 
-- [ ] Extend tests/drop-zone-validation-browser.test.js with actual count browse/chooser/native submit prevention/exact-count recovery in all three engines. Add count to shadow/external-reset and trusted Chromium protocol-drop scenarios, retaining finally cleanup.
-- [ ] Update docs/src/pages/drop-zone.astro, llm.md and CHANGELOG.md. Extend the existing static feedback selector and tests/semantics.test.js without changing its id or initializing components, then regenerate semantics/skill/MCP guidance.
-- [ ] Run affected browser/static/docs/decision/skill/selective checks, record actual bundle deltas and commit the verified slice.
+- [x] Extend tests/drop-zone-validation-browser.test.js with actual count browse/chooser/native submit prevention/exact-count recovery in all three engines. Add count to shadow/external-reset and trusted Chromium protocol-drop scenarios, retaining finally cleanup.
+- [x] Update docs/src/pages/drop-zone.astro, llm.md and CHANGELOG.md. Extend the existing static feedback selector and tests/semantics.test.js without changing its id or initializing components, then regenerate semantics/skill/MCP guidance.
+- [x] Run affected browser/static/docs/decision/skill/selective checks, record actual bundle deltas and commit the verified slice.
 
 Delivers R1-R6. Completion checks V2-V3.
 

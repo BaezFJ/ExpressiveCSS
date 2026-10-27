@@ -15,6 +15,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Independent drop-zone file-count limits through `data-max-files`. Exact-count
+  choices pass; too many files invalidate the complete retained selection with
+  accessible count feedback and `expressive:reject` reason `count`. All selected
+  files appear in independent rejection snapshots. Shared Forms handling keeps
+  type/size precedence, application validity, deduplication and reset recovery.
 - Optional per-file drop-zone byte limits through `data-max-size`, independent
   of type checking. Exact-limit files pass; one oversized file invalidates the
   whole retained selection with accessible feedback and `expressive:reject`

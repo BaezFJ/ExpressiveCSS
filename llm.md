@@ -416,7 +416,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:refresh` | Pull-to-refresh | `{ waitUntil }` |
 | `expressive:swipetoggle` | Swipe actions | `{ row, open }` |
 | `expressive:transfer` | Transfer list, from the container | `{ rows, from, to }` |
-| `expressive:reject` | Opted-in drop zones, from the wrapper | `{ input, files, rejected, reason: 'type' | 'size' }`; noncancelable |
+| `expressive:reject` | Opted-in drop zones, from the wrapper | `{ input, files, rejected, reason }`; reason is `type`, `size` or `count`; noncancelable |
 | `expressive:change`, `expressive:sort`, `expressive:resize`, `expressive:filter`, `expressive:page` | Data tables, from the wrapper | `{ selected }`, `{ header, column, direction }`, `{ header, column, width }`, `{ query }`, `{ page, pageSize }`; `sort`, `filter` and `page` are cancelable |
 
 An Autocomplete or Select input hosts a Menu, so it also fires that Menu's `expressive:open`, `expressive:close` and `expressive:select`. A callback that changes the choice again, such as an `onShow` that selects another tab, leaves only the event for the final choice.
@@ -8757,11 +8757,11 @@ Destroys the editor, removes its element and the button state, and shows the tex
 
 ## Drop zone
 
-A large target for choosing or dropping files, with an optional list, type validation and per-file size limits.
+A large target for choosing or dropping files, with an optional list and independent type, size and count limits.
 
 A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input covers the label, so clicking, keyboard input and file dropping reach the native control. Forms marks dragover and lists each selected file's name and localized size. The root bundle installs Forms on load; modular consumers call `Forms.Init()`. Document-level input/change handling also supports dynamically inserted zones and open shadow roots.
 
-A dropped file replaces the selection; add multiple to take several files. `accept` alone is a picker hint. Add data-validate-types for type checks or data-max-size for a per-file byte limit. Unmarked zones retain their existing behavior. Reset clears lists after dispatch/default handling; cancellation preserves the current view, and a newer selection keeps its state.
+A dropped file replaces the selection; add multiple to take several files. `accept` alone is a picker hint. Add data-validate-types for type checks, data-max-size for a per-file byte limit or data-max-files for a count limit. Unmarked zones retain their existing behavior. Reset clears lists after dispatch/default handling; cancellation preserves the current view, and a newer selection keeps its state.
 
 ```html
 <div class="drop-zone">
@@ -8809,7 +8809,7 @@ input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
 
 Valid replacement, clearing, removal of the opt-in followed by validation, and an uncanceled reset release only framework-owned type validity. If the application replaces that message, recovery preserves its new value. Reset uses native form ownership, including controls associated through a form attribute outside the form subtree. Cleanup runs after dispatch/default handling, respects cancellation and leaves newer selections intact. Reset and silent validation emit no rejection event. Disabled controls and fieldsets remain inactive, including reset-time validity writes; call Forms.validateField after scripted enabling to refresh the current selection. Handled shadow-root forms follow the same reset contract.
 
-File-count limits and uploads are outside these options. File names and MIME labels do not verify contents. Native validation can be bypassed by scripts or explicit form settings; always validate received data on the server.
+Uploads are outside these options. File names and MIME labels do not verify contents. Native validation can be bypassed by scripts or explicit form settings; always validate received data on the server.
 
 ### Per-file size limit
 
@@ -8832,9 +8832,34 @@ Use positive decimal safe-integer bytes, with surrounding whitespace allowed. Mi
 
 Combine both constraints on one input: `type="file" multiple data-validate-types accept=".pdf,.png" data-max-size="1048576"`. Supply the same direct polite data-error status area. A nonempty data-error-size value localizes size feedback; empty uses a message naming the exact byte limit. Existing data-error continues localizing type feedback. Type failures take precedence; only when all files match types does the size failure appear. With neither file failure, remaining native/application errors are shown or feedback clears when valid. Existing application custom validity is never overwritten.
 
-A changed size-rejected selection reports the same bubbling, composed, noncancelable `expressive:reject` with `{ input, files, rejected, reason: 'size' }`. Files contains the full selection; rejected contains only oversized files. Type failures retain reason:'type' and their type-rejected subset. Native input/change pairs deduplicate using File identities, the type opt-in, raw accept and effective parsed byte limit. Equivalent decimal limits do not report again; a changed effective constraint can report after an input/change event. Event arrays are independent snapshots, silent validation/reset report nothing, and newer reentrant selections stay authoritative.
+A changed size-rejected selection reports the same bubbling, composed, noncancelable `expressive:reject` with `{ input, files, rejected, reason: 'size' }`. Files contains the full selection; rejected contains only oversized files. Type failures retain reason:'type' and their type-rejected subset. Native input/change pairs deduplicate using File identities, the type opt-in, raw accept and effective parsed byte/count limits. Equivalent decimal limits do not report again; a changed effective constraint can report after an input/change event. Event arrays are independent snapshots, silent validation/reset report nothing, and newer reentrant selections stay authoritative.
 
 Valid replacement, clearing, removing/invalidating the size limit and successful reset release only owned file validity. Application messages, canceled reset, disabled-control refresh, native form association, shadow forms and newer-selection protection follow the type-validation recovery contract above. Ordinary native submission is blocked while invalid; native bypass settings remain native. Always enforce file type/size and contents on the server.
+
+### File count
+
+Add `data-max-files="2"` to the native input for at most two selected files. Exactly two pass; more invalidate the whole retained selection. Each native FileList entry counts, including repeated filenames. This is independent of type/size validation. A count-only input leaves accept as a picker hint, and data-max-files does not add multiple automatically.
+
+```html
+<div class="drop-zone">
+  <label>Drop files here or browse
+    <small>At most 2 files</small>
+    <input type="file" multiple data-max-files="2">
+  </label>
+  <p class="supporting-text" data-error
+     data-error-count="Choose no more than two files."
+     role="status" aria-live="polite" hidden></p>
+  <ul class="drop-zone-files" aria-live="polite"></ul>
+</div>
+```
+
+Use trimmed positive decimal safe-integer counts, including leading zeros. Missing, blank, zero, negative, fractional, exponent, hexadecimal, nonnumeric or unsafe limits impose no count constraint. Remove/change the attribute and call Forms.validateField to silently refresh validity/feedback; a bubbling composed input/change also refreshes the list.
+
+Combine all three constraints on one input: `type="file" multiple data-validate-types accept=".pdf,.png" data-max-size="1048576" data-max-files="2"`. Keep the direct polite data-error status area. Nonempty data-error-count localizes count feedback; empty uses a message naming the count limit. Existing data-error and data-error-size continue localizing type/size messages. Type failures take precedence, followed by size and then count. Preserve unowned application custom validity even while the status explains a file-rule failure.
+
+Count rejection reports the existing bubbling, composed, noncancelable expressive:reject with `{ input, files, rejected, reason: 'count' }`. Both arrays contain every selected File as independent snapshots. No first-N subset is accepted, removed or uploaded. Earlier type/size failures retain their existing reasons and rejected subsets. Native pairs deduplicate using File identities, the type opt-in, raw accept and effective parsed byte/count limits; equivalent count values do not notify again. A changed effective count can report after input/change. Silent validation/reset emit no rejection, event-array mutation cannot corrupt metadata, and newer reentrant selections remain authoritative.
+
+Valid/exact-count replacement, clearing, count opt-out and successful reset release only owned validity. Application errors, canceled reset, disabled-control refresh, native form ownership, handled shadow forms and newer-selection protection follow the shared recovery contract above. Required-empty and native bypass settings remain effective. Never filter the native FileList to satisfy the limit. Validate received counts, types, sizes and file contents on the server.
 
 ### Tokens
 

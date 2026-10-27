@@ -577,7 +577,7 @@ Added with the drop zone component. A <label> wraps the native file input, which
 | --- | --- | --- | --- |
 | `drop-zone-input-is-in-the-label` | forbid | `.drop-zone > input[type="file"]` | must not match |
 | `drop-zone-files-are-a-list` | forbid | `.drop-zone-files:not(ul, ol)` | must not match |
-| `drop-zone-type-error-is-live-status` | forbid | `.drop-zone:has(> label input[type="file"]:is([data-validate-types], [data-max-size])):not(:has(> [data-error])), .drop-zone:has(> label input[type="file"]:is([data-validate-types], [data-max-size])) > [data-error]:not([role="status"][aria-live="polite"])` | must not match |
+| `drop-zone-type-error-is-live-status` | forbid | `.drop-zone:has(> label input[type="file"]:is([data-validate-types], [data-max-size], [data-max-files])):not(:has(> [data-error])), .drop-zone:has(> label input[type="file"]:is([data-validate-types], [data-max-size], [data-max-files])) > [data-error]:not([role="status"][aria-live="polite"])` | must not match |
 
 - **drop-zone-input-is-in-the-label** - Put the file input inside the .drop-zone <label>. The label names the input and the input covers the label; a loose input is neither named nor a drop target.
 - **drop-zone-files-are-a-list** - Write .drop-zone-files as a <ul>. The behavior fills it with one <li> per file, and a list tells assistive technology how many files were chosen.
