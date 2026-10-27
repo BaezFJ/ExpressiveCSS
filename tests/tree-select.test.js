@@ -298,3 +298,79 @@ for (const attributes of ['multiple', 'class="browser-default"']) {
     } finally { instance.destroy(); }
   });
 }
+
+
+function filterTree(instance, query) {
+  const input = instance.menuEl.querySelector('input[type="search"]');
+  input.value = query;
+  input.dispatchEvent(new document.defaultView.Event('input', { bubbles: true }));
+}
+const visibleTree = instance => instance._visibleRows().map(li => li.firstChild.textContent);
+const treeExpansion = instance => Object.fromEntries([...instance.tree.querySelectorAll('[aria-expanded]')]
+  .map(li => [li.firstChild.textContent, li.ariaExpanded]));
+
+test('tree filtering reveals leaf ancestors and restores expansion across queries and temporary toggles', () => {
+  const instance = start(PLACES, '', { searchable: true });
+  let changes = 0;
+  instance.el.addEventListener('change', () => changes++);
+  try {
+    instance.el.value = 'lyon';
+    instance.refresh();
+    instance._activate(row(instance, 'Asia'));
+    const before = treeExpansion(instance);
+    filterTree(instance, '  pAr  ');
+    assert.deepEqual(visibleTree(instance), ['Europe', 'France', 'Paris']);
+    assert.equal(row(instance, 'Europe').ariaExpanded, 'true');
+    assert.equal(row(instance, 'France').ariaExpanded, 'true');
+    instance._activate(row(instance, 'Europe'));
+    filterTree(instance, 'tok');
+    assert.deepEqual(visibleTree(instance), ['Asia', 'Tokyo']);
+    filterTree(instance, '');
+    assert.deepEqual(treeExpansion(instance), before);
+    assert.equal(instance.el.value, 'lyon');
+    assert.equal(instance.input.value, 'Lyon');
+    assert.deepEqual([...new document.defaultView.FormData(instance.el.form)], [['place', 'lyon']]);
+    assert.equal(changes, 0);
+  } finally { instance.destroy(); }
+});
+
+test('tree search matches literal leaf labels only and reports disabled matches without unsafe status markup', () => {
+  const options = PLACES.replace('>Paris</option>', '>Café [1]</option>') + '<option value="duplicate" data-parent="france">Tokyo</option>';
+  const instance = start(options, '', { searchable: true, i18n: { noResults: '<img src=x>' } });
+  try {
+    filterTree(instance, '[1]');
+    assert.deepEqual(visibleTree(instance), ['Europe', 'France', 'Café [1]']);
+    for (const query of ['france', 'paris', 'cafe', '.*']) {
+      filterTree(instance, query);
+      assert.deepEqual(visibleTree(instance), []);
+      assert.equal(instance.menuEl.querySelector('[role="status"]').textContent, '<img src=x>');
+      assert.equal(instance.menuEl.querySelector('img'), null);
+    }
+    filterTree(instance, 'tokyo');
+    assert.equal(instance._visibleRows().filter(li => li.firstChild.textContent === 'Tokyo').length, 2);
+    filterTree(instance, 'kyoto');
+    assert.deepEqual(visibleTree(instance), ['Asia', 'Kyoto']);
+    assert.equal(instance.menuEl.querySelector('[role="status"]').textContent, '');
+    assert.equal(row(instance, 'Kyoto').ariaDisabled, 'true');
+    const chosen = instance.el.value;
+    instance._activate(row(instance, 'Kyoto'));
+    assert.equal(instance.el.value, chosen);
+  } finally { instance.destroy(); }
+});
+
+test('filtered navigation skips own-hidden children and hidden branches cannot activate or open as siblings', () => {
+  const instance = start(PLACES, '', { searchable: true });
+  try {
+    filterTree(instance, 'lyon');
+    assert.deepEqual(visibleTree(instance), ['Europe', 'France', 'Lyon']);
+    instance._openOrEnter(row(instance, 'France'));
+    assert.equal(document.activeElement, row(instance, 'Lyon'));
+    const asia = row(instance, 'Asia');
+    const before = asia.ariaExpanded;
+    instance._activate(asia);
+    assert.equal(asia.ariaExpanded, before);
+    instance._openSiblings(row(instance, 'Europe'));
+    assert.equal(asia.ariaExpanded, before);
+    assert.equal(row(instance, 'Lyon').tabIndex, -1);
+  } finally { instance.destroy(); }
+});
