@@ -278,8 +278,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.container.addEventListener('pointerdown', this._handleContainerPointerDown, { signal });
     this.container.addEventListener('pointerup', this._handleContainerPointerUp, { signal });
     this.container.addEventListener('pointercancel', this._handleContainerPointerUp, { signal });
-    this.container.addEventListener('mousedown', this._handleNoResultsPress, { capture: true, signal });
-    this.container.addEventListener('click', this._handleNoResultsPress, { capture: true, signal });
+    this.container.addEventListener('mousedown', this._handleInertRowPress, { capture: true, signal });
+    this.container.addEventListener('click', this._handleInertRowPress, { capture: true, signal });
   }
 
   _setupMenu() {
@@ -521,10 +521,11 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this._pointerDown = false;
   };
 
-  // The no-results row is not an option. A press on it would move focus to the
-  // list, which nothing hands back, and Menu would report the row as chosen.
-  _handleNoResultsPress = (e: MouseEvent) => {
-    if (!(e.target instanceof Element) || !e.target.closest('.autocomplete-no-results')) return;
+  // The no-results row is not an option, and a disabled row cannot be chosen.
+  // A press on either would move focus to the list, which nothing hands back,
+  // and Menu would report the no-results row as chosen.
+  _handleInertRowPress = (e: MouseEvent) => {
+    if (!(e.target instanceof Element) || !e.target.closest('.autocomplete-no-results, [aria-disabled="true"]')) return;
     e.preventDefault();
     e.stopPropagation();
   };
