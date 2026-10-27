@@ -8,9 +8,9 @@ Use feature-spec-auto, incremental-implementation, code-review-and-quality with 
 
 Prerequisite: independent specification review passes.
 
-- [ ] Add failing size-only byte-boundary/malformed-limit/whole-selection checks in tests/drop-zone-validation.test.js, including application validity and combined type-first precedence.
-- [ ] Generalize only the shared Forms eligibility/failure result in src/ts/behaviors/forms.ts. Reuse the existing ownership map, native validity, feedback, reset and public silent validation paths; add strict positive decimal byte parsing and localized size messages.
-- [ ] Build/typecheck, run focused Forms/drop-zone checks for R1-R3/R5 and commit the verified slice. Keep new helpers within the complexity gate.
+- [x] Add failing size-only byte-boundary/malformed-limit/whole-selection checks in tests/drop-zone-validation.test.js, including application validity and combined type-first precedence.
+- [x] Generalize only the shared Forms eligibility/failure result in src/ts/behaviors/forms.ts. Reuse the existing ownership map, native validity, feedback, reset and public silent validation paths; add strict positive decimal byte parsing and localized size messages.
+- [x] Build/typecheck, run focused Forms/drop-zone checks for R1-R3/R5 and commit the verified slice. Keep new helpers within the complexity gate.
 
 Completion check V1. No separate component, listener or error map.
 

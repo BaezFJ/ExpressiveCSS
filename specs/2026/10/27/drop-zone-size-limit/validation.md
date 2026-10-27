@@ -24,3 +24,10 @@ Agent decisions are recorded in requirements.md: independent data-max-size, trim
 ## Evidence limits
 
 Physical OS picker/drop input, devices, native zoom and spoken output are unavailable. Chooser.setFiles after a native browse trigger does not prove physical picker interaction. A synthetic drop does not assign files; Chromium protocol native-drop observations must be recorded separately. Firefox map tests may skip when WebGL2 is absent. Metadata checks do not replace server validation. Required project checks and external review gates remain in force.
+
+
+## Increment 1 evidence
+
+Five new size-validation regressions failed against the Phase 72 bundle before implementation. The shared Forms pipeline now recognizes size-only opt-ins, parses trimmed positive decimal safe-integer bytes, accepts exact-limit files and rejects complete selections with an oversized file while retaining every File. Type matching stays gated on data-validate-types; type-first failure and separate data-error-size/fallback text preserve the type contract. Shared ownership preserves application validity and required-empty behavior.
+
+JS build, typecheck and all 50 focused Node checks pass, including all 45 prior checks. No new public export, listener, ownership map or reset mechanism was added. Logs are `/tmp/expressivecss-phase73-{size-red,size-build,size-typecheck,size-node}.log`. Constraint-aware deduplication, size-specific delivery/reset/browser/static/style checks and final verification remain pending.
