@@ -356,3 +356,20 @@ test('server and local state remain isolated across independent and nested wrapp
   assert.equal(status(), '2 / 4');
   assert.equal(other.querySelector('[data-table-page-status]').textContent, '1 / 3');
 });
+
+test('the first local Next activation works before sync and cancellation leaves the initial DOM intact', () => {
+  document.querySelector('[data-table-filter]').value = '';
+  wrapper().setAttribute('data-page-size', '1');
+  const seen = [];
+  wrapper().addEventListener('expressive:page', (event) => {
+    seen.push(event.detail);
+    event.preventDefault();
+  }, { once: true });
+  const before = wrapper().outerHTML;
+  button('next').click();
+  assert.deepEqual(seen, [{ page: 2, pageSize: 1 }]);
+  assert.equal(wrapper().outerHTML, before);
+  button('next').click();
+  assert.equal(status(), '2 / 2');
+  assert.deepEqual(displayed(), ['r4']);
+});

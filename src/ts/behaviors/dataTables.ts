@@ -436,7 +436,11 @@ export class DataTables {
   }
 
   private static _pageState(wrapper: Element): PageView {
-    return DataTables._pages.get(wrapper) ?? { page: 1, pageSize: pageSize(wrapper), total: 0 };
+    const previous = DataTables._pages.get(wrapper);
+    if (previous) return previous;
+    const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
+    const total = table ? DataTables._records(table).filter(([row]) => visibleRecord(row)).length : 0;
+    return { page: 1, pageSize: pageSize(wrapper), total };
   }
 
   /** Filter visibility is settled before paging; details consume no slots. */
