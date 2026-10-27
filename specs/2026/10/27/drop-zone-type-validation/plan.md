@@ -38,8 +38,8 @@ Delivers R1-R6. Completion checks V2-V3.
 
 Prerequisite: groups 1-3 pass.
 
-- [ ] Run contributor-equivalent checks sequentially against built bundles, including the full suite, generated data, docs/site verification, MCP smoke and both clean package consumers. Record failures and unavailable evidence accurately.
-- [ ] Compare drop-zone docs against the merged base in compact, expanded, large and large-dark layouts, and inspect actual invalid-feedback captures in light/dark layouts. Disclose intended differences rather than claiming a zero-diff pass.
+- [x] Run contributor-equivalent checks sequentially against built bundles, including the full suite, generated data, docs/site verification, MCP smoke and both clean package consumers. Record failures and unavailable evidence accurately.
+- [x] Compare drop-zone docs against the merged base in compact, expanded, large and large-dark layouts, and inspect actual invalid-feedback captures in light/dark layouts. Disclose intended differences rather than claiming a zero-diff pass.
 - [ ] Obtain independent R1-R6 implementation/evidence review, fix findings, perform a separate simplification pass, then open/watch the PR and merge only after exact-head CI/conversation/current-master/clean-worktree gates pass.
 
 Delivers R6. Completion checks V4-V6. Preserve the separate post-merge roadmap/evidence documentation step.
