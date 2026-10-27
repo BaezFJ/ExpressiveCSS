@@ -9,7 +9,7 @@ Component ID: `select`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `e852230403ae2482cbb462114d00d4acad844d24ed3fa015d9d4722fa9ff92d7`
+Contract SHA-256: `1c200768a541149ecee821f676a60009a2fc7ed24e1a881e40342cf40eeffee0`
 
 #### Selection and adaptation
 
@@ -27,7 +27,7 @@ Requirements and boundaries: design reference inputs-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/menus/guidelines).
 
-Support (2026-10-27, `llm.md#select`): Single/multiple selection, optgroups, browser-default fallback, and opt-in single-select search with a separate popup field and native form values.
+Support (2026-10-27, `llm.md#select`): Single/multiple selection, optgroups, browser-default fallback, and opt-in single and multiple select search with a separate popup field and native form values.
 
 Web adaptation: Native select enhanced by runtime; this is related to menu/text-field patterns.
 
@@ -113,7 +113,7 @@ Add `multiple` to select several options. Chosen values appear as a comma-separa
 
 #### Also documented
 
-The Select section of the [API reference](https://www.expressivecss.com/llm.md) also covers Single-select search, Initialization, Properties, Disabled styles.
+The Select section of the [API reference](https://www.expressivecss.com/llm.md) also covers Select search, Initialization, Properties, Disabled styles.
 
 #### Rules
 

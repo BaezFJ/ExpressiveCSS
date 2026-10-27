@@ -8046,7 +8046,7 @@
         "implementation": {
           "source": "llm.md#select",
           "reviewedOn": "2026-10-27",
-          "documentedSupport": "Single/multiple selection, optgroups, browser-default fallback, and opt-in single-select search with a separate popup field and native form values.",
+          "documentedSupport": "Single/multiple selection, optgroups, browser-default fallback, and opt-in single and multiple select search with a separate popup field and native form values.",
           "webAdaptation": "Native select enhanced by runtime; this is related to menu/text-field patterns.",
           "limitations": [
             "Native zoom, screen-reader announcements, Windows contrast themes and physical-device form interaction remain unverified."

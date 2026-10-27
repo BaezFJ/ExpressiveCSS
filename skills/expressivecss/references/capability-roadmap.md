@@ -1533,7 +1533,7 @@ Web adaptation: The native input covers the label, so clicks, keys and drops are
 
 ## Select
 
-**implemented within the stated scope.** Single/multiple selection, optgroups, browser-default fallback, and opt-in single-select search with a separate popup field and native form values.
+**implemented within the stated scope.** Single/multiple selection, optgroups, browser-default fallback, and opt-in single and multiple select search with a separate popup field and native form values.
 
 Source review: source-reviewed, 2026-10-27. [src/sass/components/forms/_select.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/forms/_select.scss), [src/sass/components/_menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_menu.scss), [src/ts/components/select.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/select.ts), [src/ts/components/menu.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/menu.ts).
 

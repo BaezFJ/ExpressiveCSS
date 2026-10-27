@@ -15,11 +15,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- Opt-in single-select filtering with `FormSelect`'s `searchable` option. A
+- Opt-in select filtering with `FormSelect`'s `searchable` option. A
   separate popup search field filters grouped options while the native select
   retains its form value. Includes localized search and no-results text,
   keyboard navigation, query clearing on close and reset, and query-preserving
-  refresh. Default, multiple, tree and browser-default selects keep their behavior.
+  refresh. On a multiple select, picks keep the popup open with the query and
+  focus in place, and options the query hides stay selected and submitted.
+  Default, tree and browser-default selects keep their behavior.
 - Independent gap utilities. `.gap-x-0` through `.gap-x-6` set column gaps and
   `.gap-y-0` through `.gap-y-6` set row gaps on the existing rem spacing scale.
   Both support all four window-size prefixes and override the gap shorthand

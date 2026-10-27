@@ -5112,7 +5112,7 @@
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
       "reviewedOn": "2026-10-27",
-      "scope": "Single/multiple selection, optgroups, browser-default fallback, and opt-in single-select search with a separate popup field and native form values.",
+      "scope": "Single/multiple selection, optgroups, browser-default fallback, and opt-in single and multiple select search with a separate popup field and native form values.",
       "adaptation": "Native select enhanced by runtime; this is related to menu/text-field patterns.",
       "upstream": {
         "source": "https://m3.material.io/components/menus/overview",
