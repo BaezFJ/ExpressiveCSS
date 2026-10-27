@@ -97,7 +97,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Rich text editor](#rich-text-editor) | unassessed | needs-review | needs-rerun | 0 |
 | [Drop zone](#drop-zone) | unassessed | needs-review | needs-rerun | 0 |
 | [Select](#select) | unassessed | needs-review | needs-rerun | 0 |
-| [Tree select](#tree-select) | implemented | source-reviewed | incomplete | 0 |
+| [Tree select](#tree-select) | unassessed | needs-review | incomplete | 0 |
 | [Cascader](#cascader) | implemented | source-reviewed | incomplete | 0 |
 | [Checkboxes](#checkboxes) | unassessed | needs-review | needs-rerun | 0 |
 | [Transfer list](#transfer-list) | implemented | source-reviewed | incomplete | 0 |
@@ -1562,13 +1562,13 @@ Web adaptation: Native select enhanced by runtime; this is related to menu/text-
 
 ## Tree select
 
-**implemented within the stated scope.** A native select[data-tree] whose flat options name their parent's value in data-parent; a role="tree" popup with the ARIA tree keyboard contract over visible, enabled rows, mirrored under RTL; one leaf chosen into the native select; branch options disabled while it runs; refresh() keeping open branches and focus.
+**unassessed within the stated scope.** A native select[data-tree] whose flat options name their parent's value in data-parent; a role="tree" popup with the ARIA tree keyboard contract over visible, enabled rows, mirrored under RTL; one leaf chosen into the native select; branch options disabled while it runs; optional leaf search retaining ancestor paths and restoring pre-query expansion; refresh() preserving the query, expansion baseline and focus.
 
-Source review: source-reviewed, 2026-10-25. [src/ts/components/treeSelect.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/treeSelect.ts).
+Source review: needs-review, 2026-10-25. [src/ts/components/treeSelect.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/treeSelect.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
 
-Web adaptation: TreeSelect extends FormSelect, so the native select keeps the form value, reset, validity and disabled state. The popup is a ul role="tree" inside the Menu surface, one list below the rows Menu styles, named as the field is.
+Web adaptation: TreeSelect extends FormSelect, so the native select keeps the form value, reset, validity and disabled state. The popup is a ul role="tree" inside the Menu surface, one list below the rows Menu styles, named as the field is. Search reuses the labelled dialog/search/status controls around that tree without a listbox wrapper.
 
 - verification: Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output and touch remain unverified. Next: Move through the tree and choose a leaf with VoiceOver and NVDA, and tap branches and leaves on iOS Safari and Android Chrome.
 

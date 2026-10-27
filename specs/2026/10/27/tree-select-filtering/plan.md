@@ -29,8 +29,8 @@ Delivers R2-R4/R6-R7. Completion checks V1-V2.
 Prerequisite: groups 1-2 pass.
 
 - [x] Read Sass architecture before extending existing search/tree result scrolling and hidden selectors in src/sass/components/forms/_select.scss. Add real-keyboard, pointer, submission, RTL, composition, modal/shadow, reset/refresh/autoFocus and constrained enlarged/forced-colors tests in tests/tree-select-browser.test.js; retain all flat-search regressions.
-- [ ] Update docs/src/pages/tree-select.astro, llm.md, CHANGELOG.md and the existing tree decision record in docs/src/data/component-decisions.json where supported. Preserve author semantics; regenerate semantics/skill/MCP guidance from source.
-- [ ] Run affected browser/guidance/static/selective/generated checks, measure reviewed JS/CSS budgets and commit the verified slice.
+- [x] Update docs/src/pages/tree-select.astro, docs/src/pages/select.astro, llm.md, CHANGELOG.md and the existing tree decision record in docs/src/data/component-decisions.json where supported. Preserve author semantics; regenerate semantics/skill/MCP guidance from source.
+- [x] Run affected browser/guidance/static/selective/generated checks, measure reviewed JS/CSS budgets and commit the verified slice.
 
 Delivers R1-R8. Completion checks V2-V3.
 

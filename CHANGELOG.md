@@ -15,6 +15,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Opt-in single-leaf TreeSelect search through `searchable: true`. Matching leaf
+  paths open without changing the native selection. Clearing or closing restores
+  pre-query expansion, including through refresh and disabled-control recovery.
+  Search reuses accessible popup controls, localization and lifecycle handling
+  while retaining tree keyboard behavior and native leaf submission.
 - Independent drop-zone file-count limits through `data-max-files`. Exact-count
   choices pass; too many files invalidate the complete retained selection with
   accessible count feedback and `expressive:reject` reason `count`. All selected

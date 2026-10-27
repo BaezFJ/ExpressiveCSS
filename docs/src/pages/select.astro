@@ -259,8 +259,9 @@ Expressive.FormSelect.init(select, { searchable: true });`} />
       matches can be picked in a row. An option the query hides stays selected,
       stays in the trigger text and is submitted. Escape, Tab or an outside click
       closes the popup, clears the query and keeps every selection.</p>
-    <p>Search is off by default and ignored for tree and browser-default
-      selects. Remote search, creating options, fuzzy matching and virtualization
+    <p>Search is off by default; browser-default selects stay native.
+      <a href={route('tree_select') + '#search'}>TreeSelect has its own leaf search</a>.
+      Remote search, creating options, fuzzy matching and virtualization
       are outside this mode. With <code>autoFocus: false</code>, opening keeps
       existing focus and Tab from the trigger can still reach search.</p>
   </Section>

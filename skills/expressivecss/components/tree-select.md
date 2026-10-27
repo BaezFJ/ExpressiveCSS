@@ -9,7 +9,7 @@ Component ID: `tree-select`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `f88e5e1f2f7bea60a5dd09d3ed8a5ce60a484a54c903e8974aa1e221450781ee`
+Contract SHA-256: `f2f2f8efcfd5daaf41bd89a6578dd9c1d40df3bf3744be385e98a62cc269c19a`
 
 #### Selection and adaptation
 
@@ -25,11 +25,11 @@ Upstream: web-extension-inventory-reviewed (2026-10-25); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Support (2026-10-25, `llm.md#tree-select`): A native select[data-tree] whose flat options name their parent's value in data-parent; a role="tree" popup with the ARIA tree keyboard contract over visible, enabled rows, mirrored under RTL; one leaf chosen into the native select; branch options disabled while it runs; refresh() keeping open branches and focus.
+Support (2026-10-27, `llm.md#tree-select`): A native select[data-tree] whose flat options name their parent's value in data-parent; a role="tree" popup with the ARIA tree keyboard contract over visible, enabled rows, mirrored under RTL; one leaf chosen into the native select; branch options disabled while it runs; optional leaf search retaining ancestor paths and restoring pre-query expansion; refresh() preserving the query, expansion baseline and focus.
 
-Web adaptation: TreeSelect extends FormSelect, so the native select keeps the form value, reset, validity and disabled state. The popup is a ul role="tree" inside the Menu surface, one list below the rows Menu styles, named as the field is.
+Web adaptation: TreeSelect extends FormSelect, so the native select keeps the form value, reset, validity and disabled state. The popup is a ul role="tree" inside the Menu surface, one list below the rows Menu styles, named as the field is. Search reuses the labelled dialog/search/status controls around that tree without a listbox wrapper.
 
-Known boundary: Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output and touch remain unverified. One leaf only, no search, no choosable branch, and the field shows the leaf, not its path.
+Known boundary: Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output, touch, native zoom and OS IME remain unverified. Leaf filtering, expansion restoration, native submission, reset/refresh, modal/shadow focus and forced-color scrolling are checked in all three engines. One leaf only, no choosable branch, and the field shows the leaf, not its path.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#tree-select).
 
@@ -37,7 +37,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 A native `<select data-tree>` holds flat `<option>`s. A child names its parent option's value in `data-parent`; an option without one is a root, and an option another option names is a branch. `AutoInit()` starts every `select[data-tree]` as `TreeSelect`, a FormSelect subclass, so the field, labels, validation messages and reset work as in a select. The native select still owns the form value, reset, validity and the disabled state. HTML cannot nest `<optgroup>`s, so nesting comes only from `data-parent`.
 
-The popup is a `<ul role="tree">` inside the Menu surface, named as the field is: its `aria-labelledby`, then its `aria-label`, then its labels. Branch rows have `aria-expanded` and hold their children in a `ul[role="group"]`; leaf rows have `aria-selected`. Branches start collapsed, and each time the popup opens, the chosen leaf's branches open and focus goes to it.
+The popup is a `<ul role="tree">` inside the Menu surface, named as the field is: its `aria-labelledby`, then its `aria-label`, then its labels. Branch rows have `aria-expanded` and hold their children in a `ul[role="group"]`; leaf rows have `aria-selected`. Branches start collapsed. In default mode, opening reveals and focuses the chosen leaf; search mode focuses its separate search field.
 
 Only a leaf can be chosen. While the component runs, it sets `disabled` on every branch option, so the form never submits a branch; `destroy()` and `refresh()` restore that attribute. If the browser picked a branch only because nothing was `selected`, the first enabled leaf is chosen instead, as a form reset would pick. A branch the markup or a script selects shows in the field and submits nothing. Put `disabled` on branch options in the markup and start with a `value=""` placeholder, so the page also works without JavaScript.
 
@@ -61,13 +61,13 @@ Only a leaf can be chosen. While the component runs, it sets `disabled` on every
 
 #### Methods
 
-- `.refresh()`: Rebuilds the tree from the native options after a page adds, removes or changes them. Branches whose value is still there stay open, and while the popup is open focus stays on the same row, or moves to the first enabled row when that row is gone or disabled.
+- `.refresh()`: Rebuilds the tree from the native options after a page adds, removes or changes them. Without search, branches whose value is still there stay open. An active query is reapplied without overwriting its saved expansion baseline. While open, focus stays on a surviving enabled visible row, moves to an enabled visible row, or returns to search when none remains.
 - `.getSelectedValues()`: The chosen value in an array, as in FormSelect.
 - `.destroy()`: Removes the tree and its listeners, restores the branch options' `disabled` attributes and the native select.
 
 #### Also documented
 
-The Tree select section of the [API reference](https://www.expressivecss.com/llm.md) also covers Properties.
+The Tree select section of the [API reference](https://www.expressivecss.com/llm.md) also covers Tree search, Properties.
 
 #### Rules
 
