@@ -38,8 +38,8 @@ Delivers R1-R8. Completion checks V2-V3.
 
 Prerequisite: groups 1-3 pass.
 
-- [ ] Complete independent source/evidence review against R1-R8, fix confirmed findings and run a separate code-simplification pass. Rerun affected checks after any change.
-- [ ] Run full contributor-equivalent build/typecheck/tests/generated/Astro/site checks, MCP and isolated packages sequentially. Inspect tree-select/select compact/expanded/large/large-dark comparisons and live search light/dark/forced-color focus evidence; state limits honestly.
+- [x] Complete independent source/evidence review against R1-R8, fix confirmed findings and run a separate code-simplification pass. Rerun affected checks after any change.
+- [x] Run full contributor-equivalent build/typecheck/tests/generated/Astro/site checks, MCP and isolated packages sequentially. Inspect tree-select/select compact/expanded/large/large-dark comparisons and live search light/dark/forced-color focus evidence; state limits honestly.
 - [ ] Open/push/link/watch the PR, fix CI/review issues, verify exact head/all-required checks/conversations/current master/clean worktree and merge. Record actual merge proof in the separate completion documentation PR.
 
 Completion checks V4-V6. No package publication.
