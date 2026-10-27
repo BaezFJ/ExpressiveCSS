@@ -8199,10 +8199,10 @@
         ]
       },
       "jobs": [
-        "Choose one leaf from options nested as a tree, expanded with the keyboard or pointer."
+        "Choose one or more leaves from a tree using the keyboard or pointer."
       ],
       "useWhen": [
-        "One choice from a hierarchy deeper than one level, such as a place or a category."
+        "Choose one or more leaves from a hierarchy, such as places or categories."
       ],
       "avoidWhen": [
         "Options one level deep, which a select with optgroups shows, or a tree people browse, which a tree of links shows."

@@ -9,7 +9,7 @@ Component ID: `countdown`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `23f6251bca109c3d2f5f58684f1fd18b9ec22740c2802d19b656fb5b7d6c7556`
+Contract SHA-256: `c36429fc8949f361aa7ea53ec4be738ad382ccaaf05f8da070aabe55409af9a7`
 
 #### Selection and adaptation
 
