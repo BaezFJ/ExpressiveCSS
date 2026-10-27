@@ -29,7 +29,7 @@ Delivers R1-R6. Completion checks V2-V3. Commit the verified increment.
 Prerequisite: groups 1 and 2 pass.
 
 - [x] Measure JS/CSS gzip deltas and update reviewed budgets in `tests/selective-builds.test.js`.
-- [ ] Run contributor-equivalent checks sequentially, including full browser coverage, generated data, docs build/verification, MCP smoke and isolated packages. Record limitations and every failed check or rerun.
+- [x] Run contributor-equivalent checks sequentially, including full browser coverage, generated data, docs build/verification, MCP smoke and isolated packages. Record limitations and every failed check or rerun.
 - [ ] Obtain independent final review against R1-R6, fix confirmed findings and run a separate simplification pass. Open and monitor the PR; fix issues and merge only when required CI passes, review conversations are resolved and the branch includes current master.
 
 Delivers R6. Completion checks V4-V6. Publication is excluded. Preserve the separate post-merge roadmap documentation step.
