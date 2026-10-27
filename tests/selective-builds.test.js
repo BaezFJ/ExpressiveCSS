@@ -320,7 +320,10 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed independent per-file byte limits through shared file validity, messages and constraint-aware rejection: 109,451 gzip bytes (+205).
   // Reviewed independent file-count limits through shared validation and all-file rejection snapshots: 109,541 gzip bytes (+90).
   // Reviewed search-result focus preserved when opening completes after navigation: 109,553 gzip bytes (+12).
-  assert.ok(sizes(js).gzip <= 109553, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed tree search through shared controls, retained leaf paths and pre-query expansion recovery: 109,867 gzip bytes (+314).
+  // Reviewed native popup hiding before disabled controls can initialize Menu: 109,878 gzip bytes (+11).
+  // Reviewed search-surface resizing after result and localized-status updates: 109,888 gzip bytes (+10).
+  assert.ok(sizes(js).gzip <= 109888, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -505,5 +508,7 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed drop-zone error borders and direct live feedback with existing theme tokens: 90,893 gzip bytes (+45).
   // Reviewed the existing file-error selectors also covering size-only opt-ins: 90,904 gzip bytes (+11).
   // Reviewed the existing file-error selectors also covering count-only opt-ins: 90,909 gzip bytes (+5).
-  assert.ok(sizes(css).gzip <= 90909, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed hidden tree rows and independently scrolling tree-search results: 90,928 gzip bytes (+19).
+  // Reviewed shared menu tokens reaching tree-search dialogs without duplicate token declarations: 90,945 gzip bytes (+17).
+  assert.ok(sizes(css).gzip <= 90945, `CSS gzip: ${sizes(css).gzip}`);
 });

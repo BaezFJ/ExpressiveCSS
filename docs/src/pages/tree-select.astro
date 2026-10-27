@@ -8,6 +8,7 @@ import { route } from "../lib/catalogue";
 const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "branches", label: "Branches and the form" },
+  { id: "search", label: "Search leaves" },
   { id: "keyboard", label: "Keyboard and pointer" },
   { id: "methods", label: "Options and methods" },
   { id: "limits", label: "What it does not do" },
@@ -73,6 +74,78 @@ const S = defineSections([
           select. To disable part of the tree, disable each leaf in it.
         </p>
   </Section>
+  <Section {...S.search}>
+    <p>Set <code>searchable: true</code> through <code>data-tree-select-options</code>
+      or <code>TreeSelect.init()</code> to search a single-leaf tree. Search matches
+      a literal substring of leaf text, ignoring case and trimming query edges.
+      It retains and opens every matching leaf's ancestors. Branch labels and option
+      values do not match; disabled matches stay visible and unavailable.</p>
+    <div class="mb-3" style="max-width: 24rem;">
+      <div class="field">
+        <select id="search-place" name="search-place" data-tree data-tree-select-options='{"searchable":true}'>
+          <option value="" disabled selected>Choose a place</option>
+          <option value="europe" disabled>Europe</option>
+          <option value="france" data-parent="europe" disabled>France</option>
+          <option value="paris" data-parent="france">Paris</option>
+          <option value="lyon" data-parent="france">Lyon</option>
+          <option value="asia" disabled>Asia</option>
+          <option value="tokyo" data-parent="asia">Tokyo</option>
+        </select>
+        <label for="search-place">Search places</label>
+      </div>
+    </div>
+<Code code={`
+<div class="field">
+  <select id="search-place" name="place" data-tree
+    data-tree-select-options='{"searchable":true}'>
+    <option value="" disabled selected>Choose a place</option>
+    <option value="europe" disabled>Europe</option>
+    <option value="france" data-parent="europe" disabled>France</option>
+    <option value="paris" data-parent="france">Paris</option>
+    <option value="lyon" data-parent="france">Lyon</option>
+    <option value="asia" disabled>Asia</option>
+    <option value="tokyo" data-parent="asia">Tokyo</option>
+  </select>
+  <label for="search-place">Search places</label>
+</div>
+`} />
+    <p>The read-only trigger still shows the chosen leaf. Its named nonmodal dialog
+      contains a labelled search field, polite no-results status and the named tree.
+      Search has no form name. Typing, clearing and hiding the chosen leaf preserve
+      its native value and fire no <code>change</code>. An enabled leaf pick changes
+      the value once, closes the popup and focuses the trigger.</p>
+    <p>The first nonempty query saves the person's expansion state. Further edits,
+      temporary branch toggles and refresh do not replace it. Clearing or closing
+      restores surviving branches to that state; newly added branches start closed.
+      A matching path opens again on the next query edit or refresh.</p>
+    <table>
+      <thead><tr><th>Key or action</th><th>Searchable tree behavior</th></tr></thead>
+      <tbody>
+        <tr><td>Open</td><td>Focus search by default. Opening completion preserves focus already inside the popup.</td></tr>
+        <tr><td>Type, paste, Space, Home / End, horizontal keys or composition in search</td><td>Edit text normally. Enter neither selects nor submits.</td></tr>
+        <tr><td>ArrowDown / ArrowUp from search</td><td>Focus the first / last enabled visible tree row. Stay in search when none exists.</td></tr>
+        <tr><td>Keys on a tree row</td><td>Use the tree controls below, including RTL arrows, typeahead and branch toggles. Hidden rows and disabled leaves are skipped.</td></tr>
+        <tr><td>Tab / Shift+Tab</td><td>Tab enters the first enabled row from search. From a row, Tab closes and advances after the trigger. Without enabled rows, Tab exits search. Shift+Tab returns from a row to search, or closes from search to the trigger.</td></tr>
+        <tr><td>Escape / outside click</td><td>Close and clear search. Escape focuses the trigger; outside dismissal preserves its target's focus.</td></tr>
+      </tbody>
+    </table>
+    <p><code>refresh()</code> reapplies an active query while preserving the original
+      expansion state and search caret, or focus on a surviving enabled visible row.
+      When that row is unavailable, focus moves to an enabled visible row or search.
+      A successful native reset closes, clears and restores defaults; cancellation
+      preserves the query, selection and expansion. Disabling the select or its
+      fieldset and refreshing closes it. Existing menu callbacks and
+      <code>autoFocus: false</code> work as on a select.</p>
+<Code code={`
+Expressive.TreeSelect.init(select, {
+  searchable: true,
+  i18n: { searchLabel: 'Find a leaf', noResults: 'No matching leaves' }
+});
+`} />
+    <p>Search defaults off. Browser-default selects stay native; multiple-leaf tree
+      selection is separate. Search does not fold accents, interpret regular
+      expressions, fetch children or change the native options.</p>
+  </Section>
   <Section {...S.keyboard}>
         <p>
           The popup is an ARIA tree. Down and Up move between visible rows without wrapping,
@@ -90,7 +163,8 @@ const S = defineSections([
   </Section>
   <Section {...S.methods}>
         <p>
-          A tree select takes the select's <code>classes</code> and <code>menuOptions</code>,
+          A tree select takes the select's <code>classes</code>, <code>menuOptions</code>,
+          <code>searchable</code> and search <code>i18n</code>,
           from script or from <code>data-tree-select-options</code>. Call
           <code>refresh()</code> after changing the options; open branches stay open.
         </p>
@@ -103,7 +177,7 @@ place.destroy();            // restores the branch options and the native select
   </Section>
   <Section {...S.limits}>
         <p>
-          There is no multiple selection, search field, choosable branch, nested
+          There is no multiple selection, choosable branch, nested
           <code>&lt;optgroup&gt;</code>, option image or children loaded on demand. The field
           shows the chosen leaf's text, not its path.
         </p>

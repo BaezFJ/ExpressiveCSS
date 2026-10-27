@@ -9364,7 +9364,7 @@ Expressive.AutoInit(document.body, {
 | --- | --- | --- | --- |
 | `classes` | String | `''` | Space-separated classes added to the `.field` wrapper, either the parent `.field` or one the plugin creates. |
 | `menuOptions` | Object | `{}` | Options passed to `Menu`. See Menu. `coverTrigger` is forced to `false` and `closeOnClick` is forced to `false`. |
-| `searchable` | Boolean | `false` | Add a separate popup search field to an enhanced plain single select. Ignored for multiple, tree and browser-default selects. |
+| `searchable` | Boolean | `false` | Add a popup search field to a plain single/multiple FormSelect or single-leaf TreeSelect. Browser-default selects stay native. |
 | `i18n` | Object | `{ searchLabel: 'Search options', noResults: 'No results' }` | Search input label and no-results status. Override either string; omitted keys retain defaults. |
 
 There is no `selected` option. Mark options with the HTML `selected` attribute instead.
@@ -9442,7 +9442,7 @@ Choose one leaf from options nested as a tree, expanded with the keyboard or poi
 
 A native `<select data-tree>` holds flat `<option>`s. A child names its parent option's value in `data-parent`; an option without one is a root, and an option another option names is a branch. `AutoInit()` starts every `select[data-tree]` as `TreeSelect`, a FormSelect subclass, so the field, labels, validation messages and reset work as in a select. The native select still owns the form value, reset, validity and the disabled state. HTML cannot nest `<optgroup>`s, so nesting comes only from `data-parent`.
 
-The popup is a `<ul role="tree">` inside the Menu surface, named as the field is: its `aria-labelledby`, then its `aria-label`, then its labels. Branch rows have `aria-expanded` and hold their children in a `ul[role="group"]`; leaf rows have `aria-selected`. Branches start collapsed, and each time the popup opens, the chosen leaf's branches open and focus goes to it.
+The popup is a `<ul role="tree">` inside the Menu surface, named as the field is: its `aria-labelledby`, then its `aria-label`, then its labels. Branch rows have `aria-expanded` and hold their children in a `ul[role="group"]`; leaf rows have `aria-selected`. Branches start collapsed. In default mode, opening reveals and focuses the chosen leaf; search mode focuses its separate search field.
 
 Only a leaf can be chosen. While the component runs, it sets `disabled` on every branch option, so the form never submits a branch; `destroy()` and `refresh()` restore that attribute. If the browser picked a branch only because nothing was `selected`, the first enabled leaf is chosen instead, as a form reset would pick. A branch the markup or a script selects shows in the field and submits nothing. Put `disabled` on branch options in the markup and start with a `value=""` placeholder, so the page also works without JavaScript.
 
@@ -9475,9 +9475,50 @@ Left and Right swap under `dir="rtl"`. A click on a branch opens or closes it an
 </div>
 ```
 
-There is no multiple selection, search field, choosable branch, `<optgroup>`, `data-icon` image or children loaded on demand. The field shows the leaf's text, not its path. To disable a subtree, disable each leaf.
+There is no multiple selection, choosable branch, `<optgroup>`, `data-icon` image or children loaded on demand. The field shows the leaf's text, not its path. To disable a subtree, disable each leaf.
 
-TreeSelect takes FormSelect's `classes` and `menuOptions`, which markup sets with `data-tree-select-options`.
+TreeSelect takes FormSelect's `classes`, `menuOptions`, `searchable` and search `i18n`, which markup sets with `data-tree-select-options`.
+
+### Tree search
+
+Set `searchable: true` with `TreeSelect.init` or `data-tree-select-options` on a single-leaf tree. The read-only trigger keeps the chosen leaf's text and controls a named nonmodal dialog with `aria-haspopup="dialog"`. A separately labelled search input, polite no-results status and the named `role="tree"` share that popup. Search and status remain outside the tree, with no listbox wrapper. Names honor the field's authored names or labels in its document or shadow root.
+
+```html
+<label for="search-place">Search places</label>
+<select id="search-place" name="place" data-tree data-tree-select-options='{"searchable":true}'>
+  <option value="" disabled selected>Choose a place</option>
+  <option value="europe" disabled>Europe</option>
+  <option value="france" data-parent="europe" disabled>France</option>
+  <option value="paris" data-parent="france">Paris</option>
+  <option value="lyon" data-parent="france">Lyon</option>
+  <option value="asia" disabled>Asia</option>
+  <option value="tokyo" data-parent="asia">Tokyo</option>
+</select>
+```
+
+```js
+Expressive.TreeSelect.init(select, {
+  searchable: true,
+  i18n: { searchLabel: 'Find a leaf', noResults: 'No matching leaves' }
+});
+```
+
+Search trims query edges and matches a literal case-insensitive substring of each leaf's trimmed text. It preserves internal spaces and accents. Values and branch labels are excluded, and regular-expression syntax stays literal. Matching leaves and their ancestor paths stay visible, and their branches open. Disabled matches remain visible and unavailable; a disabled-only match is still a result. No matching leaves produces the localized status as safe text. Native options are never removed or rewritten by filtering.
+
+The first nonempty query saves open branch values. Further edits, temporary branch toggles and refresh retain this baseline. Clearing or closing shows every row and restores surviving branches to it; newly added branches are closed on restoration. Query edits and refresh reveal matching paths again. Typing, clearing, hiding a selected leaf and dismissal leave its native value and trigger text intact and emit no change. Search has no name and is never submitted. Only a visible enabled leaf pick changes the native value, closes the popup and emits the existing single change event when the value changes. Branches still contribute no form value.
+
+| Key or action | Searchable tree behavior |
+| --- | --- |
+| Open | Focus search by default. Delayed opening preserves focus already inside the popup. autoFocus false leaves current focus alone; Tab from the trigger can reach search. |
+| Text editing in search | Typing, paste, Space, Home/End, horizontal keys and composition edit normally. Enter neither submits nor chooses. |
+| ArrowDown / ArrowUp in search | Focus the first / last enabled visible tree row, or remain in search if none exists. |
+| Keys on a tree row | Keep the tree arrows, Home/End, star, typeahead and branch/leaf activation above. Hidden rows and disabled leaves are excluded. Up from the first row stays there. RTL still mirrors branch arrows. |
+| Tab / Shift+Tab | Tab enters the first enabled row from search. Tab from a row, or search with no enabled row, closes and advances after the trigger. Shift+Tab returns from a row to search, or closes from search to the trigger. |
+| Escape / outside dismissal | Close, clear the query and restore expansion. Escape focuses the trigger; outside dismissal preserves its target's focus. |
+
+Refresh reapplies the query and preserves the original expansion baseline and search focus/caret. A surviving enabled visible row keeps focus; otherwise focus moves to an enabled visible row or search. An uncanceled native reset closes, clears and restores default selection and expansion; cancellation retains query, selection and expansion. Disabling the control or its fieldset and refreshing closes it. Existing Menu callbacks are preserved. Destroy removes search controls, listeners and timers and restores native branch attributes.
+
+Search defaults off, stays off for browser-default and multiple-tree controls, and adds no remote search, lazy children, fuzzy matching, accent folding, highlighting, virtualization or new selection event. Multiple-leaf tree selection is a separate phase.
 
 ### Properties
 
@@ -9489,7 +9530,7 @@ TreeSelect takes FormSelect's `classes` and `menuOptions`, which markup sets wit
 
 #### .refresh()
 
-Rebuilds the tree from the native options after a page adds, removes or changes them. Branches whose value is still there stay open, and while the popup is open focus stays on the same row, or moves to the first enabled row when that row is gone or disabled.
+Rebuilds the tree from the native options after a page adds, removes or changes them. Without search, branches whose value is still there stay open. An active query is reapplied without overwriting its saved expansion baseline. While open, focus stays on a surviving enabled visible row, moves to an enabled visible row, or returns to search when none remains.
 
 #### .getSelectedValues()
 

@@ -20,12 +20,12 @@ const PLACES = `<option value="" disabled selected>Choose a place</option>
   <option value="kyoto" data-parent="asia" disabled>Kyoto</option>`;
 
 /** Starts a tree select holding `options` in a form and returns its instance. */
-function start(options = PLACES, attributes = '') {
+function start(options = PLACES, attributes = '', settings = {}) {
   document.body.innerHTML = `<form><div class="field">
     <select id="place" name="place" data-tree ${attributes}>${options}</select>
     <label for="place">Place</label>
   </div></form>`;
-  return Expressive.TreeSelect.init(document.getElementById('place'));
+  return Expressive.TreeSelect.init(document.getElementById('place'), settings);
 }
 
 /** The rows under `list` as text, with each branch's rows nested after it. */
@@ -262,5 +262,236 @@ test('typeahead moves past the focused row on a new search and stays on it while
     assert.equal(document.activeElement, row(instance, 'Apricot'));
   } finally {
     instance.destroy();
+  }
+});
+
+
+test('AutoInit tree search names its popup and tree without putting search inside the tree', () => {
+  document.body.innerHTML = `<label for="search-tree">Destination</label><select id="search-tree" data-tree
+    aria-label="Chosen place" data-tree-select-options='{"searchable":true,"i18n":{"searchLabel":"Find leaves","noResults":"Nothing here"}}'>${PLACES}</select>`;
+  const before = Expressive.Menu._menus.length;
+  Expressive.AutoInit();
+  const instance = Expressive.TreeSelect.getInstance(document.getElementById('search-tree'));
+  try {
+    const search = instance.menuEl.querySelector('input[type="search"]');
+    assert.ok(search);
+    assert.equal(search.getAttribute('aria-label'), 'Find leaves');
+    assert.equal(search.hasAttribute('name'), false);
+    assert.equal(instance.menuEl.getAttribute('aria-label'), 'Chosen place');
+    assert.equal(instance.tree.getAttribute('aria-label'), 'Chosen place');
+    assert.equal(instance.tree.contains(search), false);
+    assert.equal(instance.tree.contains(instance.menuEl.querySelector('[role="status"]')), false);
+    assert.equal(instance.tree.getAttribute('role'), 'tree');
+    assert.equal(instance.tree.querySelector('[role="treeitem"]').tagName, 'LI');
+  } finally { instance.destroy(); }
+  assert.equal(Expressive.Menu._menus.length, before);
+  assert.equal(document.querySelector('input[type="search"]'), null);
+  assert.equal(document.querySelector('label').htmlFor, 'search-tree');
+});
+
+for (const attributes of ['multiple', 'class="browser-default"']) {
+  test(`tree search leaves unsupported ${attributes} mode unchanged`, () => {
+    const instance = start(PLACES, attributes, { searchable: true });
+    try {
+      assert.equal(document.querySelector('input[type="search"]'), null);
+      if (instance.menuEl) assert.equal(instance.input.getAttribute('aria-haspopup'), 'tree');
+    } finally { instance.destroy(); }
+  });
+}
+
+
+function filterTree(instance, query) {
+  const input = instance.menuEl.querySelector('input[type="search"]');
+  input.value = query;
+  input.dispatchEvent(new document.defaultView.Event('input', { bubbles: true }));
+}
+const visibleTree = instance => instance._visibleRows().map(li => li.firstChild.textContent);
+const treeExpansion = instance => Object.fromEntries([...instance.tree.querySelectorAll('[aria-expanded]')]
+  .map(li => [li.firstChild.textContent, li.ariaExpanded]));
+
+test('tree filtering reveals leaf ancestors and restores expansion across queries and temporary toggles', () => {
+  const instance = start(PLACES, '', { searchable: true });
+  let changes = 0;
+  instance.el.addEventListener('change', () => changes++);
+  try {
+    instance.el.value = 'lyon';
+    instance.refresh();
+    instance._activate(row(instance, 'Asia'));
+    const before = treeExpansion(instance);
+    filterTree(instance, '  pAr  ');
+    assert.deepEqual(visibleTree(instance), ['Europe', 'France', 'Paris']);
+    assert.equal(row(instance, 'Europe').ariaExpanded, 'true');
+    assert.equal(row(instance, 'France').ariaExpanded, 'true');
+    instance._activate(row(instance, 'Europe'));
+    filterTree(instance, 'tok');
+    assert.deepEqual(visibleTree(instance), ['Asia', 'Tokyo']);
+    filterTree(instance, '');
+    assert.deepEqual(treeExpansion(instance), before);
+    assert.equal(instance.el.value, 'lyon');
+    assert.equal(instance.input.value, 'Lyon');
+    assert.deepEqual([...new document.defaultView.FormData(instance.el.form)], [['place', 'lyon']]);
+    assert.equal(changes, 0);
+  } finally { instance.destroy(); }
+});
+
+test('tree search matches literal leaf labels only and reports disabled matches without unsafe status markup', () => {
+  const options = PLACES.replace('>Paris</option>', '>Café [1]</option>') + '<option value="duplicate" data-parent="france">Tokyo</option>';
+  const instance = start(options, '', { searchable: true, i18n: { noResults: '<img src=x>' } });
+  try {
+    filterTree(instance, '[1]');
+    assert.deepEqual(visibleTree(instance), ['Europe', 'France', 'Café [1]']);
+    for (const query of ['france', 'paris', 'cafe', '.*']) {
+      filterTree(instance, query);
+      assert.deepEqual(visibleTree(instance), []);
+      assert.equal(instance.menuEl.querySelector('[role="status"]').textContent, '<img src=x>');
+      assert.equal(instance.menuEl.querySelector('img'), null);
+    }
+    filterTree(instance, 'tokyo');
+    assert.equal(instance._visibleRows().filter(li => li.firstChild.textContent === 'Tokyo').length, 2);
+    filterTree(instance, 'kyoto');
+    assert.deepEqual(visibleTree(instance), ['Asia', 'Kyoto']);
+    assert.equal(instance.menuEl.querySelector('[role="status"]').textContent, '');
+    assert.equal(row(instance, 'Kyoto').ariaDisabled, 'true');
+    const chosen = instance.el.value;
+    instance._activate(row(instance, 'Kyoto'));
+    assert.equal(instance.el.value, chosen);
+  } finally { instance.destroy(); }
+});
+
+test('filtered navigation skips own-hidden children and hidden branches cannot activate or open as siblings', () => {
+  const instance = start(PLACES, '', { searchable: true });
+  try {
+    filterTree(instance, 'lyon');
+    assert.deepEqual(visibleTree(instance), ['Europe', 'France', 'Lyon']);
+    instance._openOrEnter(row(instance, 'France'));
+    assert.equal(document.activeElement, row(instance, 'Lyon'));
+    const asia = row(instance, 'Asia');
+    const before = asia.ariaExpanded;
+    instance._activate(asia);
+    assert.equal(asia.ariaExpanded, before);
+    instance._openSiblings(row(instance, 'Europe'));
+    assert.equal(asia.ariaExpanded, before);
+    assert.equal(row(instance, 'Lyon').tabIndex, -1);
+  } finally { instance.destroy(); }
+});
+
+
+const treeTick = () => new Promise(resolve => setTimeout(resolve, 0));
+const searchSettings = { searchable: true, menuOptions: { inDuration: 0, outDuration: 0 } };
+
+test('refresh retains query, caret and the original expansion baseline while options change', async () => {
+  const instance = start(PLACES, '', searchSettings);
+  try {
+    instance._activate(row(instance, 'Asia'));
+    instance.menu.open();
+    await treeTick();
+    filterTree(instance, 'par');
+    const search = instance.menuEl.querySelector('input[type="search"]');
+    search.focus();
+    search.setSelectionRange(1, 1);
+    instance.refresh();
+    assert.equal(document.activeElement, search);
+    assert.equal(search.selectionStart, 1);
+    assert.deepEqual(visibleTree(instance), ['Europe', 'France', 'Paris']);
+    instance.el.querySelector('[value="asia"]').remove();
+    const ocean = new document.defaultView.Option('Oceania', 'ocean');
+    const leaf = new document.defaultView.Option('Paris Island', 'island');
+    leaf.dataset.parent = 'ocean';
+    instance.el.append(ocean, leaf);
+    instance.refresh();
+    assert.deepEqual(visibleTree(instance), ['Europe', 'France', 'Paris', 'Oceania', 'Paris Island']);
+    filterTree(instance, '');
+    assert.deepEqual(treeExpansion(instance), { Europe: 'false', France: 'false', Oceania: 'false' });
+    filterTree(instance, 'missing');
+    instance.refresh();
+    assert.equal(document.activeElement, search);
+    assert.equal(search.value, 'missing');
+  } finally { instance.destroy(); }
+});
+
+test('canceled reset retains tree search and native reset restores the pre-query branches silently', async () => {
+  const instance = start(PLACES, '', searchSettings);
+  let changes = 0;
+  instance.el.addEventListener('change', () => changes++);
+  try {
+    instance.el.value = 'lyon';
+    instance.refresh();
+    instance._activate(row(instance, 'Asia'));
+    const before = treeExpansion(instance);
+    instance.menu.open();
+    await treeTick();
+    filterTree(instance, 'par');
+    const during = treeExpansion(instance);
+    instance.el.form.addEventListener('reset', event => event.preventDefault(), { once: true });
+    instance.el.form.reset();
+    await treeTick();
+    assert.equal(instance.menuEl.querySelector('input[type="search"]').value, 'par');
+    assert.equal(instance.el.value, 'lyon');
+    assert.deepEqual(treeExpansion(instance), during);
+    instance.el.form.reset();
+    await treeTick();
+    assert.equal(instance.menu.isOpen, false);
+    assert.equal(instance.menuEl.querySelector('input[type="search"]').value, '');
+    assert.equal(instance.menuEl.querySelector('[role="status"]').textContent, '');
+    assert.equal(instance.el.value, '');
+    assert.deepEqual(treeExpansion(instance), before);
+    assert.equal(changes, 0);
+  } finally { instance.destroy(); }
+});
+
+for (const boundary of ['select', 'fieldset']) {
+  test(`disabling the ${boundary} during a query restores its original expansion on refresh`, async () => {
+    const instance = start(PLACES, '', searchSettings);
+    let disabled = instance.el;
+    try {
+      if (boundary === 'fieldset') {
+        disabled = document.createElement('fieldset');
+        instance.wrapper.before(disabled);
+        disabled.append(instance.wrapper);
+      }
+      instance._activate(row(instance, 'Asia'));
+      const before = treeExpansion(instance);
+      instance.menu.open();
+      await treeTick();
+      filterTree(instance, 'par');
+      disabled.disabled = true;
+      instance.refresh();
+      assert.equal(instance.menu.isOpen, false);
+      assert.equal(instance.input.disabled, true);
+      assert.equal(instance.menuEl.querySelector('input[type="search"]').value, '');
+      assert.deepEqual(treeExpansion(instance), before);
+      disabled.disabled = false;
+      instance.refresh();
+      assert.equal(instance.input.disabled, false);
+      assert.deepEqual(treeExpansion(instance), before);
+    } finally { instance.destroy(); }
+  });
+}
+
+
+test('two searchable trees keep independent queries, expansion baselines and branch ownership', () => {
+  document.body.innerHTML = ['first', 'second'].map(id => `<label for="${id}">${id}</label>
+    <select id="${id}" data-tree data-tree-select-options='{"searchable":true}'>${PLACES}</select>`).join('');
+  Expressive.AutoInit();
+  const first = Expressive.TreeSelect.getInstance(document.getElementById('first'));
+  const second = Expressive.TreeSelect.getInstance(document.getElementById('second'));
+  try {
+    first._activate(row(first, 'Asia'));
+    second._activate(row(second, 'Europe'));
+    const before = treeExpansion(first);
+    filterTree(first, 'par');
+    filterTree(second, 'tok');
+    const secondExpansion = treeExpansion(second);
+    filterTree(first, '');
+    assert.deepEqual(treeExpansion(first), before);
+    assert.deepEqual(visibleTree(second), ['Asia', 'Tokyo']);
+    assert.deepEqual(treeExpansion(second), secondExpansion);
+    assert.equal(second.menuEl.querySelector('input[type="search"]').value, 'tok');
+    first.destroy();
+    assert.equal(second.el.querySelector('[value="asia"]').disabled, true);
+    assert.ok(second.menuEl.isConnected);
+  } finally {
+    if (Expressive.TreeSelect.getInstance(first.el)) first.destroy();
+    second.destroy();
   }
 });

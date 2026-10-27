@@ -75,6 +75,8 @@ export class TreeSelect extends FormSelect {
   private _disabledBranches: Set<HTMLOptionElement>;
   /** While refresh() rebuilds the rows, the values of the branches left open. */
   private _keepOpen: Set<string> | undefined;
+  /** Expansion before the first nonempty query, retained across query edits. */
+  private _searchOpen: Set<string> | undefined;
   /** What typeahead has read so far, and the timer that clears it. */
   private _typed = '';
   private _typedTimer: ReturnType<typeof setTimeout>;
@@ -84,20 +86,60 @@ export class TreeSelect extends FormSelect {
     // A browser-default select stays native.
     if (!this.menuEl) return;
     const { signal } = this._events;
-    this.menuEl.setAttribute('role', 'presentation');
+    if (!this._searchInput) {
+      this.menuEl.setAttribute('role', 'presentation');
+      this.input.setAttribute('aria-haspopup', 'tree');
+      this.input.setAttribute('aria-controls', this.tree.id);
+    }
     this.menuEl.removeAttribute('aria-multiselectable');
-    this.input.setAttribute('aria-haspopup', 'tree');
-    this.input.setAttribute('aria-controls', this.tree.id);
     this._nameTree();
     this._leaveImplicitBranch();
     this._handleSelectChange();
     // Capture, so the tree's keys and clicks are handled before Menu's own
     // listeners on the same element.
-    this.menuEl.addEventListener('keydown', this._handleTreeKeydown, { signal, capture: true });
+    if (!this._searchInput) this.menuEl.addEventListener('keydown', this._handleTreeKeydown, { signal, capture: true });
     this.menuEl.addEventListener('click', this._handleTreeClick, { signal, capture: true });
   }
 
   static key = 'Expressive_TreeSelect';
+
+  protected _canSearch() {
+    return !this.el.multiple && this.options.searchable;
+  }
+
+  protected _searchList() { return this.tree; }
+
+  protected _searchRows() { return this._enabledRows(); }
+
+  protected _filterSearch(query: string) {
+    const matches = this._matchingRows(query);
+    this.tree.querySelectorAll<HTMLElement>('li[role="treeitem"]').forEach(row => { row.hidden = !matches.has(row); });
+    this._searchExpansion(query);
+  }
+
+  private _matchingRows(query: string) {
+    const matches = new Set<HTMLElement>();
+    this._values.filter(({ el }) => el.textContent.trim().toLowerCase().includes(query)).forEach(({ optionEl }) => {
+      for (let row = optionEl; row; row = this._parentRow(row)) matches.add(row);
+    });
+    return matches;
+  }
+
+  private _searchExpansion(query: string) {
+    if (query) {
+      this._searchOpen ??= this._openValues();
+      this._branches.forEach((_option, row) => { if (!row.hidden) this._setExpanded(row, true); });
+      return;
+    }
+    const saved = this._searchOpen;
+    this._searchOpen = undefined;
+    if (saved) this._branches.forEach((option, row) => this._setExpanded(row, saved.has(option.value)));
+  }
+
+  protected _searchNavigate(e: KeyboardEvent) {
+    if (e.target === this._searchInput) super._searchNavigate(e);
+    else this._handleTreeKeydown(e);
+  }
 
   destroy() {
     clearTimeout(this._typedTimer);
@@ -111,10 +153,14 @@ export class TreeSelect extends FormSelect {
    */
   refresh() {
     const focused = this._focusedOption();
-    this._keepOpen = this._openValues();
+    this._keepOpen = this._searchOpen ?? this._openValues();
     super.refresh();
     this._keepOpen = undefined;
-    if (focused && this.menu?.isOpen) this._restoreFocus(focused);
+    this._restoreOpenFocus(focused);
+  }
+
+  private _restoreOpenFocus(option: HTMLOptionElement) {
+    if (option && this.menu?.isOpen) this._restoreFocus(option);
   }
 
   /** The option whose row has focus, if one does. */
@@ -135,7 +181,7 @@ export class TreeSelect extends FormSelect {
     const rows = this._enabledRows();
     const target = rows.includes(row) ? row : rows[0];
     if (target) this._focusRow(target);
-    else this.input.focus();
+    else (this._searchInput ?? this.input).focus();
   }
 
   /** Names the tree as the field is named: aria-labelledby, then aria-label, then its labels. */
@@ -235,7 +281,7 @@ export class TreeSelect extends FormSelect {
 
   /** The rows not inside a closed branch, in document order. */
   _visibleRows(): HTMLElement[] {
-    return Array.from(this.tree.querySelectorAll<HTMLElement>('li[role="treeitem"]')).filter((li) => !li.parentElement.closest('[hidden]'));
+    return Array.from(this.tree.querySelectorAll<HTMLElement>('li[role="treeitem"]')).filter((li) => !li.closest('[hidden]'));
   }
 
   private _enabledRows() {
@@ -276,6 +322,7 @@ export class TreeSelect extends FormSelect {
 
   /** Chooses a leaf, or opens or closes a branch. */
   _activate(row: HTMLElement) {
+    if (row.closest('[hidden]')) return;
     if (this._branches.has(row)) this._toggle(row, row.ariaExpanded !== 'true');
     else this._selectOptionElement(row);
   }
@@ -284,7 +331,7 @@ export class TreeSelect extends FormSelect {
   _openOrEnter(row: HTMLElement) {
     if (!this._branches.has(row)) return;
     if (row.ariaExpanded !== 'true') this._toggle(row, true);
-    else this._focusRow(row.querySelector<HTMLElement>(':scope > ul > li:not(.disabled)'));
+    else this._focusRow(row.querySelector<HTMLElement>(':scope > ul > li:not(.disabled, [hidden])'));
   }
 
   /** Closes an open branch, or moves to the parent row. */
@@ -296,7 +343,7 @@ export class TreeSelect extends FormSelect {
   /** Opens every branch beside `row`. */
   _openSiblings(row: HTMLElement) {
     Array.from(row.parentElement.children).forEach((sibling) => {
-      if (this._branches.has(sibling as HTMLElement)) this._toggle(sibling as HTMLElement, true);
+      if (this._branches.has(sibling as HTMLElement) && !sibling.hasAttribute('hidden')) this._toggle(sibling as HTMLElement, true);
     });
   }
 
@@ -344,7 +391,9 @@ export class TreeSelect extends FormSelect {
   // Only a row's label acts. A disabled row passes clicks through to its
   // group, which must not toggle the branch around it.
   private _handleTreeClick = (e: MouseEvent) => {
-    const label = Utils.eventTarget(e)?.closest('li[role="treeitem"] > span');
+    const target = Utils.eventTarget(e);
+    if (!this.tree.contains(target)) return;
+    const label = target.closest('li[role="treeitem"] > span');
     e.preventDefault();
     e.stopPropagation();
     if (label) this._activate(label.parentElement);
