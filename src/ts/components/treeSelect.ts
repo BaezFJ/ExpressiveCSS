@@ -103,6 +103,12 @@ export class TreeSelect extends FormSelect {
 
   static key = 'Expressive_TreeSelect';
 
+  _setValueToInput() {
+    // Branches are navigation controls, not multiple-select values.
+    if (this.isMultiple) this._branches.forEach(option => { option.selected = false; });
+    super._setValueToInput();
+  }
+
   protected _canSearch() {
     return !this.el.multiple && this.options.searchable;
   }
@@ -212,6 +218,7 @@ export class TreeSelect extends FormSelect {
       this.tree.id = 'select-tree-' + Utils.guid();
       this.tree.setAttribute('role', 'tree');
     }
+    this.tree.ariaMultiSelectable = String(this.isMultiple);
     this.tree.replaceChildren(...optionTree(options).map((node) => this._row(node)));
     this.menuEl.append(this.tree);
   }
@@ -224,7 +231,7 @@ export class TreeSelect extends FormSelect {
    * after that a selected branch is one a script chose.
    */
   private _leaveImplicitBranch() {
-    if (!this._browserPickedBranch()) return;
+    if (this.isMultiple || !this._browserPickedBranch()) return;
     const leaf = Array.from(this.el.options).find((option) => !option.disabled);
     if (leaf) leaf.selected = true;
     else this.el.selectedIndex = -1;

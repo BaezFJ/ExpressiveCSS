@@ -8,9 +8,9 @@ Use feature-spec-auto, incremental-implementation, independent code-review-and-q
 
 Prerequisite: independent specification review passes.
 
-- [ ] Add failing multiple-tree structure, two-leaf FormData, empty/branch-only defaults and branch-normalization regressions in tests/tree-select.test.js. Cover duplicate-valued leaves, change counts, disabled leaves and branch nonpropagation.
-- [ ] Reuse shared native toggling in src/ts/components/treeSelect.ts, name multiple state on the actual tree and normalize branches before inherited trigger synchronization. Keep the implicit single-select fallback single-only. Add no checkbox or parallel selection model.
-- [ ] Build/typecheck and run focused tree/select/form/selection checks for R1-R3/R5/R7. Mutate the shared toggle to behave as single selection, require the two-leaf submission regression to fail, restore/rebuild/compare bundle hash and rerun. Commit the verified slice.
+- [x] Add failing multiple-tree structure, two-leaf FormData, empty/branch-only defaults and branch-normalization regressions in tests/tree-select.test.js. Cover duplicate-valued leaves, change counts, disabled leaves and branch nonpropagation.
+- [x] Reuse shared native toggling in src/ts/components/treeSelect.ts, name multiple state on the actual tree and normalize branches before inherited trigger synchronization. Keep the implicit single-select fallback single-only. Add no checkbox or parallel selection model.
+- [x] Build/typecheck and run focused tree/select/form/selection checks for R1-R3/R5/R7. Mutate the shared toggle to behave as single selection, require the two-leaf submission regression to fail, restore/rebuild/compare bundle hash and rerun. Commit the verified slice.
 
 Completion V1-V2; all new functions stay below complexity five.
 

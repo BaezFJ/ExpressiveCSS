@@ -495,3 +495,108 @@ test('two searchable trees keep independent queries, expansion baselines and bra
     second.destroy();
   }
 });
+
+const MULTIPLE_PLACES = PLACES.replace('<option value="" disabled selected>Choose a place</option>', '');
+
+test('AutoInit multiple trees expose multiselect state on the actual tree and start empty', () => {
+  document.body.innerHTML = `<form><div class="field"><select id="many" name="place" multiple data-tree>${MULTIPLE_PLACES}</select><label for="many">Places</label></div></form>`;
+  Expressive.AutoInit();
+  const instance = Expressive.TreeSelect.getInstance(document.getElementById('many'));
+  try {
+    assert.ok(instance);
+    assert.equal(instance.tree.ariaMultiSelectable, 'true');
+    assert.equal(instance.menuEl.hasAttribute('aria-multiselectable'), false);
+    assert.equal(instance.menuEl.getAttribute('role'), 'presentation');
+    assert.equal(instance.tree.querySelector('input'), null);
+    assert.deepEqual(instance.getSelectedValues(), []);
+    assert.equal(instance.input.value, '');
+    assert.deepEqual(new window.FormData(instance.el.form).getAll('place'), []);
+    for (const branch of ['Europe', 'France', 'Asia']) {
+      assert.equal(row(instance, branch).hasAttribute('aria-selected'), false);
+      assert.equal(row(instance, branch).hasAttribute('aria-checked'), false);
+    }
+  } finally { instance.destroy(); }
+});
+
+test('multiple tree submits independent leaves and branch navigation never changes choices', () => {
+  const instance = start(MULTIPLE_PLACES, 'multiple');
+  try {
+    const events = [];
+    instance.el.addEventListener('change', e => events.push([e.bubbles, e.composed]));
+    for (const branch of ['Europe', 'France', 'Asia']) instance._activate(row(instance, branch));
+    assert.deepEqual(events, []);
+    instance._activate(row(instance, 'Tokyo'));
+    instance._activate(row(instance, 'Paris'));
+    assert.deepEqual(new window.FormData(instance.el.form).getAll('place'), ['paris', 'tokyo']);
+    assert.deepEqual(instance.getSelectedValues(), ['paris', 'tokyo']);
+    assert.equal(instance.input.value, 'Paris, Tokyo');
+    assert.equal(row(instance, 'Paris').ariaSelected, 'true');
+    assert.equal(row(instance, 'Tokyo').ariaSelected, 'true');
+    instance._activate(row(instance, 'Europe'));
+    instance._activate(row(instance, 'Paris'));
+    instance._activate(row(instance, 'Kyoto'));
+    assert.deepEqual(events, [[true, true], [true, true]]);
+    assert.deepEqual(instance.getSelectedValues(), ['paris', 'tokyo']);
+    instance._activate(row(instance, 'Europe'));
+    instance._activate(row(instance, 'Paris'));
+    assert.deepEqual(instance.getSelectedValues(), ['tokyo']);
+    assert.equal(row(instance, 'Paris').ariaSelected, 'false');
+    assert.equal(events.length, 3);
+  } finally { instance.destroy(); }
+});
+
+test('multiple trees normalize selected branches on init, change and refresh without replacing them with leaves', () => {
+  const instance = start(ASIA.replace('<option value="asia">', '<option value="asia" disabled selected>'), 'multiple required');
+  try {
+    const branch = instance.el.options[0];
+    assert.deepEqual(instance.getSelectedValues(), []);
+    assert.equal(branch.defaultSelected, true);
+    assert.equal(instance.el.checkValidity(), false);
+    let events = 0;
+    instance.el.addEventListener('change', () => events++);
+    branch.selected = true;
+    instance.el.querySelector('[value="tokyo"]').selected = true;
+    instance.el.dispatchEvent(new window.Event('change', { bubbles: true, composed: true }));
+    assert.deepEqual(instance.getSelectedValues(), ['tokyo']);
+    assert.equal(instance.input.value, 'Tokyo');
+    assert.equal(instance.el.checkValidity(), true);
+    branch.selected = true;
+    instance.refresh();
+    assert.deepEqual(instance.getSelectedValues(), ['tokyo']);
+    assert.equal(events, 1);
+    assert.equal(branch.defaultSelected, true);
+  } finally { instance.destroy(); }
+});
+
+test('multiple branch normalization preserves duplicate-valued leaves and authored disabled selections', () => {
+  const instance = start(`<option value="same" selected>Branch</option>
+    <option value="same" data-parent="same" selected>First leaf</option>
+    <option value="same" data-parent="same" selected>Second leaf</option>
+    <option value="locked" disabled selected>Locked leaf</option>`, 'multiple');
+  const branch = instance.el.options[0];
+  try {
+    assert.equal(branch.selected, false);
+    assert.deepEqual(instance.getSelectedValues(), ['same', 'same', 'locked']);
+    assert.equal(instance.input.value, 'First leaf, Second leaf, Locked leaf');
+    assert.equal(row(instance, 'First leaf').ariaSelected, 'true');
+    assert.equal(row(instance, 'Locked leaf').ariaSelected, 'true');
+    assert.equal(row(instance, 'Locked leaf').ariaDisabled, 'true');
+  } finally { instance.destroy(); }
+  assert.equal(branch.disabled, false);
+  assert.equal(branch.defaultSelected, true);
+  assert.equal(instance.el.options[3].disabled, true);
+  assert.deepEqual(Array.from(instance.el.selectedOptions, option => option.value), ['same', 'same', 'locked']);
+});
+
+test('a programmatically chosen branch never gives a multiple tree an implicit leaf', () => {
+  document.body.innerHTML = `<form><div class="field"><select id="place" name="place" data-tree multiple required>${ASIA}</select><label for="place">Places</label></div></form>`;
+  const select = document.getElementById('place');
+  select.options[0].selected = true;
+  const instance = Expressive.TreeSelect.init(select, {});
+  try {
+    assert.deepEqual(instance.getSelectedValues(), []);
+    assert.equal(instance.input.value, '');
+    assert.equal(select.options[0].defaultSelected, false);
+    assert.equal(select.checkValidity(), false);
+  } finally { instance.destroy(); }
+});
