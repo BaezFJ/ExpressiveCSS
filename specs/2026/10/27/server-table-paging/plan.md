@@ -38,8 +38,10 @@ Delivers R1-R6. Completion checks V2-V3. Commit the verified increment.
 
 Prerequisite: groups 1-3 pass.
 
-- [ ] Run contributor-equivalent checks sequentially, including the full suite, generated data, docs/site verification, MCP smoke and isolated packages. Record failures and unavailable checks accurately.
-- [ ] Compare the data-table docs against the merged base in compact, expanded, large and large-dark layouts; inspect changed captures and distinguish expected differences from a no-difference pass.
+- [x] Run contributor-equivalent checks sequentially, including the full suite, generated data, docs/site verification, MCP smoke and isolated packages. Record failures and unavailable checks accurately.
+- [x] Compare the data-table docs against the merged base in compact, expanded, large and large-dark layouts; inspect changed captures and distinguish expected differences from a no-difference pass.
 - [ ] Obtain independent final review mapping R1-R6 to source and evidence. Fix findings, perform a separate simplification pass, then open and monitor the PR. Merge only after required CI, conversations, clean worktree and current-master gates pass.
 
 Delivers R6. Completion checks V4-V6. Preserve the separate post-merge roadmap/evidence documentation step.
+
+Local implementation, contributor verification, visual inspection, independent final review and separate simplification are complete. The remaining combined task is PR monitoring and green merge. Completion labels and merge evidence remain for the separate post-merge documentation PR.
