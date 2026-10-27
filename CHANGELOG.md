@@ -22,6 +22,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Responsive child sizing. `.flex-1`, `.flex-none` and `.shrink-0` now take
   window-size prefixes. New `.flex-initial` and `.shrink-1` classes restore
   content sizing and shrinking, with the same four prefixes.
+- Responsive self-alignment. `.self-start`, `.self-center`, `.self-end` and
+  `.self-stretch` take the `medium:`, `expanded:`, `large:` and
+  `extra-large:` prefixes, and the new `.self-auto` returns a child to its
+  parent's `align-items`. `self-center expanded:self-auto` centers a child
+  until Expanded and then follows the parent. The unprefixed classes are
+  unchanged.
 - Show more. A `.show-more` holds text with a `line-clamp-1`, `-2` or
   `-3` class and a `<button>`; the button shows the full text, reads
   "Show less" while it is open (`i18n.showLess` or `data-show-less`) and

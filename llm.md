@@ -1258,6 +1258,7 @@ One class per declaration, applied to the container. Row direction and start ali
 | `.shrink-0` | `flex-shrink: 0` on a child, so it never gets narrower than its basis |
 | `.shrink-1` | `flex-shrink: 1` on a child, restoring shrinking while keeping its grow factor and basis |
 | `.self-start`, `.self-center`, `.self-end`, `.self-stretch` | `align-self` on a child |
+| `.self-auto` | `align-self: auto` on a child, so it follows the parent's `align-*` again |
 | `.order-first`, `.order-last` | `order: -1`, `order: 1` on a child. Visual order only: keyboard and screen reader order still follow the source. |
 | `.gap-0` to `.gap-6` | `gap` on the spacing scale, `!important`; also works on grid containers |
 | `.gap-x-0` to `.gap-x-6` | `column-gap` only, `!important` |
@@ -1294,7 +1295,7 @@ Both gaps start at `1rem`. From 600px, the column gap becomes `0.5rem` while the
 
 ### Window-size prefixes
 
-The display, flex direction, wrap, `.flex-1`, `.flex-none`, `.flex-initial`, `.shrink-0`, `.shrink-1`, `justify-*`, `align-*`, text alignment (`.start-align`, `.center-align`, `.end-align`), `.line-clamp-*`, `.gap-*`, `.gap-x-*`, `.gap-y-*`, margin and padding classes, and `.hide`, also come with a window-size prefix. Prefixed margin and padding cover all sides, `x`, `y`, top, bottom, start and end; use start and end rather than left and right. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do.
+The display, flex direction, wrap, `.flex-1`, `.flex-none`, `.flex-initial`, `.shrink-0`, `.shrink-1`, `justify-*`, `align-*`, `self-*`, text alignment (`.start-align`, `.center-align`, `.end-align`), `.line-clamp-*`, `.gap-*`, `.gap-x-*`, `.gap-y-*`, margin and padding classes, and `.hide`, also come with a window-size prefix. Prefixed margin and padding cover all sides, `x`, `y`, top, bottom, start and end; use start and end rather than left and right. A prefixed class applies from that size class up and overrides the unprefixed one, the same way the grid's `m6` and `l4` do. `self-center expanded:self-auto` centers a child until Expanded and then follows the parent's `align-*`.
 
 | Prefix | Applies from |
 | --- | --- |

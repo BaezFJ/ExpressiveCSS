@@ -3,8 +3,8 @@
 Date: 2026-10-26
 Roadmap phase: Phase 61, responsive self-alignment
 Branch: `feature/2026-10-26-responsive-self-alignment`
-Base: `origin/master` at `3b9703956823c9c445a0835067915a0e322152a5`
-Status: specified; not implemented
+Base: `origin/master` at `ec8acb904f0be18df113078fcadf58ea66431b5a` (rebased from `3b9703956` after Phases 59 and 60 merged)
+Status: implemented; automated checks passed; CI and review pending
 
 Follow the [mission's utilities scope and product rules](../../../../mission.md#agreed-scope), [framework constraints](../../../../tech-stack.md#framework-constraints), and [roadmap Phase 61](../../../../roadmap.md#phase-61-responsive-self-alignment). Work groups are in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -20,7 +20,7 @@ These facts come from the base commit.
 - The same file holds the `$_layout` map. Every entry gets an unprefixed class, and a loop at the end of the file emits `.medium\:`, `.expanded\:`, `.large\:` and `.extra-large\:` copies inside `bp-up()`. The `.self-*` rules sit outside the map, so they have no prefixed forms.
 - No class sets `align-self: auto`, so a child with a `.self-*` class cannot go back to its parent's `align-items` at a larger window size.
 - The breakpoints are Medium 600px, Expanded 840px, Large 1200px and Extra-large 1600px (`src/sass/abstracts/_breakpoints.scss`).
-- `llm.md` and `docs/src/pages/helpers.astro` list the four `.self-*` classes. The `llm.md` paragraph under "Window-size prefixes" names the classes that take a prefix and leaves these out. `skills/expressivecss/expressivecss-usage/references/helpers.md` is generated from `llm.md`.
+- `llm.md` and `docs/src/pages/helpers.astro` list the four `.self-*` classes. The `llm.md` paragraph under "Window-size prefixes" names the classes that take a prefix and leaves these out. `skills/expressivecss/expressivecss-usage/references/helpers.md` is a hand-written skill reference with the same table.
 - `tests/helpers-browser.test.js` has a static prefix check for the line clamps and a Chromium test that switches layout classes across breakpoints.
 
 An author who wants a child centered on a phone and aligned to the end on a wide window has to write page CSS today.
@@ -49,7 +49,7 @@ The unprefixed `.self-start`, `.self-center`, `.self-end` and `.self-stretch` ke
 
 ### R4. Docs and delivery records describe the classes
 
-The helpers page and `llm.md` list `.self-auto` with the other `.self-*` classes, and the `llm.md` window-size prefix paragraph names the self-alignment classes. The Unreleased changelog records the new class and prefixes. Regenerate the skill guidance from `llm.md`, and record the measured CSS gzip size and its delta in `tests/selective-builds.test.js`.
+The helpers page, `llm.md` and the skill's `references/helpers.md` list `.self-auto` with the other `.self-*` classes, and their window-size prefix paragraphs name the self-alignment classes. The Unreleased changelog records the new class and prefixes. Regenerate the skill guidance from `llm.md`, and record the measured CSS gzip size and its delta in `tests/selective-builds.test.js`.
 
 ## Scope and constraints
 
