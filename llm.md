@@ -9032,46 +9032,6 @@ Distinct options with the same value can be selected and deselected independentl
 
 Native `<optgroup>` elements become group headings in the menu.
 
-### Single-select search
-
-Set `searchable: true` on FormSelect or use `data-form-select-options='{"searchable":true}'` on a plain single select. The read-only trigger continues to show the chosen option. Its popup is a named nonmodal `dialog` containing a labelled search field and a separately named `listbox`; the trigger has `aria-haspopup="dialog"`. Search and the polite no-results status are outside the listbox.
-
-```html
-<select name="destination" aria-label="Destination" data-form-select-options='{"searchable":true}'>
-  <optgroup label="Europe">
-    <option value="paris">Paris</option>
-    <option value="rome">Rome</option>
-  </optgroup>
-  <optgroup label="Asia"><option value="tokyo">Tokyo</option></optgroup>
-</select>
-```
-
-```js
-Expressive.FormSelect.init(select, {
-  searchable: true,
-  i18n: { searchLabel: 'Find a destination', noResults: 'No destinations match' }
-});
-```
-
-Search matches a literal case-insensitive substring of trimmed option text. It trims query edges, preserves internal whitespace and does not search values, group labels or icon URLs, interpret regular expressions, or fold accents. Empty groups disappear. Matching disabled options remain visible and unavailable. Hidden and disabled results cannot receive selection or navigation focus. A disabled-only match is still a result; `No results` means zero matches.
-
-Typing and clearing never change native selection, even when the chosen option is hidden. Only selecting a visible enabled result updates the native select; value changes fire the existing native `change` event once. Distinct options with the same value retain their identity and existing value-based event behavior. Search has no `name`, so form submission contains the selected option's value. Enter in search does not submit or implicitly choose a result.
-
-| Key or action | Searchable select behavior |
-| --- | --- |
-| Open by pointer, Enter, Space or a vertical arrow | Focus the empty search field with the default `menuOptions.autoFocus`. |
-| Type, paste, Space, Home, End, horizontal arrows or composition in search | Edit text normally without Menu typeahead. Enter does not select or submit. |
-| ArrowDown / ArrowUp in search | Focus the first / last visible enabled result, or stay in search if none exists. |
-| ArrowDown / ArrowUp on results | Move without wrapping, skipping hidden/disabled options and headings. Up from the first result returns to search. |
-| Home / End on results | Focus the first / last visible enabled result. |
-| Enter / Space on a result | Choose it, close and focus the trigger. |
-| Tab / Shift+Tab | Tab from search focuses the first enabled result; Tab from a result exits to the next control. Without enabled results, Tab exits from search. Shift+Tab from a result returns to search; from search it closes and focuses the trigger. |
-| Escape / outside click | Close without changing selection. Escape focuses the trigger; outside dismissal keeps its target's focus. |
-
-Every close clears the query and restores the unfiltered list. A successful native reset closes search and restores defaults; a canceled reset preserves state. `refresh()` reapplies an open query, preserves search focus/caret or a surviving enabled result, and returns focus to search when that result disappears. Disabling the control or its fieldset and refreshing closes it. `menuOptions.autoFocus: false` leaves existing focus alone on open; Tab from the trigger can still reach search. Existing open/close callbacks remain supported.
-
-Search defaults to off and is ignored for multiple, tree and `browser-default` selects. Multiple and tree filtering are separate roadmap phases. This mode has no remote search, option creation, fuzzy matching, highlighting, virtualization or mutation observer.
-
 Put an image URL in `data-icon` on an option. Classes on that option are copied to the image; `left` floats it left. Images float right by default. There is no `icons` class on the `<select>`.
 
 Icon URLs may be relative, HTTP(S), blob URLs, or image data URLs (AVIF, BMP, GIF, JPEG, PNG, SVG, WebP, or ICO). Invalid URLs and other schemes are ignored; the option remains selectable.
@@ -9128,6 +9088,46 @@ Add `browser-default` to skip the menu and keep the native select.
   <option value="1">Option 1</option>
 </select>
 ```
+
+### Single-select search
+
+Set `searchable: true` on FormSelect or use `data-form-select-options='{"searchable":true}'` on a plain single select. The read-only trigger continues to show the chosen option. Its popup is a named nonmodal `dialog` containing a labelled search field and a separately named `listbox`; the trigger has `aria-haspopup="dialog"`. Search and the polite no-results status are outside the listbox.
+
+```html
+<select name="destination" aria-label="Destination" data-form-select-options='{"searchable":true}'>
+  <optgroup label="Europe">
+    <option value="paris">Paris</option>
+    <option value="rome">Rome</option>
+  </optgroup>
+  <optgroup label="Asia"><option value="tokyo">Tokyo</option></optgroup>
+</select>
+```
+
+```js
+Expressive.FormSelect.init(select, {
+  searchable: true,
+  i18n: { searchLabel: 'Find a destination', noResults: 'No destinations match' }
+});
+```
+
+Search matches a literal case-insensitive substring of trimmed option text. It trims query edges, preserves internal whitespace and does not search values, group labels or icon URLs, interpret regular expressions, or fold accents. Empty groups disappear. Matching disabled options remain visible and unavailable. Hidden and disabled results cannot receive selection or navigation focus. A disabled-only match is still a result; `No results` means zero matches.
+
+Typing and clearing never change native selection, even when the chosen option is hidden. Only selecting a visible enabled result updates the native select; value changes fire the existing native `change` event once. Distinct options with the same value retain their identity and existing value-based event behavior. Search has no `name`, so form submission contains the selected option's value. Enter in search does not submit or implicitly choose a result.
+
+| Key or action | Searchable select behavior |
+| --- | --- |
+| Open by pointer, Enter, Space or a vertical arrow | Focus the empty search field with the default `menuOptions.autoFocus`. |
+| Type, paste, Space, Home, End, horizontal arrows or composition in search | Edit text normally without Menu typeahead. Enter does not select or submit. |
+| ArrowDown / ArrowUp in search | Focus the first / last visible enabled result, or stay in search if none exists. |
+| ArrowDown / ArrowUp on results | Move without wrapping, skipping hidden/disabled options and headings. Up from the first result returns to search. |
+| Home / End on results | Focus the first / last visible enabled result. |
+| Enter / Space on a result | Choose it, close and focus the trigger. |
+| Tab / Shift+Tab | Tab from search focuses the first enabled result; Tab from a result exits to the next control. Without enabled results, Tab exits from search. Shift+Tab from a result returns to search; from search it closes and focuses the trigger. |
+| Escape / outside click | Close without changing selection. Escape focuses the trigger; outside dismissal keeps its target's focus. |
+
+Every close clears the query and restores the unfiltered list. A successful native reset closes search and restores defaults; a canceled reset preserves state. `refresh()` reapplies an open query, preserves search focus/caret or a surviving enabled result, and returns focus to search when that result disappears. Disabling the control or its fieldset and refreshing closes it. `menuOptions.autoFocus: false` leaves existing focus alone on open; Tab from the trigger can still reach search. Existing open/close callbacks remain supported.
+
+Search defaults to off and is ignored for multiple, tree and `browser-default` selects. Multiple and tree filtering are separate roadmap phases. This mode has no remote search, option creation, fuzzy matching, highlighting, virtualization or mutation observer.
 
 ### Initialization
 

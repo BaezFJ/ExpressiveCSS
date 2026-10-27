@@ -9,7 +9,7 @@ Component ID: `select`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `60057d1ba2005e76bb7292924c1bb7ac6c30f068b0dbc9b5d5182928c807b14f`
+Contract SHA-256: `078628700e71077eef6b0435093f061233e51fdc2802a5b76b336faaaf64ecde`
 
 #### Selection and adaptation
 
@@ -46,12 +46,53 @@ Add `multiple` to select several options. Chosen values appear as a comma-separa
 #### Syntax
 
 ```html
-<select name="destination" aria-label="Destination" data-form-select-options='{"searchable":true}'>
-  <optgroup label="Europe">
-    <option value="paris">Paris</option>
-    <option value="rome">Rome</option>
-  </optgroup>
-  <optgroup label="Asia"><option value="tokyo">Tokyo</option></optgroup>
+<div class="field">
+  <select id="form-select-1">
+    <option value="" disabled selected>Choose your option</option>
+    <option value="1">Option 1</option>
+    <option value="2">Option 2</option>
+    <option value="3">Option 3</option>
+  </select>
+  <label for="form-select-1">Expressive Select</label>
+</div>
+
+<div class="field">
+  <select id="form-select-2" multiple>
+    <option value="" disabled selected>Choose your option</option>
+    <option value="1">Option 1</option>
+    <option value="2">Option 2</option>
+    <option value="3">Option 3</option>
+  </select>
+  <label for="form-select-2">Multiple Select</label>
+</div>
+
+<div class="field">
+  <select id="form-select-3">
+    <optgroup label="team 1">
+      <option value="1">Option 1</option>
+      <option value="2">Option 2</option>
+    </optgroup>
+    <optgroup label="team 2">
+      <option value="3">Option 3</option>
+      <option value="4">Option 4</option>
+    </optgroup>
+  </select>
+  <label for="form-select-3">Optgroups</label>
+</div>
+
+<div class="field">
+  <select id="form-select-4">
+    <option value="" disabled selected>Choose your option</option>
+    <option value="1" data-icon="photo.jpg">example 1</option>
+    <option value="2" data-icon="photo.jpg" class="left">example 2</option>
+  </select>
+  <label for="form-select-4">Images in select</label>
+</div>
+
+<label for="form-select-6">Browser Select</label>
+<select id="form-select-6" class="browser-default">
+  <option value="" disabled selected>Choose your option</option>
+  <option value="1">Option 1</option>
 </select>
 ```
 
