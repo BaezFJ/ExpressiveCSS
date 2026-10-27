@@ -3,10 +3,11 @@
 Date: 2026-10-26
 Roadmap phase: [Phase 60, responsive child sizing](../../../../roadmap.md#phase-60-responsive-child-sizing)
 Branch: `feature/2026-10-26-responsive-child-sizing`
-Base: `origin/master` at `3b9703956823c9c445a0835067915a0e322152a5`
-Status: groups 1 and 2 complete, group 3 pending
+Base: `origin/master` at `a43a5a6a0466d867539e80a97bafd7236f048c04`
+Original specification base: `3b9703956823c9c445a0835067915a0e322152a5`
+Status: implementation and local checks complete, human visual approval and PR CI pending
 
-The three groups run in order. Requirements are in [requirements.md](requirements.md); acceptance checks are in [validation.md](validation.md). Leave the roadmap unfinished until implementation is complete.
+The three groups run in order. Requirements are in [requirements.md](requirements.md); acceptance checks are in [validation.md](validation.md). Keep the roadmap unfinished while the merge review remains pending.
 
 ## 1. Sass and regression checks
 
@@ -44,12 +45,14 @@ Outcome: the implementation has measured bundle costs and complete acceptance ev
 
 Prerequisites: groups 1 and 2; browser engines and contributor/package tooling available.
 
-- [ ] Measure the full minified CSS gzip size using the existing budget test's normalization. Compare with the implementation branch's merge base, add a reviewed size/delta line in `tests/selective-builds.test.js`, and adjust the budget only to the reviewed measured value. Do not invent a size in this specification.
-- [ ] Rebuild and run the focused browser, helper-guidance and selective-build checks, followed by `npm run verify`, `npm run test:browser`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`, one suite at a time. Install MCP dependencies with `npm ci --prefix mcp/expressivecss` when needed. Regenerate guidance again if covered sources change.
-- [ ] Run the established visual comparison, review the responsive helper example below and above its breakpoint, and obtain BaezFJ's required visual review. Record automated results and manual review separately.
-- [ ] If integration with Phases 59, 61 or 62 changes shared files, preserve their accepted behavior and rerun affected checks. Recompute the budget against the new merge base after any rebase. Record failures, skips, report paths and remaining blockers in `validation.md`.
-- [ ] Confirm all R1 to R7 acceptance checks pass, required CI succeeds and review conversations are resolved. Keep this specification's completion status distinct from implementation and merge status.
+- [x] Measure the full minified CSS gzip size using the existing budget test's normalization. Compare with the implementation branch's merge base, add a reviewed size/delta line in `tests/selective-builds.test.js`, and adjust the budget only to the reviewed measured value. Do not invent a size in this specification.
+- [x] Rebuild and run the focused browser, helper-guidance and selective-build checks, followed by `npm run verify`, `npm run test:browser`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`, one suite at a time. Install MCP dependencies with `npm ci --prefix mcp/expressivecss` when needed. Regenerate guidance again if covered sources change.
+- [x] Run the established visual comparison and inspect the responsive helper example below and above its breakpoint. Record automated captures and assistant inspection separately from human approval. The four Helpers variants differ as expected after the docs additions; the four button-group control variants pass. See V8.
+- [x] If integration with Phases 59, 61 or 62 changes shared files, preserve their accepted behavior and rerun affected checks. Recompute the budget against the new merge base after any rebase. Record failures, skips, report paths and remaining blockers in `validation.md`.
+- [ ] Obtain BaezFJ's required visual approval, then confirm all R1 to R7 acceptance checks pass, required PR CI succeeds and review conversations are resolved before merge. Local implementation and checks are complete. No PR or CI run was created in this task; merge readiness remains pending.
 
 Completion check: V1 through V8 have passing evidence, all in-scope requirements have coverage, and the merge conditions in `validation.md` are satisfied.
 
 Covers R1 through R7. V6, V7 and V8 complete the checks; rerun affected V1 through V5 checks after changes.
+
+Local work is complete in the implementation commits. The remaining checkbox records merge review, which requires human input and a separately requested PR. The later remote rebase integrated Phase 59 at a43a5a6a0, preserving both implementations and their tests. No integration with Phases 61 or 62 occurred.

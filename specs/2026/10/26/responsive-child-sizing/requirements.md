@@ -3,18 +3,19 @@
 Date: 2026-10-26
 Roadmap phase: Phase 60, responsive child sizing
 Branch: `feature/2026-10-26-responsive-child-sizing`
-Base: `origin/master` at `3b9703956823c9c445a0835067915a0e322152a5`
-Status: implementation in progress
+Base: `origin/master` at `a43a5a6a0466d867539e80a97bafd7236f048c04`
+Original specification base: `3b9703956823c9c445a0835067915a0e322152a5`
+Status: implemented, local checks pass, merge review pending
 
 Follow the [mission's product rules and utility scope](../../../../mission.md#product-rules), [framework constraints](../../../../tech-stack.md#framework-constraints), [styling contracts](../../../../tech-stack.md#styling-contracts) and [roadmap Phase 60](../../../../roadmap.md#phase-60-responsive-child-sizing). Work is in [plan.md](plan.md); checks are in [validation.md](validation.md).
 
 ## Phase selection
 
-The user explicitly selected Phase 60. Phase 59 is the earliest unfinished phase, but Phase 60 declares no dependencies. It can proceed independently. Phases 59, 61 and 62 may touch the same helper sources, docs and tests, so later integration must preserve their changes. This specification leaves the roadmap's completion state unchanged.
+The user explicitly selected Phase 60 while Phase 59 was the earliest unfinished phase. Phase 60 has no dependencies. Phase 59 subsequently merged as PR #448, and the requested remote rebase integrated its gap utilities. Phases 61 and 62 may touch the same helper sources, docs and tests, so later integration must preserve their changes. This specification leaves the roadmap's completion state unchanged.
 
 ## Current behavior
 
-Source inspection at the base commit established these facts:
+Source inspection at the original specification base established these facts:
 
 - `src/sass/utilities/_helpers.scss` defines `.flex-1` as `flex: 1 1 0`, `.flex-none` as `flex: none` and `.shrink-0` as `flex-shrink: 0`. These rules follow the base `$_layout` output in that order and have no prefixed copies.
 - The same partial emits `$_layout` classes once without a prefix and again inside its final breakpoint loop. `src/sass/abstracts/_breakpoints.scss` supplies the four minimum widths, 600, 840, 1200 and 1600 pixels.
@@ -73,4 +74,4 @@ Record the measured full CSS gzip size and delta against the implementation bran
 
 ## Dependencies and open decisions
 
-There are no roadmap dependencies and no unresolved interview decisions. Graph tooling had no usable index for this worktree; the findings above come from direct source reads. The user invoked `incremental-implementation` after approving the specification, authorizing implementation and verified local commits. Current results are recorded in validation.md.
+There are no roadmap dependencies and no unresolved interview decisions. Graph tooling had no usable index for this worktree; the findings above come from direct source reads. The user invoked `incremental-implementation` after approving the specification, authorizing implementation and verified local commits. Current results are recorded in [validation.md](validation.md).
