@@ -300,6 +300,12 @@ menu[role="listbox"] li.optgroup-option {
   }
 
   > menu > li[hidden] { display: none; }
+
+  > ul[role="tree"] {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -332,6 +338,8 @@ ul[role="tree"] {
     padding: 0;
     cursor: pointer;
     outline: none;
+
+    &[hidden] { display: none; }
 
     > span {
       display: flex;

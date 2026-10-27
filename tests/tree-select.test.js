@@ -467,3 +467,31 @@ for (const boundary of ['select', 'fieldset']) {
     } finally { instance.destroy(); }
   });
 }
+
+
+test('two searchable trees keep independent queries, expansion baselines and branch ownership', () => {
+  document.body.innerHTML = ['first', 'second'].map(id => `<label for="${id}">${id}</label>
+    <select id="${id}" data-tree data-tree-select-options='{"searchable":true}'>${PLACES}</select>`).join('');
+  Expressive.AutoInit();
+  const first = Expressive.TreeSelect.getInstance(document.getElementById('first'));
+  const second = Expressive.TreeSelect.getInstance(document.getElementById('second'));
+  try {
+    first._activate(row(first, 'Asia'));
+    second._activate(row(second, 'Europe'));
+    const before = treeExpansion(first);
+    filterTree(first, 'par');
+    filterTree(second, 'tok');
+    const secondExpansion = treeExpansion(second);
+    filterTree(first, '');
+    assert.deepEqual(treeExpansion(first), before);
+    assert.deepEqual(visibleTree(second), ['Asia', 'Tokyo']);
+    assert.deepEqual(treeExpansion(second), secondExpansion);
+    assert.equal(second.menuEl.querySelector('input[type="search"]').value, 'tok');
+    first.destroy();
+    assert.equal(second.el.querySelector('[value="asia"]').disabled, true);
+    assert.ok(second.menuEl.isConnected);
+  } finally {
+    if (Expressive.TreeSelect.getInstance(first.el)) first.destroy();
+    second.destroy();
+  }
+});
