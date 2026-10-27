@@ -9,7 +9,7 @@ Component ID: `tree-select`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `b043d9edb96654aa4b05c1797d2f0d80dcaae0dc67b2fcac41ded1e63853f095`
+Contract SHA-256: `4600f35b6ea7c73d9213210c0f5c915a5faadfc0be84fb97cd99b31169363182`
 
 #### Selection and adaptation
 

@@ -9,7 +9,7 @@ Component ID: `data-table`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `b043d9edb96654aa4b05c1797d2f0d80dcaae0dc67b2fcac41ded1e63853f095`
+Contract SHA-256: `4600f35b6ea7c73d9213210c0f5c915a5faadfc0be84fb97cd99b31169363182`
 
 #### Selection and adaptation
 
@@ -38,6 +38,8 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 A `.data-table` is a `<div>` around one native `<table>`. The wrapper scrolls and draws the outline, so the table keeps its table semantics. The header row sticks to the top of the wrapper once the wrapper scrolls vertically, so give the wrapper a `max-block-size` for long tables. Add `numeric` to the header and body cells of a number column to align them on the end edge with tabular figures, and `dense` to the wrapper for shorter rows.
 
 Put a `<button>` in each sortable `<th>` and set `aria-sort="ascending"` or `"descending"` on the header of the sorted column. The framework draws the arrow. Add `data-sort` to the wrapper and the framework sorts too: a header button reorders the rows by its column and moves `aria-sort`. A `numeric` header compares numbers (`$1,200.00` after `$87.00`); other columns compare text in the page's language, with 9 before 10. A cell's `data-value` stands in for its text, and a `tr.data-table-detail` moves with its row. Each press fires a cancelable `expressive:sort` from the wrapper with `{ header, column, direction }`; a server-paged table cancels it and loads the sorted page, with `aria-sort` already moved. Without `data-sort`, the page reorders the rows and moves `aria-sort` itself.
+
+Add a labelled `input[type="search"][data-table-filter]` inside the wrapper for text filtering, and put `data-filter` on each searchable single-column header. A named `output[data-table-filter-count]` with `role="status"` and `aria-live="polite"` receives the matching record count. Filtering keeps record details together and preserves author-hidden rows. Select-all changes only enabled records visible in the current view, while hidden records keep their selections. `Expressive.DataTables.sync(wrapper)` reapplies the current query after script edits or replacement records.
 
 #### Syntax
 
@@ -79,3 +81,7 @@ The Data table section of the [API reference](https://www.expressivecss.com/llm.
 - `data-table-row-is-not-selected`: aria-selected is not valid on a row of a plain table. It belongs to role="grid" and its keyboard contract. Select a row with a labelled checkbox in its first cell.
 - `data-table-scroll-region-is-a-region`: A focusable scroll wrapper needs role="region" so its name is announced. aria-label is not allowed on a plain div.
 - `data-table-scroll-region-is-named`: Name a focusable scroll wrapper with aria-label, or aria-labelledby pointing at the table caption, so keyboard users know what they are scrolling.
+- `data-table-filter-is-named`: Give the table search input a label identifying the records it filters.
+- `data-table-filter-count-is-named`: Name the result count, for example aria-label="Matching records", so its number has context.
+- `data-table-filter-count-is-status`: Give the table result count role="status" so changes are announced without moving focus.
+- `data-table-filter-count-is-polite`: Use aria-live="polite" on the table result count so typing does not interrupt other speech.

@@ -3868,6 +3868,8 @@ A `.data-table` is a `<div>` around one native `<table>`. The wrapper scrolls an
 
 Put a `<button>` in each sortable `<th>` and set `aria-sort="ascending"` or `"descending"` on the header of the sorted column. The framework draws the arrow. Add `data-sort` to the wrapper and the framework sorts too: a header button reorders the rows by its column and moves `aria-sort`. A `numeric` header compares numbers (`$1,200.00` after `$87.00`); other columns compare text in the page's language, with 9 before 10. A cell's `data-value` stands in for its text, and a `tr.data-table-detail` moves with its row. Each press fires a cancelable `expressive:sort` from the wrapper with `{ header, column, direction }`; a server-paged table cancels it and loads the sorted page, with `aria-sort` already moved. Without `data-sort`, the page reorders the rows and moves `aria-sort` itself.
 
+Add a labelled `input[type="search"][data-table-filter]` inside the wrapper for text filtering, and put `data-filter` on each searchable single-column header. A named `output[data-table-filter-count]` with `role="status"` and `aria-live="polite"` receives the matching record count. Filtering keeps record details together and preserves author-hidden rows. Select-all changes only enabled records visible in the current view, while hidden records keep their selections. `Expressive.DataTables.sync(wrapper)` reapplies the current query after script edits or replacement records.
+
 ```html
 <div class="data-table" data-sort>
   <table>
@@ -3897,7 +3899,7 @@ Put a `<button>` in each sortable `<th>` and set `aria-sort="ascending"` or `"de
 
 ### Row selection
 
-A checked checkbox in a row's first cell selects the row and fills it with `secondary-container`. Name each checkbox after its row. `aria-selected` is not valid on the rows of a plain table, so the checkbox carries the state. A checkbox in the first header cell selects every enabled row, and shows mixed while only some are selected. Each change fires `expressive:change` from the wrapper with `{ selected }`, the selected rows. Checking rows from script fires no change, so call `Expressive.DataTables.sync(wrapper)` afterwards, and for a table rendered after the page loaded with rows already checked. `sync` also applies the table's column toggles.
+A checked checkbox in a row's first cell selects the row and fills it with `secondary-container`. Name each checkbox after its row. `aria-selected` is not valid on the rows of a plain table, so the checkbox carries the state. A checkbox in the first header cell selects every enabled record visible in the current view, and shows mixed while only some of those records are selected. Hidden records keep their selections. Each change fires `expressive:change` from the wrapper with `{ selected }`, all selected records, including hidden ones. Checking rows from script fires no change, so call `Expressive.DataTables.sync(wrapper)` afterwards, and for a table rendered after the page loaded with rows already checked. `sync` also applies the table's column toggles and current filter.
 
 ```html
 <div class="data-table">
@@ -3921,6 +3923,30 @@ A checked checkbox in a row's first cell selects the row and fills it with `seco
 ```
 
 ### Bulk actions
+
+Put a labelled `input[type="search"][data-table-filter]` inside the wrapper and mark each searchable column's `<th>` with `data-filter`. Mark only headers that span one column, including headers in grouped rows. The trimmed query matches a substring in any marked column, ignoring case in the table's language. Each cell uses its `data-value` when present, otherwise its text. An empty query restores the records; a nonempty query with no marked columns matches none. Detail text does not contribute to search.
+
+Record details stay with their record, and filtering preserves author `hidden` attributes, CSS hiding and `aria-expanded`. Select-all affects only enabled visible records. The framework's `data-table-filter-hidden` row attribute is reserved for filter state. Do not author it. Call `Expressive.DataTables.sync(wrapper)` after replacing records, changing the query from script or revealing a previously hidden table. Normal typing and the native search clear button need no script.
+
+An optional named `output[data-table-filter-count]` inside the same wrapper, with `role="status"` and `aria-live="polite"`, receives the matching record count in the table's language. The count excludes details and author-hidden records, includes disabled records and leaves focus in the search input. Authors provide the labels and surrounding wording.
+
+```html
+<div class="data-table">
+  <div class="field">
+    <input id="customer-search" type="search" data-table-filter>
+    <label for="customer-search">Search customers</label>
+  </div>
+  <span>Matching records: <output data-table-filter-count role="status" aria-live="polite" aria-label="Matching records"></output></span>
+  <table>
+    <caption>Customers</caption>
+    <thead><tr><th scope="col" data-filter>Customer</th><th scope="col">Status</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Alvin</th><td>Shipped</td></tr>
+      <tr><th scope="row">Alan</th><td>Pending</td></tr>
+    </tbody>
+  </table>
+</div>
+```
 
 A `.data-table-actions` bar written just before the `.data-table` joins its top edge and takes the selected color while any row is selected. A leading label, such as a count, pushes the buttons to the end. The page keeps the count current and decides which buttons apply; `hidden` removes the bar.
 

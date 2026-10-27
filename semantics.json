@@ -1282,6 +1282,34 @@
           "kind": "require-accessible-name",
           "selector": ".data-table[tabindex]",
           "message": "Name a focusable scroll wrapper with aria-label, or aria-labelledby pointing at the table caption, so keyboard users know what they are scrolling."
+        },
+        {
+          "id": "data-table-filter-is-named",
+          "kind": "require-accessible-name",
+          "selector": ".data-table input[type=\"search\"][data-table-filter]",
+          "message": "Give the table search input a label identifying the records it filters."
+        },
+        {
+          "id": "data-table-filter-count-is-named",
+          "kind": "require-accessible-name",
+          "selector": ".data-table [data-table-filter-count]",
+          "message": "Name the result count, for example aria-label=\"Matching records\", so its number has context."
+        },
+        {
+          "id": "data-table-filter-count-is-status",
+          "kind": "require-attr",
+          "selector": ".data-table [data-table-filter-count]",
+          "attr": "role",
+          "equals": "status",
+          "message": "Give the table result count role=\"status\" so changes are announced without moving focus."
+        },
+        {
+          "id": "data-table-filter-count-is-polite",
+          "kind": "require-attr",
+          "selector": ".data-table [data-table-filter-count]",
+          "attr": "aria-live",
+          "equals": "polite",
+          "message": "Use aria-live=\"polite\" on the table result count so typing does not interrupt other speech."
         }
       ]
     },

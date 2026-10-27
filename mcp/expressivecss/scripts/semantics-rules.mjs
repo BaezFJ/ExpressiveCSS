@@ -71,12 +71,14 @@ export function authoredName(el, document) {
  * Enough of the accessible-name computation to answer "is this control
  * nameless?" - the authored name, then the text that is left once the
  * aria-hidden subtrees are taken out. Not the full algorithm: no title, no
- * <label>, no alt on a descendant image, because a control relying on those is
+ * alt on a descendant image, because a control relying on those is
  * not what this is looking for.
  */
 function accessibleName(el, document) {
   const authored = authoredName(el, document);
   if (authored) return authored;
+  const labels = [...(el.labels ?? [])].map((label) => accessibleName(label, document)).join(' ').trim();
+  if (labels) return labels;
   const clone = el.cloneNode(true);
   clone.querySelectorAll('[aria-hidden="true"]').forEach((n) => n.remove());
   return clone.textContent.trim();

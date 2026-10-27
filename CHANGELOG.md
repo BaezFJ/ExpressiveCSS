@@ -15,6 +15,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Opt-in data table text filtering. A labelled search input with
+  `data-table-filter` searches columns whose headers have `data-filter`.
+  Record details stay together, author-hidden rows remain hidden, and an
+  authored status output can announce the result count. Select-all now
+  affects only enabled records visible in the current view; hidden records
+  retain their selections. To include hidden records in a bulk operation,
+  check them from script and call `Expressive.DataTables.sync(wrapper)`;
+  `expressive:change` continues reporting all selected records.
 - Opt-in select filtering with `FormSelect`'s `searchable` option. A
   separate popup search field filters grouped options while the native select
   retains its form value. Includes localized search and no-results text,
