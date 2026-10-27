@@ -44,4 +44,4 @@ Prerequisite: groups 1-3 pass.
 
 Delivers R6. Completion checks V4-V6. Preserve separate post-merge roadmap/evidence documentation.
 
-CI repair: preserve an already focused search result when opening completes. The timed modal/shadow regression, source guard, changelog, size budget and generated fingerprints pass focused checks; final contributor revalidation and independent review are pending.
+CI repair: preserve an already focused search result when opening completes. The timed modal/shadow regression, source guard, changelog, size budget and generated fingerprints pass focused checks. Independent repair review and separate simplification are complete; the full contributor/package chain passes again. New-head CI and merge gates remain pending.
