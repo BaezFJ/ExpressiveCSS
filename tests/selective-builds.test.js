@@ -308,7 +308,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed opt-in single-select search, native selection, popup keyboard handling, reset and refresh: 106,503 gzip bytes (+1,039 over the Phase 62 base).
   // Reviewed opt-in multiple-select search, with the multi-select state on the inner listbox: 106,526 gzip bytes (+23 over the Phase 63 base).
   // Reviewed Autocomplete disabled entries: refused by every selection path, skipped by the arrows, left out of the result count, with presses on them cancelled: 106,580 gzip bytes (+54 over the Phase 64 base).
-  assert.ok(sizes(js).gzip <= 106580, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Autocomplete option groups: entries gathered under labelled role="group" lists where each group first appears, rows found inside groups, and presses on headings cancelled: 106,724 gzip bytes (+144 over the Phase 65 base).
+  assert.ok(sizes(js).gzip <= 106724, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -487,5 +488,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed .order-none and window-size prefixes for the three order classes: 90,609 gzip bytes (+50 over the Phase 61 base).
   // Reviewed the searchable select popup, scrolling list, token-based search field and focus ring, and reduced motion: 90,754 gzip bytes (+145 over the Phase 62 base).
   // Reviewed Autocomplete disabled rows taking the pointer so a press on them is cancelled: 90,780 gzip bytes (+26 over the Phase 64 base).
-  assert.ok(sizes(css).gzip <= 90780, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed Autocomplete group headings styled as Menu labels that take the pointer, and group lists filling the row: 90,826 gzip bytes (+46 over the Phase 65 base).
+  assert.ok(sizes(css).gzip <= 90826, `CSS gzip: ${sizes(css).gzip}`);
 });
