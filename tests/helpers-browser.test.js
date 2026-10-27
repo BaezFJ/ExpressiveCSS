@@ -91,15 +91,15 @@ async function gapFixture(page, stylesheet = css) {
 
 for (const [engine, browserType, utilityTest] of engines) {
 
-  utilityTest(`axis gaps keep their native grid and flex axes and scale in RTL (${engine})`, async () => {
-    const browser = await leaseBrowser(browserType);
-    try {
-      const page = await browser.newPage();
-      await page.setContent(`<style>${css}
-        #gaps { width: 200px; height: 200px; row-gap: 7px; column-gap: 9px; align-content: start; }
-        #gaps > span { width: 50px; height: 50px; flex: none; }
-      </style><div id="gaps">${'<span></span>'.repeat(6)}</div>`);
-      for (const root of [16, 32]) for (const dir of ['ltr', 'rtl']) {
+  for (const root of [16, 32]) for (const dir of ['ltr', 'rtl']) {
+    utilityTest(`axis gaps keep their native grid and flex axes (${engine}, ${dir}, ${root}px)`, async () => {
+      const browser = await leaseBrowser(browserType);
+      try {
+        const page = await browser.newPage();
+        await page.setContent(`<style>${css}
+          #gaps { width: 200px; height: 200px; row-gap: 7px; column-gap: 9px; align-content: start; }
+          #gaps > span { width: 50px; height: 50px; flex: none; }
+        </style><div id="gaps">${'<span></span>'.repeat(6)}</div>`);
         await page.evaluate(({ root, dir }) => {
           document.documentElement.style.fontSize = `${root}px`;
           document.documentElement.dir = dir;
@@ -132,11 +132,11 @@ for (const [engine, browserType, utilityTest] of engines) {
             }
           }
         }
+      } finally {
+        await browser.close();
       }
-    } finally {
-      await browser.close();
-    }
-  });
+    });
+  }
 
   utilityTest(`axis gaps honor every breakpoint boundary (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);

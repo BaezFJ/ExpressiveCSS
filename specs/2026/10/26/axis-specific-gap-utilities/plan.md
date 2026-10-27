@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: Phase 59, axis-specific gap utilities
 Branch: `feature/2026-10-26-axis-specific-gap-utilities`
 Base: `origin/master` at `3b9703956823c9c445a0835067915a0e322152a5`
-Status: Groups 1 and 2 complete; Group 3 pending
+Status: implementation and local checks complete; required CI and visual approval pending
 
 Use the [mission](../../../../mission.md#agreed-scope), [technical constraints](../../../../tech-stack.md#framework-stack) and [roadmap Phase 59](../../../../roadmap.md#phase-59-axis-specific-gap-utilities). The confirmed contract is in [requirements.md](requirements.md); checks are in [validation.md](validation.md). The groups below are the three groups confirmed by the user. Checkboxes record completed implementation work; validation.md records the evidence.
 
@@ -40,9 +40,10 @@ Outcome: the implementation has recorded acceptance evidence and is ready for re
 
 Prerequisites: Groups 1 and 2 complete; Node 24, locked dependencies and all three browser engines available directly or through the repository container workflow.
 
-- [ ] Run V1 through V6 against the final built CSS in Chromium, Firefox and WebKit, including all breakpoint boundaries, zero resets, root scaling, RTL and selective-build compatibility. Record actual results and skips.
-- [ ] Measure final CSS gzip bytes with the same toolchain and method as the base. Record both sizes and the delta; update the reviewed CSS budget and its explanatory comment in `tests/selective-builds.test.js` after reviewing that increase.
-- [ ] Run V7 and V8 sequentially, including generated checks, contributor verification, explicit browser checks, MCP smoke tests and isolated package consumers. Resolve failures and record any remaining blocker.
-- [ ] Run the visual comparison in V9 and inspect the live example at both sides of the breakpoint. Obtain BaezFJ's visual review and record it in the implementation PR. Verify required CI and review conversations before merge.
+- [x] Run V1 through V6 against the final built CSS in Chromium, Firefox and WebKit, including all breakpoint boundaries, zero resets, root scaling, RTL and selective-build compatibility. Record actual results and skips.
+- [x] Measure final CSS gzip bytes with the same toolchain and method as the base. Record both sizes and the delta; update the reviewed CSS budget and its explanatory comment in `tests/selective-builds.test.js` after reviewing that increase.
+- [x] Run V7 and V8 sequentially, including generated checks, contributor verification, explicit browser checks, MCP smoke tests and isolated package consumers. Resolve failures and record any remaining blocker.
+- [x] Run the visual comparison in V9 and inspect the live example at both sides of the breakpoint. Record the four helpers-page comparisons and the 24 live-example capture cases.
+- [ ] Obtain BaezFJ's visual review and record it in the implementation PR. Verify required CI and review conversations before merge. No PR has been requested or opened.
 
 Delivers R6 and final verification of R1 through R5. Completion check: every validation row has passing evidence, size changes are reviewed, required CI is green and required visual review is recorded. Missing evidence blocks merge. Specification alone does not complete any task or roadmap phase.

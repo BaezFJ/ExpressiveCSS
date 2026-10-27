@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: Phase 59, axis-specific gap utilities
 Branch: `feature/2026-10-26-axis-specific-gap-utilities`
 Base: `origin/master` at `3b9703956823c9c445a0835067915a0e322152a5`
-Status: implementation in progress; final checks and visual approval pending
+Status: implemented and checked locally; required CI and visual approval pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules) and [agreed utility scope](../../../../mission.md#agreed-scope), the [framework stack](../../../../tech-stack.md#framework-stack) and [styling contracts](../../../../tech-stack.md#styling-contracts), and [roadmap Phase 59](../../../../roadmap.md#phase-59-axis-specific-gap-utilities). Task groups are in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
