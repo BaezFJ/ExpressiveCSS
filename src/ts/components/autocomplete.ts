@@ -742,7 +742,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     if (this._announcer.textContent !== text) this._announcer.textContent = text;
   }
 
-  private _resultsMessage(count: number) {
+  /** Announces the entries a person can choose. Disabled ones are shown, not counted. */
+  private _resultsMessage() {
+    const count = this.menuItems.filter((entry) => entry.disabled !== true).length;
     return count ? this.options.i18n.results(count) : this.options.i18n.noResults;
   }
 
@@ -779,7 +781,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this._resetAutocomplete();
     if (inputText.length >= this.options.minLength) {
       this._renderMenu();
-      this._announce(this._resultsMessage(this.menuItems.length));
+      this._announce(this._resultsMessage());
     }
     // Open menu
     if (!this.menu.isOpen) {
@@ -818,8 +820,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // Results that arrive after the user left the field update the list
     // without opening it under an input nobody is using.
     open &&= !this._left;
-    const resultCount = menuItems.length;
-    this._noResults = resultCount === 0;
+    this._noResults = menuItems.length === 0;
     this.menuItems = menuItems;
     if (selected) {
       this.selectedValues = this.menuItems.filter(
@@ -834,7 +835,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
     if (open) this.open();
     this._updateSelectedInfo();
-    this._announce(open ? this._resultsMessage(resultCount) : '');
+    this._announce(open ? this._resultsMessage() : '');
     if (selected) this._triggerChanged();
   }
 

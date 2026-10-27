@@ -1876,6 +1876,73 @@ describe('Autocomplete disabled entries', () => {
       instance.destroy();
     }
   });
+
+  test('the arrows skip disabled rows and the count announces only choices', async () => {
+    const { el, instance, key, row } = await setup({
+      data: [...data, { id: 'date', text: 'Date pie' }, { id: 'elder', text: 'Elder pie', disabled: true }]
+    });
+    const status = () => document.querySelector('.autocomplete-status').textContent;
+    try {
+      assert.equal(status(), '2 results available.');
+      const active = [];
+      for (let i = 0; i < 5; i++) {
+        key('ArrowDown');
+        active.push(el.getAttribute('aria-activedescendant'));
+      }
+      key('ArrowUp');
+      active.push(el.getAttribute('aria-activedescendant'));
+      assert.deepEqual(active, ['apple', 'date', 'date', 'date', 'date', 'apple'].map((id) => row(id).id));
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a list of only disabled matches announces no results and offers nothing to Enter', async () => {
+    const { el, instance, log, key, ids } = await setup({ data: [data[0], data[2]] });
+    const status = () => document.querySelector('.autocomplete-status').textContent;
+    try {
+      assert.equal(status(), 'No results.');
+      assert.equal(instance.container.querySelectorAll('li[role="option"]').length, 2);
+      assert.equal(instance.container.querySelector('.autocomplete-no-results'), null);
+      key('ArrowDown');
+      key('Enter');
+      assert.equal(el.hasAttribute('aria-activedescendant'), false);
+      assert.deepEqual(ids(), []);
+      assert.deepEqual(log, []);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('allowCreate offers no row for the text of a disabled entry', async () => {
+    const { el, instance } = await setup({ allowCreate: true });
+    try {
+      el.value = 'cherry pie';
+      fire(el, 'input');
+      assert.deepEqual([...instance.container.querySelectorAll('li')].map((li) => li.dataset.id), ['cherry']);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('the app can still select a disabled entry, and editing the text clears it', async () => {
+    const { el, instance, log, ids } = await setup();
+    document.body.insertAdjacentHTML('beforeend', `<div class="field"><input class="autocomplete" type="text" id="typed" value="banana"></div>`);
+    const typed = Expressive.Autocomplete.init(document.getElementById('typed'), { data });
+    try {
+      assert.deepEqual(typed.selectedValues, [], 'a value at setup goes through selectOption()');
+      instance.setMenuItems(data, ['banana']);
+      assert.deepEqual(ids(), ['banana']);
+      assert.deepEqual(log, ['change', 'callback', 'event']);
+      assert.equal(el.value, 'Banana pie');
+      el.value = 'Banana';
+      fire(el, 'input');
+      assert.deepEqual(ids(), []);
+    } finally {
+      instance.destroy();
+      typed.destroy();
+    }
+  });
 });
 
 describe('Autocomplete with delayed results', () => {
