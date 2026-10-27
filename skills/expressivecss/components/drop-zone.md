@@ -9,7 +9,7 @@ Component ID: `drop-zone`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `98e6d9c0c14b0e6191038b08ce2864a9c6b802b72a74dcd3eeb18d3e02bcf3ae`
+Contract SHA-256: `a6171730fa00c7123d63fae95a856638968d1913d2b76b5be33ba20a39ec8f66`
 
 #### Selection and adaptation
 
@@ -35,9 +35,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input is stretched invisibly over the whole label, so the browser takes a click, Enter, Space or a dropped file exactly as it does on a plain file input, and the label text names it. The Forms behavior adds `dragover` to the zone while files are dragged over it and lists each chosen file's name and size, formatted for the page's locale, in `.drop-zone-files`. The root bundle installs it on load, and the modular entry with `Forms.Init()`. It listens on the document, so zones added later work too. Resetting the form empties the list.
+A large target for choosing or dropping files, with an optional list and type validation.
 
-The browser does not apply `accept` to dropped files, so check type and size where the files are used. A dropped file replaces the selection, as it does on any file input; add `multiple` to take several at once.
+A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input covers the label, so clicking, keyboard input and file dropping reach the native control. Forms marks dragover and lists each selected file's name and localized size. The root bundle installs Forms on load; modular consumers call `Forms.Init()`. Document-level input/change handling also supports dynamically inserted zones and open shadow roots.
+
+A dropped file replaces the selection; add multiple to take several files. `accept` alone is a picker hint. Add data-validate-types for the checks below. Unmarked zones retain their existing behavior. Reset clears lists after dispatch/default handling; cancellation preserves the current view, and a newer selection keeps its state.
 
 #### Syntax
 
@@ -46,7 +48,7 @@ The browser does not apply `accept` to dropped files, so check type and size whe
   <label>
     <span class="material-symbols" aria-hidden="true">upload_file</span>
     Drop files here or browse
-    <small>PDF or PNG, up to 10 MB</small>
+    <small>PDF or PNG files</small>
     <input type="file" multiple accept=".pdf,.png">
   </label>
   <ul class="drop-zone-files" aria-live="polite"></ul>
@@ -55,9 +57,10 @@ The browser does not apply `accept` to dropped files, so check type and size whe
 
 #### Also documented
 
-The Drop zone section of the [API reference](https://www.expressivecss.com/llm.md) also covers Tokens.
+The Drop zone section of the [API reference](https://www.expressivecss.com/llm.md) also covers Type validation, Tokens.
 
 #### Rules
 
 - `drop-zone-input-is-in-the-label`: Put the file input inside the .drop-zone <label>. The label names the input and the input covers the label; a loose input is neither named nor a drop target.
 - `drop-zone-files-are-a-list`: Write .drop-zone-files as a <ul>. The behavior fills it with one <li> per file, and a list tells assistive technology how many files were chosen.
+- `drop-zone-type-error-is-live-status`: An opted-in type-validation zone needs a direct [data-error] area with role="status" and aria-live="polite". The runtime writes real error text there and describes the file input with it.

@@ -28,9 +28,9 @@ Delivers R2-R5. Completion checks V1-V2.
 
 Prerequisite: groups 1 and 2 pass.
 
-- [ ] Add tests/drop-zone-validation-browser.test.js for actual browse trigger/chooser input, native form prevention, recovery, shadow roots and shared file-change parity across Chromium, Firefox and WebKit. Probe Chromium protocol drag delivery and record its actual capability; tear down all pages and temporary files in finally.
-- [ ] Add an authored validation example through the existing sections catalogue in docs/src/pages/drop-zone.astro. Update llm.md and CHANGELOG.md, add only the required static feedback contract in semantics.json/tests/semantics.test.js, and regenerate derived guidance.
-- [ ] Run affected Forms/error-summary/drop-zone/browser/static/docs checks and selective-build budgets. Record actual JS/CSS deltas from merged baselines 108,250 and 90,848 gzip bytes. Commit the verified slice.
+- [x] Add tests/drop-zone-validation-browser.test.js for actual browse trigger/chooser input, native form prevention, recovery, shadow roots and shared file-change parity across Chromium, Firefox and WebKit. Probe Chromium protocol drag delivery and record its actual capability; tear down all pages and temporary files in finally.
+- [x] Add an authored validation example through the existing sections catalogue in docs/src/pages/drop-zone.astro. Update llm.md and CHANGELOG.md, add only the required static feedback contract in semantics.json/tests/semantics.test.js, and regenerate derived guidance.
+- [x] Run affected Forms/error-summary/drop-zone/browser/static/docs checks and selective-build budgets. Record actual JS/CSS deltas from merged baselines 108,250 and 90,848 gzip bytes. Commit the verified slice.
 
 Delivers R1-R6. Completion checks V2-V3.
 

@@ -39,6 +39,9 @@ test('extension, exact MIME and standard media wildcard alternatives match case-
     ['.pdf', 'report.pdf.exe', 'application/pdf', false],
     ['application/pdf', 'unknown', 'application/pdf', true],
     ['APPLICATION/PDF', 'unknown', 'application/pdf', true],
+    ['application/x.foo*bar', 'unknown', 'application/x.foo*bar', true],
+    ['application/x.foo*bar', 'unknown', 'text/plain', false],
+    ['text/*', 'anything.exe', '', true],
     ['application/pdf', 'report.pdf', '', false],
     ['image/*', 'picture', 'image/png', true],
     ['audio/*', 'sound', 'audio/ogg', true],
@@ -312,4 +315,24 @@ test('older deferred reset cleanup leaves a newer file selection intact', async 
   assert.equal(input().validity.customError, true);
   assert.equal(document.querySelector('[data-error]').hidden, false);
   assert.match(document.querySelector('.drop-zone-files').textContent, /^new-after-reset.exe/);
+});
+
+test('native form-associated controls outside the form recover their owned state on reset', async () => {
+  const form = document.getElementById('upload');
+  const zone = document.querySelector('.drop-zone');
+  input().setAttribute('form', form.id);
+  form.after(zone);
+  assert.equal(input().form, form);
+  choose(file('bad.exe'));
+  input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  choose();
+  form.reset();
+  await settleReset(0);
+  assert.equal(input().validity.customError, false);
+  assert.equal(document.querySelector('[data-error]').hidden, true);
+  assert.equal(document.querySelectorAll('.drop-zone-files > li').length, 0);
+  input().setCustomValidity('Application policy');
+  form.reset();
+  await settleReset(0);
+  assert.equal(input().validationMessage, 'Application policy');
 });

@@ -138,6 +138,33 @@ for (const [name, engine, browserTest] of engines) {
     }
   });
 
+  browserTest(`${name}: external form-associated file controls recover on native reset`, async () => {
+    const browser = await leaseBrowser(engine);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>${markup}<script>${js}</script></body></html>`);
+      const input = page.locator('#files');
+      await input.evaluate(el => {
+        const form = el.form;
+        el.setAttribute('form', form.id);
+        form.after(el.closest('.drop-zone'));
+      });
+      await input.setInputFiles([selected('bad.exe')]);
+      await expect(page.locator('#error')).toBeVisible();
+      assert.equal(await input.evaluate(el => el.form.checkValidity()), false);
+      await page.getByRole('button', { name: 'Reset', exact: true }).click();
+      await expect(page.locator('#error')).toBeHidden();
+      assert.equal(await input.evaluate(el => el.files.length), 0);
+      assert.equal(await input.evaluate(el => el.form.checkValidity()), true);
+      assert.equal(await page.locator('.drop-zone-files > li').count(), 0);
+      await input.evaluate(el => el.setCustomValidity('Application policy'));
+      await page.getByRole('button', { name: 'Reset', exact: true }).click();
+      assert.equal(await input.evaluate(el => el.validationMessage), 'Application policy');
+    } finally {
+      await browser.close();
+    }
+  });
+
   if (name === 'chromium') browserTest('chromium: trusted protocol drop uses native file assignment and blocks invalid submission', async () => {
     const temporary = mkdtempSync(join(tmpdir(), 'expressivecss-file-drop-'));
     let browser;

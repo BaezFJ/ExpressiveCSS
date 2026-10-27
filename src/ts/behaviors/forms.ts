@@ -3,8 +3,9 @@ import { Utils } from '../core/utils';
 const FILE_TYPES = '.drop-zone input[type="file"][data-validate-types]';
 
 function fileSpecifier(value: string) {
-  return /^\.[^\s/\\]+$/.test(value) || /^(image|audio|video)\/\*$/.test(value) ||
-    /^[!#$%&'+.^_`|~0-9a-z-]+\/[!#$%&'+.^_`|~0-9a-z-]+$/.test(value);
+  if (value.endsWith('/*')) return /^(image|audio|video)\/\*$/.test(value);
+  return /^\.[^\s/\\]+$/.test(value) ||
+    /^[!#$%&'*+.^_`|~0-9a-z-]+\/[!#$%&'*+.^_`|~0-9a-z-]+$/.test(value);
 }
 
 function fileMatches(file: File, specifier: string) {
@@ -246,7 +247,8 @@ export class Forms {
   }
 
   private static _resetDropZones(form: HTMLFormElement) {
-    form.querySelectorAll<HTMLInputElement>('input[type="file"]').forEach(Forms._resetFileInput);
+    Array.from(form.elements).filter((field): field is HTMLInputElement =>
+      field instanceof HTMLInputElement && field.type === 'file').forEach(Forms._resetFileInput);
   }
 
   /**

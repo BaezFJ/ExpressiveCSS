@@ -9,7 +9,7 @@ Component ID: `snackbar`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `98e6d9c0c14b0e6191038b08ce2864a9c6b802b72a74dcd3eeb18d3e02bcf3ae`
+Contract SHA-256: `a6171730fa00c7123d63fae95a856638968d1913d2b76b5be33ba20a39ec8f66`
 
 #### Selection and adaptation
 
