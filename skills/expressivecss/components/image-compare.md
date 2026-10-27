@@ -9,7 +9,7 @@ Component ID: `image-compare`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `d0d414ec971bf0acaca99d8c95b6864c6101fc5549fb222571cc136517c7088a`
+Contract SHA-256: `23f6251bca109c3d2f5f58684f1fd18b9ec22740c2802d19b656fb5b7d6c7556`
 
 #### Selection and adaptation
 

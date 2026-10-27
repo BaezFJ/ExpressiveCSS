@@ -1562,7 +1562,7 @@ Web adaptation: Native select enhanced by runtime; this is related to menu/text-
 
 ## Tree select
 
-**unassessed within the stated scope.** A native select[data-tree] whose flat options name their parent's value in data-parent; a role="tree" popup with the ARIA tree keyboard contract over visible, enabled rows, mirrored under RTL; one leaf chosen into the native select; branch options disabled while it runs; optional leaf search retaining ancestor paths and restoring pre-query expansion; refresh() preserving the query, expansion baseline and focus.
+**unassessed within the stated scope.** A native select[data-tree] whose flat options name their parent's value in data-parent; a role="tree" popup with the ARIA tree keyboard contract over visible, enabled rows, mirrored under RTL; single or native multiple independent leaf choices, with branches normalized out of multiple selection; branch options disabled while it runs; optional single/multiple leaf search retaining ancestor paths and restoring pre-query expansion; refresh() preserving the query, expansion baseline and focus.
 
 Source review: needs-review, 2026-10-25. [src/ts/components/treeSelect.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/treeSelect.ts).
 

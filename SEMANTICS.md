@@ -1455,13 +1455,13 @@ Added with the tree component. Nested lists of native disclosures and links: eve
 
 ### tree-select
 
-Added with the tree select component. The author writes a native <select data-tree> of flat options, each child naming its parent's value in `data-parent`; AutoInit builds a role="tree" popup with the tested arrow-key contract, and the native select still submits the chosen leaf. Nesting comes only from data-parent, because HTML cannot nest optgroups, and only one leaf can be chosen.
+A native <select data-tree> owns single or multiple leaf values. Flat options name their parent value with data-parent. AutoInit builds the named ARIA tree; branches only navigate and never submit. Nesting comes only from data-parent because HTML cannot nest optgroups.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
-| `tree-select-is-a-single-select` | forbid | `[data-tree]:not(select), select[data-tree][multiple], select[data-tree] optgroup, select:not([data-tree]) option[data-parent]` | must not match |
+| `tree-select-needs-native-options` | forbid | `[data-tree]:not(select), select[data-tree] optgroup, select:not([data-tree]) option[data-parent]` | must not match |
 
-- **tree-select-is-a-single-select** - Put data-tree on a <select> without multiple, and nest its options only with data-parent naming the parent option's value. A tree select chooses one leaf, an <optgroup> cannot nest, and data-parent does nothing in a select without data-tree.
+- **tree-select-needs-native-options** - Put data-tree on a native <select>, optionally with multiple. Nest flat options only through data-parent naming the parent option value. An <optgroup> cannot nest, and data-parent needs a select with data-tree.
 
 ### treemap-chart
 

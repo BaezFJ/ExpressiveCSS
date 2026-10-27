@@ -28,9 +28,9 @@ Completion V1-V3. No new search option, popup implementation or mode-switching s
 
 Prerequisite: groups 1-2 pass.
 
-- [ ] Update semantics.json, its static tests, docs/src/pages/tree-select.astro, stale shared Select guidance, llm.md, CHANGELOG.md and the existing tree decision. Regenerate build:semantics/build:skill outputs; preserve unrelated rules and historical review pins.
-- [ ] Run guidance/static/selective/generated checks; review JS/CSS gzip. Check actual named tree state and distinct selected/focus paint in constrained enlarged/RTL/forced-colors/reduced-motion cases. Read Sass architecture before any justified style fix.
-- [ ] Inspect compact/expanded/large/large-dark tree/select comparisons and live multiple light/dark selection/focus states. Record intended docs differences and unavailable capabilities; commit the verified slice.
+- [x] Update semantics.json, its static tests, docs/src/pages/tree-select.astro, stale shared Select guidance, llm.md, CHANGELOG.md and the existing tree decision. Regenerate build:semantics/build:skill outputs; preserve unrelated rules and historical review pins.
+- [x] Run guidance/static/selective/generated checks; review JS/CSS gzip. Check actual named tree state and distinct selected/focus paint in constrained enlarged/RTL/forced-colors/reduced-motion cases. Read Sass architecture before any justified style fix.
+- [x] Inspect compact/expanded/large/large-dark tree/select comparisons and live multiple light/dark selection/focus states. Record intended docs differences and unavailable capabilities; commit the verified slice.
 
 Completion V3-V5; delivers R5/R8 without claiming static or emulated evidence as physical accessibility approval.
 
@@ -38,7 +38,7 @@ Completion V3-V5; delivers R5/R8 without claiming static or emulated evidence as
 
 Prerequisite: groups 1-3 pass.
 
-- [ ] Independently trace R1-R8 to source and evidence, fix confirmed findings and complete a separate code-simplification pass. Rerun affected checks after changes.
+- [x] Independently trace R1-R8 to source and evidence, fix confirmed findings and complete a separate code-simplification pass. Rerun affected checks after changes.
 - [ ] Run all contributor-equivalent, MCP and isolated-package checks sequentially, then independent final evidence review. Record exact commands, results, failures and limits.
 - [ ] Push/open/link/watch the PR. Fix CI/review issues; verify exact head, all and required checks, conversations, current master and clean worktrees before merge. Record merge proof and remaining completion audit in the separate docs PR.
 

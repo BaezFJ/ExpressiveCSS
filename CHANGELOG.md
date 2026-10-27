@@ -15,6 +15,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Native multiple-leaf TreeSelect through `<select data-tree multiple>`, with
+  independent leaf toggles, an open popup and optional search retaining hidden
+  choices. Native form submission includes all selected leaves and no branches.
+  Branch defaults never propagate into leaf choices; reset and refresh retain
+  native ownership. Selection and focus remain separate on the named tree.
+
 - Opt-in single-leaf TreeSelect search through `searchable: true`. Matching leaf
   paths open without changing the native selection. Clearing or closing restores
   pre-query expansion, including through refresh and disabled-control recovery.
@@ -771,6 +777,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   stays with the page's inline script.
 
 ### Fixed
+
+- Nonsearch TreeSelect opening now honors Menu `autoFocus: false` and preserves
+  focus already moved to a tree row before its opening animation completes.
 
 - Searchable tree rows inherit the shared menu tokens, preserving visible
   keyboard focus, selected colors and row spacing in light and dark themes.

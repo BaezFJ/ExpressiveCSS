@@ -8,6 +8,7 @@ import { route } from "../lib/catalogue";
 const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "branches", label: "Branches and the form" },
+  { id: "multiple", label: "Choose several leaves" },
   { id: "search", label: "Search leaves" },
   { id: "keyboard", label: "Keyboard and pointer" },
   { id: "methods", label: "Options and methods" },
@@ -18,7 +19,8 @@ const S = defineSections([
   <Section {...S.anatomy}>
         <p class="flow-text">
           Add <code>data-tree</code> to a <a href={route('select')}>select</a> whose options
-          nest, and people open branches to choose one leaf.
+          nest, and people open branches to choose leaves. Add <code>multiple</code>
+          to choose several leaves independently.
         </p>
         <p>
           The options stay flat in the markup. A child names its parent option's value in
@@ -64,9 +66,10 @@ const S = defineSections([
         <p>
           Only a leaf can be chosen. While the tree select runs, it disables every branch
           option, so the form never submits a branch, and it restores them when it is
-          destroyed. If nothing is <code>selected</code>, the browser picks the first option,
+          destroyed. In single mode, if nothing is <code>selected</code>, the browser picks the first option,
           often a branch; the tree select then chooses the first enabled leaf, as a form
-          reset would. Put <code>disabled</code> on branch options and start with a
+          reset would. Multiple mode starts empty unless leaves are selected; it clears
+          branch selections without choosing any descendants. Put <code>disabled</code> on branch options and start with a
           <code>value=""</code> placeholder anyway, so the page works without JavaScript.
         </p>
         <p>
@@ -74,9 +77,51 @@ const S = defineSections([
           select. To disable part of the tree, disable each leaf in it.
         </p>
   </Section>
+  <Section {...S.multiple}>
+    <p>Add <code>multiple</code> to the native select. Click, Enter or Space toggles
+      only the focused leaf, without a modifier. Branches only expand or collapse;
+      choosing a branch never selects its descendants. The popup stays open.</p>
+    <div class="mb-3" style="max-width: 24rem;">
+<div class="field">
+  <select id="demo-many-places" name="places" multiple data-tree
+    data-tree-select-options='{"searchable":true}'>
+    <option value="europe" disabled>Europe</option>
+    <option value="paris" data-parent="europe" selected>Paris</option>
+    <option value="lyon" data-parent="europe">Lyon</option>
+    <option value="asia" disabled>Asia</option>
+    <option value="tokyo" data-parent="asia" selected>Tokyo</option>
+  </select>
+  <label for="demo-many-places">Places</label>
+</div>
+    </div>
+<Code code={`
+<div class="field">
+  <select id="many-places" name="places" multiple data-tree
+    data-tree-select-options='{"searchable":true}'>
+    <option value="europe" disabled>Europe</option>
+    <option value="paris" data-parent="europe" selected>Paris</option>
+    <option value="lyon" data-parent="europe">Lyon</option>
+    <option value="asia" disabled>Asia</option>
+    <option value="tokyo" data-parent="asia" selected>Tokyo</option>
+  </select>
+  <label for="many-places">Places</label>
+</div>
+`} />
+    <p>The actual named tree exposes <code>aria-multiselectable="true"</code>.
+      Leaf selection and keyboard focus are separate, with no generated checkboxes.
+      The trigger and <code>getSelectedValues()</code> list leaves in native option
+      order. <code>new FormData(form).getAll('places')</code> includes both selected
+      leaves, even when a query hides one, and never includes a branch.</p>
+    <p>Each toggle fires one native <code>change</code>. Search, focus, branch
+      navigation and refresh do not. Required multiple trees with no selected leaf
+      stay empty and invalid. Reset restores authored leaf defaults, clears search
+      and closes; a canceled reset preserves the live choices. Branch defaults
+      never propagate to leaves. Destroy and reinitialize after changing the
+      native <code>multiple</code> attribute.</p>
+  </Section>
   <Section {...S.search}>
     <p>Set <code>searchable: true</code> through <code>data-tree-select-options</code>
-      or <code>TreeSelect.init()</code> to search a single-leaf tree. Search matches
+      or <code>TreeSelect.init()</code> to search a single or multiple tree. Search matches
       a literal substring of leaf text, ignoring case and trimming query edges.
       It retains and opens every matching leaf's ancestors. Branch labels and option
       values do not match; disabled matches stay visible and unavailable.</p>
@@ -113,7 +158,8 @@ const S = defineSections([
       contains a labelled search field, polite no-results status and the named tree.
       Search has no form name. Typing, clearing and hiding the chosen leaf preserve
       its native value and fire no <code>change</code>. An enabled leaf pick changes
-      the value once, closes the popup and focuses the trigger.</p>
+      the value once. In single mode it closes and focuses the trigger; in multiple
+      mode it keeps the popup, query and row focus.</p>
     <p>The first nonempty query saves the person's expansion state. Further edits,
       temporary branch toggles and refresh do not replace it. Clearing or closing
       restores surviving branches to that state; newly added branches start closed.
@@ -142,8 +188,8 @@ Expressive.TreeSelect.init(select, {
   i18n: { searchLabel: 'Find a leaf', noResults: 'No matching leaves' }
 });
 `} />
-    <p>Search defaults off. Browser-default selects stay native; multiple-leaf tree
-      selection is separate. Search does not fold accents, interpret regular
+    <p>Search defaults off and works with single or multiple trees. Browser-default
+      selects stay native. Search does not fold accents, interpret regular
       expressions, fetch children or change the native options.</p>
   </Section>
   <Section {...S.keyboard}>
@@ -153,8 +199,10 @@ Expressive.TreeSelect.init(select, {
           Left closes an open branch or moves to its parent. Home and End go to the first and
           last visible rows, <code>*</code> opens every branch beside the focused row, and
           typing a few letters moves to the next row that starts with them. Enter and Space
-          choose a leaf or toggle a branch. Escape closes the popup and returns focus to the
-          field. Under <code>dir="rtl"</code> Left and Right swap.
+          choose a leaf or toggle a branch. In multiple mode, leaf activation toggles
+          only that leaf and keeps the popup open. Focus movement never changes choices. Escape closes the popup and returns focus to the
+          field. Without search, Tab or Shift+Tab closes back to the trigger; the
+          following Tab moves normally. Under <code>dir="rtl"</code> Left and Right swap.
         </p>
         <p>
           A click on a branch opens or closes it and keeps the popup open. A click on a leaf
@@ -165,7 +213,9 @@ Expressive.TreeSelect.init(select, {
         <p>
           A tree select takes the select's <code>classes</code>, <code>menuOptions</code>,
           <code>searchable</code> and search <code>i18n</code>,
-          from script or from <code>data-tree-select-options</code>. Call
+          through script. <code>data-tree-select-options</code> accepts classes,
+          searchable and existing i18n keys; pass nested Menu options such as
+          <code>autoFocus</code> through script. Call
           <code>refresh()</code> after changing the options; open branches stay open.
         </p>
 <Code code={`
@@ -177,9 +227,9 @@ place.destroy();            // restores the branch options and the native select
   </Section>
   <Section {...S.limits}>
         <p>
-          There is no multiple selection, choosable branch, nested
+          There is no choosable branch, nested
           <code>&lt;optgroup&gt;</code>, option image or children loaded on demand. The field
-          shows the chosen leaf's text, not its path.
+          shows chosen leaf text, not ancestor paths.
         </p>
   </Section>
 </DocsLayout>

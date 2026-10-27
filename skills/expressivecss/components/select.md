@@ -9,7 +9,7 @@ Component ID: `select`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `d0d414ec971bf0acaca99d8c95b6864c6101fc5549fb222571cc136517c7088a`
+Contract SHA-256: `23f6251bca109c3d2f5f58684f1fd18b9ec22740c2802d19b656fb5b7d6c7556`
 
 #### Selection and adaptation
 
@@ -102,7 +102,7 @@ Add `multiple` to select several options. Chosen values appear as a comma-separa
 | --- | --- | --- | --- |
 | `classes` | String | `''` | Space-separated classes added to the `.field` wrapper, either the parent `.field` or one the plugin creates. |
 | `menuOptions` | Object | `{}` | Options passed to `Menu`. See Menu. `coverTrigger` is forced to `false` and `closeOnClick` is forced to `false`. |
-| `searchable` | Boolean | `false` | Add a popup search field to a plain single/multiple FormSelect or single-leaf TreeSelect. Browser-default selects stay native. |
+| `searchable` | Boolean | `false` | Add a popup search field to a plain single/multiple FormSelect or single/multiple TreeSelect. Browser-default selects stay native. |
 | `i18n` | Object | `{ searchLabel: 'Search options', noResults: 'No results' }` | Search input label and no-results status. Override either string; omitted keys retain defaults. |
 
 #### Methods
