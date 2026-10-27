@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.15.0",
-  "sourceRevision": "08de35aa30901a3a0cc34bf8c56844fe3d0286f5",
+  "sourceRevision": "823ca3aa4c71a08cf4554f0204d4c464f2cb4f24",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-10-10",
@@ -5108,11 +5108,11 @@
       "slug": "select",
       "title": "Select",
       "kind": "component",
-      "support": "unassessed",
+      "support": "implemented",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-09-17",
-      "scope": "Single/multiple selection, optgroups, and browser-default fallback.",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-10-27",
+      "scope": "Single/multiple selection, optgroups, browser-default fallback, and opt-in single-select search with a separate popup field and native form values.",
       "adaptation": "Native select enhanced by runtime; this is related to menu/text-field patterns.",
       "upstream": {
         "source": "https://m3.material.io/components/menus/overview",
@@ -5139,19 +5139,19 @@
       "sources": [
         {
           "path": "src/sass/components/forms/_select.scss",
-          "sha256": "d360405d6a315e4ff8be9936ac1bc0e7ec0c01ad300d177a87de54a096937bec"
+          "sha256": "d72f66ebe96038d8dcee434ed75bcff1f9e2f6995f8cf0a578a3abd747327315"
         },
         {
           "path": "src/sass/components/_menu.scss",
-          "sha256": "fc7456249caec5118a379c9d56c7a7bfb211c147f5fd318bbcf8de6ea1d33654"
+          "sha256": "586e869181fda28efcf9f511ba90908b6f6788d7eff614f90c89fe1d7a56c396"
         },
         {
           "path": "src/ts/components/select.ts",
-          "sha256": "b375715a62baae95a7ba2c97d85d60ee2c619d5d261ee0abf9aea7ab28c3ae74"
+          "sha256": "a5e8b18896cd53c1ea18f919cc0602df4be63c1ee4bd12dcbc2ef1d24a338693"
         },
         {
           "path": "src/ts/components/menu.ts",
-          "sha256": "0ca7f4c0d80012adad3babdfc23005792dbaa2655c3fe5595bc9bcc7e2c35ce8"
+          "sha256": "52b3f0016e521f1785a76a44b8ba91051c675a4c2c0c95afac9d8a397ff0a6f8"
         }
       ],
       "gaps": [
@@ -5203,6 +5203,36 @@
           "name": "Select native form synchronization: interaction (chromium)",
           "scope": "Pointer and keyboard multiple selection, event counts, checkbox state, native FormData, LTR/RTL, both motion preferences, reset teardown and instance isolation. Equivalent Firefox and WebKit cases run in the same file.",
           "state": "stale"
+        },
+        {
+          "file": "tests/select-search-browser.test.js",
+          "name": "chromium: searchable select filters grouped options and submits the chosen value by pointer",
+          "scope": "Grouped literal filtering, pointer selection, native form submission and one change event. Equivalent Firefox and WebKit cases run in the same file.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/select-search-browser.test.js",
+          "name": "chromium: searchable select keeps text editing separate from row navigation and restores focus",
+          "scope": "Search editing, arrow navigation, selection, Escape and focus recovery. Equivalent Firefox and WebKit cases run in the same file.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/select-search-browser.test.js",
+          "name": "chromium: searchable select refreshes a live query, preserves the caret, and resets native state",
+          "scope": "Live-query refresh, disabled rows, caret/focus, successful and canceled reset and disabling the control. Equivalent Firefox and WebKit cases run in the same file.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/select-search-browser.test.js",
+          "name": "chromium: searchable select works in a native modal dialog and an open shadow root",
+          "scope": "Popup operation, keyboard selection and focus recovery inside a native modal dialog and an open shadow root. Equivalent Firefox and WebKit cases run in the same file.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/select-search-browser.test.js",
+          "name": "chromium: searchable select keeps search visible while results scroll with enlarged RTL text and forced colors",
+          "scope": "Scrolling results, visible search/focus ring, enlarged RTL text, forced colors and reduced motion. Programmatic font scaling does not prove native zoom or spoken output. Equivalent Firefox and WebKit cases run in the same file.",
+          "state": "not-recorded"
         }
       ],
       "browserEvidence": "needs-rerun",

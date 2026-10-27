@@ -11,6 +11,7 @@ import InstanceNote from "../components/api/InstanceNote.astro";
 const S = defineSections([
   { id: "introduction", label: "Introduction", heading: false },
   { id: "initialization", label: "Initialization" },
+  { id: "search", label: "Search" },
   { id: "options", label: "Options" },
   { id: "methods", label: "Methods" },
   { id: "native-forms", label: "Native forms" },
@@ -181,8 +182,70 @@ Expressive.AutoInit(document.body, {
 });
 `} />
   </Section>
+  <Section {...S.search}>
+    <p>Set <code>searchable: true</code> for a single select, or use the existing
+      <code>data-form-select-options</code> attribute. A separate search field in
+      the popup filters option text. The read-only trigger keeps showing the chosen
+      value, and the native select still supplies the form value.</p>
+    <form>
+      <div class="field mb-3">
+        <select id="search-destination" name="destination" data-form-select-options='{"searchable":true}'>
+          <option value="" disabled selected>Choose a destination</option>
+          <optgroup label="Europe">
+            <option value="paris">Paris</option>
+            <option value="rome">Rome</option>
+            <option value="oslo" disabled>Oslo, unavailable</option>
+          </optgroup>
+          <optgroup label="Asia">
+            <option value="tokyo">Tokyo</option>
+            <option value="seoul">Seoul</option>
+          </optgroup>
+        </select>
+        <label for="search-destination">Destination</label>
+      </div>
+      <button type="reset">Reset destination</button>
+    </form>
+    <Code code={`<select name="destination" aria-label="Destination"
+  data-form-select-options='{"searchable":true}'>
+  <optgroup label="Europe">
+    <option value="paris">Paris</option>
+    <option value="rome">Rome</option>
+  </optgroup>
+</select>
+
+// Or initialize from script:
+Expressive.FormSelect.init(select, { searchable: true });`} />
+    <p>Matching uses a case-insensitive literal substring of option text, with
+      leading and trailing query whitespace trimmed. Values, group names and
+      accents are not substituted. Empty groups disappear. Matching disabled
+      choices stay visible and unavailable. Typing never changes selection;
+      the localized "No results" status appears only when no option matches.</p>
+    <p>The searchable trigger controls a named nonmodal dialog containing the search
+      field and a separate named listbox. Search and status are outside the listbox.
+      Search text has no form name. Closing clears the query; a successful reset
+      closes and restores the native defaults. Refresh retains an open query,
+      search focus and caret, or a surviving enabled result's focus.</p>
+    <table class="striped">
+      <thead><tr><th>Key or action</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><td>Open by pointer, Enter, Space or vertical arrow</td><td>Focus search, unless <code>menuOptions.autoFocus</code> is false.</td></tr>
+        <tr><td>Type, paste, Home, End, horizontal arrows, composition</td><td>Edit search normally. Enter in search neither chooses nor submits.</td></tr>
+        <tr><td>ArrowDown / ArrowUp from search</td><td>Focus the first / last enabled visible result. Stay in search if none exists.</td></tr>
+        <tr><td>Arrows, Home / End on a result</td><td>Move among enabled visible results without wrapping. Up from the first returns to search.</td></tr>
+        <tr><td>Enter / Space on a result</td><td>Choose it, close and return focus to the trigger.</td></tr>
+        <tr><td>Tab / Shift+Tab</td><td>Tab from search enters the first enabled result; Tab from a result exits to the next control. Without enabled results, Tab exits from search. Shift+Tab from a result returns to search; from search it closes and focuses the trigger.</td></tr>
+        <tr><td>Escape / outside click</td><td>Close without changing selection. Escape focuses the trigger; an outside click keeps focus on its target.</td></tr>
+      </tbody>
+    </table>
+    <p>Search is off by default and ignored for multiple, tree and browser-default
+      selects. Remote search, creating options, fuzzy matching and virtualization
+      are outside this mode. With <code>autoFocus: false</code>, opening keeps
+      existing focus and Tab from the trigger can still reach search.</p>
+  </Section>
   <Section {...S.options}>
         <OptionsTable>
+            <tr><td><code>searchable</code></td><td>Boolean</td><td><code>false</code></td><td>Add a popup search field to an enhanced plain single select.</td></tr>
+            <tr><td><code>i18n</code></td><td>Object</td><td><code>searchLabel: "Search options", noResults: "No results"</code></td><td>Override either search label or empty-result message. Omitted strings retain their defaults.</td></tr>
             <tr>
               <td><code>classes</code></td>
               <td>String</td>
@@ -287,7 +350,7 @@ instance.destroy();
             <tr>
               <td><code>menuEl</code></td>
               <td>Element</td>
-              <td>The generated <code>&lt;menu&gt;</code>.</td>
+              <td>The generated popup. A <code>&lt;menu&gt;</code> by default, or a dialog <code>&lt;div&gt;</code> containing a listbox when searchable.</td>
             </tr>
             <tr>
               <td><code>labelEl</code></td>

@@ -251,6 +251,61 @@ menu[role="listbox"] li.optgroup-option {
   padding-inline-start: 1rem;
 }
 
+.select-search-popup {
+  position: absolute;
+  inset: auto;
+  margin: 0;
+  padding: 8px;
+  max-height: min(24rem, calc(100dvh - 2rem));
+  overflow: hidden;
+  border-radius: var(--md-sys-shape-corner-large);
+  background: var(--md-sys-color-surface-container-low);
+  color: var(--md-sys-color-on-surface);
+  @include z-depth("2");
+
+  &:popover-open { display: flex; flex-direction: column; }
+
+  > input {
+    flex: none;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: rem(48px);
+    padding: 8px;
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: var(--md-sys-shape-corner-small);
+    @include typescale("body-large");
+
+    &:focus-visible {
+      outline: 2px solid var(--md-sys-color-primary);
+      outline-offset: -2px;
+    }
+  }
+
+  > [role="status"] {
+    flex: none;
+    overflow-wrap: anywhere;
+    @include typescale("body-medium");
+  }
+
+  > menu {
+    display: block;
+    position: static;
+    flex: 1;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    opacity: 1;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  > menu > li[hidden] { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .select-search-popup { transition: none !important; }
+}
+
 // Tree select. TreeSelect puts a ul[role="tree"] inside the Menu surface,
 // one list below the rows Menu styles, and nests each branch's rows in a
 // ul[role="group"] inside its treeitem. The row is the treeitem's label span:

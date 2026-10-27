@@ -9,7 +9,7 @@ Component ID: `select`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `6de826d84406ced6fb743f8795d9595f18d1f80c94f4bf063381d5842cee7cf4`
+Contract SHA-256: `7a68ec163eec437ca9ac15b7a7770fb710b8c24526e777ad6ffb105c0c4d73f2`
 
 #### Selection and adaptation
 
@@ -27,7 +27,7 @@ Requirements and boundaries: design reference inputs-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/menus/guidelines).
 
-Support (2026-09-17, `llm.md#select`): Single/multiple selection, optgroups, and browser-default fallback.
+Support (2026-10-27, `llm.md#select`): Single/multiple selection, optgroups, browser-default fallback, and opt-in single-select search with a separate popup field and native form values.
 
 Web adaptation: Native select enhanced by runtime; this is related to menu/text-field patterns.
 
@@ -102,6 +102,8 @@ Add `multiple` to select several options. Chosen values appear as a comma-separa
 | --- | --- | --- | --- |
 | `classes` | String | `''` | Space-separated classes added to the `.field` wrapper, either the parent `.field` or one the plugin creates. |
 | `menuOptions` | Object | `{}` | Options passed to `Menu`. See Menu. `coverTrigger` is forced to `false` and `closeOnClick` is forced to `false`. |
+| `searchable` | Boolean | `false` | Add a separate popup search field to an enhanced plain single select. Ignored for multiple, tree and browser-default selects. |
+| `i18n` | Object | `{ searchLabel: 'Search options', noResults: 'No results' }` | Search input label and no-results status. Override either string; omitted keys retain defaults. |
 
 #### Methods
 
@@ -111,7 +113,7 @@ Add `multiple` to select several options. Chosen values appear as a comma-separa
 
 #### Also documented
 
-The Select section of the [API reference](https://www.expressivecss.com/llm.md) also covers Initialization, Properties, Disabled styles.
+The Select section of the [API reference](https://www.expressivecss.com/llm.md) also covers Single-select search, Initialization, Properties, Disabled styles.
 
 #### Rules
 
