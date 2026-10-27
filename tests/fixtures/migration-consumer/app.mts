@@ -1,6 +1,7 @@
 import {
   AutoInit,
   ButtonGroup,
+  DataTables,
   Dialogs,
   FloatingActionButton,
   FormSelect,
@@ -12,6 +13,16 @@ import {
   type SnackbarOptions,
   type TimepickerOptions,
 } from "@expressivecss/expressive/modular";
+import { DataTables as RootDataTables } from "@expressivecss/expressive";
+
+export function checkTablePageContract(wrapper: HTMLElement): boolean[] {
+  const state = Object.freeze({ page: 2, pageSize: 20, total: 87 });
+  const accepted: boolean = DataTables.setPage(wrapper, state);
+  const reset: boolean = RootDataTables.setPage(wrapper, null);
+  // @ts-expect-error Page state accepts numeric fields only.
+  DataTables.setPage(wrapper, { page: '2', pageSize: 20, total: 87 });
+  return [accepted, reset];
+}
 
 export const manualDatepicker: Partial<DatepickerOptions> = { autoSubmit: false };
 export const manualTimepicker: Partial<TimepickerOptions> = { autoSubmit: false };

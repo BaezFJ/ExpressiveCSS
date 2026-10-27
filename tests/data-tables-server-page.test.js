@@ -114,6 +114,20 @@ test('the accepted state is copied and null restores local filtering from page o
   assert.equal(status(), '2 / 2');
 });
 
+test('state accepts inherited and non-enumerable numeric fields and reads them once', () => {
+  assert.equal(accept(Object.create({ page: 2, pageSize: 2, total: 7 })), true);
+  assert.equal(status(), '2 / 4');
+  const reads = { page: 0, pageSize: 0, total: 0 };
+  const state = Object.defineProperties({}, Object.fromEntries(
+    Object.entries({ page: 3, pageSize: 1, total: 8 }).map(([key, value]) =>
+      [key, { get() { reads[key]++; return value; } }])
+  ));
+  assert.equal(accept(state), true);
+  assert.equal(status(), '3 / 8');
+  assert.deepEqual(reads, { page: 1, pageSize: 1, total: 1 });
+  assert.deepEqual(displayed(), ['r3', 'r4']);
+});
+
 test('server sync clears former local hiding and select-all only affects displayed enabled records', () => {
   sync();
   assert.deepEqual(displayed(), []);
@@ -317,4 +331,28 @@ test('a newer accepted nested local request supersedes the older requested page'
   assert.equal(status(), '1 / 1');
   assert.equal(wrapper().getAttribute('data-page-size'), '4');
   assert.deepEqual(displayed(), ['r3', 'r4']);
+});
+
+test('server and local state remain isolated across independent and nested wrappers', () => {
+  accept();
+  const outer = wrapper();
+  const other = outer.cloneNode(true);
+  document.body.append(other);
+  other.querySelector('[data-table-filter]').value = '';
+  other.setAttribute('data-page-size', '1');
+  Expressive.DataTables.sync(other);
+  other.querySelector('[data-table-page="next"]').click();
+  assert.equal(other.querySelector('[data-table-page-status]').textContent, '2 / 2');
+  assert.equal(status(), '2 / 4');
+  assert.equal(count(), '87');
+  outer.append(other);
+  Expressive.DataTables.setPage(other, { page: 1, pageSize: 2, total: 6 });
+  const seen = [];
+  outer.addEventListener('expressive:page', (event) => seen.push([event.target, event.detail]));
+  other.querySelector('[data-table-page="next"]').click();
+  assert.deepEqual(seen, [[other, { page: 2, pageSize: 2 }]]);
+  assert.equal(other.querySelector('[data-table-page-status]').textContent, '1 / 3');
+  Expressive.DataTables.sync(outer);
+  assert.equal(status(), '2 / 4');
+  assert.equal(other.querySelector('[data-table-page-status]').textContent, '1 / 3');
 });

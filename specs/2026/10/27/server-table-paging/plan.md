@@ -28,9 +28,9 @@ Delivers R2-R5. Completion checks V1-V2. Commit the verified increment.
 
 Prerequisite: groups 1 and 2 pass.
 
-- [ ] Add `tests/data-tables-server-page-browser.test.js` for actual page-button pointer/keyboard input, native size changes, shadow roots and FormSelect. Assert no local slicing, state/control updates, selection/count preservation and ordinary link navigation; teardown in finally.
-- [ ] Add the server paging section through the existing catalogue in `docs/src/pages/data-table.astro`; update the API/event reference in `llm.md` and `CHANGELOG.md`. Reuse existing semantics without component initialization and verify the new public declaration in the existing isolated consumer path.
-- [ ] Regenerate semantics/skill/MCP guidance, run relevant docs/static checks, measure JS/CSS gzip deltas and update reviewed budgets in `tests/selective-builds.test.js`.
+- [x] Add `tests/data-tables-server-page-browser.test.js` for actual page-button pointer/keyboard input, native size changes, shadow roots and FormSelect. Assert no local slicing, state/control updates, selection/count preservation and ordinary link navigation; teardown in finally.
+- [x] Add the server paging section through the existing catalogue in `docs/src/pages/data-table.astro`; update the API/event reference in `llm.md` and `CHANGELOG.md`. Reuse existing semantics without component initialization and verify the new public declaration in the existing isolated consumer path.
+- [x] Regenerate semantics/skill/MCP guidance, run relevant docs/static checks, measure JS/CSS gzip deltas and update reviewed budgets in `tests/selective-builds.test.js`.
 
 Delivers R1-R6. Completion checks V2-V3. Commit the verified increment.
 

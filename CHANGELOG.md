@@ -15,6 +15,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Server-owned data table paging through silent validated `DataTables.setPage`
+  state and cancelable `expressive:page` requests. Server responses retain
+  every supplied record without local slicing, filtering or sorting. Local
+  page and size controls now request before applying their default; cancel
+  to preserve the accepted view. Null state restores local paging.
 - Authored single-select page-size controls for local data tables. Changing
   size preserves an available page or clamps to the new last page, retaining
   selections and matching counts.

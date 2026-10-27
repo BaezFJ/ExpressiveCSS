@@ -219,6 +219,8 @@ function keyWidth(header: HTMLTableCellElement, e: KeyboardEvent) {
  * A positive `data-page-size` opts into local record-group paging through
  * authored Previous/Next buttons; selections on other pages stay checked.
  * A marked single select changes the size while preserving a valid page.
+ * Page/size controls request cancelable `expressive:page` before a local
+ * default. setPage accepts server state whose records stay application-owned.
  */
 export class DataTables {
   private static _initialized = false;
@@ -255,6 +257,8 @@ export class DataTables {
    * after a canceled filter request. It fires no events.
    * Local paging preserves the current page where possible and clamps it
    * after record changes, before synchronizing the page's select-all state.
+   * Accepted server pages retain all supplied visible records and use their
+   * application total for status and bounds, without local filtering.
    */
   static sync(wrapper: Element) {
     const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
@@ -286,9 +290,11 @@ export class DataTables {
       DataTables._pages.delete(wrapper);
       return true;
     }
-    if (!validPageState(state)) return false;
-    wrapper.setAttribute('data-page-size', String(state.pageSize));
-    DataTables._pages.set(wrapper, { ...state, server: true });
+    if (!state) return false;
+    const accepted = { page: state.page, pageSize: state.pageSize, total: state.total };
+    if (!validPageState(accepted)) return false;
+    wrapper.setAttribute('data-page-size', String(accepted.pageSize));
+    DataTables._pages.set(wrapper, { ...accepted, server: true });
     return true;
   }
 

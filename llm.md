@@ -416,7 +416,7 @@ Choices and changes carry what was chosen in `event.detail`:
 | `expressive:refresh` | Pull-to-refresh | `{ waitUntil }` |
 | `expressive:swipetoggle` | Swipe actions | `{ row, open }` |
 | `expressive:transfer` | Transfer list, from the container | `{ rows, from, to }` |
-| `expressive:change`, `expressive:sort`, `expressive:resize`, `expressive:filter` | Data tables, from the wrapper | `{ selected }`, `{ header, column, direction }`, `{ header, column, width }`, `{ query }`; `sort` and `filter` are cancelable |
+| `expressive:change`, `expressive:sort`, `expressive:resize`, `expressive:filter`, `expressive:page` | Data tables, from the wrapper | `{ selected }`, `{ header, column, direction }`, `{ header, column, width }`, `{ query }`, `{ page, pageSize }`; `sort`, `filter` and `page` are cancelable |
 
 An Autocomplete or Select input hosts a Menu, so it also fires that Menu's `expressive:open`, `expressive:close` and `expressive:select`. A callback that changes the choice again, such as an `onShow` that selects another tab, leaves only the event for the final choice.
 
@@ -3961,7 +3961,7 @@ wrapper.addEventListener('expressive:filter', (event) => {
 });
 ```
 
-`loadPage` is application code. The application handles fetching, failures and response ordering, replaces records, writes its server count and calls `Expressive.DataTables.sync(wrapper)`. Under server ownership, sync skips query matching and count writes, restores filter-owned hiding and synchronizes visible-record selection and columns. Author-hidden records and their details stay hidden. Sync also works inside the canceling listener and never emits filter, selection or sort events. Changing the input from script stays silent. The next uncanceled input restores local filtering and counts for that wrapper.
+`loadPage` is application code. The application handles fetching, failures and response ordering, replaces records, writes its server count and calls `Expressive.DataTables.sync(wrapper)`. Under server ownership, sync skips query matching and count writes, restores filter-owned hiding and synchronizes visible-record selection and columns. Author-hidden records and their details stay hidden. Sync also works inside the canceling listener and never emits filter, selection or sort events. Changing the input from script stays silent. For tables without accepted server page state, the next uncanceled input restores local filtering and counts for that wrapper.
 
 ### Local paging
 
@@ -3995,15 +3995,41 @@ Set `data-page-size="10"` on the `.data-table` wrapper to set the initial number
 </div>
 ```
 
-An optional labelled single `select[data-table-page-size]` lets users choose a positive safe-integer size. Its native input or change updates the wrapper's `data-page-size` and preserves the current numeric page when available, otherwise clamps it to the last page. For seven records on page four at size two, choosing four shows page two of two and records five through seven. Size changes preserve details, selections and matching counts and emit no filter, sort, selection or page request. Native selects (`browser-default`) and the existing FormSelect enhancement work in documents and open shadow roots. Disabled controls or fieldsets, multiple selects, unavailable options and invalid values are ignored without changing the working size. Unmarked controls and fixed-size tables retain their behavior.
+An optional labelled single `select[data-table-page-size]` lets users choose a positive safe-integer size. Its native input or change updates the wrapper's `data-page-size` and preserves the current numeric page when available, otherwise clamps it to the last page. For seven records on page four at size two, choosing four shows page two of two and records five through seven. Size changes preserve details, selections and matching counts and emit no filter, sort or selection event. Each valid changed size requests cancelable `expressive:page` before its local default. Native selects (`browser-default`) and the existing FormSelect enhancement work in documents and open shadow roots. Disabled controls or fieldsets, multiple selects, unavailable options and invalid values are ignored without changing the working size. Unmarked controls and fixed-size tables retain their behavior.
 
-The wrapper attribute remains authoritative for initial rendering and silent `sync(wrapper)`. Select the matching initial option. Changing only `select.value` from script is silent; dispatch a bubbling composed `input` or `change` event to apply it. Alternatively update the wrapper attribute and call sync, keeping the control's scripted value and presentation aligned yourself. DataTables does not synthesize events, refresh FormSelect or handle form resets.
+The wrapper attribute remains authoritative for initial rendering and silent `sync(wrapper)`. Select the matching initial option. Changing only `select.value` from script is silent; dispatch a bubbling composed `input` or `change` event to apply it. Alternatively update the wrapper attribute and call sync, keeping the control's scripted value and presentation aligned yourself. Silent sync does not synthesize events or refresh FormSelect. Applications handle form resets.
 
 Filtering and sorting run before paging. Details consume no page slots and stay with their record; author hiding and expansion state remain unchanged. Filter counts include all matching records across pages. Select-all changes only enabled records on the displayed page, while other selections remain checked. Its existing selection event still reports all selected records. The framework reserves `data-table-page-hidden` for page state; do not author it.
 
-The first page is the default. An uncanceled filter input or a local sort returns to it. Canceling filter or sort applies no page reset. `Expressive.DataTables.sync(wrapper)` preserves the current page where possible, clamps it after row changes and emits no events. Call it after changing records or removing the size to restore paging-only hidden rows. Explicit local paging can slice server-filtered DOM records without rewriting the application's filter count; it does not provide server page requests or server totals.
+The first page is the default. An uncanceled filter input or a local sort returns to it. Canceling filter or sort applies no page reset. `Expressive.DataTables.sync(wrapper)` preserves the current page where possible, clamps it after row changes and emits no events. Call it after changing records or removing the size to restore paging-only hidden rows. Explicit local paging can slice server-filtered DOM records without rewriting the application's filter count; it derives totals from DOM records. Page and size controls request `expressive:page` before their local default; cancellation preserves the accepted view.
 
 Page buttons keep focus, including at the first or last page. The framework sets `aria-disabled="true"` at bounds and ignores unavailable activation; buttons stay in the Tab order. Paging never moves focus into a row and emits no filter, sort or selection event. The optional status shows localized numbers such as `1 / 3` in the wrapper's language, or `0 / 0` with no records. Authors supply its accessible name and surrounding language. No numbered controls or page-size selector is generated. Standalone pagination remains CSS-only.
+
+### Server paging
+
+`Expressive.DataTables.setPage(wrapper, { page, pageSize, total })` accepts application page state and opts that wrapper into server ownership. Reuse the local paging markup. The wrapper must be a `.data-table` with a direct native table. Numeric safe integers are required: page and pageSize positive, total nonnegative. Missing fields, strings, fractions, infinities and unsafe integers return false without mutation. Valid state returns true, is copied without modifying the supplied object, clamps the page and reflects pageSize in the wrapper attribute. The setter silently synchronizes status, bounds, selection and columns.
+
+```js
+const wrapper = document.getElementById('orders');
+// Render response records and matching-count text before accepting state.
+Expressive.DataTables.setPage(wrapper, { page: 2, pageSize: 20, total: 87 });
+wrapper.addEventListener('expressive:page', event => {
+  event.preventDefault();
+  loadPage(event.detail);
+});
+// After a later response replaces records and matching-count text:
+Expressive.DataTables.setPage(wrapper, { page: 3, pageSize: 20, total: 87 });
+// Exit server ownership, retaining the current size and starting locally at page one:
+Expressive.DataTables.setPage(wrapper, null);
+```
+
+Valid changed page/size controls emit bubbling, composed, cancelable `expressive:page` from their own wrapper with `{ page, pageSize }`. Requested pages are positive and one-based, clamped against the known total. An empty table's size request asks for page one. Disabled/boundary buttons, unchanged accepted sizes and invalid controls make no request. A native composed input and its noncomposed change produce one request even when canceled or deferred. FormSelect's composed change works through the original select in documents and open shadow roots. For scripted size changes, dispatch one bubbling composed input or change.
+
+Cancellation prevents the local default and preserves accepted state, rows, order, selection, counts and focus. A native select may already show the requested choice. Server mode always retains accepted page and size until another setter call, even if nobody cancels or handles the request. A newer nested page request or a setter call inside a listener supersedes an older request's local default. The application keeps select/FormSelect presentation aligned with accepted responses.
+
+The application owns `loadPage`, fetching, errors, response ordering, safe DOM construction and matching-count text. Replace response records and count before accepting their state. Server totals never come from the returned row count. Every supplied author-visible record stays displayed, including on page two or when more than pageSize records are supplied. Details consume no slots. Zero total displays `0 / 0` and disables both directions without hiding application-provided records; render an empty body for an empty response.
+
+Filter and sort events remain requests in server mode, without local filtering, reordering or page reset. Sorting still updates its requested aria-sort direction. Accept page one with a response when appropriate. Sync/setPage emit no events and preserve application counts, author-hidden/CSS-hidden records and details, expansion and selection. Select-all affects enabled displayed records only; its event still reports every selected DOM record. Null exits server ownership and reapplies local paging from page one using the current size. Independent canceled-filter ownership remains until the next uncanceled filter input restores local filtering.
 
 ### Bulk actions
 
