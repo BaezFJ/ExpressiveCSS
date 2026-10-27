@@ -401,6 +401,13 @@ textarea {
     cursor: default;
     @include typescale("label-large");
   }
+
+  // Menu lets a press on a disabled row fall through to the list, which takes
+  // focus from the field. The row takes the press so Autocomplete can cancel it.
+  > li[role="option"][aria-disabled="true"] {
+    pointer-events: auto;
+    cursor: default;
+  }
 }
 
 // Datepicker paints its formatted date over the native value with ::after.

@@ -1787,6 +1787,164 @@ describe('Autocomplete no-results row', () => {
   });
 });
 
+describe('Autocomplete disabled entries', () => {
+  beforeEach(() => resetBody());
+
+  const data = [
+    { id: 'banana', text: 'Banana pie', disabled: true },
+    { id: 'apple', text: 'Apple pie' },
+    { id: 'cherry', text: 'Cherry pie', disabled: true }
+  ];
+  /** An open autocomplete over `data`, logging every selection report. */
+  const setup = async (options = {}) => {
+    document.body.innerHTML = `<div class="field"><input class="autocomplete" type="text" id="ac"></div>`;
+    const el = document.getElementById('ac');
+    const log = [];
+    const instance = Expressive.Autocomplete.init(el, {
+      data,
+      menuOptions: { inDuration: 0, outDuration: 0 },
+      onAutocomplete: () => log.push('callback'),
+      ...options
+    });
+    el.addEventListener('change', () => log.push('change'));
+    el.addEventListener('expressive:autocomplete', () => log.push('event'));
+    const key = (name) => el.dispatchEvent(new window.KeyboardEvent('keydown', { key: name, bubbles: true, cancelable: true }));
+    const row = (id) => instance.container.querySelector(`li[data-id="${id}"]`);
+    const ids = () => instance.selectedValues.map((entry) => entry.id);
+    el.focus();
+    el.value = 'pie';
+    fire(el, 'input');
+    await sleep(10);
+    return { el, instance, log, key, row, ids };
+  };
+
+  test('no click, Enter or selectOption() selects a disabled entry in a single select', async () => {
+    const { el, instance, log, key, row, ids } = await setup();
+    try {
+      fire(row('banana'), 'click');
+      instance.selectOption('banana');
+      key('ArrowDown');
+      assert.notEqual(el.getAttribute('aria-activedescendant'), row('banana').id);
+      assert.deepEqual(log, []);
+      assert.deepEqual(ids(), []);
+      assert.equal(el.value, 'pie');
+      assert.equal(instance.isOpen, true);
+      assert.equal(document.activeElement, el);
+      key('Enter');
+      assert.deepEqual(ids(), ['apple']);
+      assert.deepEqual(log, ['change', 'callback', 'event']);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a multi select neither adds a disabled entry nor removes a preselected one', async () => {
+    const { instance, log, row, ids } = await setup({ isMultiSelect: true, selected: ['cherry'] });
+    try {
+      for (const id of ['banana', 'cherry']) {
+        fire(row(id), 'click');
+        instance.selectOption(id);
+      }
+      assert.deepEqual(log, []);
+      assert.deepEqual(ids(), ['cherry']);
+      assert.equal(instance.isOpen, true);
+      instance.selectOption('apple');
+      assert.deepEqual(ids(), ['cherry', 'apple']);
+      assert.deepEqual(log, ['change', 'callback', 'event']);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('disabled rows stay options, report their real selection and disable their checkbox', async () => {
+    const { instance, row } = await setup({ isMultiSelect: true, selected: ['cherry'] });
+    try {
+      const states = ['banana', 'apple', 'cherry'].map((id) => [
+        id,
+        row(id).getAttribute('role'),
+        row(id).getAttribute('aria-disabled'),
+        row(id).getAttribute('aria-selected'),
+        row(id).querySelector('input').disabled,
+        row(id).querySelector('input').checked
+      ]);
+      assert.deepEqual(states, [
+        ['banana', 'option', 'true', 'false', true, false],
+        ['apple', 'option', null, 'false', false, false],
+        ['cherry', 'option', 'true', 'true', true, true]
+      ]);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('the arrows skip disabled rows and the count announces only choices', async () => {
+    const { el, instance, key, row } = await setup({
+      data: [...data, { id: 'date', text: 'Date pie' }, { id: 'elder', text: 'Elder pie', disabled: true }]
+    });
+    const status = () => document.querySelector('.autocomplete-status').textContent;
+    try {
+      assert.equal(status(), '2 results available.');
+      const active = [];
+      for (let i = 0; i < 5; i++) {
+        key('ArrowDown');
+        active.push(el.getAttribute('aria-activedescendant'));
+      }
+      key('ArrowUp');
+      active.push(el.getAttribute('aria-activedescendant'));
+      assert.deepEqual(active, ['apple', 'date', 'date', 'date', 'date', 'apple'].map((id) => row(id).id));
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('a list of only disabled matches announces no results and offers nothing to Enter', async () => {
+    const { el, instance, log, key, ids } = await setup({ data: [data[0], data[2]] });
+    const status = () => document.querySelector('.autocomplete-status').textContent;
+    try {
+      assert.equal(status(), 'No results.');
+      assert.equal(instance.container.querySelectorAll('li[role="option"]').length, 2);
+      assert.equal(instance.container.querySelector('.autocomplete-no-results'), null);
+      key('ArrowDown');
+      key('Enter');
+      assert.equal(el.hasAttribute('aria-activedescendant'), false);
+      assert.deepEqual(ids(), []);
+      assert.deepEqual(log, []);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('allowCreate offers no row for the text of a disabled entry', async () => {
+    const { el, instance } = await setup({ allowCreate: true });
+    try {
+      el.value = 'cherry pie';
+      fire(el, 'input');
+      assert.deepEqual([...instance.container.querySelectorAll('li')].map((li) => li.dataset.id), ['cherry']);
+    } finally {
+      instance.destroy();
+    }
+  });
+
+  test('the app can still select a disabled entry, and editing the text clears it', async () => {
+    const { el, instance, log, ids } = await setup();
+    document.body.insertAdjacentHTML('beforeend', `<div class="field"><input class="autocomplete" type="text" id="typed" value="banana"></div>`);
+    const typed = Expressive.Autocomplete.init(document.getElementById('typed'), { data });
+    try {
+      assert.deepEqual(typed.selectedValues, [], 'a value at setup goes through selectOption()');
+      instance.setMenuItems(data, ['banana']);
+      assert.deepEqual(ids(), ['banana']);
+      assert.deepEqual(log, ['change', 'callback', 'event']);
+      assert.equal(el.value, 'Banana pie');
+      el.value = 'Banana';
+      fire(el, 'input');
+      assert.deepEqual(ids(), []);
+    } finally {
+      instance.destroy();
+      typed.destroy();
+    }
+  });
+});
+
 describe('Autocomplete with delayed results', () => {
   for (const isMultiSelect of [false, true]) {
     test(`a new query clears the active result before its results arrive (isMultiSelect: ${isMultiSelect})`, async () => {

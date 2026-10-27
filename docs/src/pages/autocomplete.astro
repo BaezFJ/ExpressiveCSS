@@ -23,7 +23,7 @@ const S = defineSections([
   <p>Autocomplete adds a visually hidden, polite live region for loading, result counts and multi-selection changes. The visible spinner and count stay unchanged. It announces only while the input has focus and its text meets <code>minLength</code>. Closing the menu clears the region. Check spoken delivery with a screen reader.</p>
   <p>Override <code>i18n.loading</code> and <code>i18n.noResults</code>, which default to "Loading results." and "No results.". For localized plurals, supply <code>i18n.results(count)</code> and <code>i18n.selected(count)</code> functions. The defaults produce "1 result available." or "N results available." and "1 item selected." or "N items selected.". <code>i18n.create(text)</code> labels the "Add" row and defaults to <code>Add "text"</code>. Missing keys keep their defaults. All messages are plain text.</p>
   <p>When a search returns no suggestions, the open list also shows <code>i18n.noResults</code> as its first row, so sighted users see what the live region says. The row is not an option. It is hidden from assistive technology, arrow keys skip it, and a click on it chooses nothing and leaves focus in the field. The row goes away when a search returns a match. In Chips, pressing Enter to add the typed text as a chip closes the list.</p>
-  <p>Updates announce the count passed to <code>setMenuItems</code>, excluding fallback selected items and the "Add" row. Opening an existing list announces its displayed item count. Updates with <code>open: false</code> stay silent. Your application handles request cancellation, stale-response ordering and errors. The plugin ignores results delivered after <code>destroy()</code>, and results delivered after the user leaves the field update the list without opening it.</p>
+  <p>Updates announce the count passed to <code>setMenuItems</code>, excluding fallback selected items, disabled entries and the "Add" row. Opening an existing list announces its displayed item count, without disabled entries. Updates with <code>open: false</code> stay silent. Your application handles request cancellation, stale-response ordering and errors. The plugin ignores results delivered after <code>destroy()</code>, and results delivered after the user leaves the field update the list without opening it.</p>
   <Section {...S.introduction}>
         <p class="flow-text">
           Add <code>autocomplete</code> to a text input inside <code>.field</code>.
@@ -41,6 +41,12 @@ const S = defineSections([
           <span class="material-symbols prefix" aria-hidden="true">textsms</span>
           <input type="text" id="autocomplete-multi" class="autocomplete no-autoinit" placeholder=" ">
           <label for="autocomplete-multi">Multiple Autocomplete</label>
+        </div>
+        <p>Set <code>disabled: true</code> on an entry to show it without letting anyone choose it. Oslo is unavailable, and Vienna is selected and cannot be removed.</p>
+        <div class="field mb-5">
+          <span class="material-symbols prefix" aria-hidden="true">location_city</span>
+          <input type="text" id="autocomplete-disabled" class="autocomplete no-autoinit" placeholder=" ">
+          <label for="autocomplete-disabled">Cities</label>
         </div>
 <Code code={`
 <div class="field">
@@ -71,6 +77,10 @@ const S = defineSections([
           <li>
             <strong>description</strong>. An optional secondary line under the label.
           </li>
+          <li>
+            <strong>disabled</strong>. <code>true</code> keeps the entry in the list,
+            dimmed, but nobody can choose it.
+          </li>
         </ul>
         <p>
           The default search ignores extra properties. Filter them yourself in
@@ -98,6 +108,28 @@ Expressive.Autocomplete.init(document.querySelector('#autocomplete-multi'), {
     { id: 12, text: 'Apple' },
     { id: 13, text: 'Microsoft' },
     { id: 42, text: 'Google', image: 'https://picsum.photos/id/64/250/250' }
+  ]
+});
+`} />
+        <p>
+          A disabled entry stays in the results so people can see it exists.
+          A click, Enter and <code>selectOption()</code> all leave it as it is,
+          so no <code>change</code> or <code>expressive:autocomplete</code> fires.
+          Up and Down skip it, and the announced result count leaves it out,
+          so a list of only disabled matches announces <code>i18n.noResults</code>.
+          The <code>selected</code> option and <code>setMenuItems(items, selected)</code>
+          can still select one, which shows a choice the person cannot remove:
+        </p>
+<Code code={`
+Expressive.Autocomplete.init(document.querySelector('#autocomplete-disabled'), {
+  minLength: 0,
+  isMultiSelect: true,
+  selected: ['vienna'],
+  data: [
+    { id: 'lisbon', text: 'Lisbon' },
+    { id: 'oslo', text: 'Oslo', disabled: true },
+    { id: 'rome', text: 'Rome' },
+    { id: 'vienna', text: 'Vienna', disabled: true }
   ]
 });
 `} />

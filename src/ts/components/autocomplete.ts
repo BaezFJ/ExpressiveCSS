@@ -21,6 +21,12 @@ export interface AutocompleteData {
    * Optional attributes which describes the option.
    */
   description?: string;
+  /**
+   * Shows the entry dimmed and keeps every selection path from choosing or
+   * removing it. The arrow keys skip it, and the result count leaves it out.
+   * The `selected` option and `setMenuItems()` can still select it.
+   */
+  disabled?: boolean;
 }
 
 export interface AutocompleteOptions extends BaseOptions {
@@ -272,8 +278,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.container.addEventListener('pointerdown', this._handleContainerPointerDown, { signal });
     this.container.addEventListener('pointerup', this._handleContainerPointerUp, { signal });
     this.container.addEventListener('pointercancel', this._handleContainerPointerUp, { signal });
-    this.container.addEventListener('mousedown', this._handleNoResultsPress, { capture: true, signal });
-    this.container.addEventListener('click', this._handleNoResultsPress, { capture: true, signal });
+    this.container.addEventListener('mousedown', this._handleInertRowPress, { capture: true, signal });
+    this.container.addEventListener('click', this._handleInertRowPress, { capture: true, signal });
   }
 
   _setupMenu() {
@@ -515,17 +521,18 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this._pointerDown = false;
   };
 
-  // The no-results row is not an option. A press on it would move focus to the
-  // list, which nothing hands back, and Menu would report the row as chosen.
-  _handleNoResultsPress = (e: MouseEvent) => {
-    if (!(e.target instanceof Element) || !e.target.closest('.autocomplete-no-results')) return;
+  // The no-results row is not an option, and a disabled row cannot be chosen.
+  // A press on either would move focus to the list, which nothing hands back,
+  // and Menu would report the no-results row as chosen.
+  _handleInertRowPress = (e: MouseEvent) => {
+    if (!(e.target instanceof Element) || !e.target.closest('.autocomplete-no-results, [aria-disabled="true"]')) return;
     e.preventDefault();
     e.stopPropagation();
   };
 
-  /** The rows that can be chosen. The no-results row is not one. */
+  /** The rows that can be chosen. The no-results row and disabled rows are not. */
   private _options() {
-    return this.container.querySelectorAll<HTMLElement>('li[role="option"]');
+    return this.container.querySelectorAll<HTMLElement>('li[role="option"]:not([aria-disabled="true"])');
   }
 
   _resetCurrentElementPosition() {
@@ -561,6 +568,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     const isSelected = this.selectedValues.some((sel) => sel.id === entry.id);
     item.setAttribute('aria-selected', isSelected ? 'true' : 'false');
     item.setAttribute('data-id', <string>entry.id);
+    Autocomplete._markDisabled(item, entry);
     item.setAttribute(
       'style',
       'display:grid; grid-auto-flow: column; user-select: none; align-items: center;'
@@ -575,6 +583,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       checkbox.type = 'checkbox';
       checkbox.tabIndex = -1;
       checkbox.checked = isSelected;
+      checkbox.disabled = entry.disabled === true;
       const spacer = document.createElement('span');
       spacer.style.paddingLeft = '21px';
       selection.append(checkbox, spacer);
@@ -619,6 +628,11 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     };
     item.style.gridTemplateColumns = getGridConfig();
     return item;
+  }
+
+  /** Menu already ignores a click on an aria-disabled row. */
+  private static _markDisabled(item: HTMLElement, entry: AutocompleteData) {
+    if (entry.disabled === true) item.setAttribute('aria-disabled', 'true');
   }
 
   _createLabel(entry: AutocompleteData) {
@@ -729,7 +743,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     if (this._announcer.textContent !== text) this._announcer.textContent = text;
   }
 
-  private _resultsMessage(count: number) {
+  /** Announces the entries a person can choose. Disabled ones are shown, not counted. */
+  private _resultsMessage() {
+    const count = this.menuItems.filter((entry) => entry.disabled !== true).length;
     return count ? this.options.i18n.results(count) : this.options.i18n.noResults;
   }
 
@@ -766,7 +782,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this._resetAutocomplete();
     if (inputText.length >= this.options.minLength) {
       this._renderMenu();
-      this._announce(this._resultsMessage(this.menuItems.length));
+      this._announce(this._resultsMessage());
     }
     // Open menu
     if (!this.menu.isOpen) {
@@ -805,8 +821,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // Results that arrive after the user left the field update the list
     // without opening it under an input nobody is using.
     open &&= !this._left;
-    const resultCount = menuItems.length;
-    this._noResults = resultCount === 0;
+    this._noResults = menuItems.length === 0;
     this.menuItems = menuItems;
     if (selected) {
       this.selectedValues = this.menuItems.filter(
@@ -821,7 +836,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
     if (open) this.open();
     this._updateSelectedInfo();
-    this._announce(open ? this._resultsMessage(resultCount) : '');
+    this._announce(open ? this._resultsMessage() : '');
     if (selected) this._triggerChanged();
   }
 
@@ -878,7 +893,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
    * @param id The id of a data-entry.
    */
   selectOption(id: number | string) {
-    const entry = this.menuItems.find((item) => item.id == id);
+    // A disabled entry is never found, so it is neither chosen nor removed.
+    const entry = this.menuItems.find((item) => item.id == id && item.disabled !== true);
     if (!entry) return;
     if (this.options.isMultiSelect) this._toggleOption(entry);
     else this._selectSingle(entry);
