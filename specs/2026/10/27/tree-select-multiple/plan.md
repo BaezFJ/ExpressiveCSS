@@ -39,7 +39,7 @@ Completion V3-V5; delivers R5/R8 without claiming static or emulated evidence as
 Prerequisite: groups 1-3 pass.
 
 - [x] Independently trace R1-R8 to source and evidence, fix confirmed findings and complete a separate code-simplification pass. Rerun affected checks after changes.
-- [ ] Run all contributor-equivalent, MCP and isolated-package checks sequentially, then independent final evidence review. Record exact commands, results, failures and limits.
+- [x] Run all contributor-equivalent, MCP and isolated-package checks sequentially, then independent final evidence review. Record exact commands, results, failures and limits.
 - [ ] Push/open/link/watch the PR. Fix CI/review issues; verify exact head, all and required checks, conversations, current master and clean worktrees before merge. Record merge proof and remaining completion audit in the separate docs PR.
 
 Completion V4-V6. No release or publication.
