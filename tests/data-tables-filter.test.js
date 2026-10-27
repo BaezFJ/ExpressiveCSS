@@ -28,6 +28,157 @@ const count = () => document.querySelector('[data-table-filter-count]').textCont
 
 beforeEach(() => { resetBody(); document.body.innerHTML = markup; });
 
+test('filter requests bubble with a trimmed case-preserving query before the default action', () => {
+  const requests = [];
+  wrapper().parentElement.addEventListener('expressive:filter', (e) => {
+    requests.push({ detail: e.detail, target: e.target, flags: [e.bubbles, e.composed, e.cancelable], count: count() });
+  }, { once: true });
+  query('  ALpha  ');
+  assert.deepEqual(requests, [{ detail: { query: 'ALpha' }, target: wrapper(), flags: [true, true, true], count: '' }]);
+  assert.equal(count(), '2');
+  let empty;
+  wrapper().addEventListener('expressive:filter', (e) => { empty = e.detail.query; });
+  query('');
+  assert.equal(empty, '');
+  assert.equal(count(), '3');
+});
+
+test('canceling preserves the current local view, count, order and focus until explicit sync', () => {
+  query('beta');
+  const before = document.querySelector('tbody').innerHTML;
+  search().focus();
+  wrapper().addEventListener('expressive:filter', (e) => e.preventDefault(), { once: true });
+  query('Alpha');
+  assert.equal(document.querySelector('tbody').innerHTML, before);
+  assert.equal(count(), '1');
+  assert.equal(document.activeElement, search());
+  document.querySelector('[data-table-filter-count]').textContent = '87';
+  Expressive.DataTables.sync(wrapper());
+  assert.equal(filtered('alpha'), false);
+  assert.equal(filtered('beta'), false);
+  assert.equal(filtered('secret-detail'), true);
+  assert.equal(count(), '87');
+  query('beta');
+  assert.equal(filtered('alpha'), true);
+  assert.equal(count(), '1');
+});
+
+test('canceling listeners can replace records and silently sync before dispatch returns', () => {
+  const requests = [];
+  const otherEvents = [];
+  wrapper().addEventListener('expressive:change', (e) => otherEvents.push(e.type));
+  wrapper().addEventListener('expressive:sort', (e) => otherEvents.push(e.type));
+  wrapper().addEventListener('expressive:filter', (e) => {
+    e.preventDefault();
+    requests.push(e.detail);
+    document.querySelector('tbody').innerHTML = '<tr id="server"><td><input type="checkbox" checked></td><th>Unrelated server record</th><td>Ready</td></tr>';
+    document.querySelector('[data-table-filter-count]').textContent = '87';
+    Expressive.DataTables.sync(wrapper());
+  });
+  query('missing');
+  assert.deepEqual(requests, [{ query: 'missing' }]);
+  assert.deepEqual(otherEvents, []);
+  assert.equal(filtered('server'), false);
+  assert.equal(all().checked, true);
+  assert.equal(count(), '87');
+});
+
+test('later server sync preserves author hiding and counts while selecting only displayed records', async () => {
+  let requests = 0;
+  wrapper().addEventListener('expressive:filter', (e) => { e.preventDefault(); requests++; });
+  query('missing');
+  await Promise.resolve();
+  const body = document.querySelector('tbody');
+  body.replaceWith(body.cloneNode(true));
+  document.getElementById('alpha').style.display = 'none';
+  document.querySelector('[data-table-filter-count]').textContent = '87';
+  search().value = 'changed from script';
+  Expressive.DataTables.sync(wrapper());
+  assert.equal(count(), '87');
+  assert.equal(requests, 1);
+  assert.equal(filtered('beta'), false);
+  assert.equal(filtered('alpha-detail'), true);
+  assert.equal(filtered('secret-detail'), true);
+  assert.equal(document.getElementById('secret').hidden, true);
+  assert.equal(all().checked, true);
+  all().checked = false;
+  input(all());
+  assert.deepEqual(['alpha', 'beta', 'locked', 'secret'].map((id) => box(id).checked), [false, false, false, false]);
+  document.querySelector('tbody').append(document.getElementById('beta').cloneNode(true));
+  Expressive.DataTables.sync(wrapper());
+  assert.equal(count(), '87');
+  assert.equal(requests, 1);
+});
+
+test('an older default action cannot overwrite a newer canceled filter request', () => {
+  wrapper().addEventListener('expressive:filter', (e) => {
+    if (e.detail.query === 'outer') {
+      query('newer');
+      return;
+    }
+    e.preventDefault();
+    document.querySelector('tbody').innerHTML = '<tr id="server"><td><input type="checkbox" checked></td><th>Server result</th><td>Ready</td></tr>';
+    document.querySelector('[data-table-filter-count]').textContent = '87';
+    Expressive.DataTables.sync(wrapper());
+  });
+  query('outer');
+  assert.equal(search().value, 'newer');
+  assert.equal(filtered('server'), false);
+  assert.equal(count(), '87');
+  Expressive.DataTables.sync(wrapper());
+  assert.equal(count(), '87', 'the newer request keeps ownership after dispatch');
+});
+
+test('server filter ownership stays within its wrapper and is independent of sort cancellation', () => {
+  const server = wrapper();
+  const local = server.cloneNode(true);
+  document.body.append(local);
+  server.addEventListener('expressive:filter', (e) => e.preventDefault());
+  query('missing');
+  Expressive.DataTables.sync(server);
+  assert.equal(filtered('alpha'), false);
+  const localSearch = local.querySelector('[data-table-filter]');
+  localSearch.value = 'beta';
+  input(localSearch);
+  assert.equal(local.querySelector('[data-table-filter-count]').textContent, '1');
+  assert.equal(local.querySelector('#alpha').hasAttribute('data-table-filter-hidden'), true);
+  const body = server.querySelector('tbody');
+  body.prepend(server.querySelector('#beta'));
+  server.querySelector('th button').click();
+  assert.equal(body.firstElementChild.id, 'alpha', 'canceling filtering does not cancel local sorting');
+  const localBody = local.querySelector('tbody');
+  localBody.prepend(local.querySelector('#beta'));
+  const order = [...localBody.children];
+  local.addEventListener('expressive:sort', (e) => e.preventDefault());
+  local.querySelector('th button').click();
+  assert.deepEqual([...localBody.children], order);
+  localSearch.value = 'alpha';
+  input(localSearch);
+  assert.equal(local.querySelector('[data-table-filter-count]').textContent, '2');
+});
+
+test('silent local sync and unrelated controls request no filter operation', () => {
+  let requests = 0;
+  const listener = () => requests++;
+  document.addEventListener('expressive:filter', listener);
+  try {
+    search().value = 'beta';
+    Expressive.DataTables.sync(wrapper());
+    assert.equal(count(), '1');
+    const field = search();
+    field.removeAttribute('data-table-filter');
+    input(field);
+    const outside = document.createElement('input');
+    outside.type = 'search';
+    outside.setAttribute('data-table-filter', '');
+    document.body.append(outside);
+    input(outside);
+    assert.equal(requests, 0);
+  } finally {
+    document.removeEventListener('expressive:filter', listener);
+  }
+});
+
 test('text filtering searches only marked columns and keeps record details together', () => {
   query('  ALPHA  ');
   assert.equal(filtered('alpha'), false);

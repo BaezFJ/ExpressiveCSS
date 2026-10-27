@@ -15,6 +15,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Server-owned data table filtering through cancelable `expressive:filter`
+  requests with a trimmed, case-preserving query. Cancel synchronously to
+  preserve the current view, then replace records and call
+  `Expressive.DataTables.sync(wrapper)`. Sync stays silent and preserves the
+  application's server count; an uncanceled input resumes local filtering.
 - Opt-in data table text filtering. A labelled search input with
   `data-table-filter` searches columns whose headers have `data-filter`.
   Record details stay together, author-hidden rows remain hidden, and an

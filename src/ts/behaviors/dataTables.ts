@@ -187,10 +187,13 @@ function keyWidth(header: HTMLTableCellElement, e: KeyboardEvent) {
  * and fires `expressive:resize` with `{ header, column, width }`. A menu
  * checkbox item with `data-column` naming a first-row header cell's id
  * hides that column while it is unchecked.
+ * Marked search inputs request `expressive:filter` with `{ query }`.
+ * Cancel to keep records and counts server-owned across silent sync calls.
  */
 export class DataTables {
   private static _initialized = false;
   private static _dragged = false;
+  private static _serverFilters = new WeakMap<Element, Event>();
 
   static Init() {
     if (DataTables._initialized || typeof document === 'undefined') return;
@@ -213,6 +216,8 @@ export class DataTables {
    * after checking rows from script, which fires no change. It also shows
    * and hides the columns that column toggles name, as their
    * `aria-checked` says.
+   * It reapplies a local query, or preserves application records and counts
+   * after a canceled filter request. It fires no events.
    */
   static sync(wrapper: Element) {
     const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
@@ -279,9 +284,15 @@ export class DataTables {
   };
 
   private static _onFilter = (e: Event) => {
-    const input = Utils.eventTarget(e);
-    const wrapper = input?.closest('.data-table');
-    if (wrapper && input.matches(FILTER)) DataTables.sync(wrapper);
+    const input = Utils.closestInPath(e, `.data-table ${FILTER}`) as HTMLInputElement;
+    if (!input) return;
+    const wrapper = input.closest('.data-table');
+    // A listener may replace rows, sync or dispatch a newer request before returning.
+    DataTables._serverFilters.set(wrapper, e);
+    if (Utils.emit(wrapper, 'filter', { query: input.value.trim() }, true) && DataTables._serverFilters.get(wrapper) === e) {
+      DataTables._serverFilters.delete(wrapper);
+      DataTables.sync(wrapper);
+    }
   };
 
   /** Filters record groups without changing author hiding or expansion state. */
@@ -289,7 +300,7 @@ export class DataTables {
     const input = tableControl(wrapper, FILTER) as HTMLInputElement;
     if (!input) return;
     const locale = Utils.locale(table);
-    const query = input.value.trim().toLocaleLowerCase(locale);
+    const query = DataTables._serverFilters.has(wrapper) ? '' : input.value.trim().toLocaleLowerCase(locale);
     const headers = table.tHead ? [...headerColumns(table.tHead)] : [];
     const columns = headers.filter(([cell]) => cell.hasAttribute('data-filter') && (cell as HTMLTableCellElement).colSpan === 1).map(([, column]) => column);
     const groups = Array.from(table.tBodies).flatMap(DataTables._groups).filter(([row]) => !row.classList.contains('data-table-detail'));
@@ -297,8 +308,14 @@ export class DataTables {
     groups.forEach(([row]) => row.removeAttribute(FILTERED));
     const matches = groups.map(([row]) => visibleRecord(row) && DataTables._matches(row, columns, query, locale));
     groups.forEach((group, index) => group.forEach((row) => row.toggleAttribute(FILTERED, !matches[index])));
+    DataTables._filterCount(wrapper, locale, matches.filter(Boolean).length);
+  }
+
+  /** A server-filtered table's count belongs to the application. */
+  private static _filterCount(wrapper: Element, locale: string, matches: number) {
+    if (DataTables._serverFilters.has(wrapper)) return;
     const count = tableControl(wrapper, '[data-table-filter-count]');
-    if (count) count.textContent = new Intl.NumberFormat(locale).format(matches.filter(Boolean).length);
+    if (count) count.textContent = new Intl.NumberFormat(locale).format(matches);
   }
 
   private static _matches(row: HTMLTableRowElement, columns: number[], query: string, locale: string) {
