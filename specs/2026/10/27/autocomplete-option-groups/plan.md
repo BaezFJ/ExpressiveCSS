@@ -4,7 +4,7 @@
 - Roadmap phase: Phase 66, autocomplete option groups
 - Branch: `feature/2026-10-27-autocomplete-option-groups`
 - Base: `origin/master` at `db981aa4f83d0d2ee63e5877c1238cc698b2045e`
-- Status: group 1 done on 2026-10-27; groups 2 and 3 pending
+- Status: groups 1 and 2 done on 2026-10-27; group 3 pending
 
 Deliver [requirements.md](requirements.md) within the [mission](../../../../mission.md#product-rules), the [tech stack](../../../../tech-stack.md#framework-constraints) and [roadmap Phase 66](../../../../roadmap.md#phase-66-autocomplete-option-groups). Check IDs refer to [validation.md](validation.md). The user confirmed these three groups on 2026-10-27.
 
@@ -32,10 +32,10 @@ Outcome: people and agents read the same contract for grouped results.
 
 Prerequisites: group 1 has fixed the behavior.
 
-- [ ] Add `group` to the `data` list in the Autocomplete section of `llm.md`, and describe first-appearance order, the keyboard path across headings and the count.
-- [ ] Add a live example with grouped results to `docs/src/pages/autocomplete.astro`, with its setup in `docs/static/docs.js`.
-- [ ] Add an `[Unreleased]` entry to `CHANGELOG.md`. Update the `autocomplete` record in `docs/src/data/component-decisions.json` only if its recorded support changes. Leave `semantics.json` unchanged.
-- [ ] Run `npm run build:semantics`, `npm run build:skill` and `npm run check:generated`. Run `build:skill` again after the last edit to any hashed source.
+- [x] Add `group` to the `data` list in the Autocomplete section of `llm.md`, and describe first-appearance order, the keyboard path across headings and the count.
+- [x] Add a live example with grouped results to `docs/src/pages/autocomplete.astro`, with its setup in `docs/static/docs.js`. The setup joins the table that the multi-select and disabled examples share, with `isMultiSelect: false`.
+- [x] Add an `[Unreleased]` entry to `CHANGELOG.md`. Update the `autocomplete` record in `docs/src/data/component-decisions.json` only if its recorded support changes. Leave `semantics.json` unchanged. The record's documented support names single and multi select only, so it stayed as it was.
+- [x] Run `npm run build:semantics`, `npm run build:skill` and `npm run check:generated`. Run `build:skill` again after the last edit to any hashed source.
 
 Completion check: V7 passes, and the docs example uses the implemented API. Covers R9.
 

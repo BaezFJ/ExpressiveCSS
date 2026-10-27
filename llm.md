@@ -9945,6 +9945,7 @@ The IIFE bundle exposes `Expressive.Autocomplete`. `data` is an array of objects
 - image — image URL. Shown as a circle; not searched by default.
 - description — optional secondary line under the label.
 - disabled — `true` keeps the entry in the list, dimmed, but nobody can choose it.
+- group — optional heading to list the entry under.
 
 Extra properties are ignored by the default search. Filter them yourself in `onSearch`.
 
@@ -9988,6 +9989,20 @@ Expressive.Autocomplete.init(document.querySelector('#autocomplete-disabled'), {
     { id: 'oslo', text: 'Oslo', disabled: true },
     { id: 'rome', text: 'Rome' },
     { id: 'vienna', text: 'Vienna', disabled: true }
+  ]
+});
+```
+
+Give entries a `group` to list them under labelled headings. Entries with the same group gather where the group first appears in the results, so sort them yourself if the order matters; entries without one stay outside every group. Up and Down pass over a heading to the next entry, the announced result count leaves headings out, and a click on a heading chooses nothing. The heading is plain text, even with `allowUnsafeHTML`:
+
+```js
+Expressive.Autocomplete.init(document.querySelector('#autocomplete-groups'), {
+  minLength: 0,
+  data: [
+    { id: 'lisbon', text: 'Lisbon', group: 'Portugal' },
+    { id: 'porto', text: 'Porto', group: 'Portugal' },
+    { id: 'bergen', text: 'Bergen', group: 'Norway' },
+    { id: 'oslo', text: 'Oslo', group: 'Norway' }
   ]
 });
 ```

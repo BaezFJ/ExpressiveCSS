@@ -48,6 +48,12 @@ const S = defineSections([
           <input type="text" id="autocomplete-disabled" class="autocomplete no-autoinit" placeholder=" ">
           <label for="autocomplete-disabled">Cities</label>
         </div>
+        <p>Set <code>group</code> on entries to list them under headings.</p>
+        <div class="field mb-5">
+          <span class="material-symbols prefix" aria-hidden="true">public</span>
+          <input type="text" id="autocomplete-groups" class="autocomplete no-autoinit" placeholder=" ">
+          <label for="autocomplete-groups">Grouped cities</label>
+        </div>
 <Code code={`
 <div class="field">
   <span class="material-symbols prefix" aria-hidden="true">textsms</span>
@@ -80,6 +86,9 @@ const S = defineSections([
           <li>
             <strong>disabled</strong>. <code>true</code> keeps the entry in the list,
             dimmed, but nobody can choose it.
+          </li>
+          <li>
+            <strong>group</strong>. An optional heading to list the entry under.
           </li>
         </ul>
         <p>
@@ -130,6 +139,20 @@ Expressive.Autocomplete.init(document.querySelector('#autocomplete-disabled'), {
     { id: 'oslo', text: 'Oslo', disabled: true },
     { id: 'rome', text: 'Rome' },
     { id: 'vienna', text: 'Vienna', disabled: true }
+  ]
+});
+`} />
+        <p>
+          Give entries a <code>group</code> to list them under labelled headings. Entries with the same group gather where the group first appears in the results, so sort them yourself if the order matters; entries without one stay outside every group. Up and Down pass over a heading to the next entry, the announced result count leaves headings out, and a click on a heading chooses nothing. The heading is plain text, even with <code>allowUnsafeHTML</code>:
+        </p>
+<Code code={`
+Expressive.Autocomplete.init(document.querySelector('#autocomplete-groups'), {
+  minLength: 0,
+  data: [
+    { id: 'lisbon', text: 'Lisbon', group: 'Portugal' },
+    { id: 'porto', text: 'Porto', group: 'Portugal' },
+    { id: 'bergen', text: 'Bergen', group: 'Norway' },
+    { id: 'oslo', text: 'Oslo', group: 'Norway' }
   ]
 });
 `} />

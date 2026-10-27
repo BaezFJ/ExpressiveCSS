@@ -22,6 +22,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   refresh. On a multiple select, picks keep the popup open with the query and
   focus in place, and options the query hides stay selected and submitted.
   Default, tree and browser-default selects keep their behavior.
+- Autocomplete option groups. An entry's `group` lists it under a labelled
+  heading, and entries with the same group gather where the group first
+  appears. Up and Down pass over headings, the announced result count leaves
+  them out, and a click on one chooses nothing. Entries without a group keep
+  their behavior.
 - Disabled Autocomplete entries. An entry with `disabled: true` stays in the
   results, dimmed, and a click, Enter and `selectOption()` leave it
   unselected, or selected when the `selected` option or
