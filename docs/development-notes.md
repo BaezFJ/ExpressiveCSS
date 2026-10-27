@@ -903,3 +903,15 @@ lets translations wrap and text grow without colliding with the value. Keep
 leading-icon padding on that row and paint only the label/control, not supporting
 text. Native and outlined selects are outside this layout change. Browser tests
 check label/value geometry, not just page overflow.
+
+## Chart base sharing size experiment
+
+On 2026-10-26, Phase 58 evaluated a private write-once base for all twelve `chart()` callers, including radial. Identical layout, caption, cursor, tooltip, labels, legend and swatch rules used shared selectors. Chart-specific token declarations and reads stayed separate. Table and sparkline selectors kept each chart's root and descendant class paired. A custom chart name retained its own base rules.
+
+With Node 24.22.1, locked Dart Sass 1.105.2 and native `gzipSync` defaults, full minified CSS measured 90,098 gzip bytes before and 89,243 after, including the same source-map trailer. The saving was 855 bytes. The existing budget test removes that trailer; its corresponding measurements were 90,045 and 89,197 bytes, a saving of 848. This candidate did not reach Phase 58's confirmed 1,024-byte threshold.
+
+The experiment's production Sass changes were restored. A fresh compile matched the baseline CSS byte-for-byte, so this phase ships no CSS change and does not lower the budget. The baseline build and existing selective-build suite passed. An isolated assertion probe compiled all twelve standalone chart selections, a custom name, empty selection, inert abstracts and default/full equality on the baseline and candidate. Candidate browser and visual compatibility checks did not run after the size decision. The result does not establish a limit on every possible chart refactor.
+
+Full contributor verification built and typechecked successfully, then reported six failures, two cancellations and six skips on unchanged production source. All eight affected checks passed in a sequential-file rerun of 18 selected tests with no skips. Generated-data checks and the docs build and verification passed separately. The original full run remains recorded as failed.
+
+See [the Phase 58 validation record](../specs/2026/10/26/chart-base-rules/validation.md) for source identities and evidence. The roadmap completion state remains unchanged.
