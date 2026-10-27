@@ -148,8 +148,8 @@
     display: none;
   }
 
-  // Keep filter state separate from the author's hidden attribute.
-  > table > tbody > tr[data-table-filter-hidden] {
+  // Keep filtering and paging separate from the author's hidden attribute.
+  > table > tbody > tr:is([data-table-filter-hidden], [data-table-page-hidden]) {
     display: none;
   }
 

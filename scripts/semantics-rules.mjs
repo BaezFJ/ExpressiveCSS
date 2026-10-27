@@ -76,6 +76,8 @@ export function authoredName(el, document) {
 function accessibleName(el, document) {
   const authored = authoredName(el, document);
   if (authored) return authored;
+  // A navigation landmark is not named by the links and buttons it contains.
+  if (el.localName === 'nav') return '';
   const labels = [...(el.labels ?? [])].map((label) => accessibleName(label, document)).join(' ').trim();
   if (labels) return labels;
   const clone = el.cloneNode(true);

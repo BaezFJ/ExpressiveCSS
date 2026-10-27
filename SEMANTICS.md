@@ -414,6 +414,14 @@ Added with the data table component. The wrapper is the scroll container so the 
 | `data-table-filter-count-is-named` | require-accessible-name | `.data-table [data-table-filter-count]` | must end up with an accessible name |
 | `data-table-filter-count-is-status` | require-attr | `.data-table [data-table-filter-count]` | must have `role` = `status` |
 | `data-table-filter-count-is-polite` | require-attr | `.data-table [data-table-filter-count]` | must have `aria-live` = `polite` |
+| `data-table-page-control-is-button` | forbid | `.data-table[data-page-size] [data-table-page]:not(button[type="button"])` | must not match |
+| `data-table-page-control-is-named` | require-accessible-name | `.data-table[data-page-size] button[data-table-page]` | must end up with an accessible name |
+| `data-table-page-control-is-in-pagination` | forbid | `.data-table[data-page-size] [data-table-page]:not(nav.pagination *)` | must not match |
+| `data-table-page-navigation-is-named` | require-accessible-name | `.data-table[data-page-size] nav.pagination` | must end up with an accessible name |
+| `data-table-page-direction-is-known` | forbid | `.data-table[data-page-size] [data-table-page]:not([data-table-page="previous"], [data-table-page="next"])` | must not match |
+| `data-table-page-status-is-named` | require-accessible-name | `.data-table [data-table-page-status]` | must end up with an accessible name |
+| `data-table-page-status-is-status` | require-attr | `.data-table [data-table-page-status]` | must have `role` = `status` |
+| `data-table-page-status-is-polite` | require-attr | `.data-table [data-table-page-status]` | must have `aria-live` = `polite` |
 
 - **data-table-wraps-the-table** - Put .data-table on a <div> around the <table>. The wrapper scrolls; a table made to scroll itself needs display:block, which drops its table role in some engines.
 - **data-table-sort-is-on-a-header** - aria-sort belongs on the column header cell (<th>), not on the button inside it or on a data cell. Assistive technology reads the sort state from the header.
@@ -424,6 +432,14 @@ Added with the data table component. The wrapper is the scroll container so the 
 - **data-table-filter-count-is-named** - Name the result count, for example aria-label="Matching records", so its number has context.
 - **data-table-filter-count-is-status** - Give the table result count role="status" so changes are announced without moving focus.
 - **data-table-filter-count-is-polite** - Use aria-live="polite" on the table result count so typing does not interrupt other speech.
+- **data-table-page-control-is-button** - Use a native button with type="button" for a local table page control. Ordinary pagination links keep their navigation behavior.
+- **data-table-page-control-is-named** - Name each table page button, for example Previous or Next, using visible text or an accessible label.
+- **data-table-page-control-is-in-pagination** - Put local table page buttons in a named nav.pagination inside their table wrapper.
+- **data-table-page-navigation-is-named** - Name the table's pagination navigation so it is distinct from other navigation on the page.
+- **data-table-page-direction-is-known** - Set data-table-page to previous or next. Local table paging does not generate numbered page controls.
+- **data-table-page-status-is-named** - Name the page status, for example aria-label="Pages", so its numbers have context.
+- **data-table-page-status-is-status** - Give the table page status role="status" so page changes are announced without moving focus.
+- **data-table-page-status-is-polite** - Use aria-live="polite" on the table page status so page changes do not interrupt other speech.
 
 ### datepicker
 

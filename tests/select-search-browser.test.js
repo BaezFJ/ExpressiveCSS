@@ -176,6 +176,8 @@ each('keeps search visible while results scroll with enlarged RTL text and force
   await page.getByRole('searchbox').fill('Item');
   assert.notEqual(await page.getByRole('searchbox').evaluate(el => getComputedStyle(el).outlineStyle), 'none');
   await page.keyboard.press('ArrowUp');
+  // Native focus-reveal scrolling can finish after the key event returns.
+  await expect(page.getByRole('option', { name: 'Item 119', exact: true })).toBeInViewport({ ratio: 1 });
   const geometry = await page.evaluate(() => {
     const popup = instance.menuEl.getBoundingClientRect();
     const input = instance.menuEl.querySelector('input').getBoundingClientRect();

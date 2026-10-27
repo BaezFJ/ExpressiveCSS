@@ -3870,6 +3870,8 @@ Put a `<button>` in each sortable `<th>` and set `aria-sort="ascending"` or `"de
 
 Add a labelled `input[type="search"][data-table-filter]` inside the wrapper for text filtering, and put `data-filter` on each searchable single-column header. A named `output[data-table-filter-count]` with `role="status"` and `aria-live="polite"` receives the matching record count. Filtering keeps record details together and preserves author-hidden rows. Select-all changes only enabled records visible in the current view, while hidden records keep their selections. Each edit fires cancelable `expressive:filter` with `{ query }`. Cancel synchronously for server filtering, then replace records, write the count and call `Expressive.DataTables.sync(wrapper)`. Sync stays silent and preserves server records and counts until the next uncanceled input; otherwise it reapplies the local query.
 
+Opt in to local paging with a positive safe-integer `data-page-size` on the wrapper. Authored Previous/Next `button[type="button"][data-table-page]` controls in a named `nav.pagination` move between filtered, sorted record groups. An optional named `output[data-table-page-status][role="status"][aria-live="polite"]` shows page numbers. Selection is page-scoped and retained across pages; silent `sync(wrapper)` clamps the current page after record changes. Ordinary pagination links keep their navigation behavior.
+
 ```html
 <div class="data-table" data-sort>
   <table>
@@ -3958,6 +3960,37 @@ wrapper.addEventListener('expressive:filter', (event) => {
 ```
 
 `loadPage` is application code. The application handles fetching, failures and response ordering, replaces records, writes its server count and calls `Expressive.DataTables.sync(wrapper)`. Under server ownership, sync skips query matching and count writes, restores filter-owned hiding and synchronizes visible-record selection and columns. Author-hidden records and their details stay hidden. Sync also works inside the canceling listener and never emits filter, selection or sort events. Changing the input from script stays silent. The next uncanceled input restores local filtering and counts for that wrapper.
+
+### Local paging
+
+Set `data-page-size="10"` on the `.data-table` wrapper to show a fixed number of local record groups per page. The value must be a positive safe integer; absent or invalid sizes leave records unpaged. Provide named native `button[type="button"]` controls with `data-table-page="previous"` and `data-table-page="next"` inside a named `nav.pagination` in that wrapper. The framework uses the existing pagination styles and leaves all anchors and unmarked controls alone.
+
+```html
+<div class="data-table" data-page-size="2">
+  <table>
+    <caption>Customers</caption>
+    <thead><tr><th scope="col">Customer</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Alvin</th></tr>
+      <tr><th scope="row">Alan</th></tr>
+      <tr><th scope="row">Jonathan</th></tr>
+    </tbody>
+  </table>
+  <nav class="pagination" aria-label="Customer pages">
+    <ol>
+      <li><button type="button" data-table-page="previous">Previous</button></li>
+      <li><output data-table-page-status role="status" aria-live="polite" aria-label="Pages"></output></li>
+      <li><button type="button" data-table-page="next">Next</button></li>
+    </ol>
+  </nav>
+</div>
+```
+
+Filtering and sorting run before paging. Details consume no page slots and stay with their record; author hiding and expansion state remain unchanged. Filter counts include all matching records across pages. Select-all changes only enabled records on the displayed page, while other selections remain checked. Its existing selection event still reports all selected records. The framework reserves `data-table-page-hidden` for page state; do not author it.
+
+The first page is the default. An uncanceled filter input or a local sort returns to it. Canceling filter or sort applies no page reset. `Expressive.DataTables.sync(wrapper)` preserves the current page where possible, clamps it after row changes and emits no events. Call it after changing records or removing the size to restore paging-only hidden rows. Explicit local paging can slice server-filtered DOM records without rewriting the application's filter count; it does not provide server page requests or server totals.
+
+Page buttons keep focus, including at the first or last page. The framework sets `aria-disabled="true"` at bounds and ignores unavailable activation; buttons stay in the Tab order. Paging never moves focus into a row and emits no filter, sort or selection event. The optional status shows localized numbers such as `1 / 3` in the wrapper's language, or `0 / 0` with no records. Authors supply its accessible name and surrounding language. No numbered controls or page-size selector is generated. Standalone pagination remains CSS-only.
 
 ### Bulk actions
 

@@ -36,6 +36,19 @@ const root = new URL('../', import.meta.url);
 const read = (p) => readFileSync(new URL(p, root), 'utf8');
 const data = JSON.parse(read('semantics.json'));
 
+test('table paging requires named native controls in navigation and a named polite status', () => {
+  const rules = rulesOf(data).filter((rule) => rule.id.startsWith('data-table-page-'));
+  const broken = (html) => violations(`<div class="data-table" data-page-size="2">${html}</div>`, rules, data.compositeRoles).map(({ rule }) => rule.id);
+  assert.deepEqual(broken('<button data-table-page="next"></button>'), ['data-table-page-control-is-button', 'data-table-page-control-is-named', 'data-table-page-control-is-in-pagination']);
+  assert.deepEqual(broken('<nav class="pagination"><ol><li><button type="button" data-table-page="next">Next</button></li></ol></nav>'), ['data-table-page-navigation-is-named']);
+  assert.deepEqual(broken('<nav class="pagination" aria-label=" "><button type="button" data-table-page="next">Next</button></nav>'), ['data-table-page-navigation-is-named']);
+  assert.deepEqual(broken('<span id="pages-name">Record pages</span><nav class="pagination" aria-labelledby="pages-name"><button type="button" data-table-page="next">Next</button></nav>'), []);
+  assert.deepEqual(broken('<nav class="pagination" aria-label="Record pages"><ol><li><button type="button" data-table-page="other">Next</button></li></ol></nav>'), ['data-table-page-direction-is-known']);
+  assert.deepEqual(broken('<output data-table-page-status></output>'), ['data-table-page-status-is-named', 'data-table-page-status-is-status', 'data-table-page-status-is-polite']);
+  assert.deepEqual(broken('<nav class="pagination" aria-label="Record pages"><ol><li><button type="button" data-table-page="next">Next</button></li></ol></nav><output data-table-page-status role="status" aria-live="polite" aria-label="Pages"></output>'), []);
+  assert.deepEqual(broken('<nav class="pagination" aria-label="Server pages"><a href="?page=2">Next</a></nav>'), []);
+});
+
 test('table filter names accept native labels and reject unnamed controls and status counts', () => {
   const rules = rulesOf(data).filter((rule) => rule.id.startsWith('data-table-filter-'));
   const broken = (html) => violations(`<div class="data-table">${html}</div>`, rules, data.compositeRoles).map(({ rule }) => rule.id);

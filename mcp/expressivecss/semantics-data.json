@@ -1314,6 +1314,61 @@
             "attr": "aria-live",
             "equals": "polite",
             "message": "Use aria-live=\"polite\" on the table result count so typing does not interrupt other speech."
+          },
+          {
+            "id": "data-table-page-control-is-button",
+            "kind": "forbid",
+            "selector": ".data-table[data-page-size] [data-table-page]:not(button[type=\"button\"])",
+            "fragmentSafe": true,
+            "message": "Use a native button with type=\"button\" for a local table page control. Ordinary pagination links keep their navigation behavior."
+          },
+          {
+            "id": "data-table-page-control-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".data-table[data-page-size] button[data-table-page]",
+            "message": "Name each table page button, for example Previous or Next, using visible text or an accessible label."
+          },
+          {
+            "id": "data-table-page-control-is-in-pagination",
+            "kind": "forbid",
+            "selector": ".data-table[data-page-size] [data-table-page]:not(nav.pagination *)",
+            "fragmentSafe": true,
+            "message": "Put local table page buttons in a named nav.pagination inside their table wrapper."
+          },
+          {
+            "id": "data-table-page-navigation-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".data-table[data-page-size] nav.pagination",
+            "message": "Name the table's pagination navigation so it is distinct from other navigation on the page."
+          },
+          {
+            "id": "data-table-page-direction-is-known",
+            "kind": "forbid",
+            "selector": ".data-table[data-page-size] [data-table-page]:not([data-table-page=\"previous\"], [data-table-page=\"next\"])",
+            "fragmentSafe": true,
+            "message": "Set data-table-page to previous or next. Local table paging does not generate numbered page controls."
+          },
+          {
+            "id": "data-table-page-status-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".data-table [data-table-page-status]",
+            "message": "Name the page status, for example aria-label=\"Pages\", so its numbers have context."
+          },
+          {
+            "id": "data-table-page-status-is-status",
+            "kind": "require-attr",
+            "selector": ".data-table [data-table-page-status]",
+            "attr": "role",
+            "equals": "status",
+            "message": "Give the table page status role=\"status\" so page changes are announced without moving focus."
+          },
+          {
+            "id": "data-table-page-status-is-polite",
+            "kind": "require-attr",
+            "selector": ".data-table [data-table-page-status]",
+            "attr": "aria-live",
+            "equals": "polite",
+            "message": "Use aria-live=\"polite\" on the table page status so page changes do not interrupt other speech."
           }
         ]
       },

@@ -9,7 +9,7 @@ Component ID: `split-button`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `f994ba228a56e30603681c9edd301aeac00f18c2f0f2c28974c8174122ebb40a`
+Contract SHA-256: `9957a434173649d641ae18e9972432677422e6049affdf016e5622e3cb233801`
 
 #### Selection and adaptation
 
