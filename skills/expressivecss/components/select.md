@@ -9,7 +9,7 @@ Component ID: `select`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `6de826d84406ced6fb743f8795d9595f18d1f80c94f4bf063381d5842cee7cf4`
+Contract SHA-256: `60057d1ba2005e76bb7292924c1bb7ac6c30f068b0dbc9b5d5182928c807b14f`
 
 #### Selection and adaptation
 
@@ -27,7 +27,7 @@ Requirements and boundaries: design reference inputs-material-review. Full visua
 
 [Google guidelines](https://m3.material.io/components/menus/guidelines).
 
-Support (2026-09-17, `llm.md#select`): Single/multiple selection, optgroups, and browser-default fallback.
+Support (2026-10-26, `llm.md#select`): Single/multiple selection, optgroups, browser-default fallback, and opt-in single-select search with a separate popup field and native form values.
 
 Web adaptation: Native select enhanced by runtime; this is related to menu/text-field patterns.
 
@@ -46,53 +46,12 @@ Add `multiple` to select several options. Chosen values appear as a comma-separa
 #### Syntax
 
 ```html
-<div class="field">
-  <select id="form-select-1">
-    <option value="" disabled selected>Choose your option</option>
-    <option value="1">Option 1</option>
-    <option value="2">Option 2</option>
-    <option value="3">Option 3</option>
-  </select>
-  <label for="form-select-1">Expressive Select</label>
-</div>
-
-<div class="field">
-  <select id="form-select-2" multiple>
-    <option value="" disabled selected>Choose your option</option>
-    <option value="1">Option 1</option>
-    <option value="2">Option 2</option>
-    <option value="3">Option 3</option>
-  </select>
-  <label for="form-select-2">Multiple Select</label>
-</div>
-
-<div class="field">
-  <select id="form-select-3">
-    <optgroup label="team 1">
-      <option value="1">Option 1</option>
-      <option value="2">Option 2</option>
-    </optgroup>
-    <optgroup label="team 2">
-      <option value="3">Option 3</option>
-      <option value="4">Option 4</option>
-    </optgroup>
-  </select>
-  <label for="form-select-3">Optgroups</label>
-</div>
-
-<div class="field">
-  <select id="form-select-4">
-    <option value="" disabled selected>Choose your option</option>
-    <option value="1" data-icon="photo.jpg">example 1</option>
-    <option value="2" data-icon="photo.jpg" class="left">example 2</option>
-  </select>
-  <label for="form-select-4">Images in select</label>
-</div>
-
-<label for="form-select-6">Browser Select</label>
-<select id="form-select-6" class="browser-default">
-  <option value="" disabled selected>Choose your option</option>
-  <option value="1">Option 1</option>
+<select name="destination" aria-label="Destination" data-form-select-options='{"searchable":true}'>
+  <optgroup label="Europe">
+    <option value="paris">Paris</option>
+    <option value="rome">Rome</option>
+  </optgroup>
+  <optgroup label="Asia"><option value="tokyo">Tokyo</option></optgroup>
 </select>
 ```
 
@@ -102,6 +61,8 @@ Add `multiple` to select several options. Chosen values appear as a comma-separa
 | --- | --- | --- | --- |
 | `classes` | String | `''` | Space-separated classes added to the `.field` wrapper, either the parent `.field` or one the plugin creates. |
 | `menuOptions` | Object | `{}` | Options passed to `Menu`. See Menu. `coverTrigger` is forced to `false` and `closeOnClick` is forced to `false`. |
+| `searchable` | Boolean | `false` | Add a separate popup search field to an enhanced plain single select. Ignored for multiple, tree and browser-default selects. |
+| `i18n` | Object | `{ searchLabel: 'Search options', noResults: 'No results' }` | Search input label and no-results status. Override either string; omitted keys retain defaults. |
 
 #### Methods
 
@@ -111,7 +72,7 @@ Add `multiple` to select several options. Chosen values appear as a comma-separa
 
 #### Also documented
 
-The Select section of the [API reference](https://www.expressivecss.com/llm.md) also covers Initialization, Properties, Disabled styles.
+The Select section of the [API reference](https://www.expressivecss.com/llm.md) also covers Single-select search, Initialization, Properties, Disabled styles.
 
 #### Rules
 

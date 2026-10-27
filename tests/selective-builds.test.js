@@ -305,7 +305,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed show more: the toggle, the fit check with its focus, blur and font rechecks, the swapped label and destroy(): 101,521 gzip bytes (+693).
   // Reviewed the cascader: nested options in listbox columns, keys in both directions, the path submitted through the form control it now shares with Chips in core/formControl, and the review fixes: 103,607 gzip bytes (+2,086).
   // Reviewed the tree select: a role="tree" list in the Menu surface over a data-tree select, the full tree keyboard contract in both directions, branch options kept out of the form, refresh() keeping open branches and focus, and FormSelect's hooks, focus redirect and skipped destroy(): 105,464 gzip bytes (+1,857 over master's 103,607 build).
-  assert.ok(sizes(js).gzip <= 105464, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed opt-in single-select search, native selection, popup keyboard handling, reset and refresh: 106,503 gzip bytes (+1,039 over the Phase 62 base).
+  assert.ok(sizes(js).gzip <= 106503, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -482,5 +483,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed responsive child sizing and both resets across four breakpoints: 90,471 gzip bytes (+97 over the Phase 59 base).
   // Reviewed .self-auto and window-size prefixes for the self-alignment classes: 90,559 gzip bytes (+88 over the Phase 60 base).
   // Reviewed .order-none and window-size prefixes for the three order classes: 90,609 gzip bytes (+50 over the Phase 61 base).
-  assert.ok(sizes(css).gzip <= 90609, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the searchable select popup, scrolling list, token-based search field and focus ring, and reduced motion: 90,754 gzip bytes (+145 over the Phase 62 base).
+  assert.ok(sizes(css).gzip <= 90754, `CSS gzip: ${sizes(css).gzip}`);
 });
