@@ -3922,7 +3922,7 @@ A checked checkbox in a row's first cell selects the row and fills it with `seco
 </div>
 ```
 
-### Bulk actions
+### Text filtering
 
 Put a labelled `input[type="search"][data-table-filter]` inside the wrapper and mark each searchable column's `<th>` with `data-filter`. Mark only headers that span one column, including headers in grouped rows. The trimmed query matches a substring in any marked column, ignoring case in the table's language. Each cell uses its `data-value` when present, otherwise its text. An empty query restores the records; a nonempty query with no marked columns matches none. Detail text does not contribute to search.
 
@@ -3947,6 +3947,8 @@ An optional named `output[data-table-filter-count]` inside the same wrapper, wit
   </table>
 </div>
 ```
+
+### Bulk actions
 
 A `.data-table-actions` bar written just before the `.data-table` joins its top edge and takes the selected color while any row is selected. A leading label, such as a count, pushes the buttons to the end. The page keeps the count current and decides which buttons apply; `hidden` removes the bar.
 

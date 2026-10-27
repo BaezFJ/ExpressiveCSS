@@ -9,11 +9,11 @@ Component ID: `data-table`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `4600f35b6ea7c73d9213210c0f5c915a5faadfc0be84fb97cd99b31169363182`
+Contract SHA-256: `6519564df4331e7665793414028d0eff0f6fe07fee7295f73ebd2fdf8eadf4d1`
 
 #### Selection and adaptation
 
-Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
+Runtime ownership: `shared-runtime`. No dedicated entry in the reviewed Google component inventory.
 
 Example: A contacts screen where people tap a name to open a profile is a list. A data table would add column headers and sorting nobody uses on a phone.
 
@@ -25,9 +25,9 @@ Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Support (2026-10-06, `llm.md#data-table`): Scrolling wrapper with an outline, sticky header row, numeric columns, dense rows, a sort arrow drawn from aria-sort and checkbox row selection.
+Support (2026-10-27, `llm.md#data-table`): Scrolling native table with sticky headers, numeric and dense rows, sorting, view-scoped selection, column resizing and visibility, and opt-in text filtering with record/detail grouping and an authored result count.
 
-Web adaptation: A plain div wraps a native <table>, so the table keeps its role; the page owns sorting, select-all and the scroll region name.
+Web adaptation: A plain div wraps a native table. Shared DataTables handlers own opt-in sorting, filtering, select-all and column operations; authors name controls and the scroll region, and keep native row and header semantics.
 
 Known boundary: Table semantics, the sticky header, numeric alignment, the sort arrow and selected rows are checked in a browser; sort announcements, enlarged text and spoken output remain unverified.
 
@@ -72,7 +72,7 @@ Add a labelled `input[type="search"][data-table-filter]` inside the wrapper for 
 
 #### Also documented
 
-The Data table section of the [API reference](https://www.expressivecss.com/llm.md) also covers Row selection, Bulk actions, Row expansion, Scrolling, Sticky first column, Column resize, Column visibility, Tokens.
+The Data table section of the [API reference](https://www.expressivecss.com/llm.md) also covers Row selection, Text filtering, Bulk actions, Row expansion, Scrolling, Sticky first column, Column resize, Column visibility, Tokens.
 
 #### Rules
 

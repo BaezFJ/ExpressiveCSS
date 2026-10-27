@@ -293,14 +293,12 @@ export class DataTables {
     const headers = table.tHead ? [...headerColumns(table.tHead)] : [];
     const columns = headers.filter(([cell]) => cell.hasAttribute('data-filter') && (cell as HTMLTableCellElement).colSpan === 1).map(([, column]) => column);
     const groups = Array.from(table.tBodies).flatMap(DataTables._groups).filter(([row]) => !row.classList.contains('data-table-detail'));
-    const matches = groups.filter(([row, ...details]) => {
-      row.removeAttribute(FILTERED);
-      const match = visibleRecord(row) && DataTables._matches(row, columns, query, locale);
-      [row, ...details].forEach((each) => each.toggleAttribute(FILTERED, !match));
-      return match;
-    });
+    // Read visibility between write batches, so filtering causes one layout, not one per record.
+    groups.forEach(([row]) => row.removeAttribute(FILTERED));
+    const matches = groups.map(([row]) => visibleRecord(row) && DataTables._matches(row, columns, query, locale));
+    groups.forEach((group, index) => group.forEach((row) => row.toggleAttribute(FILTERED, !matches[index])));
     const count = tableControl(wrapper, '[data-table-filter-count]');
-    if (count) count.textContent = new Intl.NumberFormat(locale).format(matches.length);
+    if (count) count.textContent = new Intl.NumberFormat(locale).format(matches.filter(Boolean).length);
   }
 
   private static _matches(row: HTMLTableRowElement, columns: number[], query: string, locale: string) {
