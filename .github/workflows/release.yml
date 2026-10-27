@@ -53,6 +53,10 @@ jobs:
       # prebuilt platform packages without them.
       - run: npm ci --ignore-scripts
       - run: npm ci --prefix mcp/expressivecss --ignore-scripts
+      - name: Audit both release lockfiles
+        run: |
+          npm audit --package-lock-only --ignore-scripts --audit-level=high
+          npm audit --prefix mcp/expressivecss --package-lock-only --ignore-scripts --audit-level=high
       - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run verify
       - run: npm test --prefix mcp/expressivecss

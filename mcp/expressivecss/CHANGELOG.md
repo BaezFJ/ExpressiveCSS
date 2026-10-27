@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Security: update the locked `body-parser` to 2.4.0, `fast-uri` to 3.1.9,
+  and the `qs` override to 6.16.1 to resolve known dependency advisories.
 - Security: `quality_inspector` skips every `files` entry outside
   `projectRoot` with the same reason before touching the disk. A missing
   path used to get "file does not exist", so a client could tell which host

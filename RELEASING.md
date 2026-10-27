@@ -35,6 +35,11 @@ only validates and dry-runs. Its credential-free `--dry-run --force` permits
 rehearsing the current version even when it is already on npm; real publishing
 never uses `--force` and rejects previously published or backward versions.
 
+Validation audits both committed npm lockfiles, including development dependencies,
+and blocks on high or critical findings. Dependency installation scripts stay
+disabled in this job. Review lower-severity findings and any proposed dependency
+updates before releasing; do not use forced audit fixes.
+
 The `npm-publish` environment requires BaezFJ's approval and accepts only release
 tags. Only the publishing job receives OIDC permission. Each package needs an npm
 trusted publisher for repository `BaezFJ/ExpressiveCSS`, workflow `release.yml`,

@@ -25,7 +25,7 @@ assert.equal(packageManifest.scripts.test, 'node smoke.mjs');
 assert.equal(packageManifest.scripts.prepack, 'npm test');
 assert.ok(Object.values(packageManifest.scripts).every((command) => !command.includes('../..')));
 assert.equal(packageManifest.files.includes('scripts/sync-guides.mjs'), false);
-assert.equal(packageManifest.overrides.qs, '6.16.0');
+assert.equal(packageManifest.overrides.qs, '6.16.1');
 assert.equal(packageManifest.engines.node, jsdomManifest.engines.node);
 for (const [name, data] of Object.entries({ guideData, semanticsData, decisionsData, contractData })) {
   assert.equal(typeof data.generatedBy, 'string', `${name} has no generatedBy marker`);
