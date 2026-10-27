@@ -312,7 +312,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed table filtering with batched visibility reads, authored counts and visible-record selection: 107,109 gzip bytes (+385 over the Phase 66 base).
   // Reviewed Escape dismissal from an opening menu's trigger, preserving IME keys: 107,136 gzip bytes (+27).
   // Reviewed cancelable filtering, silent server ownership and newer-request precedence: 107,235 gzip bytes (+99).
-  assert.ok(sizes(js).gzip <= 107235, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed local record-group paging, retained selections and authored page controls: 107,683 gzip bytes (+448).
+  assert.ok(sizes(js).gzip <= 107683, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -493,5 +494,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed Autocomplete disabled rows taking the pointer so a press on them is cancelled: 90,780 gzip bytes (+26 over the Phase 64 base).
   // Reviewed Autocomplete group headings styled as Menu labels that take the pointer, and group lists filling the row: 90,826 gzip bytes (+46 over the Phase 65 base).
   // Reviewed filter-owned row hiding that preserves author-hidden state: 90,834 gzip bytes (+8 over the Phase 66 base).
-  assert.ok(sizes(css).gzip <= 90834, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed page-owned row hiding alongside filter hiding: 90,848 gzip bytes (+14).
+  assert.ok(sizes(css).gzip <= 90848, `CSS gzip: ${sizes(css).gzip}`);
 });

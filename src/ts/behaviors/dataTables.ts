@@ -20,6 +20,14 @@ const TOGGLE = '[role="menuitemcheckbox"][data-column]';
 const HIDDEN = 'data-column-hidden';
 const FILTER = 'input[type="search"][data-table-filter]';
 const FILTERED = 'data-table-filter-hidden';
+const PAGED = 'data-table-page-hidden';
+const PAGE_BUTTON = 'button[type="button"]:is([data-table-page="previous"], [data-table-page="next"])';
+const PAGE_STEP: Record<string, number> = { previous: -1, next: 1 };
+
+function pageSize(wrapper: Element) {
+  const size = Number(wrapper.getAttribute('data-page-size'));
+  return Number.isSafeInteger(size) && size > 0 ? size : 0;
+}
 
 /** Controls belong to their nearest wrapper, never an enclosing table. */
 function tableControl(wrapper: Element, selector: string) {
@@ -28,7 +36,7 @@ function tableControl(wrapper: Element, selector: string) {
 
 /** Enabled selection and result counts use the same visible record set. */
 function visibleRecord(row: HTMLTableRowElement) {
-  if (row.closest(`[hidden], [${FILTERED}]`)) return false;
+  if (row.closest(`[hidden], [${FILTERED}], [${PAGED}]`)) return false;
   if (row.checkVisibility) return row.checkVisibility({ visibilityProperty: true });
   const style = getComputedStyle(row);
   return style.display !== 'none' && !['hidden', 'collapse'].includes(style.visibility);
@@ -194,6 +202,7 @@ export class DataTables {
   private static _initialized = false;
   private static _dragged = false;
   private static _serverFilters = new WeakMap<Element, Event>();
+  private static _pages = new WeakMap<Element, number>();
 
   static Init() {
     if (DataTables._initialized || typeof document === 'undefined') return;
@@ -202,6 +211,7 @@ export class DataTables {
     document.addEventListener('input', DataTables._onChange);
     document.addEventListener('input', DataTables._onFilter);
     document.addEventListener('click', DataTables._onClick);
+    document.addEventListener('click', DataTables._onPage);
     document.addEventListener('pointerdown', DataTables._onPointerDown);
     document.addEventListener('click', DataTables._onHandleClick);
     document.addEventListener('keydown', DataTables._onKeyDown);
@@ -222,7 +232,9 @@ export class DataTables {
   static sync(wrapper: Element) {
     const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
     if (table) {
+      table.querySelectorAll(`:scope > tbody > tr[${PAGED}]`).forEach((row) => row.removeAttribute(PAGED));
       DataTables._filter(wrapper, table);
+      DataTables._page(wrapper, table);
       DataTables._select(DataTables._all(table), DataTables._enabled(table), false);
     }
     (wrapper.getRootNode() as ParentNode).querySelectorAll(TOGGLE).forEach((item) => {
@@ -291,6 +303,7 @@ export class DataTables {
     DataTables._serverFilters.set(wrapper, e);
     if (Utils.emit(wrapper, 'filter', { query: input.value.trim() }, true) && DataTables._serverFilters.get(wrapper) === e) {
       DataTables._serverFilters.delete(wrapper);
+      DataTables._pages.delete(wrapper);
       DataTables.sync(wrapper);
     }
   };
@@ -303,7 +316,7 @@ export class DataTables {
     const query = DataTables._serverFilters.has(wrapper) ? '' : input.value.trim().toLocaleLowerCase(locale);
     const headers = table.tHead ? [...headerColumns(table.tHead)] : [];
     const columns = headers.filter(([cell]) => cell.hasAttribute('data-filter') && (cell as HTMLTableCellElement).colSpan === 1).map(([, column]) => column);
-    const groups = Array.from(table.tBodies).flatMap(DataTables._groups).filter(([row]) => !row.classList.contains('data-table-detail'));
+    const groups = DataTables._records(table);
     // Read visibility between write batches, so filtering causes one layout, not one per record.
     groups.forEach(([row]) => row.removeAttribute(FILTERED));
     const matches = groups.map(([row]) => visibleRecord(row) && DataTables._matches(row, columns, query, locale));
@@ -320,6 +333,49 @@ export class DataTables {
 
   private static _matches(row: HTMLTableRowElement, columns: number[], query: string, locale: string) {
     return !query || columns.some((column) => cellText(row, column).toLocaleLowerCase(locale).includes(query));
+  }
+
+  private static _onPage = (e: MouseEvent) => {
+    const button = Utils.closestInPath(e, `.data-table[data-page-size] ${PAGE_BUTTON}:not(:disabled, [aria-disabled="true"])`) as HTMLButtonElement;
+    if (!button) return;
+    const wrapper = button.closest('.data-table');
+    if (!pageSize(wrapper)) return;
+    DataTables._pages.set(wrapper, (DataTables._pages.get(wrapper) ?? 1) + PAGE_STEP[button.dataset.tablePage]);
+    DataTables.sync(wrapper);
+  };
+
+  /** Filter visibility is settled before paging; details consume no slots. */
+  private static _page(wrapper: Element, table: HTMLTableElement) {
+    const size = pageSize(wrapper);
+    if (!size) return;
+    const groups = DataTables._records(table);
+    const eligible = groups.filter(([row]) => visibleRecord(row));
+    const pages = Math.ceil(eligible.length / size);
+    const page = Math.min(Math.max(DataTables._pages.get(wrapper) ?? 1, 1), pages);
+    DataTables._pages.set(wrapper, page);
+    const shown = new Set(eligible.slice((page - 1) * size, page * size).map(([row]) => row));
+    groups.forEach((group) => group.forEach((row) => row.toggleAttribute(PAGED, !shown.has(group[0]))));
+    DataTables._pageControls(wrapper, page, pages);
+  }
+
+  private static _pageControls(wrapper: Element, page: number, pages: number) {
+    wrapper.querySelectorAll<HTMLButtonElement>(PAGE_BUTTON).forEach((button) => {
+      if (button.closest('.data-table') !== wrapper) return;
+      const unavailable = button.dataset.tablePage === 'previous' ? page <= 1 : page >= pages;
+      button.setAttribute('aria-disabled', String(unavailable));
+    });
+    const status = tableControl(wrapper, '[data-table-page-status]');
+    if (status) {
+      const number = new Intl.NumberFormat(Utils.locale(wrapper));
+      status.textContent = `${number.format(page)} / ${number.format(pages)}`;
+    }
+  }
+
+  /** Sorting resets only opted-in tables; ordinary table behavior stays unchanged. */
+  private static _firstPage(wrapper: Element) {
+    if (!pageSize(wrapper)) return;
+    DataTables._pages.delete(wrapper);
+    DataTables.sync(wrapper);
   }
 
   /**
@@ -346,6 +402,7 @@ export class DataTables {
     const column = headerColumns(header.closest('thead')).get(header);
     if (Utils.emit(wrapper, 'sort', { header, column, direction }, true)) {
       DataTables._sort(header.closest('table'), header, column, ORDER[direction]);
+      DataTables._firstPage(wrapper);
     }
   };
 
@@ -445,6 +502,10 @@ export class DataTables {
     if (!header.classList.contains('numeric')) return new Intl.Collator(Utils.locale(table), { numeric: true, sensitivity: 'base' }).compare;
     const number = (text: string) => numberValue(text) ?? -Infinity;
     return (a: string, b: string) => number(a) - number(b);
+  }
+
+  private static _records(table: HTMLTableElement) {
+    return Array.from(table.tBodies).flatMap(DataTables._groups).filter(([row]) => !row.classList.contains('data-table-detail'));
   }
 
   /** A body's rows in groups: each record row with the detail rows after it. */
