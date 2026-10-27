@@ -46,7 +46,7 @@ The margin ruler can move inward or outward. A wider margin adds negative space 
 
 Spacing groups content, directs attention and sets the product's tone. Denser spacing feels focused and serious; open spacing feels calm. Desktop layouts can use more generous spacing than mobile ones.
 
-Use the spacing scale instead of one-off values: `.m*`, `.p*` and `.gap-*` from 0 to 6 (0.25rem to 3rem), and `.g-0` to `.g-5` on a `.row`. Prefer the logical forms `.ms-*`, `.me-*`, `.ps-*` and `.pe-*` so spacing mirrors in RTL.
+Use the spacing scale instead of one-off values: `.m*`, `.p*` and `.gap-*` from 0 to 6, with zero at 0 and the nonzero values from 0.25rem to 3rem, and `.g-0` to `.g-5` on a `.row`. Set independent column and row gaps with `.gap-x-*` and `.gap-y-*`. Both accept all four window-size prefixes. For example, `gap-4 medium:gap-x-2` retains a `1rem` row gap while reducing the column gap to `0.5rem` from 600px. See the [helper reference](../../expressivecss-usage/references/helpers.md#spacing-grammar) for scale and shorthand precedence. Prefer the logical forms `.ms-*`, `.me-*`, `.ps-*` and `.pe-*` so spacing mirrors in RTL.
 
 ### Group related content
 

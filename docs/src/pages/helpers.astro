@@ -165,6 +165,8 @@ const S = defineSections([
             <tr><td><code>.self-start</code>, <code>.self-center</code>, <code>.self-end</code>, <code>.self-stretch</code></td><td><code>align-self</code> on a child</td></tr>
             <tr><td><code>.order-first</code>, <code>.order-last</code></td><td><code>order: -1</code>, <code>order: 1</code> on a child. This changes the visual order only. Keyboard and screen reader order still follow the source.</td></tr>
             <tr><td><code>.gap-0</code> to <code>.gap-6</code></td><td><code>gap</code> on the spacing scale, with <code>!important</code>. Also works on grid containers.</td></tr>
+            <tr><td><code>.gap-x-0</code> to <code>.gap-x-6</code></td><td><code>column-gap</code> only, with <code>!important</code>.</td></tr>
+            <tr><td><code>.gap-y-0</code> to <code>.gap-y-6</code></td><td><code>row-gap</code> only, with <code>!important</code>.</td></tr>
           </tbody>
         </table>
         <div class="flex align-center justify-between gap-3 surface-container p-4">
@@ -188,13 +190,42 @@ const S = defineSections([
           that already lay out their children (app bars, toolbars, card <code>.actions</code>,
           button groups) do not need these classes.
         </p>
+        <h5>Independent gaps</h5>
+        <p>
+          The gap scale is <code>0</code>, <code>0.25rem</code>, <code>0.5rem</code>,
+          <code>0.75rem</code>, <code>1rem</code>, <code>1.5rem</code> and <code>3rem</code>.
+          Use <code>.gap-x-*</code> for column gaps and <code>.gap-y-*</code> for row gaps
+          on grid or flex containers. They keep the native meanings of <code>column-gap</code>
+          and <code>row-gap</code>, including in RTL and column-direction flex layouts.
+          There are no <code>auto</code> gap values. The grid's <code>.g-*</code> classes are a separate scale.
+        </p>
+        <div id="axis-gap-example" class="grid-auto-fill gap-4 medium:gap-x-2" style="--grid-column-min: 8rem">
+          {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'].map(day => <div class="surface-container p-3">{day}</div>)}
+        </div>
+<Code code={`
+<div class="grid-auto-fill gap-4 medium:gap-x-2" style="--grid-column-min: 8rem">
+  <div class="surface-container p-3">Monday</div>
+  <div class="surface-container p-3">Tuesday</div>
+  <div class="surface-container p-3">Wednesday</div>
+  <div class="surface-container p-3">Thursday</div>
+  <div class="surface-container p-3">Friday</div>
+  <div class="surface-container p-3">Saturday</div>
+</div>
+`} />
+        <p>
+          Both gaps start at <code>1rem</code>. From 600px, the column gap becomes <code>0.5rem</code>
+          while the row gap stays <code>1rem</code>. At the same breakpoint, an axis class overrides
+          <code>.gap-*</code> regardless of class order. A later breakpoint's <code>.gap-*</code> resets
+          both axes; a later axis class changes only its axis. Use <code>0</code> to remove a gap.
+          Avoid conflicting values from the same family at the same breakpoint.
+        </p>
   </Section>
   <Section {...S.prefixes}>
         <p>
           These classes also come with a window-size prefix: display, flex direction, wrap,
           <code>justify-*</code>, <code>align-*</code>, text alignment (<code>.start-align</code>,
           <code>.center-align</code>, <code>.end-align</code>), <code>.line-clamp-*</code>,
-          <code>.gap-*</code>, margin, padding and <code>.hide</code>. Prefixed margin and padding cover all sides,
+          <code>.gap-*</code>, <code>.gap-x-*</code>, <code>.gap-y-*</code>, margin, padding and <code>.hide</code>. Prefixed margin and padding cover all sides,
           <code>x</code>, <code>y</code>, top, bottom, start and end. Use start and end, not left
           and right. A prefixed class applies from that size class up and overrides the unprefixed
           one, the same way the grid's <code>m6</code> and <code>l4</code> do.

@@ -15,6 +15,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Independent gap utilities. `.gap-x-0` through `.gap-x-6` set column gaps and
+  `.gap-y-0` through `.gap-y-6` set row gaps on the existing rem spacing scale.
+  Both support all four window-size prefixes and override the gap shorthand
+  at the same breakpoint. Existing gap utilities retain their behavior.
 - Show more. A `.show-more` holds text with a `line-clamp-1`, `-2` or
   `-3` class and a `<button>`; the button shows the full text, reads
   "Show less" while it is open (`i18n.showLess` or `data-show-less`) and

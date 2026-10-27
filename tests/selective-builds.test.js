@@ -90,6 +90,22 @@ test('default custom Sass matches the complete stylesheet and preserves configur
   assert.throws(() => compileString('@use "custom" with ($components: ("menu"), $utilities: (), $expressive-glass: true, $expressive-glass-opacity: 0.7);', options), /must be a percentage/);
 });
 
+test('axis gaps ship with spacing alone and stay out of builds without spacing', () => {
+  const options = { style: 'compressed', loadPaths: [`${root}/src/sass`], logger: { warn() {} } };
+  const spacing = compileString('@use "custom" with ($components: (), $utilities: ("spacing"), $expressive-include-fonts: false);', options).css;
+  const empty = compileString('@use "custom" with ($components: (), $utilities: (), $expressive-include-fonts: false);', options).css;
+  for (const prefix of ['', 'medium\\:', 'expanded\\:', 'large\\:', 'extra-large\\:']) {
+    for (const [step, value] of ['0', '.25rem', '.5rem', '.75rem', '1rem', '1.5rem', '3rem'].entries()) {
+      assert.ok(spacing.includes(`.${prefix}gap-x-${step}{column-gap:${value} !important}`), `${prefix}gap-x-${step}`);
+      assert.ok(spacing.includes(`.${prefix}gap-y-${step}{row-gap:${value} !important}`), `${prefix}gap-y-${step}`);
+    }
+  }
+  assert.doesNotMatch(spacing, /gap-[xy]-auto|\.flex\{/);
+  assert.doesNotMatch(empty, /gap-[xy]-\d/);
+  const configured = compileString('@use "custom" with ($components: (), $utilities: ("spacing"), $breakpoints: ("medium": 650px, "expanded": 900px, "large": 1300px, "extra-large": 1700px));', options).css;
+  assert.match(configured, /@media\(width >= 650px\)\{[^@]*\.medium\\:gap-x-1\{/);
+});
+
 test('complete minified artifacts stay within the reviewed gzip budgets', () => {
   const js = readFileSync(`${root}/dist/js/expressive.min.js`, 'utf8').replace(/^\/\/# sourceMappingURL=.*\n?/m, '');
   const css = readFileSync(`${root}/dist/css/expressive.min.css`, 'utf8').replace(/\/\*# sourceMappingURL=.*?\*\//, '').trimEnd();
@@ -439,5 +455,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed complete body-large and title-medium roles for app bar form inputs and card captions: 90,048 gzip bytes (+3).
   // Reviewed chip component-prefixed sizing properties with legacy fallbacks: 90,067 gzip bytes (+19).
   // Reviewed the Timepicker canvas and expanding-card content delay reading motion tokens: 90,072 gzip bytes (+5).
-  assert.ok(sizes(css).gzip <= 90072, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed axis-specific gaps on the spacing scale with all four window-size prefixes: 90,374 gzip bytes (+302).
+  assert.ok(sizes(css).gzip <= 90374, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -55,7 +55,9 @@ Examples: `.m-0`, `.mt-4`, `.mx-auto`, `.p-3`, `.py-2`, `.pl-6`, `.ms-auto`, `.p
 </section>
 ```
 
-`.gap-0` to `.gap-6` set `gap` on the same scale for a flex or grid container; there is no `.gap-auto`.
+`.gap-0` to `.gap-6` set `gap` on the same scale for a flex or grid container. `.gap-x-0` to `.gap-x-6` set only `column-gap`, and `.gap-y-0` to `.gap-y-6` set only `row-gap`. These keep the native property meanings in RTL and column-direction flex layouts. No gap family accepts `auto`.
+
+At the same breakpoint, an axis class overrides the gap shorthand regardless of HTML class order. A later breakpoint's shorthand resets both axes; a later axis class changes only its axis. Use `0` to remove a gap, and avoid conflicting values from the same family at the same breakpoint. For example, `grid-auto-fill gap-4 medium:gap-x-2` keeps a `1rem` row gap while its column gap changes from `1rem` to `0.5rem` at 600px. The grid's `.g-*` classes use a separate scale.
 
 All generated spacing declarations use `!important`, so they intentionally beat component declarations. `auto` is meaningful for margin only; padding-auto classes are not generated because CSS rejects `padding: auto`. The `l` and `r` forms remain physical directions. Use `.ms-*`, `.me-*`, `.ps-*`, and `.pe-*` for `margin-inline-start`, `margin-inline-end`, `padding-inline-start`, and `padding-inline-end`. They follow writing direction and mirror in RTL. Each accepts `0` through `6`; only `.ms-*` and `.me-*` accept `auto`. Avoid combining physical and logical helpers that set the same side.
 
@@ -173,6 +175,8 @@ Apply one class per declaration to the container. `.flex-row` and `.flex-nowrap`
 | `.self-start`, `.self-center`, `.self-end`, `.self-stretch` | `align-self` | One child out of line with the rest. |
 | `.order-first`, `.order-last` | `order: -1`, `order: 1` | Visual only; keyboard and reading order follow the source, so do not reorder meaningful content. |
 | `.gap-0` to `.gap-6` | `gap`, `!important` | Spacing scale above; use `.g-*` on `.row` instead. |
+| `.gap-x-0` to `.gap-x-6` | `column-gap`, `!important` | Changes only the column gap. |
+| `.gap-y-0` to `.gap-y-6` | `row-gap`, `!important` | Changes only the row gap. |
 
 ```html
 <div class="flex align-center justify-between gap-3">
@@ -185,7 +189,7 @@ Components that already lay out their children (app bars, toolbars, card `.actio
 
 ## Window-size prefixes
 
-Display, flex direction and wrap, `justify-*`, `align-*`, `.start-align`, `.center-align`, `.end-align`, `.gap-*`, margin and padding (all sides, `x`, `y`, `t`, `b`, `s`, `e`; not `l` or `r`) and `.hide` also take a `medium:`, `expanded:`, `large:` or `extra-large:` prefix. The prefixed class applies from that size class up (600, 840, 1200 and 1600px) and overrides the unprefixed one, like the grid's `m6` and `l4`.
+Display, flex direction and wrap, `justify-*`, `align-*`, `.start-align`, `.center-align`, `.end-align`, `.gap-*`, `.gap-x-*`, `.gap-y-*`, margin and padding (all sides, `x`, `y`, `t`, `b`, `s`, `e`; not `l` or `r`) and `.hide` also take a `medium:`, `expanded:`, `large:` or `extra-large:` prefix. The prefixed class applies from that size class up (600, 840, 1200 and 1600px) and overrides the unprefixed one, like the grid's `m6` and `l4`.
 
 ```html
 <div class="flex flex-column gap-2 expanded:flex-row expanded:align-center expanded:justify-between">

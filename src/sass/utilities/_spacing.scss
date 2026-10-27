@@ -44,14 +44,19 @@ $spacing-values: ("0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem, "5
   }
 }
 
-@include _margin-and-padding;
-
-// Gap on the same scale for flex and grid containers: .gap-0 ... .gap-6.
-@each $name, $value in $spacing-values {
-  @if $name != "auto" {
-    .gap-#{$name} { gap: $value !important; }
+@mixin _gaps($prefix: "") {
+  // Axis rules follow every shorthand value so they win at the same breakpoint.
+  @each $class, $property in ("gap": "gap", "gap-x": "column-gap", "gap-y": "row-gap") {
+    @each $name, $value in $spacing-values {
+      @if $name != "auto" {
+        .#{$prefix}#{$class}-#{$name} { #{$property}: $value !important; }
+      }
+    }
   }
 }
+
+@include _margin-and-padding;
+@include _gaps;
 
 // The margin, padding and gap scales with window-size prefixes, like the
 // layout classes in _helpers.scss: .expanded:p-5 and .expanded:gap-5 apply
@@ -60,10 +65,6 @@ $spacing-values: ("0": 0, "1": 0.25rem, "2": 0.5rem, "3": 0.75rem, "4": 1rem, "5
 @each $size in ("medium", "expanded", "large", "extra-large") {
   @include bp-up($size) {
     @include _margin-and-padding("#{$size}\\:");
-    @each $name, $value in $spacing-values {
-      @if $name != "auto" {
-        .#{$size}\:gap-#{$name} { gap: $value !important; }
-      }
-    }
+    @include _gaps("#{$size}\\:");
   }
 }
