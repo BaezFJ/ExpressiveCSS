@@ -25,6 +25,20 @@ const PAGE_BUTTON = 'button[type="button"]:is([data-table-page="previous"], [dat
 const PAGE_STEP: Record<string, number> = { previous: -1, next: 1 };
 const PAGE_SIZE = 'select[data-table-page-size]:not([multiple], :disabled):not(:has(option:checked:disabled))';
 
+interface TablePageState { page: number; pageSize: number; total: number; }
+type PageView = TablePageState & { server?: boolean };
+
+function validPageState(state: TablePageState) {
+  if (!state) return false;
+  return [[state.page, 1], [state.pageSize, 1], [state.total, 0]].every(
+    ([value, minimum]) => Number.isSafeInteger(value) && value >= minimum
+  );
+}
+
+function pageIndex(page: number, total: number, size: number) {
+  return Math.min(Math.max(page, 1), Math.ceil(total / size));
+}
+
 function positivePageSize(value: string | null) {
   const size = Number(value);
   return Number.isSafeInteger(size) && size > 0 ? size : 0;
@@ -210,7 +224,7 @@ export class DataTables {
   private static _initialized = false;
   private static _dragged = false;
   private static _serverFilters = new WeakMap<Element, Event>();
-  private static _pages = new WeakMap<Element, number>();
+  private static _pages = new WeakMap<Element, PageView>();
 
   static Init() {
     if (DataTables._initialized || typeof document === 'undefined') return;
@@ -245,6 +259,9 @@ export class DataTables {
     const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
     if (table) {
       table.querySelectorAll(`:scope > tbody > tr[${PAGED}]`).forEach((row) => row.removeAttribute(PAGED));
+      if (DataTables._pages.get(wrapper)?.server) {
+        table.querySelectorAll(`:scope > tbody > tr[${FILTERED}]`).forEach((row) => row.removeAttribute(FILTERED));
+      }
       DataTables._filter(wrapper, table);
       DataTables._page(wrapper, table);
       DataTables._select(DataTables._all(table), DataTables._enabled(table), false);
@@ -252,6 +269,25 @@ export class DataTables {
     (wrapper.getRootNode() as ParentNode).querySelectorAll(TOGGLE).forEach((item) => {
       if (wrapper.contains(toggledHeader(item))) applyToggle(item);
     });
+  }
+
+  /** Accepts application page state without slicing its records; null restores local paging. */
+  static setPage(wrapper: Element, state: TablePageState | null): boolean {
+    if (!wrapper?.matches?.('.data-table:has(> table)')) return false;
+    if (!DataTables._storePage(wrapper, state)) return false;
+    DataTables.sync(wrapper);
+    return true;
+  }
+
+  private static _storePage(wrapper: Element, state: TablePageState | null) {
+    if (state === null) {
+      DataTables._pages.delete(wrapper);
+      return true;
+    }
+    if (!validPageState(state)) return false;
+    wrapper.setAttribute('data-page-size', String(state.pageSize));
+    DataTables._pages.set(wrapper, { ...state, server: true });
+    return true;
   }
 
   /** A column's width in pixels, read from its header cell. */
@@ -315,8 +351,7 @@ export class DataTables {
     DataTables._serverFilters.set(wrapper, e);
     if (Utils.emit(wrapper, 'filter', { query: input.value.trim() }, true) && DataTables._serverFilters.get(wrapper) === e) {
       DataTables._serverFilters.delete(wrapper);
-      DataTables._pages.delete(wrapper);
-      DataTables.sync(wrapper);
+      DataTables._resetPage(wrapper);
     }
   };
 
@@ -325,7 +360,7 @@ export class DataTables {
     const input = tableControl(wrapper, FILTER) as HTMLInputElement;
     if (!input) return;
     const locale = Utils.locale(table);
-    const query = DataTables._serverFilters.has(wrapper) ? '' : input.value.trim().toLocaleLowerCase(locale);
+    const query = DataTables._serverRecords(wrapper) ? '' : input.value.trim().toLocaleLowerCase(locale);
     const headers = table.tHead ? [...headerColumns(table.tHead)] : [];
     const columns = headers.filter(([cell]) => cell.hasAttribute('data-filter') && (cell as HTMLTableCellElement).colSpan === 1).map(([, column]) => column);
     const groups = DataTables._records(table);
@@ -338,9 +373,13 @@ export class DataTables {
 
   /** A server-filtered table's count belongs to the application. */
   private static _filterCount(wrapper: Element, locale: string, matches: number) {
-    if (DataTables._serverFilters.has(wrapper)) return;
+    if (DataTables._serverRecords(wrapper)) return;
     const count = tableControl(wrapper, '[data-table-filter-count]');
     if (count) count.textContent = new Intl.NumberFormat(locale).format(matches);
+  }
+
+  private static _serverRecords(wrapper: Element) {
+    return DataTables._pages.get(wrapper)?.server || DataTables._serverFilters.has(wrapper);
   }
 
   private static _matches(row: HTMLTableRowElement, columns: number[], query: string, locale: string) {
@@ -352,13 +391,20 @@ export class DataTables {
     if (!button) return;
     const wrapper = button.closest('.data-table');
     if (!pageSize(wrapper)) return;
-    DataTables._pages.set(wrapper, (DataTables._pages.get(wrapper) ?? 1) + PAGE_STEP[button.dataset.tablePage]);
-    DataTables.sync(wrapper);
+    DataTables._advancePage(wrapper, PAGE_STEP[button.dataset.tablePage]);
   };
+
+  private static _advancePage(wrapper: Element, step: number) {
+    const view = DataTables._pages.get(wrapper) ?? { page: 1, pageSize: pageSize(wrapper), total: 0 };
+    if (view.server) return;
+    DataTables._pages.set(wrapper, { ...view, page: view.page + step });
+    DataTables.sync(wrapper);
+  }
 
   private static _onPageSize = (e: Event) => {
     const control = Utils.closestInPath(e, `.data-table[data-page-size] ${PAGE_SIZE}`) as HTMLSelectElement;
     if (!control) return;
+    if (DataTables._pages.get(control.closest('.data-table'))?.server) return;
     DataTables._setPageSize(control.closest('.data-table'), control.value);
   };
 
@@ -375,12 +421,18 @@ export class DataTables {
     if (!size) return;
     const groups = DataTables._records(table);
     const eligible = groups.filter(([row]) => visibleRecord(row));
-    const pages = Math.ceil(eligible.length / size);
-    const page = Math.min(Math.max(DataTables._pages.get(wrapper) ?? 1, 1), pages);
-    DataTables._pages.set(wrapper, page);
-    const shown = new Set(eligible.slice((page - 1) * size, page * size).map(([row]) => row));
+    const view = DataTables._pageView(wrapper, eligible.length, size);
+    DataTables._pages.set(wrapper, view);
+    const displayed = view.server ? eligible : eligible.slice((view.page - 1) * size, view.page * size);
+    const shown = new Set(displayed.map(([row]) => row));
     groups.forEach((group) => group.forEach((row) => row.toggleAttribute(PAGED, !shown.has(group[0]))));
-    DataTables._pageControls(wrapper, page, pages);
+    DataTables._pageControls(wrapper, view.page, Math.ceil(view.total / size));
+  }
+
+  private static _pageView(wrapper: Element, total: number, size: number): PageView {
+    const previous = DataTables._pages.get(wrapper) ?? { page: 1, pageSize: size, total };
+    const records = previous.server ? previous.total : total;
+    return { ...previous, page: pageIndex(previous.page, records, size), pageSize: size, total: records };
   }
 
   private static _pageControls(wrapper: Element, page: number, pages: number) {
@@ -399,6 +451,11 @@ export class DataTables {
   /** Sorting resets only opted-in tables; ordinary table behavior stays unchanged. */
   private static _firstPage(wrapper: Element) {
     if (!pageSize(wrapper)) return;
+    DataTables._resetPage(wrapper);
+  }
+
+  private static _resetPage(wrapper: Element) {
+    if (DataTables._pages.get(wrapper)?.server) return;
     DataTables._pages.delete(wrapper);
     DataTables.sync(wrapper);
   }
@@ -510,6 +567,7 @@ export class DataTables {
    * row before it.
    */
   private static _sort(table: HTMLTableElement, header: HTMLTableCellElement, column: number, order: number) {
+    if (DataTables._pages.get(table.closest('.data-table'))?.server) return;
     const compare = DataTables._compare(table, header);
     for (const body of Array.from(table.tBodies)) {
       const groups = DataTables._groups(body);

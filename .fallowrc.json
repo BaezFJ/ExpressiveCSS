@@ -23,6 +23,7 @@
   "usedClassMembers": [
     "getInstance",
     "dismissAll",
+    "setPage",
     {
       "extends": "Component",
       "members": [
