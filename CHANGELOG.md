@@ -15,6 +15,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Authored single-select page-size controls for local data tables. Changing
+  size preserves an available page or clamps to the new last page, retaining
+  selections and matching counts.
 - Local data table paging through a fixed `data-page-size` and authored
   Previous/Next buttons. Paging follows filtering and sorting, keeps details
   with records, scopes select-all to the displayed page and preserves

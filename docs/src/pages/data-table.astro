@@ -272,6 +272,10 @@ wrapper.addEventListener('expressive:filter', (event) => {
       links keep their navigation behavior.
     </p>
     <div class="data-table" data-sort data-page-size="2">
+      <label for="paged-customer-size">Customers per page</label>
+      <select id="paged-customer-size" class="browser-default" data-table-page-size>
+        <option value="1">1</option><option value="2" selected>2</option><option value="3">3</option>
+      </select>
       <div class="field"><input id="paged-customer-query" type="search" data-table-filter /><label for="paged-customer-query">Search paged customers</label></div>
       <span>Matching records: <output data-table-filter-count role="status" aria-live="polite" aria-label="Matching paged customers"></output></span>
       <table>
@@ -293,6 +297,13 @@ wrapper.addEventListener('expressive:filter', (event) => {
     </div>
     <Code code={`
 <div class="data-table" data-page-size="2">
+  <label>Customers per page
+    <select class="browser-default" data-table-page-size>
+      <option value="1">1</option>
+      <option value="2" selected>2</option>
+      <option value="3">3</option>
+    </select>
+  </label>
   <table>
     <caption>Customers</caption>
     <thead><tr><th scope="col">Customer</th></tr></thead>
@@ -311,6 +322,25 @@ wrapper.addEventListener('expressive:filter', (event) => {
   </nav>
 </div>
 `} />
+    <p>
+      Add a labelled single <code>select[data-table-page-size]</code> to let
+      users change the size. Its positive safe-integer option value updates
+      the wrapper's <code>data-page-size</code>, preserving the current page
+      when available and clamping it otherwise. For seven records on page
+      four at size two, choosing four shows page two with records five
+      through seven. Details, selections and matching counts stay intact.
+      Disabled or multiple controls, unavailable options and invalid values
+      are ignored. Use <code>browser-default</code> for a native select, or
+      use the existing FormSelect enhancement. Both work in open shadow roots.
+    </p>
+    <p>
+      Select the option matching the wrapper's initial size. Changing a
+      select value from script is silent; dispatch a bubbling, composed
+      <code>input</code> or <code>change</code> event to apply it. Alternatively,
+      update the wrapper's size and call <code>Expressive.DataTables.sync(wrapper)</code>.
+      Sync reads the wrapper attribute. Keep the control's scripted value
+      and presentation aligned yourself; DataTables does not refresh FormSelect.
+    </p>
     <p>
       Filtering and sorting run before paging. Details consume no page slots,
       and author hiding and expansion stay unchanged. Filter counts cover all

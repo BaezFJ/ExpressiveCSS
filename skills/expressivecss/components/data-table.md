@@ -9,7 +9,7 @@ Component ID: `data-table`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `9957a434173649d641ae18e9972432677422e6049affdf016e5622e3cb233801`
+Contract SHA-256: `12bead849fc0f1a62a32f6877b48511e08e414e14ab3d81764aad80e73ec58e0`
 
 #### Selection and adaptation
 
@@ -85,6 +85,9 @@ The Data table section of the [API reference](https://www.expressivecss.com/llm.
 - `data-table-filter-count-is-named`: Name the result count, for example aria-label="Matching records", so its number has context.
 - `data-table-filter-count-is-status`: Give the table result count role="status" so changes are announced without moving focus.
 - `data-table-filter-count-is-polite`: Use aria-live="polite" on the table result count so typing does not interrupt other speech.
+- `data-table-page-size-is-select`: Use a native select for an authored table page-size control. The existing FormSelect enhancement reads and updates that same select.
+- `data-table-page-size-is-single`: A table has one page size. Omit multiple from its page-size select.
+- `data-table-page-size-is-named`: Label the table page-size select, for example Rows per page. Option values do not name the control.
 - `data-table-page-control-is-button`: Use a native button with type="button" for a local table page control. Ordinary pagination links keep their navigation behavior.
 - `data-table-page-control-is-named`: Name each table page button, for example Previous or Next, using visible text or an accessible label.
 - `data-table-page-control-is-in-pagination`: Put local table page buttons in a named nav.pagination inside their table wrapper.

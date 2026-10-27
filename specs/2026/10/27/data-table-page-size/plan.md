@@ -18,9 +18,9 @@ Delivers R1-R5. Completion check V1. Build/typecheck and run focused Node regres
 
 Prerequisite: group 1 passes.
 
-- [ ] Extend `tests/data-tables-page-browser.test.js` for native pointer/keyboard operation, focus, last-page clamping, a real native select in an open shadow root, and existing FormSelect's composed event path in all three engines. Preserve ordinary links and teardown in finally.
-- [ ] Add source rules in `semantics.json` and static regressions in `tests/semantics.test.js`. Update the existing Local paging section of `docs/src/pages/data-table.astro`, `llm.md` and `CHANGELOG.md`.
-- [ ] Run `npm run build:semantics` and `npm run build:skill`, check guidance and browser coverage, measure JS/CSS gzip sizes and update the reviewed budgets in `tests/selective-builds.test.js`.
+- [x] Extend `tests/data-tables-page-browser.test.js` for native pointer/keyboard operation, focus, last-page clamping, a real native select in an open shadow root, and existing FormSelect's composed event path in all three engines. Preserve ordinary links and teardown in finally.
+- [x] Add source rules in `semantics.json` and static regressions in `tests/semantics.test.js`; correct the shared accessible-name helper in `scripts/semantics-rules.mjs` so option text does not name a select. Update the existing Local paging section of `docs/src/pages/data-table.astro`, `llm.md` and `CHANGELOG.md`.
+- [x] Run `npm run build:semantics` and `npm run build:skill`, check guidance and browser coverage, measure JS/CSS gzip sizes and update the reviewed budgets in `tests/selective-builds.test.js`.
 
 Delivers R1-R6. Completion checks V2-V3. Commit the verified increment.
 

@@ -50,8 +50,8 @@ const MAX_LABEL_REFS = 32;
  * Empty when it has neither.
  *
  * The two callers below diverge on what happens next, which is why this stops
- * here: a control falls back to its own text, a landmark does not. A <nav>
- * full of links is not named by the links in it.
+ * here: buttons can fall back to their own text, while landmarks and selects
+ * need a name apart from the links or options they contain.
  */
 export function authoredName(el, document) {
   const label = el.getAttribute('aria-label');
@@ -77,12 +77,12 @@ export function authoredName(el, document) {
 function accessibleName(el, document) {
   const authored = authoredName(el, document);
   if (authored) return authored;
-  // A navigation landmark is not named by the links and buttons it contains.
-  if (el.localName === 'nav') return '';
   const labels = [...(el.labels ?? [])].map((label) => accessibleName(label, document)).join(' ').trim();
   if (labels) return labels;
+  // Landmarks and selects are not named by their descendant links or options.
+  if (el.matches('nav, select')) return '';
   const clone = el.cloneNode(true);
-  clone.querySelectorAll('[aria-hidden="true"]').forEach((n) => n.remove());
+  clone.querySelectorAll('[aria-hidden="true"], select').forEach((n) => n.remove());
   return clone.textContent.trim();
 }
 
