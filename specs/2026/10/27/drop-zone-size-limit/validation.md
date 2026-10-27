@@ -31,3 +31,12 @@ Physical OS picker/drop input, devices, native zoom and spoken output are unavai
 Five new size-validation regressions failed against the Phase 72 bundle before implementation. The shared Forms pipeline now recognizes size-only opt-ins, parses trimmed positive decimal safe-integer bytes, accepts exact-limit files and rejects complete selections with an oversized file while retaining every File. Type matching stays gated on data-validate-types; type-first failure and separate data-error-size/fallback text preserve the type contract. Shared ownership preserves application validity and required-empty behavior.
 
 JS build, typecheck and all 50 focused Node checks pass, including all 45 prior checks. No new public export, listener, ownership map or reset mechanism was added. Logs are `/tmp/expressivecss-phase73-{size-red,size-build,size-typecheck,size-node}.log`. Constraint-aware deduplication, size-specific delivery/reset/browser/static/style checks and final verification remain pending.
+
+
+## Increment 2 evidence
+
+The changed-limit rejection regression failed before extending deduplication. Metadata now records the type opt-in, raw accept and parsed effective byte limit independently from event arrays. Unchanged native pairs and equivalent decimal limits deduplicate; a changed effective limit or type flag can report again. Size reentry and cancellation/external-form/newer-selection reset cases pass, as does disabled application-validity preservation. Existing error selectors now include size-only opt-ins, using the same tokens and focus styling.
+
+The pre-commit complexity gate initially rejected the new parser and size-failure helper at complexity five. Separating size-message formatting and removing a redundant positive comparison after decimal-only parsing keeps each new helper below the gate. Rebuild/typecheck and all 50 increment-1 checks passed after that correction; commit d2304a34e records the slice. No gate was bypassed.
+
+JS/CSS builds, typecheck and all 54 focused Node checks pass. Mutating file.size > limit to >= fails the exact-limit regression; restoration returns all 54 checks to green and preserves the minified bundle SHA-256. Logs are `/tmp/expressivecss-phase73-{delivery-red,delivery-build,delivery-css,delivery-typecheck,delivery-node,mutation-build,mutation,restored-build,restored-node}.log`. Native browser delivery/style and static/docs guidance remain for increment 3.

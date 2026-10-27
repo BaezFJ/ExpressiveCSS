@@ -82,11 +82,11 @@
     color: var(--md-comp-drop-zone-dragover-color);
   }
 
-  > label:has(> input[data-validate-types][aria-invalid="true"]) {
+  > label:has(> input:is([data-validate-types], [data-max-size])[aria-invalid="true"]) {
     border-color: var(--md-sys-color-error);
   }
 
-  &:has(> label > input[data-validate-types]) > .supporting-text[data-error] {
+  &:has(> label > input:is([data-validate-types], [data-max-size])) > .supporting-text[data-error] {
     margin: 8px 16px 0;
     color: var(--md-sys-color-error);
     @include typescale("body-small");

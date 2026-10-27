@@ -18,9 +18,9 @@ Completion check V1. No separate component, listener or error map.
 
 Prerequisite: group 1 passes.
 
-- [ ] Extend rejection snapshots/reason and deduplication for effective type/size constraints, with failing native-pair, changed-limit, event-mutation and reentrant-selection checks.
-- [ ] Extend size-only accessibility/reset/disabled/external-form/shadow/isolation cases. Read Sass architecture before extending existing error selectors for the new opt-in.
-- [ ] Mutate the size comparison from > to >=, require the exact-limit regression to fail, restore and rerun built-bundle checks. Commit the verified slice.
+- [x] Extend rejection snapshots/reason and deduplication for effective type/size constraints, with failing native-pair, changed-limit, event-mutation and reentrant-selection checks.
+- [x] Extend size-only accessibility/reset/disabled/external-form/shadow/isolation cases. Read Sass architecture before extending existing error selectors for the new opt-in.
+- [x] Mutate the size comparison from > to >=, require the exact-limit regression to fail, restore and rerun built-bundle checks. Commit the verified slice.
 
 Delivers R2-R5. Completion checks V1-V2.
 

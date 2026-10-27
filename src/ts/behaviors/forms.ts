@@ -126,7 +126,7 @@ export class Forms {
 
   private static _initialized = false;
   private static _fileErrors = new WeakMap<HTMLInputElement, string>();
-  private static _fileSelections = new WeakMap<HTMLInputElement, { files: File[]; accept: string }>();
+  private static _fileSelections = new WeakMap<HTMLInputElement, { files: File[]; constraints: string }>();
   private static _fileResetForms = new WeakSet<HTMLFormElement>();
 
   private static _validatedFile(input: HTMLInputElement) {
@@ -239,9 +239,10 @@ export class Forms {
   }
 
   private static _newFileSelection(input: HTMLInputElement, files: File[]) {
+    const constraints = JSON.stringify([input.hasAttribute('data-validate-types'), input.accept, fileSizeLimit(input)]);
     const previous = Forms._fileSelections.get(input);
-    Forms._fileSelections.set(input, { files, accept: input.accept });
-    return !previous || previous.accept !== input.accept || previous.files.length !== files.length ||
+    Forms._fileSelections.set(input, { files, constraints });
+    return !previous || previous.constraints !== constraints || previous.files.length !== files.length ||
       !previous.files.every((file, index) => file === files[index]);
   }
 
