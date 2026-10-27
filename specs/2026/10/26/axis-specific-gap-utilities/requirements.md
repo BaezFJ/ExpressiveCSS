@@ -4,7 +4,7 @@ Date: 2026-10-26
 Roadmap phase: Phase 59, axis-specific gap utilities
 Branch: `feature/2026-10-26-axis-specific-gap-utilities`
 Base: `origin/master` at `3b9703956823c9c445a0835067915a0e322152a5`
-Status: specified; implementation and acceptance checks pending
+Status: implementation in progress; final checks and visual approval pending
 
 Follow the [mission's product rules](../../../../mission.md#product-rules) and [agreed utility scope](../../../../mission.md#agreed-scope), the [framework stack](../../../../tech-stack.md#framework-stack) and [styling contracts](../../../../tech-stack.md#styling-contracts), and [roadmap Phase 59](../../../../roadmap.md#phase-59-axis-specific-gap-utilities). Task groups are in [plan.md](plan.md); acceptance checks are in [validation.md](validation.md).
 
@@ -14,7 +14,7 @@ Phase 59 is the earliest unfinished phase at the base. Phases 1 through 58 have 
 
 The user confirmed Phase 59, this base, and three ordered implementation groups: Sass rules and focused regressions; docs and generated guidance; browser, size and contributor verification. The user chose `gap-x` and `gap-y`, the existing spacing scale and prefixes, and the cascade rules below. All proposed validation checks are required unchanged. No decisions are deferred.
 
-## Current behavior and evidence
+## Behavior and evidence at the base
 
 `src/sass/utilities/_spacing.scss` owns a shared spacing-value map. It emits `.gap-0` through `.gap-6` as `gap` declarations with `!important`. It repeats that scale inside `bp-up()` for `medium:`, `expanded:`, `large:` and `extra-large:`. It currently has no axis-specific gap classes. Independent gaps therefore require author CSS.
 

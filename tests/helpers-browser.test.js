@@ -2,6 +2,8 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium } from 'playwright';
+import { compileString } from 'sass';
+import { fileURLToPath } from 'node:url';
 import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
@@ -68,7 +70,132 @@ browserTest('a plain fieldset drops its container and puts the legend at the con
   }
 });
 
+async function gapFixture(page, stylesheet = css) {
+  await page.setContent(`<style>${stylesheet}</style>
+    <div class="gaps" style="display:grid;grid-template-columns:50px 50px"><span>A</span><span>B</span><span>C</span></div>
+    <div class="gaps" style="display:flex;flex-wrap:wrap;width:160px"><span>A</span><span>B</span><span>C</span></div>`);
+  return {
+    classes: value => page.locator('.gaps').evaluateAll((els, value) => {
+      for (const el of els) el.className = `gaps ${value}`;
+    }, value),
+    check: async (width, row, column) => {
+      await page.setViewportSize({ width, height: 600 });
+      const gaps = await page.locator('.gaps').evaluateAll(els => els.map(el => {
+        const style = getComputedStyle(el);
+        return [style.rowGap, style.columnGap];
+      }));
+      assert.deepEqual(gaps, [[`${row}px`, `${column}px`], [`${row}px`, `${column}px`]], `width ${width}`);
+    },
+  };
+}
+
 for (const [engine, browserType, utilityTest] of engines) {
+
+  utilityTest(`axis gaps keep their native grid and flex axes and scale in RTL (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<style>${css}
+        #gaps { width: 200px; height: 200px; row-gap: 7px; column-gap: 9px; align-content: start; }
+        #gaps > span { width: 50px; height: 50px; flex: none; }
+      </style><div id="gaps">${'<span></span>'.repeat(6)}</div>`);
+      for (const root of [16, 32]) for (const dir of ['ltr', 'rtl']) {
+        await page.evaluate(({ root, dir }) => {
+          document.documentElement.style.fontSize = `${root}px`;
+          document.documentElement.dir = dir;
+        }, { root, dir });
+        for (const layout of ['grid', 'row', 'column']) {
+          await page.locator('#gaps').evaluate((el, layout) => {
+            el.style.display = layout === 'grid' ? 'grid' : 'flex';
+            el.style.gridTemplateColumns = 'repeat(2, 50px)';
+            el.style.gridAutoRows = '50px';
+            el.style.flexDirection = layout === 'column' ? 'column' : 'row';
+            el.style.flexWrap = 'wrap';
+          }, layout);
+          for (const [step, rem] of [0, 0.25, 0.5, 0.75, 1, 1.5, 3].entries()) {
+            const value = rem * root;
+            for (const [classes, row, column] of [
+              [`gap-x-${step}`, 7, value], [`gap-y-${step}`, value, 9],
+              [`gap-6 gap-x-${step} gap-y-2`, root / 2, value],
+            ]) {
+              await page.locator('#gaps').evaluate((el, classes) => { el.className = classes; }, classes);
+              const actual = await page.locator('#gaps').evaluate(el => {
+                const style = getComputedStyle(el);
+                const boxes = [...el.children].map(child => child.getBoundingClientRect());
+                const distance = key => {
+                  const positions = [...new Set(boxes.map(box => box[key]))].sort((a, b) => a - b);
+                  return positions[1] - positions[0] - 50;
+                };
+                return [parseFloat(style.rowGap), parseFloat(style.columnGap), distance('top'), distance('left')];
+              });
+              assert.deepEqual(actual, [row, column, row, column], `${layout} ${dir} ${root}px ${classes}`);
+            }
+          }
+        }
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  utilityTest(`axis gaps honor every breakpoint boundary (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { classes, check } = await gapFixture(await browser.newPage());
+      for (const [prefix, width] of [['medium', 600], ['expanded', 840], ['large', 1200], ['extra-large', 1600]]) {
+        for (const [step, value] of [0, 4, 8, 12, 16, 24, 48].entries()) {
+          for (const [axis, row, column] of [['x', 48, value], ['y', value, 48]]) {
+            await classes(`gap-6 ${prefix}:gap-${axis}-${step}`);
+            await check(width - 1, 48, 48);
+            await check(width, row, column);
+          }
+        }
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  utilityTest(`axis gaps honor shorthand precedence and zero resets (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { classes, check } = await gapFixture(await browser.newPage());
+      const cases = [
+        ['gap-6 gap-x-1 gap-y-2', 8, 4], ['gap-y-2 gap-x-1 gap-6', 8, 4],
+        ['gap-x-1 gap-y-2 medium:gap-6', 48, 48],
+        ['gap-6 medium:gap-x-0', 48, 0], ['gap-6 medium:gap-y-0', 0, 48],
+        ['gap-6 medium:gap-x-0 medium:gap-y-0', 0, 0],
+        ...['medium', 'expanded', 'large', 'extra-large'].flatMap(prefix => [
+          [`${prefix}:gap-6 ${prefix}:gap-x-1 ${prefix}:gap-y-2`, 8, 4],
+          [`${prefix}:gap-y-2 ${prefix}:gap-x-1 ${prefix}:gap-6`, 8, 4],
+        ]),
+      ];
+      for (const [value, row, column] of cases) {
+        await classes(value);
+        await check(1600, row, column);
+      }
+      await classes('gap-4 medium:gap-x-2 expanded:gap-y-5 large:gap-x-0 extra-large:gap-y-1');
+      const transitions = [[599, 16, 16], [600, 16, 8], [839, 16, 8], [840, 24, 8], [1199, 24, 8], [1200, 24, 0], [1599, 24, 0], [1600, 4, 0]];
+      for (const [width, row, column] of [...transitions, ...transitions.toReversed()]) await check(width, row, column);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  utilityTest(`axis gaps work in a spacing-only custom build (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const spacing = compileString('@use "custom" with ($components: (), $utilities: ("spacing"), $expressive-include-fonts: false);', {
+        loadPaths: [fileURLToPath(new URL('../src/sass', import.meta.url))],
+      }).css;
+      const { classes, check } = await gapFixture(await browser.newPage(), spacing);
+      await classes('gap-4 medium:gap-x-2');
+      await check(599, 16, 16);
+      await check(600, 16, 8);
+    } finally {
+      await browser.close();
+    }
+  });
 
   utilityTest(`opacity helpers set their documented values and beat component opacity (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);

@@ -4,9 +4,9 @@ Date: 2026-10-26
 Roadmap phase: Phase 59, axis-specific gap utilities
 Branch: `feature/2026-10-26-axis-specific-gap-utilities`
 Base: `origin/master` at `3b9703956823c9c445a0835067915a0e322152a5`
-Status: specified; all implementation tasks pending
+Status: Group 1 complete; Groups 2 and 3 pending
 
-Use the [mission](../../../../mission.md#agreed-scope), [technical constraints](../../../../tech-stack.md#framework-stack) and [roadmap Phase 59](../../../../roadmap.md#phase-59-axis-specific-gap-utilities). The confirmed contract is in [requirements.md](requirements.md); checks are in [validation.md](validation.md). The groups below are the three groups confirmed by the user. Checkboxes stay unchecked until implementation supplies evidence.
+Use the [mission](../../../../mission.md#agreed-scope), [technical constraints](../../../../tech-stack.md#framework-stack) and [roadmap Phase 59](../../../../roadmap.md#phase-59-axis-specific-gap-utilities). The confirmed contract is in [requirements.md](requirements.md); checks are in [validation.md](validation.md). The groups below are the three groups confirmed by the user. Checkboxes record completed implementation work; validation.md records the evidence.
 
 ## 1. Sass rules and focused regressions
 
@@ -14,10 +14,10 @@ Outcome: authors set either gap independently with the confirmed scale and casca
 
 Prerequisites: confirmed R1 through R4; inspect the shared spacing loops, their index/custom loaders and existing tests. Capture the base CSS gzip measurement using the repository method before changing production Sass.
 
-- [ ] Extend `src/sass/utilities/_spacing.scss` using its existing values and breakpoint loop. Emit shorthand before both axis families within each breakpoint level. Preserve existing margin and padding generation and avoid a new public Sass API.
-- [ ] Extend `tests/helpers-browser.test.js` through its existing `engines` loop for the scale, native axis behavior, breakpoints and cascade. Use grid and wrapping flex fixtures; close browser leases in `finally` blocks.
-- [ ] Extend `tests/selective-builds.test.js` for a spacing-only custom build and a build excluding spacing. Keep the existing full/default-custom equality check.
-- [ ] Build the affected bundles and run focused checks sequentially. Confirm the new browser assertions fail against base CSS before treating them as regression evidence.
+- [x] Extend `src/sass/utilities/_spacing.scss` using its existing values and breakpoint loop. Emit shorthand before both axis families within each breakpoint level. Preserve existing margin and padding generation and avoid a new public Sass API.
+- [x] Extend `tests/helpers-browser.test.js` through its existing `engines` loop for the scale, native axis behavior, breakpoints and cascade. Use grid and wrapping flex fixtures; close browser leases in `finally` blocks.
+- [x] Extend `tests/selective-builds.test.js` for a spacing-only custom build and a build excluding spacing. Keep the existing full/default-custom equality check.
+- [x] Build the affected bundles and run focused checks sequentially. Confirm the new browser assertions fail against base CSS before treating them as regression evidence.
 
 Delivers R1 through R4. Completion check: V1 through V6 pass in the applicable environments, with no new acceptance test silently skipped. Detailed command and setup requirements remain in validation.md.
 
