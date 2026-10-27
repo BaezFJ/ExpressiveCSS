@@ -1,0 +1,86 @@
+# Axis-specific gap utilities validation
+
+Date: 2026-10-26
+Roadmap phase: Phase 59, axis-specific gap utilities
+Branch: `feature/2026-10-26-axis-specific-gap-utilities`
+Base: `origin/master` at `3b9703956823c9c445a0835067915a0e322152a5`
+Status: all implementation acceptance results pending
+
+Checks implement the [mission](../../../../mission.md#product-rules), [framework testing constraints](../../../../tech-stack.md#framework-testing) and [roadmap Phase 59 completion check](../../../../roadmap.md#phase-59-axis-specific-gap-utilities). See [requirements.md](requirements.md) and [plan.md](plan.md). The user confirmed all checks below; none are deferred.
+
+## Setup and evidence
+
+Use Node 24 and locked dependencies. Build with `npm run build` before tests that read `dist/`. Reuse `tests/helpers-browser.test.js`, `tests/selective-builds.test.js` and `tests/browser.js`; add focused cases to those files during implementation. Use `engines` for every new browser acceptance case and close each lease in `finally`. Run suites sequentially.
+
+For focused host runs, build first and run each command separately:
+
+```sh
+EXPRESSIVECSS_TEST_BROWSER=chromium node --test tests/helpers-browser.test.js
+EXPRESSIVECSS_TEST_BROWSER=firefox node --test tests/helpers-browser.test.js
+EXPRESSIVECSS_TEST_BROWSER=webkit node --test tests/helpers-browser.test.js
+node --test tests/selective-builds.test.js
+```
+
+The explicit engine setting makes a missing requested engine fail instead of skip. The commands are established repository entry points, but have not run for this specification. New Phase 59 assertions do not exist yet. A successful run of existing tests alone cannot establish this feature's acceptance.
+
+The container alternative is `npm run test:docker -- <command>`, using the commands above after a build inside that environment. Follow CONTRIBUTING.md for setup, report locations and cleanup. Keep baseline and candidate measurements in comparable environments. Save browser names and versions, source revision, commands, results and artifact paths with the implementation evidence.
+
+## Automated acceptance
+
+| ID | Requirements | Setup and action | Expected result | Result |
+| --- | --- | --- | --- | --- |
+| V1 | R1, R2 | In each engine, create a two-column, multi-row grid and a flex container with fixed-width children that wrap. At a 16px root, apply each `gap-x-*` and `gap-y-*` value individually and in unequal pairs. Read computed row/column gaps and child geometry. Inspect compiled declarations for `!important` and absence of auto variants. | Values 0 through 6 compute to 0, 4, 8, 12, 16, 24 and 48px on the named property. Applying one axis leaves the other axis at its fixture baseline. Both grid and flex geometry reflect the requested gaps. No auto variants exist. | Pending |
+| V2 | R2, R3 | In each engine and both layouts, combine a base gap with each axis prefix. Check widths 599/600, 839/840, 1199/1200 and 1599/1600. Also run the cumulative example below and resize back down. Check generated rules for both families and every scale value at each prefix. | A prefix starts exactly at its existing minimum width, remains active above it and stops applying below it. Cumulative results match the table below in either resize direction. | Pending |
+| V3 | R1, R3 | In each engine, combine shorthand and axes at the same breakpoint using different numeric values, such as `gap-6 gap-x-1 gap-y-2`. Repeat with reversed HTML class order and with prefixed equivalents. Test a base axis plus a later shorthand, then a later axis overriding an earlier shorthand. Include zero resets for each axis and both axes together. | Same-level axes override shorthand even when their numeric suffix is smaller and regardless of class order. A later shorthand resets both axes; a later axis changes only its property. Zero computes to 0px on exactly the requested axes. | Pending |
+| V4 | R1, R2, R4 | Repeat representative unequal gaps and breakpoint overrides at root sizes 16px and 32px in LTR and RTL, for grid, wrapping flex-row and wrapping flex-column fixtures. | Nonzero gap lengths double with the root size; zero stays zero. RTL preserves the property values and correct layout spacing. Flex direction uses native row-gap/column-gap semantics without remapping classes. | Pending |
+| V5 | R4 | Compare representative legacy `.gap-0` through `.gap-6`, prefixed gap, margin, padding and grid `.g-*` cases against base CSS. Include the existing helper browser regressions and check that new utilities still override ordinary component/page gap declarations through `!important`. | Existing markup has the same computed layout at matching root and viewport sizes. New declarations retain single-class specificity and existing layer placement. No runtime or public export changes occur. | Pending |
+| V6 | R1, R2, R4 | Extend and run `tests/selective-builds.test.js`. Compile full and default-custom stylesheets, a custom build with `$components: ()` and `$utilities: ("spacing")`, and one with `$utilities: ()`. Use existing Sass compile options. Apply the spacing-only CSS to representative browser fixtures in each engine. | Full and default-custom CSS match. Spacing-only output contains working base and prefixed axis rules without the helpers partial. Excluding spacing emits none of the new utility selectors. Existing configuration tests pass. | Pending |
+| V7 | R5, R6 | Review helpers docs, `llm.md` and the Unreleased entry against the requirements. Regenerate with `npm run build:semantics` and `npm run build:skill`; run `npm run check:generated`. Inspect resulting helper guidance and build/verify the docs through V8. | Sources and generated guidance agree on names, scale, prefixes and cascade. The docs contain the live wrapping-grid example. Generated copies have no manual edits or unexplained provenance changes. | Pending |
+| V8 | R4, R6 | Run the size and repository checks below on the final implementation. Record baseline/candidate gzip values, delta and required CI results. | A reviewed budget records the measured final CSS size. Contributor, explicit browser, MCP/package and required CI checks pass, with affected regressions resolved. | Pending |
+
+For the cumulative V2 fixture, use `gap-4 medium:gap-x-2 expanded:gap-y-5 large:gap-x-0 extra-large:gap-y-1` at a 16px root. Keep children small enough to fit multiple columns or items per line at every viewport.
+
+| Viewport width | Row gap | Column gap |
+| --- | --- | --- |
+| Below 600px | 16px | 16px |
+| 600px to below 840px | 16px | 8px |
+| 840px to below 1200px | 24px | 8px |
+| 1200px to below 1600px | 24px | 0px |
+| At least 1600px | 4px | 0px |
+
+## Size and repository checks for V8
+
+Use the existing `sizes()` method from `tests/fixtures/selective-builds.mjs` and the CSS input used by the budget assertion in `tests/selective-builds.test.js`. Measure the base and candidate production minified CSS with the same Node, Sass, locked dependencies and compression method. Preserve the repository's source-map handling. Record raw measurements and revisions before changing the ceiling. The base's recorded 90,072-byte ceiling is not a substitute for measuring the base. No new numeric size allowance has been approved in this spec.
+
+Run these established commands sequentially after implementation and regeneration:
+
+```sh
+npm run verify
+npm run test:browser
+npm ci --prefix mcp/expressivecss
+npm test --prefix mcp/expressivecss
+npm run verify:packages
+```
+
+`npm run verify` builds and runs contributor checks, including generated data and docs. The separate browser command requires all supported engines. MCP and package checks verify that generated guidance remains self-contained and compatible. Use the repository container equivalents if host prerequisites are missing. Record failures and environmental skips; do not describe them as passing acceptance.
+
+## Manual and visual acceptance
+
+| ID | Requirements | Setup and action | Expected result | Result |
+| --- | --- | --- | --- | --- |
+| V9 | R2, R3, R5, R6 | Run `npm run test:visual` and inspect the report with `npm run test:visual:report`. Inspect the helpers page's live wrapping-grid example below and at its breakpoint, in LTR and RTL and with enlarged root text. Record the comparison base and artifact paths. BaezFJ reviews intended changes in the implementation PR. | The example changes only its requested gap axis at the breakpoint; content remains readable. No unexplained regressions appear in existing pages. Captures complete successfully and BaezFJ's visual approval is recorded. | Pending |
+
+The roadmap demonstration can use `gap-4 medium:gap-x-2`: below 600px both gaps are 16px; from 600px the column gap is 8px and the row gap remains 16px at the default root. Browser emulation and screenshots establish only their recorded checks, not a physical-device or screen-reader review.
+
+## Requirement coverage and merge conditions
+
+| Requirement | Planned group | Validation |
+| --- | --- | --- |
+| R1 | 1 | V1, V3, V4, V6 |
+| R2 | 1, 3 | V1, V2, V4, V6, V9 |
+| R3 | 1, 3 | V2, V3, V9 |
+| R4 | 1, 3 | V4, V5, V6, V8 |
+| R5 | 2, 3 | V7, V9 |
+| R6 | 2, 3 | V7, V8, V9 |
+
+Merge requires passing evidence for all in-scope acceptance checks, passing affected regressions and required CI, a reviewed gzip budget, resolved review conversations and BaezFJ's recorded visual approval. Missing engines, unresolved failures or missing visual approval block merge. No migration is expected because existing markup behavior is preserved and new classes are opt-in. Specification creates no implementation evidence and leaves the roadmap completion state unchanged.
