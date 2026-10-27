@@ -410,12 +410,20 @@ Added with the data table component. The wrapper is the scroll container so the 
 | `data-table-row-is-not-selected` | forbid | `.data-table tr[aria-selected]` | must not match |
 | `data-table-scroll-region-is-a-region` | require-attr | `.data-table[tabindex]` | must have `role` = `region` |
 | `data-table-scroll-region-is-named` | require-accessible-name | `.data-table[tabindex]` | must end up with an accessible name |
+| `data-table-filter-is-named` | require-accessible-name | `.data-table input[type="search"][data-table-filter]` | must end up with an accessible name |
+| `data-table-filter-count-is-named` | require-accessible-name | `.data-table [data-table-filter-count]` | must end up with an accessible name |
+| `data-table-filter-count-is-status` | require-attr | `.data-table [data-table-filter-count]` | must have `role` = `status` |
+| `data-table-filter-count-is-polite` | require-attr | `.data-table [data-table-filter-count]` | must have `aria-live` = `polite` |
 
 - **data-table-wraps-the-table** - Put .data-table on a <div> around the <table>. The wrapper scrolls; a table made to scroll itself needs display:block, which drops its table role in some engines.
 - **data-table-sort-is-on-a-header** - aria-sort belongs on the column header cell (<th>), not on the button inside it or on a data cell. Assistive technology reads the sort state from the header.
 - **data-table-row-is-not-selected** - aria-selected is not valid on a row of a plain table. It belongs to role="grid" and its keyboard contract. Select a row with a labelled checkbox in its first cell.
 - **data-table-scroll-region-is-a-region** - A focusable scroll wrapper needs role="region" so its name is announced. aria-label is not allowed on a plain div.
 - **data-table-scroll-region-is-named** - Name a focusable scroll wrapper with aria-label, or aria-labelledby pointing at the table caption, so keyboard users know what they are scrolling.
+- **data-table-filter-is-named** - Give the table search input a label identifying the records it filters.
+- **data-table-filter-count-is-named** - Name the result count, for example aria-label="Matching records", so its number has context.
+- **data-table-filter-count-is-status** - Give the table result count role="status" so changes are announced without moving focus.
+- **data-table-filter-count-is-polite** - Use aria-live="polite" on the table result count so typing does not interrupt other speech.
 
 ### datepicker
 

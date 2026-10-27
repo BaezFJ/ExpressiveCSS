@@ -14,6 +14,35 @@ const menu = (id, top) => `<button type="button" class="menu-trigger no-autoinit
 
 for (const [engine, browserType, browserTest] of engines) {
 
+  browserTest(`${engine}: Escape on the trigger dismisses a menu before opening focus moves`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<style>${css}</style>${menu('m', 40)}<script>${js}</script>`);
+      const result = await page.evaluate(() => {
+        const trigger = document.getElementById('m-trigger');
+        const instance = Expressive.Menu.init(trigger, { inDuration: 100, outDuration: 0 });
+        try {
+          trigger.focus();
+          instance.open();
+          const composing = [{ isComposing: true }, { keyCode: 229 }].map(composition => {
+            const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true, ...composition });
+            trigger.dispatchEvent(escape);
+            return { open: instance.isOpen, consumed: escape.defaultPrevented };
+          });
+          const escape = new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true });
+          trigger.dispatchEvent(escape);
+          return { composing, open: instance.isOpen, expanded: trigger.ariaExpanded, consumed: escape.defaultPrevented, focus: document.activeElement === trigger };
+        } finally {
+          instance.destroy();
+        }
+      });
+      assert.deepEqual(result, { composing: [{ open: true, consumed: false }, { open: true, consumed: false }], open: false, expanded: 'false', consumed: true, focus: true });
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: Home and End jump to the first and last rows`, async () => {
     const browser = await leaseBrowser(browserType);
     try {

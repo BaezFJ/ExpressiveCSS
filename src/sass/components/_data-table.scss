@@ -148,6 +148,11 @@
     display: none;
   }
 
+  // Keep filter state separate from the author's hidden attribute.
+  > table > tbody > tr[data-table-filter-hidden] {
+    display: none;
+  }
+
   > table > tbody > tr.data-table-detail > td {
     padding-block: 16px;
     background-color: var(--md-comp-data-table-detail-container-color);

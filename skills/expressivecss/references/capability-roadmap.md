@@ -627,13 +627,13 @@ Web adaptation: The component unclamps with inline -webkit-line-clamp and line-c
 
 ## Data table
 
-**unassessed within the stated scope.** Scrolling wrapper with an outline, sticky header row, numeric columns, dense rows, a sort arrow drawn from aria-sort and checkbox row selection.
+**unassessed within the stated scope.** Scrolling native table with sticky headers, numeric and dense rows, sorting, view-scoped selection, column resizing and visibility, and opt-in text filtering with record/detail grouping and an authored result count.
 
 Source review: needs-review, 2026-10-06. [src/sass/components/_data-table.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_data-table.scss).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
 
-Web adaptation: A plain div wraps a native <table>, so the table keeps its role; the page owns sorting, select-all and the scroll region name.
+Web adaptation: A plain div wraps a native table. Shared DataTables handlers own opt-in sorting, filtering, select-all and column operations; authors name controls and the scroll region, and keep native row and header semantics.
 
 - verification: Table semantics, the sticky header, numeric alignment, the sort arrow and selected rows are checked in a browser; sort announcements, enlarged text and spoken output remain unverified. Next: Sort and select rows with a screen reader in each engine and confirm the sort state and selection are announced; test enlarged text and RTL.
 

@@ -36,6 +36,18 @@ const root = new URL('../', import.meta.url);
 const read = (p) => readFileSync(new URL(p, root), 'utf8');
 const data = JSON.parse(read('semantics.json'));
 
+test('table filter names accept native labels and reject unnamed controls and status counts', () => {
+  const rules = rulesOf(data).filter((rule) => rule.id.startsWith('data-table-filter-'));
+  const broken = (html) => violations(`<div class="data-table">${html}</div>`, rules, data.compositeRoles).map(({ rule }) => rule.id);
+  assert.deepEqual(broken('<input type="search" data-table-filter>'), ['data-table-filter-is-named']);
+  assert.deepEqual(broken('<label for="q">Search records</label><input id="q" type="search" data-table-filter>'), []);
+  assert.deepEqual(broken('<label>Search records<input type="search" data-table-filter></label>'), []);
+  assert.deepEqual(broken('<label for="q"> </label><input id="q" type="search" data-table-filter>'), ['data-table-filter-is-named']);
+  assert.deepEqual(broken('<input type="search" data-table-filter aria-label="Search records">'), []);
+  assert.deepEqual(broken('<output data-table-filter-count></output>'), ['data-table-filter-count-is-named', 'data-table-filter-count-is-status', 'data-table-filter-count-is-polite']);
+  assert.deepEqual(broken('<output data-table-filter-count role="status" aria-live="polite" aria-label="Matching records"></output>'), []);
+});
+
 // --- conformance ------------------------------------------------------------
 
 /** Top-level comma split: a comma inside `:not(a, b)` belongs to that compound. */

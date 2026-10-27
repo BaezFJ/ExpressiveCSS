@@ -167,6 +167,30 @@ const tick = () => new Promise((resolve) => setTimeout(resolve, 5));
 describe("Menu behaviour", () => {
   beforeEach(resetBody);
 
+  test("Escape on the trigger dismisses an opening menu before focus moves", () => {
+    for (const autoFocus of [true, false]) {
+      document.body.innerHTML = `<button type="button" class="menu-trigger" data-target="m">Open</button><menu id="m"><li>One</li></menu>`;
+      const trigger = document.querySelector(".menu-trigger");
+      const instance = Expressive.Menu.init(trigger, { autoFocus, inDuration: 100, outDuration: 0 });
+      try {
+        trigger.focus();
+        instance.open();
+        for (const composition of [{ isComposing: true }, { keyCode: 229 }]) {
+          const escape = new window.KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true, ...composition });
+          assert.equal(trigger.dispatchEvent(escape), true, "Escape during composition belongs to the IME");
+          assert.equal(instance.isOpen, true);
+        }
+        assert.equal(key(trigger, "Escape"), false, "an open menu consumes Escape");
+        assert.equal(instance.isOpen, false);
+        assert.equal(trigger.ariaExpanded, "false");
+        assert.equal(document.activeElement, trigger);
+        assert.equal(key(trigger, "Escape"), true, "a closed menu leaves Escape to its surroundings");
+      } finally {
+        instance.destroy();
+      }
+    }
+  });
+
   test("keeps one .active row across close and reopen", async () => {
     document.body.innerHTML = `
       <button type="button" class="menu-trigger" data-target="m">Drop</button>

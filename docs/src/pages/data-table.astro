@@ -10,6 +10,7 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "sorting", label: "Sorting" },
   { id: "selection", label: "Row selection" },
+  { id: "filtering", label: "Text filtering" },
   { id: "bulk-actions", label: "Bulk actions" },
   { id: "expansion", label: "Row expansion" },
   { id: "scrolling", label: "Scrolling" },
@@ -142,7 +143,8 @@ table.addEventListener('expressive:sort', (event) => {
           plain table, so the checkbox carries the state.
         </p>
         <p>
-          Put a checkbox in the first header cell to select every row. It
+          Put a checkbox in the first header cell to select every enabled
+          record visible in the current view. Hidden records keep their selections. It
           shows mixed while only some rows are selected, and it skips disabled
           rows. Every change to the selection fires
           <code>expressive:change</code> from the wrapper with
@@ -172,6 +174,68 @@ table.addEventListener('expressive:sort', (event) => {
   <td class="numeric">$87.00</td>
 </tr>
 `} />
+  </Section>
+  <Section {...S.filtering}>
+    <p>
+      Put a labelled <code>input[type="search"][data-table-filter]</code>
+      inside the wrapper. Mark each searchable column's header with
+      <code>data-filter</code>, including headers in grouped rows that span one
+      column. The trimmed query matches a substring in any marked column,
+      ignoring case in the table's language. A cell's <code>data-value</code>
+      replaces its text for search, as it does for sorting.
+    </p>
+    <p>
+      Details stay with their record, and author-hidden records and details
+      stay hidden. Clearing the query restores the records without changing
+      <code>aria-expanded</code>. Select-all changes only enabled visible
+      records; the selection event still reports all selected records.
+      The framework reserves <code>data-table-filter-hidden</code> for its
+      row state. Do not author it.
+    </p>
+    <p>
+      An optional named <code>output[data-table-filter-count]</code> with
+      <code>role="status"</code> and <code>aria-live="polite"</code> receives
+      the matching record count. It excludes details and author-hidden
+      records, includes disabled records and keeps focus in the search.
+      Supply the labels and count wording in your page's language.
+    </p>
+    <div class="data-table">
+      <div class="field"><input id="filter-customers" type="search" data-table-filter /><label for="filter-customers">Search customers</label></div>
+      <span>Matching records: <output data-table-filter-count role="status" aria-live="polite" aria-label="Matching records"></output></span>
+      <table>
+        <caption>Customers</caption>
+        <thead><tr><th scope="col" data-filter>Customer</th><th scope="col">Status</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Alvin</th><td>Shipped</td></tr>
+          <tr><th scope="row">Alan</th><td>Pending</td></tr>
+          <tr><th scope="row">Jonathan</th><td>Delivered</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <Code code={`
+<div class="data-table">
+  <div class="field">
+    <input id="customer-query" type="search" data-table-filter>
+    <label for="customer-query">Search customers</label>
+  </div>
+  <span>Matching records: <output data-table-filter-count role="status" aria-live="polite" aria-label="Matching records"></output></span>
+  <table>
+    <caption>Customers</caption>
+    <thead><tr><th scope="col" data-filter>Customer</th><th scope="col">Status</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Alvin</th><td>Shipped</td></tr>
+      <tr><th scope="row">Alan</th><td>Pending</td></tr>
+    </tbody>
+  </table>
+</div>
+`} />
+    <p>
+      Call <code>Expressive.DataTables.sync(wrapper)</code> after replacing
+      records, changing the query from script or revealing a hidden table.
+      Prefilled queries apply on page load. An empty query shows all
+      author-visible records; a nonempty query with no marked columns matches
+      none. Detail text never contributes to search.
+    </p>
   </Section>
   <Section {...S["bulk-actions"]}>
         <p>

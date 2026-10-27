@@ -18,6 +18,21 @@ const ORDER = { ascending: 1, descending: -1 };
 const TOGGLE = '[role="menuitemcheckbox"][data-column]';
 /** Marks a cell hidden with its column, so showing the column never shows a cell the author hid. */
 const HIDDEN = 'data-column-hidden';
+const FILTER = 'input[type="search"][data-table-filter]';
+const FILTERED = 'data-table-filter-hidden';
+
+/** Controls belong to their nearest wrapper, never an enclosing table. */
+function tableControl(wrapper: Element, selector: string) {
+  return Array.from(wrapper.querySelectorAll<HTMLElement>(selector)).find((el) => el.closest('.data-table') === wrapper);
+}
+
+/** Enabled selection and result counts use the same visible record set. */
+function visibleRecord(row: HTMLTableRowElement) {
+  if (row.closest(`[hidden], [${FILTERED}]`)) return false;
+  if (row.checkVisibility) return row.checkVisibility({ visibilityProperty: true });
+  const style = getComputedStyle(row);
+  return style.display !== 'none' && !['hidden', 'collapse'].includes(style.visibility);
+}
 
 /** The cell of a body row that covers a column, counting colspan. */
 function cellAt(row: HTMLTableRowElement, column: number) {
@@ -182,6 +197,7 @@ export class DataTables {
     DataTables._initialized = true;
     // A checkbox's input event crosses shadow roots; its change event does not.
     document.addEventListener('input', DataTables._onChange);
+    document.addEventListener('input', DataTables._onFilter);
     document.addEventListener('click', DataTables._onClick);
     document.addEventListener('pointerdown', DataTables._onPointerDown);
     document.addEventListener('click', DataTables._onHandleClick);
@@ -200,7 +216,10 @@ export class DataTables {
    */
   static sync(wrapper: Element) {
     const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
-    if (table) DataTables._select(DataTables._all(table), DataTables._enabled(table), false);
+    if (table) {
+      DataTables._filter(wrapper, table);
+      DataTables._select(DataTables._all(table), DataTables._enabled(table), false);
+    }
     (wrapper.getRootNode() as ParentNode).querySelectorAll(TOGGLE).forEach((item) => {
       if (wrapper.contains(toggledHeader(item))) applyToggle(item);
     });
@@ -236,10 +255,10 @@ export class DataTables {
     return cell?.querySelector<HTMLInputElement>(box);
   }
 
-  /** The selection boxes a select-all box changes: the enabled ones. */
+  /** The enabled record boxes visible in the current view. */
   private static _enabled(table: HTMLTableElement) {
     // :disabled also covers a box inside a disabled fieldset.
-    return DataTables._boxes(table).filter((each) => !each.matches(':disabled'));
+    return DataTables._boxes(table).filter((each) => !each.matches(':disabled') && visibleRecord(each.closest('tr')));
   }
 
   /** The selection checkboxes of a table's record rows. */
@@ -258,6 +277,33 @@ export class DataTables {
     DataTables._select(all, DataTables._enabled(table), box === all);
     Utils.emit(wrapper, 'change', { selected: boxes.filter((each) => each.checked).map((each) => each.closest('tr')) });
   };
+
+  private static _onFilter = (e: Event) => {
+    const input = Utils.eventTarget(e);
+    const wrapper = input?.closest('.data-table');
+    if (wrapper && input.matches(FILTER)) DataTables.sync(wrapper);
+  };
+
+  /** Filters record groups without changing author hiding or expansion state. */
+  private static _filter(wrapper: Element, table: HTMLTableElement) {
+    const input = tableControl(wrapper, FILTER) as HTMLInputElement;
+    if (!input) return;
+    const locale = Utils.locale(table);
+    const query = input.value.trim().toLocaleLowerCase(locale);
+    const headers = table.tHead ? [...headerColumns(table.tHead)] : [];
+    const columns = headers.filter(([cell]) => cell.hasAttribute('data-filter') && (cell as HTMLTableCellElement).colSpan === 1).map(([, column]) => column);
+    const groups = Array.from(table.tBodies).flatMap(DataTables._groups).filter(([row]) => !row.classList.contains('data-table-detail'));
+    // Read visibility between write batches, so filtering causes one layout, not one per record.
+    groups.forEach(([row]) => row.removeAttribute(FILTERED));
+    const matches = groups.map(([row]) => visibleRecord(row) && DataTables._matches(row, columns, query, locale));
+    groups.forEach((group, index) => group.forEach((row) => row.toggleAttribute(FILTERED, !matches[index])));
+    const count = tableControl(wrapper, '[data-table-filter-count]');
+    if (count) count.textContent = new Intl.NumberFormat(locale).format(matches.filter(Boolean).length);
+  }
+
+  private static _matches(row: HTMLTableRowElement, columns: number[], query: string, locale: string) {
+    return !query || columns.some((column) => cellText(row, column).toLocaleLowerCase(locale).includes(query));
+  }
 
   /**
    * Checks every enabled row when the select-all box changed, then shows on

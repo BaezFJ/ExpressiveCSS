@@ -9,11 +9,11 @@ Component ID: `data-table`
 
 Contract: ExpressiveCSS 0.15.0
 
-Contract SHA-256: `b043d9edb96654aa4b05c1797d2f0d80dcaae0dc67b2fcac41ded1e63853f095`
+Contract SHA-256: `28b00fd47973775b7498708160f591c31fa7fde4f17042afce10b9599199bb65`
 
 #### Selection and adaptation
 
-Runtime ownership: `css-only`. No dedicated entry in the reviewed Google component inventory.
+Runtime ownership: `shared-runtime`. No dedicated entry in the reviewed Google component inventory.
 
 Example: A contacts screen where people tap a name to open a profile is a list. A data table would add column headers and sorting nobody uses on a phone.
 
@@ -25,9 +25,9 @@ Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.m
 
 Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Support (2026-10-06, `llm.md#data-table`): Scrolling wrapper with an outline, sticky header row, numeric columns, dense rows, a sort arrow drawn from aria-sort and checkbox row selection.
+Support (2026-10-27, `llm.md#data-table`): Scrolling native table with sticky headers, numeric and dense rows, sorting, view-scoped selection, column resizing and visibility, and opt-in text filtering with record/detail grouping and an authored result count.
 
-Web adaptation: A plain div wraps a native <table>, so the table keeps its role; the page owns sorting, select-all and the scroll region name.
+Web adaptation: A plain div wraps a native table. Shared DataTables handlers own opt-in sorting, filtering, select-all and column operations; authors name controls and the scroll region, and keep native row and header semantics.
 
 Known boundary: Table semantics, the sticky header, numeric alignment, the sort arrow and selected rows are checked in a browser; sort announcements, enlarged text and spoken output remain unverified.
 
@@ -38,6 +38,8 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 A `.data-table` is a `<div>` around one native `<table>`. The wrapper scrolls and draws the outline, so the table keeps its table semantics. The header row sticks to the top of the wrapper once the wrapper scrolls vertically, so give the wrapper a `max-block-size` for long tables. Add `numeric` to the header and body cells of a number column to align them on the end edge with tabular figures, and `dense` to the wrapper for shorter rows.
 
 Put a `<button>` in each sortable `<th>` and set `aria-sort="ascending"` or `"descending"` on the header of the sorted column. The framework draws the arrow. Add `data-sort` to the wrapper and the framework sorts too: a header button reorders the rows by its column and moves `aria-sort`. A `numeric` header compares numbers (`$1,200.00` after `$87.00`); other columns compare text in the page's language, with 9 before 10. A cell's `data-value` stands in for its text, and a `tr.data-table-detail` moves with its row. Each press fires a cancelable `expressive:sort` from the wrapper with `{ header, column, direction }`; a server-paged table cancels it and loads the sorted page, with `aria-sort` already moved. Without `data-sort`, the page reorders the rows and moves `aria-sort` itself.
+
+Add a labelled `input[type="search"][data-table-filter]` inside the wrapper for text filtering, and put `data-filter` on each searchable single-column header. A named `output[data-table-filter-count]` with `role="status"` and `aria-live="polite"` receives the matching record count. Filtering keeps record details together and preserves author-hidden rows. Select-all changes only enabled records visible in the current view, while hidden records keep their selections. `Expressive.DataTables.sync(wrapper)` reapplies the current query after script edits or replacement records.
 
 #### Syntax
 
@@ -70,7 +72,7 @@ Put a `<button>` in each sortable `<th>` and set `aria-sort="ascending"` or `"de
 
 #### Also documented
 
-The Data table section of the [API reference](https://www.expressivecss.com/llm.md) also covers Row selection, Bulk actions, Row expansion, Scrolling, Sticky first column, Column resize, Column visibility, Tokens.
+The Data table section of the [API reference](https://www.expressivecss.com/llm.md) also covers Row selection, Text filtering, Bulk actions, Row expansion, Scrolling, Sticky first column, Column resize, Column visibility, Tokens.
 
 #### Rules
 
@@ -79,3 +81,7 @@ The Data table section of the [API reference](https://www.expressivecss.com/llm.
 - `data-table-row-is-not-selected`: aria-selected is not valid on a row of a plain table. It belongs to role="grid" and its keyboard contract. Select a row with a labelled checkbox in its first cell.
 - `data-table-scroll-region-is-a-region`: A focusable scroll wrapper needs role="region" so its name is announced. aria-label is not allowed on a plain div.
 - `data-table-scroll-region-is-named`: Name a focusable scroll wrapper with aria-label, or aria-labelledby pointing at the table caption, so keyboard users know what they are scrolling.
+- `data-table-filter-is-named`: Give the table search input a label identifying the records it filters.
+- `data-table-filter-count-is-named`: Name the result count, for example aria-label="Matching records", so its number has context.
+- `data-table-filter-count-is-status`: Give the table result count role="status" so changes are announced without moving focus.
+- `data-table-filter-count-is-polite`: Use aria-live="polite" on the table result count so typing does not interrupt other speech.

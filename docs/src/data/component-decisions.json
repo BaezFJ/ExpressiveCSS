@@ -2892,7 +2892,7 @@
         "Rows of records in a scrolling table with a sticky header, sort state and row selection."
       ],
       "useWhen": [
-        "Compare many records across the same columns, with sorting or selecting rows."
+        "Compare records across columns, with sorting, filtering or selection."
       ],
       "avoidWhen": [
         "A few rows of reference data need only the table styles; items people scan by title need a list."
@@ -2902,16 +2902,16 @@
         "cards"
       ],
       "adaptive": [],
-      "runtime": "css-only",
+      "runtime": "shared-runtime",
       "guide": "../components/data-table.md",
       "materialGuidance": {
         "status": "framework-extra",
         "href": null,
         "implementation": {
           "source": "llm.md#data-table",
-          "reviewedOn": "2026-10-06",
-          "documentedSupport": "Scrolling wrapper with an outline, sticky header row, numeric columns, dense rows, a sort arrow drawn from aria-sort and checkbox row selection.",
-          "webAdaptation": "A plain div wraps a native <table>, so the table keeps its role; the page owns sorting, select-all and the scroll region name.",
+          "reviewedOn": "2026-10-27",
+          "documentedSupport": "Scrolling native table with sticky headers, numeric and dense rows, sorting, view-scoped selection, column resizing and visibility, and opt-in text filtering with record/detail grouping and an authored result count.",
+          "webAdaptation": "A plain div wraps a native table. Shared DataTables handlers own opt-in sorting, filtering, select-all and column operations; authors name controls and the scroll region, and keep native row and header semantics.",
           "limitations": [
             "Table semantics, the sticky header, numeric alignment, the sort arrow and selected rows are checked in a browser; sort announcements, enlarged text and spoken output remain unverified."
           ]
