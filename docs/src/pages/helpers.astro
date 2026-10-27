@@ -166,7 +166,7 @@ const S = defineSections([
             <tr><td><code>.shrink-1</code></td><td><code>flex-shrink: 1</code> on a child, restoring shrinking while keeping its grow factor and basis</td></tr>
             <tr><td><code>.self-start</code>, <code>.self-center</code>, <code>.self-end</code>, <code>.self-stretch</code></td><td><code>align-self</code> on a child</td></tr>
             <tr><td><code>.self-auto</code></td><td><code>align-self: auto</code> on a child, so it follows the parent's <code>align-*</code> again</td></tr>
-            <tr><td><code>.order-first</code>, <code>.order-last</code></td><td><code>order: -1</code>, <code>order: 1</code> on a child. This changes the visual order only. Keyboard and screen reader order still follow the source.</td></tr>
+            <tr><td><code>.order-first</code>, <code>.order-last</code>, <code>.order-none</code></td><td><code>order: -1</code>, <code>order: 1</code>, <code>order: 0</code> on a child. <code>.order-none</code> puts a child back in its source position, so a prefixed one undoes the other two from that size class up. This changes the visual order only. Keyboard and screen reader order still follow the source.</td></tr>
             <tr><td><code>.gap-0</code> to <code>.gap-6</code></td><td><code>gap</code> on the spacing scale, with <code>!important</code>. Also works on grid containers.</td></tr>
             <tr><td><code>.gap-x-0</code> to <code>.gap-x-6</code></td><td><code>column-gap</code> only, with <code>!important</code>.</td></tr>
             <tr><td><code>.gap-y-0</code> to <code>.gap-y-6</code></td><td><code>row-gap</code> only, with <code>!important</code>.</td></tr>
@@ -230,7 +230,7 @@ const S = defineSections([
           <code>.shrink-0</code>, <code>.shrink-1</code>,
           <code>justify-*</code>, <code>align-*</code>, <code>self-*</code>, text alignment (<code>.start-align</code>,
           <code>.center-align</code>, <code>.end-align</code>), <code>.line-clamp-*</code>,
-          <code>.gap-*</code>, <code>.gap-x-*</code>, <code>.gap-y-*</code>, margin, padding and <code>.hide</code>. Prefixed margin and padding cover all sides,
+          <code>.order-*</code>, <code>.gap-*</code>, <code>.gap-x-*</code>, <code>.gap-y-*</code>, margin, padding and <code>.hide</code>. Prefixed margin and padding cover all sides,
           <code>x</code>, <code>y</code>, top, bottom, start and end. Use start and end, not left
           and right. A prefixed class applies from that size class up and overrides the unprefixed
           one, the same way the grid's <code>m6</code> and <code>l4</code> do.

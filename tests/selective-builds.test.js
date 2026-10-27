@@ -481,5 +481,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed axis-specific gaps on the spacing scale with all four window-size prefixes: 90,374 gzip bytes (+302).
   // Reviewed responsive child sizing and both resets across four breakpoints: 90,471 gzip bytes (+97 over the Phase 59 base).
   // Reviewed .self-auto and window-size prefixes for the self-alignment classes: 90,559 gzip bytes (+88 over the Phase 60 base).
-  assert.ok(sizes(css).gzip <= 90559, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed .order-none and window-size prefixes for the three order classes: 90,609 gzip bytes (+50 over the Phase 61 base).
+  assert.ok(sizes(css).gzip <= 90609, `CSS gzip: ${sizes(css).gzip}`);
 });
