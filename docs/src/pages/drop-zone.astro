@@ -11,6 +11,7 @@ const S = defineSections([
   { id: "behavior", label: "Behavior" },
   { id: "validation", label: "Type validation" },
   { id: "size", label: "Size limit" },
+  { id: "count", label: "File count" },
   { id: "tokens", label: "Tokens" },
 ]);
 ---
@@ -128,8 +129,8 @@ const S = defineSections([
       File arrays are snapshots. A native input/change pair reports once;
       silent validation and reset report no rejection. This is a notification,
       so canceling it cannot allow invalid files. Combine type validation with
-      the per-file size limit below. File-count limits and uploads are outside
-      these options. Native novalidate/formnovalidate bypasses remain
+      the per-file size and count limits below. Uploads are outside these
+      options. Native novalidate/formnovalidate bypasses remain
       native; always validate received files on the server.
     </p>
   </Section>
@@ -186,6 +187,63 @@ const S = defineSections([
       submission settings and reset recovery follow the type-validation contract
       above. <code>Forms.validateField(input)</code> silently refreshes both
       constraints. Always enforce received file limits on the server.
+    </p>
+  </Section>
+  <Section {...S.count}>
+    <p>
+      Add <code>data-max-files="2"</code> to allow at most two selected files.
+      Exactly two pass. A larger selection stays intact, but native validity
+      blocks ordinary form submission and explains the count violation. This
+      live example checks count independently of type and size.
+    </p>
+    <div class="drop-zone" style="max-width:32rem;">
+      <label>Drop files here or browse
+        <small>At most 2 files</small>
+        <input type="file" multiple data-max-files="2">
+      </label>
+      <p class="supporting-text" data-error data-error-count="Choose no more than two files." role="status" aria-live="polite" hidden></p>
+      <ul class="drop-zone-files" aria-live="polite"></ul>
+    </div>
+    <p>This markup combines type, per-file size and count checks:</p>
+    <Code code={`
+<div class="drop-zone">
+  <label>Drop documents here or browse
+    <small>Up to 2 PDF or PNG files, at most 1 MiB each</small>
+    <input type="file" multiple data-validate-types accept=".pdf,.png"
+           data-max-size="1048576" data-max-files="2">
+  </label>
+  <p class="supporting-text" data-error="Choose PDF or PNG files."
+     data-error-size="Choose files no larger than 1 MiB each."
+     data-error-count="Choose no more than two files."
+     role="status" aria-live="polite" hidden></p>
+  <ul class="drop-zone-files" aria-live="polite"></ul>
+</div>
+`} />
+    <p>
+      Use positive decimal safe-integer counts; surrounding whitespace and
+      leading zeros are allowed. Missing, blank, zero, negative, fractional,
+      exponent, hexadecimal, nonnumeric or unsafe values impose no count limit.
+      Each FileList entry counts, including repeated filenames. Add
+      <code>multiple</code> to choose several files; the limit does not add it.
+      A count-only input leaves <code>accept</code> as a picker hint.
+    </p>
+    <p>
+      Supply the same direct polite <code>[data-error]</code> area.
+      <code>data-error-count</code> localizes count feedback; empty uses a
+      message naming the limit. Type errors take precedence, followed by size
+      errors and then count. A count failure reports
+      <code>{"{ input, files, rejected, reason: 'count' }"}</code> through
+      <code>expressive:reject</code>. Both arrays contain every chosen file,
+      independently; there is no accepted first-N subset. The event is
+      noncancelable. A changed effective count limit can report again after
+      input/change; equivalent decimal values still deduplicate.
+    </p>
+    <p>
+      <code>Forms.validateField(input)</code> silently refreshes all three
+      constraints after script changes. Valid replacement, clearing, opt-out
+      and native reset follow the same application-validity, cancellation,
+      disabled-control, shadow and external-form recovery contract above.
+      Always validate received counts, sizes and file contents on the server.
     </p>
   </Section>
   <Section {...S.tokens}>

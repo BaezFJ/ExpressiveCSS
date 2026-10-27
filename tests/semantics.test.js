@@ -39,7 +39,7 @@ const data = JSON.parse(read('semantics.json'));
 test('opt-in drop-zone file feedback requires a direct live status without initialization', () => {
   const rules = rulesOf(data).filter((rule) => rule.id === 'drop-zone-type-error-is-live-status');
   const broken = (html) => violations(html, rules, data.compositeRoles).map(({ rule }) => rule.id);
-  for (const markers of ['data-validate-types', 'data-max-size="1024"', 'data-validate-types data-max-size="1024"']) {
+  for (const markers of ['data-validate-types', 'data-max-size="1024"', 'data-validate-types data-max-size="1024"', 'data-max-files="2"', 'data-validate-types data-max-size="1024" data-max-files="2"']) {
     const field = `<label>Documents<input type="file" ${markers} accept=".pdf"></label>`;
     const wrap = (error) => `<div class="drop-zone">${field}${error}</div>`;
     for (const error of ['', '<p data-error></p>', '<p data-error role="status"></p>', '<p data-error role="status" aria-live="assertive"></p>', '<div><p data-error role="status" aria-live="polite"></p></div>']) {

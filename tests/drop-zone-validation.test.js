@@ -549,3 +549,247 @@ test('size validation skips disabled controls and refresh preserves unreadable a
   validate();
   assert.equal(input().validationMessage, 'Application while disabled');
 });
+
+const countLimit = (value = '2') => {
+  input().removeAttribute('data-validate-types');
+  input().removeAttribute('data-max-size');
+  input().setAttribute('data-max-files', value);
+};
+
+test('count-only validation accepts the exact count without requiring a list or changing multiple', () => {
+  countLimit();
+  input().multiple = false;
+  document.querySelector('.drop-zone-files').remove();
+  const files = Array.from({ length: 3 }, () => sizedFile('same.exe', 4));
+  for (const count of [0, 1, 2, 3]) {
+    choose(...files.slice(0, count));
+    validate();
+    assert.equal(input().validity.valid, count <= 2, `${count} file entries`);
+    assert.equal(input().multiple, false);
+  }
+  assert.match(input().validationMessage, /2/);
+});
+
+test('count limits share strict positive decimal parsing and ignore inactive hints', () => {
+  countLimit();
+  choose(...Array.from({ length: 3 }, () => sizedFile('same.pdf', 4)));
+  for (const value of ['', '0', '-1', '1.5', '2e0', '0x2', '+2', 'no limit', 'Infinity', '9007199254740992']) {
+    input().setAttribute('data-max-files', value);
+    validate();
+    assert.equal(input().validity.valid, true, value);
+  }
+  input().setAttribute('data-max-files', ' 002 ');
+  validate();
+  assert.equal(input().validity.customError, true);
+  input().setAttribute('data-max-files', '9007199254740991');
+  validate();
+  assert.equal(input().validity.valid, true);
+  input().removeAttribute('data-max-files');
+  validate();
+  assert.equal(input().validity.valid, true);
+});
+
+test('count failure retains every file and safely lists it with separate accessible feedback', () => {
+  countLimit();
+  const selected = choose(sizedFile('same.pdf', 4), sizedFile('same.pdf', 4), sizedFile('<img src=x>.pdf', 4));
+  const error = document.querySelector('[data-error]');
+  validate();
+  assert.equal(input().validity.customError, true);
+  assert.match(input().validationMessage, /2/);
+  assert.notEqual(input().validationMessage, error.getAttribute('data-error'));
+  assert.equal(document.getElementById('upload').checkValidity(), false);
+  assert.equal(input().files, selected);
+  assert.equal(error.textContent, input().validationMessage);
+  assert.equal(error.hidden, false);
+  assert.equal(input().getAttribute('aria-invalid'), 'true');
+  assert.equal(input().getAttribute('aria-describedby'), `hint ${error.id}`);
+  error.setAttribute('data-error-count', 'Choisissez au plus deux fichiers.');
+  validate();
+  assert.equal(input().validationMessage, 'Choisissez au plus deux fichiers.');
+  assert.equal(input().getAttribute('aria-describedby'), `hint ${error.id}`);
+  Expressive.Forms.listDropZoneFiles(document.querySelector('.drop-zone'), input());
+  assert.equal(document.querySelectorAll('.drop-zone-files > li').length, 3);
+  assert.equal(document.querySelector('.drop-zone-files img'), null);
+});
+
+test('combined file rules preserve type then size then count precedence', () => {
+  input().setAttribute('data-max-size', '4');
+  input().setAttribute('data-max-files', '2');
+  choose(sizedFile('bad.exe', 8), sizedFile('one.pdf', 8), sizedFile('two.pdf', 8));
+  validate();
+  assert.equal(input().validationMessage, 'Choose PDF or PNG files.');
+  choose(...Array.from({ length: 3 }, () => sizedFile('same.pdf', 8)));
+  validate();
+  assert.match(input().validationMessage, /size.*4/);
+  choose(...Array.from({ length: 3 }, () => sizedFile('same.pdf', 4)));
+  validate();
+  assert.match(input().validationMessage, /count.*2/);
+  choose(sizedFile('one.pdf', 4), sizedFile('two.pdf', 4));
+  validate();
+  assert.equal(input().validity.valid, true);
+});
+
+test('count recovery releases only owned errors and preserves application and required constraints', () => {
+  countLimit();
+  const files = Array.from({ length: 3 }, () => sizedFile('same.pdf', 4));
+  input().setCustomValidity('Application policy');
+  for (const count of [3, 2, 0]) {
+    choose(...files.slice(0, count));
+    validate();
+    assert.equal(input().validationMessage, 'Application policy');
+  }
+  input().setCustomValidity('');
+  choose(...files);
+  validate();
+  assert.equal(input().validity.customError, true);
+  input().setCustomValidity('A replacement application error');
+  choose(...files.slice(0, 2));
+  validate();
+  assert.equal(input().validationMessage, 'A replacement application error');
+  input().setCustomValidity('');
+  choose(...files);
+  validate();
+  input().setAttribute('data-max-files', '0');
+  validate();
+  assert.equal(input().validity.valid, true);
+  countLimit();
+  validate();
+  assert.equal(input().validity.customError, true);
+  input().removeAttribute('data-max-files');
+  validate();
+  assert.equal(input().validity.valid, true);
+  countLimit();
+  choose();
+  input().required = true;
+  validate();
+  assert.equal(input().validity.valueMissing, true);
+  assert.equal(input().validity.customError, false);
+});
+
+test('count rejection snapshots contain all chosen files independently and track effective count changes', () => {
+  countLimit();
+  const selected = choose(...Array.from({ length: 3 }, () => sizedFile('same.pdf', 4)));
+  const seen = [];
+  document.querySelector('.drop-zone').addEventListener('expressive:reject', event => {
+    assert.equal(event.detail.reason, 'count');
+    assert.equal(event.detail.input, input());
+    assert.equal(event.bubbles && event.composed, true);
+    assert.equal(event.cancelable, false);
+    assert.notEqual(event.detail.files, event.detail.rejected);
+    assert.notEqual(event.detail.files, selected);
+    assert.deepEqual(event.detail.files, selected);
+    assert.deepEqual(event.detail.rejected, selected);
+    event.detail.files.pop();
+    assert.equal(event.detail.rejected.length, 3);
+    event.detail.rejected.shift();
+    assert.equal(input().files.length, 3);
+    seen.push(event);
+  });
+  const emit = () => input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  emit();
+  input().dispatchEvent(new window.Event('change', { bubbles: true }));
+  assert.equal(seen.length, 1);
+  input().setAttribute('data-max-files', '1');
+  emit();
+  assert.equal(seen.length, 2);
+  input().setAttribute('data-max-files', ' 001 ');
+  emit();
+  assert.equal(seen.length, 2);
+  input().setAttribute('data-max-files', '3');
+  emit();
+  assert.equal(input().validity.valid, true);
+  input().setAttribute('data-max-files', '2');
+  emit();
+  assert.equal(seen.length, 3);
+  validate();
+  assert.equal(seen.length, 3);
+});
+
+test('a count rejection listener can replace the selection without stale list or validity writes', () => {
+  countLimit();
+  let calls = 0;
+  document.querySelector('.drop-zone').addEventListener('expressive:reject', event => {
+    assert.equal(event.detail.reason, 'count');
+    calls++;
+    choose(sizedFile('new-one.pdf', 4), sizedFile('new-two.pdf', 4));
+    input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  });
+  choose(...Array.from({ length: 3 }, () => sizedFile('old.pdf', 4)));
+  input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  assert.equal(calls, 1);
+  assert.equal(input().validity.valid, true);
+  assert.equal(document.querySelector('[data-error]').hidden, true);
+  assert.equal(document.querySelectorAll('.drop-zone-files > li').length, 2);
+  assert.match(document.querySelector('.drop-zone-files').textContent, /^new-one.pdf/);
+});
+
+test('count reset honors cancellation, external form ownership and newer selections', async () => {
+  countLimit();
+  const form = document.getElementById('upload');
+  const zone = document.querySelector('.drop-zone');
+  form.after(zone);
+  input().setAttribute('form', form.id);
+  let events = 0;
+  zone.addEventListener('expressive:reject', () => events++);
+  const emit = () => input().dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+  choose(...Array.from({ length: 3 }, () => sizedFile('old.pdf', 4)));
+  emit();
+  zone.classList.add('dragover');
+  form.addEventListener('reset', event => event.preventDefault(), { once: true });
+  form.reset();
+  await settleReset(0);
+  assert.equal(input().validity.customError, true);
+  assert.equal(document.querySelector('[data-error]').hidden, false);
+  assert.equal(zone.classList.contains('dragover'), true);
+  form.reset();
+  choose(...Array.from({ length: 3 }, () => sizedFile('new.pdf', 4)));
+  emit();
+  await settleReset(0);
+  assert.equal(input().validity.customError, true);
+  assert.match(zone.querySelector('.drop-zone-files').textContent, /^new.pdf/);
+  choose();
+  form.reset();
+  await settleReset(0);
+  assert.equal(input().validity.valid, true);
+  assert.equal(document.querySelector('[data-error]').hidden, true);
+  assert.equal(zone.classList.contains('dragover'), false);
+  assert.equal(events, 2);
+  input().setCustomValidity('Application policy');
+  form.reset();
+  await settleReset(0);
+  assert.equal(input().validationMessage, 'Application policy');
+});
+
+test('count rules stay isolated and skip disabled controls without clearing application validity', async () => {
+  countLimit();
+  const zone = document.querySelector('.drop-zone');
+  const otherZone = zone.cloneNode(true);
+  const other = otherZone.querySelector('input');
+  other.id = 'other-files';
+  other.setAttribute('data-max-files', '1');
+  zone.after(otherZone);
+  Object.defineProperty(other, 'files', { configurable: true, value: [sizedFile('one.pdf', 4), sizedFile('two.pdf', 4)] });
+  choose(...Array.from({ length: 3 }, () => sizedFile('same.pdf', 4)));
+  const fieldset = document.createElement('fieldset');
+  const label = input().parentElement;
+  label.before(fieldset);
+  fieldset.append(label);
+  fieldset.disabled = true;
+  validate();
+  assert.equal(input().validity.customError, false);
+  fieldset.disabled = false;
+  validate();
+  Expressive.Forms.validateField(other);
+  assert.match(input().validationMessage, /2/);
+  assert.match(other.validationMessage, /1/);
+  assert.match(zone.querySelector('[data-error]').textContent, /2/);
+  assert.match(otherZone.querySelector('[data-error]').textContent, /1/);
+  input().disabled = true;
+  input().setCustomValidity('Application while disabled');
+  choose();
+  document.getElementById('upload').reset();
+  await settleReset(0);
+  input().disabled = false;
+  validate();
+  assert.equal(input().validationMessage, 'Application while disabled');
+});
