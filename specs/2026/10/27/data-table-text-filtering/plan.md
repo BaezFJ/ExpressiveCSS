@@ -29,7 +29,7 @@ Delivers R5 and the guidance portion of R6. Completion checks V2 and V3, then co
 Prerequisite: groups 1 and 2 pass.
 
 - [x] Record measured gzip delta in `tests/selective-builds.test.js`.
-- [ ] Run the required checks, review the diff independently and fix confirmed issues. Perform the separate code-simplification pass without unrelated refactors.
+- [x] Run the required checks, review the diff independently and fix confirmed issues. Perform the separate code-simplification pass without unrelated refactors.
 - [ ] Record actual results in `validation.md`, open a focused PR, monitor required CI and reviews, fix issues, and merge only when green and current with master.
 
 Delivers R6. Completion checks V4 through V6. Do not publish a package.

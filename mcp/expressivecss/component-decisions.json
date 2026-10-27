@@ -2893,7 +2893,7 @@
         "Rows of records in a scrolling table with a sticky header, sort state and row selection."
       ],
       "useWhen": [
-        "Compare many records across the same columns, with sorting or selecting rows."
+        "Compare records across columns, with sorting, filtering or selection."
       ],
       "avoidWhen": [
         "A few rows of reference data need only the table styles; items people scan by title need a list."
