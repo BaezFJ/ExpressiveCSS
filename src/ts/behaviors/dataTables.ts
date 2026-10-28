@@ -27,6 +27,7 @@ const PAGE_SIZE = 'select[data-table-page-size]:not([multiple], :disabled):not(:
 
 interface TablePageState { page: number; pageSize: number; total: number; }
 type PageView = TablePageState & { server?: boolean };
+type SortKey = { text: string; value: number };
 
 function validPageState(state: TablePageState) {
   if (!state) return false;
@@ -592,27 +593,27 @@ export class DataTables {
 
   /**
    * Reorders each body's rows by one column. A detail row moves with the
-   * row before it.
+   * row before it. Numeric columns put nonnumbers first; text uses the page's language.
    */
   private static _sort(table: HTMLTableElement, header: HTMLTableCellElement, column: number, order: number) {
     if (DataTables._pages.get(table.closest('.data-table'))?.server) return;
+    const numeric = header.classList.contains('numeric');
     const compare = DataTables._compare(table, header);
     for (const body of Array.from(table.tBodies)) {
-      const groups = DataTables._groups(body);
-      groups.sort(([a], [b]) => order * compare(cellText(a, column), cellText(b, column)));
-      body.append(...groups.flat());
+      const groups = DataTables._groups(body).map((rows) => {
+        const text = cellText(rows[0], column);
+        return { rows, text, value: numeric ? numberValue(text) ?? -Infinity : 0 };
+      });
+      groups.sort((a, b) => order * compare(a, b));
+      body.append(...groups.flatMap(({ rows }) => rows));
     }
   }
 
-  /**
-   * How a column compares: a `.numeric` header's as numbers, as a chart
-   * reads them, with text that is not a number first; any other as text in
-   * the page's language, with digit runs as numbers.
-   */
+  /** Compares prepared numeric keys or text in the page's language. */
   private static _compare(table: HTMLTableElement, header: HTMLTableCellElement) {
-    if (!header.classList.contains('numeric')) return new Intl.Collator(Utils.locale(table), { numeric: true, sensitivity: 'base' }).compare;
-    const number = (text: string) => numberValue(text) ?? -Infinity;
-    return (a: string, b: string) => number(a) - number(b);
+    if (header.classList.contains('numeric')) return (a: SortKey, b: SortKey) => a.value - b.value;
+    const compare = new Intl.Collator(Utils.locale(table), { numeric: true, sensitivity: 'base' }).compare;
+    return (a: SortKey, b: SortKey) => compare(a.text, b.text);
   }
 
   private static _records(table: HTMLTableElement) {

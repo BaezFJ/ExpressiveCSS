@@ -88,6 +88,40 @@ test('a header button sorts the rows, keeps a detail row with its row and moves 
   assert.deepEqual(order(), ['c', 'a', 'b', 'b-detail'], 'a menu button in a header does not sort');
 });
 
+test('sorting reads each record key once and refreshes it for the next sort', (t) => {
+  const records = [...document.querySelectorAll('tbody tr:not(.data-table-detail)')];
+  const cells = t.mock.getter(window.HTMLTableRowElement.prototype, 'cells');
+
+  for (const column of ['by-name', 'by-total']) {
+    cells.mock.resetCalls();
+    click(column);
+    for (const row of records) {
+      assert.equal(cells.mock.calls.filter((call) => call.this === row).length, 1, `${column}: ${row.id}`);
+    }
+  }
+  document.querySelector('#c .numeric').dataset.value = '2000';
+  click('by-total');
+  assert.deepEqual(order(), ['c', 'b', 'b-detail', 'a'], 'a later sort reads changed data-value');
+});
+
+test('numeric sorting keeps ties stable, missing values first and bodies separate', () => {
+  document.querySelector('tbody').innerHTML = `
+    <tr id="first"><td></td><th>First</th><td data-value="2">Other text</td></tr>
+    <tr class="data-table-detail" id="detail"><td colspan="3">Detail</td></tr>
+    <tr id="second"><td></td><th>Second</th><td>2</td></tr>
+    <tr id="missing"><td></td><th>Missing</th><td>Pending</td></tr>
+    <tr id="negative"><td></td><th>Negative</th><td>-5</td></tr>
+    <tr id="blank"><td></td><th>Blank</th><td></td></tr>`;
+  const body = document.createElement('tbody');
+  body.innerHTML = '<tr id="high"><td></td><th>High</th><td>9</td></tr><tr id="low"><td></td><th>Low</th><td>1</td></tr>';
+  document.querySelector('table').append(body);
+
+  click('by-total');
+  assert.deepEqual(order(), ['missing', 'blank', 'negative', 'first', 'detail', 'second', 'low', 'high']);
+  click('by-total');
+  assert.deepEqual(order(), ['first', 'detail', 'second', 'negative', 'missing', 'blank', 'high', 'low']);
+});
+
 test('a canceled sort leaves the rows to the page but still marks the header', () => {
   const cancel = (e) => {
     assert.deepEqual([e.detail.column, e.detail.direction], [1, 'ascending']);
