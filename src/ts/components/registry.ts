@@ -232,6 +232,7 @@ function markupOptions(el: Element, name: string, defaults: object) {
 // to a union TypeScript cannot call, so narrow it once, here.
 const entry = (name: keyof Registry) => AUTO_INIT_COMPONENTS[name] as unknown as AutoInitEntry;
 const NAMES = Object.keys(AUTO_INIT_COMPONENTS) as (keyof Registry)[];
+const WATCH_SELECTOR = `:is(${NAMES.map((name) => entry(name).selector).join(",")}):not(.no-autoinit)`;
 
 /** Starts component `name` on one element, with its markup options under `options`. */
 function initElement(name: keyof Registry, el: Element, options: object = {}) {
@@ -255,10 +256,18 @@ function claimed(name: keyof Registry, root: ParentNode, self = false): Element[
 
 /** Starts the components an added element and its descendants claim, leaving existing instances alone. */
 function startAdded(node: Node, options?: Partial<AutoInitOptions>) {
-  if (node.nodeType !== Node.ELEMENT_NODE) return;
+  if (!hasClaims(node)) return;
   for (const name of NAMES) {
-    claimed(name, node as Element, true).forEach((el) => entry(name).component.getInstance(el) || initElement(name, el, options?.[name]));
+    claimed(name, node, true).forEach((el) => entry(name).component.getInstance(el) || initElement(name, el, options?.[name]));
   }
+}
+
+/** Skips inert mutation roots without visiting every registry entry. */
+function hasClaims(node: Node): node is Element {
+  if (node.nodeType !== Node.ELEMENT_NODE) return false;
+  const el = node as Element;
+  // shortcut: matching subtrees keep ordered scans; expand only if profiling justifies lifecycle-aware discovery.
+  return el.matches(WATCH_SELECTOR) || el.querySelector(WATCH_SELECTOR) !== null;
 }
 
 /**
@@ -267,9 +276,9 @@ function startAdded(node: Node, options?: Partial<AutoInitOptions>) {
  * and keeps its instances.
  */
 function stopRemoved(node: Node) {
-  if (node.nodeType !== Node.ELEMENT_NODE || node.isConnected) return;
+  if (node.isConnected || !hasClaims(node)) return;
   for (const name of NAMES) {
-    claimed(name, node as Element, true).forEach((el) => entry(name).component.getInstance(el)?.destroy());
+    claimed(name, node, true).forEach((el) => entry(name).component.getInstance(el)?.destroy());
   }
 }
 

@@ -566,6 +566,35 @@ describe("AutoInit watch mode", () => {
   const trigger = (id, attributes = "") =>
     `<a class="menu-trigger" id="${id}-trigger" data-target="${id}" ${attributes}>Open</a><menu id="${id}"><li><a href="#!">one</a></li></menu>`;
 
+  test("inert additions and removals need at most one descendant query per root", (t) =>
+    watching(async () => {
+      const roots = Array.from({ length: 20 }, () => document.createElement("span"));
+      const one = t.mock.method(window.Element.prototype, "querySelector");
+      const all = t.mock.method(window.Element.prototype, "querySelectorAll");
+      document.body.append(...roots);
+      await settle();
+      assert.ok(one.mock.callCount() + all.mock.callCount() <= roots.length, "addition rescanned the registry");
+      one.mock.resetCalls();
+      all.mock.resetCalls();
+      for (const root of roots) root.remove();
+      await settle();
+      assert.ok(one.mock.callCount() + all.mock.callCount() <= roots.length, "removal rescanned the registry");
+    }));
+
+  test("stop() starts later component markup created during initialization", (t) =>
+    watching(async (stop) => {
+      const init = Expressive.Menu.init;
+      t.mock.method(Expressive.Menu, "init", function (...args) {
+        const instance = init.apply(this, args);
+        add('<a class="tooltipped" data-tooltip="Generated">Generated</a>', args[0].parentElement);
+        return instance;
+      });
+      const box = add(`<div>${trigger("generated")}</div>`);
+      stop();
+      assert.ok(Expressive.Menu.getInstance(box.querySelector(".menu-trigger")));
+      assert.ok(Expressive.Tooltip.getInstance(box.querySelector(".tooltipped")));
+    }));
+
   test("starts a menu added after the scan with AutoInit and markup options", () =>
     watching(async () => {
       const el = add(trigger("m", `data-menu-options='{"hover":true}'`));
