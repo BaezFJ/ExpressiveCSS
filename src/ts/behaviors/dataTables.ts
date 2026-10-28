@@ -341,7 +341,7 @@ export class DataTables {
   }
 
   private static _onChange = (e: Event) => {
-    const box = Utils.eventTarget(e);
+    const box = Utils.closestInPath(e, 'input[type="checkbox"]');
     const wrapper = box?.closest('.data-table');
     const table = wrapper?.querySelector<HTMLTableElement>(':scope > table');
     if (!table) return;

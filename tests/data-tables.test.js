@@ -33,6 +33,18 @@ beforeEach(() => {
   document.body.innerHTML = TABLE;
 });
 
+test('non-checkbox input does not scan table selection', (t) => {
+  const wrapper = document.querySelector('.data-table');
+  const controls = document.createElement('div');
+  controls.innerHTML = '<input type="search"><input type="text"><textarea></textarea><select><option>One</option></select>';
+  wrapper.prepend(controls);
+  const queries = t.mock.method(wrapper.querySelector('table'), 'querySelectorAll');
+
+  for (const control of controls.children) change(control);
+
+  assert.equal(queries.mock.callCount(), 0);
+});
+
 test('select-all checks every enabled row, and shows mixed for some', () => {
   const all = document.getElementById('all');
   const seen = [];
