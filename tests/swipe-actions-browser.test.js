@@ -203,10 +203,14 @@ for (const [engine, browserType, browserTest] of engines) {
 
       const row = await page.locator('#row4').boundingBox();
       const from = { x: row.x + row.width / 2, y: row.y + row.height / 2 };
+      // The second finger goes down on the row above. A point below row 4 can
+      // fall outside the 300px box, where the list never hears the touchstart.
+      const above = await page.locator('#row3').boundingBox();
+      const second = { x: from.x, y: above.y + above.height / 2 };
       await send('touchstart', from);
       for (let i = 1; i <= 5; i++) await send('touchmove', { x: from.x - i * 30, y: from.y });
-      await send('touchstart', { x: from.x - 150, y: from.y }, { x: from.x, y: from.y + 100 });
-      await send('touchmove', { x: from.x - 160, y: from.y }, { x: from.x, y: from.y + 110 });
+      await send('touchstart', { x: from.x - 150, y: from.y }, second);
+      await send('touchmove', { x: from.x - 160, y: from.y }, { x: second.x, y: second.y - 10 });
       await send('touchend');
       await settled(page, '#row4', false);
       assert.equal(await expanded(page, '#row4'), 'false', 'a second finger ends the swipe');
