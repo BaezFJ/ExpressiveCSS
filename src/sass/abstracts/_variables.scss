@@ -48,7 +48,7 @@ $link-color: var(--md-sys-color-primary) !default;
 // 26 standard roles in six groups (primary, secondary, tertiary, error,
 // surface, outline), plus optional add-ons (fixed accents, the surface
 // container scale). The pre-1.0 aliases background, on-background,
-// surface-variant and surface-tint were removed in 1.0. Consumed by tokens/_theme.scss and
+// surface-variant and surface-tint were removed in 0.16.0. Consumed by tokens/_theme.scss and
 // utilities/_colors.scss so the token layer and the utility classes
 // cannot drift.
 $sys-color-roles: (

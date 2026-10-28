@@ -27,7 +27,7 @@ test('migration skill searches find legacy names and pass the bundled templates'
   }
 });
 
-test('the step 6 search finds every alias 1.0 removes and leaves their replacements', () => {
+test('the step 6 search finds every alias 0.16.0 removes and leaves their replacements', () => {
   const step6 = searches[4];
   for (const line of [
     '<span class="material-icons">add</span>',

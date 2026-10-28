@@ -67,7 +67,7 @@ Every role below emits two classes. The background class (for example `.primary`
 
 Foreground classes append `-text` to each name above: `.primary-text`, `.on-primary-text`, `.primary-container-text`, `.on-primary-container-text`, `.primary-fixed-text`, `.primary-fixed-dim-text`, `.on-primary-fixed-text`, `.on-primary-fixed-variant-text`, `.secondary-text`, `.on-secondary-text`, `.secondary-container-text`, `.on-secondary-container-text`, `.secondary-fixed-text`, `.secondary-fixed-dim-text`, `.on-secondary-fixed-text`, `.on-secondary-fixed-variant-text`, `.tertiary-text`, `.on-tertiary-text`, `.tertiary-container-text`, `.on-tertiary-container-text`, `.tertiary-fixed-text`, `.tertiary-fixed-dim-text`, `.on-tertiary-fixed-text`, `.on-tertiary-fixed-variant-text`, `.error-text`, `.on-error-text`, `.error-container-text`, `.on-error-container-text`, `.surface-text`, `.on-surface-text`, `.on-surface-variant-text`, `.surface-dim-text`, `.surface-bright-text`, `.surface-container-lowest-text`, `.surface-container-low-text`, `.surface-container-text`, `.surface-container-high-text`, `.surface-container-highest-text`, `.outline-text`, `.outline-variant-text`, `.inverse-surface-text`, `.inverse-on-surface-text`, `.inverse-primary-text`, `.scrim-text`, `.shadow-text`.
 
-The pre-1.0 roles `background`, `on-background`, `surface-variant` and `surface-tint` were removed in 1.0. Use `surface`, `on-surface`, `surface-container-highest` and `primary`.
+The pre-1.0 roles `background`, `on-background`, `surface-variant` and `surface-tint` were removed in 0.16.0. Use `surface`, `on-surface`, `surface-container-highest` and `primary`.
 
 ## Transparency and states
 

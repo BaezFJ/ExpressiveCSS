@@ -874,7 +874,7 @@ describe('Text field icon selectors', () => {
     const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
     // Documented markup puts both icons before the input, so a
     // `:last-child` rule never matches the trailing icon and it
-    // sits in flow above the well. 1.0 drops the positional <i> path.
+    // sits in flow above the well. 0.16.0 drops the positional <i> path.
     assert.match(css, /\.field\s*>\s*\.suffix/);
     assert.match(css, /\.field\s*>\s*\.prefix/);
     assert.doesNotMatch(css, /\.field\s*>\s*i:(first|last)-of-type/);

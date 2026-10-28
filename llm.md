@@ -2,7 +2,7 @@
 
 ExpressiveCSS is a Material Design 3 front-end framework built with Sass and TypeScript. It provides design tokens, light and dark themes, a responsive grid, utilities, styled controls, and interactive browser components.
 
-This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.15.0`, which is under active development.
+This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.16.0`, which is under active development.
 
 - Package: `@expressivecss/expressive`
 - Runtime target: modern browsers; the last five Chrome and Firefox versions
@@ -447,7 +447,7 @@ Build Material Design 3 interfaces from semantic HTML, with light and dark theme
 
 ### Installation
 
-Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.15.0` and is still growing, so the usual path is to build from the repository.
+Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.16.0` and is still growing, so the usual path is to build from the repository.
 
 #### Expressive
 
@@ -9878,7 +9878,7 @@ A filter chip's selected state is `:checked` on its input, so it needs no script
 
 Clicking `.close` removes the chip only when it sits inside a `.chips` container. Importing the bundle runs `Chips.Init()` on `DOMContentLoaded`, which wires that click. A lone `.chip` does not remove itself.
 
-Before 0.8.0 every chip was a `<div class="chip">` and the delete affordance was an `<i class="close">` — focusable via `tabindex` but with no role and no name. In 1.0 that `<i>` is no longer an icon, so the button reads the word "close"; write the `<button class="close">` shown here.
+Before 0.8.0 every chip was a `<div class="chip">` and the delete affordance was an `<i class="close">` — focusable via `tabindex` but with no role and no name. In 0.16.0 that `<i>` is no longer an icon, so the button reads the word "close"; write the `<button class="close">` shown here.
 
 ### Contacts
 

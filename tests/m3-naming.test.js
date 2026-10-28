@@ -1,8 +1,8 @@
-// The 0.8.0 renames, and their end in 1.0.
+// The 0.8.0 renames, and their end in 0.16.0.
 //
 // Components took the names Material 3 uses for them in 0.8.0. Each rename was
-// additive until 1.0: the old class stayed in the selector list and the old
-// export stayed as an alias. 1.0 removes the old names, and this file holds
+// additive until 0.16.0: the old class stayed in the selector list and the old
+// export stayed as an alias. 0.16.0 removes the old names, and this file holds
 // that line so none of them quietly comes back.
 //
 // One rename was never additive: `Slider` used to be the image slideshow and
@@ -56,7 +56,7 @@ describe('Slider is the range control, and nothing else', () => {
     assert.equal(Expressive.Slideshow, undefined);
   });
 
-  test('the pre-0.8.0 Range export is gone in 1.0', () => {
+  test('the pre-0.8.0 Range export is gone in 0.16.0', () => {
     assert.equal(Expressive.Range, undefined);
   });
 });

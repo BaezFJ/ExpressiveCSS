@@ -1,7 +1,7 @@
 // M3 Expressive Slider: sizes, centered, dual-handle.
 //
 // Named Range until 0.8.0, when the component took M3's name for it. The
-// Range export was removed in 1.0.
+// Range export was removed in 0.16.0.
 
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
@@ -29,7 +29,7 @@ describe('Slider CSS', () => {
     for (const h of ['.slider', 'label:has(']) {
       assert.ok(hosts.includes(h), `host list is missing ${h}: ${hosts}`);
     }
-    // The pre-0.8.0 .range and .range-field hosts were removed in 1.0.
+    // The pre-0.8.0 .range and .range-field hosts were removed in 0.16.0.
     assert.doesNotMatch(css, /\.range(-field)?(?![\w-])/);
     assert.match(css, /--md-comp-slider-track-height:\s*24px/);
     assert.match(css, /--md-comp-slider-track-height:\s*2\.5rem/);

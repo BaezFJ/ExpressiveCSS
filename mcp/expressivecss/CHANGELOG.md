@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 0.5.0 - 2026-10-27
+
 - Security: update the locked `body-parser` to 2.4.0, `fast-uri` to 3.1.9,
   and the `qs` override to 6.16.1 to resolve known dependency advisories.
 - Security: `quality_inspector` skips every `files` entry outside
@@ -21,7 +23,7 @@
   Resolving it would contact that host.
 
 - `rules_enforcer` and the lint command flag the class names, color roles
-  and markup paths that ExpressiveCSS 1.0 removes, and each finding names
+  and markup paths that ExpressiveCSS 0.16.0 removes, and each finding names
   the replacement. The new rule IDs start with `legacy-`: material-icons,
   i-icon, visibility-alias, helper-class, renamed-component, picker-root,
   sheet-class, variant-alias, markup-path, carousel-flat, color-role,
@@ -54,6 +56,7 @@
   running after the server exited.
 - The lint hook exits 2 when inspection throws, so a crash blocks the edit
   instead of letting the file through unlinted.
+- Bundled framework guidance: ExpressiveCSS 0.16.0.
 
 ## 0.4.1 - 2026-10-14
 
