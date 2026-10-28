@@ -829,7 +829,7 @@
           "kind": "forbid",
           "selector": "fieldset.rating [type=\"radio\"] + span",
           "fragmentSafe": true,
-          "message": "Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 1.0 no longer draws."
+          "message": "Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 0.16.0 no longer draws."
         }
       ]
     },
@@ -898,7 +898,7 @@
     },
     "forms/slider": {
       "status": "enforced",
-      "note": "Swept 0.8.0. Renamed from range to the name M3 uses; 1.0 removed the `.range` and `.range-field` hosts.",
+      "note": "Swept 0.8.0. Renamed from range to the name M3 uses; 0.16.0 removed the `.range` and `.range-field` hosts.",
       "rules": [
         {
           "id": "range-labelled",

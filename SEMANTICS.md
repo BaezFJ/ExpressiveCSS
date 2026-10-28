@@ -659,7 +659,7 @@ Added with the rating component. The input is a fieldset of native radios drawn 
 
 - **rating-is-a-fieldset-or-an-image** - A .rating is either a <fieldset> of radios, for input, or an element with role="img" and a name, for display. Anything else draws stars that say nothing.
 - **rating-display-is-named** - Name a rating display with the value, such as aria-label="Rated 4.5 out of 5".
-- **rating-label-text-precedes-the-radio** - Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 1.0 no longer draws.
+- **rating-label-text-precedes-the-radio** - Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 0.16.0 no longer draws.
 
 ### forms/select
 
@@ -673,7 +673,7 @@ Swept 0.8.0. The listbox FormSelect builds is checked at runtime in tests/select
 
 ### forms/slider
 
-Swept 0.8.0. Renamed from range to the name M3 uses; 1.0 removed the `.range` and `.range-field` hosts.
+Swept 0.8.0. Renamed from range to the name M3 uses; 0.16.0 removed the `.range` and `.range-field` hosts.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |

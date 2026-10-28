@@ -1,6 +1,6 @@
 ---
 name: expressivecss-migration
-description: Migrates a project to the current ExpressiveCSS release from Materialize CSS or an older @expressivecss/expressive 0.x release, and removes the names that 1.0 drops. Use when upgrading ExpressiveCSS, replacing Materialize (`M.AutoInit`, `.btn`, `.modal`, `.input-field`, `.sidenav`) with ExpressiveCSS, or clearing deprecated classes before 1.0. Not for new ExpressiveCSS work or projects that already use current names.
+description: Migrates a project to the current ExpressiveCSS release from Materialize CSS or an older @expressivecss/expressive 0.x release, and removes the names that 0.16.0 drops. Use when upgrading ExpressiveCSS, replacing Materialize (`M.AutoInit`, `.btn`, `.modal`, `.input-field`, `.sidenav`) with ExpressiveCSS, or clearing the aliases that 0.16.0 removed. Not for new ExpressiveCSS work or projects that already use current names.
 license: MIT
 compatibility: Works on its own. The sibling expressivecss skill holds each component's full contract.
 metadata:
@@ -13,9 +13,9 @@ metadata:
 
 # Migrate to ExpressiveCSS
 
-ExpressiveCSS is derived from MaterializeCSS v2.2.2, and its names changed in three waves. 0.5.0 removed the Materialize components Material 3 has no place for. 0.8.0 renamed the rest to Material 3 names and corrected the markup so each element states what the component is. 1.0 removes the aliases kept since 0.8.0.
+ExpressiveCSS is derived from MaterializeCSS v2.2.2, and its names changed in three waves. 0.5.0 removed the Materialize components Material 3 has no place for. 0.8.0 renamed the rest to Material 3 names and corrected the markup so each element states what the component is. 0.16.0 removes the aliases kept since 0.8.0.
 
-Almost nothing warns. Old classes render unstyled or slightly wrong, and some markup from before 0.8.0 keeps rendering until 1.0 removes it. The search for leftover names after each step is the real check, so run it every time.
+Almost nothing warns. Old classes render unstyled or slightly wrong, and some markup from before 0.8.0 keeps rendering up to 0.15.x and stops in 0.16.0. The search for leftover names after each step is the real check, so run it every time.
 
 For a component's full markup, options and rules, use the `expressivecss` skill or the [API reference](https://www.expressivecss.com/llm.md). The [changelog](https://github.com/BaezFJ/ExpressiveCSS/blob/master/CHANGELOG.md) has a Migration entry for every release that needs one.
 
@@ -29,7 +29,7 @@ Copy this checklist and tick it off:
 - [ ] 3. Replace the JavaScript API
 - [ ] 4. Replace removed components
 - [ ] 5. Rename classes and fix markup
-- [ ] 6. Replace the aliases that 1.0 removes
+- [ ] 6. Replace the aliases that 0.16.0 removes
 - [ ] 7. Check the silent visual changes
 - [ ] 8. Verify
 ```
@@ -84,7 +84,7 @@ Search: `grep -rnE --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.
 | `Sidenav`, `NavigationDrawer` | `NavigationRail` |
 | `Materialbox` | `Lightbox` |
 | `Slider` as an image slideshow | `Carousel`. Since 0.8.0 `Slider` is the range control |
-| `Range` | `Slider`. The alias goes in 1.0 |
+| `Range` | `Slider`. The alias is gone in 0.16.0 |
 | `Pushpin`, `TapTarget`, `Parallax`, `Waves` | Removed; see Step 4 |
 
 Behavior that changed without a rename:
@@ -131,7 +131,7 @@ Search: `grep -rnE --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.
 
 ## Step 5: Classes and markup
 
-Materialize names, and markup that 0.8.0 corrected. Before 1.0 much of the old markup in this table still renders, so nothing tells you it is wrong; in 1.0 most of it stops rendering.
+Materialize names, and markup that 0.8.0 corrected. Up to 0.15.x much of the old markup in this table still renders, so nothing tells you it is wrong; in 0.16.0 most of it stops rendering.
 
 | Old | Current |
 | --- | --- |
@@ -170,9 +170,9 @@ Search: `grep -rnE --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.
 
 ---
 
-## Step 6: Aliases that 1.0 removes
+## Step 6: Aliases that 0.16.0 removes
 
-These still work in 0.x and stop working in 1.0. Replace them now; each replacement has been documented since 0.8.0.
+These work up to 0.15.x and stop working in 0.16.0. Replace them now; each replacement has been documented since 0.8.0.
 
 | Alias | Replacement |
 | --- | --- |
@@ -186,7 +186,7 @@ These still work in 0.x and stop working in 1.0. Replace them now; each replacem
 | `.center-block` | `.mx-auto` plus your own `display: block` |
 | `.no-select` | `user-select: none` in your own CSS |
 | `.preloader` | `.progress.circular` |
-| `class="datepicker"`, `class="timepicker"` | `class="date-picker"`, `class="time-picker"`. AutoInit starts only these in 1.0 |
+| `class="datepicker"`, `class="timepicker"` | `class="date-picker"`, `class="time-picker"`. AutoInit starts only these in 0.16.0 |
 | `.searchbar` | `search.search-bar` |
 | `dialog.bottom`, the sheet's `.handle` | `dialog.bottom-sheet`, `.drag-handle` |
 | `dialog.right`, `dialog.right-sheet` | `dialog.side-sheet` |
@@ -216,9 +216,9 @@ Check each hit by hand: `searchbar` and `preloader` also match ids and prose, an
 
 These keep their class names but look different. Compare a page before and after, and decide with the user which to keep.
 
-- Button sizes (0.8.0): `small` is 40dp, not 32dp; the old 32dp button is `xsmall`. `large` is 96dp, not 56dp; the old 56dp button is `medium`. Before 1.0 `extra` also meant 56dp; in 1.0 it only marks the `circle extra` FAB. The default inset is 16dp on both sides.
+- Button sizes (0.8.0): `small` is 40dp, not 32dp; the old 32dp button is `xsmall`. `large` is 96dp, not 56dp; the old 56dp button is `medium`. Up to 0.15.x `extra` also meant 56dp; in 0.16.0 it only marks the `circle extra` FAB. The default inset is 16dp on both sides.
 - `button.circle` with no size class has a 20px glyph instead of 24px (0.8.0). Use `.icon-button`, or `.circle.medium`, to keep 24px.
-- Snackbar's generated close button holds its icon in a `<span class="material-symbols">`, not an `<i>` (1.0). Point custom styles at `.snackbar .material-symbols` instead of `.snackbar i`.
+- Snackbar's generated close button holds its icon in a `<span class="material-symbols">`, not an `<i>` (0.16.0). Point custom styles at `.snackbar .material-symbols` instead of `.snackbar i`.
 - A button's height is a `min-height` (0.11.0). A rule that shrinks a button with `height` must also set `min-height`, or set `--md-comp-filled-button-container-height`.
 - The default theme seed is Mist Iris `#c6a0f6` (0.13.0). Set `--md-source` or Sass `$md-source` to keep the brand color.
 - `--md-sys-color-scrim` set on a subtree no longer reaches scrims (0.8.0). Set it at the root, or set `--md-comp-scrim-color` on one surface.

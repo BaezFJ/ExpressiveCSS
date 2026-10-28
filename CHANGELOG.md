@@ -5,6 +5,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.16.0] - 2026-10-27
+
+This release removes the aliases kept for markup written before 0.8.0. See
+Removed and Migration below before upgrading.
+
 ### Deprecated
 
 - Chip sizing properties `--padding`, `--font-size` and `--font-size-icon`.
@@ -713,7 +718,7 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The `expressivecss-migration` agent skill moves a project from Materialize
   or an older 0.x release to current names in eight steps: package and
   assets, JavaScript API, removed components, classes and markup, the aliases
-  1.0 removes, silent visual changes, and verification. Each step ends with a
+  0.16.0 removes, silent visual changes, and verification. Each step ends with a
   search for the names it replaces, and the skill installs on its own with
   `npx skills add BaezFJ/ExpressiveCSS`.
 - An "AI agents" documentation page at `/ai.html` lists the plain-text docs,
@@ -1209,12 +1214,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   was always `null`. Read `declaredRange` and `contractVersion` instead.
 - Datepicker's undocumented `formats` property, the table of format
   functions. The `format` option and its tokens are unchanged.
-- **Breaking (1.0).** Most names kept for markup written before 0.8.0 are
+- **Breaking (0.16.0).** Most names kept for markup written before 0.8.0 are
   gone. Each one has a replacement that has been documented since 0.8.0;
   see Migration below. A few stay: `.breadcrumb` and `.breadcrumb-wrapper`,
   a bare `ul.pagination`, and checkbox `input + span`, which multiple Select
   still emits.
-- **Breaking (1.0).** The remaining compatibility paths are gone too: the
+- **Breaking (0.16.0).** The remaining compatibility paths are gone too: the
   `.range` and `.range-field` slider hosts, a switch whose `.switch` class
   sits on a wrapper around the label, the `.extra` size on a common button,
   radio `input + span` and switch `input + span` / `.lever` drawing, the
@@ -1237,6 +1242,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   no styles. Use `isDateRange` for range selection.
 
 ### Changed
+
+- The `expressivecss` skill is version 0.12.0 and `expressivecss-review` is
+  version 0.1.1. A review now leaves the reviewed files unchanged and only
+  offers its fixes. `expressivecss-migration` ships at 0.1.0.
 
 - Chips' form-associated control moved to a shared core module, which the
   cascader uses too. The control gained `checkValidity()` and
@@ -3830,7 +3839,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.15.0...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.16.0...HEAD
+[0.16.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.14.1...v0.15.0
 [0.14.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.14.0...v0.14.1
 [0.14.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.13.1...v0.14.0

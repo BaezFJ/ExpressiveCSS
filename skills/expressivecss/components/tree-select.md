@@ -5,11 +5,11 @@ Choose one or more leaves from a tree using the keyboard or pointer.
 
 Component ID: `tree-select`
 
-[Component documentation](https://www.expressivecss.com/tree-select.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/tree-select.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.15.0)
+[Component documentation](https://www.expressivecss.com/tree-select.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/tree-select.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.16.0)
 
-Contract: ExpressiveCSS 0.15.0
+Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `2180d3ca576eadb15d79f3aeddcacce11ab4f95e60073de836c2d808135cf207`
+Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
 
 #### Selection and adaptation
 

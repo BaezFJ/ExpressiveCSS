@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "generatedBy": "scripts/gen-expressivecss-skill.mjs",
-  "frameworkVersion": "0.15.0",
+  "frameworkVersion": "0.16.0",
   "semantics": {
     "about": "Normative HTML semantics for ExpressiveCSS. This data file is the single source of truth: SEMANTICS.md is generated from it by scripts/gen-semantics.mjs, and tests/semantics.test.js enforces it. One row per roster entry, each stating its kind - component, foundation or behavior, as CONTEXT.md defines them. CONTEXT.md defines the rest of the vocabulary.",
     "scope": "Element choice, landmark structure, and the ARIA that element choice implies. Keyboard interaction, focus management and colour contrast are deliberately out of scope.",
@@ -833,7 +833,7 @@
             "kind": "forbid",
             "selector": "fieldset.rating [type=\"radio\"] + span",
             "fragmentSafe": true,
-            "message": "Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 1.0 no longer draws."
+            "message": "Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 0.16.0 no longer draws."
           }
         ]
       },
@@ -902,7 +902,7 @@
       },
       "forms/slider": {
         "status": "enforced",
-        "note": "Swept 0.8.0. Renamed from range to the name M3 uses; 1.0 removed the `.range` and `.range-field` hosts.",
+        "note": "Swept 0.8.0. Renamed from range to the name M3 uses; 0.16.0 removed the `.range` and `.range-field` hosts.",
         "rules": [
           {
             "id": "range-labelled",

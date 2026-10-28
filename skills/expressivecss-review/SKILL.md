@@ -5,7 +5,7 @@ license: MIT
 compatibility: Needs the sibling expressivecss skill for guides and the version resolver. Subagents need an agent-spawning tool; without one, run the five lenses in sequence.
 metadata:
   author: BaezFJ
-  version: "0.1.0"
+  version: "0.1.1"
   tags: expressivecss, review, audit, subagents, material-design-3
 ---
 

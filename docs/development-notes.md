@@ -8,7 +8,7 @@ ExpressiveCSS is a Material Design 3 front-end framework. Framework source lives
 
 For agents, `llm.md` covers markup and JavaScript APIs; `m3-guidelines.md` covers Material 3 usage, anatomy, placement, adaptive design, and component behavior.
 
-Public APIs and markup use ExpressiveCSS names. Elements store instances as `el['Expressive_<Component>']`, the IIFE global is `Expressive`, and `src/ts/modular.ts` exports `version = '0.15.0'` to match `package.json`. The renamed classes and APIs are:
+Public APIs and markup use ExpressiveCSS names. Elements store instances as `el['Expressive_<Component>']`, the IIFE global is `Expressive`, and `src/ts/modular.ts` exports `version = '0.16.0'` to match `package.json`. The renamed classes and APIs are:
 
 | Upstream | Expressive |
 | --- | --- |
@@ -20,7 +20,7 @@ Icons use Material Symbols, outlined by default (`--md-icon-font`). Select the o
 
 The compiled CSS includes unlayered `@font-face` rules. `dist/fonts/` holds the woff2 files: outlined, rounded, and sharp variable Symbols (opsz / wght / FILL / GRAD), Latin Roboto 400/500, and Latin Noto Sans 400/500. `build:css` copies them from Fontsource packages via `scripts/copy-fonts.mjs`. Browsers fetch a family only after markup uses it. Keep `dist/fonts/` next to `dist/css/` so `url(../fonts/...)` resolves. Sass consumers can set `$expressive-font-path` or `$expressive-include-fonts: false`.
 
-Do not ship the older Material Icons font; `.material-icons` was removed in 1.0. The `--md-sys-*` and `--md-ref-*` tokens retain their Material Design 3 spec names.
+Do not ship the older Material Icons font; `.material-icons` was removed in 0.16.0. The `--md-sys-*` and `--md-ref-*` tokens retain their Material Design 3 spec names.
 
 Preserve third-party copyright and license notices in `LICENSE` and the packaged license.
 
@@ -351,7 +351,7 @@ on. The five rules:
    selectors used to make it themselves with `i` versus `span`, and all five
    broke silently the day the canonical icon became a `<span>` — icon+label
    buttons lost their leading inset, icon-only toolbar actions turned into text
-   pills. `i` stayed in `$icon` for pre-0.8.0 markup until 1.0 removed it.
+   pills. `i` stayed in `$icon` for pre-0.8.0 markup until 0.16.0 removed it.
 
    Icons are `<span class="material-symbols">`, and each one declares itself:
    `aria-hidden="true"` for decoration (the usual case, with the enclosing
@@ -495,13 +495,13 @@ deliberate:
 | --- | --- | --- |
 | Slider | `.slider` / `Slider` | Held the image slideshow before 0.8.0; now the range control |
 | FAB | `.circle.extra` | The `.fab` and `.fixed-action-btn` speed-dial wrappers were removed |
-| Progress indicators | `.progress`, `.progress.circular` | `.preloader` removed in 1.0 |
-| Date / Time pickers | `.date-picker`, `.time-picker` | Unhyphenated root classes removed in 1.0; the generated parts keep `.datepicker-*` / `.timepicker-*` |
-| Drag handle | `.drag-handle` | `.handle`, the bottom sheet's pre-1.0 slot class, removed in 1.0 |
+| Progress indicators | `.progress`, `.progress.circular` | `.preloader` removed in 0.16.0 |
+| Date / Time pickers | `.date-picker`, `.time-picker` | Unhyphenated root classes removed in 0.16.0; the generated parts keep `.datepicker-*` / `.timepicker-*` |
+| Drag handle | `.drag-handle` | `.handle`, the bottom sheet's pre-1.0 slot class, removed in 0.16.0 |
 | Text fields | `.field` | **Deliberately not `.text-field`** — the same container wraps `<select>`, autocomplete and file inputs, so the M3 name would be wrong for most of its uses |
 
-From 0.8.0 to 1.0 every rename was **additive**: the old class stayed in the
-selector list and the old export stayed as an alias. 1.0 removes the old names
+From 0.8.0 to 0.15.x every rename was **additive**: the old class stayed in the
+selector list and the old export stayed as an alias. 0.16.0 removes the old names
 (`.searchbar`, `.handle`, `.preloader`, `.material-icons`, the unhyphenated
 picker roots, `Range` and the rest listed in the CHANGELOG), and
 `tests/m3-naming.test.js` now asserts they stay gone.
@@ -520,9 +520,9 @@ either.** `.small` was 32dp and `.large` 56dp; M3 names those `xsmall` and
 `medium`, and its `small` — 40dp — is the default size. Holding `.small` at
 32dp would put two names on one rung and leave M3's small with none, so the
 whole ladder would be off by one. `.extra` resolved to the 56dp geometry
-until 1.0, which removed that size alias and left `.extra` marking only the
+until 0.16.0, which removed that size alias and left `.extra` marking only the
 `circle extra` FAB; `.small` and `.large` were
-breaks, recorded in the CHANGELOG's migration notes. This is a 1.0 change, and
+breaks, recorded in the CHANGELOG's migration notes. This is a 0.16.0 change, and
 the only reason it is not a `.slider`-style content test is that a size has no
 content to tell it apart by.
 

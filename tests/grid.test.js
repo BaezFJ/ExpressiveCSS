@@ -83,7 +83,7 @@ describe('Grid CSS', () => {
     );
     assert.match(css, /\.hide-on-extra-large-only/);
     assert.match(css, /\.show-on-extra-large/);
-    // The pre-1.0 small/med/xxl aliases were removed in 1.0.
+    // The pre-1.0 small/med/xxl aliases were removed in 0.16.0.
     assert.doesNotMatch(css, /\.(hide-on-(small-only|small-and-down|med-only|xxl-only)|show-on-(small|xxl))(?![\w-])/);
   });
 });

@@ -5,11 +5,11 @@ Stars for choosing or showing a score, on native radio buttons.
 
 Component ID: `rating`
 
-[Component documentation](https://www.expressivecss.com/rating.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/rating.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.15.0)
+[Component documentation](https://www.expressivecss.com/rating.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/rating.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.16.0)
 
-Contract: ExpressiveCSS 0.15.0
+Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `2180d3ca576eadb15d79f3aeddcacce11ab4f95e60073de836c2d808135cf207`
+Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
 
 #### Selection and adaptation
 
@@ -58,4 +58,4 @@ The Rating section of the [API reference](https://www.expressivecss.com/llm.md) 
 
 - `rating-is-a-fieldset-or-an-image`: A .rating is either a <fieldset> of radios, for input, or an element with role="img" and a name, for display. Anything else draws stars that say nothing.
 - `rating-display-is-named`: Name a rating display with the value, such as aria-label="Rated 4.5 out of 5".
-- `rating-label-text-precedes-the-radio`: Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 1.0 no longer draws.
+- `rating-label-text-precedes-the-radio`: Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 0.16.0 no longer draws.

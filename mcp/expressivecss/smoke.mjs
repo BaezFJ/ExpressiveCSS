@@ -978,7 +978,7 @@ const transport = new StdioClientTransport({
   const cardContent = lint([cardContentMarkup]);
   assert.equal(cardContent.stdout.match(/legacy-card-content/gu)?.length, 1, cardContent.stdout);
   assert.match(cardContent.stdout, /card-content\.html:3:\d+ legacy-card-content/u);
-  // The rules for names 1.0 removed, one by one and in process: the lint CLI
+  // The rules for names 0.16.0 removed, one by one and in process: the lint CLI
   // rewrites className= to class= before inspecting, so it cannot test JSX.
   // Each rule lists markup it must flag and current markup that only shares a
   // name with it, and every legacy rule must have such a list.
@@ -1043,7 +1043,7 @@ const transport = new StdioClientTransport({
     },
   };
   const legacyIds = authoringRules.map((rule) => rule.id).filter((id) => /^legacy-/.test(id) && !['legacy-btn-class', 'legacy-card-content', 'legacy-nav-wrapper', 'legacy-brand-logo', 'legacy-lever', 'legacy-filled-in', 'legacy-materialized-name', 'legacy-input-field', 'legacy-materialize-textarea'].includes(id));
-  assert.deepEqual(Object.keys(legacyCases).sort(), [...legacyIds].sort(), 'every 1.0 legacy rule needs cases, and every case a rule');
+  assert.deepEqual(Object.keys(legacyCases).sort(), [...legacyIds].sort(), 'every 0.16.0 legacy rule needs cases, and every case a rule');
   const idsFor = (snippet) => inspectAuthoringRules(snippet).map((issue) => issue.id);
   for (const [id, { flag, pass }] of Object.entries(legacyCases)) {
     for (const snippet of flag) assert.ok(idsFor(snippet).includes(id), `${id} misses ${JSON.stringify(snippet)}`);
