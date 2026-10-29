@@ -62,6 +62,18 @@
   writing-mode: horizontal-tb;
 }
 
+// Two mirrored segments on a triple-width fill. Logical positioning shows
+// the first third in LTR and the last in RTL, including CSS direction overrides.
+// The middle third keeps the returning segments outside the visible track.
+@function _progress-segments($start, $end) {
+  $start: math.div($start, 3);
+  $end: math.div($end, 3);
+  @return polygon(
+    $start 0, $start 100%, $end 100%, $end 0,
+    (100% - $end) 0, (100% - $end) 100%, (100% - $start) 100%, (100% - $start) 0
+  );
+}
+
 progress.progress {
   vertical-align: baseline;
 
@@ -83,12 +95,12 @@ progress.progress {
   // Firefox draws no ::before/::after on <progress> and paints the track as the
   // element's own background, so its indeterminate bar is the native one. It
   // places that bar from the physical left and reads only margin-left, which is
-  // margin-inline-end in RTL, so both inline margins move. Keep this out of any
-  // -webkit- selector list: Chromium drops a list naming a pseudo-element it
-  // does not know.
+  // margin-inline-end in RTL. Offset the fixed fill to show its last third.
+  // Keep this out of any -webkit- selector list: Chromium drops a list naming
+  // a pseudo-element it does not know.
   &:indeterminate::-moz-progress-bar {
-    width: 40%;
-    margin-inline-end: 60%;
+    width: 300%;
+    margin-inline-end: -200%;
     animation: progress-indeterminate-moz 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
   }
 }
@@ -135,8 +147,8 @@ progress.progress.wavy::-moz-progress-bar {
 }
 
 @keyframes progress-indeterminate-moz {
-  from { margin-inline-start: -40%; margin-inline-end: 100%; }
-  to   { margin-inline-start: 100%; margin-inline-end: -40%; }
+  from { clip-path: _progress-segments(-40%, 0%); }
+  to   { clip-path: _progress-segments(100%, 140%); }
 }
 
 .progress > .determinate {
@@ -166,7 +178,9 @@ $_bare: ".progress:not(:is(progress)):not(.circular):not(:has(> .determinate, > 
   }
 
   &:not([style*="--md-comp-progress-value"])::after {
+    // Auto width prevents a transition from the oversized fill to a known value.
     width: auto;
+    inset-inline-end: -200%;
     animation: preloader-indeterminate 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
   }
 }
@@ -187,6 +201,8 @@ progress.progress:indeterminate {
     position: absolute;
     inset-block: 0;
     inset-inline: 0 auto;
+    width: 300%;
+    clip-path: inset(50%);
     background-color: var(--md-comp-progress-indicator);
   }
 
@@ -201,15 +217,13 @@ progress.progress:indeterminate {
 }
 
 @keyframes preloader-indeterminate {
-  0%   { inset-inline-start: -35%; inset-inline-end: 100%; }
-  60%  { inset-inline-start: 100%; inset-inline-end: -90%; }
-  100% { inset-inline-start: 100%; inset-inline-end: -90%; }
+  0% { clip-path: _progress-segments(-35%, 0%); }
+  60%, 100% { clip-path: _progress-segments(100%, 190%); }
 }
 
 @keyframes preloader-indeterminate-short {
-  0%   { inset-inline-start: -200%; inset-inline-end: 100%; }
-  60%  { inset-inline-start: 107%; inset-inline-end: -8%; }
-  100% { inset-inline-start: 107%; inset-inline-end: -8%; }
+  0% { clip-path: _progress-segments(-200%, 0%); }
+  60%, 100% { clip-path: _progress-segments(107%, 108%); }
 }
 
 // ---------------------------------------------------------------------------
@@ -335,6 +349,7 @@ progress.progress:indeterminate {
   progress.progress:indeterminate::-moz-progress-bar {
     background-color: CanvasText;
     width: 40%;
+    margin-inline-end: 60%;
     animation: none;
   }
 
@@ -391,9 +406,12 @@ progress.progress:indeterminate {
   progress.progress:indeterminate::after,
   #{$_bare}:not([style*="--md-comp-progress-value"])::after {
     width: 40%;
+    clip-path: none;
   }
 
   progress.progress:indeterminate::-moz-progress-bar {
+    width: 40%;
+    margin-inline-end: 60%;
     animation: none;
   }
 }

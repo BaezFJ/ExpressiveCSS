@@ -13,6 +13,42 @@ const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><styl
 </main></body></html>`;
 
 for (const [name, engine, test] of engines) {
+  test(`${name}: forced colors stop every aura variant in document and shadow roots`, async () => {
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<style>${css}</style><main></main><div id="host"></div>`);
+      await page.evaluate(sheet => {
+        const markup = ['', 'dual', 'rainbow', 'glow'].map(variant =>
+          `<div class="aura ${variant}"><div style="width:100px;height:50px"></div></div>`).join('');
+        document.querySelector('main').innerHTML = markup;
+        const root = document.querySelector('#host').attachShadow({ mode: 'open' });
+        const styles = new CSSStyleSheet();
+        styles.replaceSync(sheet);
+        root.adoptedStyleSheets = [styles];
+        root.innerHTML = markup;
+      }, css);
+      for (const forcedColors of ['active', 'none']) {
+        await page.emulateMedia({ forcedColors, reducedMotion: 'no-preference' });
+        const styles = await page.locator('.aura').evaluateAll(elements => elements.map(el => {
+          const ring = getComputedStyle(el, '::before');
+          return { animation: ring.animationName, image: ring.backgroundImage, mask: ring.maskImage, filter: ring.filter };
+        }));
+        assert.equal(styles.length, 8);
+        for (const style of styles) {
+          assert.equal(style.animation, forcedColors === 'active' ? 'none' : 'aura-turn');
+          if (forcedColors === 'active') {
+            assert.equal(style.image, 'none');
+            assert.match(style.mask, /linear-gradient/);
+            assert.equal(style.filter, 'none');
+          }
+        }
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
   test(`${name}: aura turns a ring around its element, stops under reduced motion and stays out of the accessibility tree`, { timeout: 30000 }, async (t) => {
     const browser = await engine.launch({ headless: true });
     try {

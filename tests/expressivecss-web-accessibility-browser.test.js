@@ -455,6 +455,100 @@ scenario('remaining suggestions and section links preserve selection and dismiss
 });
 
 
+function assertProgressPixels(png, ranges, direction, label) {
+  for (let x = 0; x < png.width; x++) {
+    const logicalX = direction === 'rtl' ? png.width - 1 - x : x;
+    // Rasterization and native rounded ends can differ at the segment edges.
+    if (ranges.some(range => range.some(edge => Math.abs(logicalX - edge) <= 2))) continue;
+    let painted = false;
+    for (let y = 0; y < png.height; y++) {
+      const offset = (y * png.width + x) * 4;
+      if (png.data[offset] > 200 && png.data[offset + 1] < 80 && png.data[offset + 2] < 80) painted = true;
+    }
+    assert.equal(painted, ranges.some(([start, end]) => logicalX > start && logicalX < end), `${label} at ${x}px`);
+  }
+}
+
+scenario('indeterminate segments preserve timing, wavelength and CSS direction overrides', '', async page => {
+  const engine = page.context().browser().browserType().name();
+  const segments = [[0, 216], [130, 380]];
+  const ranges = { native: engine === 'firefox' ? [[8, 168]] : segments, bare: [[130, 380]], child: segments };
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  for (const direction of ['ltr', 'rtl']) {
+    const opposite = direction === 'ltr' ? 'rtl' : 'ltr';
+    await page.setContent(`<style>${css}</style><style>
+      .progress { --md-comp-progress-indicator: red; --md-comp-progress-track: white; --md-comp-progress-wavelength: 37px; }
+      .progress::before, .progress::after, .indeterminate::before, .indeterminate::after {
+        animation-timing-function: linear !important;
+        animation-play-state: paused !important;
+        animation-delay: -630ms !important;
+      }
+      progress::-moz-progress-bar {
+        animation-timing-function: linear !important;
+        animation-play-state: paused !important;
+        animation-delay: -630ms !important;
+      }
+    </style><section dir="${opposite}" style="direction:${direction};width:400px">
+      ${['', 'wavy'].map(variant => `
+        <progress id="native-${variant}" class="progress ${variant}" aria-label="Loading"></progress>
+        <div id="bare-${variant}" class="progress ${variant}"></div>
+        <div id="child-${variant}" class="progress ${variant}"><span class="indeterminate"></span></div>`).join('')}
+    </section>`);
+    const cases = ['', 'wavy'].flatMap(variant => ['native', 'bare', 'child'].map(form => ({ variant, form })));
+    for (const { variant, form } of cases) {
+      const bar = page.locator(`#${form}-${variant}`);
+      const png = utilsBundle.PNG.sync.read(await bar.screenshot());
+      assert.equal(png.width, 400);
+      assertProgressPixels(png, ranges[form], direction, `${form} ${variant} ${direction}`);
+      if (variant) {
+        const mask = await bar.evaluate((el, engine) => {
+          const child = el.querySelector('.indeterminate');
+          const pseudo = el.tagName === 'PROGRESS' && engine === 'firefox' ? '::-moz-progress-bar' : '::after';
+          return getComputedStyle(child || el, pseudo).maskSize;
+        }, engine);
+        assert.equal(mask, '37px 14px');
+      }
+    }
+  }
+});
+
+scenario('bare progress switches to a known value without overshooting', `
+<style>.progress { width:400px; --md-comp-progress-indicator:red; --md-comp-progress-track:white; --md-sys-motion-duration-medium2:1000ms; }</style>
+${['ltr', 'rtl'].flatMap(dir => ['', 'wavy'].map(variant =>
+  `<div class="progress ${variant}" dir="${dir}"></div>`)).join('')}
+`, async page => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.waitForFunction(() => {
+    const animations = document.getAnimations();
+    return animations.length === 4 && animations.every(animation => animation.currentTime > 0);
+  });
+  const bars = page.locator('.progress');
+  await bars.evaluateAll(elements => elements.forEach(el => el.style.setProperty('--md-comp-progress-value', '25%')));
+  for (const time of [0, 500, 1000]) {
+    await page.evaluate(time => {
+      for (const animation of document.getAnimations()) {
+        animation.pause();
+        animation.currentTime = time;
+      }
+    }, time);
+    for (const bar of await bars.all()) {
+      const direction = await bar.getAttribute('dir');
+      const png = utilsBundle.PNG.sync.read(await bar.screenshot());
+      assertProgressPixels(png, [[0, 100]], direction, `${direction} at ${time}ms`);
+    }
+  }
+  await bars.evaluateAll(elements => elements.forEach(el => el.style.setProperty('--md-comp-progress-value', '50%')));
+  const widths = await page.evaluate(() => {
+    const transitions = document.getAnimations();
+    for (const transition of transitions) {
+      transition.pause();
+      transition.currentTime = 500;
+    }
+    return [...document.querySelectorAll('.progress')].map(el => parseFloat(getComputedStyle(el, '::after').width));
+  });
+  assert.deepEqual(widths, [150, 150, 150, 150], 'subsequent determinate updates retain their width transition');
+});
+
 scenario('linear progress follows inherited and overridden RTL direction', `
 <section id="direction" style="width:400px">
 <div id="fill" class="progress" role="progressbar" aria-label="Upload" aria-valuenow="25" style="--md-comp-progress-value:25%"><span class="determinate"></span></div>
@@ -502,7 +596,12 @@ scenario('linear progress follows inherited and overridden RTL direction', `
       }
       return [['#motion .indeterminate', '::before'], ['#motion .indeterminate', '::after'], ['#bare', '::after']].map(([selector, pseudo]) => {
         const style = getComputedStyle(document.querySelector(selector), pseudo);
-        return { left: parseFloat(style.left), right: parseFloat(style.right), width: parseFloat(style.width), height: parseFloat(style.height), top: parseFloat(style.top) };
+        const points = style.clipPath.slice(8, -1).split(',').map(point => parseFloat(point));
+        const start = style.direction === 'rtl' ? points[4] : points[0];
+        const end = style.direction === 'rtl' ? points[6] : points[2];
+        const width = parseFloat(style.width) * (end - start) / 100;
+        const left = parseFloat(style.left) + parseFloat(style.width) * start / 100;
+        return { left, right: 400 - left - width, width, height: parseFloat(style.height), top: parseFloat(style.top) };
       });
     }, { direction, time });
     for (const time of [300, 900]) {

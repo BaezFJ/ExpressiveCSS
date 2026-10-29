@@ -20,6 +20,31 @@ const html = `<style>${css}</style><body style="margin: 0; padding: 8px; width: 
 
 for (const [engine, browserType, browserTest] of engines) {
 
+  if (engine === 'chromium') browserTest('chromium: linear indeterminate progress avoids steady-state layout', async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage({ viewport: { width: 1000, height: 1000 } });
+      const bars = ['', 'wavy'].map(variant => `
+        <progress class="progress ${variant}"></progress>
+        <div class="progress ${variant}"></div>
+        <div class="progress ${variant}"><span class="indeterminate"></span></div>`).join('');
+      await page.setContent(`<style>${css}</style><main style="display:grid;grid-template-columns:repeat(5,180px);gap:8px">${bars.repeat(10)}</main>`);
+      await page.waitForTimeout(350);
+      assert.equal(await page.evaluate(() => document.getAnimations().filter(a => a.playState === 'running').length), 100);
+      const cdp = await page.context().newCDPSession(page);
+      const events = [];
+      cdp.on('Tracing.dataCollected', event => events.push(...event.value));
+      const done = new Promise(resolve => cdp.once('Tracing.tracingComplete', resolve));
+      await cdp.send('Tracing.start', { categories: 'devtools.timeline', transferMode: 'ReportEvents' });
+      await page.waitForTimeout(500);
+      await cdp.send('Tracing.end');
+      await done;
+      assert.equal(events.filter(event => event.name === 'Layout' && event.ph === 'X').length, 0);
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: linear progress .stop marks the track's end and .wavy draws a wave`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
