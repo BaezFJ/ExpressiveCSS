@@ -329,7 +329,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed extracting table sort keys once per record: 109,990 gzip bytes (+39).
   // Reviewed skipping AutoInit registry scans for inert mutation roots: 110,048 gzip bytes (+58).
   // Reviewed scatter geometry reads, scoped questionnaire validation and treemap highlighting: 110,088 gzip bytes (+40).
-  assert.ok(sizes(js).gzip <= 110088, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed linear select-group filtering and two-path Sankey highlighting: 110,097 gzip bytes (+9).
+  assert.ok(sizes(js).gzip <= 110097, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

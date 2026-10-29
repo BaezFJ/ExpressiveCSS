@@ -19,6 +19,35 @@ function search(instance, query) {
   input.dispatchEvent(new window.Event('input', { bubbles: true }));
 }
 
+test('group filtering reads each option ID at most once per search', () => {
+  document.body.innerHTML = `<label for="choice">Choice</label><select id="choice">${
+    Array.from({ length: 30 }, (_, group) => `<optgroup label="Group ${group}">${
+      Array.from({ length: 10 }, (_, option) => `<option>Item ${group}-${option}</option>`).join('')
+    }</optgroup>`).join('')
+  }<optgroup label="Empty"></optgroup></select>`;
+  const instance = Expressive.FormSelect.init(document.querySelector('select'), { searchable: true });
+  try {
+    const rows = [...instance.menuEl.querySelectorAll('[role="option"]')];
+    let reads = 0;
+    for (const row of rows) {
+      const id = row.id;
+      Object.defineProperty(row, 'id', { configurable: true, get() { reads++; return id; } });
+    }
+    for (const [query, groups] of [['missing', 0], ['Item 29-', 1], ['', 30]]) {
+      reads = 0;
+      search(instance, query);
+      assert.ok(reads <= rows.length, `${query}: ${reads} ID reads for ${rows.length} options`);
+      assert.equal(instance.menuEl.querySelectorAll('.optgroup:not([hidden])').length, groups);
+    }
+    instance.el.lastElementChild.innerHTML = '<option>New option</option>';
+    instance.refresh();
+    search(instance, 'New option');
+    assert.deepEqual([...instance.menuEl.querySelectorAll('.optgroup:not([hidden])')].map(group => group.textContent), ['Empty']);
+  } finally {
+    instance.destroy();
+  }
+});
+
 test('grouped search filters generated rows and submits the chosen native value', () => {
   const instance = fixture();
   const select = instance.el;

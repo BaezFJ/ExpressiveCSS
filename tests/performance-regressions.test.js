@@ -76,6 +76,41 @@ test('treemap highlighting leaves unrelated boxes untouched and clears on hide',
   }
 });
 
+test('sankey highlighting touches only the old and new paths and survives redraw', () => {
+  document.body.innerHTML = `<figure class="sankey-chart"><table>
+    <thead><tr><th>Source</th><th>Target</th><th>Value</th></tr></thead>
+    <tbody>${Array.from({ length: 100 }, (_, i) => `<tr><td>Source</td><td>Target ${i}</td><td>1</td></tr>`).join('')}</tbody>
+  </table></figure>`;
+  const instance = Expressive.SankeyChart.init(document.querySelector('figure'));
+  try {
+    instance.show(0);
+    const touched = [];
+    instance._paths.forEach((path, index) => {
+      for (const name of ['add', 'remove', 'toggle']) {
+        const original = path.classList[name].bind(path.classList);
+        path.classList[name] = (...args) => { touched.push(index); return original(...args); };
+      }
+    });
+    instance.show(1);
+    assert.deepEqual(touched, [0, 1]);
+    assert.deepEqual(instance._paths.filter(path => path.classList.contains('active')), [instance._paths[1]]);
+    touched.length = 0;
+    instance.show(1);
+    assert.deepEqual(touched, [], 'repeating the selection does no work');
+    for (const index of [-1, 1000]) {
+      instance.show(index);
+      assert.equal(instance._paths.some(path => path.classList.contains('active')), false);
+      assert.equal(instance._tooltip.hidden, true);
+    }
+    instance.show(2);
+    instance.update();
+    assert.equal(instance.activeIndex, 2);
+    assert.deepEqual(instance._paths.filter(path => path.classList.contains('active')), [instance._paths[2]]);
+  } finally {
+    instance.destroy();
+  }
+});
+
 function questionnaire() {
   document.body.innerHTML = `<form class="questionnaire">
     <fieldset><legend>Name</legend><input name="name"></fieldset>
