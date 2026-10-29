@@ -27,20 +27,27 @@
   --md-comp-skeleton-circle-size: 40px;
 
   display: block;
+  position: relative;
+  overflow: clip;
   box-sizing: border-box;
   border-radius: var(--md-comp-skeleton-shape);
   background-color: var(--md-comp-skeleton-color);
-  background-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--md-comp-skeleton-shimmer-color) 50%,
-    transparent 100%
-  );
-  background-repeat: no-repeat;
-  background-size: 50% 100%;
-  animation: skeleton-shimmer 1.5s linear infinite;
+  // Transforming the gradient lets the compositor move it without repainting the fill.
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 50%;
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      var(--md-comp-skeleton-shimmer-color) 50%,
+      transparent 100%
+    );
+    animation: skeleton-shimmer 1.5s linear infinite;
+  }
 
-  &:dir(rtl) {
+  &:dir(rtl)::before {
     animation-direction: reverse;
   }
 
@@ -63,9 +70,11 @@
     border-radius: 50%;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    animation: none;
-    background-image: none;
+  @media (prefers-reduced-motion: reduce), (forced-colors: active) {
+    &::before {
+      animation: none;
+      background-image: none;
+    }
   }
 
   @media (forced-colors: active) {
@@ -74,6 +83,6 @@
 }
 
 @keyframes skeleton-shimmer {
-  from { background-position: -100% 0; }
-  to { background-position: 200% 0; }
+  from { transform: translateX(-100%); }
+  to { transform: translateX(200%); }
 }

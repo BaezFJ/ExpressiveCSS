@@ -77,7 +77,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Progress indicators](#progress) | unassessed | needs-review | needs-rerun | 0 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | needs-rerun | 1 |
 | [Loading overlay](#loading-overlay) | implemented | source-reviewed | incomplete | 0 |
-| [Skeleton](#skeleton) | implemented | source-reviewed | needs-rerun | 0 |
+| [Skeleton](#skeleton) | unassessed | needs-review | needs-rerun | 0 |
 | [Empty state](#empty-state) | implemented | source-reviewed | needs-rerun | 0 |
 | [Alert](#alert) | implemented | source-reviewed | incomplete | 0 |
 | [Carousel](#carousel) | unassessed | needs-review | needs-rerun | 0 |
@@ -1211,9 +1211,9 @@ Web adaptation: The native inert attribute blocks pointer and keyboard input ins
 
 ## Skeleton
 
-**implemented within the stated scope.** Box, text line and circle shapes with a shimmer that reverses in RTL, stops under reduced motion and keeps an outline in forced colors.
+**unassessed within the stated scope.** Box, text line and circle shapes with a shimmer that reverses in RTL, stops under reduced motion and keeps an outline in forced colors.
 
-Source review: source-reviewed, 2026-10-06. [src/sass/components/_skeleton.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_skeleton.scss).
+Source review: needs-review, 2026-10-06. [src/sass/components/_skeleton.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_skeleton.scss).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
 

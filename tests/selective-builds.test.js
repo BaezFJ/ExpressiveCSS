@@ -515,5 +515,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the existing file-error selectors also covering count-only opt-ins: 90,909 gzip bytes (+5).
   // Reviewed hidden tree rows and independently scrolling tree-search results: 90,928 gzip bytes (+19).
   // Reviewed shared menu tokens reaching tree-search dialogs without duplicate token declarations: 90,945 gzip bytes (+17).
-  assert.ok(sizes(css).gzip <= 90945, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed composited skeleton shimmer preserving shapes and preference fallbacks: 90,951 gzip bytes (+6).
+  assert.ok(sizes(css).gzip <= 90951, `CSS gzip: ${sizes(css).gzip}`);
 });
