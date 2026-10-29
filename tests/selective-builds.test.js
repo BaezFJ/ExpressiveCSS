@@ -325,7 +325,10 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed search-surface resizing after result and localized-status updates: 109,888 gzip bytes (+10).
   // Reviewed multiple tree semantics and leaf-only native synchronization: 109,939 gzip bytes (+51).
   // Reviewed multiple-tree search and focus preservation: 109,950 gzip bytes (+11).
-  assert.ok(sizes(js).gzip <= 109950, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed rejecting non-checkbox input before table selection scans: 109,951 gzip bytes (+1).
+  // Reviewed extracting table sort keys once per record: 109,990 gzip bytes (+39).
+  // Reviewed skipping AutoInit registry scans for inert mutation roots: 110,048 gzip bytes (+58).
+  assert.ok(sizes(js).gzip <= 110048, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -512,5 +515,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the existing file-error selectors also covering count-only opt-ins: 90,909 gzip bytes (+5).
   // Reviewed hidden tree rows and independently scrolling tree-search results: 90,928 gzip bytes (+19).
   // Reviewed shared menu tokens reaching tree-search dialogs without duplicate token declarations: 90,945 gzip bytes (+17).
-  assert.ok(sizes(css).gzip <= 90945, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed composited skeleton shimmer preserving shapes and preference fallbacks: 90,951 gzip bytes (+6).
+  assert.ok(sizes(css).gzip <= 90951, `CSS gzip: ${sizes(css).gzip}`);
 });
