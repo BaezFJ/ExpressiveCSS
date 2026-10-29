@@ -119,7 +119,8 @@ export class TreemapChart extends LineChart {
   show(index: number) {
     const row = this._drawnFrom(index);
     if (!this._tooltip || row === this.activeIndex) return;
-    this._boxes.forEach((box, i) => box?.classList.toggle('active', i === row));
+    this._boxes[this.activeIndex]?.classList.remove('active');
+    this._boxes[row]?.classList.add('active');
     super.show(row);
     this._share(row);
   }
