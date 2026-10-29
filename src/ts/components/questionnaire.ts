@@ -450,8 +450,8 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
    * every way of submitting, sees it. A disabled checkbox is not sent, so it
    * does not count.
    */
-  private _syncRequired() {
-    for (const item of this._fieldsets()) {
+  private _syncRequired(items = this._fieldsets()) {
+    for (const item of items) {
       if (!item.hasAttribute('data-required')) continue;
       const boxes = this._controls(item).filter(
         (control): control is HTMLInputElement => control instanceof HTMLInputElement && control.type === 'checkbox'
@@ -563,7 +563,7 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
 
   // An answer clears the question's error.
   private _handleInput = (e: Event) => {
-    this._syncRequired();
+    this._syncRequired(this._fieldsets().filter((item) => item.contains(e.target as Node)));
     this._save();
     const item = (e.target as Element).closest?.('fieldset');
     if (item instanceof HTMLFieldSetElement && item.classList.contains('invalid')) this._setInvalid(item, false);

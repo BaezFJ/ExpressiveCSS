@@ -56,7 +56,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Radar chart](#radar-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Radial chart](#radial-chart) | unassessed | needs-review | needs-rerun | 1 |
 | [Mixed chart](#mixed-chart) | unassessed | needs-review | needs-rerun | 0 |
-| [Scatter chart](#scatter-chart) | implemented | source-reviewed | incomplete | 0 |
+| [Scatter chart](#scatter-chart) | unassessed | needs-review | incomplete | 0 |
 | [Funnel chart](#funnel-chart) | unassessed | needs-review | incomplete | 0 |
 | [Sankey chart](#sankey-chart) | unassessed | needs-review | incomplete | 0 |
 | [Treemap chart](#treemap-chart) | unassessed | needs-review | incomplete | 0 |
@@ -854,9 +854,9 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 ## Scatter chart
 
-**implemented within the stated scope.** Points drawn from a figure's data table, with a shared x column and one series per further column, gaps for cells that are not numbers, fixed ranges for both scales, round labels for both scales with .axis, a legend with .toggle, update() motion, data-watch, a pointer and keyboard tooltip that steps through points in table order, and .bubble sizes from the last column with areas proportional to its values.
+**unassessed within the stated scope.** Points drawn from a figure's data table, with a shared x column and one series per further column, gaps for cells that are not numbers, fixed ranges for both scales, round labels for both scales with .axis, a legend with .toggle, update() motion, data-watch, a pointer and keyboard tooltip that steps through points in table order, and .bubble sizes from the last column with areas proportional to its values.
 
-Source review: source-reviewed, 2026-10-24. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/abstracts/_mixins.scss), [src/sass/components/_scatter-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_scatter-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/lineChart.ts), [src/ts/components/scatterChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/scatterChart.ts).
+Source review: needs-review, 2026-10-24. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/abstracts/_mixins.scss), [src/sass/components/_scatter-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_scatter-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/lineChart.ts), [src/ts/components/scatterChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/scatterChart.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-24); [reviewed source](https://m3.material.io/components).
 

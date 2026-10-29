@@ -159,10 +159,19 @@ export class ScatterChart extends LineChart {
   /** The point nearest the pointer, or -1 with none. */
   protected _indexAt(e: PointerEvent) {
     const [plot, box] = [this._plot, this._plot.getBoundingClientRect()];
-    const away = ({ x, y }: Mark) => Math.hypot(
-      box.left + plot.clientLeft + (x / 100) * plot.clientWidth - e.clientX,
-      box.top + plot.clientTop + (y / 100) * plot.clientHeight - e.clientY);
-    return this._marks.reduce((nearest, mark, i) => (nearest < 0 || away(mark) < away(this._marks[nearest]) ? i : nearest), -1);
+    const left = box.left + plot.clientLeft;
+    const top = box.top + plot.clientTop;
+    const [width, height] = [plot.clientWidth, plot.clientHeight];
+    let nearest = -1;
+    let distance = Infinity;
+    this._marks.forEach(({ x, y }, i) => {
+      const away = Math.hypot(left + (x / 100) * width - e.clientX, top + (y / 100) * height - e.clientY);
+      if (nearest < 0 || away < distance) {
+        nearest = i;
+        distance = away;
+      }
+    });
+    return nearest;
   }
 
   /**
