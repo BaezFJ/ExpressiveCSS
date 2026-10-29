@@ -184,9 +184,10 @@ export class SankeyChart extends LineChart {
   /** Highlights one link, numbered in table order among those drawn. Pass -1 to hide the tooltip. */
   show(index: number) {
     if (!this._tooltip || index === this.activeIndex) return;
+    this._paths[this.activeIndex]?.classList.remove('active');
+    this._paths[index]?.classList.add('active');
     this.activeIndex = index;
     const link = this._links[index];
-    this._paths.forEach((path, i) => path.classList.toggle('active', i === index));
     this._tooltip.hidden = !link;
     if (link) this._fill(link);
   }
