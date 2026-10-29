@@ -105,6 +105,7 @@
   // solid ring.
   @media (forced-colors: active) {
     &.aura::before {
+      animation: none;
       forced-color-adjust: none;
       background: Highlight;
       mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
