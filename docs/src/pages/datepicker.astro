@@ -148,6 +148,11 @@ Expressive.Datepicker.init(elem, {
   </Section>
 
   <Section {...S.options}>
+        <p><code>minYear</code>, <code>maxYear</code>, <code>minMonth</code> and <code>maxMonth</code>
+          are internal calculation fields. Their initial defaults are <code>0</code>,
+          <code>9999</code>, <code>undefined</code> and <code>undefined</code>.
+          Do not configure them directly. Use <code>minDate</code>, <code>maxDate</code> and
+          <code>yearRange</code> for supported date bounds.</p>
         <OptionsTable>
             <tr>
               <td><code>format</code></td>
@@ -554,6 +559,10 @@ instance.setDate(new Date());
 <Code code={`
 instance.gotoDate(new Date());
 `} />
+        <p><code>nextMonth()</code> and <code>prevMonth()</code> move the displayed calendar by
+          one month. <code>gotoMonth(month)</code> sets a zero-based month in the displayed year;
+          <code>gotoYear(year)</code> sets the full year. These methods redraw without selecting a date.
+          Use <code>gotoDate(date)</code> when changing both together.</p>
 
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the calendar, and tear down its event handlers.</p>

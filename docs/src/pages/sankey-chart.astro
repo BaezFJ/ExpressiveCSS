@@ -129,7 +129,10 @@ const visits: [string, string, number][] = [
           or put <code>data-watch</code> on the figure and it redraws itself.
           Links and nodes move from their old shapes to the new ones, or
           appear at once with reduced motion. It has the line chart's options
-          and methods.
+          and methods. The inherited <code>min</code> and <code>max</code> options default to
+          <code>null</code> and do not control flow thickness. The layout scales positive flow values
+          to the available height. See <a href="/line-chart.html#javascript">Line chart options</a>
+          for <code>watch</code> and the shared methods.
         </p>
 <Code code={`
 const chart = Expressive.SankeyChart.init(document.querySelector('.sankey-chart'));

@@ -1,0 +1,65 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+
+const S = defineSections([
+  { id: "markup", label: "Copy text" },
+  { id: "source", label: "Copy an element" },
+  { id: "feedback", label: "Feedback and translation" },
+  { id: "api", label: "JavaScript API" },
+]);
+---
+<DocsLayout page="copy" sections={S}>
+  <Section {...S.markup}>
+    <p>Add <code>data-copy</code> to a named button. Clicking it copies the attribute's literal text
+      and announces the result in a <a href={route("snackbar")}>snackbar</a>.</p>
+    <button type="button" data-copy="Hello from ExpressiveCSS">Copy greeting</button>
+    <Code code={`<button type="button" data-copy="Hello from ExpressiveCSS">Copy greeting</button>`} />
+    <p>The root bundle installs <code>Copy.Init()</code>. Buttons added later work through the same
+      document listener. <code>AutoInit()</code> and per-element instances are unnecessary.
+      Use HTTPS or localhost and a user click for clipboard access. A denied or unavailable Clipboard
+      API shows the failure message; it does not copy the text.</p>
+  </Section>
+  <Section {...S.source}>
+    <p>Use <code>data-copy-for="id"</code> to name a source in the button's document or shadow root.
+      Inputs, textareas and selects supply their current <code>value</code>.
+      Other elements supply trimmed <code>textContent</code>, including text hidden by CSS.</p>
+    <Code code={`<pre id="install-command">npm install @expressivecss/expressive</pre>
+<button type="button" data-copy-for="install-command">Copy install command</button>`} />
+    <p><code>data-copy</code> wins if both attributes are present, including an empty string.
+      A missing source does nothing. Disabled buttons and controls with
+      <code>aria-disabled="true"</code> do nothing. Give icon-only buttons an accessible name.</p>
+  </Section>
+  <Section {...S.feedback}>
+    <p>The defaults are <code>Copied</code> and <code>Couldn't copy</code>. Change
+      <code>Copy.i18n.copied</code> and <code>Copy.i18n.failed</code> globally, or set
+      <code>data-copy-message</code> and <code>data-copy-error</code> on one button.</p>
+    <Code code={`<button type="button" data-copy="INV-42"
+  data-copy-message="Invoice number copied"
+  data-copy-error="Copy failed. Select the invoice number manually.">Copy invoice number</button>`} />
+    <p>Each attempt replaces the current snackbar so feedback appears at once.
+      After the clipboard promise settles, <code>expressive:copy</code> bubbles from the button
+      and crosses shadow roots. Its <code>detail</code> is <code>{"{ text, copied }"}</code>.
+      <code>copied</code> is <code>false</code> when clipboard access fails.</p>
+    <Code code={`document.addEventListener('expressive:copy', (event) => {
+  console.log(event.detail.copied, event.detail.text);
+});`} />
+  </Section>
+  <Section {...S.api}>
+    <Code code={`import { Copy } from '@expressivecss/expressive/modular';
+
+Copy.i18n.copied = 'Text copied';
+Copy.i18n.failed = 'Clipboard unavailable';
+Copy.Init();
+
+const button = document.querySelector('[data-copy-for]');
+const text = Copy.textFor(button); // string, or null if the source is missing`} />
+    <p><code>Copy.Init()</code> installs the click listener. Repeated calls add no duplicate listener.
+      <code>Copy.textFor(button)</code> resolves text without writing the clipboard, showing feedback
+      or checking the button's disabled state. Copy has no <code>init(element)</code>,
+      <code>getInstance()</code> or <code>destroy()</code> method.</p>
+  </Section>
+</DocsLayout>

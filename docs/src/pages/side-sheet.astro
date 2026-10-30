@@ -9,6 +9,7 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "header", label: "Header and back" },
   { id: "layout", label: "Layout" },
+  { id: "javascript", label: "JavaScript API" },
 ]);
 ---
 <DocsLayout page="side_sheet" sections={S}>
@@ -175,5 +176,21 @@ const S = defineSections([
         <p>
           The sheet slides in, and snaps back after a short drag, on the default spatial spring. <code>--md-comp-side-sheet-motion</code> and <code>--md-comp-side-sheet-motion-duration</code> read <code>--md-sys-motion-spring-default-spatial</code> and its <code>-duration</code> token, so <code>motion="expressive"</code> gives it a slight bounce. The sheet extends 24px past its docked edge, so the bounce never uncovers the page there. When the user requests reduced motion, the sheet appears without moving.
         </p>
+  </Section>
+  <Section {...S.javascript}>
+    <p>The root bundle installs <code>SideSheets.Init()</code> for drag dismissal and
+      <code>Dialogs.Init()</code> for light dismissal. With the modular entry, call both once.</p>
+    <Code code={`import { SideSheets, Dialogs } from '@expressivecss/expressive/modular';
+
+Dialogs.Init();
+SideSheets.Init();
+
+const sheet = document.querySelector('dialog.side-sheet');
+sheet.show();      // standard, without a scrim
+sheet.close();
+sheet.showModal(); // modal, with a scrim`} />
+    <p>Use the native dialog's <code>open</code> property, <code>close</code> event and
+      <code>cancel</code> event for state and dismissal. SideSheets is a document behavior;
+      it has no per-sheet instance, options object or <code>destroy()</code> method.</p>
   </Section>
 </DocsLayout>

@@ -9,7 +9,7 @@ Component ID: `side-sheet`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
+Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
 
 #### Selection and adaptation
 
@@ -40,11 +40,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
+The root bundle calls `SideSheets.Init()` and `Dialogs.Init()`. With the modular entry, call both once for drag handling and light dismissal. Use the native dialog's `show()`, `showModal()`, `close()`, `open` property and `close`/`cancel` events for application state. SideSheets has no per-sheet instance, options object or `destroy()` method.
+
 A recent flick toward the docked edge dismisses the sheet. For short drags, pausing for at least 100ms or reversing direction lets it snap back.
 
 A `dialog.side-sheet` is optional content anchored to the side, at the trailing edge unless it has `.start`. `show()` is standard (1dp inner divider, no scrim). `showModal()` is modal (28dp inner corners, scrim). A `<header>` holds an optional back button, a `title-large` headline, and a close control. A last-child `form[method=dialog]` is the action row. Drag the header or the inner 24dp edge toward the docked side to dismiss.
-
-Docking is logical: `.start` uses the start edge, and the default uses the end edge. Drag direction, inner-edge hit testing, modal corners and opening motion follow computed RTL direction. Headings and actions wrap; the body scrolls independently. Shared sheet dragging ignores secondary-pointer cancellation and resets when a sheet closes, is removed, or a primary press starts elsewhere. Dismissal thresholds are unchanged. Keep an explicit close control; native zoom, assistive technology and physical-device review remain pending.
 
 #### Syntax
 
