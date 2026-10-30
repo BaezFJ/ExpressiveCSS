@@ -9,7 +9,7 @@ Component ID: `date-picker`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
+Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
 
 #### Selection and adaptation
 
@@ -73,6 +73,7 @@ The calendar is inline, not a modal. `open()` and `close()` are not provided. Wi
 | `minDate` | Date | `null` | Earliest selectable date. |
 | `maxDate` | Date | `null` | Latest selectable date. |
 | `yearRange` | Number or Array | `10` | Years on either side of the viewed year, or `[minYear, maxYear]`. |
+| `minYear`, `maxYear`, `minMonth`, `maxMonth` | Number or undefined | `0`, `9999`, `undefined`, `undefined` | Internal calculation fields. Do not configure them directly; use `minDate`, `maxDate` and `yearRange`. |
 | `yearRangeReverse` | Boolean | `false` | Sort the year list in reverse order. |
 | `isRTL` | Boolean | `false` | Render the calendar right-to-left. |
 | `showMonthAfterYear` | Boolean | `false` | Show the month after the year in the title. |

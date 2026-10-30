@@ -1,0 +1,149 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+import { route } from "../lib/catalogue";
+import { PAGES } from "../data/nav";
+
+const S = defineSections([
+  { id: "setup", label: "Setup and configuration" },
+  { id: "functions", label: "Functions" },
+  { id: "mixins", label: "General mixins" },
+  { id: "components", label: "Component mixins" },
+  { id: "partials", label: "Partial directory" },
+]);
+const partials = PAGES.flatMap(page => (page.styles ?? []).map(path => ({ path, page })))
+  .sort((a, b) => a.path.localeCompare(b.path));
+---
+<DocsLayout page="sass" sections={S}>
+  <Section {...S.setup}>
+    <p>Use the package importer to resolve the public Sass entry.
+      Compile <code>app.scss</code> with <code>sass --pkg-importer=node app.scss app.css</code>.</p>
+    <Code code={`@use "pkg:@expressivecss/expressive/scss" as expressive with (
+  $md-source: #6750a4,
+  $expressive-include-fonts: false
+);
+
+.notice {
+  @include expressive.typescale("body-large");
+  @include expressive.bp-up("expanded") { padding: 2rem; }
+}`} />
+    <p>The main entry emits the stylesheet and forwards the shared abstracts. To use only functions
+      and mixins without emitting framework CSS, load
+      <code>pkg:@expressivecss/expressive/scss/abstracts/index</code>.
+      Those mixins still need the framework tokens in the consuming stylesheet.
+      Sass modules load once; configure a module on its first load.</p>
+    <p>Use <code>pkg:@expressivecss/expressive/scss/custom</code> to select
+      <code>$components</code> and <code>$utilities</code>. Each is an ordered list of partial names.
+      <code>null</code> loads the full group; <code>()</code> loads none. Tokens and base styles always load.
+      Follow the <a href={route("index") + "#smaller-builds"}>smaller-build recipes</a> for supporting partials.</p>
+    <div class="docs-table-scroll">
+    <table class="striped">
+      <thead><tr><th>Configuration</th><th>Default and purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>$md-source</code></td><td><code>#c6a0f6</code>, the theme seed. Runtime theming uses <code>--md-source</code>.</td></tr>
+        <tr><td><code>$expressive-include-fonts</code>, <code>$expressive-font-path</code></td><td><code>true</code> and <code>"../fonts"</code>. Disable bundled font faces when supplying your own; otherwise keep the font files at the emitted URLs.</td></tr>
+        <tr><td><code>$expressive-glass</code>, <code>$expressive-glass-blur</code>, <code>$expressive-glass-opacity</code></td><td><code>false</code>, <code>16px</code> and <code>72%</code>. Opacity must be a percentage. See <a href={route("glass")}>Frosted glass</a> for runtime switches.</td></tr>
+        <tr><td><code>$gutter-width</code>, <code>$element-top-margin</code>, <code>$element-bottom-margin</code></td><td><code>1.5rem</code>, one third of the gutter and two thirds of the gutter. Shared layout spacing.</td></tr>
+        <tr><td><code>$root-font-size</code>, <code>$font-stack</code>, <code>$text-color</code>, <code>$link-color</code></td><td><code>16px</code>, the plain/fallback typeface tokens, <code>on-surface</code> and <code>primary</code>. Prefer <a href={route("tokens")}>runtime tokens</a> for theme-dependent values.</td></tr>
+        <tr><td><code>$flow-text-min</code>, <code>$flow-text-max</code>, <code>$flow-text-from</code>, <code>$flow-text-to</code></td><td><code>1.2rem</code>, <code>1.68rem</code>, <code>360px</code> and <code>960px</code>. Fluid type size and viewport bounds.</td></tr>
+        <tr><td><code>$menu-item-height</code></td><td><code>50px</code>, the base used to size autocomplete image thumbnails at 10px less.</td></tr>
+        <tr><td><code>$breakpoints</code>, <code>$sys-color-roles</code></td><td>Configurable maps for responsive boundaries and color role generation. Changing their keys affects the classes and tokens emitted by the build.</td></tr>
+        <tr><td><code>$elevations</code>, <code>$button-sizes</code>, <code>$icon-button-sizes</code></td><td>Readable shared maps, without <code>!default</code>; they cannot be configured through <code>@use ... with</code>. Size maps have <code>xsmall</code>, <code>small</code>, <code>medium</code>, <code>large</code> and <code>xlarge</code> entries.</td></tr>
+        <tr><td><code>$icon</code>, <code>$icon-label</code>, <code>$trend-arrow</code>, <code>$caret-down</code></td><td>Shared icon selectors and SVG image values. Changing them affects generated controls as well as authored markup.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>Names beginning with <code>_</code> or <code>-</code> are Sass-private.
+      The forwarded <code>$expressive-disabled</code> selector is a shared implementation value,
+      not a configurable <code>!default</code> setting. <code>$motion-fast-spatial</code> is a
+      compatibility easing value; prefer the spring functions or motion tokens for new styles.</p>
+  </Section>
+  <Section {...S.functions}>
+    <div class="docs-table-scroll">
+    <table class="striped">
+      <thead><tr><th>Function</th><th>Arguments and result</th></tr></thead>
+      <tbody>
+        <tr><td><code>rem($px)</code></td><td>Converts a pixel length to rem using a 16px base. <code>rem(24px)</code> returns <code>1.5rem</code>.</td></tr>
+        <tr><td><code>breakpoint($name)</code></td><td>Returns the named lower boundary: <code>compact</code> 0px, <code>medium</code> 600px, <code>expanded</code> 840px, <code>large</code> 1200px or <code>extra-large</code> 1600px. Unknown names fail compilation.</td></tr>
+        <tr><td><code>state-opacity($state)</code></td><td>Returns the token opacity as a CSS percentage calculation. Accepts <code>hover</code>, <code>focus</code>, <code>pressed</code> or <code>dragged</code>; unknown states fail compilation.</td></tr>
+        <tr><td><code>state-layer($color, $state, $base: transparent)</code></td><td>Returns an OKLab <code>color-mix()</code> of the state color over the base, using that state's opacity token.</td></tr>
+        <tr><td><code>spring($damping, $stiffness)</code></td><td>Returns a sampled CSS <code>linear()</code> easing. The arguments are damping ratio and stiffness. Pair it with the matching duration.</td></tr>
+        <tr><td><code>spring-duration($damping, $stiffness)</code></td><td>Returns the settling time in seconds for the same spring. Use positive stiffness and the damping values shown in <a href={route("css_transitions") + "#springs"}>Transitions</a>.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </Section>
+  <Section {...S.mixins}>
+    <p>Call mixins with <code>@include expressive.name(...)</code> inside a selector unless the entry says otherwise.</p>
+    <div class="docs-table-scroll">
+    <table class="striped">
+      <thead><tr><th>Mixin</th><th>Output</th></tr></thead>
+      <tbody>
+        <tr><td><code>bp-up($name)</code>, <code>bp-down($name)</code>, <code>bp-between($from, $to)</code></td><td>Wrap a content block in a media query. Lower bounds are inclusive; upper bounds are exclusive.</td></tr>
+        <tr><td><code>z-depth($level, $important: false)</code></td><td>Sets a token-based shadow. Levels are <code>0</code>, <code>1</code>, <code>1-half</code>, <code>2</code>, <code>3</code>, <code>4</code>, <code>5</code>. Unknown levels fail compilation.</td></tr>
+        <tr><td><code>typescale($role, $emphasized: false)</code></td><td>Sets font family, size, weight, line height and letter spacing from the named type role. See <a href={route("typography")}>Typography</a> for all 15 roles.</td></tr>
+        <tr><td><code>visually-hidden($important: false)</code></td><td>Clips content visually while retaining it for assistive technology and keyboard focus.</td></tr>
+        <tr><td><code>focus-ring()</code></td><td>Draws a 3px secondary-color outline with a 2px offset on the selector where included.</td></tr>
+        <tr><td><code>focus-visible()</code></td><td>Draws the focus ring inside a nested <code>&amp;:focus-visible</code> selector.</td></tr>
+        <tr><td><code>forced-colors-selected()</code></td><td>Adds an inset Highlight outline in forced-colors mode so selection remains visible.</td></tr>
+        <tr><td><code>forced-colors-fill($color: CanvasText)</code></td><td>Preserves a drawn shape with a system background color in forced-colors mode. Use on an indicator or mask, not a whole content region.</td></tr>
+        <tr><td><code>state-layer-ring($outer, $inner, $color, $state)</code></td><td>Draws a state-layer box-shadow between the outer and inner control sizes.</td></tr>
+        <tr><td><code>glass($color)</code></td><td>Adds the optional translucent container and backdrop blur behind the glass style query. Pass the solid background color. Reduced transparency or increased contrast restores it.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <Code code={`.notice {
+  @include expressive.z-depth("1");
+  @include expressive.focus-visible();
+  &:hover {
+    background: expressive.state-layer(var(--md-sys-color-primary), "hover");
+  }
+  @include expressive.bp-between("medium", "large") { padding: 1rem; }
+}`} />
+  </Section>
+  <Section {...S.components}>
+    <p>These lower-level mixins build framework components. Prefer the documented HTML and classes
+      for application code. A mixin emits styles only; it does not add semantics, keyboard behavior or labels.
+      <code>choice-fieldset</code>, <code>nav-destination</code> and <code>nav-destination-row</code>
+      are available through the abstracts entry only; the main and custom entries hide them.</p>
+    <div class="docs-table-scroll">
+    <table class="striped">
+      <thead><tr><th>Mixin</th><th>Contract</th></tr></thead>
+      <tbody>
+        <tr><td><code>btn($height, $border-radius, $padding-left, $padding-right, $font-size)</code></td><td>Button geometry and base interaction styles. Every argument is optional and defaults to small-button tokens, with 40px-equivalent height, full corners, 16px side insets and label-large type.</td></tr>
+        <tr><td><code>btn-filled()</code>, <code>btn-tonal()</code>, <code>btn-elevated()</code>, <code>btn-outlined()</code>, <code>btn-flat()</code></td><td>Button colors, elevation, state tints and focus styles. Combine one with <code>btn()</code>. Flat corresponds to the text style.</td></tr>
+        <tr><td><code>btn-disabled()</code></td><td>Disabled colors and pointer behavior. Native <code>disabled</code> or equivalent application behavior must enforce keyboard inactivity.</td></tr>
+        <tr><td><code>button-size($name)</code>, <code>icon-button-size($name)</code></td><td>Emit size custom properties from their corresponding size map. They do not emit type styles.</td></tr>
+        <tr><td><code>header-icon-action()</code></td><td>A 48px circular header action with a 24px-equivalent icon, hover tint and visible focus.</td></tr>
+        <tr><td><code>card-media-trigger()</code></td><td>An absolutely positioned trigger covering card media, including state and focus styling. Use a positioned container and a named native control.</td></tr>
+        <tr><td><code>trend-arrow()</code>, <code>tree-chevron()</code></td><td>Pseudo-element masks for an up-trend arrow or a closed tree branch. The consuming component rotates them for other states and RTL.</td></tr>
+        <tr><td><code>choice-fieldset($radius, $control)</code></td><td>A wrapping fieldset of labelled choices. Pass the label radius and control selector used for focus and disabled states.</td></tr>
+        <tr><td><code>selection-control-label($display: flex)</code></td><td>A 48px minimum label row for a checkbox, radio or switch, with body-large type and a 12px gap.</td></tr>
+        <tr><td><code>nav-destination($prefix, $inset, $transition)</code></td><td>Stacked navigation destination styles. The prefix names component tokens, such as <code>nav-bar</code>; inset is top padding and transition is a CSS transition value. Accepts an optional content block.</td></tr>
+        <tr><td><code>nav-destination-row($prefix)</code></td><td>Changes the stacked destination to a horizontal row. Include after the stacked styles.</td></tr>
+        <tr><td><code>chart($name)</code></td><td>At stylesheet top level, emits a chart's common container, plot, tooltip, labels, legend and tokens, with the supplied class prefix.</td></tr>
+        <tr><td><code>chart-axis($name, $beside: true)</code></td><td>At stylesheet top level, emits value labels and grid lines for the named chart. <code>false</code> leaves label spacing to the component.</td></tr>
+        <tr><td><code>chart-column-motion()</code></td><td>Inside a column/bar container, animates marks from the zero line or previous values when reduced motion is not requested.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </Section>
+  <Section {...S.partials}>
+    <p>Each component and utility partial links to its usage guide below.
+      For the custom entry's lists, remove <code>components/</code> or <code>utilities/</code>.
+      For example, use <code>"menu"</code> in <code>$components</code> and <code>"spacing"</code>
+      in <code>$utilities</code>. <code>"forms"</code> includes the complete forms group;
+      a path such as <code>"forms/checkboxes"</code> selects one forms partial.</p>
+    <p>This alphabetical directory is a lookup table, not load order. Preserve the component index's
+      order, with icons first, and include supporting partials. The <a href={route("index") + "#smaller-builds"}>recipes</a>
+      show working combinations. Base and token partials always load with either public stylesheet entry.</p>
+    <div class="docs-table-scroll">
+    <table class="striped">
+      <thead><tr><th>Partial</th><th>Usage guide</th></tr></thead>
+      <tbody>{partials.map(({ path, page }) => <tr><td><code>{path}</code></td><td><a href={page.route}>{page.label}</a></td></tr>)}</tbody>
+    </table>
+    </div>
+  </Section>
+</DocsLayout>

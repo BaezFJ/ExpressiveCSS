@@ -9,7 +9,7 @@ Component ID: `color-swatches`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
+Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
 
 #### Selection and adaptation
 

@@ -3,6 +3,8 @@ import DocsLayout from "../layouts/DocsLayout.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
+import PropertiesTable from "../components/api/PropertiesTable.astro";
 import { defineSections } from "../lib/sections";
 import { route } from "../lib/catalogue";
 
@@ -13,6 +15,9 @@ const S = defineSections([
   { id: "modal", label: "Modal" },
   { id: "side-panel", label: "Side panel" },
   { id: "tokens", label: "Tokens" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods and events" },
+  { id: "properties", label: "Properties" },
 ]);
 ---
 <DocsLayout page="navigation_rail" sections={S}>
@@ -250,5 +255,37 @@ const S = defineSections([
             <tr><td><code>--md-comp-nav-rail-fab-size</code></td><td>56px</td></tr>
             <tr><td><code>--md-comp-nav-rail-panel-width</code></td><td>256px</td></tr>
         </TokenTable>
+  </Section>
+  <Section {...S.options}>
+    <p>Each callback receives the rail element as its argument and the instance as <code>this</code>.
+      Pass callbacks from script; markup options cannot contain functions.</p>
+    <OptionsTable>
+      <tr><td><code>onOpenStart</code></td><td>Function</td><td><code>null</code></td><td>Runs before adding <code>expanded</code>.</td></tr>
+      <tr><td><code>onOpenEnd</code></td><td>Function</td><td><code>null</code></td><td>Runs after the expanded state and ARIA attributes update.</td></tr>
+      <tr><td><code>onCloseStart</code></td><td>Function</td><td><code>null</code></td><td>Runs before removing <code>expanded</code>.</td></tr>
+      <tr><td><code>onCloseEnd</code></td><td>Function</td><td><code>null</code></td><td>Runs after the collapsed state and ARIA attributes update.</td></tr>
+    </OptionsTable>
+  </Section>
+  <Section {...S.methods}>
+    <Code code={`const rail = Expressive.NavigationRail.init(
+  document.querySelector('.navigation-rail'),
+  { onOpenEnd(element) { console.log(element); } }
+);
+
+rail.expand();   // expands unless already expanded
+rail.collapse(); // collapses unless already collapsed
+rail.toggle();   // switches between expanded and collapsed
+rail.destroy();  // removes listeners and cancels pending hover work`} />
+    <p><code>Expressive.NavigationRail.getInstance(el)</code> retrieves an existing instance.
+      <code>destroy()</code> leaves the current expanded class and ARIA state in place.</p>
+    <p>The matching events are <code>expressive:open</code>, <code>expressive:opened</code>,
+      <code>expressive:close</code> and <code>expressive:closed</code>.
+      They fire after their callbacks and bubble from the rail across shadow roots.
+      The end callbacks and events report the state update synchronously; they do not wait for CSS motion to finish.</p>
+  </Section>
+  <Section {...S.properties}>
+    <PropertiesTable el="The navigation rail element.">
+      <tr><td><code>isExpanded</code></td><td>Boolean</td><td>Current expansion state. Use the methods to change it so the class and ARIA attributes stay in sync.</td></tr>
+    </PropertiesTable>
   </Section>
 </DocsLayout>

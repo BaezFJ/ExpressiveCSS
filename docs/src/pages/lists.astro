@@ -22,8 +22,8 @@ const S = defineSections([
   <Section {...S.anatomy}>
         <p class="flow-text">
           A <code>.list</code> is a vertical index. Use it so people can find
-          an item and act on it. The component is HTML only, with no
-          JavaScript. Order items logically, keep each row short, and put
+          an item and act on it. Basic list styling needs only HTML and CSS.
+          Order items logically, keep each row short, and put
           icons, text, and actions in the same place on every row.
         </p>
         <p>
@@ -230,6 +230,10 @@ const S = defineSections([
 `} />
   </Section>
   <Section {...S.links}>
+        <p><code>Lists.Init()</code> installs the actionable-row keyboard shortcuts below.
+          The root bundle calls it automatically. With the modular entry, import <code>Lists</code>
+          and call it once. Its delegated document listener also handles lists added later;
+          there is no per-list instance or <code>destroy()</code> method.</p>
         <p>
           Wrap the row in an <code>&lt;a&gt;</code> or
           <code>&lt;label&gt;</code> to make the whole item the target.

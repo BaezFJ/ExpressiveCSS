@@ -210,6 +210,11 @@ if (element) Tooltip.init(element, { position: 'top' });
 
 ## Sass setup
 
+The [Sass API](https://www.expressivecss.com/sass.html) lists shared functions, mixins,
+configuration and every component, utility, base and token partial with its usage guide.
+The [JavaScript API](https://www.expressivecss.com/javascript.html) lists every runtime export,
+the shared component lifecycle and the document behaviors needed by the modular entry.
+
 For smaller consumer bundles, import selected components from
 `@expressivecss/expressive/modular` and call their `.init()` methods after markup
 exists. Call the required document behaviors explicitly, such as `Forms.Init()`
@@ -376,7 +381,7 @@ function unmount() {
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
 
-`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also installs document-level keyboard/focus handlers and initializes the shared Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, ImageCompare, Tour, Sortable, and TransferList behaviors.
+`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also initializes Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, ImageCompare, Tour, Sortable, Lists, DataTables and TransferList. The modular entry requires explicit setup for these behaviors.
 
 ## Component lifecycle
 
@@ -391,7 +396,7 @@ current?.destroy();
 
 `init()` also accepts a NodeList or HTMLCollection and returns an array of component instances. Empty collections return an empty array. Re-initializing an element destroys its previous instance first. Component-specific sections below define additional methods, properties, callbacks, and option defaults.
 
-Menu, Lightbox, NavigationRail, Cards and ExpandingCard fire DOM events from the element they were initialized on: `expressive:open` and `expressive:close` when the state changes, then `expressive:opened` and `expressive:closed` when the motion ends. Cards and ExpandingCard fire only `expressive:open` and `expressive:close`. Each event follows the matching `on…` callback, which still works. The events bubble and are composed, so a document listener sees components inside open shadow roots; check `event.target` because nested components bubble too. Closing a Menu or Lightbox from its `expressive:open` listener stops it opening.
+Menu, Lightbox, NavigationRail, Cards and ExpandingCard fire DOM events from their initialization elements. Menu and Lightbox fire `expressive:open` and `expressive:close` as state changes, then `expressive:opened` and `expressive:closed` when motion ends. NavigationRail fires the same names synchronously around its class and ARIA updates; its end events do not wait for CSS motion. Cards and ExpandingCard fire only `expressive:open` and `expressive:close`. Each event follows its matching callback, bubbles and crosses shadow roots. Check `event.target` because nested components bubble too. Closing a Menu or Lightbox from its `expressive:open` listener stops it opening.
 
 ```js
 document.addEventListener('expressive:open', (event) => {
@@ -2515,6 +2520,8 @@ Every value is a `--md-comp-icon-button-*` custom property — `container-height
 ```
 
 ### Copy button
+
+`Copy.textFor(button)` returns the text without copying or showing feedback, or `null` for a missing source. `data-copy` wins over `data-copy-for`, including an empty string. Source lookup stays in the button's document or shadow root. Disabled buttons and `aria-disabled="true"` controls do nothing on click. A completed attempt fires `expressive:copy` with `{ text, copied }`; `copied` is false on clipboard failure. `Copy.Init()` installs one delegated document listener and has no per-button teardown. See the [Copy guide](https://www.expressivecss.com/copy.html).
 
 Any button copies to the clipboard with `data-copy-for`, naming the id of a field or element, or with `data-copy`, holding the text itself. A field copies its value; other elements copy their trimmed text. A snackbar confirms the result, and screen readers announce it. `data-copy-message` and `data-copy-error` replace its texts for one button; `Expressive.Copy.i18n` (`copied`, `failed`) replaces them everywhere. The root bundle starts the `Copy` behavior on load; with the modular entry, call `Copy.Init()`. The clipboard needs a secure context (HTTPS or localhost); elsewhere the snackbar reports the failure.
 
@@ -4771,6 +4778,24 @@ Offset the rest of the page:
 
 ---
 
+### JavaScript API
+
+`NavigationRail.init(el, options)` creates an instance; `getInstance(el)` retrieves it.
+`expand()`, `collapse()` and `toggle()` update the expanded class and ARIA state.
+`isExpanded` reports the current state. `destroy()` removes listeners and pending hover work,
+leaving the current class and ARIA state in place.
+
+| Option | Default | When it runs |
+| --- | --- | --- |
+| `onOpenStart` | `null` | Before the rail expands. |
+| `onOpenEnd` | `null` | After the expanded state updates, without waiting for CSS motion. |
+| `onCloseStart` | `null` | Before the rail collapses. |
+| `onCloseEnd` | `null` | After the collapsed state updates, without waiting for CSS motion. |
+
+Callbacks receive the rail element and use the instance as `this`.
+The matching events are `expressive:open`, `expressive:opened`, `expressive:close` and
+`expressive:closed`, respectively.
+
 ## Pagination
 
 Split long content into shorter, easier blocks.
@@ -6209,6 +6234,8 @@ A `<figure class="sankey-chart">` takes a `<figcaption>` and a `<table>` with on
 - After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted link stay. Links and nodes still in the table move from their old shapes to the new ones; with reduced motion they appear at once. It has the line chart's `show(index)`, which takes a link's number among those drawn, and `destroy()`.
 - `axis`, `toggle`, `stacked`, `values` and `sparkline` do not apply.
 
+The inherited `min` and `max` options default to `null` and do not control flow thickness. Positive flow values scale to the available height. `watch` defaults to `false`; `data-watch` also enables it.
+
 ### Tokens
 
 | Token | Default |
@@ -6247,6 +6274,8 @@ A `<figure class="funnel-chart">` takes a `<figcaption>` and a `<table>`. The fi
 - The tooltip names the row and each column's header and cell, as written in the table. After the second column's text it adds the stage's value as a percentage of the first row's, such as "4,800 (40%)": whole percentages, with a tenth below 10%, in the page's language. A row without a stage, or a first row without one, has no percentage.
 - After changing the table, call `update()` on the instance to redraw in place, or start the chart with `data-watch`; keyboard focus and the highlighted row stay. Each stage grows or shrinks from its old width, and a new one grows from nothing; with reduced motion they take their widths at once. It has the line chart's `show(index)` and `destroy()`.
 - `axis`, `toggle`, `stacked`, `values`, `sparkline`, `data-min` and `data-max` do not apply.
+
+The inherited `min` and `max` options default to `null` and do not control stage widths. The largest positive value in the first series fills the width. `watch` defaults to `false`; `data-watch` also enables it.
 
 ### Tokens
 
@@ -6752,6 +6781,13 @@ A `.menubar` holds `.menu-trigger` buttons, each opening an ordinary Menu writte
 
 Tokens: `--md-comp-menubar-container-color` (`surface-container`), `--md-comp-menubar-shape` (12px) and `--md-comp-menubar-item-height` (40px).
 
+`Menubar.init(el, { menuOptions })` creates an instance; `getInstance(el)` retrieves it.
+A supplied `menuOptions` object replaces the default object. Include `constrainWidth: false`
+and `coverTrigger: false` when preserving the default layout alongside other options.
+Child `data-menu-options` attributes do not apply. `destroy()` destroys the child Menus and
+removes managed tab stops and roles added by initialization. Open an individual child with
+`Menu.getInstance(trigger).open()`; Menubar has no separate open/close methods.
+
 ---
 
 ## Tour
@@ -6955,6 +6991,11 @@ Override these on the `<dialog>` if you need a different surface or width.
 
 ### Bottom sheet
 
+The root bundle calls `BottomSheets.Init()` and `Dialogs.Init()`. With the modular entry,
+call both once for drag handling and light dismissal. `BottomSheets.setExpanded(dialog, expanded)`
+toggles an expandable sheet's height and its direct handle button's `aria-expanded`.
+This is a document behavior with no per-sheet instance or `destroy()` method.
+
 A recent flick dismisses the sheet even if the pointer stops moving at release. For short drags, pausing for at least 100ms or reversing direction lets it snap back.
 
 A `dialog.bottom-sheet` is secondary content anchored to the bottom. Use it on Compact and Medium windows. `showModal()` is the modal variant (scrim). `show()` is the standard variant (no scrim). Same sheet either way: `surface-container-low`, 28dp top corners, 640dp max, 56dp side inset from the Medium breakpoint, 72dp top inset, 32×4 drag handle in a 48dp hit target. Drag the handle down to dismiss. A named `<button>` handle also dismisses on click, tap, <kbd>Enter</kbd>, or <kbd>Space</kbd>. A decorative handle needs another non-drag pointer and keyboard dismiss path, such as a `form method="dialog"` close button. Verify native Escape against the opening mode, browser, and `closedby` policy.
@@ -6988,6 +7029,11 @@ document.getElementById('sheet').show();      // standard, no scrim
 The sheet slides in, and snaps back after a short drag, on the default spatial spring: `--md-comp-bottom-sheet-motion` and `--md-comp-bottom-sheet-motion-duration` read `--md-sys-motion-spring-default-spatial` and its `-duration` token, so `motion="expressive"` gives it a slight bounce. The sheet runs on 24px below the viewport, so the bounce never uncovers the page under it. With reduced motion requested it appears without moving.
 
 ### Side sheet
+
+The root bundle calls `SideSheets.Init()` and `Dialogs.Init()`. With the modular entry,
+call both once for drag handling and light dismissal. Use the native dialog's `show()`,
+`showModal()`, `close()`, `open` property and `close`/`cancel` events for application state.
+SideSheets has no per-sheet instance, options object or `destroy()` method.
 
 A recent flick toward the docked edge dismisses the sheet. For short drags, pausing for at least 100ms or reversing direction lets it snap back.
 
@@ -7784,6 +7830,15 @@ A floating bar can sit beside a companion FAB. Wrap both in `.toolbar-group`; th
 
 # Forms
 
+`Forms.Init()` installs document behaviors and scans existing textareas and file-path inputs once.
+For markup added later, call `Forms.InitTextarea(textarea)` or `Forms.InitFileInputPath(fileInput)`
+once per new control. After assigning textarea text from script, call
+`Forms.textareaAutoResize(textarea)`. `Forms.validateField(input)` refreshes validation state
+and error descriptions; for drop-zone file inputs it also refreshes file validation and feedback.
+`Forms.listDropZoneFiles(zone, input)` rebuilds the zone's filename and localized-size list.
+Forms has no per-field instance or `destroy()` method. See the
+[form helpers API](https://www.expressivecss.com/text-inputs.html#api).
+
 ## Command palette
 
 A searchable list of commands in a dialog, opened from anywhere with a shortcut.
@@ -7947,6 +8002,7 @@ Expressive.Datepicker.init(elem, {
 | `minDate` | Date | `null` | Earliest selectable date. |
 | `maxDate` | Date | `null` | Latest selectable date. |
 | `yearRange` | Number or Array | `10` | Years on either side of the viewed year, or `[minYear, maxYear]`. |
+| `minYear`, `maxYear`, `minMonth`, `maxMonth` | Number or undefined | `0`, `9999`, `undefined`, `undefined` | Internal calculation fields. Do not configure them directly; use `minDate`, `maxDate` and `yearRange`. |
 | `yearRangeReverse` | Boolean | `false` | Sort the year list in reverse order. |
 | `isRTL` | Boolean | `false` | Render the calendar right-to-left. |
 | `showMonthAfterYear` | Boolean | `false` | Show the month after the year in the title. |

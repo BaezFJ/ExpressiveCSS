@@ -26,6 +26,10 @@ export interface DocsPage {
   section?: string;
   /** Legacy paths kept for compatibility, each published as a redirect here. */
   aliases?: string[];
+  /** Public JavaScript exports documented on this page. */
+  exports?: string[];
+  /** Sass partials covered by this guide, relative to src/sass without _ or .scss. */
+  styles?: string[];
 }
 
 /** One navigation/footer group. */
@@ -42,6 +46,8 @@ export const NAV: DocsGroup[] = [
     pages: [
       {
         id: "index",
+        styles: ["base/global", "base/normalize"],
+        exports: ["version"],
         label: "Getting started",
         title: "Material Design 3 for the web",
         route: "/",
@@ -64,7 +70,27 @@ export const NAV: DocsGroup[] = [
           "Give coding agents the ExpressiveCSS docs, skills, MCP server, and lint checks.",
       },
       {
+        id: "javascript",
+        label: "JavaScript API",
+        route: "/javascript.html",
+        description: "Every JavaScript export, component lifecycle, and document behavior.",
+      },
+      {
+        id: "copy",
+        exports: ["Copy"],
+        label: "Copy to clipboard",
+        route: "/copy.html",
+        description: "Copy text or field values with accessible clipboard feedback.",
+      },
+      {
+        id: "sass",
+        label: "Sass API",
+        route: "/sass.html",
+        description: "Configure Sass builds and use the shared functions and mixins.",
+      },
+      {
         id: "auto_init",
+        exports: ["AutoInit"],
         label: "Auto Init",
         route: "/auto-init.html",
         description:
@@ -85,6 +111,7 @@ export const NAV: DocsGroup[] = [
     pages: [
       {
         id: "color",
+        styles: ["utilities/colors"],
         label: "Color",
         route: "/color.html",
         description:
@@ -92,6 +119,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "themes",
+        styles: ["tokens/contrast", "tokens/theme", "tokens/vibrant"],
+        exports: ["Theme"],
         label: "Themes",
         route: "/themes.html",
         description:
@@ -99,6 +128,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "tokens",
+        styles: ["tokens/reference", "tokens/stacking"],
         label: "Design tokens",
         route: "/tokens.html",
         description:
@@ -106,6 +136,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "typography",
+        styles: ["utilities/typescale", "base/fonts", "base/prose", "base/typography"],
         label: "Typography",
         route: "/typography.html",
         description:
@@ -113,6 +144,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "icons",
+        styles: ["components/icons-material-design"],
         label: "Icons",
         route: "/icons.html",
         description:
@@ -120,6 +152,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "shadow",
+        styles: ["utilities/z-depth", "tokens/elevation"],
         label: "Elevation",
         title: "Shadow",
         route: "/shadow.html",
@@ -135,6 +168,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "grid",
+        styles: ["base/grid"],
         label: "Grid",
         route: "/grid.html",
         description:
@@ -142,6 +176,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "helpers",
+        styles: ["utilities/helpers", "utilities/spacing", "utilities/visibility", "base/print"],
         label: "Helpers",
         route: "/helpers.html",
         description:
@@ -149,6 +184,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "scroll-area",
+        styles: ["utilities/scroll-area"],
         label: "Scroll area",
         route: "/scroll-area.html",
         description:
@@ -156,6 +192,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "shapes",
+        styles: ["utilities/shapes", "tokens/shape"],
         label: "Shapes",
         route: "/shapes.html",
         description:
@@ -178,6 +215,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "css_transitions",
+        styles: ["components/transitions", "tokens/motion"],
         label: "Transitions",
         route: "/css-transitions.html",
         description:
@@ -185,6 +223,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "state_layers",
+        styles: ["tokens/state"],
         label: "State layers",
         route: "/state-layers.html",
         description:
@@ -198,6 +237,8 @@ export const NAV: DocsGroup[] = [
     pages: [
       {
         id: "navbar",
+        styles: ["components/navbar"],
+        exports: ["AppBar"],
         label: "App bar",
         title: "Navbar",
         route: "/navbar.html",
@@ -206,6 +247,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "navigation_bar",
+        styles: ["components/navigation-bar"],
         label: "Navigation bar",
         route: "/navigation-bar.html",
         description:
@@ -213,6 +255,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "navigation_rail",
+        styles: ["components/navigation-rail"],
+        exports: ["NavigationRail"],
         label: "Navigation rail",
         route: "/navigation-rail.html",
         description:
@@ -221,6 +265,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "panes",
+        styles: ["components/panes"],
+        exports: ["PaneResize"],
         label: "Panes",
         route: "/panes.html",
         description:
@@ -228,6 +274,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "footer",
+        styles: ["components/page-footer"],
         label: "Footer",
         route: "/footer.html",
         description:
@@ -235,6 +282,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "tabs",
+        styles: ["components/tabs"],
+        exports: ["Tabs"],
         label: "Tabs",
         route: "/tabs.html",
         description:
@@ -242,6 +291,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "breadcrumbs",
+        styles: ["components/breadcrumb"],
         label: "Breadcrumbs",
         route: "/breadcrumbs.html",
         description:
@@ -249,6 +299,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "pagination",
+        styles: ["components/pagination"],
         label: "Pagination",
         route: "/pagination.html",
         description:
@@ -256,6 +307,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "stepper",
+        styles: ["components/stepper"],
         label: "Stepper",
         route: "/stepper.html",
         description:
@@ -263,6 +315,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "menu",
+        styles: ["components/menu"],
+        exports: ["Menu"],
         label: "Menu",
         route: "/menu.html",
         description:
@@ -271,6 +325,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "mega_menu",
+        styles: ["components/mega-menu"],
         label: "Mega menu",
         route: "/mega-menu.html",
         description:
@@ -278,6 +333,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "menubar",
+        styles: ["components/menubar"],
+        exports: ["Menubar"],
         label: "Menubar",
         route: "/menubar.html",
         description:
@@ -285,6 +342,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "scrollspy",
+        styles: ["components/scrollspy", "components/table_of_contents"],
+        exports: ["ScrollSpy"],
         label: "Scrollspy",
         route: "/scrollspy.html",
         description:
@@ -292,6 +351,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "tree",
+        styles: ["components/tree"],
         label: "Tree",
         route: "/tree.html",
         description:
@@ -305,6 +365,7 @@ export const NAV: DocsGroup[] = [
     pages: [
       {
         id: "buttons",
+        styles: ["components/buttons"],
         section: "Actions",
         label: "Buttons",
         route: "/buttons.html",
@@ -313,6 +374,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "icon_buttons",
+        styles: ["components/icon-buttons"],
         label: "Icon buttons",
         route: "/icon-buttons.html",
         description:
@@ -320,6 +382,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "button_groups",
+        styles: ["components/button-groups"],
+        exports: ["ButtonGroup"],
         label: "Button groups",
         route: "/button-groups.html",
         description:
@@ -328,6 +392,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "split_button",
+        styles: ["components/split-button"],
         label: "Split button",
         route: "/split-button.html",
         description:
@@ -335,6 +400,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "floating_action_button",
+        styles: ["components/fab-menu"],
+        exports: ["FloatingActionButton"],
         label: "FAB",
         title: "Floating Action Button",
         route: "/floating-action-button.html",
@@ -343,6 +410,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "back-to-top",
+        styles: ["components/back-to-top"],
+        exports: ["BackToTop"],
         label: "Back to top",
         route: "/back-to-top.html",
         description:
@@ -350,6 +419,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "cards",
+        styles: ["components/cards", "components/expanding-card"],
+        exports: ["Cards", "ExpandingCard"],
         section: "Containment",
         label: "Cards",
         route: "/cards.html",
@@ -358,6 +429,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "aura",
+        styles: ["components/aura"],
         label: "Aura",
         route: "/aura.html",
         description:
@@ -365,6 +437,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "lists",
+        styles: ["components/list", "utilities/defer-render"],
+        exports: ["Sortable", "Lists"],
         label: "Lists",
         route: "/lists.html",
         description:
@@ -373,6 +447,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "message",
+        styles: ["components/message"],
         label: "Message",
         route: "/message.html",
         description:
@@ -380,6 +455,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "message_scroller",
+        styles: ["components/message-scroller"],
+        exports: ["MessageScroller"],
         label: "Message scroller",
         route: "/message-scroller.html",
         description:
@@ -387,6 +464,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "pull-to-refresh",
+        styles: ["components/pull-to-refresh"],
+        exports: ["PullToRefresh"],
         label: "Pull-to-refresh",
         route: "/pull-to-refresh.html",
         description:
@@ -394,6 +473,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "swipe-actions",
+        styles: ["components/swipe-actions"],
+        exports: ["SwipeActions"],
         label: "Swipe actions",
         route: "/swipe-actions.html",
         description:
@@ -401,6 +482,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "accordion",
+        styles: ["components/accordion"],
         label: "Accordion",
         route: "/accordion.html",
         description:
@@ -408,6 +490,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "show_more",
+        styles: ["components/show-more"],
+        exports: ["ShowMore"],
         label: "Show more",
         route: "/show-more.html",
         description:
@@ -415,6 +499,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "data_table",
+        styles: ["components/data-table"],
+        exports: ["DataTables"],
         section: "Data and charts",
         label: "Data table",
         route: "/data-table.html",
@@ -423,6 +509,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "stat",
+        styles: ["components/stat"],
         label: "Stat",
         route: "/stat.html",
         description:
@@ -430,6 +517,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "description_list",
+        styles: ["components/description-list"],
         label: "Description list",
         route: "/description-list.html",
         description:
@@ -437,6 +525,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "kpi",
+        styles: ["components/kpi"],
         label: "KPI",
         route: "/kpi.html",
         description:
@@ -444,6 +533,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "countdown",
+        styles: ["components/countdown"],
         label: "Countdown",
         route: "/countdown.html",
         description:
@@ -451,6 +541,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "line-chart",
+        styles: ["components/line-chart"],
+        exports: ["LineChart"],
         label: "Line chart",
         route: "/line-chart.html",
         description:
@@ -458,6 +550,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "column-chart",
+        styles: ["components/column-chart"],
+        exports: ["ColumnChart"],
         label: "Column chart",
         route: "/column-chart.html",
         description:
@@ -465,6 +559,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "bar-chart",
+        styles: ["components/bar-chart"],
+        exports: ["BarChart"],
         label: "Bar chart",
         route: "/bar-chart.html",
         description:
@@ -472,6 +568,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "pie-chart",
+        styles: ["components/pie-chart"],
+        exports: ["PieChart"],
         label: "Pie chart",
         route: "/pie-chart.html",
         description:
@@ -479,6 +577,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "heatmap-chart",
+        styles: ["components/heatmap-chart"],
+        exports: ["HeatmapChart"],
         label: "Heatmap chart",
         route: "/heatmap-chart.html",
         description:
@@ -486,6 +586,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "radar-chart",
+        styles: ["components/radar-chart"],
+        exports: ["RadarChart"],
         label: "Radar chart",
         route: "/radar-chart.html",
         description:
@@ -493,6 +595,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "radial-chart",
+        styles: ["components/radial-chart"],
+        exports: ["RadialChart"],
         label: "Radial chart",
         route: "/radial-chart.html",
         description:
@@ -500,6 +604,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "mixed-chart",
+        styles: ["components/mixed-chart"],
+        exports: ["MixedChart"],
         label: "Mixed chart",
         route: "/mixed-chart.html",
         description:
@@ -507,6 +613,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "scatter-chart",
+        styles: ["components/scatter-chart"],
+        exports: ["ScatterChart"],
         label: "Scatter chart",
         route: "/scatter-chart.html",
         description:
@@ -514,6 +622,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "funnel-chart",
+        styles: ["components/funnel-chart"],
+        exports: ["FunnelChart"],
         label: "Funnel chart",
         route: "/funnel-chart.html",
         description:
@@ -521,6 +631,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "sankey-chart",
+        styles: ["components/sankey-chart"],
+        exports: ["SankeyChart"],
         label: "Sankey chart",
         route: "/sankey-chart.html",
         description:
@@ -528,6 +640,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "treemap-chart",
+        styles: ["components/treemap-chart"],
+        exports: ["TreemapChart"],
         label: "Treemap chart",
         route: "/treemap-chart.html",
         description:
@@ -535,6 +649,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "timeline",
+        styles: ["components/timeline"],
         label: "Timeline",
         route: "/timeline.html",
         description:
@@ -542,6 +657,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "calendar",
+        styles: ["components/calendar"],
         label: "Calendar",
         route: "/calendar.html",
         description:
@@ -549,6 +665,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "dialogs",
+        styles: ["components/dialog", "components/scrim"],
+        exports: ["Dialogs"],
         section: "Dialogs and sheets",
         label: "Dialogs",
         route: "/dialogs.html",
@@ -558,6 +676,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "bottom_sheet",
+        styles: ["components/bottom-sheet"],
+        exports: ["BottomSheets"],
         label: "Bottom sheet",
         route: "/bottom-sheet.html",
         description:
@@ -565,6 +685,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "side_sheet",
+        styles: ["components/side-sheet"],
+        exports: ["SideSheets"],
         label: "Side sheet",
         route: "/side-sheet.html",
         description:
@@ -572,6 +694,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "drag_handle",
+        styles: ["components/drag-handle"],
         label: "Drag handle",
         route: "/drag-handle.html",
         description:
@@ -579,6 +702,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "badges",
+        styles: ["components/badges"],
         section: "Communication",
         label: "Badges",
         route: "/badges.html",
@@ -587,6 +711,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "avatar",
+        styles: ["components/avatar"],
         label: "Avatar",
         route: "/avatar.html",
         description:
@@ -594,6 +719,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "org-chart",
+        styles: ["components/org-chart"],
         label: "Organization chart",
         route: "/org-chart.html",
         description:
@@ -601,6 +727,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "tooltips",
+        styles: ["components/tooltip"],
+        exports: ["Tooltip"],
         label: "Tooltips",
         route: "/tooltips.html",
         description:
@@ -608,6 +736,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "popover",
+        styles: ["components/popover"],
         label: "Popover",
         route: "/popover.html",
         description:
@@ -615,6 +744,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "hover_card",
+        exports: ["HoverCard"],
         label: "Hover card",
         route: "/hover-card.html",
         description:
@@ -622,6 +752,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "tour",
+        styles: ["components/tour"],
+        exports: ["Tour"],
         label: "Tour",
         route: "/tour.html",
         description:
@@ -629,6 +761,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "snackbar",
+        styles: ["components/snackbar"],
+        exports: ["Snackbar"],
         label: "Snackbar",
         route: "/snackbar.html",
         description:
@@ -637,6 +771,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "preloader",
+        styles: ["components/progress"],
         label: "Preloader",
         route: "/preloader.html",
         description:
@@ -644,6 +779,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "loading_indicator",
+        styles: ["components/loading-indicator"],
         label: "Loading indicator",
         route: "/loading-indicator.html",
         description:
@@ -651,6 +787,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "loading_overlay",
+        styles: ["components/loading-overlay"],
+        exports: ["LoadingOverlay"],
         label: "Loading overlay",
         route: "/loading-overlay.html",
         description:
@@ -658,6 +796,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "skeleton",
+        styles: ["components/skeleton"],
         label: "Skeleton",
         route: "/skeleton.html",
         description:
@@ -665,6 +804,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "empty_state",
+        styles: ["components/empty-state"],
         label: "Empty state",
         route: "/empty-state.html",
         description:
@@ -672,6 +812,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "alert",
+        styles: ["components/alert"],
         label: "Alert",
         route: "/alert.html",
         description:
@@ -679,6 +820,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "carousel",
+        styles: ["components/carousel"],
+        exports: ["Carousel"],
         section: "Media and motion",
         label: "Carousel",
         route: "/carousel.html",
@@ -687,6 +830,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "image_compare",
+        styles: ["components/image-compare"],
+        exports: ["ImageCompare"],
         label: "Image compare",
         route: "/image-compare.html",
         description:
@@ -694,6 +839,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "marquee",
+        styles: ["components/marquee"],
         label: "Marquee",
         route: "/marquee.html",
         description:
@@ -701,6 +847,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "confetti",
+        styles: ["components/confetti"],
+        exports: ["Confetti"],
         label: "Confetti",
         route: "/confetti.html",
         description:
@@ -708,6 +856,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "particles",
+        styles: ["components/particles"],
+        exports: ["Particles"],
         label: "Particles",
         route: "/particles.html",
         description:
@@ -715,6 +865,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "media",
+        styles: ["components/lightbox"],
+        exports: ["Lightbox"],
         label: "Lightbox",
         title: "Media",
         route: "/media.html",
@@ -723,6 +875,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "map",
+        styles: ["components/map"],
+        exports: ["MapView"],
         label: "Map",
         route: "/map.html",
         description:
@@ -730,6 +884,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "toolbars",
+        styles: ["components/toolbar"],
         section: "Search and commands",
         label: "Toolbars",
         route: "/toolbars.html",
@@ -739,6 +894,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "search",
+        styles: ["components/search"],
         label: "Search",
         route: "/search.html",
         description:
@@ -746,6 +902,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "command_palette",
+        styles: ["components/command-palette"],
+        exports: ["CommandPalette"],
         label: "Command palette",
         route: "/command-palette.html",
         description:
@@ -759,6 +917,7 @@ export const NAV: DocsGroup[] = [
     pages: [
       {
         id: "fieldsets",
+        styles: ["components/forms/fieldset"],
         label: "Fieldsets",
         route: "/fieldsets.html",
         description:
@@ -766,6 +925,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "text_inputs",
+        styles: ["components/forms/file-input", "components/forms/input-fields"],
+        exports: ["CharacterCounter", "Forms"],
         label: "Text fields",
         title: "Text Inputs",
         route: "/text-inputs.html",
@@ -774,6 +935,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "input_mask",
+        exports: ["InputMask"],
         label: "Input mask",
         route: "/input-mask.html",
         description:
@@ -781,6 +943,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "currency_input",
+        exports: ["CurrencyInput"],
         label: "Currency input",
         route: "/currency-input.html",
         description:
@@ -788,6 +951,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "rich_text_editor",
+        styles: ["components/rich-text-editor"],
+        exports: ["RichTextEditor"],
         label: "Rich text editor",
         route: "/rich-text-editor.html",
         description:
@@ -795,6 +960,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "drop_zone",
+        styles: ["components/forms/drop-zone"],
         label: "Drop zone",
         route: "/drop-zone.html",
         description:
@@ -802,6 +968,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "select",
+        styles: ["components/forms/select"],
+        exports: ["FormSelect"],
         label: "Select",
         route: "/select.html",
         description:
@@ -809,6 +977,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "tree_select",
+        exports: ["TreeSelect"],
         label: "Tree select",
         route: "/tree-select.html",
         description:
@@ -816,6 +985,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "cascader",
+        styles: ["components/cascader"],
+        exports: ["Cascader"],
         label: "Cascader",
         route: "/cascader.html",
         description:
@@ -823,6 +994,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "checkboxes",
+        styles: ["components/forms/checkboxes"],
         label: "Checkboxes",
         route: "/checkboxes.html",
         description:
@@ -830,6 +1002,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "transfer_list",
+        styles: ["components/transfer-list"],
+        exports: ["TransferList"],
         label: "Transfer list",
         route: "/transfer-list.html",
         description:
@@ -837,6 +1011,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "radio_buttons",
+        styles: ["components/forms/radio-buttons"],
         label: "Radio",
         title: "Radio Buttons",
         route: "/radio-buttons.html",
@@ -845,6 +1020,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "rating",
+        styles: ["components/forms/rating"],
         label: "Rating",
         route: "/rating.html",
         description:
@@ -852,6 +1028,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "color-swatches",
+        styles: ["components/forms/color-swatches"],
         label: "Color swatches",
         route: "/color-swatches.html",
         description:
@@ -859,6 +1036,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "color-picker",
+        styles: ["components/forms/color-picker"],
+        exports: ["ColorPicker"],
         label: "Color picker",
         route: "/color-picker.html",
         description:
@@ -866,6 +1045,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "switches",
+        styles: ["components/forms/switches"],
         label: "Switches",
         route: "/switches.html",
         description:
@@ -873,6 +1053,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "sliders",
+        styles: ["components/forms/slider"],
+        exports: ["Slider"],
         label: "Slider",
         route: "/slider.html",
         description:
@@ -881,6 +1063,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "chips",
+        styles: ["components/chips"],
+        exports: ["Chips"],
         label: "Chips",
         route: "/chips.html",
         description:
@@ -888,6 +1072,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "autocomplete",
+        exports: ["Autocomplete"],
         label: "Autocomplete",
         route: "/autocomplete.html",
         description:
@@ -895,6 +1080,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "datepicker",
+        styles: ["components/datepicker", "components/docked-display"],
+        exports: ["Datepicker"],
         label: "Date picker",
         title: "Date Picker",
         route: "/datepicker.html",
@@ -903,6 +1090,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "timepicker",
+        styles: ["components/modal-display", "components/timepicker"],
+        exports: ["Timepicker"],
         label: "Time picker",
         title: "Time Picker",
         route: "/timepicker.html",
@@ -911,6 +1100,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "keypad",
+        styles: ["components/keypad"],
+        exports: ["Keypad"],
         label: "Keypad",
         title: "Keypad and Keyboard",
         route: "/keypad.html",
@@ -919,6 +1110,8 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "questionnaire",
+        styles: ["components/questionnaire"],
+        exports: ["Questionnaire"],
         label: "Questionnaire",
         route: "/questionnaire.html",
         description:

@@ -99,7 +99,10 @@ const steps: [string, number, string][] = [
           or put <code>data-watch</code> on the figure and it redraws itself.
           Each stage grows or shrinks from its old width, or takes its new
           width at once with reduced motion. It has the line chart's options
-          and methods.
+          and methods. The inherited <code>min</code> and <code>max</code> options default to
+          <code>null</code> and do not control stage widths. The largest positive value in the first
+          series always fills the plot width. See <a href="/line-chart.html#javascript">Line chart options</a>
+          for <code>watch</code> and the shared methods.
         </p>
 <Code code={`
 const chart = Expressive.FunnelChart.init(document.querySelector('.funnel-chart'));
