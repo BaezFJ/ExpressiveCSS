@@ -354,7 +354,7 @@
         },
         "reason": "Canonical layout pattern, not a standalone component."
       },
-      "selectionExample": "A contact directory with no detail view needs a list. Use list-detail panes when selecting a contact reveals a separate detail region.",
+      "selectionExample": "A contact directory with no detail view needs a list. Use list-detail panes when selecting a contact reveals a separate detail region. Static panes need no JavaScript; resizing uses PaneResize and the Runtime guide.",
       "capabilityReview": {
         "reviewedOn": "2026-09-17",
         "support": "implemented",
@@ -3351,7 +3351,7 @@
           "documentedSupport": "Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, round y axis labels with .axis, a legend, and a pointer and keyboard tooltip.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified. There is no y axis labelling."
+            "Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified. The axis modifier provides round value labels; full visual parity remains unassessed."
           ]
         },
         "relationship": "none",
@@ -3463,7 +3463,7 @@
           "documentedSupport": "Columns drawn from zero from a figure's data table, grouped by row or stacked, with fade, track and sparkline modifiers, negative values, gaps, a fixed y range, x labels, round y axis labels with .axis, a legend, and a pointer and keyboard tooltip with a highlight band.",
           "webAdaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
           "limitations": [
-            "Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There is no y axis labelling and no range (low to high) column; horizontal bars are the bar chart."
+            "Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. The axis modifier provides round value labels and range draws low-to-high columns; horizontal bars use the bar chart."
           ]
         },
         "relationship": "none",
@@ -9394,7 +9394,6 @@
           "documentedSupport": "Inline single-date, range, and multiple-date calendar, with an optional modal dialog.",
           "webAdaptation": "Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.",
           "limitations": [
-            "Modal picker parity is not provided by the documented inline API.",
             "Calendar keyboard navigation and range/multiple selection lifecycle have browser coverage. Spoken calendar context, native zoom and physical devices remain unverified."
           ]
         },
@@ -9418,7 +9417,7 @@
         "specHref": "https://m3.material.io/components/date-pickers/specs",
         "guidelinesHref": "https://m3.material.io/components/date-pickers/guidelines"
       },
-      "selectionExample": "A single date with no calendar-specific requirements can use a labeled native date input. Do not choose this picker expecting a popup: its calendar is inline and requires the documented visibility option.",
+      "selectionExample": "A single date with no calendar-specific requirements can use a labeled native date input. Datepicker defaults to an inline calendar controlled by openByDefault; choose displayPlugin: 'docked' or 'modal' for a popup.",
       "capabilityReview": {
         "reviewedOn": "2026-09-17",
         "support": "partial",
@@ -9526,7 +9525,6 @@
           "documentedSupport": "Inline clock and digital input; 12-hour and 24-hour formats, with an optional modal dialog.",
           "webAdaptation": "Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.",
           "limitations": [
-            "Modal picker parity is not provided by the documented inline API.",
             "Named digital inputs as spin buttons, AM/PM state, input-event synchronization and the modal dialog have browser coverage. The dial itself takes pointer input only."
           ]
         },
@@ -9553,7 +9551,7 @@
         "specHref": "https://m3.material.io/components/time-pickers/specs",
         "guidelinesHref": "https://m3.material.io/components/time-pickers/guidelines"
       },
-      "selectionExample": "An appointment time can use a labeled native time input when platform entry is enough. Do not choose this picker expecting a popup: its clock stays inline.",
+      "selectionExample": "An appointment time can use a labeled native time input when platform entry is enough. Timepicker defaults to a visible inline clock; choose displayPlugin: 'docked' or 'modal' for a popup.",
       "capabilityReview": {
         "reviewedOn": "2026-09-18",
         "support": "partial",

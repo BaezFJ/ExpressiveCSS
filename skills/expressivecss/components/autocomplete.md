@@ -9,11 +9,13 @@ Component ID: `autocomplete`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
+Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Related Google guidance](https://m3.material.io/components/menus/overview)
+
+Public JavaScript exports: `Autocomplete`. See the [API index](../references/api-index.md).
 
 #### Material mapping
 
@@ -70,6 +72,14 @@ Add `autocomplete` to a text input inside a `.field`. `AutoInit()` starts every 
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, each data entry's `text` is inserted as HTML. Ids always stay text. Only use sanitized data. |
 | `selected` | Array | `[]` | Initial selected ids, strings or numbers. An id without loaded data displays the id. Pass the selected ids to `setMenuItems` with the loaded data to resolve their labels. |
+
+#### Option details
+
+Autocomplete provides a visually hidden, polite live region without changing the visible spinner or selection count. `i18n.loading` defaults to `Loading results.` and `i18n.noResults` to `No results.`. `i18n.results(count)` returns `1 result available.` or `N results available.`; `i18n.selected(count)` returns `1 item selected.` or `N items selected.`. `i18n.create(text)` labels the `Add` row and returns `Add "text"`. Supply functions for language-specific plurals. Messages are inserted as text, never HTML. Missing keys retain defaults.
+
+When a search returns no suggestions, the open list also shows `i18n.noResults` as its first row, so sighted users see what the live region says. The row is `<li class="autocomplete-no-results" role="none" aria-hidden="true">`. It is not an option: arrow keys skip it, and a click on it chooses nothing and leaves focus in the field. It leaves the list when a search returns a match. In Chips, Enter that adds the typed text as a chip closes the list.
+
+Updates announce the count passed to `setMenuItems`, excluding selected items shown as a fallback and the `Add` row. Opening an existing list announces its displayed item count. Announcements require input focus and `minLength`; closing clears the live region and `setMenuItems(..., ..., false)` stays silent. Applications still pass the signal to their requests, so a stale response cannot replace newer results, and own error handling. Results delivered after `destroy()` are ignored, and results delivered after the user leaves the field update the list without opening it. Test actual spoken delivery with a screen reader.
 
 #### Methods
 

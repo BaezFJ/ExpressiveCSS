@@ -5,6 +5,19 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Skills use valid YAML discovery metadata, concise triggers and host-neutral
+  delegation. The scored review honors explicit requests for fixes and loads its
+  report template separately. The docs skill catalogue parses YAML rather than
+  extracting scalar values with regular expressions.
+
+- Skill guidance now covers all twelve chart types, axis labels and in-place
+  updates, optional picker displays, shared behavior APIs, scroll areas, shapes,
+  glass, stacking and Sass references. Generated guides retain localization
+  definitions and events, and a catalogue-derived index maps public exports and
+  Sass partials to their guides.
+
 ## [0.16.0] - 2026-10-27
 
 This release removes the aliases kept for markup written before 0.8.0. See

@@ -9,11 +9,13 @@ Component ID: `message-scroller`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
+Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
+
+Public JavaScript exports: `MessageScroller`. See the [API index](../references/api-index.md).
 
 Example: A support chat that streams replies needs a message scroller so the reply stays in view; a fixed list of three FAQ answers does not.
 

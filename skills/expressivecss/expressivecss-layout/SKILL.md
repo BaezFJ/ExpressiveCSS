@@ -1,11 +1,11 @@
 ---
 name: expressivecss-layout
-description: Plans and reviews ExpressiveCSS page layouts with Material 3 layout guidance, covering the scaffold, canonical layouts, the five breakpoints, panes, margins, gaps and right-to-left support. Use for a new page or app shell, adaptive or responsive behavior, or a layout that breaks at some width. Not for projects without ExpressiveCSS or for styling a single component.
+description: "Plans and reviews ExpressiveCSS layouts and app shells. Use for breakpoints, canonical layouts, panes, navigation, grid spacing or RTL adaptation. Single-component styling uses its component guide."
 ---
 
 # ExpressiveCSS layout
 
-Layout is the visual and strategic arrangement of elements on a screen. Material 3 writes its layout guidance for Android, and the same guidance applies to the web. ExpressiveCSS maps it onto semantic HTML, a 12-track CSS grid, CSS-only pane patterns and the navigation components. This guide is the overview: what a layout has to do, which names Material uses for its parts, and where each part lives in ExpressiveCSS. Topic references fill in the detail.
+ExpressiveCSS maps Material layout guidance onto semantic HTML, a 12-track CSS grid, CSS-only pane patterns and navigation components. Use this guide for component placement and adaptation; load the topic references only for decisions the task reaches.
 
 ## References
 
@@ -78,7 +78,7 @@ Read the [canonical layouts reference](./references/canonical-layouts.md) to cho
 
 ## Bidirectionality
 
-More than 2 billion people read right-to-left languages such as Arabic, Hebrew and Farsi. Set `dir="rtl"` and `lang` on `<html>`, or on the element that holds RTL content. Components that have a side, such as the navigation rail and side sheet, mirror with `:dir(rtl)`. In your own CSS, use logical properties (`margin-inline-start`, `inset-inline-end`, `text-align: start`) so the layout mirrors without a second stylesheet. Keep the source order identical in both directions; only the visual order flips. Media, clocks, phone numbers and code stay left to right.
+Set `dir="rtl"` and `lang` on `<html>`, or on the element that holds RTL content. Components that have a side, such as the navigation rail and side sheet, mirror with `:dir(rtl)`. In your own CSS, use logical properties (`margin-inline-start`, `inset-inline-end`, `text-align: start`) so the layout mirrors without a second stylesheet. Keep the source order identical in both directions; only the visual order flips. Media, clocks, phone numbers and code stay left to right.
 
 ## Layout terms in ExpressiveCSS
 

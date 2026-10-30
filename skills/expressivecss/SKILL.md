@@ -1,8 +1,7 @@
 ---
 name: expressivecss
-description: Build, refine, review, install, theme, and debug ExpressiveCSS interfaces, including page layouts, dashboards, and charts. Use for @expressivecss/expressive markup, components, accessibility (labels, focus, keyboard), runtime init and teardown of JavaScript components, performance, and framework contributions. Exclude generic Material Design or CSS work in projects without ExpressiveCSS.
+description: "Builds, refines, reviews and debugs @expressivecss/expressive interfaces. Use for markup, components, layouts, charts, install, theme, runtime, accessibility, performance or framework contributions. Exclude generic CSS work without ExpressiveCSS."
 license: MIT
-compatibility: Requires access to the target project's files or the public ExpressiveCSS documentation.
 metadata:
   author: BaezFJ
   version: "0.12.0"
@@ -14,7 +13,7 @@ metadata:
 
 # ExpressiveCSS
 
-ExpressiveCSS is Material Design 3 Expressive built from semantic HTML. This skill routes each task to the few guides it needs. Metadata `version` numbers this workflow; the contract manifest gives the framework version.
+ExpressiveCSS builds Material Design 3 interfaces from semantic HTML. Metadata `version` numbers this workflow; the contract manifest gives the framework version.
 
 ## Staged guide routing
 
@@ -41,15 +40,17 @@ Combine overlapping routes, and say why a route widens:
 
 - Building or reviewing an interface needs Usage and Accessibility, and so does lifecycle work that changes markup or accessibility.
 - Visual or token work adds Theming. Setup or version doubt adds Install.
-- Runtime ownership in the decision index decides Runtime: JavaScript, Auto Init, shared-runtime, and manual need it; CSS-only and native do not. A critique needs it only to check interaction.
+- Runtime ownership decides Runtime: Auto Init, shared-runtime and manual need it. Behavior-bearing variants such as clipboard controls and resizing panes need it even when their static component is CSS-only.
 - For contrast or forced-colors investigations, even token-only ones, add Accessibility.
 - For a review too large for one context, read [delegation](./references/delegation.md).
 
 ## Component guides
 
-The generated [component decision index](./references/component-decisions.md) owns the complete component inventory, use/avoid boundaries, alternatives, runtime ownership, and guide links. Detailed adaptive decisions and Material links live in each component guide. Each guide's `#### Rules` come from `semantics.json`: write the static requirements into markup, check the state the runtime generates, and cite rule IDs in reviews.
+The generated [component decision index](./references/component-decisions.md) owns the complete component inventory, selection boundaries, alternatives, runtime ownership and guide links. The [API index](./references/api-index.md) maps JavaScript exports and Sass partials to guides. Component guides include adaptive decisions, Material links and rules from `semantics.json`. Apply static rules to markup, check runtime-generated state, and cite rule IDs in reviews.
 
 For support gaps, read only the component's `## <Title>` section of the large [capability roadmap](./references/capability-roadmap.md). For Material conformance, use the [review reference](./expressivecss-design/references/material-conformance.md). Evidence about part of a component never proves full parity.
+
+For clipboard, theme controls, pane resizing, expanding cards or scripted confirmation, read the [behavior contracts](./references/behavior-contracts.md).
 
 ## Component discovery protocol
 
@@ -61,7 +62,7 @@ For support gaps, read only the component's `## <Title>` section of the large [c
 
 ## Authority by question and version
 
-Resolve the exact installed framework version once per task before contract-dependent work. Repeat only after dependency evidence changes. Run the bundled [version resolver](./scripts/resolve-version.mjs) using its path relative to this skill's location, not the consuming repository:
+Resolve the installed version once per task before contract-dependent work. Repeat only after dependency evidence changes. Run the bundled [version resolver](./scripts/resolve-version.mjs) from this skill's directory:
 
 ```sh
 node "<skill-directory>/scripts/resolve-version.mjs" --project-root "<project>"

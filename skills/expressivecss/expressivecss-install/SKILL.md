@@ -1,6 +1,6 @@
 ---
 name: expressivecss-install
-description: Installs and configures @expressivecss/expressive: package versions, imports, assets, fonts, and build integration. Use for setup, package changes, version problems, or uncertainty about which contract source applies. Not for visual refinement, or for markup changes when the project already loads the target version.
+description: "Installs @expressivecss/expressive. Use for setup, package changes, version problems, or uncertainty about which contract source applies. Not for visual refinement or markup changes when the project already loads the target version."
 ---
 
 # Install ExpressiveCSS
@@ -46,10 +46,12 @@ Importing the JavaScript bundle installs shared behaviors but does not call `Aut
 ### Sass
 
 ```scss
-@use "@expressivecss/expressive/src/sass/expressive";
+@use "pkg:@expressivecss/expressive/scss" as expressive;
 ```
 
-The package also exports `@expressivecss/expressive/scss` and individual `scss/*` paths. Follow the target version's documented Sass resolution for the consuming build tool. For Sass mechanics such as `@use ... with`, selective `custom.scss` builds, and deprecation warnings, also load the `scss-architecture` skill when it is installed.
+With Dart Sass, compile this entry using `sass --pkg-importer=node app.scss app.css`. Bundlers may provide their own package importer; follow that tool's documented resolution. The [Sass API guide](https://www.expressivecss.com/sass.html.md) owns configuration and shared functions and mixins. The [API index](../references/api-index.md#sass-partials) maps partials to their usage guides.
+
+For a selective build, use `pkg:@expressivecss/expressive/scss/custom` with ordered `$components` and `$utilities` lists. `null` loads the full group; `()` loads none. Tokens and base always load. Preserve index order and supporting partials. For functions and mixins without framework CSS, use `pkg:@expressivecss/expressive/scss/abstracts/index`; emitted mixins still need the framework tokens. Configure each module on its first load. For Sass mechanics and deprecations, also load `scss-architecture` when installed.
 
 ### Browser build
 

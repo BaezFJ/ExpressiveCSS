@@ -1,6 +1,6 @@
 ---
 name: expressivecss-theming
-description: Themes ExpressiveCSS color roles, brand seeds, typography, icon styling, shape, motion, elevation, state layers, vibrant regions, and light/dark schemes. Use for visual tokens and brand changes. Not for markup repair, setup, or JavaScript lifecycle work, and never a substitute for the selected component contract.
+description: "Themes ExpressiveCSS color roles, brand seeds, typography, icon styling, shape, motion, elevation, state layers, vibrant regions, and light/dark schemes. Use for visual tokens and brand changes. Not for markup repair, setup, or JavaScript lifecycle work, and never a substitute for the selected component contract."
 ---
 
 # ExpressiveCSS themes and colors
@@ -45,6 +45,7 @@ Read only the reference for the token family you are changing:
 - Read the [shape reference](./references/shape.md) before changing component corners or state shape.
 - Read the [motion reference](./references/motion.md) before changing component timing, spatial or effects motion, or reduced-motion behavior.
 - Read the [state-layers reference](./references/state-layers.md) before changing hover, focus, pressed, or dragged opacity tokens or per-component overrides.
+- Read the [glass reference](./references/glass.md) before enabling translucent floating surfaces. The elevation reference also owns stacking tokens.
 
 ## Verification
 

@@ -1,6 +1,6 @@
 ---
 name: expressivecss-design
-description: Designs, refines, redesigns, critiques, and audits ExpressiveCSS interfaces and responsive flows. Use for a new surface or flow, a redesign, visual refinement, responsive adaptation, Material 3 Expressive conformance, or a pre-release review. Not for setup-only, token-only, or narrow lifecycle repairs, or a narrow markup or API change that needs no surface decision.
+description: "Designs, refines, redesigns, critiques, and audits ExpressiveCSS interfaces and responsive flows. Use for a new surface or flow, a redesign, visual refinement, responsive adaptation, Material 3 Expressive conformance, or a pre-release review. Not for setup-only, token-only, or narrow lifecycle repairs, or a narrow markup or API change that needs no surface decision."
 ---
 
 # ExpressiveCSS design and review

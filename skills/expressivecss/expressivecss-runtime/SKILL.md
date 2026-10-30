@@ -1,6 +1,6 @@
 ---
 name: expressivecss-runtime
-description: Initializes and destroys ExpressiveCSS JavaScript components, handles dynamic content, repairs remounts and teardown, and inspects interaction performance. Use for Auto Init, manual or shared runtime work, and JavaScript-backed audits. Not for CSS-only audits, static markup without JavaScript behavior, or token changes; a critique needs it only when interaction evidence is in scope.
+description: "Initializes and destroys ExpressiveCSS JavaScript components, handles dynamic content, repairs remounts and teardown, and inspects interaction performance. Use for Auto Init, manual or shared runtime work, and JavaScript-backed audits. Not for CSS-only audits, static markup without JavaScript behavior, or token changes; a critique needs it only when interaction evidence is in scope."
 ---
 
 # ExpressiveCSS JavaScript runtime
@@ -67,6 +67,12 @@ Destroy route-owned instances before replacing their HTML, removing their elemen
 - Snackbar, CharacterCounter, and Slider use their documented explicit or shared paths instead of the Auto Init registry.
 - When working in the framework repository, `src/ts/components/registry.ts` is the registry's source of truth. Do not copy a selector table from a prompt.
 - Generated overlays must stay in the originating document or shadow root.
+
+### Shared behaviors and secondary components
+
+Use the [API index](../references/api-index.md) to find each exported name and its owning guide. The [behavior contracts](../references/behavior-contracts.md) bundle clipboard controls (`Copy`), theme controls (`Theme`), resizing panes (`PaneResize`), expanding cards (`ExpandingCard`) and scripted confirmation (`Dialogs.confirm`). Read only the relevant section.
+
+Static panes are CSS-only; resizing panes use a shared behavior. Static icon buttons need no script; copy buttons use `Copy`. These variants need Runtime even when the component's default decision row says CSS-only. The root bundle installs shared behaviors; `@expressivecss/expressive/modular` installs none, so call each selected behavior's `Init()` as documented. `AutoInit()` handles registry components, not all shared behaviors. Destroy per-element expanding-card instances when their view goes away.
 
 ### Rules
 

@@ -9,11 +9,13 @@ Component ID: `menu`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
+Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/menus/overview)
+
+Public JavaScript exports: `Menu`. See the [API index](../references/api-index.md).
 
 #### Material mapping
 
@@ -81,6 +83,30 @@ A `<menu>` is the surface. Each `<li>` is an item. An icon leads its label by de
 | `onCloseStart` | Function | `null` | Called when the menu starts closing. |
 | `onCloseEnd` | Function | `null` | Called when closing completes; reopening and destruction cancel it. |
 | `onItemClick` | Function | `null` | Called when an item is clicked. Receives the `li`. |
+
+#### Option details
+
+##### Examples
+
+These two menus set `constrainWidth: false` so the list can be wider than the button, and use `alignment` to pick an edge.
+
+```js
+Expressive.Menu.init(document.querySelector('#left'), {
+  alignment: 'left',
+  constrainWidth: false,
+  coverTrigger: false
+});
+```
+
+Hover is off by default. Pass `hover: true` to open on mouse enter instead of click.
+
+```js
+Expressive.Menu.init(document.querySelector('#hover'), {
+  hover: true,
+  constrainWidth: false,
+  coverTrigger: false
+});
+```
 
 #### Methods
 

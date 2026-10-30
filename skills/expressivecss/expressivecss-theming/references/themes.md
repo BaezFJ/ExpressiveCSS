@@ -22,7 +22,9 @@ Apply the public `theme` attribute to the document root, or to a custom-element 
 | `theme="light"` | locks the light role values |
 | `theme="dark"` | locks the dark role values |
 
-There is no `Expressive.theme` JavaScript API. Change the attribute directly.
+There is no `Expressive.theme` JavaScript API. The exported helper is `Theme`, with a capital T. Use `data-theme-set="light|dark|auto"` controls or `Theme.set(value)` to apply and save a choice and update each control's `aria-pressed` or `aria-checked`. `Theme.get()` reads the current choice; call `Theme.sync(root)` after rendering new controls. The root bundle starts it; modular consumers call `Theme.Init()`. Read the [theme behavior contract](../../references/behavior-contracts.md#changing-the-theme) for the markup and initialization details.
+
+For an application-owned switch, change the attribute directly:
 
 ```js
 const root = document.documentElement;
@@ -30,7 +32,7 @@ root.setAttribute('theme', 'dark');
 root.removeAttribute('theme'); // return to OS-following mode
 ```
 
-For a persisted preference, validate the stored value, apply it before first paint, then update the attribute and storage from the control. Treat `auto` as a real saved choice; do not translate it to the current light/dark result.
+For a persisted preference, validate the stored value and apply it before first paint. `Theme` saves choices under `theme` but does not restore them during initialization; retain this head script even when using the helper. Treat `auto` as a real saved choice; do not translate it to the current light/dark result.
 
 ```html
 <script>

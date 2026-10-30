@@ -9,11 +9,13 @@ Component ID: `snackbar`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
+Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
 
 #### Selection and adaptation
 
 Runtime ownership: `shared-runtime`. [Google guidance](https://m3.material.io/components/snackbar/overview)
+
+Public JavaScript exports: `Snackbar`. See the [API index](../references/api-index.md).
 
 Example: A successful save can use a snackbar. Offline status that still allows editing needs a persistent inline message; a required irreversible-delete confirmation needs a dialog before the action.
 
@@ -80,6 +82,12 @@ new Expressive.Snackbar({
 | `activationPercent` | Number | `0.8` | Fraction of the snackbar’s width a drag must travel to dismiss it. |
 | `root` | Element | `null` | Any element in the tree the snackbar should render into. Pass one when the page lives in a shadow root, so the container is appended there rather than to `document.body`. |
 | `replace` | Boolean | `false` | Show at once, cutting the snackbar on screen short, instead of waiting behind it. Copy buttons use this so a second copy answers right away. |
+
+#### Option details
+
+You can customize each snackbar with these options.
+
+One snackbar shows at a time. A new one waits until the one on screen is dismissed, then shows, so updates appear in order. A queued snackbar captures focus and fires `expressive:open` when it appears; one dismissed while still waiting runs `completeCallback` and never shows. A snackbar built from `snackbarId` takes its element when it shows, so its `el` is unset while it waits.
 
 #### Methods
 

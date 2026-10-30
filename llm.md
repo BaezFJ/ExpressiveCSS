@@ -2826,6 +2826,8 @@ An `<aside>` expands in normal flow below the persistent media, headline, and su
 
 An expanding card performs a shared-container transition from a compact feed item into a full-screen modal detail surface. Use an `<article class="expanding-card">` with a direct `<dialog class="expanding-card-dialog">`. Keep the same hero image in both states so the media appears to grow with the container. `ExpandingCard.Init()` and `AutoInit()` wire up the modal, measured clip origin, back action, focus return, Escape, and reduced motion.
 
+`ExpandingCard.init(article, options)` creates a per-element instance; `ExpandingCard.getInstance(article)` retrieves it. The `onOpen` and `onClose` options default to `null` and receive the card element. `onOpen` runs after the dialog opens and focus moves to the back button; `onClose` runs when closing starts. The card fires `expressive:open` and `expressive:close` after their callbacks while that state still holds. Use `instance.open()`, `instance.close()` and `instance.destroy()` to control the card and clean up before removing it; `instance.isOpen` reports its state.
+
 The container morph and the hero run on the slow spatial spring (`--md-comp-expanding-card-motion-duration` and `-motion-easing`), the close button and detail content on the default spatial spring (`-content-duration`, `-content-easing`), and their fade on the fast effects spring (`-fade-duration`, `-fade-easing`), so `motion="expressive"` reaches all three. Override a duration together with its easing. `--md-comp-expanding-card-motion-duration` controls the container transition. Close cleanup follows the actual clip transition, including cancellation, and runs immediately with zero duration or reduced motion. Reopening or destroying the instance invalidates pending cleanup. `onClose` runs when closing starts.
 
 Detail content starts after `--md-comp-expanding-card-content-delay`, declared on `article.expanding-card` and backed by `--md-sys-motion-duration-short4`, which defaults to 200ms. Override the system token on the page or the component property on the article. `0ms` removes the delay. Reduced motion disables the transitions even with a nonzero delay override.
@@ -7910,7 +7912,7 @@ Select a date, a range, or several dates from a calendar.
 
 Add `date-picker` to a text input. `AutoInit()` starts every `.date-picker` except those marked `no-autoinit`.
 
-The calendar is inline, not a modal. `open()` and `close()` are not provided. With the default options the calendar is hidden (`openByDefault: false`) and clicking the input does not reveal it. Pass `openByDefault: true` to show the calendar under the field.
+The calendar defaults to an inline view, hidden with `openByDefault: false`; clicking the input alone does not reveal it. Pass `openByDefault: true` for a visible inline calendar, or choose `displayPlugin: 'docked'` or `'modal'` for a popup. The picker instance provides no `open()` or `close()` methods.
 
 ```html
 <div class="field">
@@ -8177,7 +8179,7 @@ Pick a time from a clock face, in 12-hour or 24-hour form.
 
 Add `time-picker` to a text input. `AutoInit()` starts every `.time-picker` except those marked `no-autoinit`.
 
-The clock is inline, not a modal. It is appended to the input’s parent and stays visible. There is no `openByDefault` flag. `open()` and `close()` are not provided.
+The clock defaults to a visible inline view appended to the input's parent. Use `displayPlugin: 'docked'` for a popover or `'modal'` for a dialog. There is no `openByDefault` flag, and the picker instance provides no `open()` or `close()` methods.
 
 ```html
 <div class="field">
@@ -8193,7 +8195,7 @@ Click a hour on the dial, then a minute. With the default `autoSubmit: true`, fi
 Digital edits use native input events, including paste. Invalid edits restore
 the last valid value on blur. Empty fields use the current hour, minute or second without
 changing the selected AM/PM period. Twelve-hour initialization converts 24-hour
-strings and accepts either case for AM/PM. No modal or dial-keyboard API is added.
+strings and accepts either case for AM/PM. The dial takes pointer input; use the digital fields for keyboard entry. The optional display plugins control popup presentation.
 
 Clicking the host input or pressing Enter reloads its current value into the
 clock. Changing the active clock field or editing its value cancels an older

@@ -30,10 +30,10 @@ const S = defineSections([
           <code>.date-picker</code> except those marked <code>no-autoinit</code>.
         </p>
         <p>
-          Pass <code>openByDefault: true</code> to show the calendar under the
-          field. The calendar is inline, not a modal. With the default options
-          it is hidden (<code>openByDefault: false</code>), and clicking the
-          input does not reveal it.
+          The calendar defaults to an inline view, hidden with
+          <code>openByDefault: false</code>; clicking the input alone does not reveal it.
+          Use <code>openByDefault: true</code> for a visible inline calendar, or
+          <code>displayPlugin: 'docked'</code> or <code>'modal'</code> for a popup.
         </p>
         <div class="field">
           <input type="text" class="date-picker" id="datepicker-intro" data-datepicker-options='{"openByDefault": true}'>
