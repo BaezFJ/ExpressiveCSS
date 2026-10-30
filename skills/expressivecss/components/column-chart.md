@@ -9,11 +9,13 @@ Component ID: `column-chart`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
+Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
+
+Public JavaScript exports: `ColumnChart`. See the [API index](../references/api-index.md).
 
 Example: Signups per plan for each month of a half year is a grouped column chart. The same plans over three years of weekly data is a line chart.
 
@@ -29,7 +31,7 @@ Support (2026-10-07, `llm.md#column-chart`): Columns drawn from zero from a figu
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There is no y axis labelling and no range (low to high) column; horizontal bars are the bar chart.
+Known boundary: Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. The axis modifier provides round value labels and range draws low-to-high columns; horizontal bars use the bar chart.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#column-chart).
 

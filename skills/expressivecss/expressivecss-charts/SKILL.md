@@ -1,6 +1,6 @@
 ---
 name: expressivecss-charts
-description: Builds accessible ExpressiveCSS charts from data tables, including line, area, column, bar, pie, donut, heatmap, radar, radial, gauge, mixed and sparkline charts, chart cards and KPI tiles. Use whenever a page with ExpressiveCSS needs a chart, graph, plot, sparkline or metric tile. Not for projects without ExpressiveCSS or plots that need labelled axes, scatter points, log scales or zoom.
+description: "Builds ExpressiveCSS charts from data tables. Use for chart choice, labeled axes, scatter/bubble plots, sparklines and KPI cards. Not for unrelated projects, logarithmic scales, zoom or thousands of points."
 ---
 
 # ExpressiveCSS charts
@@ -24,11 +24,11 @@ Copy this checklist and tick it off:
 
 Read [Usage](../expressivecss-usage/SKILL.md) for page layout and [Theming](../expressivecss-theming/SKILL.md) before changing brand colors. Read the generated guide in [components](../components/) for each chart class you use; it holds the contract and rule IDs. For a full dashboard or reporting page, also read the [dashboard guide](../expressivecss-dashboard/SKILL.md), which adds the shell, scope controls, card system and loading states.
 
-When a plot needs axes with tick labels, scatter plots, logarithmic scales, zooming or thousands of points, tell the user a plotting library fits instead of forcing the data into an ExpressiveCSS chart.
+Reuse the root version resolution, or run its resolver if this guide was loaded directly. Use a plotting library when a plot needs logarithmic scales, zooming or thousands of points. ExpressiveCSS supports labeled axes and scatter/bubble plots.
 
 ## Pick the chart from the question
 
-Ask what the reader should conclude, then pick the class. All eight take the same table, so switching later costs one class name.
+Ask what the reader should conclude, then pick the class. All twelve read a table, but scatter and Sankey use different columns. Read the selected guide before changing chart types.
 
 | The reader should see | Class | Useful modifiers |
 | --- | --- | --- |
@@ -40,6 +40,12 @@ Ask what the reader should conclude, then pick the class. All eight take the sam
 | Several measures on one scale, compared between series | `radar-chart` | `area`, `points`, `sparkline`; `dashed` on a header |
 | Progress toward a goal | `radial-chart` | `gauge`, `sparkline`; `data-max`, `<tfoot>` total |
 | Different units together, such as revenue and margin | `mixed-chart` | `column`, `area`, `dashed`, `end` on headers |
+| A relationship between numeric measures | `scatter-chart` | `axis`, `toggle`, `bubble`; a shared x column before the y series |
+| Flows between named sources and targets | `sankey-chart` | Source, target and positive value columns |
+| Values through ordered stages | `funnel-chart` | The first value column draws stage widths; extra columns appear in the tooltip |
+| Many positive parts of a whole | `treemap-chart` | The first value column determines rectangle area |
+
+Add `axis` for round value labels on line, column, bar and mixed charts, or labels on both scales of a scatter chart. Add `toggle` to a supported chart's legend to let readers hide series. These modifiers do not apply to every chart; use its guide.
 
 Choices that look reasonable and read badly:
 
@@ -58,7 +64,9 @@ For a single key figure with a trend chip and a sparkline, read the [KPI](../com
 - Give `mixed-chart` a second scale (`end`) only for a related measure in another unit, and name both units.
 - Compute the stat beside a chart from the same numbers as its table.
 
-## The shared table contract
+## The table contract
+
+The category-and-series table below fits line, column, bar, pie, heatmap, radar, radial, mixed, funnel and treemap charts. A [scatter chart](../components/scatter-chart.md) adds a numeric x column before its y series; `bubble` uses the final column for size. A [Sankey chart](../components/sankey-chart.md) uses source, target and value columns. Their guides own those formats.
 
 ```html
 <figure class="column-chart">
@@ -81,8 +89,8 @@ For a single key figure with a trend chip and a sparkline, read the [KPI](../com
 - A cell's number is its text without currency signs, percent signs or grouping commas. `$4,400`, `18%` and `5,500` all parse.
 - Anything else is a gap: `4.4k`, `(1,200)`, `900K`, `4.400 €`. Put the number in `data-value` and keep the friendly text, which the tooltip shows as written: `<td data-value="900000">900K</td>`.
 - An empty cell is a gap too. Line charts break there; grouped columns leave the slot empty.
-- `data-min` and `data-max` on the figure fix the value scale. Use them for percentages (`data-max="100"`), budgets and meters, and comparable charts.
-- Charts have no y axis labels. Put the unit in the caption or a header: "Revenue ($K)", not "Revenue".
+- Where the chart supports a value scale, `data-min` and `data-max` fix its ends. Scatter also takes `data-x-min` and `data-x-max`. Funnel, Sankey and treemap do not use these range controls.
+- Use `axis` when numeric tick labels help. Put the units in the caption or headers as well, such as "Revenue ($K)".
 
 Two semantic rules apply to every chart: the figure holds a table of the data, and the figure has a `<figcaption>`. The caption also names the focusable plot. When a card heading or stat already names the chart, keep the caption and hide it with `class="visually-hidden"`. Removing it leaves the plot unnamed.
 
@@ -104,7 +112,7 @@ Size with tokens, inline or in your stylesheet. Each chart exposes `--md-comp-<c
 <figure class="line-chart area" style="--md-comp-line-chart-height: 120px; --md-comp-line-chart-line-width: 2px; --md-comp-line-chart-grid-color: transparent">
 ```
 
-`sparkline` makes a 48px chart with no grid, labels, legend or tooltip, and takes it out of the tab order. Put one beside a stat with `flex-1` so it fills the rest of the tile. The table still carries the data, so the caption still matters.
+Where supported, `sparkline` makes a 48px chart with no grid, labels, legend or tooltip, and takes it out of the tab order. Scatter, funnel, Sankey and treemap do not support it. Put a supported sparkline beside a stat with `flex-1`. The table still carries the data, so the caption still matters.
 
 Recolor through tokens. To tie a chart to a role, set the series token to a system color: `--md-comp-column-chart-color-1: var(--md-sys-color-tertiary)`. System colors keep light and dark switching and contrast intact; a hard-coded hex value breaks dark mode. For brand-wide changes, change the theme seed in Theming and every chart follows.
 
@@ -116,15 +124,17 @@ Read [recipes](./references/recipes.md) when you build one of its patterns: a pa
 
 Every chart except a sparkline is one Tab stop with a pointer and keyboard tooltip that is a polite live region. Do not add ARIA, `tabindex` or event handlers for it.
 
-To change data, edit the table and call the chart's `init` again:
+To change data, edit the table and call the existing instance's `update()`:
 
 ```js
 const figure = document.querySelector('#revenue .line-chart');
 figure.querySelector('tbody').replaceChildren(...newRows);
-Expressive.LineChart.init(figure);
+Expressive.LineChart.getInstance(figure).update();
 ```
 
-The classes are `LineChart`, `ColumnChart`, `BarChart`, `PieChart`, `HeatmapChart`, `RadarChart`, `RadialChart` and `MixedChart`. Each instance has `show(index)` (`-1` hides the tooltip) and `destroy()`, which removes the drawing and shows the table. Charts added after page load need `init` or another `AutoInit()` call. With the ES module build, import the class: `import { AutoInit, LineChart } from '@expressivecss/expressive'`.
+The classes are `LineChart`, `ColumnChart`, `BarChart`, `PieChart`, `HeatmapChart`, `RadarChart`, `RadialChart`, `MixedChart`, `ScatterChart`, `FunnelChart`, `SankeyChart` and `TreemapChart`. Each instance has `update()`, `show(index)` and `destroy()`. `show(-1)` hides the tooltip; the index meaning follows the selected chart. `destroy()` removes the drawing and shows the table. New hosts need `init` or a scoped `AutoInit()` call. With ES modules, import the selected class from `@expressivecss/expressive`.
+
+Set `data-watch` on the figure before initialization, or pass `{ watch: true }`, to update automatically when its table changes. Changes to the figure's range, classes or caption still need `update()`. In-place updates preserve keyboard focus, highlighted data and hidden legend series where applicable. Reinitialization replaces the instance and resets that state.
 
 A period switch is a `button-group connected` with `data-selection="single"`. On click, swap the rows, update the stat text and redraw; recipe 2 has the code.
 
@@ -139,6 +149,8 @@ A period switch is a `button-group connected` with `data-selection="single"`. On
 - Radial: each row of the first value column is a ring filled as a share of `data-max` (default 100). `gauge` draws a half circle. A `<tfoot>` row shows in the middle.
 - Mixed: header classes choose the kind: `column`, `area`, or a line, with `dashed` available. `end` puts a series on a second scale, fixed with `data-end-min` and `data-end-max`. `stacked` is not supported.
 
+For the other table formats, read [scatter/bubble](../components/scatter-chart.md), [funnel](../components/funnel-chart.md), [Sankey](../components/sankey-chart.md) or [treemap](../components/treemap-chart.md). Keep flow values and area values positive. A funnel preserves row order; a treemap arranges rectangles by size.
+
 Read the chart's section in the target version's [API reference](https://www.expressivecss.com/llm.md) before using an option not listed here.
 
 ## Before you finish
@@ -147,10 +159,10 @@ Check every chart you touched against this list, fix what fails, and check again
 
 1. Every figure has a `<figcaption>` (visible or `.visually-hidden`) and a `<table>` with a `<thead>`.
 2. Every non-plain number (`900K`, `4.4k`, `1.234,5`) has a `data-value`. A chart full of gaps is the most common silent failure.
-3. Units appear in the caption, a header or the stat, since no chart has a y axis.
+3. Units appear in the caption or headers, and `axis` labels appear where useful and supported.
 4. Stacked charts have only positive values.
 5. Scales follow "Show the data honestly", and invented data is labelled as sample data.
-6. The page calls `Expressive.AutoInit()` after the script loads, and code that rewrites a table calls `init` again.
+6. Initialize each new chart host once. Code that rewrites a table calls `update()` or uses `data-watch`.
 7. Colors come from tokens or `var(--md-sys-color-*)`, so dark mode still works.
 8. Stats and charts inside cards sit in a padded wrapper, not directly in the `<article>`.
 9. Run the root skill's [static checks](../SKILL.md#optional-mcp-acceleration) on touched markup.

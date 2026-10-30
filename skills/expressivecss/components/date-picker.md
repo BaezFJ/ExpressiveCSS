@@ -9,13 +9,15 @@ Component ID: `date-picker`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
+Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/date-pickers/overview)
 
-Example: A single date with no calendar-specific requirements can use a labeled native date input. Do not choose this picker expecting a popup: its calendar is inline and requires the documented visibility option.
+Public JavaScript exports: `Datepicker`. See the [API index](../references/api-index.md).
+
+Example: A single date with no calendar-specific requirements can use a labeled native date input. Datepicker defaults to an inline calendar controlled by openByDefault; choose displayPlugin: 'docked' or 'modal' for a popup.
 
 #### Material mapping
 
@@ -33,8 +35,6 @@ Support (2026-09-17, `llm.md#date-picker`): Inline single-date, range, and multi
 
 Web adaptation: Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.
 
-Known boundary: Modal picker parity is not provided by the documented inline API.
-
 Known boundary: Calendar keyboard navigation and range/multiple selection lifecycle have browser coverage. Spoken calendar context, native zoom and physical devices remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#date-picker).
@@ -43,7 +43,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Add `date-picker` to a text input. `AutoInit()` starts every `.date-picker` except those marked `no-autoinit`.
 
-The calendar is inline, not a modal. `open()` and `close()` are not provided. With the default options the calendar is hidden (`openByDefault: false`) and clicking the input does not reveal it. Pass `openByDefault: true` to show the calendar under the field.
+The calendar defaults to an inline view, hidden with `openByDefault: false`; clicking the input alone does not reveal it. Pass `openByDefault: true` for a visible inline calendar, or choose `displayPlugin: 'docked'` or `'modal'` for a popup. The picker instance provides no `open()` or `close()` methods.
 
 #### Syntax
 
@@ -92,6 +92,23 @@ The calendar is inline, not a modal. `open()` and `close()` are not provided. Wi
 | `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover, paired with `openByDefault: true`, or `'modal'` for a dialog with Cancel and Ok. |
 | `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. The modal plugin takes none. |
 
+#### Internationalization
+
+Pass a partial `i18n` object. Missing keys keep the English defaults.
+
+| Key | Default |
+| --- | --- |
+| `cancel` | `'Cancel'` |
+| `clear` | `'Clear'` |
+| `done` | `'Ok'` |
+| `previousMonth` | `'Previous month'` |
+| `nextMonth` | `'Next month'` |
+| `months` | `['January', …, 'December']` |
+| `monthsShort` | `['Jan', …, 'Dec']` |
+| `weekdays` | `['Sunday', …, 'Saturday']` |
+| `weekdaysShort` | `['Sun', …, 'Sat']` |
+| `weekdaysAbbrev` | `['S', 'M', 'T', 'W', 'T', 'F', 'S']` |
+
 #### Methods
 
 - `.toString()`: String form of the selected date, using `format`. You can pass another date and format.
@@ -102,7 +119,7 @@ The calendar is inline, not a modal. `open()` and `close()` are not provided. Wi
 
 #### Also documented
 
-The Date Picker section of the [API reference](https://www.expressivecss.com/llm.md) also covers Initialization, Display, Date format options, Internationalization, Calendar keyboard navigation, Date range, Multiple dates, Properties.
+The Date Picker section of the [API reference](https://www.expressivecss.com/llm.md) also covers Initialization, Display, Date format options, Calendar keyboard navigation, Date range, Multiple dates, Properties.
 
 #### Rules
 

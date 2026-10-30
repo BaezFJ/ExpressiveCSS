@@ -9,11 +9,13 @@ Component ID: `hover-card`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
+Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
+
+Public JavaScript exports: `HoverCard`. See the [API index](../references/api-index.md).
 
 Example: An author name in an article previews the author's profile in a hover card; an icon button's label is a tooltip, and a note people open on press is a popover.
 
@@ -59,6 +61,16 @@ A tap or click follows the link and shows no card, so the linked page has to hol
 | `enterDelay` | Number | `500` | How long the pointer or keyboard focus rests on the link before the card shows, in milliseconds. |
 | `exitDelay` | Number | `300` | How long the card stays after the pointer and focus leave the link and the card, in milliseconds. |
 
+#### Option details
+
+Constructor and `init` options. `data-hover-card-options` sets them from the markup.
+
+#### Events
+
+`expressive:open` and `expressive:close` fire from the link when the card shows and hides, also when the browser hides it on Escape or a click elsewhere.
+
+---
+
 #### Methods
 
 - `.open()`: Shows the card now, without `enterDelay`.
@@ -67,7 +79,7 @@ A tap or click follows the link and shows no card, so the linked page has to hol
 
 #### Also documented
 
-The Hover card section of the [API reference](https://www.expressivecss.com/llm.md) also covers Accessibility, Events.
+The Hover card section of the [API reference](https://www.expressivecss.com/llm.md) also covers Accessibility.
 
 #### Rules
 

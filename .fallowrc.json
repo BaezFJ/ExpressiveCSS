@@ -47,7 +47,8 @@
     "@fontsource-variable/material-symbols-rounded",
     "@fontsource-variable/material-symbols-sharp",
     "@fontsource/noto-sans",
-    "@fontsource/roboto"
+    "@fontsource/roboto",
+    "yaml"
   ],
   "ignoreExports": [
     {

@@ -9,11 +9,13 @@ Component ID: `pull-to-refresh`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
+Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
+
+Public JavaScript exports: `PullToRefresh`. See the [API index](../references/api-index.md).
 
 Example: An inbox that fetches new mail on demand takes pull-to-refresh with a Refresh button; a live chat that receives messages on its own needs a message scroller instead.
 

@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { expect } from '@playwright/test';
 import { engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
@@ -60,7 +61,7 @@ for (const [name, engine, test] of engines) {
 
       await page.setInputFiles('#files', [{ name: 'report.pdf', mimeType: 'application/pdf', buffer: Buffer.alloc(10) }]);
       await page.evaluate(() => document.getElementById('upload').reset());
-      assert.equal(await page.locator('#list > li').count(), 0, 'resetting the form empties the list');
+      await expect(page.locator('#list > li'), 'resetting the form empties the list').toHaveCount(0);
 
       await page.keyboard.press('Tab');
       assert.equal(await page.evaluate(() => document.activeElement.id), 'files', 'the input takes keyboard focus');

@@ -1,8 +1,7 @@
 ---
 name: expressivecss-migration
-description: Migrates a project to the current ExpressiveCSS release from Materialize CSS or an older @expressivecss/expressive 0.x release, and removes the names that 0.16.0 drops. Use when upgrading ExpressiveCSS, replacing Materialize (`M.AutoInit`, `.btn`, `.modal`, `.input-field`, `.sidenav`) with ExpressiveCSS, or clearing the aliases that 0.16.0 removed. Not for new ExpressiveCSS work or projects that already use current names.
+description: "Migrates Materialize CSS or older @expressivecss/expressive projects to current naming and APIs. Use for upgrades or replacing aliases removed in 0.16.0; not for new interfaces or projects already using current contracts."
 license: MIT
-compatibility: Works on its own. The sibling expressivecss skill holds each component's full contract.
 metadata:
   author: BaezFJ
   version: "0.1.0"
@@ -34,7 +33,7 @@ Copy this checklist and tick it off:
 - [ ] 8. Verify
 ```
 
-Work through the steps in order, on a branch, so each step is one reviewable diff. After each step, run its search and fix every hit before moving on.
+Use Step 1 to select the applicable steps, then work in dependency order within the project's branch workflow. Run each applicable search and inspect its hits before changing them; exclude generated or vendored copies that their owners regenerate.
 
 ---
 

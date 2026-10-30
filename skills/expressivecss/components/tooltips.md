@@ -9,11 +9,13 @@ Component ID: `tooltips`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
+Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/tooltips/overview)
+
+Public JavaScript exports: `Tooltip`. See the [API index](../references/api-index.md).
 
 #### Material mapping
 
@@ -70,6 +72,10 @@ Inside a `<button>` the bubble has to be a `<span>` — a `<div>` is not phrasin
 | `position` | String | `'bottom'` | Direction: `'top'`, `'right'`, `'bottom'`, or `'left'`. Set by `data-position`. The CSS-only default is above. |
 | `transitionMovement` | Number | `10` | How far the tooltip moves during its transition, in pixels. An anchored tooltip does not move and adds this to the gap. |
 | `openOnClick` | Boolean | `false` | Open on a click instead of hover and focus, at once, without `enterDelay`. A second click, Escape, a click elsewhere or focus moving to another element closes it at once; a click inside the tooltip does not. Keyboard users open it with Enter or Space, so the trigger should be a `<button>`. |
+
+#### Option details
+
+Constructor and `init` options. `data-tooltip`, `data-position`, and `data-tooltip-id` are read from the element and override these defaults. Attributes are read again each time the tooltip opens, so changing them later takes effect on the next show.
 
 #### Methods
 

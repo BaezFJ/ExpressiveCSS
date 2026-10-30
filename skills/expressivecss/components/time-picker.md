@@ -9,13 +9,15 @@ Component ID: `time-picker`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
+Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/time-pickers/overview)
 
-Example: An appointment time can use a labeled native time input when platform entry is enough. Do not choose this picker expecting a popup: its clock stays inline.
+Public JavaScript exports: `Timepicker`. See the [API index](../references/api-index.md).
+
+Example: An appointment time can use a labeled native time input when platform entry is enough. Timepicker defaults to a visible inline clock; choose displayPlugin: 'docked' or 'modal' for a popup.
 
 #### Material mapping
 
@@ -33,8 +35,6 @@ Support (2026-09-18, `llm.md#time-picker`): Inline clock and digital input; 12-h
 
 Web adaptation: Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.
 
-Known boundary: Modal picker parity is not provided by the documented inline API.
-
 Known boundary: Named digital inputs as spin buttons, AM/PM state, input-event synchronization and the modal dialog have browser coverage. The dial itself takes pointer input only.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#time-picker).
@@ -43,7 +43,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Add `time-picker` to a text input. `AutoInit()` starts every `.time-picker` except those marked `no-autoinit`.
 
-The clock is inline, not a modal. It is appended to the input’s parent and stays visible. There is no `openByDefault` flag. `open()` and `close()` are not provided.
+The clock defaults to a visible inline view appended to the input's parent. Use `displayPlugin: 'docked'` for a popover or `'modal'` for a dialog. There is no `openByDefault` flag, and the picker instance provides no `open()` or `close()` methods.
 
 #### Syntax
 
@@ -77,6 +77,18 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 | `displayPlugin` | String | `null` | Set to `'docked'` for a click-to-open popover, or `'modal'` for a dialog with Cancel and Ok. |
 | `displayPluginOptions` | Object | `null` | Options for the docked plugin: `margin`, `transition`, `duration`, `align`. The modal plugin takes none. |
 
+#### Internationalization
+
+Pass a partial `i18n` object. Missing keys keep the English defaults.
+
+| Key | Default |
+| --- | --- |
+| `cancel` | `'Cancel'` |
+| `clear` | `'Clear'` |
+| `done` | `'Ok'` |
+
+`i18n.hours`, `i18n.minutes` and `i18n.seconds` default to `Hours`, `Minutes` and `Seconds` and provide accessible input names. AM/PM buttons expose their selected state and support Enter and Space. The hour, minute and second fields are spin buttons: Up and Down step them by one and Page Up and Page Down by five, wrapping round, and the hand follows the hour and minute. Hours step round the day, so in 12-hour time passing 12 switches AM and PM: up from 11 AM comes 12 PM. Tab moves between controls. The dial itself takes pointer input only: the spin buttons already set the same values from the keyboard and to a screen reader, so a focusable dial would only add a second Tab stop for them.
+
 #### Methods
 
 - `.showView()`: Show the hours or minutes face.
@@ -87,7 +99,7 @@ The clock is inline, not a modal. It is appended to the input’s parent and sta
 
 #### Also documented
 
-The Time Picker section of the [API reference](https://www.expressivecss.com/llm.md) also covers Initialization, Display, Internationalization, 12-hour and 24-hour, Seconds, Time range, Properties.
+The Time Picker section of the [API reference](https://www.expressivecss.com/llm.md) also covers Initialization, Display, 12-hour and 24-hour, Seconds, Time range, Properties.
 
 #### Rules
 

@@ -9,13 +9,15 @@ Component ID: `panes`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
+Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/foundations/layout/canonical-examples/overview)
 
-Example: A contact directory with no detail view needs a list. Use list-detail panes when selecting a contact reveals a separate detail region.
+Public JavaScript exports: `PaneResize`. See the [API index](../references/api-index.md).
+
+Example: A contact directory with no detail view needs a list. Use list-detail panes when selecting a contact reveals a separate detail region. Static panes need no JavaScript; resizing uses PaneResize and the Runtime guide.
 
 - medium container: variant. Stack or collapse panes when their container cannot preserve useful pane widths.
 
@@ -68,9 +70,13 @@ Any of `pane`, `list-pane`, `primary-pane`, `detail-pane`, and `supporting-pane`
 </div>
 ```
 
+#### Related contracts
+
+[Resizing](../references/behavior-contracts.md#resizing)
+
 #### Also documented
 
-The Panes section of the [API reference](https://www.expressivecss.com/llm.md) also covers List-detail, Compact, Supporting pane, Equal, Three-pane, Resizing, Appearance, Pane anatomy, Tokens.
+The Panes section of the [API reference](https://www.expressivecss.com/llm.md) also covers List-detail, Compact, Supporting pane, Equal, Three-pane, Appearance, Pane anatomy, Tokens.
 
 #### Rules
 

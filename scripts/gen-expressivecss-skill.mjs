@@ -70,6 +70,45 @@ const TOOL_COPIES = [
 // Copy-ready pages from the docs site, bundled so the Install and Design guides work offline.
 const TEMPLATES = ['starter', 'layout-compact', 'layout-rail', 'layout-expanded', 'layout-list-detail', 'layout-dashboard'];
 
+// Secondary contracts omitted by each component's first example.
+const BEHAVIOR_CONTRACTS = [
+  { name: 'Copy', heading: 'Copy button', level: 3 },
+  { name: 'Theme', heading: 'Changing the theme', level: 3 },
+  { name: 'PaneResize', heading: 'Resizing', level: 3 },
+  { name: 'ExpandingCard', heading: 'Expanding card', level: 3 },
+  { name: 'Dialogs', heading: 'Confirm from script', level: 3 },
+];
+const anchorFor = (heading) => heading.toLowerCase().replaceAll(' ', '-');
+
+function rebaseHeadings(markdown, offset) {
+  return markdown.split(/(```[\s\S]*?```)/u).map((part, index) => index % 2 ? part
+    : part.replace(/^(#{1,6}) /gmu, (_, hashes) => `${'#'.repeat(hashes.length + offset)} `)).join('');
+}
+
+function renderBehaviorContracts(llm) {
+  return `${GENERATED_MARKER}\n\n# Shared behaviors and secondary contracts\n\nRead only the section needed for the selected behavior. These contracts come from \`llm.md\`; reuse the resolved framework version and the Runtime guide's ownership rules. The root bundle starts shared document behaviors; the modular entry requires the explicit initialization shown below. ExpandingCard also has per-element instances to destroy.\n\n${BEHAVIOR_CONTRACTS.map(({ name, heading }) => `- [${name}](#${anchorFor(heading)})`).join('\n')}\n\n${BEHAVIOR_CONTRACTS.map(({ name, heading, level }) => `## ${heading}\n\nExport: \`${name}\`.\n\n${rebaseHeadings(sectionFor(llm, heading, level), 2 - level)}`).join('\n\n')}\n`;
+}
+
+function documentationUrl(page) {
+  return `https://www.expressivecss.com${page.route === '/' ? '/index.html' : page.route}.md`;
+}
+
+function renderApiIndex() {
+  const rows = PAGES.flatMap((page) => (page.exports ?? []).map((name) => {
+    const component = decisionComponentsByPage.get(page.id);
+    const behavior = BEHAVIOR_CONTRACTS.find((item) => item.name === name);
+    const guidance = [
+      ...(component ? [`[${component.title}](${component.guide})`] : []),
+      ...(behavior ? [`[${behavior.heading}](./behavior-contracts.md#${anchorFor(behavior.heading)})`] : []),
+    ];
+    if (!guidance.length) guidance.push('[Runtime](../expressivecss-runtime/SKILL.md)');
+    return `| \`${name}\` | ${guidance.join('; ')} | [${page.label}](${documentationUrl(page)}) |`;
+  }));
+  const styles = PAGES.flatMap((page) => (page.styles ?? []).map((style) =>
+    `| \`${style}\` | [${page.label}](${documentationUrl(page)}) |`));
+  return `${GENERATED_MARKER}\n\n# JavaScript and Sass reference index\n\nDerived from the documentation catalogue's \`exports\` and \`styles\` ownership. Use bundled contracts at the resolved version; public website links require matching version evidence.\n\nContents: [JavaScript exports](#javascript-exports), [Sass functions and mixins](#sass-functions-and-mixins), [Sass partials](#sass-partials).\n\n## JavaScript exports\n\nImport names from \`@expressivecss/expressive\`, or from \`@expressivecss/expressive/modular\` when the application owns shared initialization. \`AutoInit\` initializes registry descendants; \`version\` reports the framework version. Per-element components inherit \`init\`, \`getInstance\` and \`destroy\`; shared behaviors follow their own contracts.\n\n| Export | Bundled guidance | Full documentation |\n| --- | --- | --- |\n${rows.join('\n')}\n\n## Sass functions and mixins\n\nThe [Sass API](https://www.expressivecss.com/sass.html.md) documents package-importer setup, configuration and all shared functions and mixins. Use [Install](../expressivecss-install/SKILL.md#sass) for the public entry and selective builds. Prefer component markup before using lower-level component mixins.\n\n## Sass partials\n\nPaths are relative to \`src/sass\`, without the underscore or extension. The catalogue assigns every public component, utility, base and token partial to its owning guide.\n\n| Partial | Documentation |\n| --- | --- |\n${styles.join('\n')}\n`;
+}
+
 const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
 
 // Every generated file except the component guides, keyed by path.
@@ -84,6 +123,8 @@ async function generatedFiles(guides, provenance) {
   }
   files.set(DECISIONS_DESTINATION, renderDecisionIndex(decisionData));
   files.set(DESIGN_RULES_DESTINATION, renderDesignRules(await read(GUIDELINES_SOURCE)));
+  files.set('skills/expressivecss/references/behavior-contracts.md', renderBehaviorContracts(await read('llm.md')));
+  files.set('skills/expressivecss/references/api-index.md', renderApiIndex());
   const contract = json(await contractManifest(provenance));
   for (const destination of CONTRACT_DESTINATIONS) files.set(destination, contract);
   const roadmap = await buildCapabilityRoadmap(decisionData, ROOT);
@@ -222,13 +263,26 @@ function semanticRules(rows, names, excluded = []) {
 
 // Options table and method names from the component's llm.md section, so an agent
 // can initialize a JavaScript component without fetching the full documentation.
-function apiSummary(section, level = 2) {
+function optionSummary(options, level) {
   const parts = [];
-  // Subsections sit one level below the component heading; method names one level further.
-  const block = (title) => new RegExp(`\\n#{${level + 1}} ${title}\\n([\\s\\S]*?)(?=\\n#{1,${level + 1}} |$)`, 'u').exec(section)?.[1] ?? '';
-  const options = block('Options');
   const table = options.split('\n').filter((line) => line.startsWith('|'));
   if (table.length > 2) parts.push(`#### Options\n\n${table.join('\n')}`);
+  const details = table.length > 2 ? [
+    options.slice(0, options.indexOf(table[0])).trim(),
+    options.slice(options.lastIndexOf(table.at(-1)) + table.at(-1).length).trim(),
+  ].filter(Boolean).join('\n\n') : '';
+  if (table.length > 2 && details) parts.push(`#### Option details\n\n${rebaseHeadings(details, 3 - level)}`);
+  return parts;
+}
+
+function apiSummary(section, level = 2) {
+  // Subsections sit one level below the component heading; method names one level further.
+  const block = (title) => new RegExp(`\\n#{${level + 1}} ${title}\\n([\\s\\S]*?)(?=\\n#{1,${level + 1}} |$)`, 'u').exec(section)?.[1] ?? '';
+  const parts = optionSummary(block('Options'), level);
+  for (const title of ['Internationalization', 'Events']) {
+    const content = block(title).trim();
+    if (content) parts.push(`#### ${title}\n\n${rebaseHeadings(content, 3 - level)}`);
+  }
   const methods = block('Methods');
   const names = [...methods.matchAll(new RegExp(`^#{${level + 2}} (.+?);?\\n\\n([^\\n]+(?:\\n[^\\n]+)*)`, 'gmu'))]
     .map(([, name, description]) => `- \`${name.trim()}\`: ${description.trim().replaceAll('\n', ' ')}`);
@@ -248,6 +302,40 @@ function apiSummary(section, level = 2) {
 function sourcePagePath(page) {
   const routeSlug = page.route.replace(/^\//u, '').replace(/\.html$/u, '');
   return `https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/${routeSlug}.astro`;
+}
+
+function renderSelection(component, page) {
+  const adaptive = component.adaptive.map((item) => {
+    const target = item.component ? ` [${item.component}](./${item.component}.md)` : '';
+    return `- ${item.window} ${item.basis}: ${item.kind}${target}. ${item.reason}`;
+  }).join('\n');
+  const mapping = component.materialGuidance;
+  const material = mapping.href
+    ? `[${mapping.relationship === 'related' ? 'Related Google guidance' : 'Google guidance'}](${mapping.href})`
+    : 'No dedicated entry in the reviewed Google component inventory.';
+  const selectionExample = component.selectionExample
+    ? `Example: ${component.selectionExample}\n\n`
+    : '';
+  const exports = page.exports?.length ? `Public JavaScript exports: ${page.exports.map((name) => `\`${name}\``).join(', ')}. See the [API index](../references/api-index.md).\n\n` : '';
+  return `#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${exports}${selectionExample}${adaptive ? `${adaptive}\n\n` : ''}`;
+}
+
+function renderMaterialMapping(component) {
+  const mapping = component.materialGuidance;
+  const implementation = mapping.implementation;
+  const upstream = mapping.upstreamReview;
+  return [
+    `Relationship: ${mapping.relationship}. ${mapping.reason ?? ''}`.trim(),
+    `Upstream: ${upstream.scope}${upstream.reviewedOn ? ` (${upstream.reviewedOn})` : ''}; [evidence](${upstream.source}).`,
+    ...(upstream.note ? [upstream.note] : []),
+    ...(mapping.specHref ? [`[Specification link](${mapping.specHref}); full specs unreviewed.`] : []),
+    ...(mapping.guidelinesHref ? [`[Google guidelines](${mapping.guidelinesHref}).`] : []),
+    ...(mapping.relatedHrefs ?? []).map((href) => `[Related Google component](${href}).`),
+    `Support (${implementation.reviewedOn}, \`${implementation.source}\`): ${implementation.documentedSupport}`,
+    `Web adaptation: ${implementation.webAdaptation}`,
+    ...implementation.limitations.map((limit) => `Known boundary: ${limit}`),
+    `Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#${component.slug}).`,
+  ].join('\n\n');
 }
 
 function renderGuide(component, page, section, rules, provenance) {
@@ -272,36 +360,15 @@ function renderGuide(component, page, section, rules, provenance) {
   if (provenance.matchingTag) {
     links.push(`[Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/${provenance.matchingTag})`);
   }
-  const adaptive = component.adaptive.map((item) => {
-    const target = item.component ? ` [${item.component}](./${item.component}.md)` : '';
-    return `- ${item.window} ${item.basis}: ${item.kind}${target}. ${item.reason}`;
-  }).join('\n');
-  const mapping = component.materialGuidance;
-  const material = mapping.href
-    ? `[${mapping.relationship === 'related' ? 'Related Google guidance' : 'Google guidance'}](${mapping.href})`
-    : 'No dedicated entry in the reviewed Google component inventory.';
-  const implementation = mapping.implementation;
-  const upstream = mapping.upstreamReview;
-  const mappingLines = [
-    `Relationship: ${mapping.relationship}. ${mapping.reason ?? ''}`.trim(),
-    `Upstream: ${upstream.scope}${upstream.reviewedOn ? ` (${upstream.reviewedOn})` : ''}; [evidence](${upstream.source}).`,
-    ...(upstream.note ? [upstream.note] : []),
-    ...(mapping.specHref ? [`[Specification link](${mapping.specHref}); full specs unreviewed.`] : []),
-    ...(mapping.guidelinesHref ? [`[Google guidelines](${mapping.guidelinesHref}).`] : []),
-    ...(mapping.relatedHrefs ?? []).map((href) => `[Related Google component](${href}).`),
-    `Support (${implementation.reviewedOn}, \`${implementation.source}\`): ${implementation.documentedSupport}`,
-    `Web adaptation: ${implementation.webAdaptation}`,
-    ...implementation.limitations.map((limit) => `Known boundary: ${limit}`),
-    `Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#${component.slug}).`,
-  ].join('\n\n');
-  const selectionExample = component.selectionExample
-    ? `Example: ${component.selectionExample}\n\n`
-    : '';
   const apiParts = apiSummary(section, component.level);
+  const related = BEHAVIOR_CONTRACTS.filter(({ heading, level }) => section.includes(`${'#'.repeat(level)} ${heading}\n`));
+  const relatedContracts = related.length
+    ? `#### Related contracts\n\n${related.map(({ heading }) => `[${heading}](../references/behavior-contracts.md#${anchorFor(heading)})`).join(' · ')}\n\n`
+    : '';
   const api = apiParts.map((part) => `${part}\n\n`).join('');
   // contractSummary keeps only the prose before the first example, so name the llm.md subsections
   // it leaves out. Headings that repeat an example's own heading are demo content, not sections.
-  const shown = new Set(apiParts.map((part) => part.split('\n', 1)[0].slice('#### '.length)));
+  const shown = new Set([...apiParts.map((part) => part.split('\n', 1)[0].slice('#### '.length)), ...related.map(({ heading }) => heading)]);
   const examples = [...section.matchAll(/```[\s\S]*?```/gu)].map(([code]) => code).join('\n');
   const demoHeadings = new Set([...examples.matchAll(/<h[1-6][^>]*>([^<]+)<\/h[1-6]>/gu)].map(([, text]) => text.trim()));
   const subsections = [...new Set([...section.replace(/```[\s\S]*?```/gu, '')
@@ -315,7 +382,7 @@ function renderGuide(component, page, section, rules, provenance) {
     ? `#### Also documented\n\nThe ${component.heading} section of the [API reference](https://www.expressivecss.com/llm.md) also covers ${subsections.join(', ')}.\n\n`
     : '';
 
-  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nContract SHA-256: \`${provenance.hash}\`\n\n#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${selectionExample}${adaptive ? `${adaptive}\n\n` : ''}#### Material mapping\n\n${mappingLines}\n\n#### Contract\n\n${contractSummary(section, page.description)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n${api}${alsoDocumented}#### Rules\n\n${ruleLines}\n${guideCheckSection ? `\n${guideCheckSection.trimEnd()}\n` : ''}`;
+  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nContract SHA-256: \`${provenance.hash}\`\n\n${renderSelection(component, page)}#### Material mapping\n\n${renderMaterialMapping(component)}\n\n#### Contract\n\n${contractSummary(section, page.description)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n${api}${relatedContracts}${alsoDocumented}#### Rules\n\n${ruleLines}\n${guideCheckSection ? `\n${guideCheckSection.trimEnd()}\n` : ''}`;
 }
 
 async function generatedGuides(provenance) {

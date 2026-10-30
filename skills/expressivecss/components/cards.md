@@ -9,11 +9,13 @@ Component ID: `cards`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
+Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/cards/overview)
+
+Public JavaScript exports: `Cards`, `ExpandingCard`. See the [API index](../references/api-index.md).
 
 Example: A hundred compact activity records need a list. Giving every row a card adds separation without a separate content or action group.
 
@@ -60,9 +62,13 @@ A Card reveal is a disclosure with exactly one identified direct `<aside>` and a
 </article>
 ```
 
+#### Related contracts
+
+[Expanding card](../references/behavior-contracts.md#expanding-card)
+
 #### Also documented
 
-The Cards section of the [API reference](https://www.expressivecss.com/llm.md) also covers Variants, Primary action and states, Collections, Media, Horizontal, Reveal, Expanding card, Sizes.
+The Cards section of the [API reference](https://www.expressivecss.com/llm.md) also covers Variants, Primary action and states, Collections, Media, Horizontal, Reveal, Sizes.
 
 #### Rules
 

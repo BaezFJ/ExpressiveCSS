@@ -9,11 +9,13 @@ Component ID: `line-chart`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
+Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
+
+Public JavaScript exports: `LineChart`. See the [API index](../references/api-index.md).
 
 Example: Monthly revenue against last year and a target is a line chart with three series. The same figures for twenty regions are a data table.
 
@@ -29,7 +31,7 @@ Support (2026-10-06, `llm.md#line-chart`): Smooth monotone lines drawn from a fi
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified. There is no y axis labelling.
+Known boundary: Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified. The axis modifier provides round value labels; full visual parity remains unassessed.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#line-chart).
 

@@ -9,11 +9,13 @@ Component ID: `side-sheet`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1001bfd064936a88d4e76e55c21eec18e3bfc46ef7f4962436939df76bd9716e`
+Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
 
 #### Selection and adaptation
 
 Runtime ownership: `shared-runtime`. [Google guidance](https://m3.material.io/components/side-sheets/overview)
+
+Public JavaScript exports: `SideSheets`. See the [API index](../references/api-index.md).
 
 - compact window: replace-with [bottom-sheet](./bottom-sheet.md). Secondary content must fit a compact window.
 - compact window: replace-with [dialogs](./dialogs.md). Use a dialog when a compact task must block progress.
