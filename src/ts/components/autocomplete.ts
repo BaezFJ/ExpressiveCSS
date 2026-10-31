@@ -1,3 +1,4 @@
+import { imageURL } from '../core/imageURL';
 import { Utils } from '../core/utils';
 import { Menu, MenuOptions } from './menu';
 import { Component, BaseOptions } from '../core/component';
@@ -67,6 +68,8 @@ export interface AutocompleteOptions extends BaseOptions {
    * @default '300px'
    */
   maxMenuHeight: string;
+  /** Maximum rendered suggestions. Infinity preserves the complete list. @default Infinity */
+  maxResults: number;
   /**
    * Function is called when the input text is altered and data can also be loaded asynchronously.
    * If the results are collected the items in the list can be updated via the function setMenuItems(collectedItems).
@@ -146,6 +149,7 @@ const _defaults: AutocompleteOptions = {
     );
   },
   maxMenuHeight: '300px',
+  maxResults: Infinity,
   allowUnsafeHTML: false,
   selected: []
 };
@@ -305,10 +309,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.el.setAttribute('aria-controls', this.container.id);
     this.el.setAttribute('data-target', this.container.id);
 
-    this.menuItems.forEach((menuItem) => {
-      const itemElement = this._createMenuItem(menuItem);
-      this.container.append(itemElement);
-    });
+    this._renderMenu();
+    this.oldVal = ''; // Initial rendering must not trigger a search on empty focus.
 
     // ! Issue in Component Menu: _placeMenu moves dom-position
     this.el.parentElement.appendChild(this.container);
@@ -563,7 +565,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     return [label.slice(0, start), label.slice(start, end + 1), label.slice(end + 1)];
   }
 
-  _createMenuItem(entry: AutocompleteData) {
+  _createMenuItem(entry: AutocompleteData, selectedIds = new Set(this.selectedValues.map(entry => entry.id))) {
     const item = document.createElement('li');
     item.id = `autocomplete-option-${Utils.guid()}`;
     item.setAttribute('role', 'option');
@@ -571,7 +573,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // chosen one - and it has to be the *real* one. A multi-select entry that
     // is already committed is selected whether or not it is the highlighted
     // row.
-    const isSelected = this.selectedValues.some((sel) => sel.id === entry.id);
+    const isSelected = selectedIds.has(entry.id);
     item.setAttribute('aria-selected', isSelected ? 'true' : 'false');
     item.setAttribute('data-id', <string>entry.id);
     Autocomplete._markDisabled(item, entry);
@@ -596,10 +598,11 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       item.appendChild(selection);
     }
     // Image
-    if (entry.image) {
+    const image = imageURL(entry.image, this.el.ownerDocument.baseURI);
+    if (image) {
       const img = document.createElement('img');
       img.classList.add('circle');
-      img.src = entry.image;
+      img.src = image;
       item.appendChild(img);
     }
 
@@ -683,6 +686,11 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
   }
 
+  private _visibleEntries() {
+    const limit = this.options.maxResults;
+    return Number.isFinite(limit) && limit >= 0 ? this.menuItems.slice(0, Math.floor(limit)) : this.menuItems;
+  }
+
   _renderMenu() {
     this._resetAutocomplete();
     if (this._noResults) this.container.append(this._createNoResultsRow());
@@ -691,7 +699,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       this.menuItems = this.selectedValues; // Show selected Items
     }
     const groups = new Map<string, HTMLElement>();
-    this.menuItems.forEach((entry) => this._groupList(entry.group, groups).append(this._createMenuItem(entry)));
+    const selectedIds = new Set(this.selectedValues.map(entry => entry.id));
+    this._visibleEntries().forEach((entry) => this._groupList(entry.group, groups).append(this._createMenuItem(entry, selectedIds)));
     const createText = this._createText();
     if (createText) this.container.append(this._createRow(createText));
   }
@@ -781,7 +790,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   /** Announces the entries a person can choose. Disabled ones are shown, not counted. */
   private _resultsMessage() {
-    const count = this.menuItems.filter((entry) => entry.disabled !== true).length;
+    const count = this._visibleEntries().filter((entry) => entry.disabled !== true).length;
     return count ? this.options.i18n.results(count) : this.options.i18n.noResults;
   }
 

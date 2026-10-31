@@ -10368,6 +10368,7 @@ onCreate: function(text, autocomplete) {
 | `data` | Array | `[]` | Suggestion list. Each item needs an `id`; `text`, `image`, and `description` are optional. |
 | `isMultiSelect` | Boolean | `false` | If true, several values can be selected. `onAutocomplete` receives an array. |
 | `maxMenuHeight` | String | `'300px'` | Max height of the suggestion menu. |
+| `maxResults` | Number | `Infinity` | Caps rendered suggestions when set to a nonnegative finite value. Search still runs over the whole dataset. |
 | `i18n` | Object | See below | Partial overrides for live status messages. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
 | `onSearch` | Function | filters `id` and `text` | Called with the text, the instance and an `AbortSignal` when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. The signal aborts when the search text changes or the autocomplete is destroyed. |

@@ -9,7 +9,7 @@ Component ID: `autocomplete`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
+Contract SHA-256: `640a1ff3b7b76f1fb2b98912bc3007c9721a26c7d7c920a37b3d02637b31afd9`
 
 #### Selection and adaptation
 
@@ -62,6 +62,7 @@ Add `autocomplete` to a text input inside a `.field`. `AutoInit()` starts every 
 | `data` | Array | `[]` | Suggestion list. Each item needs an `id`; `text`, `image`, and `description` are optional. |
 | `isMultiSelect` | Boolean | `false` | If true, several values can be selected. `onAutocomplete` receives an array. |
 | `maxMenuHeight` | String | `'300px'` | Max height of the suggestion menu. |
+| `maxResults` | Number | `Infinity` | Caps rendered suggestions when set to a nonnegative finite value. Search still runs over the whole dataset. |
 | `i18n` | Object | See below | Partial overrides for live status messages. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
 | `onSearch` | Function | filters `id` and `text` | Called with the text, the instance and an `AbortSignal` when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. The signal aborts when the search text changes or the autocomplete is destroyed. |

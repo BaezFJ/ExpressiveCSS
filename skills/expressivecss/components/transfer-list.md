@@ -9,7 +9,7 @@ Component ID: `transfer-list`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `dccc4e3d68c22391bf80b9917474d12cf245ca33eec615af4f0b78c1fc72cc05`
+Contract SHA-256: `640a1ff3b7b76f1fb2b98912bc3007c9721a26c7d7c920a37b3d02637b31afd9`
 
 #### Selection and adaptation
 
