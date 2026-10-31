@@ -227,6 +227,12 @@ onCreate: function(text, autocomplete) {
               <td>If true, the user can select several values. <code>onAutocomplete</code> receives an array.</td>
             </tr>
             <tr>
+              <td><code>maxResults</code></td>
+              <td>Number</td>
+              <td><code>Infinity</code></td>
+              <td>Maximum rendered suggestions. Set a nonnegative finite value to bound DOM creation. Search still checks the dataset; use a custom onSearch for bounded remote results.</td>
+            </tr>
+            <tr>
               <td><code>maxMenuHeight</code></td>
               <td>String</td>
               <td><code>'300px'</code></td>

@@ -73,7 +73,7 @@
     "build:css": "run-s build:fonts build:css:expanded build:css:min",
     "build:css:expanded": "sass src/sass/expressive.scss dist/css/expressive.css --style=expanded --source-map --load-path=src/sass",
     "build:css:min": "sass src/sass/expressive.scss dist/css/expressive.min.css --style=compressed --source-map --load-path=src/sass",
-    "build:js": "run-s build:js:esm build:js:cjs build:js:iife build:js:iife-min",
+    "build:js": "node scripts/build-js.mjs",
     "build:js:esm": "node scripts/build-esm.mjs",
     "build:js:cjs": "esbuild src/ts/index.ts --bundle --format=cjs --target=es2020 --outfile=dist/js/expressive.cjs --sourcemap",
     "build:js:iife": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.js --sourcemap",
@@ -90,7 +90,7 @@
     "docs:build:astro": "astro build --root docs",
     "docs:preview": "astro preview --root docs",
     "docs:verify": "node scripts/verify-site.mjs",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck:strict",
     "test": "run-s build:js build:css test:run",
     "test:run": "node --test",
     "test:browser": "run-s build:js build:css test:browser:run",
@@ -104,13 +104,14 @@
     "test:visual:report": "playwright show-report visual/report",
     "watch": "run-p watch:css watch:js",
     "watch:css": "sass --watch src/sass/expressive.scss:dist/css/expressive.css --style=expanded --source-map --load-path=src/sass",
-    "watch:js": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.js --sourcemap --watch=forever",
+    "watch:js": "node scripts/build-js.mjs --watch",
     "check:generated": "node scripts/gen-semantics.mjs --check && node scripts/gen-expressivecss-skill.mjs --check",
     "verify": "run-s build typecheck test:run check:generated docs:build:astro docs:verify",
     "verify:packages": "node scripts/verify-packages.mjs",
     "test:node": "node scripts/run-node-tests.mjs",
     "record:capabilities": "node scripts/record-capability-evidence.mjs --record",
-    "verify:consumer": "node scripts/lib/verify-consumer.mjs"
+    "verify:consumer": "node scripts/lib/verify-consumer.mjs",
+    "typecheck:strict": "tsc -p tsconfig.strict.json"
   },
   "engines": {
     "node": ">=20"

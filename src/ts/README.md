@@ -156,3 +156,10 @@ jsdom has no layout engine: assert on classes, structure and text, never on
 measured geometry, transitions or visibility. Environment gaps are shimmed in
 `tests/setup.js` (notably `innerText`, which jsdom does not implement and
 `FormSelect` relies on).
+
+## Incremental strict checking
+
+`npm run typecheck` also runs `tsconfig.strict.json`. The image URL and spring
+utilities currently pass strict checking. Add modules to that config as their
+callers and null handling are corrected; the main config still supports legacy
+components. Keep `useDefineForClassFields: false` in both configurations.

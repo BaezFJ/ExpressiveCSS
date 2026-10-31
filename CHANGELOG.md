@@ -5,7 +5,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Autocomplete `maxResults` caps rendered suggestions when configured. The default
+  is `Infinity`, preserving the complete list. Search still checks the whole dataset.
+
 ### Fixed
+
+- Autocomplete images now use the same URL scheme allowlist as FormSelect.
+  Invalid URLs, `javascript:` URLs and non-image `data:` URLs are dropped.
 
 - Skills use valid YAML discovery metadata, concise triggers and host-neutral
   delegation. The scored review honors explicit requests for fixes and loads its

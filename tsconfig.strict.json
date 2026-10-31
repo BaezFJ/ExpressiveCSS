@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noImplicitOverride": true
+  },
+  "include": [
+    "src/ts/core/imageURL.ts",
+    "src/ts/core/spring.ts"
+  ]
+}
