@@ -243,9 +243,9 @@ export class Utils {
    * it climbs out of shadow roots too, so a press on a shadow-root icon inside
    * a light-DOM button still finds the button.
    */
-  static closestInPath(event: Event, selector: string): Element | null {
+  static closestInPath<T extends Element = Element>(event: Event, selector: string): T | null {
     for (const node of event.composedPath()) {
-      if (node instanceof Element && node.matches(selector)) return node;
+      if (node instanceof Element && node.matches(selector)) return node as T;
     }
     return null;
   }

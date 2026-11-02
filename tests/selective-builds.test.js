@@ -334,7 +334,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed AutoInit surviving a throwing constructor or teardown, owner-checked destroy(), clamped emptied Timepicker fields, data tables in hidden panels and treemap update() with no rows: 110,298 gzip bytes (+93).
   // Reviewed undefined options keeping their defaults, Autocomplete presses released outside the list and its no-results count, LineChart without a table and ShowMore without clamped text: 110,424 gzip bytes (+126).
   // Reviewed modal pickers ignoring drags that end on the scrim, a linear TransferList move, Chips trimming typed text and typed component instances: 110,538 gzip bytes (+114).
-  assert.ok(sizes(js).gzip <= 110538, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed noImplicitAny: typed datepicker handlers, the MapLibre and Tiptap surfaces, and Reflect-based instance storage, and typed MapView and RichTextEditor init: 110,642 gzip bytes (+104).
+  assert.ok(sizes(js).gzip <= 110642, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

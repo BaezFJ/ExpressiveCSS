@@ -12,7 +12,7 @@
     "useDefineForClassFields": false,
 
     "strict": false,
-    "noImplicitAny": false,
+    "noImplicitAny": true,
     "strictNullChecks": false,
     "noImplicitOverride": false,
     "skipLibCheck": true,

@@ -165,11 +165,14 @@ function sameKind(fallback: unknown, value: unknown) {
   return type !== ARRAY || itemsMatch(fallback as unknown[], value as unknown[]);
 }
 
-const accepts = (defaults: object, key: string, value: unknown) =>
-  Object.hasOwn(defaults, key) && !MARKUP_BLOCKED.has(key) && sameKind(defaults[key], value);
+/** An own property of a plain object, read without an index signature on its type. */
+const prop = (source: object, key: string): unknown => Reflect.get(source, key);
+
+const accepts = (defaults: object, key: string, value: unknown): boolean =>
+  Object.hasOwn(defaults, key) && !MARKUP_BLOCKED.has(key) && sameKind(prop(defaults, key), value);
 
 /** Records a rejected key; returns undefined so the key is left out. */
-const reject = (rejected: string[], key: string) => void rejected.push(key);
+const reject = (rejected: string[], key: string): undefined => void rejected.push(key);
 
 /**
  * A plain object filtered against its default object, or undefined once any
@@ -191,7 +194,7 @@ function nested(value: unknown, fallback: object, rejected: string[], path: stri
 function pick(parsed: object, defaults: object, rejected: string[], path = ""): Record<string, unknown> {
   const picked: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(parsed)) {
-    const kept = accepts(defaults, key, value) ? nested(value, defaults[key], rejected, `${path}${key}.`) : reject(rejected, path + key);
+    const kept = accepts(defaults, key, value) ? nested(value, prop(defaults, key) as object, rejected, `${path}${key}.`) : reject(rejected, path + key);
     if (kept !== undefined) picked[key] = kept;
   }
   return picked;
