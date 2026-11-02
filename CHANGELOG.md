@@ -12,6 +12,20 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A modal date or time picker stays open when a drag that starts on the picker,
+  such as moving the clock hand, ends on the scrim. Only a press that starts and
+  ends on the scrim cancels it.
+
+- TransferList's move-all buttons no longer stall on long lists. Removing 2,000
+  rows took about 240 ms in Chromium and now takes about 26 ms.
+
+- Chips trims typed text, so Space then Enter adds no blank chip and `"a "` no
+  longer duplicates `"a"`. `addChip()` refuses a whitespace-only id.
+
+- `getInstance()` is typed to return `undefined` before `init()` and after
+  `destroy()`, and takes any `Element`. The AutoInit table is now type-checked,
+  and `src/ts/core` builds under strict TypeScript.
+
 - An option passed as `undefined`, at the top level or inside `i18n`, keeps its
   default. A translation table missing Keypad's `tooShort` made every input in a
   field with `minlength` throw.

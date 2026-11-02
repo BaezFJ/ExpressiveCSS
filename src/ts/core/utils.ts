@@ -9,13 +9,13 @@ export function restoreAttribute(el: Element, name: string, value: string | null
 }
 
 /** A picker footer text button; a hidden one is also out of the tab order. */
-function footerButton(parent: HTMLElement, text: string, className: string, onClick: () => void, visible = true) {
+function footerButton(parent: HTMLElement, text: string | undefined, className: string, onClick: () => void, visible = true) {
   const button = document.createElement('button');
   button.className = `${className} text`;
   button.style.visibility = visible ? 'visible' : 'hidden';
   button.type = 'button';
   button.tabIndex = visible ? 0 : -1;
-  button.innerText = text;
+  button.innerText = text ?? '';
   button.addEventListener('click', onClick);
   parent.append(button);
 }

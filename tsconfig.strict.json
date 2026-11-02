@@ -7,7 +7,6 @@
     "noImplicitOverride": true
   },
   "include": [
-    "src/ts/core/imageURL.ts",
-    "src/ts/core/spring.ts"
+    "src/ts/core/*.ts"
   ]
 }
