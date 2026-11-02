@@ -422,7 +422,7 @@ export class Chips extends Component<ChipsOptions> {
       }
       e.preventDefault();
       if (!this.hasAutocomplete || !this.options.autocompleteOnly) {
-        this.addChip({ id: this._input.value });
+        this.addChip({ id: this._input.value.trim() });
       }
       this._input.value = '';
       // The list answered the text Enter just used up.
@@ -508,7 +508,7 @@ export class Chips extends Component<ChipsOptions> {
   /** The "Add" row is a deliberate choice, so it adds a chip even in an autocompleteOnly field. */
   private _addTyped(text: string) {
     if (Chips.getInstance(this.el) !== this) return;
-    this.addChip({ id: text });
+    this.addChip({ id: text.trim() });
     this._input.value = '';
     this._input.focus();
   }
@@ -544,7 +544,8 @@ export class Chips extends Component<ChipsOptions> {
   }
 
   _isValidAndNotExist(chip: ChipData) {
-    const isValid = !!chip.id || chip.id === 0;
+    // A blank or whitespace-only label is no chip.
+    const isValid = (!!chip.id || chip.id === 0) && String(chip.id).trim() !== '';
     const doesNotExist = !this.chipsData.some((item) => item.id == chip.id);
     return isValid && doesNotExist;
   }
