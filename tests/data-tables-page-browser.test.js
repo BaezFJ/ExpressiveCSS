@@ -197,4 +197,19 @@ for (const [engine, browserType, browserTest] of engines) {
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: a table that starts in a hidden panel shows its first page when the panel opens`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body><div id="panel" hidden>${table}</div><script>${js}</script></body></html>`);
+      await page.evaluate(() => { document.querySelector('#panel').hidden = false; });
+      await expect(page.locator('#r1')).toBeVisible();
+      await expect(page.locator('#r2')).toBeVisible();
+      await expect(page.locator('#r3')).toBeHidden();
+      await expect(page.getByRole('button', { name: 'Next', exact: true })).toBeEnabled();
+    } finally {
+      await browser.close();
+    }
+  });
 }

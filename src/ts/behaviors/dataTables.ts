@@ -54,10 +54,24 @@ function tableControl(wrapper: Element, selector: string) {
   return Array.from(wrapper.querySelectorAll<HTMLElement>(selector)).find((el) => el.closest('.data-table') === wrapper);
 }
 
-/** Enabled selection and result counts use the same visible record set. */
+/**
+ * Enabled selection and result counts use the same visible record set. Only
+ * hiding inside the table counts: a table in a closed tab, dialog or details
+ * still has its records, and has no layout to check, so the row's own style
+ * decides there.
+ */
 function visibleRecord(row: HTMLTableRowElement) {
-  if (row.closest(`[hidden], [${FILTERED}], [${PAGED}]`)) return false;
-  if (row.checkVisibility) return row.checkVisibility({ visibilityProperty: true });
+  const table = row.closest('table');
+  if (hiddenInTable(row, table)) return false;
+  return table.checkVisibility?.() ? row.checkVisibility({ visibilityProperty: true }) : styledVisible(row);
+}
+
+function hiddenInTable(row: HTMLTableRowElement, table: HTMLTableElement) {
+  const hidden = row.closest(`[hidden], [${FILTERED}], [${PAGED}]`);
+  return hidden !== null && table.contains(hidden);
+}
+
+function styledVisible(row: HTMLTableRowElement) {
   const style = getComputedStyle(row);
   return style.display !== 'none' && !['hidden', 'collapse'].includes(style.visibility);
 }

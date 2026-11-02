@@ -955,17 +955,25 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   formatHours() {
-    if (this.inputHours.value == '') this.setHoursDefault();
+    if (this.inputHours.value === '') this.setHoursDefault();
     this.inputHours.value = pad2(this.hours);
   }
 
+  // An emptied field takes the current time, which can be outside minTime
+  // and maxTime, so it goes through _afterChange like any other change.
   formatMinutes() {
-    if (this.inputMinutes.value == '') this.minutes = new Date().getMinutes();
+    if (this.inputMinutes.value === '') {
+      this.minutes = new Date().getMinutes();
+      this._afterChange();
+    }
     this.inputMinutes.value = pad2(this.minutes);
   }
 
   formatSeconds() {
-    if (this.inputSeconds.value == '') this.seconds = new Date().getSeconds();
+    if (this.inputSeconds.value === '') {
+      this.seconds = new Date().getSeconds();
+      this._afterChange();
+    }
     this.inputSeconds.value = pad2(this.seconds);
   }
 
@@ -977,8 +985,9 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   setHoursDefault() {
-    this.hours = new Date().getHours();
-    if (this.options.twelveHour) this.hours = this.hours % 12 || 12;
+    // _setHours24 also sets AM or PM, which the old 12-hour path left as it was.
+    this._setHours24(new Date().getHours());
+    this._afterChange();
     this.inputHours.value = this.hours.toString();
   }
 

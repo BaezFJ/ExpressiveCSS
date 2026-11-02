@@ -1,4 +1,4 @@
-import { InitElements, InitElement } from "../core/component";
+import { Component, InitElements, InitElement } from "../core/component";
 import * as Components from "./index";
 import { CARDS_SELECTOR, isCardReveal } from "./cards";
 import { EXPANDING_CARD_SELECTOR } from "./expandingCard";
@@ -234,10 +234,35 @@ const entry = (name: keyof Registry) => AUTO_INIT_COMPONENTS[name] as unknown as
 const NAMES = Object.keys(AUTO_INIT_COMPONENTS) as (keyof Registry)[];
 const WATCH_SELECTOR = `:is(${NAMES.map((name) => entry(name).selector).join(",")}):not(.no-autoinit)`;
 
-/** Starts component `name` on one element, with its markup options under `options`. */
+/**
+ * Starts component `name` on one element, with its markup options under
+ * `options`. A constructor that throws is logged and its half-built instance
+ * released, so one bad element neither stops the rest of the pass nor keeps
+ * a later pass from trying again.
+ */
 function initElement(name: keyof Registry, el: Element, options: object = {}) {
   const { component } = entry(name);
-  component.init(el, { ...markupOptions(el, name, component.defaults), ...options });
+  try {
+    component.init(el, { ...markupOptions(el, name, component.defaults), ...options });
+  } catch (error) {
+    console.error(`${name} failed to start on`, el, error);
+    stopElement(name, el);
+  }
+}
+
+/**
+ * Destroys component `name`'s instance on one element. A teardown that throws,
+ * as a half-built instance's can, is logged and the base teardown runs anyway,
+ * so the listeners go and the element is free for a new instance.
+ */
+function stopElement(name: keyof Registry, el: Element) {
+  const instance = entry(name).component.getInstance(el);
+  try {
+    instance?.destroy();
+  } catch (error) {
+    console.error(`${name} failed to stop on`, el, error);
+    Component.prototype.destroy.call(instance);
+  }
 }
 
 /**
@@ -278,7 +303,7 @@ function hasClaims(node: Node): node is Element {
 function stopRemoved(node: Node) {
   if (node.isConnected || !hasClaims(node)) return;
   for (const name of NAMES) {
-    claimed(name, node, true).forEach((el) => entry(name).component.getInstance(el)?.destroy());
+    claimed(name, node, true).forEach((el) => stopElement(name, el));
   }
 }
 

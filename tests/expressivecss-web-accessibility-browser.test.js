@@ -1220,7 +1220,8 @@ for (const action of ['input', 'empty', 'boundaries']) scenario(`time picker dig
         await page.getByRole('button', { name: 'Ok', exact: true }).click();
         await expect(hours).toHaveValue(twelveHour ? '12' : '00');
         await expect(minutes).toHaveValue('37');
-        await expect(page.locator('#time')).toHaveValue(twelveHour ? '12:37 PM' : '00:37');
+        // The emptied fields take the current time, 00:37, including its AM.
+        await expect(page.locator('#time')).toHaveValue(twelveHour ? '12:37 AM' : '00:37');
       } else {
         for (const [value, expected] of [['00:15', '12:15 AM'], ['12:30', '12:30 PM'], ['23:45', '11:45 PM'], ['03:45 am', '03:45 AM']]) {
           if (!twelveHour && value.includes('am')) continue;
