@@ -215,7 +215,10 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.count = 0;
     this.activeIndex = -1;
     this.oldVal = '';
-    this.selectedValues = this.options.selected.map((id) => this.options.data.find(entry => entry.id === id) ?? { id });
+    // First entry wins on a duplicate id, as selectOption() picks the first.
+    const byId = new Map<string | number, AutocompleteData>();
+    this.options.data.forEach((entry) => byId.has(entry.id) || byId.set(entry.id, entry));
+    this.selectedValues = this.options.selected.map((id) => byId.get(id) ?? { id });
     this.menuItems = this.options.data || [];
     this.$active = null;
     this._pointerDown = false;
@@ -866,8 +869,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this._noResults = menuItems.length === 0;
     this.menuItems = menuItems;
     if (selected) {
-      const ids: (string | number)[] = selected;
-      this.selectedValues = this.menuItems.filter((item) => ids.includes(item.id));
+      const ids = new Set<string | number>(selected);
+      this.selectedValues = this.menuItems.filter((item) => ids.has(item.id));
     }
     // open() clears and renders the list itself.
     if (this.options.isMultiSelect) {
