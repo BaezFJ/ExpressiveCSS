@@ -74,7 +74,7 @@ export class PaneResize {
   }
 
   private static _onPointerDown(e: PointerEvent) {
-    const handle = Utils.closestInPath(e, handleSelector) as HTMLElement;
+    const handle = Utils.closestInPath<HTMLElement>(e, handleSelector);
     if (!handle || e.button !== 0) return;
     const pane = PaneResize._pane(handle);
     if (!pane) return;

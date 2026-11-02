@@ -167,7 +167,7 @@ export class ExpandingCard extends Component<ExpandingCardOptions> {
   static Init() {
     Utils.onDocumentReady(() => {
       document.querySelectorAll(EXPANDING_CARD_SELECTOR).forEach((el) => {
-        if (el["Expressive_ExpandingCard"] == undefined) {
+        if (this.getInstance(el) === undefined) {
           this.init(el as HTMLElement);
         }
       });

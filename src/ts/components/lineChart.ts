@@ -611,8 +611,8 @@ export class LineChart extends Component<LineChartOptions> {
         text: rows.map((row) => row.cells[i + from]?.textContent.trim() ?? ''),
         values,
         tops: values,
-        y: undefined,
-        scale: undefined,
+        y: undefined as Series['y'],
+        scale: undefined as ChartScale,
         affix: affix(rows.map((row) => row.cells[i + from]))
       };
     });

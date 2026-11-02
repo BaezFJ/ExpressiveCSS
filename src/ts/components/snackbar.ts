@@ -198,7 +198,7 @@ export class Snackbar {
 
   private _build() {
     this.el = this._createSnackbar();
-    this.el['Expressive_Snackbar'] = this;
+    Reflect.set(this.el, 'Expressive_Snackbar', this);
   }
 
   /**
@@ -257,7 +257,7 @@ export class Snackbar {
   }
 
   static getInstance(el: Element): Snackbar | undefined {
-    return el['Expressive_Snackbar'];
+    return Reflect.get(el, 'Expressive_Snackbar');
   }
 
   static _createContainer(root: HTMLElement | ShadowRoot = document.body) {
@@ -508,7 +508,7 @@ export class Snackbar {
       Snackbar._draggedSnackbar = null;
       Snackbar._dragPointerId = null;
     }
-    this.el['Expressive_Snackbar'] = undefined;
+    Reflect.set(this.el, 'Expressive_Snackbar', undefined);
     if (this._restoreElement) this._restoreElement();
     else this.el.remove();
     const index = Snackbar._snackbars.indexOf(this);

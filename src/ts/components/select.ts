@@ -68,7 +68,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     // tree select belongs to TreeSelect, which a page's FormSelect.init() on
     // every select must not wrap a second time.
     if (this.el.classList.contains('browser-default') || (new.target === FormSelect && this.el.matches('[data-tree]'))) {
-      this.el[new.target.key] = undefined;
+      Reflect.set(this.el, new.target.key, undefined);
       return;
     }
 
@@ -632,7 +632,7 @@ export class FormSelect extends Component<FormSelectOptions> {
         groupParent.replaceChildren(groupLabel);
         this._optionList.append(groupParent);
 
-        const groupChildren = [];
+        const groupChildren: string[] = [];
         const selectOptions = <HTMLOptionElement[]>(
           Array.from(realOption.children).filter((el) => el.tagName === 'OPTION')
         );

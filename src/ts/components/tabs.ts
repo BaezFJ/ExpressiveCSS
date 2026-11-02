@@ -519,11 +519,11 @@ export class Tabs extends Component<TabsOptions> {
     this._tabWidth = Math.max(this._tabsWidth, this.el.scrollWidth) / this._tabLinks.length;
   }
 
-  _calcRightPos(el) {
+  _calcRightPos(el: HTMLElement): number {
     return Math.ceil(this._tabsWidth - el.offsetLeft - el.getBoundingClientRect().width);
   }
 
-  _calcLeftPos(el) {
+  _calcLeftPos(el: HTMLElement): number {
     return Math.floor(el.offsetLeft);
   }
 
@@ -536,7 +536,7 @@ export class Tabs extends Component<TabsOptions> {
     this._animateIndicator(this._index);
   }
 
-  _animateIndicator(prevIndex) {
+  _animateIndicator(prevIndex: number): void {
     // The trailing edge waits 30% of the move, so the bar stretches toward
     // the new tab before it shrinks. On the spring tokens that delay scales
     // with the spring and drops to 0 with it under reduced motion.

@@ -300,6 +300,24 @@ export interface DatepickerOptions extends BaseOptions {
   displayPluginOptions: object;
 }
 
+type Calendar = { month: number; year: number };
+
+/** What `renderDay()` draws one cell from. */
+type DayConfig = {
+  day: number;
+  month: number;
+  year: number;
+  hasEvent: boolean;
+  isSelected: boolean;
+  isToday: boolean;
+  isDisabled: boolean;
+  isEmpty: boolean;
+  showDaysInNextAndPreviousMonths: boolean;
+  isDateRangeStart: boolean;
+  isDateRangeEnd: boolean;
+  isDateRange: boolean;
+};
+
 const _defaults: DatepickerOptions = {
   // the default output format for the input field value
   format: 'mmm dd, yyyy',
@@ -412,7 +430,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   date: Date;
   endDate: null | Date;
   dates: Date[];
-  calendars: [{ month: number; year: number }];
+  calendars: [Calendar];
   private displayPlugin: DisplayPlugin;
   /** What setInputValue last wrote, so reading it back does not depend on the parser. */
   private _writtenInputs = new WeakMap<HTMLInputElement, { value: string; date: Date | null }>();
@@ -523,8 +541,8 @@ export class Datepicker extends Component<DatepickerOptions> {
       .replace(/'/g, '&#39;');
   }
 
-  static _isDate(obj) {
-    return /Date/.test(Object.prototype.toString.call(obj)) && !isNaN(obj.getTime());
+  static _isDate(obj: unknown): obj is Date {
+    return /Date/.test(Object.prototype.toString.call(obj)) && !isNaN((obj as Date).getTime());
   }
 
   /**
@@ -557,11 +575,11 @@ export class Datepicker extends Component<DatepickerOptions> {
   /**
    * @deprecated as this function has no effect without any return statement or global parameter setter.
    */
-  static _setToStartOfDay(date) {
+  static _setToStartOfDay(date: unknown): void {
     if (Datepicker._isDate(date)) date.setHours(0, 0, 0, 0);
   }
 
-  static _compareDates(a, b) {
+  static _compareDates(a: Date, b: Date): boolean {
     // weak date comparison (use setToStartOfDay(date) to ensure correct result)
     return a.getTime() === b.getTime();
   }
@@ -825,7 +843,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   /**
    * Sets the data-date attribute on the date input field
    */
-  setDataDate(el, date) {
+  setDataDate(el: HTMLInputElement, date: Date | null): void {
     el.setAttribute('data-date', Datepicker._isDate(date) ? this.toString(date) : '');
   }
 
@@ -853,7 +871,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   /**
    * Sets given date as the input value on the given element.
    */
-  setInputValue(el, date) {
+  setInputValue(el: HTMLInputElement | null, date: Date | null): void {
     if (!el) return;
     if (el.type == 'date') this.setDataDate(el, date);
     if (!Datepicker._isDate(date)) {
@@ -928,7 +946,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.draw();
   }
 
-  adjustCalendar(calendar) {
+  adjustCalendar(calendar: Calendar): Calendar {
     if (calendar.month < 0) {
       calendar.year -= Math.ceil(Math.abs(calendar.month) / 12);
       calendar.month += 12;
@@ -950,7 +968,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.adjustCalendars();
   }
 
-  render(year, month, randId) {
+  render(year: number, month: number, randId: string): string {
     const now = new Date(),
       // Day 0 of the next month is the last of this one.
       days = new Date(year, month + 1, 0).getDate(),
@@ -1041,7 +1059,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     return this.renderTable(this.options, data, randId);
   }
 
-  renderDay(opts) {
+  renderDay(opts: DayConfig): string {
     const classMap = {
         isDisabled: 'is-disabled',
         isToday: 'is-today',
@@ -1064,7 +1082,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     }
 
     for (const [property, className] of Object.entries(classMap)) {
-      if (opts.hasOwnProperty(property) && opts[property]) {
+      if (opts[property as keyof DayConfig]) {
         arr.push(className);
       }
     }
@@ -1080,7 +1098,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   /** Assemble calendar cells; reject unsupported elements and attributes. */
-  renderRow(days, isRTL, isRowSelected) {
+  renderRow(days: string[], isRTL: boolean, isRowSelected: boolean): string {
     const row =
       '<tr class="datepicker-row' +
       (isRowSelected ? ' is-selected' : '') +
@@ -1091,7 +1109,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   /** Assemble calendar rows; reject unsupported elements and attributes. */
-  renderTable(opts, data, randId) {
+  renderTable(opts: DatepickerOptions, data: string[], randId: string): string {
     return (
       '<div class="datepicker-table-wrapper"><table cellpadding="0" cellspacing="0" class="datepicker-table" role="grid" aria-labelledby="' +
       Datepicker._escape(randId) +
@@ -1102,7 +1120,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     );
   }
 
-  renderHead(opts) {
+  renderHead(opts: DatepickerOptions): string {
     const arr = [];
     let i;
     for (i = 0; i < 7; i++) {
@@ -1114,7 +1132,7 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   /** Wrap calendar rows after validating and encoding their contents. */
-  renderBody(rows) {
+  renderBody(rows: string[]): string {
     const html = rows.join('');
     // Always sanitize row markup before insertion to avoid propagating unsafe library input.
     const safeHtml = Datepicker._calendarMarkup(html, 'tbody');
@@ -1194,7 +1212,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     ].join('|');
   }
 
-  renderTitle(instance, c, year, month, refYear, randId) {
+  renderTitle(instance: Datepicker, c: number, year: number, month: number, refYear: number, randId: string): string {
     const opts = this.options,
       isMinYear = year === opts.minYear,
       isMaxYear = year === opts.maxYear;
@@ -1439,13 +1457,15 @@ export class Datepicker extends Component<DatepickerOptions> {
     if (focused && document.activeElement === document.body) this.el.focus();
   }
 
-  _handleInputClick = (e) => {
+  // Bound to the date inputs only, so the target is one of them.
+  _handleInputClick = (e: Event) => {
+    const input = e.target as HTMLInputElement;
     // Block the native date picker only when the calendar is shown to replace it.
-    if (e.target.type == 'date' && (this.options.openByDefault || this.options.container)) e.preventDefault();
+    if (input.type == 'date' && (this.options.openByDefault || this.options.container)) e.preventDefault();
     this._batchDraws(() => {
-      this.setDateFromInput(e.target as HTMLInputElement);
+      this.setDateFromInput(input);
       this.draw();
-      this.gotoDate(<HTMLElement>e.target === this.el ? this.date : this.endDate);
+      this.gotoDate(input === this.el ? this.date : this.endDate);
     });
     this._showDisplay();
     if (this.options.onInputInteraction) this.options.onInputInteraction.call(this);
@@ -1508,7 +1528,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     if (!button.matches('.datepicker-day-button') || !Utils.plainKey(event)) return;
     const date = this._dayDate(button);
     const weekday = (date.getDay() - this.options.firstDay + 7) % 7;
-    const offsets = { ArrowLeft: this.options.isRTL ? 1 : -1, ArrowRight: this.options.isRTL ? -1 : 1,
+    const offsets: Record<string, number> = { ArrowLeft: this.options.isRTL ? 1 : -1, ArrowRight: this.options.isRTL ? -1 : 1,
       ArrowUp: -7, ArrowDown: 7, Home: -weekday, End: 6 - weekday };
     if (Object.hasOwn(offsets, event.key)) date.setDate(date.getDate() + offsets[event.key]);
     else if (event.key === 'PageUp' || event.key === 'PageDown') {
@@ -1534,8 +1554,8 @@ export class Datepicker extends Component<DatepickerOptions> {
     else this.gotoDate(date);
   };
 
-  _handleCalendarClick = (e) => {
-    const target = <HTMLElement>e.target;
+  _handleCalendarClick = (e: Event) => {
+    const target = e.target as HTMLElement;
     if (target.classList.contains('is-disabled')) return;
 
     this._batchDraws(() => {
@@ -1546,9 +1566,9 @@ export class Datepicker extends Component<DatepickerOptions> {
         !target.parentElement.classList.contains('is-selection-disabled')
       ) {
         const selectedDate = new Date(
-          e.target.getAttribute('data-year'),
-          e.target.getAttribute('data-month'),
-          e.target.getAttribute('data-day')
+          Number(target.getAttribute('data-year')),
+          Number(target.getAttribute('data-month')),
+          Number(target.getAttribute('data-day'))
         );
 
         if (!this.multiple || this.options.isMultipleSelection) {
@@ -1595,26 +1615,26 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.draw();
   };
 
-  _handleMonthChange = (e) => {
-    this.gotoMonth(e.target.value);
+  _handleMonthChange = (e: Event) => {
+    this.gotoMonth((e.target as HTMLSelectElement).value);
   };
 
-  _handleYearChange = (e) => {
-    this.gotoYear(e.target.value);
+  _handleYearChange = (e: Event) => {
+    this.gotoYear((e.target as HTMLSelectElement).value);
   };
 
   // change view to a specific month (zero-index, e.g. 0: January)
-  gotoMonth(month) {
-    if (!isNaN(month)) {
-      this.calendars[0].month = parseInt(month, 10);
+  gotoMonth(month: string | number): void {
+    if (!isNaN(Number(month))) {
+      this.calendars[0].month = parseInt(String(month), 10);
       this.adjustCalendars();
     }
   }
 
   // change view to a specific full year (e.g. "2012")
-  gotoYear(year) {
-    if (!isNaN(year)) {
-      this.calendars[0].year = parseInt(year, 10);
+  gotoYear(year: string | number): void {
+    if (!isNaN(Number(year))) {
+      this.calendars[0].year = parseInt(String(year), 10);
       this.adjustCalendars();
     }
   }
@@ -1653,11 +1673,11 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   _handleInputChange = (e: Event) => {
     // Prevent change event from being fired when triggered by the plugin
-    if (e['detail']?.firedBy === this) return;
+    if (e instanceof CustomEvent && e.detail?.firedBy === this) return;
     this.setDateFromInput(e.target as HTMLInputElement);
   };
 
-  renderDayName(opts, day, abbr: boolean = false) {
+  renderDayName(opts: DatepickerOptions, day: number, abbr: boolean = false): string {
     day += opts.firstDay;
     while (day >= 7) {
       day -= 7;

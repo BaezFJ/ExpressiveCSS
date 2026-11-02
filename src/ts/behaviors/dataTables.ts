@@ -367,7 +367,7 @@ export class DataTables {
   };
 
   private static _onFilter = (e: Event) => {
-    const input = Utils.closestInPath(e, `.data-table ${FILTER}`) as HTMLInputElement;
+    const input = Utils.closestInPath<HTMLInputElement>(e, `.data-table ${FILTER}`);
     if (!input) return;
     const wrapper = input.closest('.data-table');
     // A listener may replace rows, sync or dispatch a newer request before returning.
@@ -410,7 +410,7 @@ export class DataTables {
   }
 
   private static _onPage = (e: MouseEvent) => {
-    const button = Utils.closestInPath(e, `.data-table[data-page-size] ${PAGE_BUTTON}:not(:disabled, [aria-disabled="true"])`) as HTMLButtonElement;
+    const button = Utils.closestInPath<HTMLButtonElement>(e, `.data-table[data-page-size] ${PAGE_BUTTON}:not(:disabled, [aria-disabled="true"])`);
     if (!button) return;
     const wrapper = button.closest('.data-table');
     if (!pageSize(wrapper)) return;
@@ -426,7 +426,7 @@ export class DataTables {
 
   private static _onPageSize = (e: Event) => {
     if (!e.composed) return;
-    const control = Utils.closestInPath(e, `.data-table[data-page-size] ${PAGE_SIZE}`) as HTMLSelectElement;
+    const control = Utils.closestInPath<HTMLSelectElement>(e, `.data-table[data-page-size] ${PAGE_SIZE}`);
     if (!control) return;
     DataTables._setPageSize(control.closest('.data-table'), control.value, e);
   };
@@ -538,7 +538,7 @@ export class DataTables {
   };
 
   private static _onPointerDown = (e: PointerEvent) => {
-    const handle = Utils.closestInPath(e, HANDLE) as HTMLElement;
+    const handle = Utils.closestInPath<HTMLElement>(e, HANDLE);
     if (handle && e.button === 0) DataTables._drag(handle, e);
   };
 

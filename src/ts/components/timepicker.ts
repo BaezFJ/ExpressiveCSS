@@ -250,7 +250,7 @@ export class Timepicker extends Component<TimepickerOptions> {
    * @default 'PM'
    */
   amOrPm: 'AM' | 'PM';
-  static _template;
+  static _template: string;
   /** Whether this device exposes the Vibration API at all. */
   canVibrate: boolean;
   _canvas: HTMLElement;
@@ -689,7 +689,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   /** The hour on the 24-hour clock, setting AM or PM on a 12-hour one. */
-  private _setHours24(hour: number) {
+  private _setHours24(hour: number): void {
     if (!this.options.twelveHour) return void (this.hours = hour);
     this.amOrPm = hour >= 12 ? 'PM' : 'AM';
     this.hours = hour % 12 || 12;
@@ -744,7 +744,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     this._canvas?.classList.remove('timepicker-canvas-out');
   }
 
-  resetClock(delay) {
+  resetClock(delay: number | null): void {
     this._cancelClockReset();
     const view = this.currentView,
       value = this[view],
@@ -881,7 +881,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     this._moveHand(unit, value);
   };
 
-  drawClockFromTimeInput(value, isHours) {
+  drawClockFromTimeInput(value: number, isHours: boolean): void {
     const unit = Math.PI / (isHours ? 6 : 30);
     const radian = value * unit;
     let radius;
@@ -894,7 +894,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.setClockAttributes(radian, radius);
   }
 
-  setHand(x, y, roundBy5: boolean = false) {
+  setHand(x: number, y: number, roundBy5: boolean = false): void {
     this._cancelClockReset();
     const isHours = this.currentView === 'hours',
       unit = Math.PI / (isHours || roundBy5 ? 6 : 30),
@@ -991,7 +991,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.inputHours.value = this.hours.toString();
   }
 
-  done = (clearValue = null) => {
+  done = (clearValue: boolean | null = null): void => {
     // Set input value
     const last = this.el.value;
     let value = clearValue ? '' : this._clockTime(this.hours);
