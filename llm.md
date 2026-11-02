@@ -394,7 +394,7 @@ const current = Expressive.ComponentName.getInstance(element);
 current?.destroy();
 ```
 
-`init()` also accepts a NodeList or HTMLCollection and returns an array of component instances. Empty collections return an empty array. Re-initializing an element destroys its previous instance first. Component-specific sections below define additional methods, properties, callbacks, and option defaults.
+`init()` also accepts a NodeList or HTMLCollection and returns an array of component instances. Empty collections return an empty array. Re-initializing an element destroys its previous instance first. An option set to `undefined`, at the top level or inside `i18n`, keeps its default. Component-specific sections below define additional methods, properties, callbacks, and option defaults.
 
 Menu, Lightbox, NavigationRail, Cards and ExpandingCard fire DOM events from their initialization elements. Menu and Lightbox fire `expressive:open` and `expressive:close` as state changes, then `expressive:opened` and `expressive:closed` when motion ends. NavigationRail fires the same names synchronously around its class and ARIA updates; its end events do not wait for CSS motion. Cards and ExpandingCard fire only `expressive:open` and `expressive:close`. Each event follows its matching callback, bubbles and crosses shadow roots. Check `event.target` because nested components bubble too. Closing a Menu or Lightbox from its `expressive:open` listener stops it opening.
 

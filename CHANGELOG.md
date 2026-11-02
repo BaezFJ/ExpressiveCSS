@@ -12,6 +12,23 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- An option passed as `undefined`, at the top level or inside `i18n`, keeps its
+  default. A translation table missing Keypad's `tooShort` made every input in a
+  field with `minlength` throw.
+
+- Autocomplete hears a press on the list released outside it. Before, the
+  field kept treating the press as unfinished, missed being left, and late
+  search results reopened the list.
+
+- Autocomplete with no results announces "No results." even while it lists the
+  selected entries, and the list no longer shares the selection's array.
+
+- Charts whose table is removed draw nothing, where they kept drawing the old
+  data.
+
+- ShowMore without clamped text no longer throws from `destroy()` or `open()`,
+  so it can be initialized again.
+
 - AutoInit logs a component whose constructor throws and releases its element,
   then carries on. Before, one bad element stopped every component after it in
   the table and kept `watch` from starting.

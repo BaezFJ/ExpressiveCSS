@@ -286,8 +286,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // a `window.ontouchstart` feature detect; a pointer event covers both, and
     // the detect covered nothing the browser does not report itself.
     this.container.addEventListener('pointerdown', this._handleContainerPointerDown, { signal });
-    this.container.addEventListener('pointerup', this._handleContainerPointerUp, { signal });
-    this.container.addEventListener('pointercancel', this._handleContainerPointerUp, { signal });
     this.container.addEventListener('mousedown', this._handleInertRowPress, { capture: true, signal });
     this.container.addEventListener('click', this._handleInertRowPress, { capture: true, signal });
   }
@@ -523,6 +521,12 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     if (!e.isPrimary) return;
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     this._pointerDown = true;
+    // A mouse press has no implicit capture, so its release can land outside
+    // the list. The document hears it wherever it lands. Adding the same
+    // listener again is a no-op, so repeated presses add nothing.
+    const listen = { capture: true, once: true, signal: this._events.signal };
+    this.el.ownerDocument.addEventListener('pointerup', this._handleContainerPointerUp, listen);
+    this.el.ownerDocument.addEventListener('pointercancel', this._handleContainerPointerUp, listen);
   };
 
   _handleContainerPointerUp = () => {
@@ -694,10 +698,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   _renderMenu() {
     this._resetAutocomplete();
     if (this._noResults) this.container.append(this._createNoResultsRow());
-    // Check if Data is empty
-    if (this.menuItems.length === 0) {
-      this.menuItems = this.selectedValues; // Show selected Items
-    }
+    // With no results, the list shows the selected entries, so they can be
+    // removed. A copy: menuItems must not share selectedValues' array.
+    if (this.menuItems.length === 0) this.menuItems = [...this.selectedValues];
     const groups = new Map<string, HTMLElement>();
     const selectedIds = new Set(this.selectedValues.map(entry => entry.id));
     this._visibleEntries().forEach((entry) => this._groupList(entry.group, groups).append(this._createMenuItem(entry, selectedIds)));
@@ -790,7 +793,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   /** Announces the entries a person can choose. Disabled ones are shown, not counted. */
   private _resultsMessage() {
-    const count = this._visibleEntries().filter((entry) => entry.disabled !== true).length;
+    // The selected entries shown under "No results." are not search results.
+    const count = this._noResults ? 0 : this._visibleEntries().filter((entry) => entry.disabled !== true).length;
     return count ? this.options.i18n.results(count) : this.options.i18n.noResults;
   }
 

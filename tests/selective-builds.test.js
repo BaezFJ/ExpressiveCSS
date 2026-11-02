@@ -332,7 +332,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed linear select-group filtering and two-path Sankey highlighting: 110,097 gzip bytes (+9).
   // Autocomplete render limits, selected-ID lookup and shared image URL validation: 110,205 gzip bytes (+108).
   // Reviewed AutoInit surviving a throwing constructor or teardown, owner-checked destroy(), clamped emptied Timepicker fields, data tables in hidden panels and treemap update() with no rows: 110,298 gzip bytes (+93).
-  assert.ok(sizes(js).gzip <= 110298, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed undefined options keeping their defaults, Autocomplete presses released outside the list and its no-results count, LineChart without a table and ShowMore without clamped text: 110,424 gzip bytes (+126).
+  assert.ok(sizes(js).gzip <= 110424, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

@@ -558,7 +558,11 @@ export class LineChart extends Component<LineChartOptions> {
 
   protected _read() {
     const table = this.el.querySelector<HTMLTableElement>(':scope > table');
-    if (!table) return;
+    if (!table) {
+      // A removed table, as data-watch reports, leaves nothing to draw.
+      [this._header, this._rows, this.labels, this.series, this._all] = [[], [], [], [], []];
+      return;
+    }
     // Without a <thead> the parser puts the header row in the first <tbody>.
     const headerRow = table.tHead?.rows[0] ?? table.rows[0];
     const header = Array.from(headerRow?.cells ?? []);
