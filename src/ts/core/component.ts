@@ -28,6 +28,13 @@ export interface NotifyOptions {
 }
 
 /**
+ * `options` without its keys set to `undefined`, so those keep their
+ * defaults: `{ i18n: { tooShort: t.missing } }` must not erase a message.
+ */
+const defined = <T extends object>(options: T): T =>
+  options && (Object.fromEntries(Object.entries(options).filter(([, value]) => value !== undefined)) as T);
+
+/**
  * Base class implementation for Expressive components.
  */
 export class Component<O extends BaseOptions> {
@@ -61,8 +68,9 @@ export class Component<O extends BaseOptions> {
     new.target.getInstance(el)?.destroy();
     this.el = el;
     const defaults: Partial<O> & { i18n?: object } = new.target.defaults;
-    const i18n: object = defaults.i18n && { i18n: { ...defaults.i18n, ...(options as typeof defaults)?.i18n } };
-    this.options = { ...defaults, ...options, ...i18n } as O;
+    const given = defined(options) as typeof defaults;
+    const i18n: object = defaults.i18n && { i18n: { ...defaults.i18n, ...defined(given?.i18n) } };
+    this.options = { ...defaults, ...given, ...i18n } as O;
     this._events = controllerFor(el);
     el[new.target.key] = this;
   }

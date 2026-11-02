@@ -76,3 +76,20 @@ test('first focus of an empty autocomplete does not search, but typing still doe
     assert.deepEqual(searches, ['apple']);
   } finally { instance.destroy(); resetBody(); }
 });
+
+test('autocomplete with no results announces none, and the selected entries it shows can still be removed', () => {
+  resetBody();
+  document.body.innerHTML = '<div class="field"><input id="query"></div>';
+  const instance = Expressive.Autocomplete.init(document.getElementById('query'), { minLength: 0, isMultiSelect: true, data: [{ id: 'Apple' }, { id: 'Pear' }] });
+  try {
+    instance.el.focus();
+    instance.selectOption('Apple');
+    instance.setMenuItems([]);
+    const rows = [...instance.container.querySelectorAll('[role="option"]')].map((row) => row.getAttribute('data-id'));
+    assert.deepEqual(rows, ['Apple'], 'the selected entry is listed under "No results."');
+    assert.equal(instance._announcer.textContent, 'No results.');
+    assert.notEqual(instance.menuItems, instance.selectedValues, 'the list does not share the selection array');
+    instance.selectOption('Apple');
+    assert.deepEqual(instance.selectedValues, []);
+  } finally { instance.destroy(); resetBody(); }
+});

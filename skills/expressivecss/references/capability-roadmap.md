@@ -42,7 +42,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Pull-to-refresh](#pull-to-refresh) | implemented | source-reviewed | incomplete | 0 |
 | [Swipe actions](#swipe-actions) | implemented | source-reviewed | incomplete | 0 |
 | [Accordion](#accordion) | implemented | source-reviewed | needs-rerun | 0 |
-| [Show more](#show-more) | implemented | source-reviewed | incomplete | 0 |
+| [Show more](#show-more) | unassessed | needs-review | incomplete | 0 |
 | [Data table](#data-table) | unassessed | needs-review | needs-rerun | 0 |
 | [Stat](#stat) | unassessed | needs-review | needs-rerun | 0 |
 | [Description list](#description-list) | implemented | source-reviewed | incomplete | 0 |
@@ -609,9 +609,9 @@ Web adaptation: Native <details> and <summary>; the browser owns the toggle, its
 
 ## Show more
 
-**implemented within the stated scope.** A .show-more holding text with a line-clamp-1, -2 or -3 class and a <button type="button">; the button sets aria-expanded and aria-controls, shows the full text, reads "Show less" while it is open (i18n.showLess or data-show-less), and hides while the clamped text fits, checking again on resize, after web fonts load and on blur.
+**unassessed within the stated scope.** A .show-more holding text with a line-clamp-1, -2 or -3 class and a <button type="button">; the button sets aria-expanded and aria-controls, shows the full text, reads "Show less" while it is open (i18n.showLess or data-show-less), and hides while the clamped text fits, checking again on resize, after web fonts load and on blur.
 
-Source review: source-reviewed, 2026-10-25. [src/ts/components/showMore.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/showMore.ts), [src/sass/components/_show-more.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_show-more.scss).
+Source review: needs-review, 2026-10-25. [src/ts/components/showMore.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/showMore.ts), [src/sass/components/_show-more.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_show-more.scss).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
 
