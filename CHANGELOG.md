@@ -12,6 +12,22 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- AutoInit logs a component whose constructor throws and releases its element,
+  then carries on. Before, one bad element stopped every component after it in
+  the table and kept `watch` from starting.
+
+- Destroying an instance that a later `init` on the same element replaced no
+  longer unregisters the replacement.
+
+- Timepicker keeps the current time it puts in an emptied field inside
+  `minTime` and `maxTime`, and on the 12-hour clock sets AM or PM to match.
+
+- Data tables in a hidden tab panel, dialog or `<details>` keep their records.
+  Filtering and paging no longer hide every row until the next sync.
+
+- Treemap chart `update()` on a table with no rows no longer throws from its
+  resize observer, and `show()` does nothing on a chart with no rectangles.
+
 - Autocomplete images now use the same URL scheme allowlist as FormSelect.
   Invalid URLs, `javascript:` URLs and non-image `data:` URLs are dropped.
 

@@ -136,6 +136,9 @@ export class Component<O extends BaseOptions> {
    */
   destroy(): void {
     this._events.abort();
-    this.el[(this.constructor as typeof Component).key] = undefined;
+    // A stale instance, replaced by a later init on the same element, must
+    // not unregister the instance that replaced it.
+    const { key } = this.constructor as typeof Component;
+    if (this.el[key] === this) this.el[key] = undefined;
   }
 }
