@@ -205,7 +205,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   container: HTMLElement;
   /** Instance of the menu plugin for this autocomplete. */
   menu: Menu;
-  static _keydown: boolean;
   selectedValues: AutocompleteData[];
   menuItems: AutocompleteData[];
 
@@ -278,7 +277,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     const { signal } = this._events;
     this.el.addEventListener('blur', this._handleInputBlur, { signal });
     this.el.addEventListener('input', this._handleInput, { signal });
-    this.el.addEventListener('keyup', this._handleInputKeyup, { signal });
     this.el.addEventListener('focus', this._handleInputFocus, { signal });
     this.el.addEventListener('keydown', this._handleInputKeydown, { signal });
     this.el.addEventListener('click', this._handleInputClick, { signal });
@@ -383,10 +381,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
   };
 
-  _handleInputKeyup = () => {
-    Autocomplete._keydown = false;
-  };
-
   _handleInput = () => {
     this._left = false;
     this.count = 0;
@@ -457,7 +451,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   }
 
   _handleInputKeydown = Utils.ignoringComposition((e: KeyboardEvent) => {
-    Autocomplete._keydown = true;
     if (e.key === 'Escape' || e.key === 'Tab') {
       this._dismiss(e);
       return;
@@ -866,16 +859,15 @@ export class Autocomplete extends Component<AutocompleteOptions> {
    * @param open Option to conditionally open menu
    */
   setMenuItems(menuItems: AutocompleteData[], selected: number[] | string[] = null, open: boolean = true) {
-    if (this.el['Expressive_Autocomplete'] !== this) return;
+    if (Autocomplete.getInstance(this.el) !== this) return;
     // Results that arrive after the user left the field update the list
     // without opening it under an input nobody is using.
     open &&= !this._left;
     this._noResults = menuItems.length === 0;
     this.menuItems = menuItems;
     if (selected) {
-      this.selectedValues = this.menuItems.filter(
-        (item) => !(selected.indexOf(<never>item.id) === -1)
-      );
+      const ids: (string | number)[] = selected;
+      this.selectedValues = this.menuItems.filter((item) => ids.includes(item.id));
     }
     // open() clears and renders the list itself.
     if (this.options.isMultiSelect) {

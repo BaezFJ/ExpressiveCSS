@@ -186,11 +186,11 @@ const drawable = (series: Series) => series.values.some((value) => value !== nul
 /** Axis steps, as multiples of a power of ten. */
 const NICE = [1, 2, 2.5, 5, 10];
 
-/** A round step that cuts `span` into at most `parts` pieces. */
+/** A round step that cuts `span` into at most `parts` pieces. A reversed span, as an author's `data-min` above the data gives, is measured by its size. */
 export function niceStep(span: number, parts = 4) {
-  const raw = span / parts || 1;
+  const raw = Math.abs(span) / parts || 1;
   const power = 10 ** Math.floor(Math.log10(raw));
-  return power * NICE.find((multiple) => multiple * power >= raw * (1 - 1e-9))!;
+  return power * (NICE.find((multiple) => multiple * power >= raw * (1 - 1e-9)) ?? 10);
 }
 
 /** The multiples of `step` from `low` to `high`, without float error. */
@@ -205,6 +205,35 @@ export function steps(low: number, high: number, step: number) {
 /** A number format in the element's language, or the browser's for an invalid lang attribute. */
 export function numberFormat(el: Element, options: Intl.NumberFormatOptions) {
   return new Intl.NumberFormat(Utils.locale(el), options);
+}
+
+/**
+ * A share of a whole as a percentage: whole numbers, with a tenth below 10%
+ * so a small part is not 0%. A chart that writes many keeps `formats` and
+ * clears it when the language may have changed.
+ */
+export function percentLabel(el: Element, share: number, formats: Intl.NumberFormat[] = []) {
+  const digits = share < 0.1 ? 1 : 0;
+  formats[digits] ??= numberFormat(el, { style: 'percent', maximumFractionDigits: digits });
+  return formats[digits].format(share);
+}
+
+/** A span holding `text`. */
+export const textSpan = (text: string) => Object.assign(document.createElement('span'), { textContent: text });
+
+const ARROW_STEPS: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+
+/**
+ * The mark a key moves to among marks `0` to `last` in table order, from
+ * `active`. The arrows keep their meaning in a right-to-left chart, since
+ * table order is no direction on screen. With nothing shown, Escape is left
+ * to a dialog or sheet around the chart.
+ */
+export function linearKey(key: string, active: number, last: number): number | undefined {
+  if (key === 'Escape') return active < 0 ? undefined : -1;
+  const step = ARROW_STEPS[key];
+  if (step) return Math.min(last, Math.max(0, active + step));
+  return ({ Home: 0, End: last } as Record<string, number>)[key];
 }
 
 /** A y scale's ends, and with .axis the values its labels mark. */

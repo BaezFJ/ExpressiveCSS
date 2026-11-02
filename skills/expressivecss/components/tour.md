@@ -9,7 +9,7 @@ Component ID: `tour`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `cca599107934c5d3d29a538587c3a86f6c5ac7a3009daa25276ec5da624873bc`
+Contract SHA-256: `909b22b2d450a63b419a1d3a315a17de46fe02ff2cc36fbdf7c1c0213342f429`
 
 #### Selection and adaptation
 

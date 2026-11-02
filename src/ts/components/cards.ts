@@ -193,7 +193,7 @@ export class Cards extends Component<CardsOptions> {
     Utils.onDocumentReady(() => {
       const cards = Array.from(document.querySelectorAll(CARDS_SELECTOR)).filter(isCardReveal);
       cards.forEach((el) => {
-        if (el['Expressive_Cards'] == undefined) this.init(el);
+        if (!Cards.getInstance(el)) this.init(el);
       });
     });
   }

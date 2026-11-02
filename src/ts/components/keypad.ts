@@ -66,7 +66,8 @@ let segmenter: Intl.Segmenter | undefined;
 function keyFor(e: Event): [Keypad, HTMLButtonElement] | null {
   const key = (e.target as Element).closest?.('button');
   if (!key) return null;
-  const keypad = key.closest('.keypad, .keyboard')?.['Expressive_Keypad'] as Keypad | undefined;
+  const host = key.closest('.keypad, .keyboard');
+  const keypad = host && Keypad.getInstance(host);
   if (keypad) return [keypad, key];
   const wrapper = key.dataset.key && key.closest('.field');
   if (!wrapper) return null;

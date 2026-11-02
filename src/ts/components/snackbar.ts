@@ -256,7 +256,7 @@ export class Snackbar {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Snackbar {
+  static getInstance(el: Element): Snackbar | undefined {
     return el['Expressive_Snackbar'];
   }
 
@@ -291,7 +291,7 @@ export class Snackbar {
     // Don't start a swipe from the action or close — those are buttons.
     if (target && !target.closest('button, a') && target.closest('.snackbar')) {
       const snackbarElem = target.closest('.snackbar') as HTMLElement;
-      const snackbar: Snackbar = snackbarElem['Expressive_Snackbar'];
+      const snackbar = Snackbar.getInstance(snackbarElem);
       if (!snackbar) return;
       snackbar.panning = true;
       snackbar._pauseTimer();
