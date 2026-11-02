@@ -116,7 +116,7 @@ export class Tabs extends Component<TabsOptions> {
     // Labels measured before a web font arrives have the fallback's width,
     // and the strip's size need not change when the font arrives.
     document.fonts?.ready.then(() => {
-      if (this.el['Expressive_Tabs'] === this) this._remeasure();
+      if (Tabs.getInstance(this.el) === this) this._remeasure();
     });
   }
 

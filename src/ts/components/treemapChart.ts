@@ -1,4 +1,4 @@
-import { LineChart, LineChartOptions, numberFormat } from './lineChart';
+import { LineChart, LineChartOptions, percentLabel } from './lineChart';
 
 export type TreemapChartOptions = LineChartOptions;
 
@@ -134,10 +134,8 @@ export class TreemapChart extends LineChart {
   /** Adds the row's share of the whole to its cell in the tooltip, as the pie chart writes it. */
   private _share(row: number) {
     if (row < 0) return;
-    const share = this._values[row] / sum(this._values);
-    // Whole percentages, with a tenth below 10% so a small part is not 0%.
-    const percent = numberFormat(this.el, { style: 'percent', maximumFractionDigits: share < 0.1 ? 1 : 0 });
-    this._tooltip.querySelector('span:nth-of-type(2)')!.textContent += ` (${percent.format(share)})`;
+    const share = percentLabel(this.el, this._values[row] / sum(this._values));
+    this._tooltip.querySelector('span:nth-of-type(2)')!.textContent += ` (${share})`;
   }
 
   /**

@@ -22,8 +22,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Chips trims typed text, so Space then Enter adds no blank chip and `"a "` no
   longer duplicates `"a"`. `addChip()` refuses a whitespace-only id.
 
-- `getInstance()` is typed to return `undefined` before `init()` and after
-  `destroy()`, and takes any `Element`. The AutoInit table is now type-checked,
+- `getInstance()`, `Snackbar.getInstance()` included, is typed to return
+  `undefined` before `init()` and after `destroy()`, and takes any `Element`. The AutoInit table is now type-checked,
   and `src/ts/core` builds under strict TypeScript.
 
 - An option passed as `undefined`, at the top level or inside `i18n`, keeps its
