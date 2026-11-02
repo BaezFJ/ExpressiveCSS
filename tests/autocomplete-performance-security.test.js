@@ -93,3 +93,13 @@ test('autocomplete with no results announces none, and the selected entries it s
     assert.deepEqual(instance.selectedValues, []);
   } finally { instance.destroy(); resetBody(); }
 });
+
+test('preselected ids with duplicate data entries keep the first entry', () => {
+  resetBody();
+  document.body.innerHTML = '<div class="field"><input id="query"></div>';
+  const data = [{ id: 'a', text: 'First' }, { id: 'a', text: 'Second' }, { id: 'b', text: 'Other' }];
+  const instance = Expressive.Autocomplete.init(document.getElementById('query'), { data, selected: ['a', 'missing'] });
+  try {
+    assert.deepEqual(instance.selectedValues, [{ id: 'a', text: 'First' }, { id: 'missing' }]);
+  } finally { instance.destroy(); resetBody(); }
+});
