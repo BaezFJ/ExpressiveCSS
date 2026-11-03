@@ -8001,8 +8001,8 @@ Expressive.Datepicker.init(elem, {
 | `disableWeekends` | Boolean | `false` | Prevent selecting Saturday and Sunday. |
 | `disableDayFn` | Function | `null` | Return true to disable that day. Receives a `Date`. |
 | `firstDay` | Number | `0`, or the language's | First day of the week. `0` is Sunday, `1` is Monday. With a `lang` on or around the input, defaults to that language's first day where the browser knows it. |
-| `minDate` | Date | `null` | Earliest selectable date. |
-| `maxDate` | Date | `null` | Latest selectable date. |
+| `minDate` | Date | `null` | Earliest selectable date. The calendar does not page or list years before its month. |
+| `maxDate` | Date | `null` | Latest selectable date. The calendar does not page or list years after its month. |
 | `yearRange` | Number or Array | `10` | Years on either side of the viewed year, or `[minYear, maxYear]`. |
 | `minYear`, `maxYear`, `minMonth`, `maxMonth` | Number or undefined | `0`, `9999`, `undefined`, `undefined` | Internal calculation fields. Do not configure them directly; use `minDate`, `maxDate` and `yearRange`. |
 | `yearRangeReverse` | Boolean | `false` | Sort the year list in reverse order. |

@@ -458,11 +458,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     // A modal calendar is always open in its dialog and writes on Ok.
     if (this.options.displayPlugin === 'modal') Object.assign(this.options, { openByDefault: true, autoSubmit: false });
 
-    // Remove time component from minDate and maxDate options, on copies: the
-    // caller's Date objects are theirs.
-    const { minDate, maxDate } = this.options;
-    if (minDate) this.options.minDate = new Date(new Date(minDate.getTime()).setHours(0, 0, 0, 0));
-    if (maxDate) this.options.maxDate = new Date(new Date(maxDate.getTime()).setHours(0, 0, 0, 0));
+    this._setDateBounds();
 
     this.id = Utils.guid();
     if (this.options.isMultipleSelection) {
@@ -1183,6 +1179,25 @@ export class Datepicker extends Component<DatepickerOptions> {
    * Depends on the month, which is deliberately *not* part of the controls
    * cache key - so the reuse path has to recompute and reapply it.
    */
+  /**
+   * Removes the time from minDate and maxDate, on copies: the caller's Date
+   * objects are theirs. Each also sets the month and year bounds, which the
+   * arrows, the month and year lists and PageUp/PageDown read. They used to
+   * stay at their defaults, so the calendar paged into months where every
+   * day was disabled.
+   */
+  private _setDateBounds() {
+    const { minDate, maxDate } = this.options;
+    if (minDate) {
+      this.options.minDate = new Date(new Date(minDate.getTime()).setHours(0, 0, 0, 0));
+      Object.assign(this.options, { minYear: minDate.getFullYear(), minMonth: minDate.getMonth() });
+    }
+    if (maxDate) {
+      this.options.maxDate = new Date(new Date(maxDate.getTime()).setHours(0, 0, 0, 0));
+      Object.assign(this.options, { maxYear: maxDate.getFullYear(), maxMonth: maxDate.getMonth() });
+    }
+  }
+
   private _arrowState(year: number, month: number) {
     const opts = this.options;
     const isMinYear = year === opts.minYear;

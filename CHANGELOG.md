@@ -30,6 +30,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Datepicker `minDate` and `maxDate` bound the month arrows, the month and
+  year lists and PageUp/PageDown. The internal month and year bounds were
+  never set from them, so the calendar paged into months where every day
+  was disabled.
+
 - Autocomplete calls `onSearch` only once the text reaches `minLength`.
   Shorter text used to reach it too, so a remote search fetched on the
   first keystroke whatever `minLength` said. Text shorter than `minLength`

@@ -104,6 +104,24 @@ test('minDate and maxDate options are not mutated', () => {
   }
 });
 
+test('minDate and maxDate bound the month arrows and the year list', () => {
+  resetBody();
+  document.body.innerHTML = '<div><input></div>';
+  const picker = Expressive.Datepicker.init(document.querySelector('input'), {
+    minDate: new Date(2026, 9, 5), maxDate: new Date(2026, 9, 25), defaultDate: new Date(2026, 9, 10), setDefaultDate: true
+  });
+  try {
+    picker.draw();
+    const arrow = (name) => picker.calendarEl.querySelector(`.month-${name}`).classList.contains('is-disabled');
+    assert.equal(arrow('prev'), true, 'no month before minDate');
+    assert.equal(arrow('next'), true, 'no month after maxDate');
+    const years = [...picker.calendarEl.querySelectorAll('.orig-select-year option')].map((option) => option.value);
+    assert.deepEqual(years, ['2026']);
+  } finally {
+    picker.destroy();
+  }
+});
+
 test('a date typed into a multiple selection stays selected', () => {
   resetBody();
   document.body.innerHTML = '<div><input></div>';
