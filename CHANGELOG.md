@@ -30,6 +30,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Security: a questionnaire's review step no longer shows hidden inputs or
+  passwords. It listed a hidden token as an answer and printed a password in
+  plain text. A password now shows as a fixed-length mask, and a file input
+  shows its file names instead of the browser's fake path.
+
 - The mega menu and navigation rail panel chevrons stay visible in forced-colors
   mode. They were drawn as masks and painted in Canvas, so they disappeared.
 

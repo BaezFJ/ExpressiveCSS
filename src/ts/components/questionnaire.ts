@@ -54,11 +54,22 @@ function labelText(control: HTMLInputElement) {
   return label?.textContent.trim() || control.value;
 }
 
+/**
+ * Summary text for the inputs whose value must not be shown: a hidden input is
+ * the server's, a password is masked at a fixed length, and a file shows its
+ * names rather than the browser's fake path.
+ */
+const MASKED: Record<string, (control: HTMLInputElement) => string> = {
+  hidden: () => '',
+  password: (control) => (control.value ? '••••••••' : ''),
+  file: (control) => Array.from(control.files ?? [], (file) => file.name).join(', ')
+};
+
 /** A control's answer as text for the summary. */
 function answerText(control: Control) {
   if (control instanceof HTMLSelectElement) return Array.from(control.selectedOptions, (option) => option.text).join(', ');
   if (isChoice(control)) return control.checked ? labelText(control) : '';
-  return control.value.trim();
+  return MASKED[control.type]?.(control as HTMLInputElement) ?? control.value.trim();
 }
 
 const savedState = (control: Control): Saved => {
