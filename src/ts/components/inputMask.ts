@@ -1,4 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
+import { afterFormReset } from '../core/utils';
 
 const _defaults = Object.freeze({});
 
@@ -103,9 +104,8 @@ export class InputMask extends Component<BaseOptions> {
     // twice changes nothing.
     el.addEventListener('compositionend', this._format, { signal });
     el.addEventListener('beforeinput', this._onBeforeInput, { signal });
-    // The form resets its fields after the reset event, so the mask formats
-    // the restored value a task later.
-    el.ownerDocument.addEventListener('reset', this._onReset, { capture: true, signal });
+    // The mask formats the value a reset restores, in a shadow root too.
+    afterFormReset(el, () => this._rewrite(), signal);
     this._rewrite();
   }
 
@@ -149,14 +149,6 @@ export class InputMask extends Component<BaseOptions> {
     this.el.setSelectionRange(caret, caret);
     this.el.dispatchEvent(new InputEvent('input', { bubbles: true, composed: true, inputType }));
   }
-
-  private _onReset = (e: Event) => {
-    if (e.target === this.el.form) setTimeout(this._afterReset);
-  };
-
-  private _afterReset = () => {
-    if (!this._events.signal.aborted) this._rewrite();
-  };
 
   private _format = () => {
     const caret = this._rewrite();

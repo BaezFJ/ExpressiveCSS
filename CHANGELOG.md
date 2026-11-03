@@ -30,6 +30,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- InputMask formats the value a form reset restores inside a shadow root
+  too. It listened for `reset` on the document, which the event never
+  reaches from a shadow root. InputMask and CurrencyInput now share one
+  reset helper.
+
 - A snackbar that a `replace: true` snackbar cuts short fires `close` and
   `closed` and runs its `completeCallback`, as a dismissed one does, and so
   does one a re-render took out of the page. They used to end silently, so

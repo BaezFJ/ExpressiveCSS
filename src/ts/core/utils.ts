@@ -8,6 +8,28 @@ export function restoreAttribute(el: Element, name: string, value: string | null
   else el.setAttribute(name, value);
 }
 
+/**
+ * Where a field listens for its form's events. Neither formdata nor reset
+ * leaves a shadow root, so a field in one listens there. Otherwise the
+ * document, so the listener follows the field into another form.
+ */
+export function formEventScope(el: Element): Document | ShadowRoot {
+  const root = el.getRootNode() as Document | ShadowRoot;
+  return 'host' in root ? root : el.ownerDocument;
+}
+
+/**
+ * Runs `restored` after a reset of the field's form. The form restores its
+ * fields after the reset event, so it waits a task, and it skips a field
+ * whose listeners `signal` has removed since.
+ */
+export function afterFormReset(el: HTMLInputElement, restored: () => void, signal: AbortSignal) {
+  const onReset = (e: Event) => {
+    if (e.target === el.form) setTimeout(() => signal.aborted || restored());
+  };
+  formEventScope(el).addEventListener('reset', onReset, { capture: true, signal });
+}
+
 /** A picker footer text button; a hidden one is also out of the tab order. */
 function footerButton(parent: HTMLElement, text: string | undefined, className: string, onClick: () => void, visible = true) {
   const button = document.createElement('button');

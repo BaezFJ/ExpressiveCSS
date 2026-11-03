@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { Utils } from '../core/utils';
+import { Utils, afterFormReset, formEventScope } from '../core/utils';
 
 export interface CurrencyInputOptions extends BaseOptions {
   /** `invalid` is the validity message for text that holds no amount. */
@@ -76,15 +76,9 @@ export class CurrencyInput extends Component<CurrencyInputOptions> {
     el.addEventListener('blur', this._format, { signal });
     el.addEventListener('focus', this._onFocus, { signal });
     el.addEventListener('input', this._validate, { signal });
-    // Neither formdata nor reset leaves a shadow root, so a field in one
-    // listens there. Otherwise the document, so the listener follows the
-    // field into another form.
-    const root = el.getRootNode() as Document | ShadowRoot;
-    const scope = 'host' in root ? root : el.ownerDocument;
-    scope.addEventListener('formdata', this._onFormData, { capture: true, signal });
-    // The form resets its fields after the reset event, so the field formats
-    // the restored value a task later.
-    scope.addEventListener('reset', this._onReset, { capture: true, signal });
+    formEventScope(el).addEventListener('formdata', this._onFormData, { capture: true, signal });
+    // The field formats the value a reset restores.
+    afterFormReset(el, () => this._start(), signal);
     this._start();
   }
 
@@ -150,14 +144,6 @@ export class CurrencyInput extends Component<CurrencyInputOptions> {
     const { el } = this;
     const invalid = el.value.trim() !== '' && this.value === null;
     el.setCustomValidity(invalid ? this.options.i18n.invalid : '');
-  };
-
-  private _onReset = (e: Event) => {
-    if (e.target === this.el.form) setTimeout(this._afterReset);
-  };
-
-  private _afterReset = () => {
-    if (!this._events.signal.aborted) this._start();
   };
 
   /** Puts the plain number in the form data in place of the formatted text. */

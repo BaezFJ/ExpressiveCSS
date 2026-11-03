@@ -191,6 +191,24 @@ each('a saved value is formatted on start without events, and again after a rese
   }
 });
 
+each('a field in a shadow root formats the value a reset restores', async ({ page }) => {
+  const value = () => page.evaluate(() => document.getElementById('host').shadowRoot.querySelector('input').value);
+  await page.evaluate(() => {
+    const host = document.body.appendChild(document.createElement('div'));
+    host.id = 'host';
+    const root = host.attachShadow({ mode: 'open' });
+    root.innerHTML = '<form><input name="shadowed" data-mask="(000) 000-0000" value="5551234567"></form>';
+    Expressive.InputMask.init(root.querySelector('input'));
+  });
+  assert.equal(await value(), '(555) 123-4567');
+  await page.evaluate(() => {
+    const root = document.getElementById('host').shadowRoot;
+    root.querySelector('input').value = '1';
+    root.querySelector('form').reset();
+  });
+  await page.waitForFunction(() => document.getElementById('host').shadowRoot.querySelector('input').value === '(555) 123-4567');
+});
+
 each("the page's input listeners read the formatted value", async ({ page }) => {
   await page.click('#phone');
   await page.keyboard.type('5551');
