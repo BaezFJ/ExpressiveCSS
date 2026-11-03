@@ -820,8 +820,8 @@ describe("AutoInit with a component that throws", () => {
     const original = console.error;
     console.error = (...args) => logged.push(args);
     try {
-      // A chip with an empty id makes the Chips constructor throw part way.
-      Expressive.AutoInit(document.body, { Chips: { data: [{ id: "" }] } });
+      // A null chip makes the Chips constructor throw part way.
+      Expressive.AutoInit(document.body, { Chips: { data: [null] } });
     } finally {
       console.error = original;
     }
