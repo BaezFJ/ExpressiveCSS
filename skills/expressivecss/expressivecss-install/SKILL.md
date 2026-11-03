@@ -21,6 +21,7 @@ Copy this checklist and tick it off:
 Reuse the root version resolution, or run its bundled resolver if this guide was loaded directly. This bundled guide covers the setup below. Consult the [getting-started documentation](https://www.expressivecss.com/index.html.md) only for missing details, and treat the public site's version as unverified until provenance proves it. For an older installed version, inspect `node_modules/@expressivecss/expressive` and the matching repository tag or commit before applying contract-dependent changes.
 
 1. Read the project's manifest and lockfile. Keep its package manager and any pinned ExpressiveCSS version.
+   For vendored browser assets without a Node manifest, select their existing upstream package directory with `--package-path <relative-directory>`. Keep `--project-root` at the consumer root and verify that the selected directory supplies its served assets. The resolver reads the package's actual version; this requires no Node dependency or version override. The path must stay inside the project without symlink components. Declared ranges and lockfile conflicts still apply when present, and a framework source checkout keeps priority.
 2. Add the package only when the task includes setup and the project does not already depend on it. Use the command for the lockfile you found:
 
    | Lockfile | Command |
@@ -95,7 +96,7 @@ The compiled stylesheet ships `@font-face` rules for Material Symbols (outlined,
 
 Copy this checklist and mark each item from observed output:
 
-- [ ] The lockfile or `node_modules/@expressivecss/expressive/package.json` shows the expected version.
+- [ ] The lockfile or selected installed/vendored package's `package.json` shows the expected version.
 - [ ] The consuming app's build command exits 0.
 - [ ] A real page loads styles, fonts, and icons with no 404s for CSS, fonts, or scripts.
 - [ ] The network panel shows no duplicate CSS or font stylesheets.
