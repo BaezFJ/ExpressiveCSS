@@ -421,12 +421,26 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // Value has changed!
     if (this.oldVal !== value) {
       this._noResults = false;
-      this._setStatusLoading();
-      this._queueSearch(typed);
+      this._startSearch(typed);
     }
     if (deselected) this._triggerChanged();
     this.oldVal = value;
   };
+
+  /**
+   * Searches for text of at least `minLength` characters. Shorter text drops
+   * the pending and running searches and the old results: it used to reach
+   * onSearch too, so a remote search fetched on every first keystroke.
+   */
+  private _startSearch(typed?: boolean) {
+    if (this.el.value.length >= this.options.minLength) {
+      this._setStatusLoading();
+      return this._queueSearch(typed);
+    }
+    this._cancelPendingSearch();
+    this._searchAbort?.abort();
+    this.menuItems = [];
+  }
 
   /** Searches now, or once typing pauses for `searchDelay`. Focus never waits. */
   private _queueSearch(typed?: boolean) {

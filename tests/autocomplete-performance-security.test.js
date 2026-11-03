@@ -77,6 +77,29 @@ test('first focus of an empty autocomplete does not search, but typing still doe
   } finally { instance.destroy(); resetBody(); }
 });
 
+test('autocomplete calls onSearch only once the text reaches minLength', () => {
+  resetBody();
+  document.body.innerHTML = '<div class="field"><input id="query"></div>';
+  const input = document.getElementById('query');
+  const searches = [];
+  const instance = Expressive.Autocomplete.init(input, { minLength: 3, onSearch: (text, ac, signal) => searches.push([text, signal]) });
+  const typeText = (value) => {
+    input.value = value;
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  };
+  try {
+    input.focus();
+    typeText('a');
+    typeText('ap');
+    assert.deepEqual(searches, [], 'one or two characters do not search');
+    typeText('app');
+    assert.deepEqual(searches.map(([text]) => text), ['app']);
+    typeText('ap');
+    assert.equal(searches.length, 1, 'deleting below minLength does not search');
+    assert.equal(searches[0][1].aborted, true, 'and aborts the search for the longer text');
+  } finally { instance.destroy(); resetBody(); }
+});
+
 test('autocomplete with no results announces none, and the selected entries it shows can still be removed', () => {
   resetBody();
   document.body.innerHTML = '<div class="field"><input id="query"></div>';

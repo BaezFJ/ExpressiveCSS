@@ -10375,7 +10375,7 @@ onCreate: function(text, autocomplete) {
 | `allowCreate` | Boolean | `false` | If true, text that matches no listed suggestion exactly ends the list in an `Add "text"` row. Choosing it calls `onCreate` and fires `expressive:create`; the selection does not change. |
 | `onCreate` | Function | `null` | Called with the trimmed text and the instance when the `Add` row is chosen. |
 | `searchDelay` | Number | `0` | Milliseconds to wait after typing pauses before calling `onSearch`, so remote data is fetched once per pause. A search on focus runs at once. Blur, `destroy()` and choosing a single result cancel a pending search. `0` searches on every input. |
-| `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
+| `minLength` | Number | `1` | Characters required before `onSearch` runs and suggestions open. Shorter text aborts the running search and clears the results. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, each data entry's `text` is inserted as HTML. Ids always stay text. Only use sanitized data. |
 | `selected` | Array | `[]` | Initial selected ids, strings or numbers. An id without loaded data displays the id. Pass the selected ids to `setMenuItems` with the loaded data to resolve their labels. |

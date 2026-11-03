@@ -30,6 +30,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Autocomplete calls `onSearch` only once the text reaches `minLength`.
+  Shorter text used to reach it too, so a remote search fetched on the
+  first keystroke whatever `minLength` said. Text shorter than `minLength`
+  now aborts the running search and empties `menuItems`.
+
 - Clicking the tab that is already shown no longer fires `onShow` and
   `expressive:change` again or re-runs the indicator animation. Swipeable
   tabs and keyboard focus already skipped it.
