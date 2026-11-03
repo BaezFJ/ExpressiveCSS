@@ -440,6 +440,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this._cancelPendingSearch();
     this._searchAbort?.abort();
     this.menuItems = [];
+    // Nothing is searched, so no loading indicator or old count stays.
+    this._updateSelectedInfo();
+    this._announce('');
   }
 
   /** Searches now, or once typing pauses for `searchDelay`. Focus never waits. */
