@@ -9,7 +9,7 @@ Component ID: `scatter-chart`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `1483a2b743df29854ab2bae147553a4bef2154b6b2ec047d1e9f368c683425c2`
+Contract SHA-256: `9d1972dd42574c8534c9fd0357826a4c7c42d923051c082adf86503b4e1a3ea8`
 
 #### Selection and adaptation
 
