@@ -30,6 +30,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Chips no longer throws from the constructor when `data` holds a chip with a
+  blank or null id. Starting data now gets the same checks as `addChip`, so
+  blank ids, duplicates and chips past `limit` are dropped.
+
 - Security: a questionnaire's review step no longer shows hidden inputs or
   passwords. It listed a hidden token as an answer and printed a password in
   plain text. A password now shows as a fixed-length mask, and a file input

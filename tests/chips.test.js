@@ -165,6 +165,16 @@ describe('Chips rendered markup', () => {
     }
   });
 
+  test('initial data drops blank ids, duplicates and chips past the limit', () => {
+    const [el, chips] = mount({ data: [{ id: '' }, { id: null }, { id: ' ' }, { id: 'Apple' }, { id: 'Apple' }, { id: 0 }, { id: 'Pear' }], limit: 2 });
+    try {
+      assert.deepEqual(chips.getData().map((chip) => chip.id), ['Apple', 0]);
+      assert.equal(el.querySelectorAll('.chip').length, 2);
+    } finally {
+      chips.destroy();
+    }
+  });
+
   test('the chip is a span and is not itself in the tab order', () => {
     const [el, chips] = mount({ data: [{ id: 'Apple' }] });
     try {

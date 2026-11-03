@@ -159,12 +159,8 @@ export class Chips extends Component<ChipsOptions> {
     this._takeName();
 
     // Render initial chips
-    if (this.options.data.length) {
-      // A copy: adding or deleting a chip would otherwise edit the caller's
-      // array, and a batch init would have every instance share one list.
-      this.chipsData = [...this.options.data];
-      this._renderChips();
-    }
+    this._takeInitialData(this.options.data);
+    if (this.chipsData.length) this._renderChips();
 
     // Render input element, setup event handlers
     if (this.options.allowUserInput) {
@@ -470,6 +466,18 @@ export class Chips extends Component<ChipsOptions> {
       renderedChip.appendChild(closeButton);
     }
     return renderedChip;
+  }
+
+  /**
+   * Copies the starting chips, so adding or deleting one does not edit the
+   * caller's array and a batch init does not share one list. Blank ids,
+   * duplicates and chips past the limit are dropped, as addChip drops them: a
+   * blank id used to render nothing and throw from the constructor.
+   */
+  private _takeInitialData(data: ChipData[]) {
+    for (const chip of data) {
+      if (this.chipsData.length < this.options.limit && this._isValidAndNotExist(chip)) this.chipsData.push(chip);
+    }
   }
 
   _renderChips() {
