@@ -30,6 +30,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Carousel `destroy()` puts the authored `active` class back, removes the
+  `carousel-item` class from items it found without one, and drops the
+  `dragging` and `scrolling` classes of a drag or scroll it cut short.
+  Starting it again used to begin at the last item shown.
+
 - Chips `destroy()` leaves the markup as it was. It used to keep the
   `chips`, `field` and `focus` classes, the input's `input` class,
   placeholder and generated id, the label's `for`, and an input it had

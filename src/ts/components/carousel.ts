@@ -126,7 +126,7 @@ export class Carousel extends Component<CarouselOptions> {
   private _authoredItemSizes = new Set<HTMLElement>();
   private _itemA11yOriginal = new Map<
     HTMLElement,
-    { ariaHidden: string | null; tabIndex: string | null }
+    { ariaHidden: string | null; tabIndex: string | null; active: boolean; itemClass: boolean }
   >();
 
   private get _scroller(): HTMLElement {
@@ -148,7 +148,9 @@ export class Carousel extends Component<CarouselOptions> {
     this.images.forEach((item) => {
       this._itemA11yOriginal.set(item, {
         ariaHidden: item.getAttribute('aria-hidden'),
-        tabIndex: item.getAttribute('tabindex')
+        tabIndex: item.getAttribute('tabindex'),
+        active: item.classList.contains('active'),
+        itemClass: item.classList.contains('carousel-item')
       });
       if (item.hasAttribute('data-carousel-size')) this._authoredItemSizes.add(item);
     });
@@ -323,12 +325,10 @@ export class Carousel extends Component<CarouselOptions> {
       if (this._generatedItemLabels.has(el)) el.removeAttribute('aria-label');
       if (this._generatedItemDescriptions.has(el)) el.removeAttribute('aria-roledescription');
       if (this._generatedItemSizes.has(el)) el.removeAttribute('data-carousel-size');
-      const original = this._itemA11yOriginal.get(el);
-      if (original) {
-        restoreAttribute(el, 'aria-hidden', original.ariaHidden);
-        restoreAttribute(el, 'tabindex', original.tabIndex);
-      }
+      this._restoreItemState(el);
     });
+    // A drag or scroll that destroy() cut short leaves its state class behind.
+    this.el.classList.remove('dragging', 'scrolling');
     if (this._generatedContainerRole) this.el.removeAttribute('role');
     if (this._generatedContainerLabel) this.el.removeAttribute('aria-label');
     if (this._generatedContainerDescription) this.el.removeAttribute('aria-roledescription');
@@ -345,6 +345,20 @@ export class Carousel extends Component<CarouselOptions> {
         'full-screen-horizontal'
       );
     }
+  }
+
+  /**
+   * Puts back an item's accessibility attributes, its authored `active`
+   * class and, for an item found without it, the `carousel-item` class. A
+   * carousel started again used to begin at the last shown item.
+   */
+  private _restoreItemState(el: HTMLElement) {
+    const original = this._itemA11yOriginal.get(el);
+    if (!original) return;
+    restoreAttribute(el, 'aria-hidden', original.ariaHidden);
+    restoreAttribute(el, 'tabindex', original.tabIndex);
+    el.classList.toggle('active', original.active);
+    if (!original.itemClass) el.classList.remove('carousel-item');
   }
 
   _handleThrottledResize = () => {
