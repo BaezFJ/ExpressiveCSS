@@ -40,6 +40,7 @@ Combine overlapping routes, and say why a route widens:
 
 - Building or reviewing an interface needs Usage and Accessibility, and so does lifecycle work that changes markup or accessibility.
 - Visual or token work adds Theming. Setup or version doubt adds Install.
+- A named visual style, even one that sounds token-only, adds Design for its style directions.
 - Runtime ownership decides Runtime: Auto Init, shared-runtime and manual need it. Behavior-bearing variants such as clipboard controls and resizing panes need it even when their static component is CSS-only.
 - For contrast or forced-colors investigations, even token-only ones, add Accessibility.
 - For a review too large for one context, read [delegation](./references/delegation.md).
