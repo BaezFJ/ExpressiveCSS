@@ -9,7 +9,7 @@ Component ID: `time-picker`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `982b950fa0ea443872f578635edde1c4c6fd9aa8893232fd2ff6fc0b5e9f4b2d`
+Contract SHA-256: `1483a2b743df29854ab2bae147553a4bef2154b6b2ec047d1e9f368c683425c2`
 
 #### Selection and adaptation
 
@@ -60,7 +60,7 @@ The clock defaults to a visible inline view appended to the input's parent. Use 
 | --- | --- | --- | --- |
 | `duration` | Number | `350` | Transition between the hours and minutes views, in milliseconds. |
 | `container` | Element or String | `null` | Element or selector to render the clock into. When omitted, it is appended to the input’s parent. |
-| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
+| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. With Ok and Cancel buttons (`autoSubmit: false` or a modal picker), Clear empties the input only on Ok. |
 | `autoSubmit` | Boolean | `true` | If true, choosing a minute writes the input. If false, Ok and Cancel buttons are added. |
 | `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` or `'HH:MM:SS'` string (optionally with `AM`/`PM`). |
 | `fromNow` | Number | `0` | Millisecond offset added to `'now'`. |

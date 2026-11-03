@@ -9,7 +9,7 @@ Component ID: `date-picker`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `982b950fa0ea443872f578635edde1c4c6fd9aa8893232fd2ff6fc0b5e9f4b2d`
+Contract SHA-256: `1483a2b743df29854ab2bae147553a4bef2154b6b2ec047d1e9f368c683425c2`
 
 #### Selection and adaptation
 
@@ -70,8 +70,8 @@ The calendar defaults to an inline view, hidden with `openByDefault: false`; cli
 | `disableWeekends` | Boolean | `false` | Prevent selecting Saturday and Sunday. |
 | `disableDayFn` | Function | `null` | Return true to disable that day. Receives a `Date`. |
 | `firstDay` | Number | `0`, or the language's | First day of the week. `0` is Sunday, `1` is Monday. With a `lang` on or around the input, defaults to that language's first day where the browser knows it. |
-| `minDate` | Date | `null` | Earliest selectable date. |
-| `maxDate` | Date | `null` | Latest selectable date. |
+| `minDate` | Date | `null` | Earliest selectable date. The calendar does not page or list years before its month. |
+| `maxDate` | Date | `null` | Latest selectable date. The calendar does not page or list years after its month. |
 | `yearRange` | Number or Array | `10` | Years on either side of the viewed year, or `[minYear, maxYear]`. |
 | `minYear`, `maxYear`, `minMonth`, `maxMonth` | Number or undefined | `0`, `9999`, `undefined`, `undefined` | Internal calculation fields. Do not configure them directly; use `minDate`, `maxDate` and `yearRange`. |
 | `yearRangeReverse` | Boolean | `false` | Sort the year list in reverse order. |
@@ -80,7 +80,7 @@ The calendar defaults to an inline view, hidden with `openByDefault: false`; cli
 | `showDaysInNextAndPreviousMonths` | Boolean | `false` | Render days that fall in the adjoining months. |
 | `openByDefault` | Boolean | `false` | If true, the calendar is visible. If false, it is given `display: none`. |
 | `container` | Element or String | `null` | Element or selector to render the calendar into. When set, the calendar is not hidden. |
-| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
+| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. With Ok and Cancel buttons (`autoSubmit: false` or a modal picker), Clear empties the input only on Ok. |
 | `autoSubmit` | Boolean | `true` | If true, selecting a day writes the input immediately. If false, Ok and Cancel buttons are added. |
 | `i18n` | Object | See below | Labels and month/weekday names. Partial objects are merged with the defaults. With a `lang` on or around the input, the month and weekday names default to that language's, as `Intl` writes them; the button words stay English unless passed. |
 | `events` | Array | `[]` | Strings from `Date.toDateString()`. Matching days get a `has-event` class. The default stylesheet does not style that class. |
