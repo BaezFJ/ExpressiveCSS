@@ -213,10 +213,7 @@ $_floated: '&:focus + label, &:not([placeholder=" "]) + label, &:not(:placeholde
     top: rem(16px);
     display: flex;
     align-items: center;
-    font-size: rem(24px);
-    width: rem(24px);
-    height: rem(24px);
-    line-height: rem(24px);
+    @include icon-size(rem(24px));
     color: var(--md-sys-color-on-surface-variant);
     user-select: none;
   }

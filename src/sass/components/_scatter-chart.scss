@@ -32,7 +32,7 @@
   initial-value: 1;
 }
 
-@include chart("scatter-chart");
+@include chart("scatter-chart", $tooltip: middle);
 @include chart-axis("scatter-chart");
 
 .scatter-chart {
@@ -41,10 +41,7 @@
 }
 
 .scatter-chart-plot > svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  @include fill-parent;
   overflow: visible;
 }
 
@@ -130,12 +127,6 @@
 }
 
 .scatter-chart-tooltip {
-  translate: 12px -50%;
-
-  &.end {
-    translate: calc(-100% - 12px) -50%;
-  }
-
   // The x header names the axis, not a series, so it has no swatch.
   > span.x::before {
     content: none;

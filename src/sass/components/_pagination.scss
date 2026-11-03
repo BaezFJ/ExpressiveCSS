@@ -42,9 +42,7 @@
     flex-wrap: wrap;
     align-items: center;
     gap: var(--md-comp-pagination-gap);
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    @include list-reset;
   }
 
   &.nowrap,
@@ -53,10 +51,6 @@
     min-width: 0;
     overflow-x: auto;
     scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
   }
 
   li {
@@ -104,10 +98,7 @@
     }
 
     > #{$icon} {
-      font-size: var(--md-comp-pagination-icon-size);
-      width: var(--md-comp-pagination-icon-size);
-      height: var(--md-comp-pagination-icon-size);
-      line-height: 1;
+      @include icon-size(var(--md-comp-pagination-icon-size), 1);
     }
   }
 
@@ -154,10 +145,8 @@
       flex-wrap: inherit;
       align-items: center;
       gap: var(--md-comp-pagination-gap);
-      list-style: none;
       min-width: 0;
-      margin: 0;
-      padding: 0;
+      @include list-reset;
     }
   }
 }

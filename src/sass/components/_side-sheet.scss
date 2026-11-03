@@ -98,17 +98,9 @@ $_sheet: "dialog.side-sheet";
   }
 
   > header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex: 0 0 auto;
-    box-sizing: border-box;
-    min-height: 64px;
-    margin: 0;
+    @include header-bar(12px);
     padding-block: 8px;
     padding-inline: 24px 12px;
-    background: none;
-    box-shadow: none;
     // A horizontal touch drag here dismisses the sheet; the browser would
     // otherwise take it as a pan and cancel the pointer.
     touch-action: pan-y;
@@ -119,12 +111,8 @@ $_sheet: "dialog.side-sheet";
   }
 
   > header > :is(h1, h2, h3, h4, h5, h6) {
-    flex: 1 1 auto;
-    min-width: 0;
-    margin: 0;
+    @include header-bar-headline;
     padding: 0;
-    color: var(--md-sys-color-on-surface);
-    @include typescale("title-large");
   }
 
   > header > form {

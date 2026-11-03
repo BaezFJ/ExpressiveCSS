@@ -105,6 +105,8 @@ describe('Forced colors edges and glyphs', () => {
     'select check': [/^menu\[role=listbox\]:not\(\.multiple-select-menu\) > li\.selected:not\(\.disabled, \.optgroup\)::after$/, GLYPH],
     'submenu chevron': [/li:has\(> menu\) > :is\(a, button, .*\)::after$/, GLYPH],
     'cascader chevron': [/^\.cascader-popover \.cascader-chevron$/, GLYPH],
+    'mega menu chevron': [/^\.mega-menu > button::after$/, GLYPH],
+    'rail panel chevron': [/^\.navigation-rail-panel summary::after$/, GLYPH],
     'cascader popover': [/^\.cascader-popover$/, EDGE],
     'bottom sheet handle': [/^dialog\.bottom-sheet::before$/, GLYPH],
     'slider stops': [/\.stops::after$/, /--_stop:\s*HighlightText;\s*forced-color-adjust:\s*none/],

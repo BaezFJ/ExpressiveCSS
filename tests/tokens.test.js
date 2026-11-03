@@ -78,6 +78,18 @@ const UNREAD_ALLOWED = new Map([
     '--md-comp-radial-chart-gap',
     'read at runtime by RadialChart with the thickness token, for the same reason.',
   ],
+  ...['funnel', 'pie', 'radial', 'sankey', 'treemap'].map((name) => [
+    `--md-comp-${name}-chart-grid-color`,
+    'declared by chart() for every chart. This chart draws no grid lines; the ' +
+      'only reads were grid rules its own plot rule overrode, so the token ' +
+      'never had an effect. Dropping it removes a public name, which needs a decision.',
+  ]),
+  ...['bar', 'funnel'].map((name) => [
+    `--md-comp-${name}-chart-height`,
+    'declared by chart() for every chart. The plot is as tall as its rows, and ' +
+      'the only read was a height its own plot rule overrode, so the token ' +
+      'never had an effect. Dropping it removes a public name, which needs a decision.',
+  ]),
   ...['route', 'arc', 'cluster', 'cluster-label'].map((name) => [
     `--md-comp-map-${name}-color`,
     'read at runtime by MapView, which resolves it to an sRGB color for a ' +

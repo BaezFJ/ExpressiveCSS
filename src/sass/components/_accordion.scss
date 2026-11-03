@@ -18,8 +18,6 @@
 //   --md-comp-accordion-header-height    56px
 //   --md-comp-accordion-padding          16px
 
-$_accordion-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 15.4 6 9.4 7.4 8l4.6 4.6L16.6 8 18 9.4z'/%3E%3C/svg%3E");
-
 .accordion {
   --md-comp-accordion-container-color: var(--md-sys-color-surface-container);
   --md-comp-accordion-shape: var(--md-sys-shape-corner-large-increased);
@@ -84,7 +82,7 @@ $_accordion-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/200
       height: 24px;
       margin-inline-start: auto;
       background-color: var(--md-sys-color-on-surface-variant);
-      mask: $_accordion-chevron center / 24px no-repeat;
+      mask: $expand-more center / 24px no-repeat;
       transition: transform var(--md-sys-motion-duration-short4) ease-out;
     }
 

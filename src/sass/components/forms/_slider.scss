@@ -130,10 +130,7 @@ input[type="range"]:dir(rtl) {
   left: var(--md-comp-slider-stop-inset);
   top: 50%;
   translate: 0 -50%;
-  font-size: var(--md-comp-slider-icon-size);
-  width: var(--md-comp-slider-icon-size);
-  height: var(--md-comp-slider-icon-size);
-  line-height: 1;
+  @include icon-size(var(--md-comp-slider-icon-size), 1);
   color: var(--md-sys-color-on-primary);
   pointer-events: none;
 }

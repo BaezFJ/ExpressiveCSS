@@ -319,17 +319,13 @@ menu[role="listbox"] li.optgroup-option {
 // with the chevron .tree uses, a leaf lines its text up after it, and each
 // level hangs a guide line from its parent's chevron, as in .tree.
 ul[role="tree"] {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  @include list-reset;
 
   ul[role="group"] {
-    margin: 0;
+    @include list-reset;
     margin-inline-start: calc(var(--md-comp-menu-item-leading-space) + 10px);
-    padding: 0;
     padding-inline-start: 4px;
     border-inline-start: 1px solid var(--md-sys-color-outline-variant);
-    list-style: none;
   }
 
   li[role="treeitem"] {
