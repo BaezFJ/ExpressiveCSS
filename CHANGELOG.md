@@ -7,6 +7,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- The ExpressiveCSS skill offers four visual styles: Bold and Dramatic, Minimalist
+  and Clean, Brutalist and Neo-Brutalist, and Organic and Natural. Each one uses
+  documented attributes, classes and variants only. The skill asks, with a reason,
+  before adding token overrides and writes custom CSS only on request.
+
 - Autocomplete `maxResults` caps rendered suggestions when configured. The default
   is `Infinity`, preserving the complete list. Search still checks the whole dataset.
 

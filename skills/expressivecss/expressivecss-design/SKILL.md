@@ -19,6 +19,7 @@ Read each reference only when its condition applies.
 | --- | --- |
 | [design rules](../references/design-rules.md) | Always, before opening a component guide: hard rules, window sizes, component chooser, and screen recipes. |
 | [product context](./references/product-context.md) | The work spans pages, continues an established product, or changes a recorded design decision. |
+| [style directions](./references/style-directions.md) | The user names or describes a visual style (bold, minimalist, brutalist, organic), or a new surface or redesign has no established look. |
 | [layout guide](../expressivecss-layout/SKILL.md) | A new page or app shell, or any layout that changes across widths: panes, navigation swaps, grids, spacing, or right-to-left layout. |
 | [scaffold](./references/scaffold.md) | A complete page, app shell, or adaptive pane layout. |
 | Theming [typography and emphasis](../expressivecss-theming/references/typography.md), [shape](../expressivecss-theming/references/shape.md), or [motion](../expressivecss-theming/references/motion.md) | A decision depends on one expressive foundation; read only that one. |
@@ -53,9 +54,10 @@ Ask only about missing decisions that would change the result. Resolve:
 3. the most important action in each region;
 4. the window classes, input methods, and assistive technology paths that must work;
 5. what must remain unchanged;
-6. the app's brand seed, typography, icon style, and imagery when they cannot be inferred.
+6. the app's brand seed, typography, icon style, and imagery when they cannot be inferred;
+7. the visual style, when the style directions reference says to offer one.
 
-Do not ask the user to choose raw CSS values. Translate product and brand answers into ExpressiveCSS tokens and documented component variants.
+Do not ask the user to choose raw CSS values. Translate product and brand answers into ExpressiveCSS tokens and documented component variants. A visual style stays in markup unless the user approves CSS; the style directions reference sets that boundary.
 
 ## 2. Set a Material 3 Expressive direction
 
@@ -68,7 +70,7 @@ Write a short working brief before code:
 - Adaptive plan: Compact first, then Medium, Expanded, Large, and Extra-large where reachable. State what reflows, collapses, moves, or becomes a different documented component.
 - Scaffold map: bars, rails, content panes, and relevant safety regions; distinguish navigation from contextual actions. Name pane relationships, the narrower adaptation, and whether the document or individual panes own scrolling.
 - Component map: one documented component per job, including navigation, containment, input, feedback, and progress.
-- Brand expression: `--md-source`, role overrides when necessary, type tokens, Material Symbols style and axes, imagery, and content voice.
+- Brand expression: the chosen visual style, `--md-source`, role overrides when necessary, type tokens, Material Symbols style and axes, imagery, and content voice.
 - State plan: loading, empty, error, success, disabled, selected, permission, offline, and destructive-action behavior that the feature can reach.
 
 Keep the brief in the task unless an existing project record needs an in-scope update or the user asks to save it. Planning, Critique, and Audit alone do not authorize documentation edits.
