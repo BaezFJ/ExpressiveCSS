@@ -30,6 +30,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A date or time picker with Ok and Cancel buttons, which a modal picker
+  always has, empties its input on Ok after Clear. Clear used to write the
+  empty value and fire `change` at once, so Cancel could not keep the old
+  value. Timepicker shows empty fields until Ok, and choosing a time after
+  Clear keeps that time.
+
 - Datepicker `onSelect` and `expressive:select` no longer fire when a click,
   Enter or a form reset re-reads the date the input already shows. Only a
   new date is a selection.

@@ -1629,9 +1629,11 @@ export class Datepicker extends Component<DatepickerOptions> {
     this.draw();
   };
 
+  // Like a day click: a picker with Ok and Cancel, which a modal always is,
+  // writes the cleared input on Ok, so Cancel keeps the value.
   _handleClearClick = () => {
     this._clearDates();
-    this.setInputValues();
+    if (this.options.autoSubmit) this._finishSelection();
   };
 
   _clearDates = () => {

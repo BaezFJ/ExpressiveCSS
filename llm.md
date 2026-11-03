@@ -8011,7 +8011,7 @@ Expressive.Datepicker.init(elem, {
 | `showDaysInNextAndPreviousMonths` | Boolean | `false` | Render days that fall in the adjoining months. |
 | `openByDefault` | Boolean | `false` | If true, the calendar is visible. If false, it is given `display: none`. |
 | `container` | Element or String | `null` | Element or selector to render the calendar into. When set, the calendar is not hidden. |
-| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
+| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. With Ok and Cancel buttons (`autoSubmit: false` or a modal picker), Clear empties the input only on Ok. |
 | `autoSubmit` | Boolean | `true` | If true, selecting a day writes the input immediately. If false, Ok and Cancel buttons are added. |
 | `i18n` | Object | See below | Labels and month/weekday names. Partial objects are merged with the defaults. With a `lang` on or around the input, the month and weekday names default to that language's, as `Intl` writes them; the button words stay English unless passed. |
 | `events` | Array | `[]` | Strings from `Date.toDateString()`. Matching days get a `has-event` class. The default stylesheet does not style that class. |
@@ -8260,7 +8260,7 @@ Expressive.Timepicker.init(elem, {
 | --- | --- | --- | --- |
 | `duration` | Number | `350` | Transition between the hours and minutes views, in milliseconds. |
 | `container` | Element or String | `null` | Element or selector to render the clock into. When omitted, it is appended to the input’s parent. |
-| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
+| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. With Ok and Cancel buttons (`autoSubmit: false` or a modal picker), Clear empties the input only on Ok. |
 | `autoSubmit` | Boolean | `true` | If true, choosing a minute writes the input. If false, Ok and Cancel buttons are added. |
 | `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` or `'HH:MM:SS'` string (optionally with `AM`/`PM`). |
 | `fromNow` | Number | `0` | Millisecond offset added to `'now'`. |

@@ -264,6 +264,8 @@ export class Timepicker extends Component<TimepickerOptions> {
   toggleViewTimer: ReturnType<typeof setTimeout>;
   vibrateTimer: ReturnType<typeof setTimeout>;
   private _autoSubmitTimer: ReturnType<typeof setTimeout>;
+  /** Clear was pressed in a picker that writes on Ok. */
+  private _clearPending = false;
   private _clockResetTimer: ReturnType<typeof setTimeout>;
   private displayPlugin: DisplayPlugin;
   /** Whether the dial (ticks + SVG + AM/PM buttons) has been built yet. */
@@ -316,6 +318,8 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.plate.addEventListener('pointerdown', this._handleClockClickStart);
     this.digitalClock.addEventListener('input', this._inputFromTextField, { signal });
     this.digitalClock.addEventListener('keydown', this._handleDigitalKeydown, { signal });
+    this.containerEl.addEventListener('pointerdown', this._keepTime, { capture: true, signal });
+    this.containerEl.addEventListener('keydown', this._keepTime, { capture: true, signal });
     this.inputHours.addEventListener('focus', () => this.showView('hours'));
     this.inputHours.addEventListener('focusout', () => this.formatHours());
     this.inputMinutes.addEventListener('focus', () => this.showView('minutes'));
@@ -642,6 +646,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   _updateTimeFromInput() {
+    this._clearPending = false;
     this._cancelClockReset();
     const [hours, minutes, seconds] = readTime(`${this.el.value || this.options.defaultTime || ''}`, this.options.fromNow);
     [this.minutes, this.seconds] = [minutes, seconds];
@@ -1020,19 +1025,36 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   confirm = () => {
-    this.done();
+    this.done(this._clearPending);
+    this._clearPending = false;
     hideModal(this.displayPlugin);
     this._notify('confirm', this.options.onDone, { args: [] });
   }
 
   cancel = () => {
     // Cancel keeps the previously submitted value in the input.
+    this._clearPending = false;
     hideModal(this.displayPlugin);
     this._notify('cancel', this.options.onCancel, { args: [] });
   }
 
+  /**
+   * Empties the input. A picker with Ok and Cancel, which a modal always is,
+   * empties its fields and waits for Ok, so Cancel keeps the value: it used to
+   * write the empty value at once.
+   */
   clear = () => {
-    this.done(true);
+    if (this.options.autoSubmit) return this.done(true);
+    this._clearPending = true;
+    this._units().forEach((unit) => (this._input(unit).value = ''));
+  };
+
+  /** Choosing a time after Clear, anywhere but the footer, keeps a time after all. */
+  private _keepTime = (e: Event) => {
+    if (!this._clearPending || this.footer.contains(e.target as Node)) return;
+    this._clearPending = false;
+    // A key goes into the field it was pressed in, so that field stays empty.
+    this._writeFields(e.type === 'keydown' ? (e.target as HTMLInputElement) : undefined);
   };
 
   static {
