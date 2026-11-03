@@ -30,6 +30,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- RichTextEditor follows a form reset. The editor used to keep the typed
+  text while the reset textarea held its default, so the page showed one
+  thing and the form submitted another.
+
 - A date or time picker inside a shadow root finds its `dateRangeEndEl` and
   `container` selectors there. It used to search only the document, so a
   range end input in the same root was not found. Datepicker also stops

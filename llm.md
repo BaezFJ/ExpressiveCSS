@@ -8754,7 +8754,7 @@ ExpressiveCSS does not bundle Tiptap. Install `@tiptap/core`, `@tiptap/pm` and `
 
 A button's `data-command` names a Tiptap command and `data-attributes` holds its argument as JSON. A click runs the command and returns focus to the editor. A button is disabled while its command cannot run. Buttons for `toggle` commands set `aria-pressed` and `.active` while the selection has that format: `toggleBold` while it is bold, `toggleHeading` with `{"level":2}` while it is in a second-level heading.
 
-The editable area is a multi-line `textbox` named from the textarea's `<label for>`, `aria-label` or `aria-labelledby`; a click on the label focuses it. A `disabled` or `readonly` textarea makes the editor read-only and disables the toolbar. Sanitize the submitted HTML on the server.
+The editable area is a multi-line `textbox` named from the textarea's `<label for>`, `aria-label` or `aria-labelledby`; a click on the label focuses it. A `disabled` or `readonly` textarea makes the editor read-only and disables the toolbar. A form reset puts the textarea's default HTML back in the editor without firing `input`. Sanitize the submitted HTML on the server.
 
 ```html
 <label for="body">Release notes</label>
