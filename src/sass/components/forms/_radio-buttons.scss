@@ -16,10 +16,6 @@
 //
 // .with-gap is a no-op: the selected state is always the ring + inner.
 
-@mixin _ring($color, $state) {
-  @include state-layer-ring(var(--md-comp-radio-button-state-layer-size), var(--md-comp-radio-button-icon-size), $color, $state);
-}
-
 label:has(> [type="radio"]),
 .radio {
   --md-comp-radio-button-icon-size: 20px;
@@ -46,14 +42,7 @@ label:has(> [type="radio"]),
 // Paint the radio on the input.
 label:has(> [type="radio"]) > [type="radio"],
 .radio > [type="radio"] {
-  appearance: none;
-  flex: 0 0 var(--md-comp-radio-button-icon-size);
-  box-sizing: border-box;
-  width: var(--md-comp-radio-button-icon-size);
-  height: var(--md-comp-radio-button-icon-size);
-  margin: 0;
-  padding: 0;
-  border: 2px solid var(--md-sys-color-on-surface-variant);
+  @include selection-control(var(--md-comp-radio-button-icon-size), var(--md-comp-radio-button-icon-size), var(--md-sys-color-on-surface-variant));
   border-radius: 50%;
   background-color: transparent;
   cursor: pointer;
@@ -68,18 +57,7 @@ label:has(> [type="radio"]) > [type="radio"],
     );
   }
 
-  &:hover {
-    @include _ring(var(--md-sys-color-on-surface), "hover");
-  }
-
-  &:checked:hover {
-    @include _ring(var(--md-sys-color-primary), "hover");
-  }
-
-  &:focus-visible {
-    @include _ring(var(--md-sys-color-primary), "focus");
-    outline: none;
-  }
+  @include selection-control-states(var(--md-comp-radio-button-state-layer-size), var(--md-comp-radio-button-icon-size));
 
   &:disabled {
     border-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);

@@ -1,5 +1,6 @@
 @use "sass:list";
 @use "sass:map";
+@use "sass:meta";
 @use "sass:math";
 @use "./elevation" as *;
 @use "./variables" as *;
@@ -414,14 +415,54 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   @include typescale("body-large");
 }
 
+// A radio, checkbox or switch drawn on the <input> itself: the native look
+// cleared to a $width x $height box with a 2px $border-color edge.
+@mixin selection-control($width, $height, $border-color) {
+  appearance: none;
+  flex: 0 0 $width;
+  box-sizing: border-box;
+  width: $width;
+  height: $height;
+  margin: 0;
+  padding: 0;
+  border: 2px solid $border-color;
+}
+
+// The hover, checked hover and focus rings of a selection control, from the
+// $inner edge out to $outer. $checked lists the states whose ring is primary.
+@mixin selection-control-states($outer, $inner, $checked: ":checked") {
+  $checked-hover: ();
+  @each $state in $checked {
+    $checked-hover: list.append($checked-hover, "&#{$state}:hover", comma);
+  }
+
+  &:hover {
+    @include state-layer-ring($outer, $inner, var(--md-sys-color-on-surface), "hover");
+  }
+
+  #{$checked-hover} {
+    @include state-layer-ring($outer, $inner, var(--md-sys-color-primary), "hover");
+  }
+
+  &:focus-visible {
+    @include state-layer-ring($outer, $inner, var(--md-sys-color-primary), "focus");
+    outline: none;
+  }
+}
+
 /// The state layer some controls draw as a ring rather than an overlay.
 ///
 /// Checkboxes and radio buttons have no room for an overlay pseudo-element, so
 /// they grow a `box-shadow` from the control's edge out to the state layer
 /// size.
 @mixin state-layer-ring($outer, $inner, $color, $state) {
-  // Interpolated so a quoted color, such as "var(--c)", is written unquoted.
-  box-shadow: 0 0 0 calc((#{$outer} - #{$inner}) / 2) state-layer(#{$color}, $state);
+  // Two lengths fold to one. Anything else is interpolated, so a quoted
+  // value, such as "var(--c)", is written unquoted.
+  $spread: calc((#{$outer} - #{$inner}) / 2);
+  @if meta.type-of($outer) == "number" and meta.type-of($inner) == "number" {
+    $spread: calc(($outer - $inner) / 2);
+  }
+  box-shadow: 0 0 0 $spread state-layer(#{$color}, $state);
 }
 
 /// The button size tokens for one rung of `$button-sizes`.

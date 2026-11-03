@@ -58,14 +58,7 @@ label:has(> [type="checkbox"]):not(.switch),
 // do not write :has(:not(:has(+ span))).
 label:has(> [type="checkbox"]):not(.switch) > [type="checkbox"],
 .checkbox > [type="checkbox"] {
-  appearance: none;
-  flex: 0 0 var(--md-comp-checkbox-container-size);
-  box-sizing: border-box;
-  width: var(--md-comp-checkbox-container-size);
-  height: var(--md-comp-checkbox-container-size);
-  margin: 0;
-  padding: 0;
-  border: 2px solid var(--md-sys-color-on-surface-variant);
+  @include selection-control(var(--md-comp-checkbox-container-size), var(--md-comp-checkbox-container-size), var(--md-sys-color-on-surface-variant));
   border-radius: var(--md-comp-checkbox-container-shape);
   background-color: transparent;
   cursor: pointer;
@@ -77,19 +70,7 @@ label:has(> [type="checkbox"]):not(.switch) > [type="checkbox"],
     background-color: var(--md-sys-color-primary);
   }
 
-  &:hover {
-    @include _ring(var(--md-sys-color-on-surface), "hover");
-  }
-
-  &:checked:hover,
-  &:indeterminate:hover {
-    @include _ring(var(--md-sys-color-primary), "hover");
-  }
-
-  &:focus-visible {
-    @include _ring(var(--md-sys-color-primary), "focus");
-    outline: none;
-  }
+  @include selection-control-states(var(--md-comp-checkbox-state-layer-size), var(--md-comp-checkbox-container-size), (":checked", ":indeterminate"));
 
   &.invalid,
   &[aria-invalid="true"] {
