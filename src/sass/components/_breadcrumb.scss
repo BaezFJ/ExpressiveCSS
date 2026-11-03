@@ -40,10 +40,6 @@ nav:has(> .breadcrumb),
     }
 
     scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
   }
 
   > ol {

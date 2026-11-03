@@ -51,10 +51,6 @@ $_tab: "> a";
   border-block-end: 1px solid var(--md-sys-color-outline-variant);
   scrollbar-width: none;
 
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
   #{$_tab} {
     box-sizing: border-box;
     position: relative;
@@ -80,10 +76,7 @@ $_tab: "> a";
 
     > #{$icon} {
       flex: 0 0 auto;
-      font-size: var(--md-comp-primary-tab-icon-size);
-      width: var(--md-comp-primary-tab-icon-size);
-      height: var(--md-comp-primary-tab-icon-size);
-      line-height: var(--md-comp-primary-tab-icon-size);
+      @include icon-size(var(--md-comp-primary-tab-icon-size));
       color: inherit;
     }
 
@@ -228,10 +221,6 @@ $_tab: "> a";
   overscroll-behavior-inline: contain;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
 
   > * {
     flex: 0 0 100%;

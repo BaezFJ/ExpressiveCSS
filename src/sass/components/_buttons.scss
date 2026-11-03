@@ -1,3 +1,4 @@
+@use "sass:list";
 @use "sass:map";
 @use "../abstracts" as *;
 
@@ -71,10 +72,7 @@ $_btn: "button:not(#{$_not-btn}), a.button, label.button";
 
   > #{$icon} {
     flex: 0 0 auto;
-    font-size: var(--md-comp-filled-button-icon-size);
-    width: var(--md-comp-filled-button-icon-size);
-    height: var(--md-comp-filled-button-icon-size);
-    line-height: var(--md-comp-filled-button-icon-size);
+    @include icon-size(var(--md-comp-filled-button-icon-size));
     overflow: hidden;
   }
 
@@ -182,24 +180,10 @@ $_extend-sizes: (
   color: var(--md-comp-extended-fab-label-text-color);
   background-color: var(--md-comp-extended-fab-container-color);
   @include z-depth("3");
-
-  &:hover {
-    @include z-depth("4");
-    background-color: state-layer(var(--md-comp-extended-fab-label-text-color), "hover", var(--md-comp-extended-fab-container-color));
-  }
-
-  &:active,
-  &:focus {
-    background-color: state-layer(var(--md-comp-extended-fab-label-text-color), "focus", var(--md-comp-extended-fab-container-color));
-  }
-
-  @include focus-visible;
+  @include btn-states(var(--md-comp-extended-fab-label-text-color), var(--md-comp-extended-fab-container-color), "4");
 
   > #{$icon} {
-    font-size: var(--md-comp-extended-fab-icon-size);
-    width: var(--md-comp-extended-fab-icon-size);
-    height: var(--md-comp-extended-fab-icon-size);
-    line-height: var(--md-comp-extended-fab-icon-size);
+    @include icon-size(var(--md-comp-extended-fab-icon-size));
   }
 
   // The size axis. Every size sets the same six tokens and its type role -
@@ -262,24 +246,11 @@ $_extend-sizes: (
   appearance: none;
   vertical-align: middle;
   @include z-depth("3");
-  @include focus-visible;
+  @include btn-states(var(--md-sys-color-on-primary-container), var(--md-sys-color-primary-container), "4");
 
   > #{$icon} {
-    font-size: var(--md-comp-fab-icon-size);
-    width: var(--md-comp-fab-icon-size);
-    height: var(--md-comp-fab-icon-size);
-    line-height: var(--md-comp-fab-icon-size);
+    @include icon-size(var(--md-comp-fab-icon-size));
     color: inherit;
-  }
-
-  &:hover {
-    @include z-depth("4");
-    background-color: state-layer(var(--md-sys-color-on-primary-container), "hover", var(--md-sys-color-primary-container));
-  }
-
-  &:active,
-  &:focus {
-    background-color: state-layer(var(--md-sys-color-on-primary-container), "focus", var(--md-sys-color-primary-container));
   }
 
   // Medium FAB: 80dp container, 26dp icon. The corner continues the size
@@ -399,45 +370,24 @@ $_shaped: ":where(#{$_btn}):where(:not(#{$_fixed}))";
   border-radius: var(--md-comp-filled-button-pressed-container-shape);
 }
 
-// Toggle colours, from md.comp.button.<style>.{unselected, selected}. Text
-// buttons do not toggle. A disabled toggle takes the disabled colours below.
-@mixin _toggle($container, $state) {
-  --_toggle-container: #{$container};
-  --_toggle-state: #{$state};
-}
+// Toggle colours, from `$button-toggle-colors`. Text buttons do not toggle. A
+// disabled toggle takes the disabled colours below.
+@each $style, $states in $button-toggle-colors {
+  @each $pressed, $colors in $states {
+    $attr: "[aria-pressed]";
+    @if $pressed { $attr: '[aria-pressed="true"]'; }
+    $toggle: ".#{$style}#{$attr}";
+    @if $style == "filled" { $toggle: "#{$attr}:not(.tonal, .outlined, .elevated, .text)"; }
 
-#{$_shaped}[aria-pressed]:not(.tonal, .outlined, .elevated, .text) {
-  @include _toggle(var(--md-sys-color-surface-container), var(--md-sys-color-on-surface-variant));
-}
+    #{$_shaped}#{$toggle} {
+      --_toggle-container: #{list.nth($colors, 1)};
+      --_toggle-state: #{list.nth($colors, 2)};
 
-#{$_shaped}[aria-pressed="true"]:not(.tonal, .outlined, .elevated, .text) {
-  @include _toggle(var(--md-sys-color-primary), var(--md-sys-color-on-primary));
-}
-
-#{$_shaped}.tonal[aria-pressed] {
-  @include _toggle(var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container));
-}
-
-#{$_shaped}.tonal[aria-pressed="true"] {
-  @include _toggle(var(--md-sys-color-secondary), var(--md-sys-color-on-secondary));
-}
-
-#{$_shaped}.outlined[aria-pressed] {
-  @include _toggle(transparent, var(--md-sys-color-on-surface-variant));
-}
-
-#{$_shaped}.outlined[aria-pressed="true"] {
-  @include _toggle(var(--md-sys-color-inverse-surface), var(--md-sys-color-inverse-on-surface));
-
-  border-color: transparent;
-}
-
-#{$_shaped}.elevated[aria-pressed] {
-  @include _toggle(var(--md-sys-color-surface-container-low), var(--md-sys-color-primary));
-}
-
-#{$_shaped}.elevated[aria-pressed="true"] {
-  @include _toggle(var(--md-sys-color-primary), var(--md-sys-color-on-primary));
+      @if $style == "outlined" and $pressed {
+        border-color: transparent;
+      }
+    }
+  }
 }
 
 #{$_shaped}[aria-pressed]:not(.text, :disabled, [disabled], .disabled) {

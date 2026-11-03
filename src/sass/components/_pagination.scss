@@ -53,10 +53,6 @@
     min-width: 0;
     overflow-x: auto;
     scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
   }
 
   li {
@@ -104,10 +100,7 @@
     }
 
     > #{$icon} {
-      font-size: var(--md-comp-pagination-icon-size);
-      width: var(--md-comp-pagination-icon-size);
-      height: var(--md-comp-pagination-icon-size);
-      line-height: 1;
+      @include icon-size(var(--md-comp-pagination-icon-size), 1);
     }
   }
 

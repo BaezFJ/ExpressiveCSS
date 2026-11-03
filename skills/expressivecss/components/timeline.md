@@ -9,7 +9,7 @@ Component ID: `timeline`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `909b22b2d450a63b419a1d3a315a17de46fe02ff2cc36fbdf7c1c0213342f429`
+Contract SHA-256: `d1749082cc5be7c41da5f0753f9565a0557d2387be7f1226da16c83b917b8a74`
 
 #### Selection and adaptation
 

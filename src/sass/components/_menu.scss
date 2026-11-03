@@ -197,10 +197,7 @@ menu[id] li > menu,
     > button > #{$icon},
     > #{$icon} {
       flex: 0 0 var(--md-comp-menu-item-icon-size);
-      font-size: var(--md-comp-menu-item-icon-size);
-      width: var(--md-comp-menu-item-icon-size);
-      height: var(--md-comp-menu-item-icon-size);
-      line-height: var(--md-comp-menu-item-icon-size);
+      @include icon-size(var(--md-comp-menu-item-icon-size));
       color: var(--md-comp-menu-item-leading-icon-color);
     }
 

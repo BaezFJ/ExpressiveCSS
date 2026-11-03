@@ -20,6 +20,9 @@ $icon-label: "span:not(.material-symbols):not(.material-symbols-outlined):not(.m
 $trend-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M11 20V7.8l-5.6 5.6L4 12l8-8 8 8-1.4 1.4L13 7.8V20z'/%3E%3C/svg%3E") !default;
 // The drop-down chevron: a select's caret and a mega menu button's trailing icon.
 $caret-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") !default;
+// The expand chevron: an accordion header's trailing icon, and a tree branch's
+// (turned to point at the end edge while closed).
+$expand-more: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 15.4 6 9.4 7.4 8l4.6 4.6L16.6 8 18 9.4z'/%3E%3C/svg%3E");
 
 // Mist Iris is the default seed for the generated ramps. Primary, secondary,
 // tertiary and neutral colors derive from it; the error ramp stays fixed. It
@@ -153,6 +156,28 @@ $icon-button-sizes: (
   "medium": (height: 56px, icon: 24px, space: 16px, narrow: 12px, wide: 24px, square: 16px, pressed: 12px, outline: 1px),
   "large": (height: 96px, icon: 32px, space: 32px, narrow: 16px, wide: 48px, square: 28px, pressed: 16px, outline: 2px),
   "xlarge": (height: 136px, icon: 40px, space: 48px, narrow: 32px, wide: 72px, square: 28px, pressed: 16px, outline: 3px),
+);
+
+// Toggle colors from md.comp.button.<style>.{unselected, selected}, keyed by
+// the pressed state, as (container, label) pairs. Toggle buttons and button
+// group items both read it. Text buttons do not toggle.
+$button-toggle-colors: (
+  "filled": (
+    false: (var(--md-sys-color-surface-container), var(--md-sys-color-on-surface-variant)),
+    true: (var(--md-sys-color-primary), var(--md-sys-color-on-primary)),
+  ),
+  "tonal": (
+    false: (var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container)),
+    true: (var(--md-sys-color-secondary), var(--md-sys-color-on-secondary)),
+  ),
+  "outlined": (
+    false: (transparent, var(--md-sys-color-on-surface-variant)),
+    true: (var(--md-sys-color-inverse-surface), var(--md-sys-color-inverse-on-surface)),
+  ),
+  "elevated": (
+    false: (var(--md-sys-color-surface-container-low), var(--md-sys-color-primary)),
+    true: (var(--md-sys-color-primary), var(--md-sys-color-on-primary)),
+  ),
 );
 
 // Material's fast-spatial spring (damping .9, stiffness 1400), sampled into a

@@ -77,8 +77,9 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 // State layers mix the on-color into the container in oklab; the opacities come
 // from md.sys.state via `state-opacity()`. Filled and tonal have no elevation.
 
-// Shared by every style. Elevated also moves z-depth on hover and press.
-@mixin _btn-states($on, $base, $hover-depth: null, $press-depth: null) {
+// Shared by every button style and the FABs. Elevated and the FABs also move
+// z-depth on hover or press.
+@mixin btn-states($on, $base, $hover-depth: null, $press-depth: null) {
   &:hover {
     @if $hover-depth { @include z-depth($hover-depth); }
     background-color: state-layer($on, "hover", $base);
@@ -97,14 +98,14 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   color: var(--md-comp-filled-button-label-text-color, var(--md-sys-color-on-primary));
   background-color: var(--md-comp-filled-button-container-color, var(--md-sys-color-primary));
 
-  @include _btn-states(var(--md-sys-color-on-primary), var(--md-sys-color-primary));
+  @include btn-states(var(--md-sys-color-on-primary), var(--md-sys-color-primary));
 }
 
 @mixin btn-tonal {
   color: var(--md-sys-color-on-secondary-container);
   background-color: var(--md-sys-color-secondary-container);
 
-  @include _btn-states(var(--md-sys-color-on-secondary-container), var(--md-sys-color-secondary-container));
+  @include btn-states(var(--md-sys-color-on-secondary-container), var(--md-sys-color-secondary-container));
 }
 
 @mixin btn-elevated {
@@ -112,7 +113,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   background-color: var(--md-sys-color-surface-container-low);
   @include z-depth("1");
 
-  @include _btn-states(var(--md-sys-color-primary), var(--md-sys-color-surface-container-low), "2", "1");
+  @include btn-states(var(--md-sys-color-primary), var(--md-sys-color-surface-container-low), "2", "1");
 }
 
 @mixin btn-outlined {
@@ -124,7 +125,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   // height right.
   border: var(--md-comp-filled-button-outline-width, 1px) solid var(--md-sys-color-outline);
 
-  @include _btn-states(var(--md-sys-color-primary), transparent);
+  @include btn-states(var(--md-sys-color-primary), transparent);
 }
 
 @mixin btn-flat {
@@ -133,7 +134,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   background-color: transparent;
   border-color: transparent;
 
-  @include _btn-states(var(--md-sys-color-primary), transparent);
+  @include btn-states(var(--md-sys-color-primary), transparent);
 }
 
 @mixin btn-disabled {
@@ -210,10 +211,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   box-shadow: none;
 
   > #{$icon} {
-    font-size: rem(24px);
-    width: rem(24px);
-    height: rem(24px);
-    line-height: rem(24px);
+    @include icon-size(rem(24px));
   }
 
   &:hover {
@@ -221,6 +219,15 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   }
 
   @include focus-visible;
+}
+
+// An icon glyph's box: a ligature font size in a square of the same size. Pass
+// `$line-height: 1` where the glyph sits on a text baseline.
+@mixin icon-size($size, $line-height: $size) {
+  font-size: $size;
+  width: $size;
+  height: $size;
+  line-height: $line-height;
 }
 
 // Forced colors repaint every background as Canvas and drop box-shadow, so a
@@ -239,7 +246,6 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 // edge while closed. The row turns it with `transform: none` once the branch
 // opens, and with rotate(90deg) under :dir(rtl). .tree and the tree select
 // share it.
-$_tree-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 15.4 6 9.4 7.4 8l4.6 4.6L16.6 8 18 9.4z'/%3E%3C/svg%3E");
 
 @mixin tree-chevron {
   content: "";
@@ -247,7 +253,7 @@ $_tree-chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg
   width: 20px;
   height: 20px;
   background-color: currentColor;
-  mask: $_tree-chevron center / 20px no-repeat;
+  mask: $expand-more center / 20px no-repeat;
   transform: rotate(-90deg);
   transition: transform var(--md-sys-motion-duration-short3) ease-out;
 }

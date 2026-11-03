@@ -115,10 +115,7 @@ $_vibrant: "#{$_toolbar}.vibrant";
 
     > #{$icon} {
       flex: 0 0 auto;
-      font-size: var(--md-comp-toolbar-icon-size);
-      width: var(--md-comp-toolbar-icon-size);
-      height: var(--md-comp-toolbar-icon-size);
-      line-height: var(--md-comp-toolbar-icon-size);
+      @include icon-size(var(--md-comp-toolbar-icon-size));
     }
 
     // The state layer is the content color in both color sets, which is

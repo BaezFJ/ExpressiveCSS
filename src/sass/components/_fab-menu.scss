@@ -129,10 +129,7 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
       @include focus-visible;
 
       > #{$icon} {
-        font-size: var(--md-comp-fab-menu-menu-item-icon-size);
-        width: var(--md-comp-fab-menu-menu-item-icon-size);
-        height: var(--md-comp-fab-menu-menu-item-icon-size);
-        line-height: var(--md-comp-fab-menu-menu-item-icon-size);
+        @include icon-size(var(--md-comp-fab-menu-menu-item-icon-size));
         color: inherit;
       }
 

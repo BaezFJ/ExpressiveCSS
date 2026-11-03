@@ -525,5 +525,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed shared menu tokens reaching tree-search dialogs without duplicate token declarations: 90,945 gzip bytes (+17).
   // Reviewed composited skeleton shimmer preserving shapes and preference fallbacks: 90,951 gzip bytes (+6).
   // Reviewed fixed-size progress clipping and Aura's forced-colors animation stop: 91,055 gzip bytes (+104).
-  assert.ok(sizes(css).gzip <= 91055, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed shared icon sizing, button state and toggle color sources, dead WebKit scrollbar rules removed, and forced-colors fills on the mega menu and rail panel chevrons: 91,010 gzip bytes (-45).
+  assert.ok(sizes(css).gzip <= 91010, `CSS gzip: ${sizes(css).gzip}`);
 });

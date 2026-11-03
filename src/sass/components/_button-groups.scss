@@ -1,3 +1,4 @@
+@use "sass:list";
 @use "sass:map";
 @use "../abstracts" as *;
 
@@ -166,44 +167,20 @@ $_connected-corners: (
     --_corner: var(--md-comp-button-group-item-shape-round);
   }
 
-  // Toggle-button colors come from md.comp.button.<style>.{unselected,selected}.
-  // Shape and the filled icon below provide two non-color selection cues.
-  > #{$_label-item}#{$_filled-item}[aria-pressed=false],
-  > .icon-button.filled[aria-pressed=false] {
-    @include _toggle-colors(var(--md-sys-color-surface-container), var(--md-sys-color-on-surface-variant));
-  }
+  // Toggle-button colors, from `$button-toggle-colors`. Shape and the filled
+  // icon below provide two non-color selection cues. Icon buttons have no
+  // elevated style.
+  @each $style, $states in $button-toggle-colors {
+    @each $pressed, $colors in $states {
+      $label: ".#{$style}";
+      @if $style == "filled" { $label: $_filled-item; }
+      $icon-item: ", > .icon-button.#{$style}[aria-pressed=#{$pressed}]";
+      @if $style == "elevated" { $icon-item: ""; }
 
-  > #{$_label-item}#{$_filled-item}[aria-pressed=true],
-  > .icon-button.filled[aria-pressed=true] {
-    @include _toggle-colors(var(--md-sys-color-primary), var(--md-sys-color-on-primary));
-  }
-
-  > #{$_label-item}.tonal[aria-pressed=false],
-  > .icon-button.tonal[aria-pressed=false] {
-    @include _toggle-colors(var(--md-sys-color-secondary-container), var(--md-sys-color-on-secondary-container));
-  }
-
-  > #{$_label-item}.tonal[aria-pressed=true],
-  > .icon-button.tonal[aria-pressed=true] {
-    @include _toggle-colors(var(--md-sys-color-secondary), var(--md-sys-color-on-secondary));
-  }
-
-  > #{$_label-item}.outlined[aria-pressed=false],
-  > .icon-button.outlined[aria-pressed=false] {
-    @include _toggle-colors(transparent, var(--md-sys-color-on-surface-variant));
-  }
-
-  > #{$_label-item}.outlined[aria-pressed=true],
-  > .icon-button.outlined[aria-pressed=true] {
-    @include _toggle-colors(var(--md-sys-color-inverse-surface), var(--md-sys-color-inverse-on-surface));
-  }
-
-  > #{$_label-item}.elevated[aria-pressed=false] {
-    @include _toggle-colors(var(--md-sys-color-surface-container-low), var(--md-sys-color-primary));
-  }
-
-  > #{$_label-item}.elevated[aria-pressed=true] {
-    @include _toggle-colors(var(--md-sys-color-primary), var(--md-sys-color-on-primary));
+      > #{$_label-item}#{$label}[aria-pressed=#{$pressed}]#{$icon-item} {
+        @include _toggle-colors(list.nth($colors, 1), list.nth($colors, 2));
+      }
+    }
   }
 
   > #{$_toggle-item}[aria-pressed]:hover {

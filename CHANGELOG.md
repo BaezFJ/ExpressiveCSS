@@ -10,7 +10,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Autocomplete `maxResults` caps rendered suggestions when configured. The default
   is `Infinity`, preserving the complete list. Search still checks the whole dataset.
 
+- Sass exposes `icon-size($size, $line-height)`, `btn-states($on, $base,
+  $hover-depth, $press-depth)`, `$button-toggle-colors` and `$expand-more`.
+  Components now share them in place of repeated sizing blocks, state rules,
+  toggle color tables and a duplicate chevron image.
+
 ### Fixed
+
+- The mega menu and navigation rail panel chevrons stay visible in forced-colors
+  mode. They were drawn as masks and painted in Canvas, so they disappeared.
 
 - A modal date or time picker stays open when a drag that starts on the picker,
   such as moving the clock hand, ends on the scrim. Only a press that starts and

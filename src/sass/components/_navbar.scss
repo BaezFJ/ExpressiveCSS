@@ -170,10 +170,7 @@ header:has(> #{$_bar}) {
 
     > #{$icon} {
       display: block;
-      font-size: var(--md-comp-top-app-bar-leading-icon-size);
-      width: var(--md-comp-top-app-bar-leading-icon-size);
-      height: var(--md-comp-top-app-bar-leading-icon-size);
-      line-height: var(--md-comp-top-app-bar-leading-icon-size);
+      @include icon-size(var(--md-comp-top-app-bar-leading-icon-size));
     }
 
     &:hover {

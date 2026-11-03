@@ -1771,7 +1771,7 @@
       "sources": [
         {
           "path": "src/sass/components/_accordion.scss",
-          "sha256": "42847790221df3bb20d7c035611dbbc79725c9ad469877781041c1959b4127f8"
+          "sha256": "922bd4cb05a28a0ddf1259ad4e3373cbc7b33022c6a39911b93e0b415e6106e0"
         }
       ],
       "gaps": [
@@ -2748,7 +2748,7 @@
       "sources": [
         {
           "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "2a7fa8e2ff3322c41da6c1ad663ea69f53322be84146b0f45711837fb84decb1"
+          "sha256": "d052c02e7a012e65dedd0fe40e9ee6492e94ecc0980bd26ff2182070df46ad35"
         },
         {
           "path": "src/sass/components/_scatter-chart.scss",

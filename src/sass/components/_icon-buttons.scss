@@ -73,10 +73,7 @@
 
   > #{$icon} {
     flex: 0 0 auto;
-    font-size: var(--md-comp-icon-button-icon-size);
-    width: var(--md-comp-icon-button-icon-size);
-    height: var(--md-comp-icon-button-icon-size);
-    line-height: var(--md-comp-icon-button-icon-size);
+    @include icon-size(var(--md-comp-icon-button-icon-size));
     color: inherit;
     overflow: hidden;
   }

@@ -75,10 +75,6 @@
     overscroll-behavior-inline: contain;
     scrollbar-width: none;
 
-    &::-webkit-scrollbar {
-      display: none;
-    }
-
     img,
     video {
       -webkit-user-drag: none;
