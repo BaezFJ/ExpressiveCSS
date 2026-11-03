@@ -35,10 +35,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   ratio. A resize keeps the same dots, moved with the box, instead of
   scattering a new set every time the canvas changes size.
 
-- Tooltip keeps an option passed to init over its `data-*` attribute when it
-  opens. From the first open on, `data-position` or `data-tooltip` used to
-  replace the caller's `position` or `text`. Attributes init did not set are
-  still read again on each open.
+- Tooltip's `data-tooltip`, `data-tooltip-id` and `data-position` win over
+  init options from init on, as documented. Init used to let the options win
+  until the first open, so a tooltip could change side or text when it first
+  showed.
 
 - `Confetti.fire()` and an instance's `fire()` keep the default of an option
   passed as `undefined`, as init does. `fire({ origin: undefined })` used to
