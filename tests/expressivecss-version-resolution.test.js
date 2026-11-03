@@ -140,6 +140,138 @@ describe('ExpressiveCSS version resolution', () => {
     assert.deepEqual(result.diagnostics, []);
   });
 
+  test('an explicit vendored package resolves without a Node manifest', async () => {
+    const projectRoot = await materialize({
+      'static/vendor/expressivecss/package.json': JSON.stringify({ name: '@expressivecss/expressive', version: frameworkVersion }),
+    });
+    const result = await resolveExpressiveVersion({ projectRoot, packagePath: 'static/vendor/expressivecss',
+      contractManifestPath: fileURLToPath(new URL('../skills/expressivecss/references/contract.json', import.meta.url)) });
+    assert.equal(result.projectRoot, projectRoot);
+    assert.equal(result.declaredRange, null);
+    assert.equal(result.resolvedVersion, frameworkVersion);
+    assert.equal(result.exactInstalledVersion, frameworkVersion);
+    assert.equal(result.resolutionSource, 'installed-package');
+    assert.equal(result.documentationSources.installedPackage.path, 'static/vendor/expressivecss');
+    assert.equal(result.status, 'match');
+    assert.equal(result.bundledContractSafe, true);
+    assert.equal(result.currentDocsSafe, false);
+  });
+
+  test('an explicit extracted package root reads its actual version', async () => {
+    const projectRoot = await materialize({
+      'package.json': '{"name":"@expressivecss/expressive","version":"0.1.0"}',
+    });
+    const result = await resolveExpressiveVersion({ projectRoot, packagePath: '.', contractVersion: frameworkVersion });
+    assert.equal(result.resolvedVersion, '0.1.0');
+    assert.equal(result.status, 'mismatch');
+    assert.equal(result.bundledContractSafe, false);
+    assert.equal(result.documentationSources.installedPackage.path, '.');
+  });
+
+  test('an explicit package directory preserves literal spaces', async () => {
+    const projectRoot = await materialize({
+      'vendor/package.json': JSON.stringify({ name: '@expressivecss/expressive', version: frameworkVersion }),
+      'vendor /package.json': '{"name":"@expressivecss/expressive","version":"0.1.0"}',
+    });
+    const result = await resolveExpressiveVersion({ projectRoot, packagePath: 'vendor ', contractVersion: frameworkVersion });
+    assert.equal(result.resolvedVersion, '0.1.0');
+    assert.equal(result.status, 'mismatch');
+    assert.equal(result.documentationSources.installedPackage.path, 'vendor ');
+  });
+
+  test('invalid explicit paths cannot fall back to a valid lockfile', async () => {
+    const projectRoot = await materialize({
+      'package.json': '{"dependencies":{"@expressivecss/expressive":"^0.8.0"}}',
+      'package-lock.json': '{"lockfileVersion":3,"packages":{"":{"dependencies":{"@expressivecss/expressive":"^0.8.0"}},"node_modules/@expressivecss/expressive":{"version":"0.8.1"}}}',
+    });
+    for (const packagePath of ['', ' ', '../outside', path.join(projectRoot, 'vendor'), 'vendor\0', 7]) {
+      const result = await resolveExpressiveVersion({ projectRoot, packagePath, contractVersion: '0.8.1' });
+      assert.equal(result.status, 'unresolved', String(packagePath));
+      assert.equal(result.resolvedVersion, null, String(packagePath));
+      assert.equal(result.diagnostics[0]?.code, 'invalid-package-path');
+    }
+  });
+
+  test('missing, malformed and oversized explicit metadata stays blocked', async () => {
+    for (const content of [null, '{not-json', '{"name":"other","version":"0.8.0"}',
+      '{"name":"@expressivecss/expressive","version":"^0.8.0"}', ' '.repeat(1024 * 1024 + 1)]) {
+      const files = { 'package.json': '{"dependencies":{"@expressivecss/expressive":"0.8.0"}}',
+        'node_modules/@expressivecss/expressive/package.json': '{"name":"@expressivecss/expressive","version":"0.8.0"}' };
+      if (content !== null) files['vendor/package.json'] = content;
+      const projectRoot = await materialize(files);
+      const result = await resolveExpressiveVersion({ projectRoot, packagePath: 'vendor', contractVersion: '0.8.0' });
+      assert.equal(result.status, 'unresolved');
+      assert.equal(result.resolvedVersion, null);
+      assert.equal(result.bundledContractSafe, false);
+      assert.ok(result.diagnostics.some((entry) => entry.severity === 'blocked'));
+    }
+  });
+
+  test('explicit package paths refuse symlink files and parent directories', async () => {
+    for (const parent of [false, true]) {
+      const outside = await materialize({ 'package.json': '{"name":"@expressivecss/expressive","version":"0.8.0"}' });
+      const projectRoot = await materialize({ 'placeholder': '' });
+      const target = path.join(projectRoot, 'vendor');
+      if (parent) {
+        await symlink(outside, target, 'dir');
+      } else {
+        await mkdir(target);
+        await symlink(path.join(outside, 'package.json'), path.join(target, 'package.json'), 'file');
+      }
+      const result = await resolveExpressiveVersion({ projectRoot, packagePath: 'vendor', contractVersion: '0.8.0' });
+      assert.equal(result.status, 'unresolved');
+      assert.equal(result.resolvedVersion, null);
+      assert.equal(result.diagnostics[0]?.code, 'unavailable-installed-package');
+      assert.match(result.diagnostics[0]?.message, /symbolic-link/u);
+    }
+  });
+
+  test('explicit installed metadata retains manifest and lockfile conflict checks', async () => {
+    for (const declaredRange of ['^0.7.0', '^0.8.0']) {
+      const projectRoot = await materialize({
+        'package.json': JSON.stringify({ dependencies: { '@expressivecss/expressive': declaredRange } }),
+        'package-lock.json': JSON.stringify({ lockfileVersion: 3, packages: {
+          '': { dependencies: { '@expressivecss/expressive': declaredRange } },
+          'node_modules/@expressivecss/expressive': { version: declaredRange === '^0.7.0' ? '0.7.1' : '0.8.1' },
+        } }),
+        'vendor/package.json': '{"name":"@expressivecss/expressive","version":"0.8.0"}',
+      });
+      const result = await resolveExpressiveVersion({ projectRoot, packagePath: 'vendor', contractVersion: '0.8.0' });
+      assert.equal(result.resolvedVersion, '0.8.0');
+      assert.equal(result.status, 'unresolved');
+      assert.ok(result.diagnostics.some((entry) => entry.code === (declaredRange === '^0.7.0'
+        ? 'installed-version-outside-manifest-range' : 'installed-lockfile-version-conflict')));
+    }
+  });
+
+  test('an explicit package does not hide an unsupported direct declaration', async () => {
+    for (const range of ['', false, 7, 'workspace:*']) {
+      const projectRoot = await materialize({
+        'package.json': JSON.stringify({ dependencies: { '@expressivecss/expressive': range } }),
+        'vendor/package.json': '{"name":"@expressivecss/expressive","version":"0.8.0"}',
+      });
+      const result = await resolveExpressiveVersion({ projectRoot, packagePath: 'vendor', contractVersion: '0.8.0' });
+      assert.equal(result.status, 'unresolved', String(range));
+      assert.ok(result.diagnostics.some((entry) => entry.code === 'unsupported-manifest-range'));
+    }
+  });
+
+  test('portable CLIs preserve the consumer root with an explicit package path', async () => {
+    const projectRoot = await materialize({
+      'vendor/package.json': JSON.stringify({ name: '@expressivecss/expressive', version: frameworkVersion }),
+    });
+    for (const relative of ['scripts/lib/resolve-expressivecss-version.mjs',
+      'skills/expressivecss/scripts/resolve-version.mjs', 'mcp/expressivecss/scripts/resolve-version.mjs']) {
+      const entry = fileURLToPath(new URL('../' + relative, import.meta.url));
+      const command = spawnSync(process.execPath, [entry, '--project-root', projectRoot, '--package-path', 'vendor'], { encoding: 'utf8' });
+      assert.equal(command.status, 0, command.stderr);
+      const result = JSON.parse(command.stdout);
+      assert.equal(result.projectRoot, projectRoot);
+      assert.equal(result.resolvedVersion, frameworkVersion);
+      assert.equal(result.documentationSources.installedPackage.path, 'vendor');
+    }
+  });
+
   test('a package name alone does not prove a framework source checkout', async () => {
     const projectRoot = await materialize({
       'package.json': '{"name":"@expressivecss/expressive","version":"0.8.0","dependencies":{"@expressivecss/expressive":"^0.7.0"}}',

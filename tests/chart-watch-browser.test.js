@@ -170,6 +170,23 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 
+  browserTest(`${engine}: a watching chart whose table is removed draws nothing`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const { page } = await open(browser);
+      const result = await page.evaluate(async () => {
+        const el = document.getElementById('watched');
+        const chart = Expressive.LineChart.getInstance(el);
+        el.querySelector('table').remove();
+        await settle();
+        return { plots: el.querySelectorAll('.line-chart-plot').length, labels: chart.labels.length, series: chart.series.length };
+      });
+      assert.deepEqual(result, { plots: 0, labels: 0, series: 0 });
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: destroy stops the watch`, async () => {
     const browser = await leaseBrowser(browserType);
     try {

@@ -1,7 +1,20 @@
-import { InitElements, InitElement } from "../core/component";
+import { Component, InitElements, InitElement } from "../core/component";
 import * as Components from "./index";
 import { CARDS_SELECTOR, isCardReveal } from "./cards";
 import { EXPANDING_CARD_SELECTOR } from "./expandingCard";
+
+/** The shape every entry in the table satisfies. */
+type AutoInitable = {
+  defaults: object;
+  getInstance(el: Element): { destroy(): void } | undefined;
+  init(els: InitElement | InitElements<InitElement>, options: Partial<object>): unknown;
+};
+
+type AutoInitEntry = {
+  component: AutoInitable;
+  selector: string;
+  filter?: (el: Element) => boolean;
+};
 
 /**
  * The components `AutoInit()` starts, in initialization order, with the
@@ -107,7 +120,7 @@ export const AUTO_INIT_COMPONENTS = {
   },
   // After Menu, so the bar's own menu options replace AutoInit's defaults.
   Menubar: { component: Components.Menubar, selector: ".menubar" },
-};
+} satisfies Record<string, AutoInitEntry>;
 
 type Registry = typeof AUTO_INIT_COMPONENTS;
 
@@ -119,19 +132,6 @@ export type AutoInitOptions = {
   [K in keyof Registry]?: Partial<
     InstanceType<Registry[K]["component"]>["options"]
   >;
-};
-
-/** The shape every entry in the table satisfies; see the cast in AutoInit. */
-type AutoInitable = {
-  defaults: object;
-  getInstance(el: Element): { destroy(): void } | undefined;
-  init(els: InitElement | InitElements<InitElement>, options: Partial<object>): unknown;
-};
-
-type AutoInitEntry = {
-  component: AutoInitable;
-  selector: string;
-  filter?: (el: Element) => boolean;
 };
 
 /**
@@ -165,11 +165,14 @@ function sameKind(fallback: unknown, value: unknown) {
   return type !== ARRAY || itemsMatch(fallback as unknown[], value as unknown[]);
 }
 
-const accepts = (defaults: object, key: string, value: unknown) =>
-  Object.hasOwn(defaults, key) && !MARKUP_BLOCKED.has(key) && sameKind(defaults[key], value);
+/** An own property of a plain object, read without an index signature on its type. */
+const prop = (source: object, key: string): unknown => Reflect.get(source, key);
+
+const accepts = (defaults: object, key: string, value: unknown): boolean =>
+  Object.hasOwn(defaults, key) && !MARKUP_BLOCKED.has(key) && sameKind(prop(defaults, key), value);
 
 /** Records a rejected key; returns undefined so the key is left out. */
-const reject = (rejected: string[], key: string) => void rejected.push(key);
+const reject = (rejected: string[], key: string): undefined => void rejected.push(key);
 
 /**
  * A plain object filtered against its default object, or undefined once any
@@ -191,7 +194,7 @@ function nested(value: unknown, fallback: object, rejected: string[], path: stri
 function pick(parsed: object, defaults: object, rejected: string[], path = ""): Record<string, unknown> {
   const picked: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(parsed)) {
-    const kept = accepts(defaults, key, value) ? nested(value, defaults[key], rejected, `${path}${key}.`) : reject(rejected, path + key);
+    const kept = accepts(defaults, key, value) ? nested(value, prop(defaults, key) as object, rejected, `${path}${key}.`) : reject(rejected, path + key);
     if (kept !== undefined) picked[key] = kept;
   }
   return picked;
@@ -229,15 +232,41 @@ function markupOptions(el: Element, name: string, defaults: object) {
 }
 
 // Each component's static `init` is overloaded; indexing the table widens it
-// to a union TypeScript cannot call, so narrow it once, here.
-const entry = (name: keyof Registry) => AUTO_INIT_COMPONENTS[name] as unknown as AutoInitEntry;
+// to a union TypeScript cannot call, so widen it once, here, to the shape the
+// table satisfies.
+const entry = (name: keyof Registry): AutoInitEntry => AUTO_INIT_COMPONENTS[name];
 const NAMES = Object.keys(AUTO_INIT_COMPONENTS) as (keyof Registry)[];
 const WATCH_SELECTOR = `:is(${NAMES.map((name) => entry(name).selector).join(",")}):not(.no-autoinit)`;
 
-/** Starts component `name` on one element, with its markup options under `options`. */
+/**
+ * Starts component `name` on one element, with its markup options under
+ * `options`. A constructor that throws is logged and its half-built instance
+ * released, so one bad element neither stops the rest of the pass nor keeps
+ * a later pass from trying again.
+ */
 function initElement(name: keyof Registry, el: Element, options: object = {}) {
   const { component } = entry(name);
-  component.init(el, { ...markupOptions(el, name, component.defaults), ...options });
+  try {
+    component.init(el, { ...markupOptions(el, name, component.defaults), ...options });
+  } catch (error) {
+    console.error(`${name} failed to start on`, el, error);
+    stopElement(name, el);
+  }
+}
+
+/**
+ * Destroys component `name`'s instance on one element. A teardown that throws,
+ * as a half-built instance's can, is logged and the base teardown runs anyway,
+ * so the listeners go and the element is free for a new instance.
+ */
+function stopElement(name: keyof Registry, el: Element) {
+  const instance = entry(name).component.getInstance(el);
+  try {
+    instance?.destroy();
+  } catch (error) {
+    console.error(`${name} failed to stop on`, el, error);
+    Component.prototype.destroy.call(instance);
+  }
 }
 
 /**
@@ -278,7 +307,7 @@ function hasClaims(node: Node): node is Element {
 function stopRemoved(node: Node) {
   if (node.isConnected || !hasClaims(node)) return;
   for (const name of NAMES) {
-    claimed(name, node, true).forEach((el) => entry(name).component.getInstance(el)?.destroy());
+    claimed(name, node, true).forEach((el) => stopElement(name, el));
   }
 }
 

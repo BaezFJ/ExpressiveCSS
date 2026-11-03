@@ -9,13 +9,13 @@ export function restoreAttribute(el: Element, name: string, value: string | null
 }
 
 /** A picker footer text button; a hidden one is also out of the tab order. */
-function footerButton(parent: HTMLElement, text: string, className: string, onClick: () => void, visible = true) {
+function footerButton(parent: HTMLElement, text: string | undefined, className: string, onClick: () => void, visible = true) {
   const button = document.createElement('button');
   button.className = `${className} text`;
   button.style.visibility = visible ? 'visible' : 'hidden';
   button.type = 'button';
   button.tabIndex = visible ? 0 : -1;
-  button.innerText = text;
+  button.innerText = text ?? '';
   button.addEventListener('click', onClick);
   parent.append(button);
 }
@@ -243,9 +243,9 @@ export class Utils {
    * it climbs out of shadow roots too, so a press on a shadow-root icon inside
    * a light-DOM button still finds the button.
    */
-  static closestInPath(event: Event, selector: string): Element | null {
+  static closestInPath<T extends Element = Element>(event: Event, selector: string): T | null {
     for (const node of event.composedPath()) {
-      if (node instanceof Element && node.matches(selector)) return node;
+      if (node instanceof Element && node.matches(selector)) return node as T;
     }
     return null;
   }

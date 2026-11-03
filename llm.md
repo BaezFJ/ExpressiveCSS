@@ -394,7 +394,7 @@ const current = Expressive.ComponentName.getInstance(element);
 current?.destroy();
 ```
 
-`init()` also accepts a NodeList or HTMLCollection and returns an array of component instances. Empty collections return an empty array. Re-initializing an element destroys its previous instance first. Component-specific sections below define additional methods, properties, callbacks, and option defaults.
+`init()` also accepts a NodeList or HTMLCollection and returns an array of component instances. Empty collections return an empty array. Re-initializing an element destroys its previous instance first. `getInstance()` returns `undefined` before `init()` and after `destroy()`. An option set to `undefined`, at the top level or inside `i18n`, keeps its default. Component-specific sections below define additional methods, properties, callbacks, and option defaults.
 
 Menu, Lightbox, NavigationRail, Cards and ExpandingCard fire DOM events from their initialization elements. Menu and Lightbox fire `expressive:open` and `expressive:close` as state changes, then `expressive:opened` and `expressive:closed` when motion ends. NavigationRail fires the same names synchronously around its class and ARIA updates; its end events do not wait for CSS motion. Cards and ExpandingCard fire only `expressive:open` and `expressive:close`. Each event follows its matching callback, bubbles and crosses shadow roots. Check `event.target` because nested components bubble too. Closing a Menu or Lightbox from its `expressive:open` listener stops it opening.
 
@@ -10368,6 +10368,7 @@ onCreate: function(text, autocomplete) {
 | `data` | Array | `[]` | Suggestion list. Each item needs an `id`; `text`, `image`, and `description` are optional. |
 | `isMultiSelect` | Boolean | `false` | If true, several values can be selected. `onAutocomplete` receives an array. |
 | `maxMenuHeight` | String | `'300px'` | Max height of the suggestion menu. |
+| `maxResults` | Number | `Infinity` | Caps rendered suggestions when set to a nonnegative finite value. Search still runs over the whole dataset. |
 | `i18n` | Object | See below | Partial overrides for live status messages. |
 | `onAutocomplete` | Function | `null` | Called after a selection (and when a default value is applied). Receives the selected entries. |
 | `onSearch` | Function | filters `id` and `text` | Called with the text, the instance and an `AbortSignal` when input events change the search text, including paste, replacement and deletion without key events. Load or filter data, then call `setMenuItems`. The signal aborts when the search text changes or the autocomplete is destroyed. |

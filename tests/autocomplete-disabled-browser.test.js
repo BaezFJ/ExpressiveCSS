@@ -110,3 +110,23 @@ each('are dimmed, in forced colors too', async page => {
   await page.emulateMedia({ forcedColors: 'active' });
   assert.deepEqual(await opacity(), ['0.38', '1']);
 });
+
+// Not about disabled entries, but this file has the pointer helpers. A press
+// that leaves the list before its release must not leave the field thinking a
+// press is still in flight: then leaving the field is not noticed, and late
+// search results reopen the list under a field nobody is using.
+each('(and others) let late results stay closed after a press released outside the list', async page => {
+  const combobox = await search(page, 'pie');
+  const box = await page.getByRole('option', { name: 'Apple pie' }).boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(2, 2);
+  await page.mouse.up();
+  assert.deepEqual(await ids(page), [], 'a release off the row chooses nothing');
+  await combobox.focus();
+  await combobox.blur();
+  await page.waitForFunction(() => !instance.isOpen);
+  await page.evaluate(() => instance.setMenuItems([{ id: 'fig', text: 'Fig pie' }]));
+  await page.evaluate(() => new Promise(resolve => setTimeout(resolve, 50)));
+  assert.equal(await page.evaluate(() => instance.isOpen), false);
+});

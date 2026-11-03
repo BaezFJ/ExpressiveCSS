@@ -512,6 +512,7 @@ async function bundledContract(explicitPath = null) {
 
 export async function resolveExpressiveVersion({
   projectRoot = process.cwd(),
+  packagePath = null,
   contractVersion = null,
   skillVersion = null,
   contractManifestPath = null,
@@ -534,13 +535,48 @@ export async function resolveExpressiveVersion({
 
   let resolvedVersion = null;
   let resolutionSource = 'none';
+  let installedPackageDirectory = 'node_modules/@expressivecss/expressive';
 
   if (isFrameworkSource) {
     resolvedVersion = cleanVersion(manifest.version);
     resolutionSource = 'framework-source';
-  } else if (declaredRange) {
-    const installedRelativePath = 'node_modules/@expressivecss/expressive/package.json';
-    const installedText = await readText(path.join(root, installedRelativePath));
+    if (packagePath !== null) warnings.push('Framework source takes precedence over the explicit package path.');
+  } else if (declaredRange || packagePath !== null) {
+    let installedRelativePath = 'node_modules/@expressivecss/expressive/package.json';
+    let installedText = null;
+    let explicitPackageUnavailable = false;
+    if (packagePath !== null) {
+      const directory = typeof packagePath === 'string' && packagePath.trim() && !packagePath.includes('\0')
+        ? packagePath : null;
+      const relative = directory ? path.relative(root, path.resolve(root, directory)) : null;
+      if (relative === null || path.isAbsolute(directory) || relative === '..'
+        || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+        explicitPackageUnavailable = true;
+        diagnostics.push({
+          code: 'invalid-package-path', severity: 'blocked', source: 'installed-package',
+          path: typeof packagePath === 'string' ? packagePath : null,
+          message: 'The explicit package path must be a relative directory inside the project root.',
+        });
+      } else {
+        installedPackageDirectory = relative.split(path.sep).join('/') || '.';
+        installedRelativePath = path.posix.join(installedPackageDirectory, 'package.json');
+        try {
+          installedText = await readBoundedRegularFile(path.join(root, installedRelativePath),
+            MAX_MANIFEST_BYTES, 'Installed ExpressiveCSS metadata', root);
+        } catch (error) {
+          explicitPackageUnavailable = true;
+          const reason = error?.code === 'ENOENT' ? 'missing'
+            : error?.code === 'outside-root' || READ_REFUSALS.has(error?.code) ? error.code : 'unreadable';
+          diagnostics.push({
+            code: 'unavailable-installed-package', severity: 'blocked', source: 'installed-package',
+            path: installedRelativePath,
+            message: `Cannot read explicit installed ExpressiveCSS metadata: ${reason}.`,
+          });
+        }
+      }
+    } else {
+      installedText = await readText(path.join(root, installedRelativePath));
+    }
     let installed = null;
     if (installedText !== null) {
       try {
@@ -550,7 +586,9 @@ export async function resolveExpressiveVersion({
       }
     }
     const installedVersion = installed?.name === PACKAGE_NAME ? cleanVersion(installed.version) : null;
-    if (installedText !== null && !installedVersion) {
+    if (explicitPackageUnavailable) {
+      resolutionSource = declaredRange ? 'manifest-only' : 'none';
+    } else if (installedText !== null && !installedVersion) {
       resolutionSource = 'manifest-only';
       diagnostics.push({
         code: 'malformed-installed-metadata',
@@ -569,7 +607,7 @@ export async function resolveExpressiveVersion({
       };
       candidates.push(installedCandidate);
       const installedSatisfiesRange = versionSatisfiesRange(installedVersion, declaredRange);
-      if (installedSatisfiesRange !== true) {
+      if (declaredRange !== null && installedSatisfiesRange !== true) {
         diagnostics.push({
           code: installedSatisfiesRange === false
             ? 'installed-version-outside-manifest-range'
@@ -648,7 +686,7 @@ export async function resolveExpressiveVersion({
     },
     installedPackage: {
       available: resolutionSource === 'installed-package',
-      path: resolutionSource === 'installed-package' ? 'node_modules/@expressivecss/expressive' : null,
+      path: resolutionSource === 'installed-package' ? installedPackageDirectory : null,
       componentDocumentationAvailable: false,
     },
   };
@@ -683,9 +721,10 @@ export async function resolveExpressiveVersion({
 const invokedPath = process.argv[1] ? path.resolve(process.argv[1]) : null;
 if (invokedPath === fileURLToPath(import.meta.url)) {
   const option = { type: 'string' };
-  const { values: args } = parseArgs({ strict: false, allowPositionals: true, options: { 'project-root': option, 'contract-version': option, 'skill-version': option } });
+  const { values: args } = parseArgs({ strict: false, allowPositionals: true, options: { 'project-root': option, 'package-path': option, 'contract-version': option, 'skill-version': option } });
   const result = await resolveExpressiveVersion({
     projectRoot: typeof args['project-root'] === 'string' ? args['project-root'] : process.cwd(),
+    packagePath: args['package-path'] ?? null,
     contractVersion: typeof args['contract-version'] === 'string' ? args['contract-version'] : null,
     skillVersion: typeof args['skill-version'] === 'string' ? args['skill-version'] : null,
   });

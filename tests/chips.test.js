@@ -328,6 +328,22 @@ describe('Chips input and data', () => {
     }
   });
 
+  test('Enter trims typed text and adds nothing for blank text or a padded duplicate', () => {
+    const [el, chips] = mount({ data: [{ id: 'a' }] });
+    try {
+      const input = el.querySelector('input');
+      for (const typed of ['   ', 'a ', ' b ']) {
+        input.value = typed;
+        key(input, 'Enter');
+      }
+      assert.deepEqual(chips.getData().map((chip) => chip.id), ['a', 'b']);
+      chips.addChip({ id: ' ' });
+      assert.equal(chips.getData().length, 2, 'addChip refuses a whitespace-only id');
+    } finally {
+      chips.destroy();
+    }
+  });
+
   test('arrow keys follow the reading direction in RTL', () => {
     const [el, chips] = mount({ data: [{ id: 'A' }, { id: 'B' }, { id: 'C' }] });
     el.style.direction = 'rtl';

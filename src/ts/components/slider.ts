@@ -48,7 +48,7 @@ export class Slider extends Component<SliderOptions> {
       _authored.delete(el);
     }
     // The other handle of a range writes the shared host properties again.
-    host?.querySelectorAll('input[type="range"]').forEach((el) => el['Expressive_Slider']?._sync());
+    host?.querySelectorAll('input[type="range"]').forEach((el) => Slider.getInstance(el)?._sync());
   }
 
   _set(el: HTMLElement, name: string, value: string) {
