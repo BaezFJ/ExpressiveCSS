@@ -95,8 +95,7 @@ $_tab: "> a";
     // The tint alone is faint and vanishes under forced colors. Inset, so the
     // scrolling tab row does not clip it.
     &:focus-visible {
-      @include focus-ring;
-      outline-offset: -3px;
+      @include focus-ring(-3px);
     }
 
     &.active {

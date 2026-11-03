@@ -307,10 +307,7 @@ menu[id] li > menu,
       background-color: state-layer(var(--md-comp-menu-item-selected-label-text-color), "pressed", var(--md-comp-menu-item-selected-container-color));
     }
 
-    &:focus-visible {
-      outline: 3px solid var(--md-sys-color-secondary);
-      outline-offset: -3px;
-    }
+    @include focus-visible(-3px);
 
     &:is(.disabled, [aria-disabled="true"]) {
       pointer-events: none;

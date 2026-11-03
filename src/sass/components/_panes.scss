@@ -235,23 +235,12 @@
 
   // Header Bar (64dp height, Title Large, action icons)
   > :is(header, .pane-header) {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex: 0 0 auto;
-    box-sizing: border-box;
-    min-height: 64px;
-    margin: 0;
+    @include header-bar(12px);
     padding: 8px 16px;
-    background: none;
 
     > :is(h1, h2, h3, h4, h5, h6, .pane-title) {
-      flex: 1 1 auto;
-      min-width: 0;
-      margin: 0;
+      @include header-bar-headline;
       padding: 0;
-      color: var(--md-sys-color-on-surface);
-      @include typescale("title-large");
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

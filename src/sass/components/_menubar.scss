@@ -38,22 +38,10 @@
     cursor: pointer;
     @include typescale("label-large");
     @include focus-visible;
-
-    &:hover {
-      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
-    }
-
-    &[aria-expanded="true"] {
-      background-color: var(--md-sys-color-secondary-container);
-      color: var(--md-sys-color-on-secondary-container);
-    }
+    @include text-action('[aria-expanded="true"]');
   }
 
   @media (forced-colors: active) {
     border: 1px solid CanvasText;
-
-    > .menu-trigger[aria-expanded="true"] {
-      outline: 2px solid Highlight;
-    }
   }
 }

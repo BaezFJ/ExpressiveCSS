@@ -311,16 +311,11 @@
     cursor: pointer;
     @include typescale("label-large");
     @include focus-visible;
-
-    &:hover:not([aria-current]) {
-      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
-    }
-
-    &[aria-current] {
-      background-color: var(--md-comp-nav-rail-active-indicator-color);
-      color: var(--md-comp-nav-rail-active-color);
-      @include forced-colors-selected;
-    }
+    @include text-action(
+      "[aria-current]",
+      var(--md-comp-nav-rail-active-indicator-color),
+      var(--md-comp-nav-rail-active-color)
+    );
   }
 
   summary {

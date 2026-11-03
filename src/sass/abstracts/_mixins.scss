@@ -174,15 +174,16 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 // Focus with Keyboard
 // The ring itself, for the rare selector that cannot be written as
 // `&:focus-visible` on the focused element - a filter chip draws its ring on
-// the <label>, but the focus is on the checkbox before it.
-@mixin focus-ring {
+// the <label>, but the focus is on the checkbox before it. A row inside a
+// scrolling list passes a negative `$offset` so the list does not clip it.
+@mixin focus-ring($offset: 2px) {
   outline: 3px solid var(--md-sys-color-secondary);
-  outline-offset: 2px;
+  outline-offset: $offset;
 }
 
-@mixin focus-visible {
+@mixin focus-visible($offset: 2px) {
   &:focus-visible {
-    @include focus-ring();
+    @include focus-ring($offset);
   }
 }
 
@@ -195,6 +196,53 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   height: 18px;
   background-color: currentColor;
   mask: $trend-arrow center / 18px no-repeat;
+}
+
+// The 64dp header bar of a full-screen dialog, a side sheet or a pane: a
+// flex row with no fill or shadow. `background: none` also keeps the top app
+// bar's `header:has(> nav)` fill off it. Callers add their own padding.
+@mixin header-bar($gap) {
+  display: flex;
+  align-items: center;
+  gap: $gap;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  min-height: 64px;
+  margin: 0;
+  background: none;
+  box-shadow: none;
+}
+
+// A header bar's heading: takes the free space and can shrink, title-large.
+@mixin header-bar-headline {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  color: var(--md-sys-color-on-surface);
+  @include typescale("title-large");
+}
+
+// The states of a text action with no button chrome of its own: a mega menu
+// or menubar item, a rail panel link, a tree or cascader row. An on-surface
+// hover layer and, given `$selected` (a compound such as `[aria-current]`), a
+// selected fill with a Highlight outline under forced colors. Hover comes
+// first: the two have equal specificity, so the selected fill wins on hover.
+@mixin text-action(
+  $selected: null,
+  $container: var(--md-sys-color-secondary-container),
+  $on-container: var(--md-sys-color-on-secondary-container),
+) {
+  &:hover {
+    background-color: state-layer(var(--md-sys-color-on-surface), "hover");
+  }
+
+  @if $selected {
+    &#{$selected} {
+      background-color: $container;
+      color: $on-container;
+      @include forced-colors-selected;
+    }
+  }
 }
 
 // A 48dp icon action in a dialog, pane or side sheet header bar.
