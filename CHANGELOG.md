@@ -30,6 +30,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Datepicker `onSelect` and `expressive:select` no longer fire when a click,
+  Enter or a form reset re-reads the date the input already shows. Only a
+  new date is a selection.
+
 - Datepicker `minDate` and `maxDate` bound the month arrows, the month and
   year lists and PageUp/PageDown. The internal month and year bounds were
   never set from them, so the calendar paged into months where every day

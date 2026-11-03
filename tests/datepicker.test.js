@@ -122,6 +122,26 @@ test('minDate and maxDate bound the month arrows and the year list', () => {
   }
 });
 
+test('re-reading the date an input already shows does not fire onSelect', () => {
+  resetBody();
+  document.body.innerHTML = '<div><input></div>';
+  const input = document.querySelector('input');
+  const selected = [];
+  const picker = Expressive.Datepicker.init(input, {
+    format: 'yyyy-mm-dd', defaultDate: new Date(2026, 9, 10), setDefaultDate: true, onSelect: (date) => selected.push(date.getDate())
+  });
+  try {
+    input.dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+    input.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+    assert.deepEqual(selected, [], 'a click and Enter on the shown date select nothing');
+    input.value = '2026-10-12';
+    input.dispatchEvent(new window.Event('change', { bubbles: true }));
+    assert.deepEqual(selected, [12], 'a typed new date still selects');
+  } finally {
+    picker.destroy();
+  }
+});
+
 test('a date typed into a multiple selection stays selected', () => {
   resetBody();
   document.body.innerHTML = '<div><input></div>';

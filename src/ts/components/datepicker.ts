@@ -711,8 +711,16 @@ export class Datepicker extends Component<DatepickerOptions> {
       this.setInputValue(el, this._selectedDateFor(el));
       return;
     }
+    // Re-reading the date the input already shows, on a click, Enter or a
+    // reset, is no selection, so onSelect does not fire for it.
+    const unchanged = this._shows(el, date);
     this._selectTypedMultiDate(el, date);
-    this.setDate(date, false, isEndDate, true);
+    this.setDate(date, unchanged, isEndDate, true);
+  }
+
+  /** Whether `date` is the date already selected for `el`. */
+  private _shows(el: HTMLInputElement, date: Date) {
+    return this._selectedDateFor(el)?.getTime() === date.getTime();
   }
 
   // setDate does not toggle a typed date into a multiple selection, so it goes
