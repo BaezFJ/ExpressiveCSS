@@ -83,7 +83,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Carousel](#carousel) | unassessed | needs-review | needs-rerun | 0 |
 | [Image compare](#image-compare) | implemented | source-reviewed | incomplete | 0 |
 | [Marquee](#marquee) | implemented | source-reviewed | needs-rerun | 0 |
-| [Confetti](#confetti) | implemented | source-reviewed | needs-rerun | 0 |
+| [Confetti](#confetti) | unassessed | needs-review | needs-rerun | 0 |
 | [Particles](#particles) | unassessed | needs-review | needs-rerun | 0 |
 | [Lightbox](#lightbox) | unassessed | needs-review | needs-rerun | 0 |
 | [Map](#map) | unassessed | needs-review | needs-rerun | 0 |
@@ -92,8 +92,8 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Command palette](#command-palette) | unassessed | needs-review | needs-rerun | 0 |
 | [Fieldsets](#fieldsets) | unassessed | needs-review | needs-rerun | 0 |
 | [Text fields](#text-fields) | unassessed | needs-review | needs-rerun | 0 |
-| [Input mask](#input-mask) | implemented | source-reviewed | incomplete | 0 |
-| [Currency input](#currency-input) | implemented | source-reviewed | incomplete | 0 |
+| [Input mask](#input-mask) | unassessed | needs-review | incomplete | 0 |
+| [Currency input](#currency-input) | unassessed | needs-review | incomplete | 0 |
 | [Rich text editor](#rich-text-editor) | unassessed | needs-review | needs-rerun | 0 |
 | [Drop zone](#drop-zone) | unassessed | needs-review | needs-rerun | 0 |
 | [Select](#select) | unassessed | needs-review | needs-rerun | 0 |
@@ -1311,9 +1311,9 @@ Web adaptation: A visual copy of the item list marked aria-hidden, with its link
 
 ## Confetti
 
-**implemented within the stated scope.** Bursts from a button's center over the page, inside an authored canvas, or from script, with count, angle, spread, speed, decay, gravity, drift, lifetime, origin, colors, square, circle and star shapes, and size options, theme colors by default and a promise that resolves when the burst ends.
+**unassessed within the stated scope.** Bursts from a button's center over the page, inside an authored canvas, or from script, with count, angle, spread, speed, decay, gravity, drift, lifetime, origin, colors, square, circle and star shapes, and size options, theme colors by default and a promise that resolves when the burst ends.
 
-Source review: source-reviewed, 2026-10-09. [src/sass/components/_confetti.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_confetti.scss), [src/ts/components/confetti.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/confetti.ts).
+Source review: needs-review, 2026-10-09. [src/sass/components/_confetti.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_confetti.scss), [src/ts/components/confetti.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/confetti.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components).
 
@@ -1466,9 +1466,9 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 ## Input mask
 
-**implemented within the stated scope.** A data-mask pattern on a text, tel, search, url or password input, where 0 takes a digit, a a letter, * either and a backslash escapes a literal; typed, pasted, autofilled and composed text formatted with the caret after the edit, Backspace and Delete across literals, saved and reset values formatted, the formatted value submitted and validated, and formatting before the page's input listeners.
+**unassessed within the stated scope.** A data-mask pattern on a text, tel, search, url or password input, where 0 takes a digit, a a letter, * either and a backslash escapes a literal; typed, pasted, autofilled and composed text formatted with the caret after the edit, Backspace and Delete across literals, saved and reset values formatted, the formatted value submitted and validated, and formatting before the page's input listeners.
 
-Source review: source-reviewed, 2026-10-25. [src/ts/components/inputMask.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/inputMask.ts).
+Source review: needs-review, 2026-10-25. [src/ts/components/inputMask.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/inputMask.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
 
@@ -1483,9 +1483,9 @@ Web adaptation: A capture-phase input listener rewrites the native value, so the
 
 ## Currency input
 
-**implemented within the stated scope.** A data-currency ISO 4217 code on a text input; the amount shown with Intl.NumberFormat in the nearest lang and that currency on blur, the plain number in the locale's decimal mark on focus, typed and pasted amounts read in either decimal mark, a validity message for text with no digit that i18n can replace, saved and reset values formatted, a value property, and the plain number in the form data.
+**unassessed within the stated scope.** A data-currency ISO 4217 code on a text input; the amount shown with Intl.NumberFormat in the nearest lang and that currency on blur, the plain number in the locale's decimal mark on focus, typed and pasted amounts read in either decimal mark, a validity message for text with no digit that i18n can replace, saved and reset values formatted, a value property, and the plain number in the form data.
 
-Source review: source-reviewed, 2026-10-25. [src/ts/components/currencyInput.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/currencyInput.ts).
+Source review: needs-review, 2026-10-25. [src/ts/components/currencyInput.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/currencyInput.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
 

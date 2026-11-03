@@ -31,7 +31,7 @@ export interface NotifyOptions {
  * `options` without its keys set to `undefined`, so those keep their
  * defaults: `{ i18n: { tooShort: t.missing } }` must not erase a message.
  */
-const defined = <T extends object>(options: T): T =>
+export const defined = <T extends object>(options: T): T =>
   options && (Object.fromEntries(Object.entries(options).filter(([, value]) => value !== undefined)) as T);
 
 /**

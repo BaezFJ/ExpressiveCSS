@@ -105,6 +105,19 @@ describe('Material 3 Carousel CSS', () => {
 describe('Material 3 Carousel behavior', () => {
   beforeEach(resetBody);
 
+  test('destroy puts back the authored active item and drops drag and scroll state', () => {
+    document.body.innerHTML = markup();
+    const el = document.querySelector('.carousel');
+    el.querySelectorAll('.carousel-item')[1].classList.add('active');
+    const classes = () => [el, ...el.querySelectorAll('[class]')].map((item) => [...item.classList].join(' '));
+    const before = classes();
+    const instance = Expressive.Carousel.init(el);
+    instance.set(3);
+    el.classList.add('dragging', 'scrolling');
+    instance.destroy();
+    assert.deepEqual(classes(), before);
+  });
+
   test('assigns dynamic large, medium, and small roles in multi-browse', () => {
     document.body.innerHTML = markup();
     const el = document.querySelector('.carousel');

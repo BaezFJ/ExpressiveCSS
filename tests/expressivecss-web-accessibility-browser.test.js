@@ -779,7 +779,8 @@ scenario('autocomplete searches input-only edits without duplicate keyboard sear
   await input.fill('');
   await page.keyboard.type('ap');
   await expect(page.getByRole('option')).toHaveText(['apple', 'apricot']);
-  assert.deepEqual(await page.evaluate(() => window.queries), ['ap', 'ban', '', 'a', 'ap']);
+  // Empty text is below minLength, so it does not search.
+  assert.deepEqual(await page.evaluate(() => window.queries), ['ap', 'ban', 'a', 'ap']);
   await page.keyboard.press('Tab');
   await expect(page.locator('#after')).toBeFocused();
   await expect(page.getByRole('listbox')).toBeHidden();
@@ -1351,8 +1352,8 @@ for (const operation of ['dismiss', 'replace']) scenario(`authored snackbar surv
       margin: authoredNotice.style.marginTop,
       completions: oldCompletions
       // A dismissed snackbar finishes before the queued one takes its body; a
-      // replaced one is cut short without completing.
-    })), { sameSource: true, registered: true, instances: 1, inert: false, opacity: '1', margin: '', completions: operation === 'dismiss' ? 1 : 0 });
+      // replaced one completes once, when it is cut short.
+    })), { sameSource: true, registered: true, instances: 1, inert: false, opacity: '1', margin: '', completions: 1 });
     await expect(page.locator('#notice')).toHaveCount(1);
     await expect(page.locator('#notice button')).toHaveCount(3);
     const action = page.getByRole('button', { name: 'Use replacement', exact: true });

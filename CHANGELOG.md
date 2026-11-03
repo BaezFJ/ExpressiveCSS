@@ -30,6 +30,55 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- `Confetti.fire()` and an instance's `fire()` keep the default of an option
+  passed as `undefined`, as init does. `fire({ origin: undefined })` used to
+  throw.
+
+- InputMask formats the value a form reset restores inside a shadow root
+  too. It listened for `reset` on the document, which the event never
+  reaches from a shadow root. InputMask and CurrencyInput now share one
+  reset helper.
+
+- A snackbar that a `replace: true` snackbar cuts short fires `close` and
+  `closed` and runs its `completeCallback`, as a dismissed one does, and so
+  does one a re-render took out of the page. They used to end silently, so
+  code waiting on the callback never heard.
+
+- Carousel `destroy()` puts the authored `active` class back, removes the
+  `carousel-item` class from items it found without one, and drops the
+  `dragging` and `scrolling` classes of a drag or scroll it cut short.
+  Starting it again used to begin at the last item shown.
+
+- Chips `destroy()` leaves the markup as it was. It used to keep the
+  `chips`, `field` and `focus` classes, the input's `input` class,
+  placeholder and generated id, the label's `for`, and an input it had
+  created.
+
+- Menu `destroy()` puts back the attributes setup wrote, on the trigger,
+  the menu and its rows, and moves the menu back to where it was. A
+  destroyed trigger used to keep `aria-haspopup`, `aria-expanded` and
+  `aria-controls`, so it was still announced as a menu button.
+
+- A date or time picker with Ok and Cancel buttons, which a modal picker
+  always has, empties its input on Ok after Clear. Clear used to write the
+  empty value and fire `change` at once, so Cancel could not keep the old
+  value. Timepicker shows empty fields until Ok, and choosing a time after
+  Clear keeps that time.
+
+- Datepicker `onSelect` and `expressive:select` no longer fire when a click,
+  Enter or a form reset re-reads the date the input already shows. Only a
+  new date is a selection.
+
+- Datepicker `minDate` and `maxDate` bound the month arrows, the month and
+  year lists and PageUp/PageDown. The internal month and year bounds were
+  never set from them, so the calendar paged into months where every day
+  was disabled.
+
+- Autocomplete calls `onSearch` only once the text reaches `minLength`.
+  Shorter text used to reach it too, so a remote search fetched on the
+  first keystroke whatever `minLength` said. Text shorter than `minLength`
+  now aborts the running search and empties `menuItems`.
+
 - Clicking the tab that is already shown no longer fires `onShow` and
   `expressive:change` again or re-runs the indicator animation. Swipeable
   tabs and keyboard focus already skipped it.

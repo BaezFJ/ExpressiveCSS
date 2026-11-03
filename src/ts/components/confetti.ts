@@ -1,4 +1,4 @@
-import { Component, BaseOptions } from '../core/component';
+import { Component, BaseOptions, defined } from '../core/component';
 
 export type ConfettiShape = 'square' | 'circle' | 'star';
 
@@ -149,7 +149,8 @@ export class Confetti extends Component<ConfettiOptions> {
    * Bursts over the whole viewport. Resolves when the last piece is gone.
    */
   static fire(options: Partial<ConfettiOptions> = {}): Promise<void> {
-    return burst(viewportCanvas, document.body, { ...Confetti.defaults, ...options });
+    // An option set to undefined keeps its default, as it does at init.
+    return burst(viewportCanvas, document.body, { ...Confetti.defaults, ...defined(options) });
   }
 
   /**
@@ -157,7 +158,7 @@ export class Confetti extends Component<ConfettiOptions> {
    * Resolves when the last piece is gone.
    */
   fire(options: Partial<ConfettiOptions> = {}): Promise<void> {
-    const merged = { ...this.options, ...options };
+    const merged = { ...this.options, ...defined(options) };
     if (this.el instanceof HTMLCanvasElement) {
       const canvas = this.el;
       return burst(() => canvas, canvas.parentElement ?? document.body, merged);

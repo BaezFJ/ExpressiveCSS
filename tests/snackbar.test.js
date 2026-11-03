@@ -129,6 +129,26 @@ describe('Snackbar', () => {
     }
   });
 
+  test('a replaced snackbar fires close and closed and runs completeCallback', t => {
+    t.mock.timers.enable({ apis: ['setTimeout'] });
+    const events = [];
+    const onEvent = (e) => events.push(e.type);
+    document.addEventListener('expressive:close', onEvent);
+    document.addEventListener('expressive:closed', onEvent);
+    let completed = 0;
+    try {
+      new Expressive.Snackbar({ text: 'First', displayLength: Infinity, inDuration: 0, completeCallback: () => completed++ });
+      new Expressive.Snackbar({ text: 'Second', displayLength: Infinity, inDuration: 0, replace: true });
+      assert.deepEqual(events, ['expressive:close', 'expressive:closed']);
+      assert.equal(completed, 1);
+    } finally {
+      document.removeEventListener('expressive:close', onEvent);
+      document.removeEventListener('expressive:closed', onEvent);
+      Expressive.Snackbar.dismissAll();
+      t.mock.timers.tick(1000);
+    }
+  });
+
   test('reuses an authored body after dismissal and during replacement without stale state', t => {
     resetBody();
     t.mock.timers.enable({ apis: ['setTimeout'] });
@@ -156,13 +176,15 @@ describe('Snackbar', () => {
       assert.equal(source.style.opacity, '1');
       assert.equal(source.inert, false);
       assert.equal(Expressive.Snackbar.getInstance(source), third);
-      assert.equal(completions, 1, 'superseded dismissal must not complete against a reused element');
+      // The replaced snackbar completes once, when it is replaced; its own
+      // dismissal timer must not complete again against the reused element.
+      assert.equal(completions, 2, 'the replaced snackbar completes at replacement');
       authoredButton.click();
       assert.equal(authoredClicks, 1);
       [...source.querySelectorAll('button')].find(button => button.textContent === 'Undo').click();
       t.mock.timers.tick(30);
       assert.equal(actions, 1);
-      assert.equal(completions, 2);
+      assert.equal(completions, 3);
       assert.equal(source.parentElement, parent);
       assert.equal(parent.firstElementChild, source);
       assert.equal(source.outerHTML, original);

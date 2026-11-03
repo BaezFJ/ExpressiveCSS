@@ -398,7 +398,7 @@ describe('Autocomplete generated combobox', () => {
         await new Promise(resolve => setTimeout(resolve, 10));
         assert.equal(chips.autocomplete.isOpen, true);
         assert.equal(chips.autocomplete.container.querySelector('[role="option"]'), null);
-        if (query.length < minLength) assert.equal(chips.autocomplete.menuItems.length, 1);
+        if (query.length < minLength) assert.equal(chips.autocomplete.menuItems.length, 0, 'text shorter than minLength does not search');
         key(input, 'Enter');
         assert.deepEqual(chips.chipsData.map(item => item.id), [query]);
         assert.equal(input.value, '');
@@ -514,18 +514,19 @@ describe('Autocomplete generated combobox', () => {
       for (const [inputType, value, ids] of [
         ['insertFromPaste', 'ap', ['a']],
         ['insertReplacementText', 'ban', ['b']],
-        ['deleteByCut', '', ['a', 'b']],
+        // Empty text is below the default minLength of 1, so it does not search.
+        ['deleteByCut', '', []],
       ]) {
         inst.el.value = value;
         inst.el.dispatchEvent(new window.InputEvent('input', { bubbles: true, inputType }));
-        assert.equal(queries.at(-1), value);
+        if (value) assert.equal(queries.at(-1), value);
         assert.deepEqual(inst.menuItems.map(item => item.id), ids);
         assert.deepEqual(inst.selectedValues, []);
         const changesAfterInput = changes;
         inst.el.dispatchEvent(new window.KeyboardEvent('keyup', { bubbles: true, key: 'Backspace' }));
         assert.equal(changes, changesAfterInput, 'keyup must not repeat change callbacks');
       }
-      assert.deepEqual(queries, ['ap', 'ban', '']);
+      assert.deepEqual(queries, ['ap', 'ban']);
     } finally {
       inst.destroy();
     }

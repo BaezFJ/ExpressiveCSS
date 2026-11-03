@@ -183,7 +183,22 @@ export class Snackbar {
     for (const snackbar of Snackbar._snackbars.filter((shown) => !shown.el.isConnected)) {
       snackbar._dismissed = true;
       snackbar._remove(false);
+      snackbar.options.completeCallback?.();
     }
+  }
+
+  /**
+   * Ends a snackbar a replacement cuts short, at once, with the events and
+   * callback a dismissal has: they used to be skipped, so code waiting on
+   * completeCallback never heard. One already dismissing has fired `close`.
+   */
+  private _evict() {
+    if (!this._dismissed) Utils.emit(this.el, 'close');
+    this._dismissed = true;
+    // While the snackbar is still in the page, so the event reaches the document.
+    Utils.emit(this.el, 'closed');
+    this._restoreFocus(true);
+    this.options.completeCallback?.();
   }
 
   /** Throws now, rather than when the snackbar shows, if `snackbarId` names nothing. */
@@ -211,10 +226,7 @@ export class Snackbar {
     Snackbar._replacing = true;
     try {
       while (Snackbar._snackbars.length) {
-        for (const snackbar of Snackbar._snackbars.splice(0)) {
-          snackbar._dismissed = true;
-          snackbar._restoreFocus(true);
-        }
+        for (const snackbar of Snackbar._snackbars.splice(0)) snackbar._evict();
       }
     } finally {
       Snackbar._replacing = false;

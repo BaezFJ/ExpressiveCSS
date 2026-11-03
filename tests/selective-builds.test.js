@@ -337,7 +337,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed noImplicitAny: typed datepicker handlers, the MapLibre and Tiptap surfaces, and Reflect-based instance storage, and typed MapView and RichTextEditor init: 110,642 gzip bytes (+104).
   // Reviewed Autocomplete preselected ids looked up through a Map and a Set: 110,662 gzip bytes (+20).
   // Reviewed masked questionnaire summaries, validated starting chips, shadow-root picker selectors, RichTextEditor form reset and ignored clicks on the shown tab: 110,849 gzip bytes (+187).
-  assert.ok(sizes(js).gzip <= 110849, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Autocomplete minLength gating onSearch, Datepicker date bounds and unchanged-date reads, Clear waiting for Ok, Menu, Chips and Carousel teardown, completed replaced snackbars, shared field reset handling and Confetti fire() defaults: 111,505 gzip bytes (+656).
+  // Reviewed clearing the Autocomplete status when text drops below minLength: 111,510 gzip bytes (+5).
+  assert.ok(sizes(js).gzip <= 111510, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

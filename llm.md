@@ -7477,7 +7477,7 @@ You can customize each snackbar with these options.
 | `completeCallback` | Function | `null` | Called when the snackbar is dismissed. |
 | `activationPercent` | Number | `0.8` | Fraction of the snackbar’s width a drag must travel to dismiss it. |
 | `root` | Element | `null` | Any element in the tree the snackbar should render into. Pass one when the page lives in a shadow root, so the container is appended there rather than to `document.body`. |
-| `replace` | Boolean | `false` | Show at once, cutting the snackbar on screen short, instead of waiting behind it. Copy buttons use this so a second copy answers right away. |
+| `replace` | Boolean | `false` | Show at once, cutting the snackbar on screen short, instead of waiting behind it. The one cut short fires `close` and `closed` and runs its `completeCallback` straight away. Copy buttons use this so a second copy answers right away. |
 
 One snackbar shows at a time. A new one waits until the one on screen is dismissed, then shows, so updates appear in order. A queued snackbar captures focus and fires `expressive:open` when it appears; one dismissed while still waiting runs `completeCallback` and never shows. A snackbar built from `snackbarId` takes its element when it shows, so its `el` is unset while it waits.
 
@@ -8001,8 +8001,8 @@ Expressive.Datepicker.init(elem, {
 | `disableWeekends` | Boolean | `false` | Prevent selecting Saturday and Sunday. |
 | `disableDayFn` | Function | `null` | Return true to disable that day. Receives a `Date`. |
 | `firstDay` | Number | `0`, or the language's | First day of the week. `0` is Sunday, `1` is Monday. With a `lang` on or around the input, defaults to that language's first day where the browser knows it. |
-| `minDate` | Date | `null` | Earliest selectable date. |
-| `maxDate` | Date | `null` | Latest selectable date. |
+| `minDate` | Date | `null` | Earliest selectable date. The calendar does not page or list years before its month. |
+| `maxDate` | Date | `null` | Latest selectable date. The calendar does not page or list years after its month. |
 | `yearRange` | Number or Array | `10` | Years on either side of the viewed year, or `[minYear, maxYear]`. |
 | `minYear`, `maxYear`, `minMonth`, `maxMonth` | Number or undefined | `0`, `9999`, `undefined`, `undefined` | Internal calculation fields. Do not configure them directly; use `minDate`, `maxDate` and `yearRange`. |
 | `yearRangeReverse` | Boolean | `false` | Sort the year list in reverse order. |
@@ -8011,7 +8011,7 @@ Expressive.Datepicker.init(elem, {
 | `showDaysInNextAndPreviousMonths` | Boolean | `false` | Render days that fall in the adjoining months. |
 | `openByDefault` | Boolean | `false` | If true, the calendar is visible. If false, it is given `display: none`. |
 | `container` | Element or String | `null` | Element or selector to render the calendar into. When set, the calendar is not hidden. |
-| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
+| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. With Ok and Cancel buttons (`autoSubmit: false` or a modal picker), Clear empties the input only on Ok. |
 | `autoSubmit` | Boolean | `true` | If true, selecting a day writes the input immediately. If false, Ok and Cancel buttons are added. |
 | `i18n` | Object | See below | Labels and month/weekday names. Partial objects are merged with the defaults. With a `lang` on or around the input, the month and weekday names default to that language's, as `Intl` writes them; the button words stay English unless passed. |
 | `events` | Array | `[]` | Strings from `Date.toDateString()`. Matching days get a `has-event` class. The default stylesheet does not style that class. |
@@ -8260,7 +8260,7 @@ Expressive.Timepicker.init(elem, {
 | --- | --- | --- | --- |
 | `duration` | Number | `350` | Transition between the hours and minutes views, in milliseconds. |
 | `container` | Element or String | `null` | Element or selector to render the clock into. When omitted, it is appended to the input’s parent. |
-| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. |
+| `showClearBtn` | Boolean | `false` | Show a Clear button in the footer. With Ok and Cancel buttons (`autoSubmit: false` or a modal picker), Clear empties the input only on Ok. |
 | `autoSubmit` | Boolean | `true` | If true, choosing a minute writes the input. If false, Ok and Cancel buttons are added. |
 | `defaultTime` | String | `'now'` | Initial time. `'now'` or a `'HH:MM'` or `'HH:MM:SS'` string (optionally with `AM`/`PM`). |
 | `fromNow` | Number | `0` | Millisecond offset added to `'now'`. |
@@ -10375,7 +10375,7 @@ onCreate: function(text, autocomplete) {
 | `allowCreate` | Boolean | `false` | If true, text that matches no listed suggestion exactly ends the list in an `Add "text"` row. Choosing it calls `onCreate` and fires `expressive:create`; the selection does not change. |
 | `onCreate` | Function | `null` | Called with the trimmed text and the instance when the `Add` row is chosen. |
 | `searchDelay` | Number | `0` | Milliseconds to wait after typing pauses before calling `onSearch`, so remote data is fetched once per pause. A search on focus runs at once. Blur, `destroy()` and choosing a single result cancel a pending search. `0` searches on every input. |
-| `minLength` | Number | `1` | Characters required before suggestions open. `0` shows the list on click or focus. |
+| `minLength` | Number | `1` | Characters required before `onSearch` runs and suggestions open. Shorter text aborts the running search and clears the results. `0` shows the list on click or focus. |
 | `menuOptions` | Object | see note | Options for Menu. Defaults include `autoFocus: false`, `closeOnClick: false`, and `coverTrigger: false`. |
 | `allowUnsafeHTML` | Boolean | `false` | If true, each data entry's `text` is inserted as HTML. Ids always stay text. Only use sanitized data. |
 | `selected` | Array | `[]` | Initial selected ids, strings or numbers. An id without loaded data displays the id. Pass the selected ids to `setMenuItems` with the loaded data to resolve their labels. |

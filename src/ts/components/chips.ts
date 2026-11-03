@@ -127,6 +127,8 @@ export class Chips extends Component<ChipsOptions> {
   private _name = '';
   /** The chips the field started with, which a form reset puts back. */
   private _initialData: ChipData[] = [];
+  /** Undoes each change setup made to the markup, newest last. */
+  private _undo: (() => void)[] = [];
   /** The input's own aria-required, or null, put back on destroy. */
   private _ariaRequired: string | null = null;
   /** The form control wrapping a named input, which the form reads instead of it. */
@@ -153,7 +155,7 @@ export class Chips extends Component<ChipsOptions> {
   constructor(el: HTMLElement, options: Partial<ChipsOptions>) {
     super(el, options);
 
-    this.el.classList.add('chips');
+    this._addClass(this.el, 'chips');
     this.chipsData = [];
     this._chips = [];
     this._takeName();
@@ -164,7 +166,7 @@ export class Chips extends Component<ChipsOptions> {
 
     // Render input element, setup event handlers
     if (this.options.allowUserInput) {
-      this.el.classList.add('field');
+      this._addClass(this.el, 'field');
       this._setupInput();
       this._setupEventHandlers();
       // move input to end, inside its control when it has one
@@ -196,6 +198,9 @@ export class Chips extends Component<ChipsOptions> {
     this._chips.forEach((c) => c.remove());
     this._chips = [];
     this._giveNameBack();
+    this.el.classList.remove('focus');
+    this._undo.reverse().forEach((undo) => undo());
+    this._undo = [];
     super.destroy();
   }
 
@@ -524,22 +529,46 @@ export class Chips extends Component<ChipsOptions> {
   _setupInput() {
     this._input = this.el.querySelector('input');
     if (!this._input) {
-      this._input = document.createElement('input');
-      this.el.append(this._input);
+      const input = (this._input = document.createElement('input'));
+      this.el.append(input);
+      this._undo.push(() => input.remove());
     }
-    this._input.classList.add('input');
+    this._addClass(this._input, 'input');
+    this._keepAttribute(this._input, 'placeholder');
     this.hasAutocomplete = Object.keys(this.options.autocompleteOptions).length > 0;
     // Setup autocomplete if needed
     if (this.hasAutocomplete) this._setupAutocomplete();
     this._setPlaceholder();
     // Set input id
-    if (!this._input.getAttribute('id')) this._input.setAttribute('id', Utils.guid());
+    if (!this._input.getAttribute('id')) {
+      this._keepAttribute(this._input, 'id');
+      this._input.setAttribute('id', Utils.guid());
+    }
   }
 
   _setupLabel() {
     this._label = this.el.querySelector('label');
     // No input to point at when allowUserInput is off.
-    if (this._label && this._input) this._label.setAttribute('for', this._input.getAttribute('id'));
+    if (!this._label || !this._input) return;
+    this._keepAttribute(this._label, 'for');
+    this._label.setAttribute('for', this._input.getAttribute('id'));
+  }
+
+  /** Adds a class the markup did not have, for destroy() to take off. */
+  private _addClass(el: Element, name: string) {
+    if (el.classList.contains(name)) return;
+    const hadClass = el.hasAttribute('class');
+    el.classList.add(name);
+    this._undo.push(() => {
+      el.classList.remove(name);
+      if (!hadClass && !el.classList.length) el.removeAttribute('class');
+    });
+  }
+
+  /** Keeps an attribute's value for destroy() to put back. */
+  private _keepAttribute(el: Element, name: string) {
+    const value = el.getAttribute(name);
+    this._undo.push(() => restoreAttribute(el, name, value));
   }
 
   _setPlaceholder() {

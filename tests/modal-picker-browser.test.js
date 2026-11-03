@@ -82,6 +82,50 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 
+  browserTest(`${engine}: Clear in a modal picker waits for Ok`, async () => {
+    const browser = await browserType.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 420, height: 760 } });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(html.replaceAll("displayPlugin: 'modal',", "displayPlugin: 'modal', showClearBtn: true,"));
+      await page.evaluate(() => {
+        window.changes = [];
+        document.addEventListener('change', (e) => changes.push(e.target.id));
+      });
+
+      for (const [id, clear] of [['date', '.datepicker-clear'], ['time', '.timepicker-clear']]) {
+        // Clear then Cancel keeps the value and fires no change.
+        await page.click(`#${id}`);
+        await page.click(`#${id} ~ dialog ${clear}`);
+        assert.notEqual(await page.inputValue(`#${id}`), '', `${id}: Clear writes nothing yet`);
+        await page.click(`#${id} ~ dialog .btn-cancel`);
+        await settle(page);
+        assert.notEqual(await page.inputValue(`#${id}`), '', `${id}: Cancel keeps the value`);
+        assert.deepEqual(await page.evaluate(() => changes.splice(0)), []);
+
+        // Clear then Ok empties it.
+        await page.click(`#${id}`);
+        await page.click(`#${id} ~ dialog ${clear}`);
+        await page.click(`#${id} ~ dialog .btn-confirm`);
+        await settle(page);
+        assert.equal(await page.inputValue(`#${id}`), '', `${id}: Ok writes the cleared value`);
+        assert.deepEqual(await page.evaluate(() => changes.splice(0)), [id]);
+      }
+
+      // A time typed after Clear is kept.
+      await page.click('#time');
+      await page.click('#time ~ dialog .timepicker-clear');
+      assert.equal(await page.inputValue('#time ~ dialog .timepicker-input-hours'), '', 'Clear empties the fields');
+      await page.click('#time ~ dialog .timepicker-input-minutes');
+      assert.notEqual(await page.inputValue('#time ~ dialog .timepicker-input-hours'), '', 'touching the clock shows the time again');
+      await page.click('#time ~ dialog .btn-confirm');
+      await settle(page);
+      assert.notEqual(await page.inputValue('#time'), '');
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: a drag from the modal picker that ends on the scrim leaves it open`, async () => {
     const browser = await browserType.launch({ headless: true });
     try {
