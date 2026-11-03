@@ -30,6 +30,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Particles paint at the pixel ratio their buffer was sized for, so dots no
+  longer draw scaled and offset after the page moves to a screen with another
+  ratio. A resize keeps the same dots, moved with the box, instead of
+  scattering a new set every time the canvas changes size.
+
 - Tooltip keeps an option passed to init over its `data-*` attribute when it
   opens. From the first open on, `data-position` or `data-tooltip` used to
   replace the caller's `position` or `text`. Attributes init did not set are

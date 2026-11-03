@@ -75,6 +75,8 @@ export class Particles extends Component<ParticlesOptions> {
   private _particles: Particle[] = [];
   private _width = 0;
   private _height = 0;
+  /** The device pixel ratio the buffer was sized for, which painting scales by. */
+  private _dpr = 1;
   private _frame = 0;
   private _last = 0;
   // Pointer offset from the canvas center, kept from its last move inside.
@@ -100,9 +102,10 @@ export class Particles extends Component<ParticlesOptions> {
     this._theme = new MutationObserver(this._repaint);
     this._theme.observe(document.documentElement, { attributes: true, attributeFilter: ['theme'], subtree: true });
     this._still = this._motion.matches;
-    this._reset();
+    this._fit();
+    this._scatter();
     this._resizeObserver = new ResizeObserver(() => {
-      if (this.el.clientWidth !== this._width || this.el.clientHeight !== this._height) this._reset();
+      if (this.el.clientWidth !== this._width || this.el.clientHeight !== this._height) this._resize();
     });
     this._resizeObserver.observe(this.el);
     // Animates only while on screen. A canvas scrolled away, hidden or
@@ -170,17 +173,36 @@ export class Particles extends Component<ParticlesOptions> {
     if (Math.abs(x) < r.width / 2 && Math.abs(y) < r.height / 2) this._mouse = { x, y };
   };
 
-  // Matches the pixel buffer to the canvas box and scatters a new set.
-  private _reset() {
+  /** Matches the pixel buffer to the canvas box, which clears it. */
+  private _fit() {
     this._width = this.el.clientWidth;
     this._height = this.el.clientHeight;
-    this.el.width = Math.round(this._width * devicePixelRatio);
-    this.el.height = Math.round(this._height * devicePixelRatio);
+    this._dpr = devicePixelRatio;
+    this.el.width = Math.round(this._width * this._dpr);
+    this.el.height = Math.round(this._height * this._dpr);
+  }
+
+  /** Scatters a new set of particles. */
+  private _scatter() {
     this._particles = Array.from({ length: this.options.quantity }, () => this._particle());
-    if (this._still) {
-      for (const p of this._particles) p.alpha = p.targetAlpha;
-      this._paint();
+    if (this._still) for (const p of this._particles) p.alpha = p.targetAlpha;
+    this._repaint();
+  }
+
+  /**
+   * Refits the buffer and moves each particle with the box, so a drag that
+   * resizes the canvas every frame keeps the same dots. It used to scatter a
+   * new set each time. A box that had no size has no positions to keep.
+   */
+  private _resize() {
+    const [width, height] = [this._width, this._height];
+    this._fit();
+    if (!width || !height) return this._scatter();
+    for (const p of this._particles) {
+      p.x *= this._width / width;
+      p.y *= this._height / height;
     }
+    this._repaint();
   }
 
   private _particle(): Particle {
@@ -223,7 +245,12 @@ export class Particles extends Component<ParticlesOptions> {
 
   private _paint() {
     const ctx = this._ctx!;
-    const dpr = devicePixelRatio;
+    // The ratio the buffer has, not the current one: after the page moves to
+    // a screen with another ratio, painting at the new one drew every dot
+    // scaled and offset in the old buffer.
+    // ponytail: the buffer keeps the old ratio until the next resize; a
+    // resolution media query listener if a sharp redraw matters.
+    const dpr = this._dpr;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, this.el.width, this.el.height);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);

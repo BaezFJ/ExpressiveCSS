@@ -119,6 +119,25 @@ for (const [name, engine, test] of engines) {
       assert.ok(still.box, 'reduced motion still draws the particles');
       await page.mouse.move(100 + 50, 100 + 50);
       assert.deepEqual((await painted(20)).box, still.box, 'reduced motion keeps the particles still');
+      // Painting scales by the ratio the buffer was sized for, so a changed
+      // devicePixelRatio, as on a move to another screen, leaves the dot in place.
+      await page.evaluate(() => {
+        window.realRatio = devicePixelRatio;
+        Object.defineProperty(window, 'devicePixelRatio', { value: realRatio * 2, configurable: true });
+        document.documentElement.setAttribute('theme', 'light');
+      });
+      assert.ok(near(center((await painted(2)).box), center(still.box), 1), 'a changed pixel ratio does not move the dots');
+      await page.evaluate(() => {
+        Object.defineProperty(window, 'devicePixelRatio', { value: realRatio, configurable: true });
+        document.documentElement.removeAttribute('theme');
+      });
+      // A resize keeps the same dots, moved with the box, instead of scattering new ones.
+      const width = await page.locator('#particles').evaluate((c) => c.clientWidth);
+      await page.locator('#box').evaluate((box, width) => { box.style.width = `${width / 2}px`; }, width);
+      const half = center((await painted(3)).box);
+      assert.ok(near(half, { x: center(still.box).x / 2, y: center(still.box).y }, 2), `the dot moves with the box, got ${JSON.stringify(half)}`);
+      await page.locator('#box').evaluate((box, width) => { box.style.width = `${width}px`; }, width);
+      await painted(3);
       const theme = (value) => page.evaluate((value) => document.documentElement.setAttribute('theme', value), value);
       await theme('light');
       const light = (await painted(2)).color;
