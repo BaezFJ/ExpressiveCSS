@@ -59,17 +59,17 @@ function labelText(control: HTMLInputElement) {
  * the server's, a password is masked at a fixed length, and a file shows its
  * names rather than the browser's fake path.
  */
-const MASKED: Record<string, (control: HTMLInputElement) => string> = {
+const MASKED: Record<string, (control: HTMLInputElement | HTMLTextAreaElement) => string> = {
   hidden: () => '',
   password: (control) => (control.value ? '••••••••' : ''),
-  file: (control) => Array.from(control.files ?? [], (file) => file.name).join(', ')
+  file: (control) => Array.from((control as HTMLInputElement).files ?? [], (file) => file.name).join(', ')
 };
 
 /** A control's answer as text for the summary. */
 function answerText(control: Control) {
   if (control instanceof HTMLSelectElement) return Array.from(control.selectedOptions, (option) => option.text).join(', ');
   if (isChoice(control)) return control.checked ? labelText(control) : '';
-  return MASKED[control.type]?.(control as HTMLInputElement) ?? control.value.trim();
+  return MASKED[control.type]?.(control) ?? control.value.trim();
 }
 
 const savedState = (control: Control): Saved => {
