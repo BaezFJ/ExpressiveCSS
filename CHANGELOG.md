@@ -30,6 +30,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A snackbar that a `replace: true` snackbar cuts short fires `close` and
+  `closed` and runs its `completeCallback`, as a dismissed one does, and so
+  does one a re-render took out of the page. They used to end silently, so
+  code waiting on the callback never heard.
+
 - Carousel `destroy()` puts the authored `active` class back, removes the
   `carousel-item` class from items it found without one, and drops the
   `dragging` and `scrolling` classes of a drag or scroll it cut short.
