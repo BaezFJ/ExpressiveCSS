@@ -60,12 +60,12 @@ export class TransferList {
     const boxes = TransferList._boxes(container, move.from).filter((box) => !box.disabled && (move.all || box.checked));
     if (!to || !boxes.length) return;
     TransferList._record(container);
-    const moved: Element[] = boxes.map((box) => box.closest('li'));
-    for (const [i, row] of moved.entries()) {
-      boxes[i].checked = false;
-      to.insertBefore(row, TransferList._slot(container, row, to));
-    }
-    const rows = [...to.children].filter((row) => moved.includes(row));
+    const start = TransferList._starts.get(container);
+    const rank = new Map([...start.available, ...start.chosen].map((row, i) => [row, i]));
+    const moved = new Set<Element>(boxes.map((box) => box.closest('li')));
+    boxes.forEach((box) => (box.checked = false));
+    moved.forEach((row) => to.insertBefore(row, TransferList._slot(rank, row, to)));
+    const rows = [...to.children].filter((row) => moved.has(row));
     TransferList._announce(container, rows.length, to);
     container.dispatchEvent(new CustomEvent('expressive:transfer', { bubbles: true, detail: { rows, from, to } }));
   }
@@ -87,12 +87,17 @@ export class TransferList {
    * row that came after it before the first move; elsewhere, or for a row the
    * page added since, none, so it goes last.
    */
-  private static _slot(container: Element, row: Element, to: Element) {
-    const start = TransferList._starts.get(container);
-    const order = [...start.available, ...start.chosen];
-    const index = order.indexOf(row);
-    if (!to.matches(AVAILABLE) || index < 0) return null;
-    return [...to.children].find((other) => order.indexOf(other) > index) ?? null;
+  private static _slot(rank: Map<Element, number>, row: Element, to: Element) {
+    const index = rank.get(row);
+    if (!to.matches(AVAILABLE) || index === undefined) return null;
+    return TransferList._firstAfter(rank, to, index);
+  }
+
+  /** The first row of `list` that started after position `index`. Walks siblings, so a move-all stays cheap. */
+  private static _firstAfter(rank: Map<Element, number>, list: Element, index: number) {
+    let other = list.firstElementChild;
+    while (other && (rank.get(other) ?? -1) <= index) other = other.nextElementSibling;
+    return other;
   }
 
   private static _announce(container: Element, count: number, to: Element) {

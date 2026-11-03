@@ -1,5 +1,40 @@
 # ExpressiveCSS research brief for AI coding agents
 
+## Skill format and authoring review, 2026-10-30
+
+The repository skills target local Claude Code and OpenAI Codex workflows. Their
+shared format is YAML frontmatter followed by Markdown. Required fields are
+`name` and `description`; names match their folders and use lowercase letters,
+numbers and single hyphens. Metadata values remain strings. Optional host UI,
+tool permissions and invocation controls are not required for format compliance.
+See the [Agent Skills specification](https://agentskills.io/specification) and
+[OpenAI skill documentation](https://learn.chatgpt.com/docs/build-skills).
+
+Descriptions front-load the task and its boundary. The project's 400-character
+discovery budget is stricter than the shared format's 1,024-character maximum.
+The 500-line body budget follows authoring guidance, rather than a Markdown
+parser restriction. Detailed contracts, examples and the scored report template
+load through conditional links. Preserve the user's product, scope and explicit
+authorization instead of requiring a fixed recipe or another approval for work
+already requested. See [Claude's authoring guidance](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)
+and [OpenAI's guidance on concise skills](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra).
+
+The Install description previously contained an unquoted colon and space, which
+made its YAML invalid. Descriptions now use quoted strings, and the docs catalogue
+and tests parse actual YAML using the existing parser already supplied with the
+Astro toolchain. The parser is declared directly because the project now imports
+it. Fallow excludes `yaml` from dependency hygiene checks because it is used
+only while building static documentation and must remain a development dependency.
+The review skill uses the host's supported delegation tools and concurrency,
+falls back to sequential lenses, honors requested fixes and references a separate
+report template. Existing framework contracts and public skill paths are retained.
+
+Local validation does not establish live model behavior. The nested focused guides
+are local skill resources; hosted API uploads need host-specific packaging. In
+particular, the [OpenAI Skills API](https://developers.openai.com/api/docs/guides/tools-skills)
+accepts exactly one manifest per uploaded bundle, so the entire nested directory
+must not be treated as an upload-ready bundle without adaptation.
+
 ## Authority by question
 
 This brief separates **normative project rules** from **explanatory guidance**. For generated UI, use the source that owns each question:

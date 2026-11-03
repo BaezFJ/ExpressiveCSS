@@ -75,7 +75,7 @@ export class ShowMore extends Component<ShowMoreOptions> {
 
   /** Shows the full text. */
   open = () => {
-    if (this.isOpen || !this.button) return;
+    if (this.isOpen || !this._wired) return;
     this._show(true);
     this._notify("open", this.options.onOpen, { current: () => this.isOpen });
   };
@@ -88,7 +88,7 @@ export class ShowMore extends Component<ShowMoreOptions> {
   };
 
   destroy() {
-    if (this.button) {
+    if (this._wired) {
       this._observer.disconnect();
       if (this.isOpen) this._show(false);
       for (const name of BUTTON_ATTRIBUTES) restoreAttribute(this.button, name, this._initial[name]);
@@ -106,6 +106,11 @@ export class ShowMore extends Component<ShowMoreOptions> {
     if (this._label) this._moreLabel = this._label.data;
     this.button.ariaExpanded = "false";
     this.button.setAttribute("aria-controls", this.text.id);
+  }
+
+  /** Whether the constructor found the text and the button, and wired them. */
+  private get _wired() {
+    return Boolean(this.text && this.button);
   }
 
   private _toggle = () => (this.isOpen ? this.close() : this.open());

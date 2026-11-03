@@ -3,6 +3,7 @@ import DocsLayout from "../layouts/DocsLayout.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
+import { readSkillMetadata } from "../lib/skill-metadata";
 
 // The skills table reads each top-level skill's frontmatter, so a new
 // `skills/<name>/SKILL.md` appears here without editing this page.
@@ -12,10 +13,7 @@ const skillFiles = import.meta.glob<string>("../../../skills/*/SKILL.md", {
   eager: true,
 });
 const skills = Object.values(skillFiles)
-  .map((source) => ({
-    name: source.match(/^name: (.+)$/m)?.[1] ?? "",
-    description: source.match(/^description: (.+)$/m)?.[1] ?? "",
-  }))
+  .map(readSkillMetadata)
   .sort((a, b) => a.name.localeCompare(b.name));
 
 const S = defineSections([

@@ -1,6 +1,6 @@
 ---
 name: expressivecss-install
-description: Installs and configures @expressivecss/expressive: package versions, imports, assets, fonts, and build integration. Use for setup, package changes, version problems, or uncertainty about which contract source applies. Not for visual refinement, or for markup changes when the project already loads the target version.
+description: "Installs @expressivecss/expressive. Use for setup, package changes, version problems, or uncertainty about which contract source applies. Not for visual refinement or markup changes when the project already loads the target version."
 ---
 
 # Install ExpressiveCSS
@@ -21,6 +21,7 @@ Copy this checklist and tick it off:
 Reuse the root version resolution, or run its bundled resolver if this guide was loaded directly. This bundled guide covers the setup below. Consult the [getting-started documentation](https://www.expressivecss.com/index.html.md) only for missing details, and treat the public site's version as unverified until provenance proves it. For an older installed version, inspect `node_modules/@expressivecss/expressive` and the matching repository tag or commit before applying contract-dependent changes.
 
 1. Read the project's manifest and lockfile. Keep its package manager and any pinned ExpressiveCSS version.
+   For vendored browser assets without a Node manifest, select their existing upstream package directory with `--package-path <relative-directory>`. Keep `--project-root` at the consumer root and verify that the selected directory supplies its served assets. The resolver reads the package's actual version; this requires no Node dependency or version override. The path must stay inside the project without symlink components. Declared ranges and lockfile conflicts still apply when present, and a framework source checkout keeps priority.
 2. Add the package only when the task includes setup and the project does not already depend on it. Use the command for the lockfile you found:
 
    | Lockfile | Command |
@@ -46,10 +47,12 @@ Importing the JavaScript bundle installs shared behaviors but does not call `Aut
 ### Sass
 
 ```scss
-@use "@expressivecss/expressive/src/sass/expressive";
+@use "pkg:@expressivecss/expressive/scss" as expressive;
 ```
 
-The package also exports `@expressivecss/expressive/scss` and individual `scss/*` paths. Follow the target version's documented Sass resolution for the consuming build tool. For Sass mechanics such as `@use ... with`, selective `custom.scss` builds, and deprecation warnings, also load the `scss-architecture` skill when it is installed.
+With Dart Sass, compile this entry using `sass --pkg-importer=node app.scss app.css`. Bundlers may provide their own package importer; follow that tool's documented resolution. The [Sass API guide](https://www.expressivecss.com/sass.html.md) owns configuration and shared functions and mixins. The [API index](../references/api-index.md#sass-partials) maps partials to their usage guides.
+
+For a selective build, use `pkg:@expressivecss/expressive/scss/custom` with ordered `$components` and `$utilities` lists. `null` loads the full group; `()` loads none. Tokens and base always load. Preserve index order and supporting partials. For functions and mixins without framework CSS, use `pkg:@expressivecss/expressive/scss/abstracts/index`; emitted mixins still need the framework tokens. Configure each module on its first load. For Sass mechanics and deprecations, also load `scss-architecture` when installed.
 
 ### Browser build
 
@@ -93,7 +96,7 @@ The compiled stylesheet ships `@font-face` rules for Material Symbols (outlined,
 
 Copy this checklist and mark each item from observed output:
 
-- [ ] The lockfile or `node_modules/@expressivecss/expressive/package.json` shows the expected version.
+- [ ] The lockfile or selected installed/vendored package's `package.json` shows the expected version.
 - [ ] The consuming app's build command exits 0.
 - [ ] A real page loads styles, fonts, and icons with no 404s for CSS, fonts, or scripts.
 - [ ] The network panel shows no duplicate CSS or font stylesheets.

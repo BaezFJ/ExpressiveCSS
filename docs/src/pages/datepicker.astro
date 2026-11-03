@@ -30,10 +30,10 @@ const S = defineSections([
           <code>.date-picker</code> except those marked <code>no-autoinit</code>.
         </p>
         <p>
-          Pass <code>openByDefault: true</code> to show the calendar under the
-          field. The calendar is inline, not a modal. With the default options
-          it is hidden (<code>openByDefault: false</code>), and clicking the
-          input does not reveal it.
+          The calendar defaults to an inline view, hidden with
+          <code>openByDefault: false</code>; clicking the input alone does not reveal it.
+          Use <code>openByDefault: true</code> for a visible inline calendar, or
+          <code>displayPlugin: 'docked'</code> or <code>'modal'</code> for a popup.
         </p>
         <div class="field">
           <input type="text" class="date-picker" id="datepicker-intro" data-datepicker-options='{"openByDefault": true}'>
@@ -148,6 +148,11 @@ Expressive.Datepicker.init(elem, {
   </Section>
 
   <Section {...S.options}>
+        <p><code>minYear</code>, <code>maxYear</code>, <code>minMonth</code> and <code>maxMonth</code>
+          are internal calculation fields. Their initial defaults are <code>0</code>,
+          <code>9999</code>, <code>undefined</code> and <code>undefined</code>.
+          Do not configure them directly. Use <code>minDate</code>, <code>maxDate</code> and
+          <code>yearRange</code> for supported date bounds.</p>
         <OptionsTable>
             <tr>
               <td><code>format</code></td>
@@ -554,6 +559,10 @@ instance.setDate(new Date());
 <Code code={`
 instance.gotoDate(new Date());
 `} />
+        <p><code>nextMonth()</code> and <code>prevMonth()</code> move the displayed calendar by
+          one month. <code>gotoMonth(month)</code> sets a zero-based month in the displayed year;
+          <code>gotoYear(year)</code> sets the full year. These methods redraw without selecting a date.
+          Use <code>gotoDate(date)</code> when changing both together.</p>
 
         <h5 class="light">.destroy();</h5>
         <p>Destroy the plugin instance, remove the calendar, and tear down its event handlers.</p>

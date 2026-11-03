@@ -4,6 +4,9 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { compile } from 'sass';
+import * as publicApi from '../dist/js/modular.mjs';
+import { PAGES } from '../docs/src/data/nav.ts';
+import { readSkillMetadata } from '../docs/src/lib/skill-metadata.ts';
 
 const skillUrl = new URL('../skills/expressivecss/SKILL.md', import.meta.url);
 const skillDirectory = new URL('../skills/expressivecss/', import.meta.url);
@@ -80,6 +83,53 @@ const retiredClasses = new Set([
 ]);
 
 describe('the ExpressiveCSS agent skill', () => {
+  test('parses every skill as valid Agent Skills YAML with concise discovery metadata', () => {
+    const root = new URL('../skills/', import.meta.url);
+    const files = readdirSync(root, { recursive: true }).filter((file) => file.endsWith('/SKILL.md'));
+    const names = new Set();
+    const allowed = new Set(['name', 'description', 'license', 'compatibility', 'metadata', 'allowed-tools']);
+    assert.equal(files.length, 12);
+    for (const file of files) {
+      const source = readFileSync(new URL(file, root), 'utf8');
+      const metadata = readSkillMetadata(source);
+      assert.match(metadata.name, /^[a-z0-9]+(?:-[a-z0-9]+)*$/);
+      assert.ok(metadata.name.length <= 64);
+      assert.equal(metadata.name, file.split('/').at(-2));
+      assert.ok(!names.has(metadata.name), `duplicate skill ${metadata.name}`);
+      names.add(metadata.name);
+      assert.ok(metadata.description.length <= 1024, `${file} exceeds the format limit`);
+      assert.ok(metadata.description.length <= 400, `${file} exceeds the project's discovery budget`);
+      assert.doesNotMatch(metadata.description, /[<>]|\b(?:I|you)\b/);
+      assert.ok(source.split('\n---\n', 2)[1].split('\n').length < 500, `${file} needs progressive disclosure`);
+      for (const key of Object.keys(metadata)) assert.ok(allowed.has(key), `${file} uses host-specific frontmatter ${key}`);
+      for (const value of Object.values(metadata.metadata ?? {})) assert.equal(typeof value, 'string', `${file} metadata must use strings`);
+      if (metadata.compatibility !== undefined) assert.ok(typeof metadata.compatibility === 'string' && metadata.compatibility.length <= 500);
+    }
+  });
+
+  test('metadata parsing supports quoted and folded descriptions and rejects malformed manifests', () => {
+    assert.equal(readSkillMetadata('---\nname: sample\ndescription: "Installs packages: CSS and JS."\n---\n# Instructions').description, 'Installs packages: CSS and JS.');
+    assert.equal(readSkillMetadata('---\nname: sample\ndescription: >-\n  Reviews components\n  when requested.\n---\n').description, 'Reviews components when requested.');
+    for (const source of [
+      '---\nname: sample\ndescription: Installs packages: CSS and JS.\n---\n',
+      '---\nname: sample\nname: duplicate\ndescription: Reviews components.\n---\n',
+      '---\nname: sample\ndescription: [not, a, string]\n---\n',
+      '---\nname: sample\ndescription: ""\n---\n',
+      '---\nname: sample\ndescription: Missing delimiter.\n',
+    ]) assert.throws(() => readSkillMetadata(source));
+  });
+
+  test('the review skill preserves requested fixes and uses portable delegation and references', () => {
+    const review = readFileSync(new URL('../skills/expressivecss-review/SKILL.md', import.meta.url), 'utf8');
+    assert.match(readSkillMetadata(review).description, /scored or multi-specialist UI/);
+    assert.doesNotMatch(review, /Use whenever|run_in_background|Spawn all five in one message|"fixes" in a request means/);
+    assert.match(review, /If the user also requests fixes/);
+    assert.match(review, /Respect its concurrency limit/);
+    const template = new URL('../skills/expressivecss-review/references/report-template.md', import.meta.url);
+    assert.ok(review.includes('./references/report-template.md'));
+    assert.ok(existsSync(template));
+  });
+
   test('is a portable root skill with a concise discovery trigger', () => {
     assert.ok(skill.startsWith('---\n'));
     assert.ok(bodyStart > 4, 'frontmatter is not closed');
@@ -87,7 +137,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(frontmatter, /^  author: BaezFJ$/m);
     assert.match(frontmatter, /^  version: "0\.12\.0"$/m);
 
-    const description = frontmatter.match(/^description: (.+)$/m)?.[1];
+    const description = readSkillMetadata(skill).description;
     assert.ok(description, 'description is missing');
     assert.ok(description.length <= 400, `description is ${description.length} characters`);
     assert.ok(description.endsWith('.'), 'description is not a sentence');
@@ -110,7 +160,7 @@ describe('the ExpressiveCSS agent skill', () => {
       const guide = readFileSync(url, 'utf8');
       assert.ok(guide.startsWith('---\n'), `${path} has no frontmatter`);
       assert.match(guide, new RegExp(`^name: ${path.split('/')[0]}$`, 'm'));
-      const description = guide.match(/^description: (.+)$/m)?.[1];
+      const description = readSkillMetadata(guide).description;
       assert.ok(description, `${path} has no description`);
       assert.ok(description.length <= 400, `${path} description is too long`);
       assert.ok(description.endsWith('.'), `${path} description is not a sentence`);
@@ -328,6 +378,117 @@ describe('the ExpressiveCSS agent skill', () => {
     const optionCount = componentFiles.filter((name) => /#### Options/.test(guide(name))).length;
     assert.equal(optionCount, (llm.match(/^####? Options$/gm) ?? []).length - 1);
     assert.match(guide('lightbox.md'), /#### Options\n\n\|[\s\S]*#### Methods\n\n- `\.open\(\)`/);
+  });
+
+  test('maps every public export and Sass partial through the shared catalogue', () => {
+    const index = readFileSync(new URL('references/api-index.md', skillDirectory), 'utf8');
+    const decisions = JSON.parse(readFileSync(new URL('../docs/src/data/component-decisions.json', import.meta.url), 'utf8'));
+    assert.match(skill, /\[API index\]\(\.\/references\/api-index\.md\)/);
+    assert.deepEqual(PAGES.flatMap((page) => page.exports ?? []).sort(), Object.keys(publicApi).sort());
+    for (const page of PAGES) {
+      for (const name of page.exports ?? []) {
+        assert.ok(index.includes(`| \`${name}\` |`), `API index omits ${name}`);
+        const component = decisions.components.find((item) => item.guideSource.pageId === page.id);
+        if (component) {
+          const guide = readFileSync(new URL(`components/${component.slug}.md`, skillDirectory), 'utf8');
+          assert.ok(guide.includes(`\`${name}\``), `${component.slug} omits its export ${name}`);
+        }
+      }
+      for (const style of page.styles ?? []) {
+        const route = page.route === '/' ? '/index.html' : page.route;
+        assert.ok(index.includes(`| \`${style}\` | [${page.label}](https://www.expressivecss.com${route}.md) |`), `API index omits owner for ${style}`);
+      }
+    }
+  });
+
+  test('bundles shared behaviors and routes secondary component contracts', () => {
+    const contracts = readFileSync(new URL('references/behavior-contracts.md', skillDirectory), 'utf8');
+    const runtime = readFileSync(new URL('expressivecss-runtime/SKILL.md', skillDirectory), 'utf8');
+    for (const name of ['Copy', 'Theme', 'PaneResize', 'ExpandingCard', 'Dialogs']) {
+      assert.ok(contracts.includes(`Export: \`${name}\``), `behavior contracts omit ${name}`);
+      assert.ok(runtime.includes(name), `Runtime does not route ${name}`);
+    }
+    for (const name of ['data-copy-for', 'Copy.textFor', 'expressive:copy', 'Copy.Init()', 'data-theme-set', 'Theme.set', 'Theme.get', 'Theme.sync', 'Theme.Init()', 'PaneResize.width', 'PaneResize.setWidth', 'PaneResize.Init()', 'expanding-card-dialog', 'ExpandingCard.Init()', 'Dialogs.confirm', 'Dialogs.i18n']) {
+      assert.ok(contracts.includes(name), `behavior contracts omit ${name}`);
+    }
+    for (const [file, anchor] of [['icon-buttons', 'copy-button'], ['cards', 'expanding-card'], ['panes', 'resizing'], ['dialogs', 'confirm-from-script']]) {
+      const guide = readFileSync(new URL(`components/${file}.md`, skillDirectory), 'utf8');
+      assert.ok(guide.includes(`../references/behavior-contracts.md#${anchor}`), `${file} omits its secondary contract`);
+    }
+    assert.match(runtime, /Static panes are CSS-only; resizing panes use a shared behavior/);
+    assert.match(runtime, /modular` installs none/);
+  });
+
+  test('keeps definitions referenced by option tables and includes documented events', () => {
+    for (const [file, name] of [['autocomplete', 'Autocomplete'], ['date-picker', 'Datepicker'], ['time-picker', 'Timepicker']]) {
+      const guide = readFileSync(new URL(`components/${file}.md`, skillDirectory), 'utf8');
+      assert.match(guide, /#### (?:Option details|Internationalization)/);
+      for (const key of Object.keys(publicApi[name].defaults.i18n)) {
+        assert.ok(guide.includes(`i18n.${key}`) || guide.includes(`| \`${key}\` |`), `${file} omits referenced i18n.${key}`);
+      }
+    }
+    const scrollspy = readFileSync(new URL('components/scrollspy.md', skillDirectory), 'utf8');
+    assert.match(scrollspy, /##### getActiveElement[\s\S]*function\(id\)/);
+    const hover = readFileSync(new URL('components/hover-card.md', skillDirectory), 'utf8');
+    assert.match(hover, /#### Events[\s\S]*expressive:open[\s\S]*expressive:close/);
+  });
+
+  test('chart selection and redraw recipes cover the shipped chart family', () => {
+    const charts = readFileSync(new URL('expressivecss-charts/SKILL.md', skillDirectory), 'utf8');
+    const recipes = readFileSync(new URL('expressivecss-charts/references/recipes.md', skillDirectory), 'utf8');
+    for (const page of PAGES.filter((page) => page.exports?.some((name) => name.endsWith('Chart')))) {
+      assert.ok(charts.includes(`\`${page.route.slice(1, -5)}\``), `chart chooser omits ${page.id}`);
+      for (const name of page.exports) assert.ok(charts.includes(`\`${name}\``), `chart guide omits ${name}`);
+    }
+    assert.match(charts, /labeled axes and scatter\/bubble/);
+    assert.match(charts, /data-watch[\s\S]*watch: true/);
+    for (const text of [charts, recipes]) {
+      assert.match(text, /LineChart\.getInstance\(figure\)\.update\(\)/);
+      assert.doesNotMatch(text, /LineChart\.init\(figure\)/);
+      assert.doesNotMatch(text, /no (?:chart has a y axis|y axis labels)|All eight/);
+    }
+    const timepicker = readFileSync(new URL('components/time-picker.md', skillDirectory), 'utf8');
+    assert.doesNotMatch(timepicker, /Do not choose this picker expecting a popup|The clock is inline, not a modal/);
+    assert.match(timepicker, /defaults to a visible inline[\s\S]*displayPlugin: 'docked'[\s\S]*'modal'/);
+    const datepicker = readFileSync(new URL('components/date-picker.md', skillDirectory), 'utf8');
+    assert.doesNotMatch(datepicker, /The calendar is inline, not a modal|Do not choose this picker expecting a popup/);
+    assert.match(datepicker, /openByDefault: false[\s\S]*displayPlugin: 'docked'[\s\S]*'modal'/);
+  });
+
+  test('covers scroll areas, decorative shapes, glass, Sass and stacking references', () => {
+    const helpers = readFileSync(helpersReferenceUrl, 'utf8');
+    for (const name of ['.scroll-area', '--scroll-area-thumb-color', '--scroll-area-track-color']) {
+      assert.ok(helpers.includes(name));
+      assert.ok(compiledCss.includes(name));
+    }
+    const shape = readFileSync(foundationReferenceUrls.shape, 'utf8');
+    const shapes = readFileSync(new URL('../src/sass/utilities/_shapes.scss', import.meta.url), 'utf8');
+    for (const [, name] of shapes.matchAll(/^  ([\w-]+): \(/gm)) {
+      assert.ok(shape.includes(`\`${name}\``), `shape reference omits ${name}`);
+      assert.ok(compiledCss.includes(`.shape-${name}`));
+    }
+    assert.doesNotMatch(shape, /shape (?:scale|catalogue) remain framework gaps/);
+    const elevation = readFileSync(foundationReferenceUrls.elevation, 'utf8');
+    const stacking = readFileSync(new URL('../src/sass/tokens/_stacking.scss', import.meta.url), 'utf8');
+    for (const [, name] of stacking.matchAll(/^  (--expressive-z-[\w-]+):/gm)) assert.ok(elevation.includes(`\`${name}\``), `stacking reference omits ${name}`);
+    const theming = readFileSync(themingGuideUrl, 'utf8');
+    assert.match(theming, /references\/glass\.md/);
+    const glass = readFileSync(new URL('expressivecss-theming/references/glass.md', skillDirectory), 'utf8');
+    assert.match(glass, /surface's parent/);
+    assert.match(glass, /--expressive-glass-opacity: 72%/);
+    const install = readFileSync(new URL('expressivecss-install/SKILL.md', skillDirectory), 'utf8');
+    assert.match(install, /sass\.html\.md/);
+    assert.match(install, /sass --pkg-importer=node app\.scss app\.css/);
+  });
+
+  test('keeps bundled Markdown file references resolvable', () => {
+    for (const file of readdirSync(skillDirectory, { recursive: true }).filter((file) => file.endsWith('.md'))) {
+      const url = new URL(file, skillDirectory);
+      const text = readFileSync(url, 'utf8');
+      for (const [, target] of text.matchAll(/\]\((\.{1,2}\/[^)\s#]+)(?:#[^)\s]+)?\)/g)) {
+        assert.ok(existsSync(new URL(target, url)), `${file} links to missing ${target}`);
+      }
+    }
   });
 
   test('gives agents exact grid and helper-class references', () => {
@@ -877,11 +1038,11 @@ describe('the ExpressiveCSS agent skill', () => {
     for (const [task, load, avoid] of expectedRows) {
       assert.ok(routing.includes(`| ${task} | ${load} | ${avoid} |`), `wrong route for ${task}`);
     }
-    assert.match(routing, /Runtime ownership in the decision index decides Runtime/is);
+    assert.match(routing, /Runtime ownership decides Runtime/is);
     assert.match(routing, /Building or reviewing an interface needs Usage and Accessibility/i);
     assert.match(routing, /Visual or token work adds Theming/i);
-    assert.match(routing, /decides Runtime: JavaScript.*Auto Init.*shared-runtime.*manual need it/is);
-    assert.match(routing, /CSS-only and native do not/i);
+    assert.match(routing, /decides Runtime: Auto Init.*shared-runtime.*manual need it/is);
+    assert.match(routing, /Behavior-bearing variants.*clipboard controls.*resizing panes.*static component is CSS-only/is);
     assert.match(routing, /Setup only.*Install/is);
     assert.doesNotMatch(design, /\| Guide \| Load condition \|/, 'design guide duplicates the routing truth table');
     assert.match(design, /follow the root staged routing truth table/i);
@@ -918,7 +1079,7 @@ describe('the ExpressiveCSS agent skill', () => {
 
     for (const [path, patterns] of Object.entries(boundaries)) {
       const guide = readFileSync(new URL(path, skillDirectory), 'utf8');
-      const description = guide.match(/^description: (.+)$/m)?.[1] ?? '';
+      const description = readSkillMetadata(guide).description;
       assert.match(description, patterns.use, `${path} use boundary is incomplete`);
       assert.match(description, patterns.avoid, `${path} counter-trigger is incomplete`);
       assert.doesNotMatch(guide, /^## (?:When to use|Do not use when)$/m, `${path} repeats its description in the body`);
@@ -926,7 +1087,7 @@ describe('the ExpressiveCSS agent skill', () => {
   });
 
   test('keeps root discovery broad and separates skill from framework versions', () => {
-    const description = frontmatter.match(/^description: (.+)$/m)?.[1];
+    const description = readSkillMetadata(skill).description;
     for (const taskClass of [/install/i, /markup/i, /theme/i, /runtime/i, /accessibility/i, /refine.*review/i, /contributions/i]) {
       assert.match(description, taskClass);
     }

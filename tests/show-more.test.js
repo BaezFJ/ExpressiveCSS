@@ -96,3 +96,12 @@ test('destroy() keeps a label the page changed while the text was closed', () =>
   instance.destroy();
   assert.equal(button.textContent, 'Read the whole review');
 });
+
+test('a show-more without clamped text stays inert: open(), destroy() and a second init do nothing', () => {
+  const instance = start(undefined, {}, '<p>Plain text</p>');
+  instance.open();
+  assert.equal(instance.isOpen, false);
+  instance.destroy();
+  Expressive.ShowMore.init(document.querySelector('.show-more')).destroy();
+  assert.equal(document.querySelector('button').getAttribute('aria-expanded'), null);
+});

@@ -1,8 +1,7 @@
 ---
 name: expressivecss-review
-description: Orchestrated ExpressiveCSS UI review. Runs five specialist subagents (Creative Director, Page Architect, Component Syntax Expert, Quality Inspector, Rules Enforcer) over a page, component, template, screenshot, or pasted markup, verifies their findings, and returns one scored report with ranked fixes. Use whenever someone asks to review, audit, grade, critique, or check an interface, page, layout, or component built with ExpressiveCSS or @expressivecss/expressive, including "is this markup right", "score this page", "what's wrong with this layout", or a screenshot of an ExpressiveCSS app, even if they don't say "orchestrated". Not for building new UI or for reviewing the framework's own Sass and TypeScript source.
+description: "Reviews ExpressiveCSS interfaces with five specialist lenses and a scored report. Use for scored or multi-specialist UI audits, critiques, screenshots or markup checks. Excludes framework Sass/TypeScript source reviews and new interface implementation."
 license: MIT
-compatibility: Needs the sibling expressivecss skill for guides and the version resolver. Subagents need an agent-spawning tool; without one, run the five lenses in sequence.
 metadata:
   author: BaezFJ
   version: "0.1.1"
@@ -11,9 +10,9 @@ metadata:
 
 # ExpressiveCSS orchestrated review
 
-You are the orchestrator. You do not review the interface yourself. You collect shared evidence once, hand each of five specialists a brief, check what they bring back, and write one report. The specialists exist so each lens gets a full context window and its own guides; your job is to keep them from overlapping, keep them honest, and turn their output into a short list of fixes a developer can act on.
+Collect shared evidence once, assign the applicable specialist lenses, verify their findings, and synthesize a scored report. Run lenses yourself when delegation is unavailable or not permitted. Keep findings within the target the user named.
 
-A review is read-only. Do not edit the files under review, even for a one-line fix; "fixes" in a request means the ranked fixes in the report. Apply them only when the user asks after reading it.
+A review-only request leaves the target files unchanged. If the user also requests fixes, collect and verify findings first, then apply the authorized changes using the base skill and report the checks. Follow explicit user scope and authorization; a request for fixes does not require a second approval merely because this skill includes a review.
 
 The framework knowledge lives in the sibling skill at `../expressivecss/` (call it `<base>`). Its guides, component references, `semantics.json` rule IDs, and version resolver are the source of truth. This skill adds only the orchestration.
 
@@ -26,7 +25,7 @@ Work out what is under review and write it down in one line before anything else
 - **Screenshot.** Read the image. Source-level checks (markup, lint, lifecycle) have no evidence, so those lenses report from what is visible and mark the rest Blocked. Ask for the markup only if the user wants a source-level review.
 - **Template** from `<base>/assets/templates/`. Treat it like a file.
 
-If the scope is a whole app, pick the pages the user named. If they named none, ask which ones, because five agents over an entire codebase gives a shallow review of everything.
+For an app-wide review, use the named routes or locate the application's route inventory and state the coverage. Ask which pages only when the target cannot be inferred. Mark unreviewed routes explicitly; sampled pages do not establish coverage of the whole app.
 
 ## 2. Collect shared evidence once
 
@@ -42,8 +41,7 @@ Run these yourself and pass the output to every specialist. Running them once ke
 
 ## 3. Brief the five specialists
 
-Spawn all five in one message so they run in parallel, and run them in the foreground (with the Agent tool, `run_in_background: false`). In some harnesses a background subagent's result goes to the top-level session instead of to you, so an orchestrator that backgrounds its specialists can wait forever for results that never arrive. Foreground calls in one message still run concurrently and return their findings straight to you.
-
+Run applicable specialists in parallel when the host provides subagent tools and delegation is permitted. Respect its concurrency limit, use its supported tool names and invocation settings, and wait for each result before synthesis. Do not assume Claude's Agent parameters exist in Codex or another host. If delegation is unavailable, fails, or is disallowed by the user, apply the affected lenses yourself in sequence.
 Each brief is the matching file from `agents/` plus the shared context block below. The subagent does not see this skill, so either paste the agent file into the prompt or give its absolute path and tell the subagent to read it first.
 
 Skip a lens only when the target cannot exercise it at all, such as Page Architect for a ten-line fragment with no layout. Write "Not applicable: <reason>" in that section instead of spawning an agent for nothing.
@@ -116,61 +114,8 @@ Blocked checks do not cost points, but name them under the score so a high numbe
 
 ## 6. Write the report
 
-Return the report as your reply, not as a file, and stop there: leave the reviewed files unchanged, even when a fix is one line and instructions elsewhere tell you to act instead of asking. End by offering to apply the priorities. Use this format exactly. Do not use tables. Keep the section emojis; they are part of the requested format. Each bullet names the location (`file:line`, selector, or screen region), what is wrong, and the fix in a few words. When a list has nothing confirmed, write "None found" and say what was checked, so an empty list reads as a result and not an omission. Cite `semantics.json` rule IDs and lint IDs where they apply. Section 5 has a single list, so start each of its bullets with `[critical]`, `[major]`, or `[polish]`.
+Use the [report template](./references/report-template.md) when synthesizing the result. Follow a user-requested format instead when given. Include scores, confirmed findings with location and evidence, blocked checks, and ranked fixes. When no finding is confirmed, say what was checked. Cite semantics and lint rule IDs where applicable. Avoid counting the same defect twice.
 
-```markdown
-# ExpressiveCSS Orchestrated UI Review Report
-
-### 📊 Master Framework Score: <score>/100
-[One or two sentences on framework compliance, code health, and design fidelity.]
-Sections: Theme <n>, Layout <n>, Markup <n>, Lifecycle <n>, Rules <n> (out of 20 each)
-Not checked: [Blocked areas and why, or "nothing blocked"]
-
-### 🎨 1. Theme & Token Synthesis ([Creative Director])
-Section score: <n>/20
-* Critical Token Issues:
-  * [finding]
-* Major Issues:
-  * [finding]
-* Polish Notes:
-  * [finding, then any "Before you adapt it:" notes]
-
-### 📐 2. Layout & Grid Synthesis ([Page Architect])
-Section score: <n>/20
-* Critical Layout Issues:
-  * [finding]
-* Major Issues:
-  * [finding]
-* Polish Notes:
-  * [finding, then any "Before you adapt it:" notes]
-
-### 🧩 3. Markup & Semantics Synthesis ([Component Syntax Expert])
-Section score: <n>/20
-* Critical Markup Issues:
-  * [finding]
-* Major Issues:
-  * [finding]
-* Polish Notes:
-  * [finding, then any "Before you adapt it:" notes]
-
-### ⚙️ 4. Lifecycle & Quality Synthesis ([Quality Inspector])
-Section score: <n>/20
-* Critical Lifecycle/QA Issues:
-  * [finding]
-* Major Issues:
-  * [finding]
-* Polish Notes:
-  * [finding, then any "Before you adapt it:" notes]
-
-### ⚠️ 5. Anti-Pattern & Rule Violations ([Rules Enforcer])
-Section score: <n>/20
-* Direct Framework Violations:
-  * [critical|major|polish] [finding]
-
-### 🚀 Top 3 Orchestrated Engineering Priorities
-1. [Highest-impact fix, with location and the change to make]
-2. [...]
-3. [...]
-```
+For review-only work, return the report and leave the target unchanged. If fixes were requested, apply the verified priorities within scope and report the resulting checks. Do not interpret a review or a skill invocation as permission to publish, send messages, or change unrelated files.
 
 Rank the priorities by impact on users first (broken interaction, inaccessible controls, unreadable theme), then by how many findings one fix clears. A priority that clears several findings in one change, such as "replace the hand-rolled select with the documented select markup", beats three single-line fixes.

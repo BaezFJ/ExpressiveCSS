@@ -41,4 +41,26 @@ Keep the component's default, pressed, selected, and disabled shapes consistent.
 
 ## Verification
 
-Compare the resting, focus-visible, pressed, and selected states at the supported sizes. Check joined edges, RTL order, overflowing labels, focus-ring clipping, hit areas, and reduced motion when corners animate. Record visual results separately from source support. A full reusable shape scale and general expressive shape catalogue remain framework gaps; an application-specific override does not close them.
+Compare the resting, focus-visible, pressed, and selected states at the supported sizes. Check joined edges, RTL order, overflowing labels, focus-ring clipping, hit areas, and reduced motion when corners animate. Record visual results separately from source support.
+
+## Decorative shape catalogue
+
+The [Shapes guide](https://www.expressivecss.com/shapes.html.md) and `src/sass/utilities/_shapes.scss` own twenty CSS masks. Use a `.shape-<name>` class:
+
+| Family | Names |
+| --- | --- |
+| Rounded forms | `pebble`, `bean`, `peak`, `dart`, `slice`, `kite`, `cell`, `crest`, `facet` |
+| Radiating forms | `spark`, `seal`, `spike`, `flare` |
+| Scallops | `scallop-4`, `scallop-6`, `scallop-7`, `scallop-9`, `scallop-12` |
+| Blooms | `bloom-4`, `bloom-8` |
+
+```html
+<img class="shape-scallop-6" src="portrait.jpg" width="160" alt="Team portrait">
+<button type="button" class="icon-button filled shape-spark" aria-label="Favorite">
+  <span class="material-symbols" aria-hidden="true">favorite</span>
+</button>
+```
+
+The mask stretches to the element's box. Images, video and canvas get `aspect-ratio: 1`, `height: auto` and `object-fit: cover`; choose a square control for button shapes. The mask clips shadows, borders, overflowing content and native video controls. Use a wrapper with `filter: drop-shadow()` when a shadow must follow the shape, and keep video controls reachable outside the mask.
+
+The utility uses `contain: paint` and draws focus inside its edge. Focusable replaced elements such as images cannot draw the `::after` band, so check their visible focus separately. Forced colors use a system-color band. Include `"shapes"` in `$utilities` for a selective Sass build. The corner scale and this mask catalogue are shipped contracts; full Material parity remains unassessed.

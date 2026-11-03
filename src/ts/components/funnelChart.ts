@@ -1,4 +1,4 @@
-import { LineChart, LineChartOptions, numberFormat } from './lineChart';
+import { LineChart, LineChartOptions, percentLabel } from './lineChart';
 
 export type FunnelChartOptions = LineChartOptions;
 
@@ -80,8 +80,7 @@ export class FunnelChart extends LineChart {
     const values = this.series[0].values;
     const [first, value] = [values[0], values[index]];
     if (!(first! > 0 && value! > 0)) return '';
-    const share = value! / first!;
-    return numberFormat(this.el, { style: 'percent', maximumFractionDigits: share < 0.1 ? 1 : 0 }).format(share);
+    return percentLabel(this.el, value! / first!);
   }
 
   /** A funnel has one series of stages, so it has no legend. */

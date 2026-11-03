@@ -317,6 +317,8 @@ const tabs = Tabs.init(document.querySelector('.tabs'));`} />
       such as <code>Forms.Init()</code> or <code>Dialogs.Init()</code>.
       The root import keeps its existing initialization. <code>AutoInit</code>
       is still available and includes the full component registry.</p>
+    <p>The <a href={route("javascript")}>JavaScript API</a> lists every export and required behavior setup.
+      The <a href={route("sass")}>Sass API</a> lists configuration, functions and mixins.</p>
     <p>Select Sass partials with the custom entry. With Sass's Node package importer,
       compile with <code>sass --pkg-importer=node app.scss app.css</code>.</p>
     <Code code={`@use "pkg:@expressivecss/expressive/scss/custom" with (

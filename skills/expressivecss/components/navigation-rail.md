@@ -9,11 +9,13 @@ Component ID: `navigation-rail`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
+Contract SHA-256: `909b22b2d450a63b419a1d3a315a17de46fe02ff2cc36fbdf7c1c0213342f429`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/navigation-rail/overview)
+
+Public JavaScript exports: `NavigationRail`. See the [API index](../references/api-index.md).
 
 - compact window: replace-with [navigation-bar](./navigation-bar.md). Compact peer destinations fit the bottom edge.
 - expanded window: variant. Use the expanded rail when labels should remain visible.
@@ -63,6 +65,10 @@ Escape closes an open nested menu first. A second Escape collapses the modal rai
   </a>
 </nav>
 ```
+
+#### Also documented
+
+The Navigation rail section of the [API reference](https://www.expressivecss.com/llm.md) also covers JavaScript API.
 
 #### Rules
 

@@ -15,6 +15,7 @@ Read this after the Usage guide when a task needs spacing, flex layout, alignmen
 - Shadow and elevation
 - Responsive media helpers
 - Native form opt-out
+- Native scroll areas
 - Review checklist
 
 ## Agent procedure
@@ -287,6 +288,23 @@ Apply `.browser-default` to an `<input>` or `<select>` when the target-version c
 ```
 
 `.browser-default` is a targeted form-control opt-out, not a general CSS reset. Do not apply it to arbitrary elements.
+
+## Native scroll areas
+
+Use `.scroll-area` on a container with a bounded width or height to add native `overflow: auto`, a thin scrollbar and theme-aware colors. It requires no initialization. The [Scroll area guide](https://www.expressivecss.com/scroll-area.html.md) and `src/sass/utilities/_scroll-area.scss` own the contract.
+
+```html
+<div class="scroll-area min-h-0 p-2" style="height: 18rem"
+     tabindex="0" role="region" aria-label="Recent activity">
+  <p>Activity entries...</p>
+</div>
+```
+
+Give a generic scrolling region keyboard focus and an accessible name when no focusable child provides scrolling access. Preserve padding for focus rings; use `.min-h-0` or `.min-w-0` when its flex or grid parent must let it shrink. Wheel, touch and keyboard scrolling remain native. Applying the class to `<html>` styles the page scrollbar.
+
+`--scroll-area-thumb-color` defaults to `var(--md-sys-color-on-surface-variant)` and `--scroll-area-track-color` to `transparent`. Forced colors restore system colors and scrollbar width. Older WebKit engines use an 8px fallback; the operating system can affect rendering. Selective Sass builds need `"scroll-area"` in `$utilities`.
+
+For custom positioned content, use the [stacking token reference](https://www.expressivecss.com/tokens.html.md); a shadow's elevation does not set its `z-index`.
 
 ## Review checklist
 

@@ -44,10 +44,14 @@ for (const [name, browserType, browserTest] of engines) {
   browserTest(`${name}: hovering the link shows the card after the delay, and it stays while the pointer is on the card`, { timeout: 30000 }, async () => {
     const { browser, page, open } = await setUp(browserType);
     try {
+      // Browser round trips must not advance the delay being asserted.
+      await page.clock.install({ time: 0 });
+      await page.clock.pauseAt(1000);
       await page.mouse.move(...await center(page, '#link'));
-      await page.waitForTimeout(200);
+      await page.clock.runFor(499);
       assert.equal(await open(), false, 'nothing shows before enterDelay');
-      await page.waitForFunction(() => document.getElementById('card').matches(':popover-open'), null, { timeout: 2000 });
+      await page.clock.runFor(1);
+      assert.equal(await open(), true, 'the card shows after enterDelay');
 
       const place = await page.evaluate(() => {
         const card = document.getElementById('card');
@@ -60,11 +64,13 @@ for (const [name, browserType, browserTest] of engines) {
       assert.ok(Math.abs(place.top - (place.linkBottom + place.gap)) <= 2, `card top ${place.top}, link bottom ${place.linkBottom}, gap ${place.gap}`);
 
       await page.mouse.move(...await center(page, '#card'), { steps: 5 });
-      await page.waitForTimeout(600);
+      await page.clock.runFor(600);
       assert.equal(await open(), true, 'the card stays while the pointer is on it');
 
       await page.mouse.move(5, 590, { steps: 5 });
-      await page.waitForTimeout(600);
+      await page.clock.runFor(299);
+      assert.equal(await open(), true, 'the card stays during exitDelay');
+      await page.clock.runFor(1);
       assert.equal(await open(), false, 'the card hides once the pointer has left both for exitDelay');
     } finally {
       await browser.close();
@@ -74,17 +80,20 @@ for (const [name, browserType, browserTest] of engines) {
   browserTest(`${name}: keyboard focus shows the card, Tab moves into it, and Escape hides it with focus back on the link`, { timeout: 30000 }, async () => {
     const { browser, page, open } = await setUp(browserType);
     try {
+      await page.clock.install({ time: 0 });
+      await page.clock.pauseAt(1000);
       await page.focus('#before');
       await tab(page, name);
       assert.equal(await active(page), 'link');
-      await page.waitForTimeout(200);
+      await page.clock.runFor(499);
       assert.equal(await open(), false, 'nothing shows before enterDelay');
-      await page.waitForFunction(() => document.getElementById('card').matches(':popover-open'), null, { timeout: 2000 });
+      await page.clock.runFor(1);
+      assert.equal(await open(), true, 'the card shows after enterDelay');
       assert.equal(await active(page), 'link', 'focus stays on the link');
 
       await tab(page, name);
       assert.equal(await active(page), 'inner', 'Tab moves into the card');
-      await page.waitForTimeout(600);
+      await page.clock.runFor(600);
       assert.equal(await open(), true, 'the card stays while focus is in it');
 
       await page.keyboard.press('Escape');

@@ -102,4 +102,29 @@ for (const [engine, type, browserTest] of engines) {
       await browser.close();
     }
   });
+
+  browserTest(`Timepicker keeps an emptied field's current time inside 09:00 to 17:30 (${engine})`, async () => {
+    const browser = await leaseBrowser(type);
+    let page;
+    try {
+      page = await browser.newPage();
+      // 20:56 is after maxTime, and 8 PM was read as 8 AM on the 12-hour clock.
+      await page.clock.setFixedTime(new Date(2026, 10, 2, 20, 56));
+      const cases = [
+        { twelveHour: false, start: '17:00', emptied: 'Minutes', expected: '17:30' },
+        { twelveHour: false, start: '12:00', emptied: 'Hours', expected: '17:30' },
+        { twelveHour: true, start: '10:00 AM', emptied: 'Hours', expected: '05:30 PM' }
+      ];
+      for (const { twelveHour, start, emptied, expected } of cases) {
+        await openAt(page, twelveHour, start);
+        await field(page, emptied).fill('');
+        await field(page, emptied).press('Enter');
+        await expect(page.locator('#time'), `${emptied} on the ${twelveHour ? 12 : 24}-hour clock`).toHaveValue(expected);
+        await page.evaluate(() => window.picker.destroy());
+      }
+    } finally {
+      await page?.close();
+      await browser.close();
+    }
+  });
 }

@@ -9,11 +9,13 @@ Component ID: `lists`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
+Contract SHA-256: `909b22b2d450a63b419a1d3a315a17de46fe02ff2cc36fbdf7c1c0213342f429`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/lists/overview)
+
+Public JavaScript exports: `Sortable`, `Lists`. See the [API index](../references/api-index.md).
 
 Example: A product with a large image, description, price, and several actions may need a card. A simple product-name index remains a list.
 

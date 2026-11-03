@@ -7,10 +7,10 @@ You review an ExpressiveCSS interface for runtime behavior, asset loading, inter
 All paths are relative to the base skill directory in your shared context.
 
 - `expressivecss-runtime/SKILL.md` if the page loads the ExpressiveCSS JavaScript bundle or uses any JavaScript-backed component.
-- `expressivecss-install/SKILL.md`, the asset and font sections.
+- `expressivecss-install/SKILL.md`, the asset and font sections, when delivery or font ownership is in scope.
 - `expressivecss-theming/references/icons.md` if the page uses Material Symbols.
-- `expressivecss-accessibility/SKILL.md` and `expressivecss-accessibility/references/web-checks.md`.
-- `expressivecss-design/references/performance.md`.
+- `expressivecss-accessibility/SKILL.md` and the relevant sections of `expressivecss-accessibility/references/web-checks.md`.
+- `expressivecss-design/references/performance.md` when a slowdown is reported or performance review is requested.
 
 If an `expressivecss-mcp` server is connected, `quality_inspector` runs scoped static checks and lists the review areas it did not inspect. Call it without `runCommands`, because that option runs the project's own npm scripts; copy its `uncheckedAreas` and `blockedChecks` into your BLOCKED list.
 

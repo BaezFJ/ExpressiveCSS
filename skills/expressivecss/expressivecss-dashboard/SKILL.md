@@ -1,6 +1,6 @@
 ---
 name: expressivecss-dashboard
-description: Designs, builds and reviews ExpressiveCSS dashboards, analytics overviews, admin consoles and reporting pages that read like a Google Material 3 product. Use for KPI rows, charts on a dashboard, data tables, filters, date ranges, loading and empty states, and dashboard critique. Not for a single chart or table fix, setup only, or token-only theming.
+description: "Builds and reviews ExpressiveCSS dashboards and reporting pages. Use for page-wide KPI, chart, filter and table composition. A single chart or table repair uses its component guide."
 ---
 
 # ExpressiveCSS dashboards
@@ -9,7 +9,7 @@ Use this guide to build or review a page that shows how something is doing: an a
 
 ## Start from the reference
 
-Read [analytics-overview.html](./assets/analytics-overview.html) before writing markup. It is a static, browser-checked page with a shell, a page header with scope controls, filter chips, key figures, a trend card, live activity, breakdowns, one emphasized insight, a sortable table and a heatmap. It holds up in light and dark schemes and at Compact width. Copy its structure, its `<style>` block and its table sort handler into the user's page, point the stylesheet and script at the project's install paths, and replace the content with the user's data. Keep its component choices unless the data calls for a different chart.
+For a new dashboard or substantial recomposition, read [analytics-overview.html](./assets/analytics-overview.html) before choosing markup. For a narrow change, inspect the existing page and relevant component guides. The reference is a static, browser-checked page with a shell, scope controls, filter chips, key figures, a trend card, activity, breakdowns, an insight, a sortable table and a heatmap. Borrow relevant structure and styling while preserving the project's shell, asset loading, data handling and component ownership. Copy its sort handler only when the application has no existing sorting owner; use the framework's `data-sort` behavior where it fits. Choose components and charts from the user's task and data.
 
 Then read, as each becomes relevant:
 

@@ -61,3 +61,21 @@ Use one helper class for markup, the Sass mixin for authored framework styles, a
 ## Verification
 
 Check the surface against light, dark, and vibrant backgrounds. Confirm clipping containers do not cut off the shadow, focus indicators remain visible, and the reading/DOM order does not imply a different hierarchy from the visual elevation.
+
+## Stacking order
+
+Elevation shadows and `z-index` are separate. The [design tokens guide](https://www.expressivecss.com/tokens.html.md) and `src/sass/tokens/_stacking.scss` own these inherited tokens on `:root` and `:host`:
+
+| Token | Default |
+| --- | --- |
+| `--expressive-z-toolbar` | `996` |
+| `--expressive-z-app-bar` | `997` |
+| `--expressive-z-modal-rail` | `998` |
+| `--expressive-z-sheet` | `1100` |
+| `--expressive-z-lightbox` | `1200`, retained for consumers; Lightbox now uses the top layer |
+| `--expressive-z-tooltip` | `2000` |
+| `--expressive-z-menu` | `9999` |
+| `--expressive-z-snackbar` | `10000` |
+| `--expressive-z-confetti` | `10001` |
+
+Use the relevant token for an application layer and inspect its stacking context. Native dialogs, modal sheets, open menus, Lightbox and open popovers use the top layer, above ordinary `z-index` values. Raising a token cannot put an ordinary element above them.

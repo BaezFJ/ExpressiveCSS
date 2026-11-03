@@ -9,11 +9,13 @@ Component ID: `bottom-sheet`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
+Contract SHA-256: `909b22b2d450a63b419a1d3a315a17de46fe02ff2cc36fbdf7c1c0213342f429`
 
 #### Selection and adaptation
 
 Runtime ownership: `shared-runtime`. [Google guidance](https://m3.material.io/components/bottom-sheets/overview)
+
+Public JavaScript exports: `BottomSheets`. See the [API index](../references/api-index.md).
 
 - expanded window: replace-with [side-sheet](./side-sheet.md). Persistent secondary content fits beside the main task.
 
@@ -38,6 +40,8 @@ Known boundary: An .expandable sheet has a partial and a full height and no othe
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#bottom-sheet).
 
 #### Contract
+
+The root bundle calls `BottomSheets.Init()` and `Dialogs.Init()`. With the modular entry, call both once for drag handling and light dismissal. `BottomSheets.setExpanded(dialog, expanded)` toggles an expandable sheet's height and its direct handle button's `aria-expanded`. This is a document behavior with no per-sheet instance or `destroy()` method.
 
 A recent flick dismisses the sheet even if the pointer stops moving at release. For short drags, pausing for at least 100ms or reversing direction lets it snap back.
 

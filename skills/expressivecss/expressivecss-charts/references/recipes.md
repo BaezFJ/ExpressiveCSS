@@ -88,13 +88,13 @@ The stat answers the question, the chart shows the evidence, and the switch narr
       body.replaceChildren(...rows.slice(-Number(button.dataset.period)));
       card.querySelector('.stats dd').textContent = button.dataset.total;
       card.querySelector('.stat-change').textContent = button.dataset.change;
-      Expressive.LineChart.init(figure);
+      Expressive.LineChart.getInstance(figure).update();
     });
   });
 </script>
 ```
 
-The `p-4` wrapper gives the stat and chart the card's 16px padding; cards pad only headings and paragraphs themselves. The button group manages `aria-pressed` itself. Compute `data-total` and `data-change` from the same rows the button shows.
+Run the page's `AutoInit()` before these controls can be used. The handler updates the existing chart, preserving its focus and legend selection. The `p-4` wrapper gives the stat and chart the card's 16px padding; cards pad only headings and paragraphs themselves. The button group manages `aria-pressed` itself. Compute `data-total` and `data-change` from the same rows the button shows.
 
 ## 3. KPI row with sparklines
 

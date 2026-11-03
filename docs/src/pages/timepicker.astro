@@ -27,8 +27,9 @@ const S = defineSections([
           <code>.time-picker</code> except those marked <code>no-autoinit</code>.
         </p>
         <p>
-          The clock is inline, not a modal. The picker appends it to the input's parent, and it stays
-          visible. There is no <code>openByDefault</code> flag.
+          The clock defaults to a visible inline view in the input's parent.
+          Use <code>displayPlugin: 'docked'</code> for a popover or
+          <code>'modal'</code> for a dialog. There is no <code>openByDefault</code> flag.
         </p>
         <div class="field mb-3">
           <input type="text" class="time-picker" id="timepicker-intro">

@@ -15,6 +15,7 @@ const S = defineSections([
   { id: "file", label: "File input" },
   { id: "color", label: "Color" },
   { id: "character-counter", label: "Character counter" },
+  { id: "api", label: "Form helpers API" },
 ]);
 ---
 <DocsLayout page="text_inputs" sections={S}>
@@ -347,5 +348,35 @@ Expressive.CharacterCounter.init(
   document.querySelectorAll('#input_text_counter, #textarea_counter')
 );
 `} />
+        <p>Retrieve a counter with <code>Expressive.CharacterCounter.getInstance(input)</code>.
+          Call <code>updateCounter()</code> after assigning the value from script, or dispatch
+          <code>input</code>. Its <code>counterEl</code> is the generated polite live-region span;
+          <code>isValidLength</code> reports whether the current length fits <code>maxlength</code>.
+          <code>isInvalid</code> tracks the invalid styling state. <code>destroy()</code> removes the
+          span and listeners. CharacterCounter has no configurable options.</p>
+  </Section>
+  <Section {...S.api}>
+    <p>The root bundle calls <code>Forms.Init()</code>. With the modular entry, import
+      <code>Forms</code> and call it once to install document behaviors and scan initial textareas
+      and file-path inputs. Repeating <code>Forms.Init()</code> does not rescan new controls.</p>
+    <table class="striped">
+      <thead><tr><th>Method</th><th>When to call it</th></tr></thead>
+      <tbody>
+        <tr><td><code>Forms.validateField(input)</code></td><td>After changing a validated field from script. Refreshes invalid styling and error descriptions. File inputs in a drop zone also refresh file validation and feedback. It does not submit the form.</td></tr>
+        <tr><td><code>Forms.InitTextarea(textarea)</code></td><td>Once for an <code>.expressive-textarea</code> inserted after the initial scan. Adds resize listeners and measures it when visible.</td></tr>
+        <tr><td><code>Forms.textareaAutoResize(textarea)</code></td><td>After assigning textarea text from script. A hidden textarea waits until it can be measured.</td></tr>
+        <tr><td><code>Forms.InitFileInputPath(input)</code></td><td>Once for a new file input inside <code>.file-field</code>. Copies chosen filenames into its <code>input.file-path</code> on change.</td></tr>
+        <tr><td><code>Forms.listDropZoneFiles(zone, input)</code></td><td>Rebuilds the zone's <code>.drop-zone-files</code> list from the file input, with localized file sizes. <code>validateField</code> also runs the relevant file feedback path.</td></tr>
+      </tbody>
+    </table>
+    <Code code={`const textarea = document.querySelector('textarea.expressive-textarea');
+textarea.value = 'Updated from the application';
+Expressive.Forms.textareaAutoResize(textarea);`} />
+    <p><code>togglePassword(event)</code>, <code>stepNumber(event)</code>,
+      <code>resetFormExtras(event)</code>, <code>summarizeErrors(event)</code>,
+      <code>focusSummaryField(event)</code> and <code>markDropZone(event)</code> are event handlers
+      installed by <code>Forms.Init()</code>. They handle password visibility, number steps,
+      submit/reset cleanup, error summaries and drop feedback. Use their documented markup rather than
+      calling these handlers manually. Forms has no per-field instance or <code>destroy()</code>.</p>
   </Section>
 </DocsLayout>

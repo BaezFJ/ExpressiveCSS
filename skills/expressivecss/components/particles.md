@@ -9,11 +9,13 @@ Component ID: `particles`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
+Contract SHA-256: `909b22b2d450a63b419a1d3a315a17de46fe02ff2cc36fbdf7c1c0213342f429`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
+
+Public JavaScript exports: `Particles`. See the [API index](../references/api-index.md).
 
 Example: A product landing page can put particles behind its headline and sign-up button. Its pricing table and checkout form sit on a plain surface.
 
