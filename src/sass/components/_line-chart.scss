@@ -27,16 +27,8 @@
 //   --md-comp-line-chart-color-1..4   primary, tertiary, secondary,
 //                                     on-surface-variant
 
-@include chart("line-chart");
+@include chart("line-chart", $cursor: line, $lines: true);
 @include chart-axis("line-chart");
-
-.line-chart {
-  --md-comp-line-chart-line-width: 3px;
-
-  &.sparkline {
-    --md-comp-line-chart-line-width: 2px;
-  }
-}
 
 .line-chart-plot > svg {
   position: absolute;
@@ -44,28 +36,6 @@
   width: 100%;
   height: 100%;
   overflow: visible;
-}
-
-.line-chart-line {
-  fill: none;
-  stroke: var(--line-chart-color);
-  stroke-width: var(--md-comp-line-chart-line-width);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-.line-chart-series.dashed .line-chart-line {
-  stroke-dasharray: 2 8;
-}
-
-// Round caps on zero-length lines: dots that keep their size at any scale.
-.line-chart-points {
-  fill: none;
-  stroke: var(--line-chart-color);
-  stroke-width: calc(var(--md-comp-line-chart-line-width) * 3);
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
 }
 
 .line-chart-area {
@@ -76,41 +46,6 @@
   }
 }
 
-.line-chart-series stop {
-  stop-color: var(--line-chart-color);
-  stop-opacity: 0;
-
-  &:first-child {
-    stop-opacity: 0.24;
-  }
-}
-
 .line-chart.fade .line-chart-plot > svg {
   mask-image: linear-gradient(to right, transparent, #000 15% 85%, transparent);
-}
-
-.line-chart-cursor {
-  width: 1px;
-  background-color: var(--md-sys-color-outline);
-
-  > span {
-    position: absolute;
-    left: 0;
-    width: 10px;
-    height: 10px;
-    border: 2px solid var(--md-sys-color-surface);
-    border-radius: 50%;
-    background-color: var(--line-chart-color);
-    translate: -50% -50%;
-  }
-}
-
-@media (forced-colors: active) {
-  .line-chart-cursor {
-    background-color: CanvasText;
-  }
-
-  .line-chart-cursor > span {
-    forced-color-adjust: none;
-  }
 }

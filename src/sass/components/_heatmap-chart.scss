@@ -28,7 +28,7 @@
 //   --md-comp-heatmap-chart-empty-color     surface-container-highest, the
 //                                           lowest, or the midpoint
 
-@include chart("heatmap-chart");
+@include chart("heatmap-chart", $grid: false);
 
 // A level's color: the color above 0, the low color below it, both mixed
 // into the empty color, so one formula serves both kinds of scale.
@@ -62,8 +62,6 @@
 
 .heatmap-chart-plot {
   height: auto;
-  border: 0;
-  background: none;
 }
 
 // The row labels, then the cells beside them. Row labels take up to 40% of

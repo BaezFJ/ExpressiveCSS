@@ -31,7 +31,7 @@
 //   --md-comp-radial-chart-color-1..4   primary, tertiary, secondary,
 //                                       on-surface-variant
 
-@include chart("radial-chart");
+@include chart("radial-chart", $round: true, $tooltip: middle, $legend-columns: 3);
 
 .radial-chart {
   --md-comp-radial-chart-thickness: 8;
@@ -39,16 +39,6 @@
   --md-comp-radial-chart-track-color: var(--md-sys-color-surface-container-highest);
 
   gap: 16px;
-}
-
-.radial-chart-plot {
-  width: min(100%, var(--md-comp-radial-chart-height));
-  height: auto;
-  aspect-ratio: 1;
-  margin-inline: auto;
-  border: 0;
-  border-radius: 50%;
-  background: none;
 }
 
 .radial-chart.gauge .radial-chart-plot {
@@ -206,14 +196,6 @@
   line-height: var(--md-sys-typescale-label-medium-line-height);
 }
 
-.radial-chart-tooltip {
-  translate: 12px -50%;
-
-  &.end {
-    translate: calc(-100% - 12px) -50%;
-  }
-}
-
 // The middle, inside the innermost ring; a gauge's sits on its base line.
 .radial-chart-total {
   position: absolute;
@@ -244,35 +226,9 @@
   justify-content: end;
 }
 
-// One row per ring: swatch, name and cell in aligned columns.
-.radial-chart-legend {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 8px;
-
-  > li {
-    display: contents;
-  }
-
-  > li > span:first-child {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  > li > span:last-child {
-    text-align: end;
-    color: var(--md-sys-color-on-surface);
-    font-weight: 500;
-    font-variant-numeric: tabular-nums;
-  }
-}
-
 .radial-chart.sparkline .radial-chart-plot {
   // A set width, so the chart keeps its size as a flex item.
   width: var(--md-comp-radial-chart-height);
-  margin-inline: 0;
 }
 
 @media (forced-colors: active) {

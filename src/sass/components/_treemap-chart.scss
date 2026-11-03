@@ -23,32 +23,10 @@
 //                                          on-secondary, surface, surface,
 //                                          surface; the text in each
 
-@include chart("treemap-chart");
+@include chart("treemap-chart", $colors: 6, $on-colors: true, $grid: false);
 
 .treemap-chart {
   --md-comp-treemap-chart-gap: 4px;
-  // As in the pie chart: the container roles mixed 45% with on-surface pass
-  // 3:1 on the surface (WCAG 1.4.11), and surface text on them passes too.
-  --md-comp-treemap-chart-color-5: color-mix(in oklab, var(--md-sys-color-primary-container) 45%, var(--md-sys-color-on-surface));
-  --md-comp-treemap-chart-color-6: color-mix(in oklab, var(--md-sys-color-tertiary-container) 45%, var(--md-sys-color-on-surface));
-  --md-comp-treemap-chart-on-color-1: var(--md-sys-color-on-primary);
-  --md-comp-treemap-chart-on-color-2: var(--md-sys-color-on-tertiary);
-  --md-comp-treemap-chart-on-color-3: var(--md-sys-color-on-secondary);
-  --md-comp-treemap-chart-on-color-4: var(--md-sys-color-surface);
-  --md-comp-treemap-chart-on-color-5: var(--md-sys-color-surface);
-  --md-comp-treemap-chart-on-color-6: var(--md-sys-color-surface);
-}
-
-@for $i from 1 through 6 {
-  .treemap-chart [data-series="#{$i}"] {
-    --treemap-chart-color: var(--md-comp-treemap-chart-color-#{$i});
-    --treemap-chart-on-color: var(--md-comp-treemap-chart-on-color-#{$i});
-  }
-}
-
-.treemap-chart-plot {
-  border: 0;
-  background: none;
 }
 
 .treemap-chart-boxes {

@@ -26,12 +26,11 @@
 //   --md-comp-column-chart-color-1..4     primary, tertiary, secondary,
 //                                         on-surface-variant
 
-@include chart("column-chart");
+@include chart("column-chart", $cursor: band);
 @include chart-axis("column-chart");
 
 .column-chart {
   --md-comp-column-chart-column-width: 60%;
-  --md-comp-column-chart-shape: var(--md-sys-shape-corner-extra-small);
   --md-comp-column-chart-track-color: var(--md-sys-color-surface-container-highest);
 }
 
@@ -111,26 +110,9 @@
   }
 }
 
-// A band behind the highlighted row's columns.
-.column-chart-plot {
-  isolation: isolate;
-}
-
-.column-chart-cursor {
-  z-index: -1;
-  width: calc(100% / var(--rows, 1));
-  border-radius: var(--md-comp-column-chart-shape);
-  background-color: state-layer(var(--md-sys-color-on-surface), "hover");
-  translate: -50% 0;
-}
-
 @media (forced-colors: active) {
   .column-chart-columns > div > span {
     forced-color-adjust: none;
-  }
-
-  .column-chart-cursor {
-    outline: 1px solid CanvasText;
   }
 
   // The track is a fill, which forced colors paint as Canvas.
