@@ -644,6 +644,21 @@ describe("Menu radio groups", () => {
     }
   });
 
+  test("destroy puts back the attributes setup wrote and the menu's place", () => {
+    document.body.innerHTML = `
+      <button type="button" id="t" data-target="m">Open</button><p id="between"></p>
+      <menu id="m"><li><button type="button">Cut</button></li><li class="divider"></li><li tabindex="-1"><button type="button">Copy</button></li></menu>`;
+    const trigger = document.getElementById("t");
+    const menu = document.getElementById("m");
+    const before = [trigger, menu, ...menu.querySelectorAll("li")].map((el) => el.outerHTML);
+    const instance = Expressive.Menu.init(trigger);
+    assert.equal(trigger.nextElementSibling, menu, "setup moves the menu next to its trigger");
+    assert.equal(menu.getAttribute("role"), "menu");
+    instance.destroy();
+    assert.equal(document.getElementById("between").nextElementSibling, menu, "the menu goes back to its place");
+    assert.deepEqual([trigger, menu, ...menu.querySelectorAll("li")].map((el) => el.outerHTML), before);
+  });
+
   test("a group in a Menubar menu checks within itself", async () => {
     document.body.innerHTML = `
       <div class="menubar"><button type="button" class="menu-trigger" data-target="v">View</button></div>

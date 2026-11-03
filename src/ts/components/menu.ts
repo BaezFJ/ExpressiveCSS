@@ -217,6 +217,10 @@ export class Menu extends Component<MenuOptions> {
   private _contextPoint: { x: number; y: number } | null = null;
   /** What had focus when a context menu opened; focus goes back there. */
   private _contextReturn: HTMLElement | null = null;
+  /** Each attribute setup wrote, with the value it had before, for destroy(). */
+  private _originalAttributes = new Map<Element, Map<string, string | null>>();
+  /** Where the menu was before it moved next to the trigger. */
+  private _originalPlace: { parent: Node | null; next: Node | null } = { parent: null, next: null };
 
   constructor(el: HTMLElement, options: Partial<MenuOptions>) {
     super(el, { contextMenu: el.hasAttribute('data-context-menu'), ...options });
@@ -233,10 +237,10 @@ export class Menu extends Component<MenuOptions> {
     // A context region is content, not a button: expanded, haspopup and
     // controls are not valid on it, and the menu key is how it is discovered.
     if (!this.options.contextMenu) {
-      this.el.ariaExpanded = 'false';
-      if (!this.el.hasAttribute('aria-haspopup')) this.el.setAttribute('aria-haspopup', 'menu');
+      this._setAttribute(this.el, 'aria-expanded', 'false');
+      if (!this.el.hasAttribute('aria-haspopup')) this._setAttribute(this.el, 'aria-haspopup', 'menu');
       if (this.id && !this.el.hasAttribute('aria-controls'))
-        this.el.setAttribute('aria-controls', this.id);
+        this._setAttribute(this.el, 'aria-controls', this.id);
     }
 
     // Without a menu, moving it inserts a literal "null" text node and the
@@ -268,6 +272,7 @@ export class Menu extends Component<MenuOptions> {
     clearTimeout(this.filterTimeout);
     this._resetMenuStyles();
     this._restoreInert();
+    this._restoreSetup();
     this._events.abort();
     this._openEvents?.abort();
     const index = Menu._menus.indexOf(this);
@@ -531,29 +536,29 @@ export class Menu extends Component<MenuOptions> {
 
   private _setupAccessibility() {
     if (!this.menuEl) return;
-    if (!this.menuEl.hasAttribute('role')) this.menuEl.setAttribute('role', 'menu');
+    if (!this.menuEl.hasAttribute('role')) this._setAttribute(this.menuEl, 'role', 'menu');
 
     const menus = [this.menuEl, ...this.menuEl.querySelectorAll('menu')];
     menus.forEach((menu) => {
-      if (!menu.hasAttribute('role')) menu.setAttribute('role', 'menu');
+      if (!menu.hasAttribute('role')) this._setAttribute(menu, 'role', 'menu');
       if (menu.getAttribute('role') !== 'menu') return;
 
       menu.querySelectorAll(ROWS).forEach((li) => {
         if (li.classList.contains('divider')) {
-          if (!li.hasAttribute('role')) li.setAttribute('role', 'separator');
+          if (!li.hasAttribute('role')) this._setAttribute(li, 'role', 'separator');
           return;
         }
         if (li.classList.contains('gap')) {
-          li.setAttribute('aria-hidden', 'true');
+          this._setAttribute(li, 'aria-hidden', 'true');
           return;
         }
         if (li.classList.contains('label') || li.classList.contains('optgroup')) {
-          if (!li.hasAttribute('role')) li.setAttribute('role', 'presentation');
+          if (!li.hasAttribute('role')) this._setAttribute(li, 'role', 'presentation');
           return;
         }
-        if (!li.hasAttribute('role')) li.setAttribute('role', 'menuitem');
+        if (!li.hasAttribute('role')) this._setAttribute(li, 'role', 'menuitem');
         if (li.classList.contains('disabled') && !li.hasAttribute('aria-disabled')) {
-          li.setAttribute('aria-disabled', 'true');
+          this._setAttribute(li, 'aria-disabled', 'true');
         }
       });
     });
@@ -572,8 +577,8 @@ export class Menu extends Component<MenuOptions> {
     this.menuEl?.querySelectorAll('li').forEach((li) => {
       if (!li.querySelector(':scope > menu')) return;
       const trigger = li.querySelector(':scope > a, :scope > button, :scope > span') ?? li;
-      trigger.setAttribute('aria-haspopup', 'menu');
-      trigger.setAttribute('aria-expanded', 'false');
+      this._setAttribute(trigger, 'aria-haspopup', 'menu');
+      this._setAttribute(trigger, 'aria-expanded', 'false');
     });
   }
 
@@ -760,8 +765,9 @@ export class Menu extends Component<MenuOptions> {
   _resetMenuStyles() {
     // destroy() runs this even when the menu target was never found.
     if (!this.menuEl) return;
-    // A no-op unless open, so a removed menu does not throw.
-    this.menuEl.hidePopover();
+    // A no-op unless open, so a removed menu does not throw. A second
+    // destroy() finds the popover attribute already put back and skips it.
+    if (this.menuEl.popover) this.menuEl.hidePopover();
     this._resetMenuPositioningStyles();
     this.menuEl.style.transform = '';
     this.menuEl.style.opacity = '';
@@ -778,8 +784,33 @@ export class Menu extends Component<MenuOptions> {
   }
 
   _moveMenuToElement() {
+    this._originalPlace = { parent: this.menuEl.parentNode, next: this.menuEl.nextSibling };
     if (this.options.container) this.options.container.append(this.menuEl);
     else this.el.after(this.menuEl);
+  }
+
+  /** Keeps the value an attribute had before setup first changed it, which destroy() puts back. */
+  private _keepAttribute(el: Element, name: string) {
+    const saved = this._originalAttributes.get(el) ?? new Map<string, string | null>();
+    if (!saved.has(name)) saved.set(name, el.getAttribute(name));
+    this._originalAttributes.set(el, saved);
+  }
+
+  private _setAttribute(el: Element, name: string, value: string) {
+    this._keepAttribute(el, name);
+    el.setAttribute(name, value);
+  }
+
+  /**
+   * Puts back the attributes setup wrote and the menu where it was, so a
+   * destroyed trigger is no longer announced as a menu button. The place is
+   * only used while it is still in the page.
+   */
+  private _restoreSetup() {
+    this._originalAttributes.forEach((saved, el) => saved.forEach((value, name) => restoreAttribute(el, name, value)));
+    this._originalAttributes.clear();
+    const { parent, next } = this._originalPlace;
+    if (parent?.isConnected) parent.insertBefore(this.menuEl, next?.parentNode === parent ? next : null);
   }
 
   _makeMenuFocusable() {
@@ -788,16 +819,17 @@ export class Menu extends Component<MenuOptions> {
     // would close an Autocomplete list when its input is clicked, close any
     // other open popover, and leave the top layer before the exit fade where
     // `overlay` is missing (Firefox, WebKit).
+    this._keepAttribute(this.menuEl, 'popover');
     this.menuEl.popover = 'manual';
     // Focus moves directly to menu items; the surface itself is not a stop.
-    this.menuEl.tabIndex = -1;
+    this._setAttribute(this.menuEl, 'tabindex', '-1');
     // Only set tabindex if it hasn't been set by user
     this.menuEl.querySelectorAll(':scope li').forEach((el) => {
       if (el.matches('.divider, .gap, .label, .optgroup, [role="none"]')) {
-        el.setAttribute('tabindex', '-1');
+        this._setAttribute(el, 'tabindex', '-1');
         return;
       }
-      if (!el.getAttribute('tabindex')) el.setAttribute('tabindex', '0');
+      if (!el.getAttribute('tabindex')) this._setAttribute(el, 'tabindex', '0');
     });
   }
 

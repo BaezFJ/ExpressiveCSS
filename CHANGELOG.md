@@ -30,6 +30,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Menu `destroy()` puts back the attributes setup wrote, on the trigger,
+  the menu and its rows, and moves the menu back to where it was. A
+  destroyed trigger used to keep `aria-haspopup`, `aria-expanded` and
+  `aria-controls`, so it was still announced as a menu button.
+
 - A date or time picker with Ok and Cancel buttons, which a modal picker
   always has, empties its input on Ok after Clear. Clear used to write the
   empty value and fire `change` at once, so Cancel could not keep the old
