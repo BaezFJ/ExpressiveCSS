@@ -28,6 +28,13 @@ export interface NotifyOptions {
 }
 
 /**
+ * `options` without its keys set to `undefined`, so those keep their
+ * defaults: `{ i18n: { tooShort: t.missing } }` must not erase a message.
+ */
+const defined = <T extends object>(options: T): T =>
+  options && (Object.fromEntries(Object.entries(options).filter(([, value]) => value !== undefined)) as T);
+
+/**
  * Base class implementation for Expressive components.
  */
 export class Component<O extends BaseOptions> {
@@ -61,10 +68,11 @@ export class Component<O extends BaseOptions> {
     new.target.getInstance(el)?.destroy();
     this.el = el;
     const defaults: Partial<O> & { i18n?: object } = new.target.defaults;
-    const i18n: object = defaults.i18n && { i18n: { ...defaults.i18n, ...(options as typeof defaults)?.i18n } };
-    this.options = { ...defaults, ...options, ...i18n } as O;
+    const given = defined(options) as typeof defaults;
+    const i18n = defaults.i18n ? { i18n: { ...defaults.i18n, ...defined(given?.i18n ?? {}) } } : {};
+    this.options = { ...defaults, ...given, ...i18n } as O;
     this._events = controllerFor(el);
-    el[new.target.key] = this;
+    Reflect.set(el, new.target.key, this);
   }
 
   /**
@@ -87,7 +95,7 @@ export class Component<O extends BaseOptions> {
     this: C,
     els: ElementOf<C> | InitElements<InitElement>,
     options: InitOptions<C> = {}
-  ): InstanceType<C> | InstanceType<C>[] {
+  ): InstanceType<C> | InstanceType<C>[] | null {
     const create = (el: unknown) => new this(el as never, options as never) as InstanceType<C>;
     if (els instanceof Element) return create(els);
     return els ? Array.from(els as InitElements<InitElement>, create) : null;
@@ -101,11 +109,12 @@ export class Component<O extends BaseOptions> {
   }
 
   /**
-   * Retrieves the instance of the class it is called on for the given element.
+   * Retrieves the instance of the class it is called on for the given element,
+   * or undefined before init and after destroy.
    * @param el Associated HTML Element.
    */
-  static getInstance<C extends ComponentClass>(this: C, el: HTMLElement): InstanceType<C> {
-    return el[this.key];
+  static getInstance<C extends ComponentClass>(this: C, el: Element): InstanceType<C> | undefined {
+    return Reflect.get(el, this.key);
   }
 
   /**
@@ -120,11 +129,11 @@ export class Component<O extends BaseOptions> {
    */
   protected _notify(
     type: string,
-    callback?: Function | null,
+    callback?: ((...args: never[]) => unknown) | null,
     { args = [this.el], detail, current = () => true }: NotifyOptions = {}
   ): boolean {
     const live = () => (this.constructor as typeof Component).getInstance(this.el) === this && current();
-    if (typeof callback === 'function') callback.apply(this, args);
+    if (typeof callback === 'function') Reflect.apply(callback, this, args);
     if (!live()) return false;
     Utils.emit(this.el, type, detail);
     return live();
@@ -136,6 +145,9 @@ export class Component<O extends BaseOptions> {
    */
   destroy(): void {
     this._events.abort();
-    this.el[(this.constructor as typeof Component).key] = undefined;
+    // A stale instance, replaced by a later init on the same element, must
+    // not unregister the instance that replaced it.
+    const { key } = this.constructor as typeof Component;
+    if (Reflect.get(this.el, key) === this) Reflect.set(this.el, key, undefined);
   }
 }

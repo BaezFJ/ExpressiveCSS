@@ -250,7 +250,7 @@ export class Timepicker extends Component<TimepickerOptions> {
    * @default 'PM'
    */
   amOrPm: 'AM' | 'PM';
-  static _template;
+  static _template: string;
   /** Whether this device exposes the Vibration API at all. */
   canVibrate: boolean;
   _canvas: HTMLElement;
@@ -689,7 +689,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   /** The hour on the 24-hour clock, setting AM or PM on a 12-hour one. */
-  private _setHours24(hour: number) {
+  private _setHours24(hour: number): void {
     if (!this.options.twelveHour) return void (this.hours = hour);
     this.amOrPm = hour >= 12 ? 'PM' : 'AM';
     this.hours = hour % 12 || 12;
@@ -744,7 +744,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     this._canvas?.classList.remove('timepicker-canvas-out');
   }
 
-  resetClock(delay) {
+  resetClock(delay: number | null): void {
     this._cancelClockReset();
     const view = this.currentView,
       value = this[view],
@@ -881,7 +881,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     this._moveHand(unit, value);
   };
 
-  drawClockFromTimeInput(value, isHours) {
+  drawClockFromTimeInput(value: number, isHours: boolean): void {
     const unit = Math.PI / (isHours ? 6 : 30);
     const radian = value * unit;
     let radius;
@@ -894,7 +894,7 @@ export class Timepicker extends Component<TimepickerOptions> {
     this.setClockAttributes(radian, radius);
   }
 
-  setHand(x, y, roundBy5: boolean = false) {
+  setHand(x: number, y: number, roundBy5: boolean = false): void {
     this._cancelClockReset();
     const isHours = this.currentView === 'hours',
       unit = Math.PI / (isHours || roundBy5 ? 6 : 30),
@@ -955,17 +955,25 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   formatHours() {
-    if (this.inputHours.value == '') this.setHoursDefault();
+    if (this.inputHours.value === '') this.setHoursDefault();
     this.inputHours.value = pad2(this.hours);
   }
 
+  // An emptied field takes the current time, which can be outside minTime
+  // and maxTime, so it goes through _afterChange like any other change.
   formatMinutes() {
-    if (this.inputMinutes.value == '') this.minutes = new Date().getMinutes();
+    if (this.inputMinutes.value === '') {
+      this.minutes = new Date().getMinutes();
+      this._afterChange();
+    }
     this.inputMinutes.value = pad2(this.minutes);
   }
 
   formatSeconds() {
-    if (this.inputSeconds.value == '') this.seconds = new Date().getSeconds();
+    if (this.inputSeconds.value === '') {
+      this.seconds = new Date().getSeconds();
+      this._afterChange();
+    }
     this.inputSeconds.value = pad2(this.seconds);
   }
 
@@ -977,12 +985,13 @@ export class Timepicker extends Component<TimepickerOptions> {
   }
 
   setHoursDefault() {
-    this.hours = new Date().getHours();
-    if (this.options.twelveHour) this.hours = this.hours % 12 || 12;
+    // _setHours24 also sets AM or PM, which the old 12-hour path left as it was.
+    this._setHours24(new Date().getHours());
+    this._afterChange();
     this.inputHours.value = this.hours.toString();
   }
 
-  done = (clearValue = null) => {
+  done = (clearValue: boolean | null = null): void => {
     // Set input value
     const last = this.el.value;
     let value = clearValue ? '' : this._clockTime(this.hours);

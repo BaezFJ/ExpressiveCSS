@@ -342,7 +342,7 @@ export class Tooltip extends Component<TooltipOptions> {
     }, this.options.exitDelay);
   }
 
-  _setEnterDelayTimeout(isManual) {
+  _setEnterDelayTimeout(isManual: boolean): void {
     clearTimeout(this._enterDelayTimeout);
     const skipDelay = skippingDelay(Date.now());
     this._enterDelayTimeout = setTimeout(() => {

@@ -375,17 +375,19 @@ export class Menu extends Component<MenuOptions> {
     this.open();
   };
 
+  // A hover menu stays open while the pointer moves onto its content or onto
+  // the trigger of an open menu. relatedTarget is null when the pointer
+  // leaves the window entirely.
   _handleMouseLeave = (e: MouseEvent) => {
-    const toEl = e.relatedTarget as HTMLElement;
-    // relatedTarget is null when the pointer leaves the window entirely.
-    if (!toEl) {
-      this.close();
-      return;
-    }
-    // Close hover menu if mouse did not leave to either active menu-trigger or menu-content
-    const leaveToActiveMenuTrigger = toEl.closest('.menu-trigger')?.['Expressive_Menu']?.isOpen;
-    if (!leaveToActiveMenuTrigger && !this.menuEl?.contains(toEl)) this.close();
+    const toEl = e.relatedTarget as HTMLElement | null;
+    if (toEl && (this.menuEl?.contains(toEl) || Menu._inOpenTrigger(toEl))) return;
+    this.close();
   };
+
+  private static _inOpenTrigger(el: Element) {
+    const trigger = el.closest('.menu-trigger');
+    return Boolean(trigger && Menu.getInstance(trigger)?.isOpen);
+  }
 
   _handleDocumentClick = (e: MouseEvent) => {
     const path = e.composedPath();
@@ -1138,7 +1140,7 @@ export class Menu extends Component<MenuOptions> {
 
   // A trigger whose target never resolved has no menu to open.
   private get _canOpen() {
-    return !this.isOpen && !!this.menuEl && this.el['Expressive_Menu'] === this;
+    return !this.isOpen && !!this.menuEl && Menu.getInstance(this.el) === this;
   }
 
   /**
