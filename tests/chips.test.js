@@ -165,6 +165,19 @@ describe('Chips rendered markup', () => {
     }
   });
 
+  for (const markup of ['<div class="tags"><label>Tags</label><input name="tags"></div>', '<div class="tags"></div>']) {
+    test(`destroy leaves ${markup.includes('input') ? 'authored' : 'bare'} markup as it was`, () => {
+      document.body.innerHTML = markup;
+      const el = document.querySelector('.tags');
+      const before = el.outerHTML;
+      const chips = Expressive.Chips.init(el, { allowUserInput: true, placeholder: 'Add a tag', data: [{ id: 'Apple' }] });
+      el.querySelector('input').dispatchEvent(new window.FocusEvent('focus'));
+      assert.notEqual(el.outerHTML, before, 'setup changes the markup');
+      chips.destroy();
+      assert.equal(el.outerHTML, before);
+    });
+  }
+
   test('initial data drops blank ids, duplicates and chips past the limit', () => {
     const [el, chips] = mount({ data: [{ id: '' }, { id: null }, { id: ' ' }, { id: 'Apple' }, { id: 'Apple' }, { id: 0 }, { id: 'Pear' }], limit: 2 });
     try {

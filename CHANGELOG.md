@@ -30,6 +30,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Chips `destroy()` leaves the markup as it was. It used to keep the
+  `chips`, `field` and `focus` classes, the input's `input` class,
+  placeholder and generated id, the label's `for`, and an input it had
+  created.
+
 - Menu `destroy()` puts back the attributes setup wrote, on the trigger,
   the menu and its rows, and moves the menu back to where it was. A
   destroyed trigger used to keep `aria-haspopup`, `aria-expanded` and
