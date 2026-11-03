@@ -30,6 +30,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A date or time picker inside a shadow root finds its `dateRangeEndEl` and
+  `container` selectors there. It used to search only the document, so a
+  range end input in the same root was not found. Datepicker also stops
+  throwing when a `container` selector matches nothing and falls back to the
+  default placement, as Timepicker does.
+
 - Chips no longer throws from the constructor when `data` holds a chip with a
   blank or null id. Starting data now gets the same checks as `addChip`, so
   blank ids, duplicates and chips past `limit` are dropped.

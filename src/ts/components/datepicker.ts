@@ -627,8 +627,9 @@ export class Datepicker extends Component<DatepickerOptions> {
       } else {
         // querySelector returns null, never undefined: the old check compared
         // against undefined, so a miss skipped the warning and fell through to
-        // dereferencing null.
-        this.endDateEl = document.querySelector(this.options.dateRangeEndEl);
+        // dereferencing null. Looked up in the input's own tree first, so an
+        // end input in the same shadow root is found.
+        this.endDateEl = Utils.querySelector(this.el, this.options.dateRangeEndEl) as HTMLInputElement | null;
         if (!this.endDateEl) {
           console.warn('Specified date range end input element in dateRangeEndEl not found');
         } else {
@@ -639,11 +640,13 @@ export class Datepicker extends Component<DatepickerOptions> {
 
     pickerFooter(this.footer, this.options, 'datepicker-clear', this._handleClearClick, this._confirm, this._cancel);
 
-    if (this.options.container) {
-      const optEl = this.options.container;
-      this.options.container =
-        optEl instanceof HTMLElement ? optEl : (document.querySelector(optEl) as HTMLElement);
-      this.options.container.append(this.containerEl);
+    // A selector that matches nothing falls back to the default placement,
+    // as Timepicker does, instead of throwing on null.
+    const optEl = this.options.container;
+    const container = typeof optEl === 'string' ? Utils.querySelector(this.el, optEl) : optEl;
+    if (container) {
+      this.options.container = container;
+      container.append(this.containerEl);
     } else {
       const appendTo = !this.endDateEl ? this.el : this.endDateEl;
       if (!this.options.openByDefault) (this.containerEl as HTMLElement).setAttribute('style', 'display: none; visibility: hidden;');
