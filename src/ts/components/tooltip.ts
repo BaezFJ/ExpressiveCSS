@@ -167,12 +167,10 @@ export class Tooltip extends Component<TooltipOptions> {
   constructor(el: HTMLElement, options: Partial<TooltipOptions>) {
     super(el, options);
 
-    // Again, so the data-* options sit between the defaults and the options.
-    this.options = {
-      ...Tooltip.defaults,
-      ...this._getAttributeOptions(),
-      ...options
-    };
+    // The data-* options win over the defaults and the options, as open()
+    // has them win each time it reads them again. Init used to put the
+    // options last, so a tooltip changed side or text on its first open.
+    this.options = { ...this.options, ...this._getAttributeOptions() };
 
     this.isOpen = false;
     this.isHovered = false;

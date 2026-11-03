@@ -479,3 +479,19 @@ test('Tooltip openOnClick shows at once outside the shared delay, and its close 
     t.mock.timers.reset();
   }
 });
+
+test('Tooltip data attributes win over init options from init on, and are read again on open', t => {
+  document.body.innerHTML = '<button data-tooltip="From markup" data-position="left">Help</button>';
+  const trigger = document.querySelector('button');
+  const instance = Expressive.Tooltip.init(trigger, { position: 'top', text: 'From options', enterDelay: 0, inDuration: 0 });
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  try {
+    assert.deepEqual([instance.options.position, instance.options.text], ['left', 'From markup'], 'before the first open');
+    trigger.setAttribute('data-tooltip', 'Changed');
+    instance.open();
+    assert.deepEqual([instance.options.position, instance.options.text], ['left', 'Changed'], 'after it');
+  } finally {
+    instance.destroy();
+    t.mock.timers.reset();
+  }
+});

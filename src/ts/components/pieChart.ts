@@ -1,10 +1,9 @@
-import { LineChart, LineChartOptions, numberFormat, percentLabel, polarPoint as at, rowLegend, signs } from './lineChart';
+import { LineChart, LineChartOptions, ROW_COLORS as COLORS, numberFormat, percentLabel, polarPoint as at, rowLegend, signs } from './lineChart';
 import { svgNode as node } from '../core/utils';
 
 export type PieChartOptions = LineChartOptions;
 
 // ponytail: rows past six repeat the colors; data-other groups the small ones.
-const COLORS = 6;
 /** The pie's radius in a 100-unit box, leaving room for the active slice to grow. */
 const RADIUS = 46;
 /** The active slice's scale, as in _pie-chart.scss. */
@@ -140,9 +139,6 @@ export class PieChart extends LineChart {
       if (color) span.dataset.series = color;
       else delete span.dataset.series;
     });
-    const share = this._share(index);
-    const value = this._tooltip.querySelector('span:nth-of-type(2)');
-    if (share && value) value.textContent += ` (${share})`;
   }
 
   /** CSS places the tooltip on the slice's middle from --turn. */
@@ -154,7 +150,7 @@ export class PieChart extends LineChart {
   }
 
   /** The row's share of the whole as a percentage, or '' for none. */
-  private _share(index: number) {
+  protected _share(index: number) {
     const [start, end] = this._turns[index];
     if (end <= start) return '';
     return percentLabel(this.el, end - start, (this._percents ??= []));

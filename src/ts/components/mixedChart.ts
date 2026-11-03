@@ -1,5 +1,5 @@
 import { ColumnChart } from './columnChart';
-import { LineChart, LineChartOptions, Series, niceStep, steps } from './lineChart';
+import { LineChartOptions, Series, niceStep, steps } from './lineChart';
 
 export type MixedChartOptions = LineChartOptions;
 
@@ -78,7 +78,7 @@ export class MixedChart extends ColumnChart {
     marks.className = 'mixed-chart-marks';
     const columns = super._draw(this.series.filter((series) => has(series, 'column')));
     columns.className = 'mixed-chart-columns';
-    marks.append(columns, LineChart.prototype['_draw'].call(this, this.series.filter((series) => !has(series, 'column'))));
+    marks.append(columns, this._drawLines(this.series.filter((series) => !has(series, 'column'))));
     return marks;
   }
 }

@@ -1,5 +1,5 @@
 import { svgNode } from '../core/utils';
-import { LineChart, LineChartOptions, ChartScale, Series, affix, cellValue, linearKey, morph, numberFormat, pace, textSpan as span, tickText } from './lineChart';
+import { LineChart, LineChartOptions, ChartScale, Series, affix, cellValue, linearKey, morph, numberFormat, pace, textSpan as span, tickAxis, tickText } from './lineChart';
 
 export interface ScatterChartOptions extends LineChartOptions {
   /**
@@ -281,19 +281,8 @@ export class ScatterChart extends LineChart {
   }
 
   private _xAxis() {
-    const axis = document.createElement('ol');
-    axis.className = 'scatter-chart-axis x';
-    axis.setAttribute('aria-hidden', 'true');
     const number = numberFormat(this.el, { notation: 'compact', maximumSignificantDigits: 3 });
-    for (const tick of this._xFit.ticks) {
-      const li = document.createElement('li');
-      const label = document.createElement('span');
-      label.textContent = tickText(number, tick, this._xAffix);
-      li.style.setProperty('--at', `${this._xAt(tick)}%`);
-      li.append(label);
-      axis.append(li);
-    }
-    return axis;
+    return tickAxis('scatter-chart-axis x', this._xFit.ticks, (tick) => tickText(number, tick, this._xAffix), (tick) => this._xAt(tick));
   }
 
   /** The legend only: the rows have no labels along an axis. */
