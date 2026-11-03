@@ -102,9 +102,7 @@
 
 .heatmap-chart-row,
 .heatmap-chart-column {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  @include ellipsis;
 }
 
 .heatmap-chart-row {

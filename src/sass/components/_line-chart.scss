@@ -31,10 +31,7 @@
 @include chart-axis("line-chart");
 
 .line-chart-plot > svg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  @include fill-parent;
   overflow: visible;
 }
 

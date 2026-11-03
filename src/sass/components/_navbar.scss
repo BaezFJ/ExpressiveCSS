@@ -113,9 +113,7 @@ header:has(> #{$_bar}) {
     &:first-child {
       padding-inline-start: 12px;
     }
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    @include ellipsis;
     color: inherit;
   }
 
@@ -199,9 +197,7 @@ header:has(> #{$_bar}) {
     display: flex;
     align-items: stretch;
     align-self: stretch;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    @include list-reset;
 
     > li {
       display: flex;
@@ -438,9 +434,7 @@ header.large.collapsed:has(> #{$_bar}) > #{$_bar} {
   > #{$_title} {
     order: 0;
     flex: 1 1 auto;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
   }
 
   > #{$_title} + * {
@@ -453,9 +447,7 @@ header.large.collapsed:has(> #{$_bar}) > #{$_bar} {
     padding: 0;
     -webkit-line-clamp: unset;
     line-clamp: unset;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    @include ellipsis;
     @include typescale("title-large");
   }
 

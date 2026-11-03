@@ -41,9 +41,7 @@ $_tab: "> a";
   display: flex;
   position: relative;
   width: 100%;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  @include list-reset;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
@@ -154,9 +152,7 @@ $_tab: "> a";
     background-color: var(--md-comp-primary-tab-active-indicator-color);
     border-radius: var(--md-comp-primary-tab-active-indicator-shape);
     pointer-events: none;
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    @include list-reset;
     @include forced-colors-fill(Highlight);
   }
 }

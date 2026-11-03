@@ -108,8 +108,5 @@
   }
 }
 
-// Navigation does nothing on paper. Important so a size or state rule that sets
-// `display` cannot bring it back; see base/_print.scss for the page itself.
-@media print {
-  .navigation-bar { display: none !important; }
-}
+// Navigation does nothing on paper.
+.navigation-bar { @include print-hidden; }

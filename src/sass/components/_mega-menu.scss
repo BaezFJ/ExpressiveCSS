@@ -96,9 +96,7 @@
     }
 
     > ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
+      @include list-reset;
     }
 
     a {

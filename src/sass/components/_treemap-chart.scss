@@ -62,10 +62,8 @@
 
   > span {
     position: relative;
-    overflow: hidden;
+    @include ellipsis;
     margin-inline: calc(var(--treemap-chart-inset) + 8px);
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   > span:first-child {

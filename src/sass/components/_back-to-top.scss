@@ -1,3 +1,5 @@
+@use "../abstracts" as *;
+
 // Back-to-top link. Pair it with the FAB classes, `button circle extra`, for
 // the look: this partial only places the link and hides it. `inert` is the
 // framework's. BackToTop sets it while the page is above the threshold, so
@@ -33,6 +35,4 @@
 }
 
 // A floating link would print over the content, as the FAB menu would.
-@media print {
-  .back-to-top { display: none !important; }
-}
+.back-to-top { @include print-hidden; }

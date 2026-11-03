@@ -1,3 +1,5 @@
+@use "../abstracts" as *;
+
 // Marquee. A strip of logos, images or text that scrolls without end:
 // <div class="marquee"> holding two identical <ul class="marquee-content">
 // groups. The second is a copy that fills the gap as the first scrolls
@@ -61,9 +63,7 @@
   justify-content: space-around;
   gap: var(--md-comp-marquee-gap);
   min-width: 100%;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  @include list-reset;
   animation: marquee-x var(--md-comp-marquee-duration) linear infinite;
 
   // Its own box-sizing, not the reset's inherit, so each frame of the

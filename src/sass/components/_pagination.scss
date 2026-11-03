@@ -42,9 +42,7 @@
     flex-wrap: wrap;
     align-items: center;
     gap: var(--md-comp-pagination-gap);
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    @include list-reset;
   }
 
   &.nowrap,
@@ -147,10 +145,8 @@
       flex-wrap: inherit;
       align-items: center;
       gap: var(--md-comp-pagination-gap);
-      list-style: none;
       min-width: 0;
-      margin: 0;
-      padding: 0;
+      @include list-reset;
     }
   }
 }

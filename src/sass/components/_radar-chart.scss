@@ -142,9 +142,7 @@
 // Each label sits just past its spoke's tip and leans away from the middle:
 // right of a spoke on the right, above the top one, and so on.
 .radar-chart-axes {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  @include list-reset;
   color: var(--md-sys-color-on-surface-variant);
   @include typescale("body-small");
 

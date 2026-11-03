@@ -259,8 +259,5 @@ $_bar: ".snackbar";
   }
 }
 
-// Transient messages are not part of the page. Important so a size or state rule that sets
-// `display` cannot bring it back; see base/_print.scss for the page itself.
-@media print {
-  #snackbar-container { display: none !important; }
-}
+// Transient messages are not part of the page.
+#snackbar-container { @include print-hidden; }

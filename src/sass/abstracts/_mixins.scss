@@ -147,6 +147,36 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   cursor: default;
 }
 
+// A list with no markers or indentation. WebKit drops the list role from a
+// list with `list-style: none`, so markup that needs it adds role="list".
+@mixin list-reset {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// One line, cut off with an ellipsis when the box is too narrow for it.
+@mixin ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Covers the positioned parent. Width and height still matter for replaced
+// elements (a canvas, an svg, an iframe), which `inset` alone does not stretch.
+@mixin fill-parent {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+// Hidden on paper. Important so a size or state rule that sets `display`
+// cannot bring it back; see base/_print.scss for the page itself.
+@mixin print-hidden {
+  @media print { display: none !important; }
+}
+
 // Off the screen but not out of the document: still focusable, still read, and
 // still a form control. `display: none` and `visibility: hidden` both take the
 // element out of the tab order, which is the wrong trade for a control whose
@@ -972,9 +1002,7 @@ $_chart-on-colors: ("on-primary", "on-tertiary", "on-secondary", "surface", "sur
 
   .#{$name}-labels,
   .#{$name}-legend {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    @include list-reset;
     color: var(--md-sys-color-on-surface-variant);
     @include typescale("body-small");
   }
@@ -993,9 +1021,7 @@ $_chart-on-colors: ("on-primary", "on-tertiary", "on-secondary", "surface", "sur
     }
 
     > li {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      @include ellipsis;
     }
 
     // When each label is wider than its column, LineChart keeps every nth
@@ -1052,9 +1078,7 @@ $_chart-on-colors: ("on-primary", "on-tertiary", "on-secondary", "surface", "sur
 
     @if $legend-columns {
       > li > span:first-child {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        @include ellipsis;
       }
 
       > li > span:not(:first-child) {
@@ -1224,9 +1248,7 @@ $_chart-on-colors: ("on-primary", "on-tertiary", "on-secondary", "surface", "sur
   .#{$name}-axis {
     position: absolute;
     inset: 0;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    @include list-reset;
     color: var(--md-sys-color-on-surface-variant);
     @include typescale("body-small");
     font-variant-numeric: tabular-nums;
@@ -1245,10 +1267,8 @@ $_chart-on-colors: ("on-primary", "on-tertiary", "on-secondary", "surface", "sur
       box-sizing: border-box;
       width: var(--md-comp-#{$name}-axis-width);
       padding-inline-end: 8px;
-      overflow: hidden;
+      @include ellipsis;
       text-align: end;
-      text-overflow: ellipsis;
-      white-space: nowrap;
       translate: 0 -50%;
     }
 

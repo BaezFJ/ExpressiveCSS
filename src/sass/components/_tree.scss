@@ -29,12 +29,10 @@
   // Each level hangs a guide line from the centre of its parent's chevron
   // (12px inset + half the 20px chevron) and indents past it.
   ul {
-    margin: 0;
+    @include list-reset;
     margin-inline-start: 22px;
-    padding: 0;
     padding-inline-start: 6px;
     border-inline-start: 1px solid var(--md-comp-tree-guide-color);
-    list-style: none;
   }
 
   li {
