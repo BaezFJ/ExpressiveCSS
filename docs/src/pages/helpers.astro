@@ -16,6 +16,7 @@ const S = defineSections([
   { id: "formatting", label: "Formatting" },
   { id: "pointer", label: "Pointer" },
   { id: "browser-default", label: "Browser defaults" },
+  { id: "directory", label: "Other utility families" },
 ]);
 ---
 <DocsLayout page="helpers" sections={S}>
@@ -1005,5 +1006,34 @@ const S = defineSections([
 </select>
 <input class="browser-default" type="text">
 `} />
+  </Section>
+  <Section {...S.directory}>
+    <p>The classes on this page need only the stylesheet. Other utility families have their own guides.</p>
+    <table class="striped">
+      <thead><tr><th>Family</th><th>Guide</th></tr></thead>
+      <tbody>
+        <tr><td>Color fills and <code>-text</code> foregrounds</td><td><a href="/color.html">Color</a></td></tr>
+        <tr><td>Type roles and their <code>-emphasized</code> variants</td><td><a href="/typography.html">Typography</a></td></tr>
+        <tr><td><code>z-depth-0</code> through <code>z-depth-5</code>, including <code>z-depth-1-half</code></td><td><a href="/shadow.html">Elevation</a></td></tr>
+        <tr><td>Expressive shape classes</td><td><a href="/shapes.html">Shapes</a></td></tr>
+        <tr><td><code>scroll-area</code> and scrollbar variants</td><td><a href="/scroll-area.html">Scroll area</a></td></tr>
+        <tr><td><code>defer-render</code></td><td><a href="/lists.html#long">Long lists</a></td></tr>
+        <tr><td>Responsive columns, offsets and grid gaps</td><td><a href="/grid.html">Grid</a></td></tr>
+        <tr><td><code>prose</code> for Markdown or CMS content</td><td><a href="/typography.html#prose">Prose</a></td></tr>
+        <tr><td>Transition classes and motion tokens</td><td><a href="/css-transitions.html">Transitions</a></td></tr>
+      </tbody>
+    </table>
+    <p><code>defer-render</code> also works on non-list containers. It applies
+      <code>content-visibility: auto</code> to direct children so the browser can skip off-screen layout
+      and paint. Set <code>--defer-render-row-size</code> to an estimated child height; the fallback is
+      the list-item height token or 56px-equivalent. The browser retains each child's last rendered height.</p>
+    <Code code={`<div class="defer-render" style="--defer-render-row-size: 12rem">
+  <section aria-label="January report">...</section>
+  <section aria-label="February report">...</section>
+</div>`} />
+    <p>This keeps every child in the DOM; it is not virtualization. Paint containment clips content
+      outside a child, so avoid it around floating content that must escape.
+      Children with direct <code>.swipe-actions</code> are excluded, and table rows ignore containment.
+      Use the <a href="/sass.html">Sass API</a> to include selected utility partials.</p>
   </Section>
 </DocsLayout>

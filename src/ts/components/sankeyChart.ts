@@ -1,5 +1,5 @@
 import { svgNode } from '../core/utils';
-import { LineChart, LineChartOptions, cellValue, morph, pace } from './lineChart';
+import { LineChart, LineChartOptions, cellValue, linearKey, morph, pace, textSpan as span } from './lineChart';
 
 export type SankeyChartOptions = LineChartOptions;
 
@@ -39,9 +39,6 @@ interface Link {
   to: number;
   size: number;
 }
-
-/** A tooltip line part. */
-const span = (text: string) => Object.assign(document.createElement('span'), { textContent: text });
 
 /** A cell's trimmed text, or '' without the cell. */
 const text = (row: HTMLTableRowElement, column: number) => row.cells[column]?.textContent.trim() ?? '';
@@ -221,12 +218,7 @@ export class SankeyChart extends LineChart {
    * in a right-to-left chart, since table order is no direction on screen.
    */
   protected _keyTarget(key: string): number | undefined {
-    // With nothing shown, Escape is left to a dialog or sheet around the chart.
-    if (key === 'Escape') return this.activeIndex < 0 ? undefined : -1;
-    const last = this._links.length - 1;
-    const step = ({ ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>)[key];
-    if (step) return Math.min(last, Math.max(0, this.activeIndex + step));
-    return ({ Home: 0, End: last } as Record<string, number>)[key];
+    return linearKey(key, this.activeIndex, this._links.length - 1);
   }
 
   /** Reads the flows and lays out their nodes and links. Without a link to draw, the chart draws nothing. */

@@ -1,0 +1,120 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { PAGES } from "../data/nav";
+import { route } from "../lib/catalogue";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "imports", label: "Imports" },
+  { id: "lifecycle", label: "Component lifecycle" },
+  { id: "behaviors", label: "Document behaviors" },
+  { id: "exports", label: "All exports" },
+  { id: "styles", label: "CSS and Sass" },
+]);
+const exports = PAGES.flatMap(page => (page.exports ?? []).map(name => ({ name, page })))
+  .sort((a, b) => a.name.localeCompare(b.name));
+---
+<DocsLayout page="javascript" sections={S}>
+  <Section {...S.imports}>
+    <p>Import from <code>@expressivecss/expressive</code> for document setup, or
+      <code>@expressivecss/expressive/modular</code> for explicit initialization.
+      Both entries export the same runtime names. The IIFE script exposes them on <code>Expressive</code>.</p>
+    <Code code={`import { AutoInit, version } from '@expressivecss/expressive';
+
+// Run after the markup exists.
+const stop = AutoInit(document.body, {}, { watch: true });
+console.log(version);
+
+// Stop observing when the view unmounts. Existing instances keep running.
+stop();`} />
+    <p>The <code>version</code> string is the framework package version.
+      Type-only exports disappear at runtime. Import option and data types by name from the
+      public entries, such as <code>MenuOptions</code>, <code>AutoInitOptions</code> and <code>ConfirmOptions</code>.</p>
+    <p>Internal <code>core</code> helpers, <code>Utils</code>, <code>Component</code>,
+      <code>ModalDisplayPlugin</code> and <code>DockedDisplayPlugin</code> have no package export.
+      Use the component APIs below instead of importing files from the build's internal chunks.</p>
+  </Section>
+  <Section {...S.lifecycle}>
+    <p>Element components share <code>init</code>, <code>getInstance</code>, <code>defaults</code>,
+      <code>el</code>, <code>options</code> and <code>destroy</code>.
+      Each component's page documents its markup, extra methods, options and events.</p>
+    <Code code={`import { Menu } from '@expressivecss/expressive/modular';
+
+const trigger = document.querySelector('.menu-trigger');
+const menu = Menu.init(trigger, { closeOnClick: false });
+// Menu.getInstance(trigger) returns the same instance.
+menu.open();
+
+// When this view unmounts:
+menu.destroy();`} />
+    <div class="docs-table-scroll">
+    <table class="striped">
+      <thead><tr><th>API</th><th>Contract</th></tr></thead>
+      <tbody>
+        <tr><td><code>init(element, options?)</code></td><td>Returns one instance. Reinitializing the same element destroys its previous instance first.</td></tr>
+        <tr><td><code>init(elements, options?)</code></td><td>Accepts an array, NodeList or HTMLCollection and returns an array of instances. An empty collection returns an empty array.</td></tr>
+        <tr><td><code>getInstance(element)</code></td><td>Returns the current instance, or <code>undefined</code> before initialization and after destruction. It does not create one.</td></tr>
+        <tr><td><code>defaults</code></td><td>The class's default option object. Inspect it; pass overrides to <code>init</code> rather than mutating shared defaults.</td></tr>
+        <tr><td><code>el</code>, <code>options</code></td><td>The element and merged initialization options. Missing <code>i18n</code> strings retain their defaults. Changing an option property does not rerun initialization.</td></tr>
+        <tr><td><code>destroy()</code></td><td>Removes the instance's listeners and performs its component-specific cleanup. Call before discarding a manually managed view.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p><a href={route("auto_init")}>AutoInit</a> documents selectors, markup options,
+      watch mode and <code>expressive:*</code> events. It starts registered components only.
+      <a href={route("snackbar")}>Snackbar</a> uses <code>new Snackbar(options)</code> and its own
+      dismissal API. <a href={route("text_inputs") + "#character-counter"}>CharacterCounter</a> and
+      <a href={route("sliders")}>Slider</a> require their documented initialization paths.</p>
+  </Section>
+  <Section {...S.behaviors}>
+    <p>The root bundle installs every behavior below. The modular entry installs none.
+      Call the required <code>Init()</code> methods once after a browser document is available.
+      These document listeners have no per-element <code>destroy()</code> API.</p>
+    <Code code={`import { Forms, Copy, Dialogs, BottomSheets } from '@expressivecss/expressive/modular';
+
+Forms.Init();
+Copy.Init();
+Dialogs.Init();
+BottomSheets.Init();`} />
+    <div class="docs-table-scroll">
+    <table class="striped">
+      <thead><tr><th>Setup</th><th>What it enables</th></tr></thead>
+      <tbody>
+        <tr><td><code>Forms.Init()</code></td><td><a href={route("text_inputs")}>Fields</a>, labels, validation, textarea resizing and file paths.</td></tr>
+        <tr><td><code>Chips.Init()</code>, <code>Slider.Init()</code>, <code>Cards.Init()</code>, <code>ExpandingCard.Init()</code></td><td>Initial scans for the corresponding element components. Initialize new elements explicitly or use their documented AutoInit support.</td></tr>
+        <tr><td><code>Dialogs.Init()</code>, <code>BottomSheets.Init()</code>, <code>SideSheets.Init()</code></td><td>Dialog dismissal and sheet dragging. Include <code>Dialogs.Init()</code> for sheet light dismissal.</td></tr>
+        <tr><td><code>Copy.Init()</code>, <code>Theme.Init()</code></td><td><a href={route("copy")}>Copy buttons</a> and <a href={route("themes")}>theme controls</a>.</td></tr>
+        <tr><td><code>PaneResize.Init()</code>, <code>ImageCompare.Init()</code></td><td><a href={route("panes")}>Resizable panes</a> and <a href={route("image_compare")}>image comparison</a>.</td></tr>
+        <tr><td><code>Tour.Init()</code>, <code>Sortable.Init()</code>, <code>Lists.Init()</code></td><td><a href={route("tour")}>Tours</a>, <a href={route("lists")}>sortable lists and actionable-row keyboard navigation</a>.</td></tr>
+        <tr><td><code>DataTables.Init()</code>, <code>TransferList.Init()</code></td><td><a href={route("data_table")}>Data tables</a> and <a href={route("transfer_list")}>transfer lists</a>.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>The modular <code>AutoInit()</code> call does not replace document behavior setup.
+      It includes the full registry, so importing it can retain more components in a bundled application.
+      Browser APIs are required when initializing components; importing the modular entry alone is inert.</p>
+  </Section>
+  <Section {...S.exports}>
+    <p>Every runtime export links to its usage guide. This table reads the shared page catalogue;
+      contributor checks compare it with the built bundle.</p>
+    <div class="docs-table-scroll">
+    <table class="striped">
+      <thead><tr><th>Export</th><th>Guide</th></tr></thead>
+      <tbody>{exports.map(({ name, page }) => <tr><td><code>{name}</code></td><td><a href={page.route}>{page.label}</a></td></tr>)}</tbody>
+    </table>
+    </div>
+  </Section>
+  <Section {...S.styles}>
+    <p>CSS-only components need no JavaScript initialization. Their pages in the navigation document
+      markup, variants and accessibility requirements.</p>
+    <p>Use <a href={route("helpers")}>Helpers</a> for layout, spacing, visibility and formatting;
+      <a href={route("grid")}>Grid</a> for columns;
+      <a href={route("color")}>Color</a> and <a href={route("typography")}>Typography</a> for role classes;
+      <a href={route("shadow")}>Elevation</a>, <a href={route("shapes")}>Shapes</a> and
+      <a href={route("scroll-area")}>Scroll area</a> for their utility families.</p>
+    <p><a href={route("tokens")}>Design tokens</a> covers runtime custom properties.
+      The <a href={route("sass")}>Sass API</a> covers compile-time configuration, functions and mixins.</p>
+  </Section>
+</DocsLayout>

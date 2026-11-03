@@ -1,16 +1,33 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions } from '../core/component';
+import { Component, BaseOptions, InitElement, InitElements } from '../core/component';
 
 /**
  * The parts of a Tiptap `Editor` this component uses. Declared here so the
  * published types do not depend on Tiptap.
  */
+/** A Tiptap command chain. Commands by name come through `command()`. */
+export interface RichTextEditorChain {
+  focus(): RichTextEditorChain;
+  run(): boolean;
+}
+
+/**
+ * What `new Editor()` gets. Only these are declared; the extensions and
+ * `editorProps` ride along, and Tiptap types them itself.
+ */
+export interface RichTextEditorConfig {
+  element: HTMLElement;
+  content: string;
+  editable: boolean;
+}
+
 export interface RichTextEditorInstance {
   commands: object;
   isEditable: boolean;
   isEmpty: boolean;
-  chain(): any;
-  can(): any;
+  chain(): RichTextEditorChain;
+  /** Each command as a check that reports whether it can run now. */
+  can(): object;
   isActive(name: string, attributes?: object): boolean;
   getHTML(): string;
   on(event: string, callback: () => void): unknown;
@@ -18,13 +35,16 @@ export interface RichTextEditorInstance {
   destroy(): void;
 }
 
-export interface RichTextEditorOptions extends BaseOptions {
+/** Tiptap's `Editor` class, or any class with the parts this component uses. */
+export type RichTextEditorClass = new (options: RichTextEditorConfig) => RichTextEditorInstance;
+
+export interface RichTextEditorOptions<E extends RichTextEditorClass = RichTextEditorClass> extends BaseOptions {
   /**
    * Tiptap's `Editor` class. ExpressiveCSS does not bundle Tiptap, so the
    * page imports it and passes it in.
    * @default null
    */
-  Editor: (new (options: any) => RichTextEditorInstance) | null;
+  Editor: E | null;
   /**
    * Tiptap extensions, usually `[StarterKit]`.
    * @default []
@@ -38,6 +58,14 @@ const _defaults: RichTextEditorOptions = {
 };
 
 type Action = { command: string; attributes?: object; active?: string };
+
+/**
+ * A command by name on a chain or on `can()`. The page's `data-command`
+ * names a command an extension registered, which `_handleTransaction`
+ * checks against `editor.commands` first.
+ */
+const command = <R>(commands: object, name: string) =>
+  Reflect.get(commands, name) as (attributes?: object) => R;
 
 // Copied from the textarea onto the editable element.
 const NAMING = ['aria-label', 'aria-labelledby', 'aria-describedby'];
@@ -53,9 +81,13 @@ const NAMING = ['aria-label', 'aria-labelledby', 'aria-describedby'];
  * disabled when their command cannot run, and `toggle*` commands report their
  * state with `aria-pressed` and `.active`.
  */
-export class RichTextEditor extends Component<RichTextEditorOptions> {
-  /** The Tiptap editor. */
-  editor: RichTextEditorInstance | null = null;
+export class RichTextEditor<E extends RichTextEditorClass = RichTextEditorClass> extends Component<RichTextEditorOptions<E>> {
+  /**
+   * The Tiptap editor, with the full type of the `Editor` passed to the
+   * constructor; `init()` and `getInstance()` see the `RichTextEditorInstance`
+   * subset.
+   */
+  editor: InstanceType<E> | null = null;
   /** The form value. */
   textarea: HTMLTextAreaElement | null;
   /** The element the editor is mounted in. */
@@ -65,7 +97,15 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
   private _required = false;
   private _form: HTMLFormElement | null = null;
 
-  constructor(el: HTMLElement, options: Partial<RichTextEditorOptions>) {
+  /** Initializes an editor, typed by the `Editor` passed in. */
+  static init<E extends RichTextEditorClass>(this: typeof RichTextEditor, el: HTMLElement, options?: Partial<RichTextEditorOptions<E>>): RichTextEditor<E>;
+  /** Initializes an editor on each element, typed by the `Editor` passed in. */
+  static init<E extends RichTextEditorClass>(this: typeof RichTextEditor, els: InitElements<InitElement>, options?: Partial<RichTextEditorOptions<E>>): RichTextEditor<E>[];
+  static init(els: HTMLElement | InitElements<InitElement>, options: Partial<RichTextEditorOptions> = {}): RichTextEditor | RichTextEditor[] {
+    return super.init.call(this, els as InitElements<InitElement>, options);
+  }
+
+  constructor(el: HTMLElement, options: Partial<RichTextEditorOptions<E>>) {
     super(el, options);
     this.textarea = el.querySelector(':scope > textarea');
     if (!this.textarea || !this.options.Editor) {
@@ -115,13 +155,15 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
     this.content.className = 'rich-text-editor-content';
     this.textarea.after(this.content);
     this.textarea.hidden = true;
-    this.editor = new this.options.Editor({
+    const config = {
       element: this.content,
       extensions: this.options.extensions,
       content: this.textarea.value,
       editable: !(this.textarea.disabled || this.textarea.readOnly),
       editorProps: { attributes }
-    });
+    };
+    // `new` on a generic constructor yields the constraint, not E's instance.
+    this.editor = new this.options.Editor(config) as InstanceType<E>;
     this.editor.on('update', this._handleUpdate);
     this.editor.on('transaction', this._handleTransaction);
     this._handleTransaction();
@@ -154,7 +196,7 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
   private _handleClick = (e: MouseEvent) => {
     const button = (e.target as Element).closest<HTMLButtonElement>('button[data-command]');
     const action = this._actions.get(button);
-    if (action && !button.disabled) this.editor.chain().focus()[action.command](action.attributes).run();
+    if (action && !button.disabled) command<RichTextEditorChain>(this.editor.chain().focus(), action.command)(action.attributes).run();
   };
 
   private _handleLabelClick = () => {
@@ -179,8 +221,8 @@ export class RichTextEditor extends Component<RichTextEditorOptions> {
 
   private _handleTransaction = () => {
     const can = this.editor.isEditable && this.editor.can();
-    for (const [button, { command, attributes, active }] of this._actions) {
-      button.disabled = !can || !(command in this.editor.commands) || !can[command](attributes);
+    for (const [button, { command: name, attributes, active }] of this._actions) {
+      button.disabled = !can || !(name in this.editor.commands) || !command<boolean>(can, name)(attributes);
       if (!active) continue;
       const on = this.editor.isActive(active, attributes);
       button.setAttribute('aria-pressed', String(on));

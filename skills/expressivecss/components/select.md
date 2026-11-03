@@ -9,11 +9,13 @@ Component ID: `select`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
+Contract SHA-256: `909b22b2d450a63b419a1d3a315a17de46fe02ff2cc36fbdf7c1c0213342f429`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Related Google guidance](https://m3.material.io/components/menus/overview)
+
+Public JavaScript exports: `FormSelect`. See the [API index](../references/api-index.md).
 
 #### Material mapping
 
@@ -104,6 +106,10 @@ Add `multiple` to select several options. Chosen values appear as a comma-separa
 | `menuOptions` | Object | `{}` | Options passed to `Menu`. See Menu. `coverTrigger` is forced to `false` and `closeOnClick` is forced to `false`. |
 | `searchable` | Boolean | `false` | Add a popup search field to a plain single/multiple FormSelect or single/multiple TreeSelect. Browser-default selects stay native. |
 | `i18n` | Object | `{ searchLabel: 'Search options', noResults: 'No results' }` | Search input label and no-results status. Override either string; omitted keys retain defaults. |
+
+#### Option details
+
+There is no `selected` option. Mark options with the HTML `selected` attribute instead.
 
 #### Methods
 

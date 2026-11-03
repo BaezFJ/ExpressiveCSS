@@ -1,3 +1,4 @@
+import { imageURL } from '../core/imageURL';
 import { Utils, restoreAttribute } from '../core/utils';
 import { Menu, MenuOptions } from './menu';
 import { Component, BaseOptions } from '../core/component';
@@ -67,7 +68,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     // tree select belongs to TreeSelect, which a page's FormSelect.init() on
     // every select must not wrap a second time.
     if (this.el.classList.contains('browser-default') || (new.target === FormSelect && this.el.matches('[data-tree]'))) {
-      this.el[new.target.key] = undefined;
+      Reflect.set(this.el, new.target.key, undefined);
       return;
     }
 
@@ -631,7 +632,7 @@ export class FormSelect extends Component<FormSelectOptions> {
         groupParent.replaceChildren(groupLabel);
         this._optionList.append(groupParent);
 
-        const groupChildren = [];
+        const groupChildren: string[] = [];
         const selectOptions = <HTMLOptionElement[]>(
           Array.from(realOption.children).filter((el) => el.tagName === 'OPTION')
         );
@@ -710,23 +711,14 @@ export class FormSelect extends Component<FormSelectOptions> {
     li.appendChild(span);
 
     const iconUrl = realOption.getAttribute('data-icon');
-    let imageUrl: URL | undefined;
-    if (iconUrl) {
-      try {
-        const url = new URL(iconUrl, this.el.ownerDocument.baseURI);
-        if (['http:', 'https:', 'blob:'].includes(url.protocol) ||
-          /^data:image\/(?:avif|bmp|gif|jpeg|png|svg\+xml|webp|x-icon)(?:;|,)/i.test(url.href)) {
-          imageUrl = url;
-        }
-      } catch { /* Invalid icons must not prevent selection. */ }
-    }
+    const imageUrl = imageURL(iconUrl, this.el.ownerDocument.baseURI);
     // filter(Boolean): a doubled or trailing space yields an empty string,
     // and classList.add('') throws.
     const classes = realOption.getAttribute('class')?.split(' ').filter(Boolean);
     if (imageUrl) {
       const img = document.createElement('img');
       if (classes?.length) img.classList.add(...classes);
-      img.src = imageUrl.href;
+      img.src = imageUrl;
       img.ariaHidden = 'true';
       li.prepend(img);
     }

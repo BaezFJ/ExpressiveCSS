@@ -332,3 +332,10 @@ test('author CSS hiding excludes records and keeps their details filtered', () =
   input(all());
   assert.equal(box('alpha').checked, false);
 });
+
+test('a table in a hidden panel keeps its records for the filter and its count', () => {
+  document.body.innerHTML = `<div role="tabpanel" hidden>${markup}</div>`;
+  query('alpha');
+  assert.equal(count(), '2');
+  assert.deepEqual(['alpha', 'beta', 'locked'].map(filtered), [false, true, false]);
+});

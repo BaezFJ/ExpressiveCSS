@@ -364,7 +364,7 @@ export class Chips extends Component<ChipsOptions> {
     const tag = (<HTMLElement>e.target).tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA' || !chips) return;
 
-    const currChips: Chips = chips['Expressive_Chips'];
+    const currChips = Chips.getInstance(chips);
     if (!currChips) return; // .chips markup without an instance behind it
 
     if (e.key === 'Backspace' || e.key === 'Delete') {
@@ -422,7 +422,7 @@ export class Chips extends Component<ChipsOptions> {
       }
       e.preventDefault();
       if (!this.hasAutocomplete || !this.options.autocompleteOnly) {
-        this.addChip({ id: this._input.value });
+        this.addChip({ id: this._input.value.trim() });
       }
       this._input.value = '';
       // The list answered the text Enter just used up.
@@ -508,7 +508,7 @@ export class Chips extends Component<ChipsOptions> {
   /** The "Add" row is a deliberate choice, so it adds a chip even in an autocompleteOnly field. */
   private _addTyped(text: string) {
     if (Chips.getInstance(this.el) !== this) return;
-    this.addChip({ id: text });
+    this.addChip({ id: text.trim() });
     this._input.value = '';
     this._input.focus();
   }
@@ -544,7 +544,8 @@ export class Chips extends Component<ChipsOptions> {
   }
 
   _isValidAndNotExist(chip: ChipData) {
-    const isValid = !!chip.id || chip.id === 0;
+    // A blank or whitespace-only label is no chip.
+    const isValid = (!!chip.id || chip.id === 0) && String(chip.id).trim() !== '';
     const doesNotExist = !this.chipsData.some((item) => item.id == chip.id);
     return isValid && doesNotExist;
   }
@@ -590,7 +591,7 @@ export class Chips extends Component<ChipsOptions> {
       root = 'host' in root ? root.host.getRootNode() as Document | ShadowRoot : null;
     }
     this._notify('chip-delete', this.options.onChipDelete, { args: [this.el, chip], detail: { chip }, current: () => !this._chips.includes(chip) });
-    if (!focus || focusPath.some(({ root, element }) => root.activeElement !== element) || this.el['Expressive_Chips'] !== this) return;
+    if (!focus || focusPath.some(({ root, element }) => root.activeElement !== element) || Chips.getInstance(this.el) !== this) return;
     if (focus === 'previous' && this._chips.length) this.selectChip(Math.max(chipIndex - 1, 0));
     else {
       this._setSelected(null);
@@ -627,7 +628,7 @@ export class Chips extends Component<ChipsOptions> {
           // glyph reports the span.
           if (!(<HTMLElement>e.target).closest('.close')) return;
           const chip = (<HTMLElement>e.target).closest<HTMLElement>('.chip');
-          if (chip && !(el['Expressive_Chips'] as Chips | undefined)?._chips.includes(chip)) chip.remove();
+          if (chip && !Chips.getInstance(el)?._chips.includes(chip)) chip.remove();
         });
       });
     });

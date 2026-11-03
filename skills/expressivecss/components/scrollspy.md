@@ -9,11 +9,13 @@ Component ID: `scrollspy`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
+Contract SHA-256: `909b22b2d450a63b419a1d3a315a17de46fe02ff2cc36fbdf7c1c0213342f429`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. No dedicated entry in the reviewed Google component inventory.
+
+Public JavaScript exports: `ScrollSpy`. See the [API index](../references/api-index.md).
 
 Example: A settings screen with mutually exclusive panels needs tabs. Scrollspy only tracks sections already present in the scrolling document.
 
@@ -76,6 +78,24 @@ Each link is at least 48dp tall, the Material touch target. For a denser list, s
 | `activeClass` | String | `'active'` | Class applied to the active table-of-contents link. |
 | `getActiveElement` | Function | see below | Returns a CSS selector for the element that should receive `activeClass`, given the section’s id. |
 | `keepTopElementActive` | Boolean | `false` | If true, keep the last section above the viewport active when the scrollbar is outside all spy sections. If there is no such section, the first one stays active. |
+
+#### Option details
+
+##### getActiveElement
+
+Default function for finding the active link. `id` is the id of the `.scrollspy` section. Return a CSS selector for the element that should be marked active.
+
+Sections sharing the same `getActiveElement` function share one current link.
+Use a separate callback for each independent table of contents and reuse that
+function for all its sections. Default instances belong to one group. Each
+section honors its own `scrollOffset` and `activeClass`. Custom selectors must
+escape author-controlled IDs. The default lookup compares literal hrefs.
+
+```text
+function(id) {
+  return 'a[href="#' + id + '"]';
+}
+```
 
 #### Methods
 

@@ -198,7 +198,7 @@ export class Snackbar {
 
   private _build() {
     this.el = this._createSnackbar();
-    this.el['Expressive_Snackbar'] = this;
+    Reflect.set(this.el, 'Expressive_Snackbar', this);
   }
 
   /**
@@ -256,8 +256,8 @@ export class Snackbar {
     return _defaults;
   }
 
-  static getInstance(el: HTMLElement): Snackbar {
-    return el['Expressive_Snackbar'];
+  static getInstance(el: Element): Snackbar | undefined {
+    return Reflect.get(el, 'Expressive_Snackbar');
   }
 
   static _createContainer(root: HTMLElement | ShadowRoot = document.body) {
@@ -291,7 +291,7 @@ export class Snackbar {
     // Don't start a swipe from the action or close — those are buttons.
     if (target && !target.closest('button, a') && target.closest('.snackbar')) {
       const snackbarElem = target.closest('.snackbar') as HTMLElement;
-      const snackbar: Snackbar = snackbarElem['Expressive_Snackbar'];
+      const snackbar = Snackbar.getInstance(snackbarElem);
       if (!snackbar) return;
       snackbar.panning = true;
       snackbar._pauseTimer();
@@ -508,7 +508,7 @@ export class Snackbar {
       Snackbar._draggedSnackbar = null;
       Snackbar._dragPointerId = null;
     }
-    this.el['Expressive_Snackbar'] = undefined;
+    Reflect.set(this.el, 'Expressive_Snackbar', undefined);
     if (this._restoreElement) this._restoreElement();
     else this.el.remove();
     const index = Snackbar._snackbars.indexOf(this);

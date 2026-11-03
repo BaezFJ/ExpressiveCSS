@@ -218,6 +218,20 @@ const S = defineSections([
 `} />
   </Section>
   <Section {...S["grid-gaps"]}>
+                    <table class="striped">
+                      <thead><tr><th>Class</th><th>Gap relative to <code>--gap-size</code></th></tr></thead>
+                      <tbody>
+                        <tr><td><code>g-0</code></td><td>0</td></tr>
+                        <tr><td><code>g-1</code></td><td>0.25 times</td></tr>
+                        <tr><td><code>g-2</code></td><td>0.5 times</td></tr>
+                        <tr><td><code>g-3</code></td><td>1 times, the default</td></tr>
+                        <tr><td><code>g-4</code></td><td>1.5 times</td></tr>
+                        <tr><td><code>g-5</code></td><td>3 times</td></tr>
+                      </tbody>
+                    </table>
+                    <p><code>--gap-size</code> defaults to 1.5rem and becomes 2rem at Extra-large widths.
+                      These classes multiply that inherited
+                      value. The <code>gap-*</code> helpers use their own fixed rem scale instead.</p>
                     <p>
                         Columns have a default gap (g-3). To change it, add one of
                         <code>g-0</code> to <code>g-5</code> to the element with the <code>row</code> class.

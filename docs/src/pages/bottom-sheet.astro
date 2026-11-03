@@ -9,6 +9,7 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "handle", label: "Handle" },
   { id: "layout", label: "Layout" },
+  { id: "javascript", label: "JavaScript API" },
 ]);
 ---
 <DocsLayout page="bottom_sheet" sections={S}>
@@ -175,5 +176,23 @@ const S = defineSections([
         <p>
           The sheet slides in, and snaps back after a short drag, on the default spatial spring. <code>--md-comp-bottom-sheet-motion</code> and <code>--md-comp-bottom-sheet-motion-duration</code> read <code>--md-sys-motion-spring-default-spatial</code> and its <code>-duration</code> token, so <code>motion="expressive"</code> gives it a slight bounce. The sheet extends 24px below the viewport, so the bounce never uncovers the page under it. With reduced motion requested, it appears without moving.
         </p>
+  </Section>
+  <Section {...S.javascript}>
+    <p>The root bundle installs <code>BottomSheets.Init()</code> for dragging and handle buttons,
+      and <code>Dialogs.Init()</code> for light dismissal. With the modular entry, call both once.</p>
+    <Code code={`import { BottomSheets, Dialogs } from '@expressivecss/expressive/modular';
+
+Dialogs.Init();
+BottomSheets.Init();
+
+const sheet = document.querySelector('dialog.bottom-sheet');
+sheet.showModal();                 // modal; show() opens a standard sheet
+BottomSheets.setExpanded(sheet, true);  // full height for an .expandable sheet
+BottomSheets.setExpanded(sheet, false); // partial height
+sheet.close();`} />
+    <p><code>setExpanded(dialog, expanded)</code> toggles <code>expanded</code> and synchronizes
+      the direct handle button's <code>aria-expanded</code>. Use it on an <code>.expandable</code> sheet.
+      Closing resets that sheet to partial height. BottomSheets is a document behavior;
+      it has no per-sheet instance, <code>getInstance()</code> or <code>destroy()</code>.</p>
   </Section>
 </DocsLayout>

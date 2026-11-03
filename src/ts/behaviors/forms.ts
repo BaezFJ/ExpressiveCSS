@@ -223,7 +223,7 @@ export class Forms {
   }
 
   private static _onFileInput = (event: Event) => {
-    const input = Utils.closestInPath(event, '.drop-zone input[type="file"]') as HTMLInputElement;
+    const input = Utils.closestInPath<HTMLInputElement>(event, '.drop-zone input[type="file"]');
     if (!input) return;
     if (input.matches(':disabled')) return;
     Forms._updateDropZone(input);

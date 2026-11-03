@@ -58,6 +58,9 @@ such as `fix/menu-focus` or `docs/theme-example`. Keep each PR focused.
 - The Astro documentation and examples live in `docs/src`. Update examples and
   API documentation in the same PR as behavior changes. The page catalogue is
   `docs/src/data/nav.ts`; do not create a second page inventory.
+  Assign each public JavaScript export to its guide with that entry's `exports`
+  field and each Sass partial with `styles`. `tests/docs-coverage.test.js` checks
+  exports, default option names, partials and shared Sass helpers against the docs.
 - Add focused regression tests for bugs. Preserve keyboard behavior, accessible
   names, semantics, and cleanup of listeners and timers.
 - `semantics.json` owns markup rules; `llm.md` owns the API/markup reference;

@@ -9,11 +9,13 @@ Component ID: `button-groups`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
+Contract SHA-256: `909b22b2d450a63b419a1d3a315a17de46fe02ff2cc36fbdf7c1c0213342f429`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/button-groups/overview)
+
+Public JavaScript exports: `ButtonGroup`. See the [API index](../references/api-index.md).
 
 Example: Standard groups fit Cut/Copy/Paste commands; connected groups fit toggle choices. A pressed button does not submit a radio value: use native inputs for form values, or explicitly integrate persistence.
 

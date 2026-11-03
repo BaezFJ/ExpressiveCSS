@@ -807,3 +807,67 @@ describe("AutoInit watch mode", () => {
     assert.equal(Expressive.Tooltip.getInstance(later), undefined);
   });
 });
+
+describe("AutoInit with a component that throws", () => {
+  beforeEach(resetBody);
+
+  test("logs it, releases its element and still starts the components after it", () => {
+    document.body.innerHTML = `
+      <div class="chips" id="bad"><input></div>
+      <a class="button tooltipped" id="later" data-tooltip="Hi">Hover</a>`;
+    const [bad, later] = ["#bad", "#later"].map((id) => document.querySelector(id));
+    const logged = [];
+    const original = console.error;
+    console.error = (...args) => logged.push(args);
+    try {
+      // A chip with an empty id makes the Chips constructor throw part way.
+      Expressive.AutoInit(document.body, { Chips: { data: [{ id: "" }] } });
+    } finally {
+      console.error = original;
+    }
+    try {
+      assert.equal(logged.length, 1);
+      assert.match(String(logged[0][0]), /Chips/);
+      assert.equal(Expressive.Chips.getInstance(bad), undefined, "a later pass can try again");
+      assert.ok(Expressive.Tooltip.getInstance(later), "Tooltip comes after Chips in the table");
+    } finally {
+      Expressive.Tooltip.getInstance(later)?.destroy();
+    }
+  });
+
+  test("frees an element whose half-built instance also fails to stop, so corrected options start it", () => {
+    document.body.innerHTML = `<div class="field"><input class="autocomplete" id="field"><label for="field">Fruit</label></div>`;
+    const field = document.querySelector("#field");
+    const logged = [];
+    const original = console.error;
+    console.error = (...args) => logged.push(args);
+    try {
+      // A null entry throws in the constructor, before the menu its destroy() needs.
+      Expressive.AutoInit(document.body, { Autocomplete: { data: [null] } });
+    } finally {
+      console.error = original;
+    }
+    try {
+      assert.deepEqual(logged.map(([message]) => message), ["Autocomplete failed to start on", "Autocomplete failed to stop on"]);
+      assert.equal(Expressive.Autocomplete.getInstance(field), undefined);
+      Expressive.AutoInit(document.body, { Autocomplete: { data: [{ id: "Apple" }] } });
+      assert.ok(Expressive.Autocomplete.getInstance(field) instanceof Expressive.Autocomplete);
+    } finally {
+      Expressive.Autocomplete.getInstance(field)?.destroy();
+    }
+  });
+});
+
+test("destroying a replaced instance leaves the one that replaced it registered", () => {
+  document.body.innerHTML = `<a class="button tooltipped" data-tooltip="Hi">Hover</a>`;
+  const el = document.querySelector(".tooltipped");
+  const first = Expressive.Tooltip.init(el);
+  const second = Expressive.Tooltip.init(el);
+  try {
+    first.destroy();
+    assert.equal(Expressive.Tooltip.getInstance(el), second);
+  } finally {
+    second.destroy();
+    resetBody();
+  }
+});

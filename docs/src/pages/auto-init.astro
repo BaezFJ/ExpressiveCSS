@@ -25,8 +25,7 @@ const S = defineSections([
         </p>
         <p>
           Call <code>AutoInit()</code> yourself after the DOM is ready. Importing the JavaScript
-          installs a few document-level behaviors (Forms, Chips, Slider, Cards, ExpandingCard,
-          Dialogs, BottomSheets, and SideSheets), but it does
+          installs document-level behaviors and initial scans, but it does
           <strong>not</strong> call <code>AutoInit()</code> for you.
           This documentation site calls it in <code>docs.js</code> on <code>DOMContentLoaded</code>.
         </p>
@@ -272,6 +271,9 @@ function unmount() {
           import-time <code>Init()</code>. Chips, Cards, and ExpandingCard appear in the table as well so a
           later <code>AutoInit()</code> can pick up elements added after load.
         </p>
+        <p>The <a href="/javascript.html#behaviors">JavaScript API</a> lists every import-time behavior,
+          including Copy, Theme, PaneResize, ImageCompare, Tour, Sortable, Lists, DataTables and TransferList,
+          and explains setup with the modular entry.</p>
   </Section>
   <Section {...S.ignoring}>
         <p>
@@ -294,7 +296,9 @@ Expressive.Tooltip.init(
           element they were initialized on. <code>expressive:open</code> and
           <code>expressive:close</code> fire when the state changes, and
           <code>expressive:opened</code> and <code>expressive:closed</code> when the motion
-          ends. Cards and ExpandingCard fire only <code>expressive:open</code> and
+          ends for Menu and Lightbox. NavigationRail reports its state updates synchronously,
+          including <code>expressive:opened</code> and <code>expressive:closed</code>, before CSS motion finishes.
+          Cards and ExpandingCard fire only <code>expressive:open</code> and
           <code>expressive:close</code>.
         </p>
         <p>

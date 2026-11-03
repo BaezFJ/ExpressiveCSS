@@ -3,6 +3,7 @@ import DocsLayout from "../layouts/DocsLayout.astro";
 import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import TokenTable from "../components/api/TokenTable.astro";
+import OptionsTable from "../components/api/OptionsTable.astro";
 import { defineSections } from "../lib/sections";
 import { route } from "../lib/catalogue";
 
@@ -10,6 +11,8 @@ const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "keyboard", label: "Keyboard" },
   { id: "tokens", label: "Tokens" },
+  { id: "options", label: "Options" },
+  { id: "methods", label: "Methods" },
 ]);
 ---
 <DocsLayout page="menubar" sections={S}>
@@ -90,5 +93,24 @@ const S = defineSections([
             <td>40px</td>
           </tr>
         </TokenTable>
+  </Section>
+  <Section {...S.options}>
+    <OptionsTable>
+      <tr><td><code>menuOptions</code></td><td>Object</td><td><code>{"{ constrainWidth: false, coverTrigger: false }"}</code></td><td>Options passed to each child Menu. A supplied object replaces this default object; include both keys when retaining the content-width layout below the bar.</td></tr>
+    </OptionsTable>
+    <p>See <a href={route("menu")}>Menu options</a> for placement and callbacks.
+      Child triggers take options from their Menubar, so their <code>data-menu-options</code> attributes do not apply.</p>
+    <Code code={`const bar = Expressive.Menubar.init(document.querySelector('.menubar'), {
+  menuOptions: { constrainWidth: false, coverTrigger: false, closeOnClick: false }
+});`} />
+  </Section>
+  <Section {...S.methods}>
+    <p><code>Expressive.Menubar.getInstance(el)</code> retrieves the instance.
+      Call <code>bar.destroy()</code> when removing the bar. It destroys child Menus,
+      removes managed tab stops and removes roles that initialization added.</p>
+    <p>Open or close an individual menu through
+      <code>Expressive.Menu.getInstance(trigger).open()</code> or <code>close()</code>.
+      Menubar has no separate open or close methods. Its <code>el</code> and
+      <code>options</code> properties follow the shared component contract.</p>
   </Section>
 </DocsLayout>

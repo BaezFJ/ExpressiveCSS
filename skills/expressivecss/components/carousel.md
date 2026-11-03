@@ -9,11 +9,13 @@ Component ID: `carousel`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
+Contract SHA-256: `909b22b2d450a63b419a1d3a315a17de46fe02ff2cc36fbdf7c1c0213342f429`
 
 #### Selection and adaptation
 
 Runtime ownership: `auto-init`. [Google guidance](https://m3.material.io/components/carousel/overview)
+
+Public JavaScript exports: `Carousel`. See the [API index](../references/api-index.md).
 
 Example: A transaction history must support scanning rows and values. Use a list instead of hiding records across carousel slides.
 

@@ -9,11 +9,13 @@ Component ID: `map`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
+Contract SHA-256: `909b22b2d450a63b419a1d3a315a17de46fe02ff2cc36fbdf7c1c0213342f429`
 
 #### Selection and adaptation
 
 Runtime ownership: `manual`. No dedicated entry in the reviewed Google component inventory.
+
+Public JavaScript exports: `MapView`. See the [API index](../references/api-index.md).
 
 Example: A store locator shows each store as a marker button that opens its hours, beside a list of the same stores with addresses. A contact page with one address writes it out and links to a map app.
 

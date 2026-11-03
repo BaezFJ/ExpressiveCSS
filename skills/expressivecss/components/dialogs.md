@@ -9,11 +9,13 @@ Component ID: `dialogs`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
+Contract SHA-256: `909b22b2d450a63b419a1d3a315a17de46fe02ff2cc36fbdf7c1c0213342f429`
 
 #### Selection and adaptation
 
 Runtime ownership: `shared-runtime`. [Google guidance](https://m3.material.io/components/dialogs/overview)
+
+Public JavaScript exports: `Dialogs`. See the [API index](../references/api-index.md).
 
 Example: Saving successfully should not force dismissal of a dialog. Use a snackbar for that feedback and inline feedback for a persistent nonblocking issue; reserve a confirmation dialog for a decision that must precede the action.
 
@@ -63,9 +65,13 @@ Tokens follow the [M3 dialog spec](https://m3.material.io/components/dialogs/spe
 - `.showModal()`: Open as a modal, with the scrim.
 - `.close()`: Close the dialog.
 
+#### Related contracts
+
+[Confirm from script](../references/behavior-contracts.md#confirm-from-script)
+
 #### Also documented
 
-The Dialogs section of the [API reference](https://www.expressivecss.com/llm.md) also covers Confirm from script, Tokens, Full-screen.
+The Dialogs section of the [API reference](https://www.expressivecss.com/llm.md) also covers Tokens, Full-screen.
 
 #### Rules
 

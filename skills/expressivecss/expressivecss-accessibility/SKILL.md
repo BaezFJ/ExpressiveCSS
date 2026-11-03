@@ -1,6 +1,6 @@
 ---
 name: expressivecss-accessibility
-description: Implements and reviews ExpressiveCSS semantics, keyboard, focus, names, contrast, forced colors, target sizes, dragging alternatives, reflow, and motion. Use for interface implementation, visual critiques, audits, and contrast or forced-colors work. Not for setup-only work or token and lifecycle changes that leave accessibility behavior unchanged.
+description: "Implements and reviews ExpressiveCSS semantics, keyboard, focus, names, contrast, forced colors, target sizes, dragging alternatives, reflow, and motion. Use for interface implementation, visual critiques, audits, and contrast or forced-colors work. Not for setup-only work or token and lifecycle changes that leave accessibility behavior unchanged."
 ---
 
 # ExpressiveCSS accessibility rules

@@ -27,6 +27,10 @@ for (const [name, engine, test] of engines) {
     const browser = await engine.launch({ headless: true });
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 700 } });
+      // Keep browser round trips from fading a burst before its pixels are inspected.
+      await page.clock.install({ time: 0 });
+      await page.clock.pauseAt(1000);
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
       await page.setContent(markup);
       await page.addScriptTag({ content: js });
       await page.evaluate((still) => {
@@ -36,29 +40,32 @@ for (const [name, engine, test] of engines) {
       }, still);
 
       // The painted pixels of a canvas, in CSS pixels, with the first opaque
-      // color. Waits up to ten frames, since a fluttering piece can be edge-on.
-      const painted = (selector) => page.evaluate((selector) => new Promise((resolve) => {
-        let frames = 0;
-        const read = () => {
-        const canvas = document.querySelector(selector);
-        if (!canvas) return resolve(null);
-        const { width, height } = canvas;
-        const data = canvas.getContext('2d').getImageData(0, 0, width, height).data;
-        const scale = width / canvas.clientWidth;
-        let box = null;
-        let color = null;
-        for (let i = 0; i < data.length; i += 4) {
-          if (data[i + 3] < 200) continue;
-          const x = (i / 4) % width / scale;
-          const y = Math.floor(i / 4 / width) / scale;
-          color ??= [data[i], data[i + 1], data[i + 2]];
-          box = box ? { left: Math.min(box.left, x), right: Math.max(box.right, x), top: Math.min(box.top, y), bottom: Math.max(box.bottom, y) } : { left: x, right: x, top: y, bottom: y };
+      // color. Advance at most ten frames, since a fluttering piece can be edge-on.
+      const painted = async (selector) => {
+        let result;
+        for (let frame = 0; frame < 10; frame++) {
+          await page.clock.runFor(16);
+          result = await page.evaluate((selector) => {
+            const canvas = document.querySelector(selector);
+            if (!canvas) return null;
+            const { width, height } = canvas;
+            const data = canvas.getContext('2d').getImageData(0, 0, width, height).data;
+            const scale = width / canvas.clientWidth;
+            let box = null;
+            let color = null;
+            for (let i = 0; i < data.length; i += 4) {
+              if (data[i + 3] < 200) continue;
+              const x = (i / 4) % width / scale;
+              const y = Math.floor(i / 4 / width) / scale;
+              color ??= [data[i], data[i + 1], data[i + 2]];
+              box = box ? { left: Math.min(box.left, x), right: Math.max(box.right, x), top: Math.min(box.top, y), bottom: Math.max(box.bottom, y) } : { left: x, right: x, top: y, bottom: y };
+            }
+            return { box, color, rect: canvas.getBoundingClientRect().toJSON() };
+          }, selector);
+          if (!result || result.box) break;
         }
-        if (!box && ++frames < 10) return requestAnimationFrame(read);
-        resolve({ box, color, rect: canvas.getBoundingClientRect().toJSON() });
-        };
-        requestAnimationFrame(read);
-      }), selector);
+        return result;
+      };
       // A CSS color as the RGB a canvas paints it.
       const rgb = (color) => page.evaluate((color) => {
         const ctx = document.createElement('canvas').getContext('2d');
@@ -88,6 +95,7 @@ for (const [name, engine, test] of engines) {
       assert.ok(overlay.open, 'the overlay is in the top layer');
       assert.deepEqual([overlay.rect.width, overlay.rect.height], [800, 700], 'the overlay covers the viewport');
       const burst = await painted('canvas.confetti-overlay');
+      assert.ok(burst?.box, 'the trigger paints opaque confetti before its position is checked');
       const button = await page.locator('#trigger').boundingBox();
       assert.ok(Math.abs((burst.box.left + burst.box.right) / 2 - (button.x + button.width / 2)) < 20 && Math.abs((burst.box.top + burst.box.bottom) / 2 - (button.y + button.height / 2)) < 20, 'a trigger bursts from its center');
       const primary = await page.evaluate(() => {
@@ -100,14 +108,20 @@ for (const [name, engine, test] of engines) {
       });
       assert.ok(near(burst.color, await rgb(primary)), `the first piece is the theme primary color, got ${burst.color}`);
 
+      await page.clock.runFor(1200);
       await page.locator('canvas.confetti-overlay').waitFor({ state: 'detached' });
-      assert.equal(await page.evaluate(() => window.Expressive.Confetti.fire({ ticks: 10 }).then(() => document.querySelector('canvas.confetti-overlay'))), null, 'fire() resolves once the overlay is gone');
+      await page.evaluate(() => {
+        window.burstResult = window.Expressive.Confetti.fire({ ticks: 10 }).then(() => document.querySelector('canvas.confetti-overlay'));
+      });
+      await page.clock.runFor(200);
+      assert.equal(await page.evaluate(() => window.burstResult), null, 'fire() resolves once the overlay is gone');
 
       await page.evaluate(() => document.getElementById('dialog').showModal());
       await page.locator('#in-dialog').click();
       assert.ok(await page.locator('canvas.confetti-overlay').evaluate((c) => c.matches(':popover-open')), 'a burst from a modal dialog opens the overlay over it');
       assert.ok((await painted('canvas.confetti-overlay')).box, 'the overlay draws while a modal dialog is open');
       await page.evaluate(() => document.getElementById('dialog').close());
+      await page.clock.runFor(1200);
       await page.locator('canvas.confetti-overlay').waitFor({ state: 'detached' });
 
       await page.evaluate(() => window.Expressive.Confetti.getInstance(document.getElementById('trigger')).destroy());

@@ -82,6 +82,30 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 
+  browserTest(`${engine}: a drag from the modal picker that ends on the scrim leaves it open`, async () => {
+    const browser = await browserType.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 420, height: 760 } });
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setContent(html);
+
+      await page.click('#time');
+      const box = await page.locator('.display-modal .timepicker-canvas').boundingBox();
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 4);
+      await page.mouse.down();
+      await page.mouse.move(5, 5, { steps: 4 });
+      await page.mouse.up();
+      assert.equal(await page.evaluate(() => document.querySelector('#time ~ dialog').open), true);
+
+      // A press that starts and ends on the scrim still closes it.
+      await page.mouse.click(5, 5);
+      await settle(page);
+      assert.deepEqual((await state(page)).calls, ['cancel']);
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: a modal time picker steps its fields with the arrow keys and writes the time on Enter`, async () => {
     const browser = await browserType.launch({ headless: true });
     try {

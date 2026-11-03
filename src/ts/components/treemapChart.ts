@@ -1,4 +1,4 @@
-import { LineChart, LineChartOptions, numberFormat } from './lineChart';
+import { LineChart, LineChartOptions, percentLabel } from './lineChart';
 
 export type TreemapChartOptions = LineChartOptions;
 
@@ -117,8 +117,9 @@ export class TreemapChart extends LineChart {
    * one, as when focus asks for the first row. Pass -1 to hide them.
    */
   show(index: number) {
+    if (!this._tooltip) return;
     const row = this._drawnFrom(index);
-    if (!this._tooltip || row === this.activeIndex) return;
+    if (row === this.activeIndex) return;
     this._boxes[this.activeIndex]?.classList.remove('active');
     this._boxes[row]?.classList.add('active');
     super.show(row);
@@ -133,10 +134,8 @@ export class TreemapChart extends LineChart {
   /** Adds the row's share of the whole to its cell in the tooltip, as the pie chart writes it. */
   private _share(row: number) {
     if (row < 0) return;
-    const share = this._values[row] / sum(this._values);
-    // Whole percentages, with a tenth below 10% so a small part is not 0%.
-    const percent = numberFormat(this.el, { style: 'percent', maximumFractionDigits: share < 0.1 ? 1 : 0 });
-    this._tooltip.querySelector('span:nth-of-type(2)')!.textContent += ` (${percent.format(share)})`;
+    const share = percentLabel(this.el, this._values[row] / sum(this._values));
+    this._tooltip.querySelector('span:nth-of-type(2)')!.textContent += ` (${share})`;
   }
 
   /**
@@ -212,6 +211,9 @@ export class TreemapChart extends LineChart {
 
   /** Squarifies the positive rows, largest first, equal values in table order, and places their rectangles. */
   private _layout() {
+    // update() with no rows drops the plot without drawing a new one, but
+    // the old plot's observer still fires as that plot leaves the page.
+    if (!this._plot) return this._sizes.disconnect();
     // A hidden plot has no size; lay it out as a square until it shows.
     const [width, height] = [this._plot.clientWidth || 1, this._plot.clientHeight || 1];
     const rows = this._values.map((_, i) => i).filter((i) => this._values[i]).sort((a, b) => this._values[b] - this._values[a]);

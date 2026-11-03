@@ -1,4 +1,4 @@
-import { LineChart, LineChartOptions, numberFormat, polarPoint as at, rowLegend, signs } from './lineChart';
+import { LineChart, LineChartOptions, numberFormat, percentLabel, polarPoint as at, rowLegend, signs } from './lineChart';
 import { svgNode as node } from '../core/utils';
 
 export type PieChartOptions = LineChartOptions;
@@ -157,15 +157,7 @@ export class PieChart extends LineChart {
   private _share(index: number) {
     const [start, end] = this._turns[index];
     if (end <= start) return '';
-    const share = end - start;
-    // Whole percentages, with a tenth below 10% so a small part is not 0%.
-    const digits = share < 0.1 ? 1 : 0;
-    (this._percents ??= [])[digits] ??= this._percent(digits);
-    return this._percents[digits].format(share);
-  }
-
-  private _percent(digits: number) {
-    return numberFormat(this.el, { style: 'percent', maximumFractionDigits: digits });
+    return percentLabel(this.el, end - start, (this._percents ??= []));
   }
 
   // ponytail: names only move up or down their side, so many thin slices

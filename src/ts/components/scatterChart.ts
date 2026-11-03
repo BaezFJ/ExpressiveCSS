@@ -1,5 +1,5 @@
 import { svgNode } from '../core/utils';
-import { LineChart, LineChartOptions, ChartScale, Series, affix, cellValue, morph, numberFormat, pace, tickText } from './lineChart';
+import { LineChart, LineChartOptions, ChartScale, Series, affix, cellValue, linearKey, morph, numberFormat, pace, textSpan as span, tickText } from './lineChart';
 
 export interface ScatterChartOptions extends LineChartOptions {
   /**
@@ -31,9 +31,6 @@ const dots = (marks: Mark[]) => marks.map(({ x, y }) => `M${x},${y}h0`).join('')
 
 /** A point's row and series column, which update() matches old and new points by. */
 const place = ({ row, series }: Mark) => `${row} ${series.column}`;
-
-/** A tooltip line part. */
-const span = (text: string) => Object.assign(document.createElement('span'), { textContent: text });
 
 /** A CSS time, such as 400ms or 0.4s, in milliseconds. */
 const ms = (time: string) => parseFloat(time) * (time.trim().endsWith('ms') ? 1 : 1000);
@@ -179,12 +176,7 @@ export class ScatterChart extends LineChart {
    * in a right-to-left chart, since table order is no direction on screen.
    */
   protected _keyTarget(key: string): number | undefined {
-    // With nothing shown, Escape is left to a dialog or sheet around the chart.
-    if (key === 'Escape') return this.activeIndex < 0 ? undefined : -1;
-    const last = this._marks.length - 1;
-    const step = ({ ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 } as Record<string, number>)[key];
-    if (step) return Math.min(last, Math.max(0, this.activeIndex + step));
-    return ({ Home: 0, End: last } as Record<string, number>)[key];
+    return linearKey(key, this.activeIndex, this._marks.length - 1);
   }
 
   protected _read() {

@@ -1,6 +1,6 @@
 ---
 name: expressivecss-usage
-description: Writes and repairs ExpressiveCSS HTML, JSX, templates, layouts, utilities, and component choices. Use for interface implementation and review, including classes, markup, layout, and component selection. Not for tasks that touch only setup, visual tokens, or lifecycle code; the install, theming, or runtime guide owns those.
+description: "Writes and repairs ExpressiveCSS HTML, JSX, templates, layouts, utilities, and component choices. Use for interface implementation and review, including classes, markup, layout, and component selection. Not for tasks that touch only setup, visual tokens, or lifecycle code; the install, theming, or runtime guide owns those."
 ---
 
 # ExpressiveCSS usage rules
@@ -33,6 +33,8 @@ Read a reference only when the task touches its feature:
 - Read the [table reference](./references/table.md) for a data table or any `.striped`, `.highlight`, `.centered`, or `.responsive-table` class.
 - Read the [transitions reference](./references/transitions.md) for `.scale-transition`, `.scale-in`, or `.scale-out`.
 
+Clipboard controls use the [Copy contract](../references/behavior-contracts.md#copy-button). Scroll areas use the helper-class reference.
+
 ## Verification
 
-Exercise every reachable window boundary, light and dark schemes, reduced motion, long content, zoom and reflow, and right-to-left layout where relevant. Confirm there are no legacy classes, broken relationships, missing assets, or duplicated navigation and feedback patterns. Fix what fails and recheck the same cases.
+Test reachable window boundaries, both schemes, reduced motion, long content, zoom/reflow and RTL where relevant. Check legacy classes, relationships, assets and duplicate navigation or feedback. Fix failures and repeat the checks.

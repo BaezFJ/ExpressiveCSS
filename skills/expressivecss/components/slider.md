@@ -9,11 +9,13 @@ Component ID: `slider`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `d005fbd1fc75538ac5f20a4024adbd044ab3d31d3a3ff9c34b268a74c26b1d5a`
+Contract SHA-256: `909b22b2d450a63b419a1d3a315a17de46fe02ff2cc36fbdf7c1c0213342f429`
 
 #### Selection and adaptation
 
 Runtime ownership: `shared-runtime`. [Google guidance](https://m3.material.io/components/sliders/overview)
+
+Public JavaScript exports: `Slider`. See the [API index](../references/api-index.md).
 
 Example: An invoice amount needs a labeled number field with appropriate precision. A slider fits approximate volume or brightness adjustment.
 
