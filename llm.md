@@ -3053,7 +3053,7 @@ instead of laying them over the media; markup can do the same by carrying
 
 Two images of the same scene with a divider that reveals one over the other.
 
-A `.image-compare` holds two `<img>` and a native `<input type="range">`. The range is the control, so keys, drags and taps work as on any slider and its value is announced; it covers the images invisibly. The `ImageCompare` behavior writes the value to `--md-comp-image-compare-position`, which clips the second image and places the divider and handle. RTL starts the first image on the right. Slider leaves this range alone. Give each image alt text that says which it is, and name the range. `Expressive.ImageCompare.sync(range)` places a compare added after load; the root bundle starts the behavior on load, and the modular entry with `ImageCompare.Init()`.
+A `.image-compare` holds two `<img>` and a native `<input type="range">`. The range is the control, so keys, drags and taps work as on any slider and its value is announced; it covers the images invisibly. The `ImageCompare` behavior writes the value to `--md-comp-image-compare-position`, which clips the second image and places the divider and handle. RTL starts the first image on the right. Slider leaves this range alone. Give each image alt text that says which it is, and name the range. A form reset moves the divider back with the range. `Expressive.ImageCompare.sync(range)` places a compare added after load; the root bundle starts the behavior on load, and the modular entry with `ImageCompare.Init()`.
 
 ```html
 <div class="image-compare">
@@ -4007,7 +4007,7 @@ Set `data-page-size="10"` on the `.data-table` wrapper to set the initial number
 
 An optional labelled single `select[data-table-page-size]` lets users choose a positive safe-integer size. Its native input or change updates the wrapper's `data-page-size` and preserves the current numeric page when available, otherwise clamps it to the last page. For seven records on page four at size two, choosing four shows page two of two and records five through seven. Size changes preserve details, selections and matching counts and emit no filter, sort or selection event. Each valid changed size requests cancelable `expressive:page` before its local default. Native selects (`browser-default`) and the existing FormSelect enhancement work in documents and open shadow roots. Disabled controls or fieldsets, multiple selects, unavailable options and invalid values are ignored without changing the working size. Unmarked controls and fixed-size tables retain their behavior.
 
-The wrapper attribute remains authoritative for initial rendering and silent `sync(wrapper)`. Select the matching initial option. Changing only `select.value` from script is silent; dispatch a bubbling composed `input` or `change` event to apply it. Alternatively update the wrapper attribute and call sync, keeping the control's scripted value and presentation aligned yourself. Silent sync does not synthesize events or refresh FormSelect. Applications handle form resets.
+The wrapper attribute remains authoritative for initial rendering and silent `sync(wrapper)`. Select the matching initial option. Changing only `select.value` from script is silent; dispatch a bubbling composed `input` or `change` event to apply it. Alternatively update the wrapper attribute and call sync, keeping the control's scripted value and presentation aligned yourself. Silent sync does not synthesize events or refresh FormSelect. A form reset syncs each `.data-table` inside the form, so select-all follows the restored row boxes; the page size still follows the wrapper attribute, so applications handle a reset size control.
 
 Filtering and sorting run before paging. Details consume no page slots and stay with their record; author hiding and expansion state remain unchanged. Filter counts include all matching records across pages. Select-all changes only enabled records on the displayed page, while other selections remain checked. Its existing selection event still reports all selected records. The framework reserves `data-table-page-hidden` for page state; do not author it.
 
@@ -5381,7 +5381,7 @@ An alert that is in the page when it loads needs no role. When one appears or ch
 
 ### Error summary
 
-An `.error-summary` alert at the top of a `novalidate` form lists what is wrong when the form is submitted. While any field is invalid, the submit stops as it would natively, and the Forms behavior writes one link per invalid field into the summary's `<ul>`: the field's label and the browser's validation message. A radio group gets one link, named by its legend. The summary then shows and takes focus, so a screen reader reads it, and each link focuses its field. A valid submit hides it again, and a submit button with `formnovalidate` skips the check. `novalidate` is required: without it the browser blocks the submit event and shows only the first field's bubble. Keep each field's own error text; the summary only gathers them.
+An `.error-summary` alert at the top of a `novalidate` form lists what is wrong when the form is submitted. While any field is invalid, the submit stops as it would natively, and the Forms behavior writes one link per invalid field into the summary's `<ul>`: the field's label and the browser's validation message. A radio group gets one link, named by its legend. The summary then shows and takes focus, so a screen reader reads it, and each link focuses its field. A valid submit hides it again, as does a form reset, and a submit button with `formnovalidate` skips the check. `novalidate` is required: without it the browser blocks the submit event and shows only the first field's bubble. Keep each field's own error text; the summary only gathers them.
 
 ```html
 <form novalidate>
@@ -8536,7 +8536,7 @@ A field icon needs a side. `.prefix` is leading and `.suffix` is trailing; an ic
 
 ### Input types
 
-`email`, `password`, and the other native text-like types are styled the same way. `validate` uses HTML5 constraint validation on `change` and toggles `invalid` and `aria-invalid="true"` on the input, so a screen reader hears the error state too. It adds the field's `[data-error]` supporting text to the input's `aria-describedby`, giving it an id if it has none and keeping the ids already there, so the error the CSS shows is read with the field. There is no green `valid` style.
+`email`, `password`, and the other native text-like types are styled the same way. `validate` uses HTML5 constraint validation on `change` and toggles `invalid` and `aria-invalid="true"` on the input, so a screen reader hears the error state too. It adds the field's `[data-error]` supporting text to the input's `aria-describedby`, giving it an id if it has none and keeping the ids already there, so the error the CSS shows is read with the field. A form reset clears `invalid` and `aria-invalid`. There is no green `valid` style.
 
 ```html
 <div class="field">
@@ -8562,7 +8562,7 @@ This is an inline input field:
 
 ### Textarea
 
-Use `textarea.expressive-textarea` inside `.field`. Textareas grow with their content. `Forms.Init()` starts every `.expressive-textarea` on `DOMContentLoaded`.
+Use `textarea.expressive-textarea` inside `.field`. Textareas grow with their content, and fit their restored text after a form reset. `Forms.Init()` starts every `.expressive-textarea` on `DOMContentLoaded`.
 
 ```html
 <div class="field">
@@ -8665,7 +8665,7 @@ An `<input type="color">` keeps the browser's picker and is drawn as a 40px roun
 
 ### Character counter
 
-Character Counter is not in `AutoInit()`. It reads `maxlength` (not `data-length`) and writes `current/max` into a `.character-counter` span. Overflow adds `invalid` on the field.
+Character Counter is not in `AutoInit()`. It reads `maxlength` (not `data-length`) and writes `current/max` into a `.character-counter` span. Overflow adds `invalid` on the field. A form reset recounts the restored value.
 
 ```js
 Expressive.CharacterCounter.init(
@@ -9191,7 +9191,7 @@ A `<fieldset class="color-swatches">` holds a `<legend>` and one radio per color
 
 Choose any color with a saturation and brightness area, a hue slider and a hex field, over a native color input.
 
-Write a `.color-picker` with `role="group"` and a name around an `<input type="color">`. Without JavaScript that is the native swatch and the browser's picker. `ColorPicker`, which AutoInit starts, adds three controls around the input: a saturation and brightness area, a hue slider and a hex field. The native input stays the form value and the preview, and the browser's picker still opens from it. Every change writes the input and fires its `input` event, and a committed change (a released drag, a key press, a released hue, an applied hex value) also fires `change`, so existing listeners keep working.
+Write a `.color-picker` with `role="group"` and a name around an `<input type="color">`. Without JavaScript that is the native swatch and the browser's picker. `ColorPicker`, which AutoInit starts, adds three controls around the input: a saturation and brightness area, a hue slider and a hex field. The native input stays the form value and the preview, and the browser's picker still opens from it. Every change writes the input and fires its `input` event, and a committed change (a released drag, a key press, a released hue, an applied hex value) also fires `change`, so existing listeners keep working. A form reset redraws the controls from the restored value without firing events.
 
 The area is a `role="slider"` with `aria-valuetext` such as "Saturation 60%, brightness 80%". Left and Right change saturation, Up and Down brightness, Shift takes steps of 10%, Page Up and Page Down change brightness by 10%, and Home and End go to no and full saturation. The area and the hue track are the color itself, so they do not mirror in right-to-left pages and keep their colors under forced colors. The hue slider is the framework's range input. In the hex field, Enter applies the value instead of submitting the form, and an invalid value goes back to the current color. The browser's color input only holds `#rrggbb`, so there is no alpha.
 
@@ -9445,7 +9445,7 @@ instance.getSelectedValues();
 
 #### .refresh();
 
-Re-read native values, option labels, options and disabled states. The generated rows are rebuilt while the field and an existing Menu instance remain. Refresh preserves focus on a surviving option in an open menu; it does not emit a user `change` event. Call it after programmatic changes, including moving the select to another form or changing its `form` attribute, to rebind reset handling. There is no mutation observer.
+Re-read native values, option labels, options and disabled states. The generated rows are rebuilt while the field and an existing Menu instance remain. Refresh preserves focus on a surviving option in an open menu; it does not emit a user `change` event. Call it after programmatic changes. Reset handling reads the select's form when the reset fires and follows that form into a shadow root, so moving the select to another form, changing its `form` attribute or moving its form needs no refresh. After moving the select itself into another shadow root, call it to rebind reset handling. There is no mutation observer.
 
 The native select owns form submission. Disabled options and optgroups cannot be activated, even when selected programmatically. Their selected labels remain visible, but native `FormData` excludes disabled choices. An empty selection displays an empty field. Successful native form resets synchronize the field and selection semantics after the browser restores defaults. Canceled resets preserve selection; resets do not synthesize `change`.
 

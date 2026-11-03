@@ -193,6 +193,8 @@ export class Particles extends Component<ParticlesOptions> {
    * Refits the buffer and moves each particle with the box, so a drag that
    * resizes the canvas every frame keeps the same dots. It used to scatter a
    * new set each time. A box that had no size has no positions to keep.
+   * Refitting clears the buffer, and the observer runs after this frame's
+   * draw, so a moving canvas is painted here too or it shows blank.
    */
   private _resize() {
     const [width, height] = [this._width, this._height];
@@ -202,7 +204,7 @@ export class Particles extends Component<ParticlesOptions> {
       p.x *= this._width / width;
       p.y *= this._height / height;
     }
-    this._repaint();
+    this._paint();
   }
 
   private _particle(): Particle {

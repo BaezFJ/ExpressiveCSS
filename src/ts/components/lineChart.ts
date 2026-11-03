@@ -236,6 +236,18 @@ export function numberFormat(el: Element, options: Intl.NumberFormatOptions) {
 }
 
 /**
+ * A compact format that gives each tick its own label: three significant
+ * digits, or more when two ticks would read the same, as 10,050 and 10,100
+ * both do at "10.1K". 21 is the most Intl allows.
+ */
+export function tickFormat(el: Element, ticks: number[]) {
+  for (let digits = 3; ; digits++) {
+    const format = numberFormat(el, { notation: 'compact', maximumSignificantDigits: digits });
+    if (digits === 21 || new Set(ticks.map((tick) => format.format(tick))).size === ticks.length) return format;
+  }
+}
+
+/**
  * A share of a whole as a percentage: whole numbers, with a tenth below 10%
  * so a small part is not 0%. A chart that writes many keeps `formats` and
  * clears it when the language may have changed.
@@ -833,7 +845,7 @@ export class LineChart extends Component<LineChartOptions> {
 
   /** One scale's labels, each placed by --at, its value's distance down the plot. */
   private _valueAxis(series: Series, end: boolean) {
-    const number = numberFormat(this.el, { notation: 'compact', maximumSignificantDigits: 3 });
+    const number = tickFormat(this.el, series.scale.ticks);
     return tickAxis(`${this._type}-axis${end ? ' end' : ''}`, series.scale.ticks, (tick) => tickText(number, tick, series.affix), series.y);
   }
 

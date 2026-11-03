@@ -235,6 +235,12 @@ header:has(> #{$_bar}) {
     min-width: 0;
     margin: 0;
 
+    // The input clears its own ring, so the form shows it, inset to stay
+    // inside the bar.
+    &:has(input:focus-visible) {
+      @include focus-ring(-3px);
+    }
+
     input {
       flex: 1 1 auto;
       min-width: 0;

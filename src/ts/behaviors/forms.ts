@@ -291,9 +291,17 @@ export class Forms {
     Forms._showFileError(input, input.validationMessage);
   }
 
-  private static _resetDropZones(form: HTMLFormElement) {
-    Array.from(form.elements).filter((field): field is HTMLInputElement =>
+  private static _afterReset(form: HTMLFormElement) {
+    const fields = Array.from(form.elements);
+    fields.filter((field): field is HTMLInputElement =>
       field instanceof HTMLInputElement && field.type === 'file').forEach(Forms._resetFileInput);
+    fields.filter((field) => field.classList.contains('validate'))
+      .forEach((field: HTMLInputElement) => Forms._markInvalid(field, false));
+    fields.filter((field) => field.classList.contains('expressive-textarea')).forEach(Forms.textareaAutoResize);
+    const summary = form.querySelector<HTMLElement>('.error-summary');
+    if (!summary) return;
+    summary.hidden = true;
+    summary.querySelector('ul, ol')?.replaceChildren();
   }
 
   /**
@@ -382,9 +390,10 @@ export class Forms {
   /**
    * A revealed password goes back to type="password" when its form is
    * submitted or reset, so it is never sent or autofilled as plain text and
-   * a reset field does not stay revealed. A reset form also drops the file
-   * lists it would otherwise leave showing: reset fires no change event.
-   * File cleanup waits for native reset and respects later cancellation.
+   * a reset field does not stay revealed. Reset fires no input or change
+   * event, so a reset form also drops its file lists, `.validate` errors and
+   * error summary, and fits each auto-resizing textarea to its restored text.
+   * That cleanup waits for the native reset and respects later cancellation.
    */
   static resetFormExtras(e: Event) {
     const form = e.target;
@@ -397,7 +406,7 @@ export class Forms {
     if (e.type === 'reset') {
       // Native events can run microtasks between listeners, before a later cancellation.
       setTimeout(() => {
-        if (!e.defaultPrevented) Forms._resetDropZones(form);
+        if (!e.defaultPrevented) Forms._afterReset(form);
       }, 0);
     }
   }

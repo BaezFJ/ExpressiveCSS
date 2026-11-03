@@ -9,7 +9,7 @@ Component ID: `select`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `9d1972dd42574c8534c9fd0357826a4c7c42d923051c082adf86503b4e1a3ea8`
+Contract SHA-256: `feea0da16620941f65dc393bfbee61ee4f72ecb95c812c14266685f7851cfd80`
 
 #### Selection and adaptation
 
@@ -114,7 +114,7 @@ There is no `selected` option. Mark options with the HTML `selected` attribute i
 #### Methods
 
 - `.getSelectedValues()`: Selected values as an array of strings.
-- `.refresh()`: Re-read native values, option labels, options and disabled states. The generated rows are rebuilt while the field and an existing Menu instance remain. Refresh preserves focus on a surviving option in an open menu; it does not emit a user `change` event. Call it after programmatic changes, including moving the select to another form or changing its `form` attribute, to rebind reset handling. There is no mutation observer.
+- `.refresh()`: Re-read native values, option labels, options and disabled states. The generated rows are rebuilt while the field and an existing Menu instance remain. Refresh preserves focus on a surviving option in an open menu; it does not emit a user `change` event. Call it after programmatic changes. Reset handling reads the select's form when the reset fires and follows that form into a shadow root, so moving the select to another form, changing its `form` attribute or moving its form needs no refresh. After moving the select itself into another shadow root, call it to rebind reset handling. There is no mutation observer.
 - `.destroy()`: Destroy the plugin instance, remove the menu, and restore the native select. Associated labels keep their original nodes and event listeners; teardown restores their attributes and authored positions.
 
 #### Also documented

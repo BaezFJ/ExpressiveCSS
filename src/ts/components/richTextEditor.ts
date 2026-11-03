@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, afterFormReset } from '../core/utils';
 import { Component, BaseOptions, InitElement, InitElements } from '../core/component';
 
 /**
@@ -150,7 +150,7 @@ export class RichTextEditor<E extends RichTextEditorClass = RichTextEditorClass>
       this.textarea.required = false;
       this._form?.addEventListener('submit', this._handleSubmit, { capture: true, signal: this._events.signal });
     }
-    this._form?.addEventListener('reset', this._handleReset, { signal: this._events.signal });
+    afterFormReset(this.textarea, this._handleReset, this._events.signal);
 
     this.content = document.createElement('div');
     this.content.className = 'rich-text-editor-content';
@@ -220,12 +220,10 @@ export class RichTextEditor<E extends RichTextEditorClass = RichTextEditorClass>
    * it back a task later. Without this the editor kept the typed text while the
    * form submitted the default. No update is emitted, so a reset fires no input.
    */
-  private _handleReset = (e: Event) => {
-    setTimeout(() => {
-      if (e.defaultPrevented || RichTextEditor.getInstance(this.el) !== this || !this.editor) return;
-      const commands = this.editor.commands as { setContent: (content: string, options: { emitUpdate: boolean }) => boolean };
-      commands.setContent(this.textarea.value, { emitUpdate: false });
-    });
+  private _handleReset = () => {
+    if (!this.editor) return;
+    const commands = this.editor.commands as { setContent: (content: string, options: { emitUpdate: boolean }) => boolean };
+    commands.setContent(this.textarea.value, { emitUpdate: false });
   };
 
   private _handleUpdate = () => {

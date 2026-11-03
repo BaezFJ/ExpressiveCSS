@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, afterAnyFormReset } from '../core/utils';
 
 const rangeSelector = '.image-compare > input[type="range"]';
 
@@ -6,7 +6,8 @@ const rangeSelector = '.image-compare > input[type="range"]';
  * Image compare. Keeps `--md-comp-image-compare-position` on each
  * `.image-compare` in step with its range input, so the divider and the
  * revealed image follow the value. Listens on the document, so compares added
- * later follow too once moved; `ImageCompare.sync(el)` sets one at once.
+ * later follow too once moved, and a form reset moves them back.
+ * `ImageCompare.sync(el)` sets one at once.
  */
 export class ImageCompare {
   private static _initialized = false;
@@ -18,6 +19,7 @@ export class ImageCompare {
       const range = Utils.eventTarget(e);
       if (range?.matches(rangeSelector)) ImageCompare.sync(<HTMLInputElement>range);
     });
+    afterAnyFormReset((form) => form.querySelectorAll<HTMLInputElement>(rangeSelector).forEach(ImageCompare.sync));
     Utils.onDocumentReady(() => {
       document.querySelectorAll<HTMLInputElement>(rangeSelector).forEach((range) => ImageCompare.sync(range));
     });

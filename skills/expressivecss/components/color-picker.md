@@ -9,7 +9,7 @@ Component ID: `color-picker`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `9d1972dd42574c8534c9fd0357826a4c7c42d923051c082adf86503b4e1a3ea8`
+Contract SHA-256: `feea0da16620941f65dc393bfbee61ee4f72ecb95c812c14266685f7851cfd80`
 
 #### Selection and adaptation
 
@@ -37,7 +37,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Write a `.color-picker` with `role="group"` and a name around an `<input type="color">`. Without JavaScript that is the native swatch and the browser's picker. `ColorPicker`, which AutoInit starts, adds three controls around the input: a saturation and brightness area, a hue slider and a hex field. The native input stays the form value and the preview, and the browser's picker still opens from it. Every change writes the input and fires its `input` event, and a committed change (a released drag, a key press, a released hue, an applied hex value) also fires `change`, so existing listeners keep working.
+Write a `.color-picker` with `role="group"` and a name around an `<input type="color">`. Without JavaScript that is the native swatch and the browser's picker. `ColorPicker`, which AutoInit starts, adds three controls around the input: a saturation and brightness area, a hue slider and a hex field. The native input stays the form value and the preview, and the browser's picker still opens from it. Every change writes the input and fires its `input` event, and a committed change (a released drag, a key press, a released hue, an applied hex value) also fires `change`, so existing listeners keep working. A form reset redraws the controls from the restored value without firing events.
 
 The area is a `role="slider"` with `aria-valuetext` such as "Saturation 60%, brightness 80%". Left and Right change saturation, Up and Down brightness, Shift takes steps of 10%, Page Up and Page Down change brightness by 10%, and Home and End go to no and full saturation. The area and the hue track are the color itself, so they do not mirror in right-to-left pages and keep their colors under forced colors. The hue slider is the framework's range input. In the hex field, Enter applies the value instead of submitting the form, and an invalid value goes back to the current color. The browser's color input only holds `#rrggbb`, so there is no alpha.
 

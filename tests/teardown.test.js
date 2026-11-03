@@ -315,12 +315,15 @@ describe('destroy() releases shared listeners', () => {
     const instance = Expressive.Datepicker.init(document.querySelector('.date-picker'), {
       displayPlugin: 'docked'
     });
+    // The picker and its month and year selects follow form resets from the
+    // document for as long as they live; destroy() below releases those too.
+    const plugin = () => watch.live().filter((type) => type !== 'reset');
     try {
-      assert.deepEqual(watch.live(), [], 'the hidden plugin listened to document clicks');
+      assert.deepEqual(plugin(), [], 'the hidden plugin listened to document clicks');
       instance.displayPlugin.show();
       assert.ok(watch.live().includes('click'), 'the shown plugin did not attach a document click handler');
       instance.displayPlugin.hide();
-      assert.deepEqual(watch.live(), [], 'hide() left the document click handler attached');
+      assert.deepEqual(plugin(), [], 'hide() left the document click handler attached');
       instance.displayPlugin.show();
     } finally {
       instance.destroy();

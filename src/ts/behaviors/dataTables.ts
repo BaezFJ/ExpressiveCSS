@@ -1,5 +1,5 @@
 import { numberValue } from '../components/lineChart';
-import { Utils, controllerFor } from '../core/utils';
+import { Utils, afterAnyFormReset, controllerFor } from '../core/utils';
 
 /** The rows of a table's bodies that hold records, not a row's detail. */
 const ROWS = ':scope > tbody > tr:not(.data-table-detail)';
@@ -258,6 +258,8 @@ export class DataTables {
     document.addEventListener('click', DataTables._onHandleClick);
     document.addEventListener('keydown', DataTables._onKeyDown);
     document.addEventListener('expressive:change', DataTables._onToggle);
+    // A reset restores the row boxes without an event; select-all follows them.
+    afterAnyFormReset((form) => form.querySelectorAll('.data-table').forEach(DataTables.sync));
     Utils.onDocumentReady(() => document.querySelectorAll('.data-table').forEach(DataTables.sync));
   }
 

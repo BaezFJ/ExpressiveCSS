@@ -1,4 +1,4 @@
-import { Utils, pickerFooter } from '../core/utils';
+import { Utils, afterFormReset, pickerFooter } from '../core/utils';
 import { FormSelect } from './select';
 import { BaseOptions, Component, I18nOptions } from '../core/component';
 import { DisplayPlugin, ModalDisplayPlugin, createDisplayPlugin, hideModal } from '../plugins/modalDisplayPlugin';
@@ -434,11 +434,9 @@ export class Datepicker extends Component<DatepickerOptions> {
   private displayPlugin: DisplayPlugin;
   /** What setInputValue last wrote, so reading it back does not depend on the parser. */
   private _writtenInputs = new WeakMap<HTMLInputElement, { value: string; date: Date | null }>();
-  private _form: HTMLFormElement | null = null;
   private _resetDates = new WeakMap<HTMLInputElement, { value: string; date: Date | null }>();
   // Counts selections, so a callback that selects again silences the stale event.
   private _selection = 0;
-  private _resetTimer: ReturnType<typeof setTimeout>;
   private footer: HTMLElement;
   /** Nesting depth of {@link _batchDraws}; > 0 means draws are being collected. */
   private _drawDepth = 0;
@@ -584,7 +582,6 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   destroy() {
     this._events.abort();
-    clearTimeout(this._resetTimer);
     this.dateEls?.slice(1).forEach(input => this._removeDateInput(input));
     if (!this.options.dateRangeEndEl && this.endDateEl) this._removeDateInput(this.endDateEl);
     this.displayPlugin?.destroy();
@@ -1450,9 +1447,8 @@ export class Datepicker extends Component<DatepickerOptions> {
   _setupEventHandlers() {
     this._addInputEventHandlers(this.el);
     if (this.endDateEl) this._addInputEventHandlers(this.endDateEl);
-    this._form = this.el.form;
     const { signal } = this._events;
-    this._form?.addEventListener('reset', this._handleFormReset, { signal });
+    afterFormReset(this.el, this._readBack, signal);
     this.calendarEl.addEventListener('click', this._handleCalendarClick, { signal });
     this.calendarEl.addEventListener('keydown', this._handleCalendarKeydown, { signal });
     this.calendarEl.addEventListener('focusin', this._handleCalendarFocus, { signal });
@@ -1582,7 +1578,8 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   _handleCalendarClick = (e: Event) => {
     const target = e.target as HTMLElement;
-    if (target.classList.contains('is-disabled')) return;
+    // A click on a disabled arrow's icon targets the svg, not the button.
+    if (target.closest('.is-disabled')) return;
 
     this._batchDraws(() => {
       if (
@@ -1670,14 +1667,10 @@ export class Datepicker extends Component<DatepickerOptions> {
   // A reset restores the inputs' values after its event, without a change
   // event. Drop the inputs added for extra dates and read the selection back
   // from what the reset left.
-  _handleFormReset = (e: Event) => {
-    clearTimeout(this._resetTimer);
-    this._resetTimer = setTimeout(() => {
-      if (e.defaultPrevented) return;
-      if (this.options.isMultipleSelection) this._readBackMultiple();
-      else this._readBackSingle();
-      this.draw();
-    });
+  private _readBack = () => {
+    if (this.options.isMultipleSelection) this._readBackMultiple();
+    else this._readBackSingle();
+    this.draw();
   };
 
   private _readBackMultiple() {

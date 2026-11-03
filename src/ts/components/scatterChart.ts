@@ -1,5 +1,5 @@
 import { svgNode } from '../core/utils';
-import { LineChart, LineChartOptions, ChartScale, Series, affix, cellValue, linearKey, morph, numberFormat, pace, textSpan as span, tickAxis, tickText } from './lineChart';
+import { LineChart, LineChartOptions, ChartScale, Series, affix, cellValue, linearKey, morph, tickFormat, pace, textSpan as span, tickAxis, tickText } from './lineChart';
 
 export interface ScatterChartOptions extends LineChartOptions {
   /**
@@ -281,7 +281,7 @@ export class ScatterChart extends LineChart {
   }
 
   private _xAxis() {
-    const number = numberFormat(this.el, { notation: 'compact', maximumSignificantDigits: 3 });
+    const number = tickFormat(this.el, this._xFit.ticks);
     return tickAxis('scatter-chart-axis x', this._xFit.ticks, (tick) => tickText(number, tick, this._xAffix), (tick) => this._xAt(tick));
   }
 

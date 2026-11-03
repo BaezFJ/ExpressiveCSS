@@ -9,7 +9,7 @@ Component ID: `image-compare`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `9d1972dd42574c8534c9fd0357826a4c7c42d923051c082adf86503b4e1a3ea8`
+Contract SHA-256: `feea0da16620941f65dc393bfbee61ee4f72ecb95c812c14266685f7851cfd80`
 
 #### Selection and adaptation
 
@@ -37,7 +37,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-A `.image-compare` holds two `<img>` and a native `<input type="range">`. The range is the control, so keys, drags and taps work as on any slider and its value is announced; it covers the images invisibly. The `ImageCompare` behavior writes the value to `--md-comp-image-compare-position`, which clips the second image and places the divider and handle. RTL starts the first image on the right. Slider leaves this range alone. Give each image alt text that says which it is, and name the range. `Expressive.ImageCompare.sync(range)` places a compare added after load; the root bundle starts the behavior on load, and the modular entry with `ImageCompare.Init()`.
+A `.image-compare` holds two `<img>` and a native `<input type="range">`. The range is the control, so keys, drags and taps work as on any slider and its value is announced; it covers the images invisibly. The `ImageCompare` behavior writes the value to `--md-comp-image-compare-position`, which clips the second image and places the divider and handle. RTL starts the first image on the right. Slider leaves this range alone. Give each image alt text that says which it is, and name the range. A form reset moves the divider back with the range. `Expressive.ImageCompare.sync(range)` places a compare added after load; the root bundle starts the behavior on load, and the modular entry with `ImageCompare.Init()`.
 
 #### Syntax
 

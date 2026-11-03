@@ -66,6 +66,8 @@ test('default custom Sass matches the complete stylesheet and preserves configur
   assert.doesNotMatch(empty, /\.scroll-area/);
   const seeded = compileString('@use "expressive" with ($md-source: #6750a4, $expressive-include-fonts: false);', options).css;
   assert.match(seeded, /--md-source: ?#6750a4/);
+  const expandMore = compileString('@use "expressive" with ($expand-more: url("x.svg"), $expressive-include-fonts: false);', options).css;
+  assert.match(expandMore, /url\("?x\.svg"?\)/);
   const textColor = compileString('@use "expressive" with ($text-color: red, $expressive-include-fonts: false);', options).css;
   assert.match(textColor, /body,:host\{color:red\}/);
   const scrollArea = compileString('@use "custom" with ($components: (), $utilities: ("scroll-area"), $expressive-include-fonts: false);', options).css;
@@ -339,7 +341,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed masked questionnaire summaries, validated starting chips, shadow-root picker selectors, RichTextEditor form reset and ignored clicks on the shown tab: 110,849 gzip bytes (+187).
   // Reviewed Autocomplete minLength gating onSearch, Datepicker date bounds and unchanged-date reads, Clear waiting for Ok, Menu, Chips and Carousel teardown, completed replaced snackbars, shared field reset handling and Confetti fire() defaults: 111,505 gzip bytes (+656).
   // Reviewed clearing the Autocomplete status when text drops below minLength: 111,510 gzip bytes (+5).
-  assert.ok(sizes(js).gzip <= 111510, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed shared form reset handling for pickers, Slider, FormSelect, RichTextEditor, ColorPicker, CharacterCounter, validation, ImageCompare and select-all, disabled month arrow icons, near-whole pie slices, distinct axis labels, reset handling that follows a form into a shadow root, and painting particles on resize: 111,636 gzip bytes (+126).
+  assert.ok(sizes(js).gzip <= 111636, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -530,5 +533,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed fixed-size progress clipping and Aura's forced-colors animation stop: 91,055 gzip bytes (+104).
   // Reviewed shared icon sizing, button state and toggle color sources, dead WebKit scrollbar rules removed, and forced-colors fills on the mega menu and rail panel chevrons: 91,010 gzip bytes (-45).
   // Reviewed shared selection-control, chart, header-bar, text-action and small layout mixins, with charts dropping grid rules they undid: 90,681 gzip bytes (-329).
-  assert.ok(sizes(css).gzip <= 90681, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the app bar search form focus ring and a configurable $expand-more: 90,693 gzip bytes (+12).
+  assert.ok(sizes(css).gzip <= 90693, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -22,7 +22,7 @@ $trend-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' 
 $caret-down: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") !default;
 // The expand chevron: an accordion header's trailing icon, and a tree branch's
 // (turned to point at the end edge while closed).
-$expand-more: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 15.4 6 9.4 7.4 8l4.6 4.6L16.6 8 18 9.4z'/%3E%3C/svg%3E");
+$expand-more: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 15.4 6 9.4 7.4 8l4.6 4.6L16.6 8 18 9.4z'/%3E%3C/svg%3E") !default;
 
 // Mist Iris is the default seed for the generated ramps. Primary, secondary,
 // tertiary and neutral colors derive from it; the error ramp stays fixed. It

@@ -117,6 +117,9 @@ test('minDate and maxDate bound the month arrows and the year list', () => {
     assert.equal(arrow('next'), true, 'no month after maxDate');
     const years = [...picker.calendarEl.querySelectorAll('.orig-select-year option')].map((option) => option.value);
     assert.deepEqual(years, ['2026']);
+    // A click on a disabled arrow's icon does not page either.
+    picker.calendarEl.querySelector('.month-prev svg').dispatchEvent(new window.MouseEvent('click', { bubbles: true }));
+    assert.equal(picker.calendars[0].month, 9);
   } finally {
     picker.destroy();
   }

@@ -26,6 +26,7 @@ const html = `<!doctype html><html lang="en"><head><style>${css}</style></head><
     <div dir="rtl">${chart('class="bar-chart axis" id="bar-rtl"', '<th>Web</th>', money)}</div>
     ${chart('class="radar-chart axis" id="radar"', '<th>A</th>', [['Speed', '7'], ['Range', '5'], ['Cost', '9']])}
     ${chart('class="pie-chart axis" id="pie"', '<th>Share</th>', [['A', '3'], ['B', '5']])}
+    ${chart('class="line-chart axis" id="narrow"', '<th>Web</th>', [['Jan', '10000'], ['Feb', '10040'], ['Mar', '10070'], ['Apr', '10100']])}
   </div>
   <script>${js}</script></body></html>`;
 
@@ -94,6 +95,10 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.equal(radar.rings, 4);
 
       assert.equal(await page.locator('#pie [class*="-axis"]').count(), 0, 'a pie has no value axis');
+
+      // A narrow range at a high baseline takes more digits instead of repeating a label.
+      const narrow = (await labels(page, 'narrow')).map((label) => label.text);
+      assert.ok(narrow.length > 2 && new Set(narrow).size === narrow.length, `repeated axis labels: ${narrow}`);
     } finally {
       await browser.close();
     }
