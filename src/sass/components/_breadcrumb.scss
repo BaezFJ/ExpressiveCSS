@@ -46,10 +46,8 @@ nav:has(> .breadcrumb),
     display: flex;
     flex-wrap: inherit;
     align-items: center;
-    list-style: none;
     min-width: 0;
-    margin: 0;
-    padding: 0;
+    @include list-reset;
 
     > li {
       display: inline-flex;

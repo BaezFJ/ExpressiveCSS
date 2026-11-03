@@ -190,7 +190,7 @@ $_layout: (
 .text-wrap { white-space: normal; }
 .text-balance { text-wrap-style: balance; }
 .text-pretty { text-wrap-style: pretty; }
-.truncate { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.truncate { display: block; @include ellipsis; }
 
 // Pointer input. Clicks pass through a .pointer-events-none overlay to what
 // lies beneath, and a .pointer-events-auto child takes them back. Neither

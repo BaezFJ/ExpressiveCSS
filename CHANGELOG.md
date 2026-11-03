@@ -15,10 +15,21 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   Components now share them in place of repeated sizing blocks, state rules,
   toggle color tables and a duplicate chevron image.
 
+- Sass adds `selection-control()`, `selection-control-states()`, `header-bar()`,
+  `header-bar-headline()`, `text-action()`, `list-reset()`, `ellipsis()`,
+  `fill-parent()` and `print-hidden()`. `focus-ring()` and `focus-visible()`
+  take an `$offset`, and `chart()` takes optional parameters for the parts some
+  charts share: extra series colors, round and row-band plots, centred tooltips,
+  cursors, SVG lines and table legends. Charts without a grid no longer emit
+  grid rules that they then undid.
+
 ### Fixed
 
 - The mega menu and navigation rail panel chevrons stay visible in forced-colors
   mode. They were drawn as masks and painted in Canvas, so they disappeared.
+
+- The menubar's expanded trigger insets its forced-colors outline by 2px, like
+  the other menus, instead of drawing it on the edge.
 
 - A modal date or time picker stays open when a drag that starts on the picker,
   such as moving the clock hand, ends on the scrim. Only a press that starts and

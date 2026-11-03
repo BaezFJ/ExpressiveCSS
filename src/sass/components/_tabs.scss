@@ -41,9 +41,7 @@ $_tab: "> a";
   display: flex;
   position: relative;
   width: 100%;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  @include list-reset;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
@@ -95,8 +93,7 @@ $_tab: "> a";
     // The tint alone is faint and vanishes under forced colors. Inset, so the
     // scrolling tab row does not clip it.
     &:focus-visible {
-      @include focus-ring;
-      outline-offset: -3px;
+      @include focus-ring(-3px);
     }
 
     &.active {
@@ -155,9 +152,7 @@ $_tab: "> a";
     background-color: var(--md-comp-primary-tab-active-indicator-color);
     border-radius: var(--md-comp-primary-tab-active-indicator-shape);
     pointer-events: none;
-    list-style: none;
-    padding: 0;
-    margin: 0;
+    @include list-reset;
     @include forced-colors-fill(Highlight);
   }
 }

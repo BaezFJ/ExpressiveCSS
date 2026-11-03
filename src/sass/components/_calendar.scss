@@ -107,13 +107,11 @@ table.calendar {
     list-style: none;
 
     > li {
-      overflow: hidden;
+      @include ellipsis;
       padding: 2px 6px;
       border-radius: var(--md-sys-shape-corner-extra-small);
       background-color: var(--md-comp-calendar-event-container-color);
       color: var(--md-comp-calendar-event-color);
-      white-space: nowrap;
-      text-overflow: ellipsis;
       @include typescale("label-small");
 
       > a {

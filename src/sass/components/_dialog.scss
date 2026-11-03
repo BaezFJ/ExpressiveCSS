@@ -201,26 +201,14 @@ dialog.max {
   }
 
   > header {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex: 0 0 auto;
-    box-sizing: border-box;
-    min-height: 64px;
-    margin: 0;
+    @include header-bar(4px);
     padding: 8px 4px;
-    background: none;
-    box-shadow: none;
   }
 
   > header > :is(h1, h2, h3, h4, h5, h6) {
-    flex: 1 1 auto;
-    min-width: 0;
-    margin: 0;
+    @include header-bar-headline;
     padding: 0 12px;
     text-align: start;
-    color: var(--md-sys-color-on-surface);
-    @include typescale("title-large");
   }
 
   > header > form {

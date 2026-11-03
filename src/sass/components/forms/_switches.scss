@@ -32,14 +32,7 @@
 // Paint the switch on the checkbox. The class goes on the <label> that wraps
 // it; a checkbox nested deeper is an ordinary checkbox.
 .switch > [type="checkbox"] {
-  appearance: none;
-  flex: 0 0 var(--md-comp-switch-track-width);
-  box-sizing: border-box;
-  width: var(--md-comp-switch-track-width);
-  height: var(--md-comp-switch-track-height);
-  margin: 0;
-  padding: 0;
-  border: 2px solid var(--md-sys-color-outline);
+  @include selection-control(var(--md-comp-switch-track-width), var(--md-comp-switch-track-height), var(--md-sys-color-outline));
   border-radius: var(--md-sys-shape-corner-large);
   background-color: var(--md-sys-color-surface-container-highest);
   // Size the image to the handle. A 100% gradient keeps the circle in
@@ -82,18 +75,8 @@
       50%;
   }
 
-  &:hover {
-    box-shadow: 0 0 0 8px state-layer(var(--md-sys-color-on-surface), "hover");
-  }
-
-  &:checked:hover {
-    box-shadow: 0 0 0 8px state-layer(var(--md-sys-color-primary), "hover");
-  }
-
-  &:focus-visible {
-    box-shadow: 0 0 0 8px state-layer(var(--md-sys-color-primary), "focus");
-    outline: none;
-  }
+  // A fixed 8px ring around the default 32px track, for a 48dp target.
+  @include selection-control-states(48px, 32px);
 
   &:disabled {
     opacity: 0.38;

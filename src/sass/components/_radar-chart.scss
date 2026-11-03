@@ -28,7 +28,7 @@
 //   --md-comp-radar-chart-color-1..4    primary, tertiary, secondary,
 //                                       on-surface-variant
 
-@include chart("radar-chart");
+@include chart("radar-chart", $grid: false, $tooltip: middle, $cursor: line);
 @include chart-axis("radar-chart", $beside: false);
 
 .radar-chart {
@@ -58,9 +58,7 @@
       2 * var(--md-sys-typescale-body-small-line-height) + var(--radar-chart-label-offset)
     )
     auto;
-  border: 0;
   border-radius: 50%;
-  background: none;
 }
 
 // .axis rings the grid at round values and labels each ring up the top
@@ -144,9 +142,7 @@
 // Each label sits just past its spoke's tip and leans away from the middle:
 // right of a spoke on the right, above the top one, and so on.
 .radar-chart-axes {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  @include list-reset;
   color: var(--md-sys-color-on-surface-variant);
   @include typescale("body-small");
 
@@ -169,22 +165,9 @@
 // places the points on it by their share of its length from the rim.
 .radar-chart-cursor {
   inset: auto auto 50% 50%;
-  width: 1px;
   height: 50%;
-  background-color: var(--md-sys-color-outline);
   transform-origin: bottom;
   rotate: calc(var(--turn, 0) * 1turn);
-
-  > span {
-    position: absolute;
-    left: 0;
-    width: 10px;
-    height: 10px;
-    border: 2px solid var(--md-sys-color-surface);
-    border-radius: 50%;
-    background-color: var(--radar-chart-color);
-    translate: -50% -50%;
-  }
 }
 
 // Past the spoke's tip, on the side away from the middle.
@@ -193,11 +176,6 @@
 
   left: calc(50% + sin(var(--radar-chart-angle)) * 50%);
   top: calc(50% - cos(var(--radar-chart-angle)) * 50%);
-  translate: 12px -50%;
-
-  &.end {
-    translate: calc(-100% - 12px) -50%;
-  }
 }
 
 .radar-chart-legend {
@@ -221,13 +199,5 @@
 
   .radar-chart-axes {
     forced-color-adjust: auto;
-  }
-
-  .radar-chart-cursor {
-    background-color: CanvasText;
-  }
-
-  .radar-chart-cursor > span {
-    forced-color-adjust: none;
   }
 }

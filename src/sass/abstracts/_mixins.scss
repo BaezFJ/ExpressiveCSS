@@ -1,5 +1,6 @@
 @use "sass:list";
 @use "sass:map";
+@use "sass:meta";
 @use "sass:math";
 @use "./elevation" as *;
 @use "./variables" as *;
@@ -146,6 +147,36 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   cursor: default;
 }
 
+// A list with no markers or indentation. WebKit drops the list role from a
+// list with `list-style: none`, so markup that needs it adds role="list".
+@mixin list-reset {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+// One line, cut off with an ellipsis when the box is too narrow for it.
+@mixin ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Covers the positioned parent. Width and height still matter for replaced
+// elements (a canvas, an svg, an iframe), which `inset` alone does not stretch.
+@mixin fill-parent {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+// Hidden on paper. Important so a size or state rule that sets `display`
+// cannot bring it back; see base/_print.scss for the page itself.
+@mixin print-hidden {
+  @media print { display: none !important; }
+}
+
 // Off the screen but not out of the document: still focusable, still read, and
 // still a form control. `display: none` and `visibility: hidden` both take the
 // element out of the tab order, which is the wrong trade for a control whose
@@ -173,15 +204,16 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 // Focus with Keyboard
 // The ring itself, for the rare selector that cannot be written as
 // `&:focus-visible` on the focused element - a filter chip draws its ring on
-// the <label>, but the focus is on the checkbox before it.
-@mixin focus-ring {
+// the <label>, but the focus is on the checkbox before it. A row inside a
+// scrolling list passes a negative `$offset` so the list does not clip it.
+@mixin focus-ring($offset: 2px) {
   outline: 3px solid var(--md-sys-color-secondary);
-  outline-offset: 2px;
+  outline-offset: $offset;
 }
 
-@mixin focus-visible {
+@mixin focus-visible($offset: 2px) {
   &:focus-visible {
-    @include focus-ring();
+    @include focus-ring($offset);
   }
 }
 
@@ -194,6 +226,53 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   height: 18px;
   background-color: currentColor;
   mask: $trend-arrow center / 18px no-repeat;
+}
+
+// The 64dp header bar of a full-screen dialog, a side sheet or a pane: a
+// flex row with no fill or shadow. `background: none` also keeps the top app
+// bar's `header:has(> nav)` fill off it. Callers add their own padding.
+@mixin header-bar($gap) {
+  display: flex;
+  align-items: center;
+  gap: $gap;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  min-height: 64px;
+  margin: 0;
+  background: none;
+  box-shadow: none;
+}
+
+// A header bar's heading: takes the free space and can shrink, title-large.
+@mixin header-bar-headline {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  color: var(--md-sys-color-on-surface);
+  @include typescale("title-large");
+}
+
+// The states of a text action with no button chrome of its own: a mega menu
+// or menubar item, a rail panel link, a tree or cascader row. An on-surface
+// hover layer and, given `$selected` (a compound such as `[aria-current]`), a
+// selected fill with a Highlight outline under forced colors. Hover comes
+// first: the two have equal specificity, so the selected fill wins on hover.
+@mixin text-action(
+  $selected: null,
+  $container: var(--md-sys-color-secondary-container),
+  $on-container: var(--md-sys-color-on-secondary-container),
+) {
+  &:hover {
+    background-color: state-layer(var(--md-sys-color-on-surface), "hover");
+  }
+
+  @if $selected {
+    &#{$selected} {
+      background-color: $container;
+      color: $on-container;
+      @include forced-colors-selected;
+    }
+  }
 }
 
 // A 48dp icon action in a dialog, pane or side sheet header bar.
@@ -414,14 +493,54 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   @include typescale("body-large");
 }
 
+// A radio, checkbox or switch drawn on the <input> itself: the native look
+// cleared to a $width x $height box with a 2px $border-color edge.
+@mixin selection-control($width, $height, $border-color) {
+  appearance: none;
+  flex: 0 0 $width;
+  box-sizing: border-box;
+  width: $width;
+  height: $height;
+  margin: 0;
+  padding: 0;
+  border: 2px solid $border-color;
+}
+
+// The hover, checked hover and focus rings of a selection control, from the
+// $inner edge out to $outer. $checked lists the states whose ring is primary.
+@mixin selection-control-states($outer, $inner, $checked: ":checked") {
+  $checked-hover: ();
+  @each $state in $checked {
+    $checked-hover: list.append($checked-hover, "&#{$state}:hover", comma);
+  }
+
+  &:hover {
+    @include state-layer-ring($outer, $inner, var(--md-sys-color-on-surface), "hover");
+  }
+
+  #{$checked-hover} {
+    @include state-layer-ring($outer, $inner, var(--md-sys-color-primary), "hover");
+  }
+
+  &:focus-visible {
+    @include state-layer-ring($outer, $inner, var(--md-sys-color-primary), "focus");
+    outline: none;
+  }
+}
+
 /// The state layer some controls draw as a ring rather than an overlay.
 ///
 /// Checkboxes and radio buttons have no room for an overlay pseudo-element, so
 /// they grow a `box-shadow` from the control's edge out to the state layer
 /// size.
 @mixin state-layer-ring($outer, $inner, $color, $state) {
-  // Interpolated so a quoted color, such as "var(--c)", is written unquoted.
-  box-shadow: 0 0 0 calc((#{$outer} - #{$inner}) / 2) state-layer(#{$color}, $state);
+  // Two lengths fold to one. Anything else is interpolated, so a quoted
+  // value, such as "var(--c)", is written unquoted.
+  $spread: calc((#{$outer} - #{$inner}) / 2);
+  @if meta.type-of($outer) == "number" and meta.type-of($inner) == "number" {
+    $spread: calc(($outer - $inner) / 2);
+  }
+  box-shadow: 0 0 0 $spread state-layer(#{$color}, $state);
 }
 
 /// The button size tokens for one rung of `$button-sizes`.
@@ -578,12 +697,77 @@ $_chart-toggle-written: false;
   }
 }
 
+// The series colors. Past the first four come the container roles, which
+// alone are 1.3:1 on the surface in light mode and 2:1 in dark. Mixed 45%
+// with on-surface, they keep their hue and reach 5:1 and 6.8:1, past the 3:1
+// a mark needs (WCAG 1.4.11), and surface text on them passes too.
+$_chart-colors: (
+  var(--md-sys-color-primary),
+  var(--md-sys-color-tertiary),
+  var(--md-sys-color-secondary),
+  var(--md-sys-color-on-surface-variant),
+  color-mix(in oklab, var(--md-sys-color-primary-container) 45%, var(--md-sys-color-on-surface)),
+  color-mix(in oklab, var(--md-sys-color-tertiary-container) 45%, var(--md-sys-color-on-surface))
+);
+$_chart-on-colors: ("on-primary", "on-tertiary", "on-secondary", "surface", "surface", "surface");
+
 // The parts LineChart draws for every chart type, prefixed with the
 // component's name: .#{$name}-plot, -cursor, -tooltip, -labels and -legend.
-// Defines the --md-comp-#{$name}-height, -grid-color and -color-1..4 tokens,
+// Defines the --md-comp-#{$name}-height, -grid-color and -color-1..N tokens,
 // and --#{$name}-color on each [data-series]. Include it at the root of the
 // component's partial; the component adds its own marks and cursor look.
-@mixin chart($name) {
+//
+// The options draw parts that some chart types share:
+//   $colors     4 to 6 series colors; 5 and 6 are primary- and
+//               tertiary-container deepened toward on-surface
+//   $on-colors  adds --md-comp-#{$name}-on-color-1..N, the text color on each
+//               series color, and --#{$name}-on-color on each [data-series]
+//   $grid       false leaves out the plot's grid lines and baseline
+//   $round      a round plot with no grid, as wide as the height token and
+//               centred; a sparkline's sits at the inline start
+//   $rows       a band per table row down the plot, which is as tall as its
+//               rows at --md-comp-#{$name}-row-height (40px each), with the
+//               labels beside it, grid lines down it and the tooltip below
+//               the highlighted row
+//   $tooltip    middle centres the tooltip on its point instead of hanging
+//               it from the point's top
+//   $cursor     line draws a 1px line with a dot on it for each series;
+//               band tints the highlighted row behind the marks, rounded by
+//               --md-comp-#{$name}-shape (4px)
+//   $lines      styles series drawn as SVG lines: .#{$name}-line, dashed in
+//               a .dashed .#{$name}-series, .#{$name}-points and the area
+//               gradient's stops, at --md-comp-#{$name}-line-width (3px,
+//               sparkline 2px)
+//   $legend-columns  a number, 3 or more, lays the legend out as a table of
+//               that many columns: swatch, name, then the values, the first
+//               of them bold
+@mixin chart(
+  $name,
+  $colors: 4,
+  $on-colors: false,
+  $grid: true,
+  $round: false,
+  $rows: false,
+  $tooltip: top,
+  $cursor: null,
+  $lines: false,
+  $legend-columns: null
+) {
+  @if $colors < 4 or $colors > list.length($_chart-colors) {
+    @error "chart() takes 4 to #{list.length($_chart-colors)} $colors, got #{$colors}.";
+  }
+  @if not list.index((top, middle), $tooltip) {
+    @error "chart() $tooltip must be top or middle, got #{$tooltip}.";
+  }
+  @if $legend-columns and $legend-columns < 3 {
+    @error "chart() $legend-columns must be 3 or more, got #{$legend-columns}.";
+  }
+  @if $cursor and not list.index((line, band), $cursor) {
+    @error "chart() $cursor must be line, band or null, got #{$cursor}.";
+  }
+
+  $grid: $grid and not $round;
+
   @if not $_chart-toggle-written {
     $_chart-toggle-written: true !global;
     @include _chart-toggle;
@@ -592,12 +776,29 @@ $_chart-toggle-written: false;
   .#{$name} {
     --md-comp-#{$name}-height: #{rem(240px)};
     --md-comp-#{$name}-grid-color: var(--md-sys-color-outline-variant);
-    --md-comp-#{$name}-color-1: var(--md-sys-color-primary);
-    --md-comp-#{$name}-color-2: var(--md-sys-color-tertiary);
-    --md-comp-#{$name}-color-3: var(--md-sys-color-secondary);
-    --md-comp-#{$name}-color-4: var(--md-sys-color-on-surface-variant);
+    @for $i from 1 through $colors {
+      --md-comp-#{$name}-color-#{$i}: #{list.nth($_chart-colors, $i)};
+    }
+    @if $on-colors {
+      @for $i from 1 through $colors {
+        --md-comp-#{$name}-on-color-#{$i}: var(--md-sys-color-#{list.nth($_chart-on-colors, $i)});
+      }
+    }
+    @if $rows {
+      --md-comp-#{$name}-row-height: #{rem(40px)};
+    }
+    @if $cursor == band {
+      --md-comp-#{$name}-shape: var(--md-sys-shape-corner-extra-small);
+    }
+    @if $lines {
+      --md-comp-#{$name}-line-width: 3px;
+    }
 
-    display: flex;
+    @if $rows {
+      display: grid;
+    } @else {
+      display: flex;
+    }
     flex-direction: column;
     gap: 8px;
     min-width: 0;
@@ -609,6 +810,28 @@ $_chart-toggle-written: false;
     // holds it to the 1px wide it is given. Its rows still set its height, so
     // it hangs up from the bottom edge, where the overflow cannot scroll.
     position: relative;
+
+    @if $rows {
+      // Labels beside the plot, up to 40% of the width; everything else
+      // spans both columns. Dense flow puts the labels in the plot's row. A
+      // stretched figure, as in a grid of cards, keeps its rows at their size.
+      grid-template-columns: fit-content(40%) minmax(0, 1fr);
+      grid-auto-flow: row dense;
+      align-content: start;
+      column-gap: 12px;
+
+      > * {
+        grid-column: 1 / -1;
+      }
+
+      > .#{$name}-plot {
+        grid-column: 2;
+      }
+
+      > .#{$name}-labels {
+        grid-column: 1;
+      }
+    }
 
     > figcaption {
       color: var(--md-sys-color-on-surface-variant);
@@ -622,27 +845,92 @@ $_chart-toggle-written: false;
     }
   }
 
-  @for $i from 1 through 4 {
+  @for $i from 1 through $colors {
     .#{$name} [data-series="#{$i}"] {
       --#{$name}-color: var(--md-comp-#{$name}-color-#{$i});
+      @if $on-colors {
+        --#{$name}-on-color: var(--md-comp-#{$name}-on-color-#{$i});
+      }
     }
   }
 
   .#{$name}-plot {
     position: relative;
-    height: var(--md-comp-#{$name}-height);
-    border-block-end: 1px solid var(--md-comp-#{$name}-grid-color);
-    border-radius: 2px;
-    // Four grid lines; the border is the fifth.
-    background: linear-gradient(var(--md-comp-#{$name}-grid-color) 1px, transparent 0) 0 0 / 100% 25%;
+    @if $cursor == band {
+      isolation: isolate;
+    }
+    @if $round {
+      width: min(100%, var(--md-comp-#{$name}-height));
+      height: auto;
+      aspect-ratio: 1;
+      margin-inline: auto;
+      border-radius: 50%;
+    } @else {
+      @if $rows {
+        height: calc(var(--rows, 1) * var(--md-comp-#{$name}-row-height));
+      } @else {
+        height: var(--md-comp-#{$name}-height);
+      }
+      @if $grid and $rows {
+        border-right: 1px solid var(--md-comp-#{$name}-grid-color);
+      } @else if $grid {
+        border-block-end: 1px solid var(--md-comp-#{$name}-grid-color);
+      }
+      border-radius: 2px;
+    }
+    @if $grid and $rows {
+      // A line down the plot at each quarter of the value axis.
+      background: linear-gradient(to right, var(--md-comp-#{$name}-grid-color) 1px, transparent 0) 0 0 / 25% 100%;
+    } @else if $grid {
+      // Four grid lines; the border is the fifth.
+      background: linear-gradient(var(--md-comp-#{$name}-grid-color) 1px, transparent 0) 0 0 / 100% 25%;
+    }
     touch-action: pan-y;
     @include focus-visible;
   }
 
   .#{$name}-cursor {
     position: absolute;
-    inset-block: 0;
+    @if $cursor == band and $rows {
+      inset-block: auto;
+      inset-inline: 0;
+      height: calc(100% / var(--rows, 1));
+    } @else {
+      inset-block: 0;
+    }
     pointer-events: none;
+
+    @if $cursor == line {
+      width: 1px;
+      background-color: var(--md-sys-color-outline);
+
+      > span {
+        position: absolute;
+        left: 0;
+        width: 10px;
+        height: 10px;
+        border: 2px solid var(--md-sys-color-surface);
+        border-radius: 50%;
+        background-color: var(--#{$name}-color);
+        translate: -50% -50%;
+      }
+    }
+
+    // A band behind the highlighted row's marks, which the plot's isolation
+    // keeps in front of the plot's own background.
+    @if $cursor == band {
+      z-index: -1;
+      @if not $rows {
+        width: calc(100% / var(--rows, 1));
+      }
+      border-radius: var(--md-comp-#{$name}-shape);
+      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
+      @if $rows {
+        translate: 0 -50%;
+      } @else {
+        translate: -50% 0;
+      }
+    }
   }
 
   // Rich tooltip surface, as in _tooltip.scss.
@@ -651,6 +939,9 @@ $_chart-toggle-written: false;
 
     position: absolute;
     top: 0;
+    @if $rows {
+      left: 50%;
+    }
     z-index: 1;
     display: grid;
     grid-template-columns: auto auto;
@@ -665,7 +956,14 @@ $_chart-toggle-written: false;
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
     pointer-events: none;
-    translate: 12px 0;
+    @if $rows {
+      // Below the highlighted row, or above it in the lower half.
+      translate: -50% calc(var(--md-comp-#{$name}-row-height) / 2);
+    } @else if $tooltip == middle {
+      translate: 12px -50%;
+    } @else {
+      translate: 12px 0;
+    }
     @include z-depth("2");
     @include glass(var(--md-comp-#{$name}-tooltip-color));
 
@@ -674,7 +972,13 @@ $_chart-toggle-written: false;
     }
 
     &.end {
-      translate: calc(-100% - 12px) 0;
+      @if $rows {
+        translate: -50% calc(-100% - var(--md-comp-#{$name}-row-height) / 2);
+      } @else if $tooltip == middle {
+        translate: calc(-100% - 12px) -50%;
+      } @else {
+        translate: calc(-100% - 12px) 0;
+      }
     }
 
     > strong {
@@ -698,9 +1002,7 @@ $_chart-toggle-written: false;
 
   .#{$name}-labels,
   .#{$name}-legend {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    @include list-reset;
     color: var(--md-sys-color-on-surface-variant);
     @include typescale("body-small");
   }
@@ -708,13 +1010,18 @@ $_chart-toggle-written: false;
   .#{$name}-labels {
     display: grid;
     grid-auto-columns: minmax(0, 1fr);
-    grid-auto-flow: column;
-    text-align: center;
+    @if $rows {
+      grid-auto-rows: minmax(0, 1fr);
+      grid-auto-flow: row;
+      align-items: center;
+      text-align: end;
+    } @else {
+      grid-auto-flow: column;
+      text-align: center;
+    }
 
     > li {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+      @include ellipsis;
     }
 
     // When each label is wider than its column, LineChart keeps every nth
@@ -741,15 +1048,48 @@ $_chart-toggle-written: false;
   }
 
   .#{$name}-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 16px;
+    @if $legend-columns {
+      $columns: auto minmax(0, 1fr);
+      @for $i from 3 through $legend-columns {
+        $columns: list.append($columns, auto);
+      }
+
+      display: grid;
+      grid-template-columns: $columns;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    } @else {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 16px;
+    }
 
     > li {
       position: relative;
-      display: flex;
+      @if $legend-columns {
+        display: contents;
+      } @else {
+        display: flex;
+      }
       align-items: center;
       gap: 8px;
+    }
+
+    @if $legend-columns {
+      > li > span:first-child {
+        @include ellipsis;
+      }
+
+      > li > span:not(:first-child) {
+        text-align: end;
+        font-variant-numeric: tabular-nums;
+      }
+
+      > li > span:nth-child(2) {
+        color: var(--md-sys-color-on-surface);
+        font-weight: 500;
+      }
     }
   }
 
@@ -764,15 +1104,57 @@ $_chart-toggle-written: false;
     background-color: var(--#{$name}-color);
   }
 
+  @if $lines {
+    .#{$name}-line {
+      fill: none;
+      stroke: var(--#{$name}-color);
+      stroke-width: var(--md-comp-#{$name}-line-width);
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .#{$name}-series.dashed .#{$name}-line {
+      stroke-dasharray: 2 8;
+    }
+
+    // Round caps on zero-length lines: dots that keep their size at any scale.
+    .#{$name}-points {
+      fill: none;
+      stroke: var(--#{$name}-color);
+      stroke-width: calc(var(--md-comp-#{$name}-line-width) * 3);
+      stroke-linecap: round;
+      vector-effect: non-scaling-stroke;
+    }
+
+    .#{$name}-series stop {
+      stop-color: var(--#{$name}-color);
+      stop-opacity: 0;
+
+      &:first-child {
+        stop-opacity: 0.24;
+      }
+    }
+  }
+
   .#{$name}.sparkline {
     --md-comp-#{$name}-height: 48px;
+    @if $lines {
+      --md-comp-#{$name}-line-width: 2px;
+    }
     // Keep the taller hidden table from adding scrollable overflow. A
     // sparkline has no tooltip or focus ring to clip.
     overflow: clip;
 
-    .#{$name}-plot {
-      border: 0;
-      background: none;
+    @if $grid {
+      .#{$name}-plot {
+        border: 0;
+        background: none;
+      }
+    } @else if $round {
+      .#{$name}-plot {
+        margin-inline: 0;
+      }
     }
 
     .#{$name}-labels,
@@ -782,12 +1164,28 @@ $_chart-toggle-written: false;
   }
 
   @media (forced-colors: active) {
-    .#{$name}-plot {
-      background: none;
+    @if $grid {
+      .#{$name}-plot {
+        background: none;
+      }
     }
 
     .#{$name}-tooltip {
       outline: 1px solid CanvasText;
+    }
+
+    @if $cursor == line {
+      .#{$name}-cursor {
+        background-color: CanvasText;
+      }
+
+      .#{$name}-cursor > span {
+        forced-color-adjust: none;
+      }
+    } @else if $cursor == band {
+      .#{$name}-cursor {
+        outline: 1px solid CanvasText;
+      }
     }
 
     // The marks keep their colors, so the swatches that key them must too.
@@ -850,9 +1248,7 @@ $_chart-toggle-written: false;
   .#{$name}-axis {
     position: absolute;
     inset: 0;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    @include list-reset;
     color: var(--md-sys-color-on-surface-variant);
     @include typescale("body-small");
     font-variant-numeric: tabular-nums;
@@ -871,10 +1267,8 @@ $_chart-toggle-written: false;
       box-sizing: border-box;
       width: var(--md-comp-#{$name}-axis-width);
       padding-inline-end: 8px;
-      overflow: hidden;
+      @include ellipsis;
       text-align: end;
-      text-overflow: ellipsis;
-      white-space: nowrap;
       translate: 0 -50%;
     }
 

@@ -44,16 +44,7 @@
     cursor: pointer;
     @include typescale("label-large");
     @include focus-visible;
-
-    &:hover {
-      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
-    }
-
-    &[aria-current="page"] {
-      background-color: var(--md-sys-color-secondary-container);
-      color: var(--md-sys-color-on-secondary-container);
-      @include forced-colors-selected;
-    }
+    @include text-action('[aria-current="page"]');
   }
 
   // A trailing chevron turns while the button's panel is open.
@@ -105,9 +96,7 @@
     }
 
     > ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
+      @include list-reset;
     }
 
     a {
@@ -119,10 +108,7 @@
       text-decoration: none;
       @include typescale("body-large");
       @include focus-visible;
-
-      &:hover {
-        background-color: state-layer(var(--md-sys-color-on-surface), "hover");
-      }
+      @include text-action;
 
       > small {
         display: block;

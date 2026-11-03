@@ -132,9 +132,7 @@ menu[id] li > menu,
   @include glass(var(--md-comp-menu-container-color));
 
   > li > ul[role="group"] {
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    @include list-reset;
   }
 
   #{$_rows} {
@@ -307,10 +305,7 @@ menu[id] li > menu,
       background-color: state-layer(var(--md-comp-menu-item-selected-label-text-color), "pressed", var(--md-comp-menu-item-selected-container-color));
     }
 
-    &:focus-visible {
-      outline: 3px solid var(--md-sys-color-secondary);
-      outline-offset: -3px;
-    }
+    @include focus-visible(-3px);
 
     &:is(.disabled, [aria-disabled="true"]) {
       pointer-events: none;

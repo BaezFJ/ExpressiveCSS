@@ -311,16 +311,11 @@
     cursor: pointer;
     @include typescale("label-large");
     @include focus-visible;
-
-    &:hover:not([aria-current]) {
-      background-color: state-layer(var(--md-sys-color-on-surface), "hover");
-    }
-
-    &[aria-current] {
-      background-color: var(--md-comp-nav-rail-active-indicator-color);
-      color: var(--md-comp-nav-rail-active-color);
-      @include forced-colors-selected;
-    }
+    @include text-action(
+      "[aria-current]",
+      var(--md-comp-nav-rail-active-indicator-color),
+      var(--md-comp-nav-rail-active-color)
+    );
   }
 
   summary {
@@ -369,8 +364,5 @@
   }
 }
 
-// Navigation does nothing on paper. Important so a size or state rule that sets
-// `display` cannot bring it back; see base/_print.scss for the page itself.
-@media print {
-  .navigation-rail { display: none !important; }
-}
+// Navigation does nothing on paper.
+.navigation-rail { @include print-hidden; }

@@ -25,33 +25,16 @@
 //                                        and tertiary-container deepened
 //                                        toward on-surface, as the pie chart's
 
-@include chart("sankey-chart");
+// No grid lines or baseline: the nodes and links have no value axis.
+@include chart("sankey-chart", $colors: 6, $grid: false, $tooltip: middle);
 
 .sankey-chart {
   --md-comp-sankey-chart-link-opacity: 0.4;
-  --md-comp-sankey-chart-color-5: color-mix(in oklab, var(--md-sys-color-primary-container) 45%, var(--md-sys-color-on-surface));
-  --md-comp-sankey-chart-color-6: color-mix(in oklab, var(--md-sys-color-tertiary-container) 45%, var(--md-sys-color-on-surface));
 }
 
-// chart() sets colors 1 to 4.
-@for $i from 5 through 6 {
-  .sankey-chart [data-series="#{$i}"] {
-    --sankey-chart-color: var(--md-comp-sankey-chart-color-#{$i});
-  }
-}
-
-// No grid lines or baseline: the nodes and links have no value axis.
-.sankey-chart-plot {
-  border: 0;
-  background: none;
-
-  > svg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
+.sankey-chart-plot > svg {
+  @include fill-parent;
+  overflow: visible;
 }
 
 .sankey-chart-node {
@@ -70,12 +53,6 @@
 
 // Level with the link's middle.
 .sankey-chart-tooltip {
-  translate: 12px -50%;
-
-  &.end {
-    translate: calc(-100% - 12px) -50%;
-  }
-
   // The value header names a column, not a node, so it has no swatch.
   > span.value::before {
     content: none;

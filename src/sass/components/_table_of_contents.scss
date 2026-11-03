@@ -15,9 +15,7 @@
   --md-comp-toc-indicator: 2px;
   --md-comp-toc-item-height: 48px;
 
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  @include list-reset;
 
   &.fixed {
     position: fixed;

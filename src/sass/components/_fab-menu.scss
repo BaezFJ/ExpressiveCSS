@@ -78,9 +78,7 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
     flex-direction: column;
     align-items: flex-end;
     gap: var(--md-comp-fab-menu-menu-item-between-space);
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    @include list-reset;
     width: max-content;
     max-inline-size: calc(100vw - 2 * var(--md-comp-fab-menu-offset));
     visibility: hidden;
@@ -236,8 +234,5 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
   }
 }
 
-// A floating menu would print over the content. Important so a size or state rule that sets
-// `display` cannot bring it back; see base/_print.scss for the page itself.
-@media print {
-  .fab-menu { display: none !important; }
-}
+// A floating menu would print over the content.
+.fab-menu { @include print-hidden; }

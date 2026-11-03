@@ -26,17 +26,12 @@
 //   --md-comp-mixed-chart-color-1..4     primary, tertiary, secondary,
 //                                        on-surface-variant
 
-@include chart("mixed-chart");
+@include chart("mixed-chart", $lines: true);
 @include chart-axis("mixed-chart");
 
 .mixed-chart {
   --md-comp-mixed-chart-column-width: 50%;
   --md-comp-mixed-chart-shape: var(--md-sys-shape-corner-extra-small);
-  --md-comp-mixed-chart-line-width: 3px;
-
-  &.sparkline {
-    --md-comp-mixed-chart-line-width: 2px;
-  }
 }
 
 .mixed-chart-plot {
@@ -105,39 +100,8 @@
   }
 }
 
-.mixed-chart-line {
-  fill: none;
-  stroke: var(--mixed-chart-color);
-  stroke-width: var(--md-comp-mixed-chart-line-width);
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-
-.mixed-chart-series.dashed .mixed-chart-line {
-  stroke-dasharray: 2 8;
-}
-
-// Round caps on zero-length lines: dots that keep their size at any scale.
-.mixed-chart-points {
-  fill: none;
-  stroke: var(--mixed-chart-color);
-  stroke-width: calc(var(--md-comp-mixed-chart-line-width) * 3);
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-}
-
 .mixed-chart-series:not(.area) .mixed-chart-area {
   display: none;
-}
-
-.mixed-chart-series stop {
-  stop-color: var(--mixed-chart-color);
-  stop-opacity: 0;
-
-  &:first-child {
-    stop-opacity: 0.24;
-  }
 }
 
 // A band behind the highlighted row, with a point over each line. The
