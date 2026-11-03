@@ -205,7 +205,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   container: HTMLElement;
   /** Instance of the menu plugin for this autocomplete. */
   menu: Menu;
-  static _keydown: boolean;
   selectedValues: AutocompleteData[];
   menuItems: AutocompleteData[];
 
@@ -216,7 +215,10 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.count = 0;
     this.activeIndex = -1;
     this.oldVal = '';
-    this.selectedValues = this.options.selected.map((id) => this.options.data.find(entry => entry.id === id) ?? { id });
+    // First entry wins on a duplicate id, as selectOption() picks the first.
+    const byId = new Map<string | number, AutocompleteData>();
+    this.options.data.forEach((entry) => byId.has(entry.id) || byId.set(entry.id, entry));
+    this.selectedValues = this.options.selected.map((id) => byId.get(id) ?? { id });
     this.menuItems = this.options.data || [];
     this.$active = null;
     this._pointerDown = false;
@@ -278,7 +280,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     const { signal } = this._events;
     this.el.addEventListener('blur', this._handleInputBlur, { signal });
     this.el.addEventListener('input', this._handleInput, { signal });
-    this.el.addEventListener('keyup', this._handleInputKeyup, { signal });
     this.el.addEventListener('focus', this._handleInputFocus, { signal });
     this.el.addEventListener('keydown', this._handleInputKeydown, { signal });
     this.el.addEventListener('click', this._handleInputClick, { signal });
@@ -286,8 +287,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     // a `window.ontouchstart` feature detect; a pointer event covers both, and
     // the detect covered nothing the browser does not report itself.
     this.container.addEventListener('pointerdown', this._handleContainerPointerDown, { signal });
-    this.container.addEventListener('pointerup', this._handleContainerPointerUp, { signal });
-    this.container.addEventListener('pointercancel', this._handleContainerPointerUp, { signal });
     this.container.addEventListener('mousedown', this._handleInertRowPress, { capture: true, signal });
     this.container.addEventListener('click', this._handleInertRowPress, { capture: true, signal });
   }
@@ -385,10 +384,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     }
   };
 
-  _handleInputKeyup = () => {
-    Autocomplete._keydown = false;
-  };
-
   _handleInput = () => {
     this._left = false;
     this.count = 0;
@@ -459,7 +454,6 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   }
 
   _handleInputKeydown = Utils.ignoringComposition((e: KeyboardEvent) => {
-    Autocomplete._keydown = true;
     if (e.key === 'Escape' || e.key === 'Tab') {
       this._dismiss(e);
       return;
@@ -523,6 +517,12 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     if (!e.isPrimary) return;
     if (e.pointerType === 'mouse' && e.button !== 0) return;
     this._pointerDown = true;
+    // A mouse press has no implicit capture, so its release can land outside
+    // the list. The document hears it wherever it lands. Adding the same
+    // listener again is a no-op, so repeated presses add nothing.
+    const listen = { capture: true, once: true, signal: this._events.signal };
+    this.el.ownerDocument.addEventListener('pointerup', this._handleContainerPointerUp, listen);
+    this.el.ownerDocument.addEventListener('pointercancel', this._handleContainerPointerUp, listen);
   };
 
   _handleContainerPointerUp = () => {
@@ -694,10 +694,9 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   _renderMenu() {
     this._resetAutocomplete();
     if (this._noResults) this.container.append(this._createNoResultsRow());
-    // Check if Data is empty
-    if (this.menuItems.length === 0) {
-      this.menuItems = this.selectedValues; // Show selected Items
-    }
+    // With no results, the list shows the selected entries, so they can be
+    // removed. A copy: menuItems must not share selectedValues' array.
+    if (this.menuItems.length === 0) this.menuItems = [...this.selectedValues];
     const groups = new Map<string, HTMLElement>();
     const selectedIds = new Set(this.selectedValues.map(entry => entry.id));
     this._visibleEntries().forEach((entry) => this._groupList(entry.group, groups).append(this._createMenuItem(entry, selectedIds)));
@@ -790,7 +789,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
 
   /** Announces the entries a person can choose. Disabled ones are shown, not counted. */
   private _resultsMessage() {
-    const count = this._visibleEntries().filter((entry) => entry.disabled !== true).length;
+    // The selected entries shown under "No results." are not search results.
+    const count = this._noResults ? 0 : this._visibleEntries().filter((entry) => entry.disabled !== true).length;
     return count ? this.options.i18n.results(count) : this.options.i18n.noResults;
   }
 
@@ -862,16 +862,15 @@ export class Autocomplete extends Component<AutocompleteOptions> {
    * @param open Option to conditionally open menu
    */
   setMenuItems(menuItems: AutocompleteData[], selected: number[] | string[] = null, open: boolean = true) {
-    if (this.el['Expressive_Autocomplete'] !== this) return;
+    if (Autocomplete.getInstance(this.el) !== this) return;
     // Results that arrive after the user left the field update the list
     // without opening it under an input nobody is using.
     open &&= !this._left;
     this._noResults = menuItems.length === 0;
     this.menuItems = menuItems;
     if (selected) {
-      this.selectedValues = this.menuItems.filter(
-        (item) => !(selected.indexOf(<never>item.id) === -1)
-      );
+      const ids = new Set<string | number>(selected);
+      this.selectedValues = this.menuItems.filter((item) => ids.has(item.id));
     }
     // open() clears and renders the list itself.
     if (this.options.isMultiSelect) {

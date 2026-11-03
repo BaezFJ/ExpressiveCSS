@@ -1,5 +1,5 @@
 import { Utils } from '../core/utils';
-import { Component, BaseOptions } from '../core/component';
+import { Component, BaseOptions, InitElement, InitElements } from '../core/component';
 
 /** `[longitude, latitude]`, MapLibre's order. */
 export type LngLat = [number, number];
@@ -9,9 +9,94 @@ export type LngLat = [number, number];
  * the published types do not depend on MapLibre.
  */
 export interface MapLibre {
-  Map: new (options: object) => any;
-  Marker: new (options: object) => any;
-  Popup: new (options: object) => any;
+  Map: new (options: MapInit) => MapInstance;
+  Marker: new (options: object) => MapMarker;
+  Popup: new (options: object) => MapPopup;
+}
+
+/**
+ * What `new Map()` gets. Only the container is declared; the style, center,
+ * zoom and `mapOptions` ride along, and MapLibre types them itself.
+ */
+export interface MapInit {
+  container: HTMLElement;
+}
+
+/** A point on the map, as MapLibre hands it back. */
+export interface MapLngLat {
+  lng: number;
+  lat: number;
+}
+
+/** A map click, with the DOM event behind it and, on a layer, the features hit. */
+export interface MapMouseEvent {
+  originalEvent: MouseEvent;
+  lngLat: MapLngLat;
+  features?: Array<{ properties: Record<string, unknown>; geometry: { coordinates: LngLat } }>;
+}
+
+export interface MapMarker {
+  getElement(): HTMLElement;
+  getLngLat(): MapLngLat;
+  setLngLat(at: LngLat | MapLngLat): this;
+  addTo(map: MapInstance): this;
+  on(event: 'dragstart' | 'dragend', callback: () => void): unknown;
+  remove(): unknown;
+}
+
+export interface MapPopup {
+  getElement(): HTMLElement | undefined;
+  setDOMContent(content: Node): this;
+  setLngLat(at: LngLat | MapLngLat): this;
+  addTo(map: MapInstance): this;
+  isOpen(): boolean;
+  on(event: 'open' | 'close', callback: () => void): unknown;
+  remove(): unknown;
+}
+
+/** A style layer, as `getStyle()` lists them. */
+export interface MapLayer {
+  id: string;
+  source?: string;
+  layout?: Record<string, unknown>;
+}
+
+/** A source, as `getSource()` returns it. */
+export interface MapSource {
+  type: string;
+}
+
+/** A clustered GeoJSON source, which is what `addClusters()` registers. */
+export interface MapClusterSource extends MapSource {
+  getClusterExpansionZoom(clusterId: unknown): Promise<number>;
+}
+
+/** The parts of a `maplibre-gl` `Map` this component calls. */
+export interface MapInstance {
+  on(event: string, listener: (e: MapMouseEvent) => void): unknown;
+  on(event: string, layer: string, listener: (e: MapMouseEvent) => void): unknown;
+  off(event: string, layer: string, listener: (e: MapMouseEvent) => void): unknown;
+  remove(): void;
+  zoomIn(): unknown;
+  zoomOut(): unknown;
+  resetNorthPitch(): unknown;
+  getZoom(): number;
+  getMinZoom(): number;
+  getMaxZoom(): number;
+  getBearing(): number;
+  getCanvas(): HTMLCanvasElement;
+  getStyle(): { glyphs?: string; layers: MapLayer[] };
+  setStyle(style: string | object | null, options?: { diff?: boolean }): unknown;
+  getSource(id: string): MapSource | undefined;
+  addSource(id: string, source: object): unknown;
+  removeSource(id: string): unknown;
+  addLayer(layer: object): unknown;
+  removeLayer(id: string): unknown;
+  project(at: MapLngLat): { x: number; y: number };
+  unproject(point: [number, number]): MapLngLat;
+  panBy(offset: [number, number]): unknown;
+  flyTo(options: { center: LngLat; zoom: number }): unknown;
+  easeTo(options: { center: LngLat; zoom: number }): unknown;
 }
 
 /** A style for each color scheme. The map follows the page's theme. */
@@ -20,13 +105,13 @@ export interface MapThemedStyle {
   dark: string | object;
 }
 
-export interface MapViewOptions extends BaseOptions {
+export interface MapViewOptions<L extends MapLibre = MapLibre> extends BaseOptions {
   /**
    * The `maplibre-gl` module. ExpressiveCSS does not bundle MapLibre, so the
    * page imports it and passes it in.
    * @default null
    */
-  maplibregl: MapLibre | null;
+  maplibregl: L | null;
   /**
    * A MapLibre style URL or object, or `{ light, dark }` to follow the theme.
    * @default OpenFreeMap Positron and Dark
@@ -144,18 +229,21 @@ const plainArrow = (e: KeyboardEvent) => (Utils.plainKey(e) ? ARROWS[e.key] : un
  * The class is `MapView` rather than `Map` so importing it does not shadow
  * JavaScript's `Map`.
  */
-export class MapView extends Component<MapViewOptions> {
-  /** The MapLibre map. */
-  map: any = null;
+export class MapView<L extends MapLibre = MapLibre> extends Component<MapViewOptions<L>> {
+  /**
+   * The MapLibre map, with the full type of the `maplibregl` passed to the
+   * constructor; `init()` and `getInstance()` see the `MapInstance` subset.
+   */
+  map: InstanceType<L['Map']> | null = null;
   /** The MapLibre markers made from `.map-marker` children, in order. */
-  markers: any[] = [];
+  markers: MapMarker[] = [];
   private _children: Element[] = [];
-  private _popups: any[] = [];
-  private _markerPopups = new Map<HTMLElement, any>();
+  private _popups: MapPopup[] = [];
+  private _markerPopups = new Map<HTMLElement, MapPopup>();
   private _overlays = new Map<string, Overlay>();
   private _styleReady = false;
   private _dark = false;
-  private _location: any = null;
+  private _location: MapMarker | null = null;
   private _observer: MutationObserver | null = null;
   // Looked up once: `move` fires every frame of a pan or zoom.
   private _zoomIn: HTMLButtonElement[] = [];
@@ -178,7 +266,15 @@ export class MapView extends Component<MapViewOptions> {
     'pan-right': () => this._pan(1, 0)
   };
 
-  constructor(el: HTMLElement, options: Partial<MapViewOptions>) {
+  /** Initializes a map, typed by the `maplibregl` passed in. */
+  static init<L extends MapLibre>(this: typeof MapView, el: HTMLElement, options?: Partial<MapViewOptions<L>>): MapView<L>;
+  /** Initializes a map on each element, typed by the `maplibregl` passed in. */
+  static init<L extends MapLibre>(this: typeof MapView, els: InitElements<InitElement>, options?: Partial<MapViewOptions<L>>): MapView<L>[];
+  static init(els: HTMLElement | InitElements<InitElement>, options: Partial<MapViewOptions> = {}): MapView | MapView[] {
+    return super.init.call(this, els as InitElements<InitElement>, options);
+  }
+
+  constructor(el: HTMLElement, options: Partial<MapViewOptions<L>>) {
     super(el, options);
     const lib = this.options.maplibregl;
     if (!lib) {
@@ -190,13 +286,15 @@ export class MapView extends Component<MapViewOptions> {
     this._zoomIn = [...this._buttons('zoom-in')];
     this._zoomOut = [...this._buttons('zoom-out')];
     this._dark = this._isDark();
-    this.map = new lib.Map({
+    const init = {
       ...this.options.mapOptions,
       container: el,
       style: this._style(),
       center: this.options.center,
       zoom: this.options.zoom
-    });
+    };
+    // `new` on a generic constructor yields the constraint, not L's instance.
+    this.map = new lib.Map(init) as InstanceType<L['Map']>;
     this.map.on('style.load', this._handleStyleLoad);
     this.map.on('move', this._sync);
     this.map.on('click', this._handleMapClick);
@@ -281,9 +379,11 @@ export class MapView extends Component<MapViewOptions> {
    */
   addClusters(id: string, data: object | string, options: MapClusterOptions = {}) {
     const clusters = `${id}-clusters`, points = `${id}-points`;
-    const zoomIn = async (e: any) => {
+    const zoomIn = async (e: MapMouseEvent) => {
       const [feature] = e.features;
-      const zoom = await this.map.getSource(id).getClusterExpansionZoom(feature.properties.cluster_id);
+      // `_draw` registered this id as a clustered GeoJSON source.
+      const source = this.map.getSource(id) as MapClusterSource;
+      const zoom = await source.getClusterExpansionZoom(feature.properties.cluster_id);
       // destroy() may have run while the zoom was looked up.
       this.map?.easeTo({ center: feature.geometry.coordinates, zoom });
     };
@@ -322,7 +422,7 @@ export class MapView extends Component<MapViewOptions> {
         });
         // A symbol layer needs the style's glyphs and one of its fonts.
         const style = this.map.getStyle();
-        const font = style.glyphs && style.layers.find((layer: any) => layer.layout?.['text-font'])?.layout['text-font'];
+        const font = style.glyphs && style.layers.find((layer) => layer.layout?.['text-font'])?.layout['text-font'];
         if (font) {
           this.map.addLayer({
             id: `${id}-count`,
@@ -405,7 +505,7 @@ export class MapView extends Component<MapViewOptions> {
   }
 
   /** A marker moved: its `data-lng-lat` holds the new place, and it fires `change`. */
-  private _moved(marker: any) {
+  private _moved(marker: MapMarker) {
     const element: HTMLElement = marker.getElement();
     const { lng, lat } = marker.getLngLat();
     element.dataset.lngLat = `${lng},${lat}`;
@@ -415,7 +515,7 @@ export class MapView extends Component<MapViewOptions> {
   // A drag is not the only way to move it (WCAG 2.5.7): a tap picks it up,
   // and the arrow keys nudge it. A button is already a control; anything
   // else becomes one, and destroy() takes that back off.
-  private _makeMovable(element: HTMLElement, marker: any) {
+  private _makeMovable(element: HTMLElement, marker: MapMarker) {
     const added = element instanceof HTMLButtonElement ? [] : ['role', 'tabindex'].filter((name) => !element.hasAttribute(name));
     if (added.includes('role')) element.setAttribute('role', 'button');
     if (added.includes('tabindex')) element.tabIndex = 0;
@@ -423,7 +523,7 @@ export class MapView extends Component<MapViewOptions> {
     this._restore.push(() => ['aria-pressed', ...added].forEach((name) => element.removeAttribute(name)));
     element.addEventListener('keydown', (e) => this._nudge(e, marker), { signal: this._events.signal });
     marker.on('dragstart', () => (this._dragged = element));
-    marker.on('dragend', () => setTimeout(() => (this._dragged = null)));
+    marker.on('dragend', () => setTimeout(() => { this._dragged = null; }));
   }
 
   /** Takes back the attributes `_makeMovable()` added. Destroy removes its listeners. */
@@ -433,7 +533,7 @@ export class MapView extends Component<MapViewOptions> {
   }
 
   /** The arrow keys move a focused draggable marker 10px, and the map stays put. */
-  private _nudge(e: KeyboardEvent, marker: any) {
+  private _nudge(e: KeyboardEvent, marker: MapMarker) {
     const step = plainArrow(e);
     if (!step) return;
     e.preventDefault();
@@ -494,7 +594,7 @@ export class MapView extends Component<MapViewOptions> {
     navigator.geolocation?.getCurrentPosition(
       ({ coords }) => {
         if (!this.map) return;
-        const center = [coords.longitude, coords.latitude];
+        const center: LngLat = [coords.longitude, coords.latitude];
         if (!this._location) {
           const dot = document.createElement('span');
           dot.className = 'map-marker location';
@@ -528,13 +628,13 @@ export class MapView extends Component<MapViewOptions> {
     return this._color('light-dark(black, white)') === 'rgba(255, 255, 255, 1)';
   }
 
-  private _themed() {
-    const style = this.options.style;
+  private _themed(style: MapViewOptions['style'] = this.options.style): style is MapThemedStyle {
     return typeof style === 'object' && 'light' in style && 'dark' in style;
   }
 
   private _style() {
-    return this._themed() ? this.options.style[this._dark ? 'dark' : 'light'] : this.options.style;
+    const style = this.options.style;
+    return this._themed(style) ? style[this._dark ? 'dark' : 'light'] : style;
   }
 
   private _handleStyleLoad = () => {
@@ -571,7 +671,7 @@ export class MapView extends Component<MapViewOptions> {
   };
 
   // A click on the map closes marker popups, but not the one being toggled.
-  private _handleMapClick = (e: any) => {
+  private _handleMapClick = (e: MapMouseEvent) => {
     const target = e.originalEvent.target as Node;
     this._drop(target, e.lngLat);
     for (const [marker, popup] of this._markerPopups) {
@@ -580,7 +680,7 @@ export class MapView extends Component<MapViewOptions> {
   };
 
   // A tap on the map, not on a marker, puts a picked-up marker there.
-  private _drop(target: Node, at: any) {
+  private _drop(target: Node, at: MapLngLat) {
     if (!this._picked || (target as Element).closest?.('.map-marker')) return;
     const marker = this.markers.find((m) => m.getElement() === this._picked);
     marker.setLngLat(at);

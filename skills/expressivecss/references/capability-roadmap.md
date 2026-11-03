@@ -42,7 +42,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Pull-to-refresh](#pull-to-refresh) | implemented | source-reviewed | incomplete | 0 |
 | [Swipe actions](#swipe-actions) | implemented | source-reviewed | incomplete | 0 |
 | [Accordion](#accordion) | implemented | source-reviewed | needs-rerun | 0 |
-| [Show more](#show-more) | implemented | source-reviewed | incomplete | 0 |
+| [Show more](#show-more) | unassessed | needs-review | incomplete | 0 |
 | [Data table](#data-table) | unassessed | needs-review | needs-rerun | 0 |
 | [Stat](#stat) | unassessed | needs-review | needs-rerun | 0 |
 | [Description list](#description-list) | implemented | source-reviewed | incomplete | 0 |
@@ -100,7 +100,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Tree select](#tree-select) | unassessed | needs-review | incomplete | 0 |
 | [Cascader](#cascader) | implemented | source-reviewed | incomplete | 0 |
 | [Checkboxes](#checkboxes) | unassessed | needs-review | needs-rerun | 0 |
-| [Transfer list](#transfer-list) | implemented | source-reviewed | incomplete | 0 |
+| [Transfer list](#transfer-list) | unassessed | needs-review | incomplete | 0 |
 | [Radio buttons](#radio-buttons) | unassessed | needs-review | needs-rerun | 0 |
 | [Rating](#rating) | implemented | source-reviewed | needs-rerun | 0 |
 | [Color swatches](#color-swatches) | implemented | source-reviewed | incomplete | 0 |
@@ -609,9 +609,9 @@ Web adaptation: Native <details> and <summary>; the browser owns the toggle, its
 
 ## Show more
 
-**implemented within the stated scope.** A .show-more holding text with a line-clamp-1, -2 or -3 class and a <button type="button">; the button sets aria-expanded and aria-controls, shows the full text, reads "Show less" while it is open (i18n.showLess or data-show-less), and hides while the clamped text fits, checking again on resize, after web fonts load and on blur.
+**unassessed within the stated scope.** A .show-more holding text with a line-clamp-1, -2 or -3 class and a <button type="button">; the button sets aria-expanded and aria-controls, shows the full text, reads "Show less" while it is open (i18n.showLess or data-show-less), and hides while the clamped text fits, checking again on resize, after web fonts load and on blur.
 
-Source review: source-reviewed, 2026-10-25. [src/ts/components/showMore.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/showMore.ts), [src/sass/components/_show-more.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_show-more.scss).
+Source review: needs-review, 2026-10-25. [src/ts/components/showMore.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/showMore.ts), [src/sass/components/_show-more.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_show-more.scss).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
 
@@ -1613,9 +1613,9 @@ Web adaptation: Native checkbox; indeterminate is set through the DOM property.
 
 ## Transfer list
 
-**implemented within the stated scope.** Two .list groups of labelled checkbox rows with add, add-all, remove and remove-all buttons between them, chosen rows kept in the order they arrived, rows returned to their original slots, the chosen values submitted under data-name in order, form reset, a polite announcement, an expressive:transfer event, and a layout that follows the page direction and stacks below the medium window size.
+**unassessed within the stated scope.** Two .list groups of labelled checkbox rows with add, add-all, remove and remove-all buttons between them, chosen rows kept in the order they arrived, rows returned to their original slots, the chosen values submitted under data-name in order, form reset, a polite announcement, an expressive:transfer event, and a layout that follows the page direction and stacks below the medium window size.
 
-Source review: source-reviewed, 2026-10-25. [src/sass/components/_transfer-list.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_transfer-list.scss), [src/ts/behaviors/transferList.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/behaviors/transferList.ts).
+Source review: needs-review, 2026-10-25. [src/sass/components/_transfer-list.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_transfer-list.scss), [src/ts/behaviors/transferList.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/behaviors/transferList.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
 

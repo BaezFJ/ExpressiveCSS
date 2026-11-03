@@ -288,4 +288,28 @@ for (const [engine, browserType, browserTest] of engines) {
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: treemap chart update() with no rows draws nothing and throws nothing`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      const errors = [];
+      page.on('pageerror', (error) => errors.push(error));
+      await page.setContent(html);
+      await page.evaluate(() => Expressive.AutoInit());
+      await page.locator('#ltr').evaluate((el) => {
+        el.querySelector('tbody').replaceChildren();
+        const chart = Expressive.TreemapChart.getInstance(el);
+        chart.update();
+        // A chart with no rows has nothing to show.
+        chart.show(0);
+      });
+      // The old plot's resize observer reports its removal on the next frame.
+      await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      assert.equal(await page.locator('#ltr .treemap-chart-plot').count(), 0);
+      assert.deepEqual(errors, []);
+    } finally {
+      await browser.close();
+    }
+  });
 }

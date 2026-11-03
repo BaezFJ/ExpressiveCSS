@@ -38,7 +38,7 @@ function define(tag: string) {
     get willValidate() { return this.internals.willValidate; }
     checkValidity() { return this.internals.checkValidity(); }
     reportValidity() { return this.internals.reportValidity(); }
-    focus(options?: FocusOptions) { this._input?.focus(options); }
+    override focus(options?: FocusOptions) { this._input?.focus(options); }
     private get _input() { return this.querySelector<HTMLInputElement>(':scope > input'); }
   });
 }

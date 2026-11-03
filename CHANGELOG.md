@@ -12,6 +12,53 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A modal date or time picker stays open when a drag that starts on the picker,
+  such as moving the clock hand, ends on the scrim. Only a press that starts and
+  ends on the scrim cancels it.
+
+- TransferList's move-all buttons no longer stall on long lists. Removing 2,000
+  rows took about 240 ms in Chromium and now takes about 26 ms.
+
+- Chips trims typed text, so Space then Enter adds no blank chip and `"a "` no
+  longer duplicates `"a"`. `addChip()` refuses a whitespace-only id.
+
+- `getInstance()`, `Snackbar.getInstance()` included, is typed to return
+  `undefined` before `init()` and after `destroy()`, and takes any `Element`. The AutoInit table is now type-checked,
+  and `src/ts/core` builds under strict TypeScript.
+
+- An option passed as `undefined`, at the top level or inside `i18n`, keeps its
+  default. A translation table missing Keypad's `tooShort` made every input in a
+  field with `minlength` throw.
+
+- Autocomplete hears a press on the list released outside it. Before, the
+  field kept treating the press as unfinished, missed being left, and late
+  search results reopened the list.
+
+- Autocomplete with no results announces "No results." even while it lists the
+  selected entries, and the list no longer shares the selection's array.
+
+- Charts whose table is removed draw nothing, where they kept drawing the old
+  data.
+
+- ShowMore without clamped text no longer throws from `destroy()` or `open()`,
+  so it can be initialized again.
+
+- AutoInit logs a component whose constructor throws and releases its element,
+  then carries on. Before, one bad element stopped every component after it in
+  the table and kept `watch` from starting.
+
+- Destroying an instance that a later `init` on the same element replaced no
+  longer unregisters the replacement.
+
+- Timepicker keeps the current time it puts in an emptied field inside
+  `minTime` and `maxTime`, and on the 12-hour clock sets AM or PM to match.
+
+- Data tables in a hidden tab panel, dialog or `<details>` keep their records.
+  Filtering and paging no longer hide every row until the next sync.
+
+- Treemap chart `update()` on a table with no rows no longer throws from its
+  resize observer, and `show()` does nothing on a chart with no rectangles.
+
 - Autocomplete images now use the same URL scheme allowlist as FormSelect.
   Invalid URLs, `javascript:` URLs and non-image `data:` URLs are dropped.
 

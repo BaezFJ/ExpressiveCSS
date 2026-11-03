@@ -15,6 +15,8 @@ export class ModalDisplayPlugin {
   /** Whether the picker, not the user, is closing the dialog. */
   private _settled = false;
   private _opener: HTMLElement | null = null;
+  /** Whether the press that ends in the next click started on the scrim. */
+  private _downOnScrim = false;
 
   constructor(el: HTMLElement, container: HTMLElement, onDismiss: () => void) {
     this.triggers = [el];
@@ -25,13 +27,23 @@ export class ModalDisplayPlugin {
     if (label) this.dialog.setAttribute('aria-label', label);
     this.dialog.append(container);
     el.parentElement.append(this.dialog);
+    this.dialog.addEventListener('pointerdown', this._handlePointerDown);
     this.dialog.addEventListener('click', this._handleClick);
     this.dialog.addEventListener('close', this._handleClose);
   }
 
-  /** The picker fills the dialog, so a press on the dialog itself is on the scrim. */
+  private _handlePointerDown = (e: PointerEvent) => {
+    this._downOnScrim = e.target === this.dialog;
+  };
+
+  /**
+   * The picker fills the dialog, so a press on the dialog itself is on the
+   * scrim. A drag that starts on the picker, such as the timepicker hand,
+   * and ends on the scrim also clicks the dialog, so both ends must be there.
+   */
   private _handleClick = (e: MouseEvent) => {
-    if (e.target === this.dialog) this.dialog.close();
+    if (e.target === this.dialog && this._downOnScrim) this.dialog.close();
+    this._downOnScrim = false;
   };
 
   private _handleClose = () => {
@@ -42,6 +54,7 @@ export class ModalDisplayPlugin {
   };
 
   destroy = () => {
+    this.dialog.removeEventListener('pointerdown', this._handlePointerDown);
     this.dialog.removeEventListener('click', this._handleClick);
     this.dialog.removeEventListener('close', this._handleClose);
     this.dialog.remove();
