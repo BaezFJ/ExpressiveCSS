@@ -30,6 +30,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Clicking the tab that is already shown no longer fires `onShow` and
+  `expressive:change` again or re-runs the indicator animation. Swipeable
+  tabs and keyboard focus already skipped it.
+
 - RichTextEditor follows a form reset. The editor used to keep the typed
   text while the reset textarea held its default, so the page showed one
   thing and the form submitted another.

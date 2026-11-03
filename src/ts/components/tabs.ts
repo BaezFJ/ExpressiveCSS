@@ -247,6 +247,8 @@ export class Tabs extends Component<TabsOptions> {
   }
 
   private _clickTab(tabLink: HTMLAnchorElement) {
+    // The shown tab: nothing changes, so onShow must not fire again.
+    if (tabLink === this._activeTabLink) return;
     const oldContent = this._content;
     this._tabLinks = this._queryTabLinks();
     // Moves the class and aria-current together, off the old tab and onto this
