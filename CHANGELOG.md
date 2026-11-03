@@ -30,6 +30,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- `Confetti.fire()` and an instance's `fire()` keep the default of an option
+  passed as `undefined`, as init does. `fire({ origin: undefined })` used to
+  throw.
+
 - InputMask formats the value a form reset restores inside a shadow root
   too. It listened for `reset` on the document, which the event never
   reaches from a shadow root. InputMask and CurrencyInput now share one

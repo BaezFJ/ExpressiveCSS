@@ -111,7 +111,8 @@ for (const [name, engine, test] of engines) {
       await page.clock.runFor(1200);
       await page.locator('canvas.confetti-overlay').waitFor({ state: 'detached' });
       await page.evaluate(() => {
-        window.burstResult = window.Expressive.Confetti.fire({ ticks: 10 }).then(() => document.querySelector('canvas.confetti-overlay'));
+        // An option set to undefined keeps its default instead of throwing.
+        window.burstResult = window.Expressive.Confetti.fire({ ticks: 10, origin: undefined, colors: undefined }).then(() => document.querySelector('canvas.confetti-overlay'));
       });
       await page.clock.runFor(200);
       assert.equal(await page.evaluate(() => window.burstResult), null, 'fire() resolves once the overlay is gone');
