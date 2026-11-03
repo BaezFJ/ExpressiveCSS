@@ -108,7 +108,19 @@ for (const [name, engine, test] of engines) {
       await page.locator('#box').evaluate((box) => { box.style.marginTop = ''; });
       await painted(5);
       assert.ok(await paints(20) > 0, 'the canvas does not resume painting when back in view');
-      await page.locator('#box').evaluate((box) => { box.style.width = '300px'; });
+      // Refitting clears the buffer after this frame's draw. A later observer
+      // in the same frame reads the canvas as it is painted, so it must not be blank.
+      const shownOnResize = await page.locator('#box').evaluate((box) => new Promise((resolve) => {
+        const canvas = document.getElementById('particles');
+        const observer = new ResizeObserver(() => {
+          observer.disconnect();
+          const data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+          resolve(data.some((value, i) => i % 4 === 3 && value > 0));
+        });
+        observer.observe(canvas);
+        box.style.width = '300px';
+      }));
+      assert.ok(shownOnResize, 'a moving canvas is blank for the frame it is resized in');
       await painted(3);
       assert.deepEqual(await page.locator('#particles').evaluate((c) => [c.width / devicePixelRatio, c.clientWidth]), [300, 300], 'the pixel buffer follows a resize');
       await page.evaluate(() => window.Expressive.Particles.getInstance(document.getElementById('particles')).destroy());

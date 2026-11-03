@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { Utils, controllerFor } from '../core/utils';
+import { Utils, afterFormReset, controllerFor } from '../core/utils';
 
 export interface ColorPickerOptions extends BaseOptions {
   /**
@@ -84,6 +84,8 @@ export class ColorPicker extends Component<ColorPickerOptions> {
     this._hsv = toHsv(this.input.value) ?? this._hsv;
     this._build();
     this.input.addEventListener('input', this._onNativeInput, { signal: this._events.signal });
+    // A form reset restores the native value without an input event.
+    afterFormReset(this.input, this._onNativeInput, this._events.signal);
     this._render();
   }
 

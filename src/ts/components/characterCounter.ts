@@ -1,4 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
+import { afterFormReset } from '../core/utils';
 
 const _defaults = Object.freeze({});
 
@@ -41,6 +42,8 @@ export class CharacterCounter extends Component<BaseOptions> {
     const options = { capture: true, signal: this._events.signal };
     this.el.addEventListener('focus', this.updateCounter, options);
     this.el.addEventListener('input', this.updateCounter, options);
+    // A form reset restores the value without an input event.
+    afterFormReset(this.el, this.updateCounter, this._events.signal);
   }
 
   _setupCounter() {

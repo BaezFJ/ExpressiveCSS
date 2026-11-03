@@ -1,5 +1,5 @@
 import { imageURL } from '../core/imageURL';
-import { Utils, restoreAttribute } from '../core/utils';
+import { Utils, afterFormReset, restoreAttribute } from '../core/utils';
 import { Menu, MenuOptions } from './menu';
 import { Component, BaseOptions } from '../core/component';
 
@@ -53,9 +53,8 @@ export class FormSelect extends Component<FormSelectOptions> {
   private _createdWrapper: boolean;
   private _originalLabels = new Map<HTMLLabelElement, { for: string | null; id: string | null }>();
   private _labelPlaceholder: Comment;
-  private _form: HTMLFormElement | null;
-  private _resetTimer: ReturnType<typeof setTimeout>;
   private _validationMessage: HTMLElement | null = null;
+  private _bindReset: () => void = () => {};
   nativeTabIndex: number;
   private _searchable: boolean;
   protected _searchInput: HTMLInputElement;
@@ -97,7 +96,6 @@ export class FormSelect extends Component<FormSelectOptions> {
     // A skipped select built nothing and holds no instance key. The control
     // may belong to a TreeSelect, or to a later instance, so leave it alone.
     if (!this.menuEl) return;
-    clearTimeout(this._resetTimer);
     this._clearValidationError();
     // The Menu holds itself in the static Menu._menus registry
     // until its own destroy() runs, so dropping the elements is not enough -
@@ -118,7 +116,7 @@ export class FormSelect extends Component<FormSelectOptions> {
    */
   refresh() {
     if (!this.menuEl) return;
-    this._bindForm();
+    this._bindReset();
     const root = this.menuEl.getRootNode() as Document | ShadowRoot;
     const focused = this._values.find(value => value.optionEl.contains(root.activeElement))?.el;
     this.input.disabled = this.el.matches(':disabled');
@@ -149,13 +147,7 @@ export class FormSelect extends Component<FormSelectOptions> {
     this.el.addEventListener('focus', this._handleNativeFocus, { signal });
     this.input.addEventListener('click', this._handleInputClick, { signal });
     this.menuEl.addEventListener('focusin', this._handleOptionFocus, { signal });
-    this._bindForm();
-  }
-
-  private _bindForm() {
-    this._form?.removeEventListener('reset', this._handleReset);
-    this._form = this.el.form;
-    this._form?.addEventListener('reset', this._handleReset, { signal: this._events.signal });
+    this._bindReset = afterFormReset(this.el, this._handleReset, signal);
   }
 
   // A rebuild replaces the rows, and no event reaches the old ones.
@@ -213,15 +205,10 @@ export class FormSelect extends Component<FormSelectOptions> {
     this._validationMessage = null;
   }
 
-  private _handleReset = (e: Event) => {
-    clearTimeout(this._resetTimer);
-    this._resetTimer = setTimeout(() => {
-      if (!e.defaultPrevented) {
-        this._resetSearch();
-        this._handleSelectChange();
-        this._clearValidationError();
-      }
-    }, 0);
+  private _handleReset = () => {
+    this._resetSearch();
+    this._handleSelectChange();
+    this._clearValidationError();
   };
 
   _handleOptionKeydown = (e: KeyboardEvent) => {

@@ -24,6 +24,7 @@ const html = `<style>${css}</style>
     ${chart('class="pie-chart" id="seven"', 'Seven', '<th>V</th>', [['A', '1'], ['B', '1'], ['C', '1'], ['D', '1'], ['E', '1'], ['F', '1'], ['G', '1']])}
     ${chart('class="pie-chart" id="trailing"', 'Trailing', '<th>V</th>', [['A', '1'], ['B', '1'], ['C', '1'], ['D', '1'], ['E', '1'], ['F', '1'], ['G', '1'], ['H', '0']])}
     ${chart('class="pie-chart" id="whole"', 'Whole', '<th>V</th>', [['Only', '5'], ['None', '']])}
+    ${chart('class="pie-chart" id="dominant"', 'Dominant', '<th>V</th>', [['Big', '3000000'], ['Small', '1']])}
     ${chart('class="pie-chart sparkline" id="spark"', 'Spark', '<th>V</th>', [['A', '1'], ['B', '2']])}
   </div>
   <script>${js}</script>`;
@@ -99,6 +100,9 @@ for (const [engine, browserType, browserTest] of engines) {
         el.querySelector('.pie-chart-gaps').getAttribute('d'),
       ]);
       assert.deepEqual(whole, [1, 2, ''], 'one slice is a whole circle of two arcs with no gap');
+      // A slice so near whole that its rounded ends meet is drawn whole, not as an empty arc.
+      const dominant = await page.locator('#dominant .pie-chart-slice').first().getAttribute('d');
+      assert.equal(dominant.split('A').length - 1, 2, `the dominant slice is drawn: ${dominant}`);
 
       assert.deepEqual(await page.locator('#spark').evaluate((el) => [
         el.querySelector('.pie-chart-plot').hasAttribute('tabindex'),

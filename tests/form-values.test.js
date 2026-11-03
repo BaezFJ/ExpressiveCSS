@@ -212,6 +212,108 @@ describe('Form values', () => {
     }
   });
 
+  test('a Slider and a FormSelect moved into a form after init follow its reset', async () => {
+    document.body.innerHTML = '<p class="range-field"><input type="range" min="0" max="100" value="20"></p>' +
+      '<div class="field"><select><option value="a">A</option><option value="b">B</option></select></div><form></form>';
+    const range = document.querySelector('input[type="range"]');
+    const select = document.querySelector('select');
+    const slider = Expressive.Slider.init(range);
+    const formSelect = Expressive.FormSelect.init(select);
+    try {
+      document.querySelector('form').append(range.parentElement, select.closest('.field'));
+      range.value = '80';
+      range.dispatchEvent(new window.Event('input', { bubbles: true }));
+      select.value = 'b';
+      select.dispatchEvent(new window.Event('change', { bubbles: true }));
+      assert.equal(formSelect.input.value, 'B');
+      document.querySelector('form').reset();
+      await sleep();
+      assert.equal(slider.value.textContent, '20');
+      assert.equal(formSelect.input.value, 'A');
+    } finally {
+      slider.destroy();
+      formSelect.destroy();
+    }
+  });
+
+  test('a FormSelect follows the reset of its form after the form moves into a shadow root', async () => {
+    document.body.innerHTML = '<form><div class="field"><select><option value="a">A</option><option value="b">B</option></select></div></form><div id="host"></div>';
+    const form = document.querySelector('form');
+    const select = form.querySelector('select');
+    const formSelect = Expressive.FormSelect.init(select);
+    try {
+      document.getElementById('host').attachShadow({ mode: 'open' }).append(form);
+      for (const refresh of [false, true]) {
+        if (refresh) formSelect.refresh();
+        select.value = 'b';
+        select.dispatchEvent(new window.Event('change', { bubbles: true }));
+        assert.equal(formSelect.input.value, 'B');
+        form.reset();
+        await sleep();
+        assert.equal(formSelect.input.value, 'A', refresh ? 'after refresh()' : 'without refresh()');
+      }
+    } finally {
+      formSelect.destroy();
+    }
+  });
+
+  test('a form reset returns a ColorPicker and a CharacterCounter to the reset values', async () => {
+    document.body.innerHTML = '<form><div class="color-picker" id="p"><input type="color" value="#ff0000" aria-label="Accent"></div>' +
+      '<div class="field"><input id="c" maxlength="5" value="ab"></div></form>';
+    const color = document.querySelector('#p input');
+    const text = document.getElementById('c');
+    const picker = Expressive.ColorPicker.init(document.getElementById('p'));
+    const counter = Expressive.CharacterCounter.init(text);
+    try {
+      color.value = '#0000ff';
+      color.dispatchEvent(new window.Event('input', { bubbles: true }));
+      text.value = 'abcdefg';
+      text.dispatchEvent(new window.Event('input', { bubbles: true }));
+      assert.equal(document.querySelector('.color-picker-hex').value, '#0000ff');
+      assert.equal(counter.counterEl.textContent, '7/5');
+      document.querySelector('form').reset();
+      await sleep();
+      assert.equal(document.querySelector('.color-picker-hex').value, '#ff0000');
+      assert.equal(counter.counterEl.textContent, '2/5');
+      assert.equal(text.classList.contains('invalid'), false);
+    } finally {
+      picker.destroy();
+      counter.destroy();
+    }
+  });
+
+  test('a form reset clears validation errors and the error summary, and moves image compares and select-all back', async () => {
+    document.body.innerHTML = `<form>
+      <div class="error-summary" hidden><ul></ul></div>
+      <div class="field"><input class="validate" id="v" required><span data-error>Required</span></div>
+      <div class="image-compare"><input type="range" min="0" max="100" value="50" aria-label="Compare"></div>
+      <div class="data-table"><table>
+        <thead><tr><th><input type="checkbox" id="all" aria-label="Select all"></th></tr></thead>
+        <tbody><tr><td><input type="checkbox" id="row" aria-label="Select a"></td></tr><tr><td><input type="checkbox" aria-label="Select b"></td></tr></tbody>
+      </table></div>
+    </form>`;
+    const form = document.querySelector('form');
+    const field = document.getElementById('v');
+    const range = document.querySelector('.image-compare input');
+    const summary = document.querySelector('.error-summary');
+    field.dispatchEvent(new window.Event('change', { bubbles: true }));
+    form.dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+    range.value = '80';
+    range.dispatchEvent(new window.Event('input', { bubbles: true }));
+    document.getElementById('row').checked = true;
+    document.getElementById('row').dispatchEvent(new window.Event('input', { bubbles: true, composed: true }));
+    assert.deepEqual([field.classList.contains('invalid'), summary.hidden, document.getElementById('all').indeterminate], [true, false, true]);
+
+    form.reset();
+    await sleep();
+    assert.equal(field.classList.contains('invalid'), false);
+    assert.equal(field.hasAttribute('aria-invalid'), false);
+    assert.equal(summary.hidden, true);
+    assert.equal(summary.querySelector('ul').children.length, 0);
+    assert.equal(range.parentElement.style.getPropertyValue('--md-comp-image-compare-position'), '50%');
+    assert.equal(document.getElementById('all').indeterminate, false);
+  });
+
   test('data-save keeps passwords and hidden inputs out of storage', (t) => {
     t.after(() => { window.localStorage.clear(); delete globalThis.localStorage; });
     globalThis.localStorage = window.localStorage;

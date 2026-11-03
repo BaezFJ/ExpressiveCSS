@@ -250,6 +250,12 @@ test('a search bar shows the focus ring its input clears', () => {
   assert.ok(ringed, 'the focused bar takes the shared focus ring');
 });
 
+test('a plain app bar form shows the focus ring its input clears', () => {
+  const form = 'header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)) > :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > form:has(input:focus-visible)';
+  const ringed = rules.some((r) => r.selector === form && /outline:\s*3px solid var\(--md-sys-color-secondary\)/.test(r.body));
+  assert.ok(ringed, 'the form around the focused input takes the shared focus ring');
+});
+
 test('destinations that do not fit move to their own row instead of squeezing the title', () => {
   const bar = 'header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)) > :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar):has(> :is(menu, ul))';
   assert.ok(rules.some((r) => r.selector === bar && /flex-wrap:\s*wrap/.test(r.body)), 'the bar wraps');

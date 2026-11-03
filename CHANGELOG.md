@@ -30,6 +30,32 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- A form reset no longer leaves stale state behind. ColorPicker redraws its
+  controls, CharacterCounter recounts, `.validate` fields drop `invalid` and
+  `aria-invalid`, the error summary hides, auto-resizing textareas fit their
+  restored text, ImageCompare moves its divider back, and a data table's
+  select-all follows the restored rows. Datepicker, Slider, FormSelect and
+  RichTextEditor read the field's form when the reset fires, so a field moved
+  into a form after init follows its reset too.
+
+- A click on the icon of a disabled Datepicker month arrow no longer changes
+  the month.
+
+- A pie slice of nearly the whole total, such as 3,000,000 beside 1, is drawn
+  as a full circle. Its arc used to round to a zero-length path and vanish.
+
+- Line and scatter chart axes add significant digits when compact labels
+  would repeat, so ticks at 10,050 and 10,100 no longer both read "10.1K".
+
+- A moving Particles canvas repaints when it is resized, instead of showing a
+  blank frame on each resize step.
+
+- The search form in a plain top app bar shows a focus ring when its input
+  has keyboard focus.
+
+- `$expand-more` is `!default`, so `@use "expressive" with ($expand-more: …)`
+  configures it.
+
 - Particles paint at the pixel ratio their buffer was sized for, so dots no
   longer draw scaled and offset after the page moves to a screen with another
   ratio. A resize keeps the same dots, moved with the box, instead of

@@ -20,14 +20,43 @@ export function formEventScope(el: Element): Document | ShadowRoot {
 
 /**
  * Runs `restored` after a reset of the field's form. The form restores its
- * fields after the reset event, so it waits a task, and it skips a field
- * whose listeners `signal` has removed since.
+ * fields after the reset event, so it waits a task. It skips a cancelled
+ * reset, and a field whose listeners `signal` has removed since.
+ *
+ * It listens on the field's root, which hears a form the field moves into
+ * later, and on the form itself, which still hears it after the form moves
+ * into a shadow root. Reset does not leave a shadow root. The returned
+ * function binds both again, for a field that moved into another root;
+ * listeners already bound are not added twice.
  */
-export function afterFormReset(el: HTMLInputElement, restored: () => void, signal: AbortSignal) {
+export function afterFormReset(
+  el: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement,
+  restored: () => void,
+  signal: AbortSignal
+) {
+  const handled = new WeakSet<Event>();
   const onReset = (e: Event) => {
-    if (e.target === el.form) setTimeout(() => signal.aborted || restored());
+    if (e.target !== el.form || handled.has(e)) return;
+    handled.add(e);
+    setTimeout(() => signal.aborted || e.defaultPrevented || restored());
   };
-  formEventScope(el).addEventListener('reset', onReset, { capture: true, signal });
+  const bind = () => {
+    for (const target of [formEventScope(el), el.form]) target?.addEventListener('reset', onReset, { capture: true, signal });
+  };
+  bind();
+  return bind;
+}
+
+/**
+ * Runs `restored(form)` a task after any form in the document resets, once
+ * the form has restored its fields, unless the reset was cancelled. For
+ * document-level behaviors; a component bound to one field uses afterFormReset.
+ */
+export function afterAnyFormReset(restored: (form: HTMLFormElement) => void) {
+  document.addEventListener('reset', (e) => {
+    const form = e.target;
+    if (form instanceof HTMLFormElement) setTimeout(() => e.defaultPrevented || restored(form));
+  }, true);
 }
 
 /** A picker footer text button; a hidden one is also out of the tab order. */

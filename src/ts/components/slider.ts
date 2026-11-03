@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { Utils } from '../core/utils';
+import { Utils, afterFormReset } from '../core/utils';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface SliderOptions extends BaseOptions {}
@@ -78,15 +78,8 @@ export class Slider extends Component<SliderOptions> {
     // nothing cleared it before.
     this.el.addEventListener('mouseout', this._handleRangeRelease, { signal });
     // A form reset restores the value without an input event.
-    this.el.form?.addEventListener('reset', this._handleFormReset, { signal });
+    afterFormReset(this.el, () => this._sync(), signal);
   }
-
-  // The reset event fires before the browser restores the values.
-  _handleFormReset = () => {
-    setTimeout(() => {
-      if (Slider.getInstance(this.el) === this) this._sync();
-    });
-  };
 
   _handleRangeChange = () => {
     this._clampDual();

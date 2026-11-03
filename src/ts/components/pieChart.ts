@@ -6,6 +6,12 @@ export type PieChartOptions = LineChartOptions;
 // ponytail: rows past six repeat the colors; data-other groups the small ones.
 /** The pie's radius in a 100-unit box, leaving room for the active slice to grow. */
 const RADIUS = 46;
+/**
+ * Slices at least this share are drawn whole. polarPoint rounds to 0.001, so
+ * a slice within about 3.5e-6 of whole would end where it starts and its
+ * single arc would draw nothing. The rest of the pie is too thin to see.
+ */
+const WHOLE = 1 - 1e-5;
 /** The active slice's scale, as in _pie-chart.scss. */
 const GROWN = 1.06;
 /** Slices smaller than this share get no .values label. */
@@ -257,7 +263,7 @@ export class PieChart extends LineChart {
         class: 'pie-chart-slice',
         'data-series': this._colors[i],
         // A whole circle is two half arcs; one arc cannot end where it starts.
-        d: end - start >= 1
+        d: end - start >= WHOLE
           ? `M0,${-RADIUS}${arc} 1 1 0,${RADIUS}${arc} 1 1 0,${-RADIUS}Z`
           : `M0,0L${at(start, RADIUS)}${arc} ${end - start > 0.5 ? 1 : 0} 1 ${at(end, RADIUS)}Z`
       }) as SVGPathElement;
