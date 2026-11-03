@@ -108,6 +108,35 @@ for (const [name, engine, test] of engines) {
     }
   });
 
+  test(`${name}: rich text editor shows the default text after a form reset`, { timeout: 60000 }, async (t) => {
+    const browser = await leaseBrowser(engine);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(markup);
+      await page.addScriptTag({ content: js });
+      await page.addScriptTag({ content: tiptap });
+      await page.evaluate(() => {
+        const { Editor, StarterKit } = window.Tiptap;
+        window.Expressive.RichTextEditor.init(document.querySelector('.rich-text-editor'), { Editor, extensions: [StarterKit] });
+      });
+      const editable = page.locator('.rich-text-editor-content [contenteditable="true"]');
+      await editable.click();
+      await page.keyboard.press('End');
+      await page.keyboard.type(' again');
+      assert.equal(await page.locator('textarea').inputValue(), '<p>Hello world again</p>');
+      await page.evaluate(() => {
+        window.inputs = 0;
+        document.querySelector('textarea').addEventListener('input', () => window.inputs++);
+        document.querySelector('form').reset();
+      });
+      await page.waitForFunction(() => document.querySelector('.rich-text-editor-content [contenteditable]').innerHTML === '<p>Hello world</p>');
+      assert.equal(await page.locator('textarea').inputValue(), '<p>Hello world</p>');
+      assert.equal(await page.evaluate(() => window.inputs), 0, 'a reset fires no input');
+    } finally {
+      await browser.close();
+    }
+  });
+
   test(`${name}: rich text editor follows a disabled textarea`, { timeout: 60000 }, async (t) => {
     const browser = await leaseBrowser(engine);
     try {

@@ -252,7 +252,7 @@ const extras = `<!doctype html><html lang="en"><head><style>${css}</style></head
   <fieldset><legend>Uses</legend>
     <label><input type="checkbox" name="use" value="work"> Work</label>
     <label><input type="checkbox" name="use" value="home"> Home</label></fieldset>
-  <fieldset><legend>Note</legend><input name="note" aria-label="Note"></fieldset>
+  <fieldset><legend>Note</legend><input name="note" aria-label="Note"><input type="hidden" name="token" value="csrf-secret"><input type="password" name="pin" aria-label="PIN"></fieldset>
   <footer><button type="button" value="previous">Back</button><button type="button" value="skip">Skip</button><button type="button" value="next">Next</button><button type="submit">Send</button></footer>
 </form></body></html>`;
 
@@ -316,13 +316,15 @@ for (const [name, engine, test] of engines) {
 
       // After the last question comes the review step, with the submit button.
       assert.deepEqual((await shown()).buttons, ['Back', 'Skip', 'Next'], 'the last question moves on to the review');
+      // A password is masked in the review and a hidden input left out.
+      await page.locator('#extra input[name="pin"]').fill('1234');
       await page.locator('#extra footer [value="next"]').click();
       const review = await page.evaluate(() => ({
         rows: [...document.querySelectorAll('.questionnaire-summary dl > div')].map((row) => [...row.children].map((cell) => cell.textContent)),
         focused: document.activeElement.className,
         described: document.querySelector('.questionnaire-summary button').getAttribute('aria-describedby') === document.querySelector('.questionnaire-summary dt').id,
       }));
-      assert.deepEqual(review.rows, [['Source', 'Other, a', 'Edit'], ['Uses', 'Home', 'Edit'], ['Note', 'fasta', 'Edit']]);
+      assert.deepEqual(review.rows, [['Source', 'Other, a', 'Edit'], ['Uses', 'Home', 'Edit'], ['Note', 'fasta, ••••••••', 'Edit']]);
       assert.equal(review.focused, 'questionnaire-summary');
       assert.ok(review.described, 'each Edit button is described by its question');
       assert.deepEqual(await shown(), { question: -1, buttons: ['Back', 'Send'], progress: 'Review your answers' });

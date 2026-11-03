@@ -269,3 +269,33 @@ test('the month arrows are named from i18n', () => {
     for (const picker of pickers) picker.destroy();
   }
 });
+
+test('a range end input and a container selector are found inside the same shadow root', () => {
+  resetBody();
+  document.body.innerHTML = '<div id="host"></div>';
+  const root = document.getElementById('host').attachShadow({ mode: 'open' });
+  root.innerHTML = '<div><input id="start"><input id="end"></div><section id="box"></section>';
+  const picker = Expressive.Datepicker.init(root.getElementById('start'), {
+    isDateRange: true, dateRangeEndEl: '#end', container: '#box', format: 'yyyy-mm-dd'
+  });
+  try {
+    assert.equal(picker.endDateEl, root.getElementById('end'));
+    assert.equal(picker.containerEl.parentElement, root.getElementById('box'));
+  } finally {
+    picker.destroy();
+    resetBody();
+  }
+});
+
+test('a container selector that matches nothing falls back to the default placement', () => {
+  resetBody();
+  document.body.innerHTML = '<div><input id="start"></div>';
+  const start = document.getElementById('start');
+  const picker = Expressive.Datepicker.init(start, { container: '#missing' });
+  try {
+    assert.equal(picker.containerEl.previousElementSibling, start.parentElement);
+  } finally {
+    picker.destroy();
+    resetBody();
+  }
+});

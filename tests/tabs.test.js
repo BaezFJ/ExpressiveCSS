@@ -46,6 +46,27 @@ describe('Tabs', () => {
     }
   });
 
+  test('clicking the shown tab does not fire onShow again', () => {
+    document.body.innerHTML = markup;
+    const nav = document.querySelector('nav');
+    const [base, cafe] = nav.querySelectorAll('a');
+    const shown = [];
+    const onChange = (e) => shown.push(e.detail.panel.id);
+    nav.addEventListener('expressive:change', onChange);
+    let instance;
+    try {
+      instance = Expressive.Tabs.init(nav, { onShow: (panel) => shown.push(`onShow:${panel.id}`) });
+      base.click();
+      assert.deepEqual(shown, [], 'the shown tab changes nothing');
+      cafe.click();
+      cafe.click();
+      assert.deepEqual(shown, ['onShow:café', 'café'], 'one notice per change');
+    } finally {
+      nav.removeEventListener('expressive:change', onChange);
+      instance?.destroy();
+    }
+  });
+
   test('panels inside a shadow root resolve', () => {
     document.body.innerHTML = '<div id="host"></div>';
     const shadow = document.getElementById('host').attachShadow({ mode: 'open' });

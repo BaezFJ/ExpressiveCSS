@@ -446,9 +446,9 @@ export class Timepicker extends Component<TimepickerOptions> {
 
     // Append popover to input by default
     const optEl = this.options.container;
-    const containerEl = optEl instanceof HTMLElement ? optEl : document.querySelector(optEl);
+    const containerEl = typeof optEl === 'string' ? Utils.querySelector(this.el, optEl) : optEl;
 
-    if (this.options.container && !!containerEl) {
+    if (containerEl) {
       containerEl.append(this.containerEl);
     } else {
       this.el.parentElement.appendChild(this.containerEl);

@@ -30,6 +30,29 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Clicking the tab that is already shown no longer fires `onShow` and
+  `expressive:change` again or re-runs the indicator animation. Swipeable
+  tabs and keyboard focus already skipped it.
+
+- RichTextEditor follows a form reset. The editor used to keep the typed
+  text while the reset textarea held its default, so the page showed one
+  thing and the form submitted another.
+
+- A date or time picker inside a shadow root finds its `dateRangeEndEl` and
+  `container` selectors there. It used to search only the document, so a
+  range end input in the same root was not found. Datepicker also stops
+  throwing when a `container` selector matches nothing and falls back to the
+  default placement, as Timepicker does.
+
+- Chips no longer throws from the constructor when `data` holds a chip with a
+  blank or null id. Starting data now gets the same checks as `addChip`, so
+  blank ids, duplicates and chips past `limit` are dropped.
+
+- Security: a questionnaire's review step no longer shows hidden inputs or
+  passwords. It listed a hidden token as an answer and printed a password in
+  plain text. A password now shows as a fixed-length mask, and a file input
+  shows its file names instead of the browser's fake path.
+
 - The mega menu and navigation rail panel chevrons stay visible in forced-colors
   mode. They were drawn as masks and painted in Canvas, so they disappeared.
 

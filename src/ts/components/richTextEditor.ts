@@ -144,12 +144,13 @@ export class RichTextEditor<E extends RichTextEditorClass = RichTextEditorClass>
     // browser cannot focus it to report. The editor takes over: it carries
     // aria-required, and an empty editor cancels submit and takes focus.
     this._required = this.textarea.required;
+    this._form = this.textarea.form;
     if (this._required) {
       attributes['aria-required'] = 'true';
       this.textarea.required = false;
-      this._form = this.textarea.form;
       this._form?.addEventListener('submit', this._handleSubmit, { capture: true, signal: this._events.signal });
     }
+    this._form?.addEventListener('reset', this._handleReset, { signal: this._events.signal });
 
     this.content = document.createElement('div');
     this.content.className = 'rich-text-editor-content';
@@ -212,6 +213,19 @@ export class RichTextEditor<E extends RichTextEditorClass = RichTextEditorClass>
     e.preventDefault();
     e.stopImmediatePropagation();
     this.editor.chain().focus().run();
+  };
+
+  /**
+   * The form restores the textarea after the reset event, so the editor reads
+   * it back a task later. Without this the editor kept the typed text while the
+   * form submitted the default. No update is emitted, so a reset fires no input.
+   */
+  private _handleReset = (e: Event) => {
+    setTimeout(() => {
+      if (e.defaultPrevented || RichTextEditor.getInstance(this.el) !== this || !this.editor) return;
+      const commands = this.editor.commands as { setContent: (content: string, options: { emitUpdate: boolean }) => boolean };
+      commands.setContent(this.textarea.value, { emitUpdate: false });
+    });
   };
 
   private _handleUpdate = () => {

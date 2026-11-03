@@ -165,6 +165,16 @@ export class Utils {
   }
 
   /**
+   * `querySelector` against the tree `el` lives in, then the document, so a
+   * selector option finds an element in the same shadow root and still finds
+   * one outside it, such as `body`.
+   */
+  static querySelector(el: Node, selector: string): HTMLElement | null {
+    const root = el.getRootNode() as Document | ShadowRoot;
+    return ('getElementById' in root && root.querySelector<HTMLElement>(selector)) || document.querySelector<HTMLElement>(selector);
+  }
+
+  /**
    * Adds or removes one name in an element's inline `anchor-name` list. A
    * trigger can anchor a Tooltip and a Menu at once, and writing the whole
    * property let the last writer, or the first to be destroyed, wipe the other.

@@ -247,3 +247,17 @@ test('the seconds layout sizes its boxes and digits in rem', () => {
   assert.ok(sizes.length >= 4, sizes.join(', '));
   for (const size of sizes) assert.match(size, /: [\d.]+rem$/);
 });
+
+test('a container selector is found inside the input\'s shadow root', () => {
+  resetBody();
+  document.body.innerHTML = '<div id="host"></div>';
+  const root = document.getElementById('host').attachShadow({ mode: 'open' });
+  root.innerHTML = '<div><input></div><section id="box"></section>';
+  const picker = Expressive.Timepicker.init(root.querySelector('input'), { container: '#box', vibrate: false });
+  try {
+    assert.equal(picker.containerEl.parentElement, root.getElementById('box'));
+  } finally {
+    picker.destroy();
+    resetBody();
+  }
+});
