@@ -1,5 +1,5 @@
 import { svgNode } from '../core/utils';
-import { LineChart, LineChartOptions, cellValue, linearKey, morph, pace, textSpan as span } from './lineChart';
+import { LineChart, LineChartOptions, ROW_COLORS, cellValue, linearKey, morph, pace, seriesColor, textSpan as span } from './lineChart';
 
 export type SankeyChartOptions = LineChartOptions;
 
@@ -9,7 +9,6 @@ const NODE_WIDTH = 2;
 /** The gap between nodes in a column, in hundredths of the plot's height. */
 const NODE_GAP = 4;
 // ponytail: nodes past six repeat the colors, as pie chart rows do.
-const COLORS = 6;
 
 /** A row that draws a link: its index, its source and target names, and its value. */
 interface Flow {
@@ -86,7 +85,7 @@ function nodesOf(flows: Flow[]): Node[] {
   const columns = new Map<string, number>();
   return [...new Set(flows.flatMap((flow) => [flow.source, flow.target]))].map((name, i) => ({
     name,
-    color: String((i % COLORS) + 1),
+    color: seriesColor(i, ROW_COLORS),
     column: columnOf(name, flows, columns),
     size: Math.max(sum(flows.filter((flow) => flow.target === name)), sum(flows.filter((flow) => flow.source === name))),
     x: 0,

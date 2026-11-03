@@ -28,6 +28,8 @@ const _defaults: LineChartOptions = {
 };
 
 export const COLORS = 4;
+/** Charts that color each row, not each series, cycle through six colors. */
+export const ROW_COLORS = 6;
 
 /** The least space between two row labels. */
 const LABEL_GAP = 4;
@@ -127,8 +129,34 @@ export function polarPoint(turn: number, r: number): string {
   return `${(r * Math.sin(angle)).toFixed(3)},${(-r * Math.cos(angle)).toFixed(3)}`;
 }
 
-/** A series' color number, for its `data-series`. */
-export const seriesColor = (i: number) => String((i % COLORS) + 1);
+/** A series' color number, for its `data-series`, from a palette of `colors`. */
+export const seriesColor = (i: number, colors = COLORS) => String((i % colors) + 1);
+
+/** A value's tooltip text, with the row's share after it when there is one. */
+const withShare = (text: string, share: string | undefined) => (share ? `${text} (${share})` : text);
+
+/** The rows of a series split at each null into runs of indexes, empty runs included. */
+export function splitRuns(values: (number | null)[]) {
+  const runs: number[][] = [[]];
+  values.forEach((value, index) => (value === null ? runs.push([]) : runs[runs.length - 1].push(index)));
+  return runs;
+}
+
+/** An axis of tick labels, each placed by --at, its distance along the plot. */
+export function tickAxis(className: string, ticks: number[], text: (tick: number) => string, at: (tick: number) => number) {
+  const axis = document.createElement('ol');
+  axis.className = className;
+  axis.setAttribute('aria-hidden', 'true');
+  for (const tick of ticks) {
+    const li = document.createElement('li');
+    const label = document.createElement('span');
+    label.textContent = text(tick);
+    li.style.setProperty('--at', `${at(tick)}%`);
+    li.append(label);
+    axis.append(li);
+  }
+  return axis;
+}
 let _gradientId = 0;
 
 /** The series update() moves the marks from: none when the reader asked for less motion. */
@@ -552,6 +580,8 @@ export class LineChart extends Component<LineChartOptions> {
     title.textContent = this.labels[index];
     this._tooltip.replaceChildren(title);
 
+    // The row's share goes after its first value only.
+    let share = this._share(index);
     this.series.forEach((series) => {
       const value = series.values[index];
       if (value === null) return;
@@ -568,7 +598,8 @@ export class LineChart extends Component<LineChartOptions> {
       name.dataset.series = color;
       name.textContent = series.name;
       const text = document.createElement('span');
-      text.textContent = series.text[index];
+      text.textContent = withShare(series.text[index], share);
+      share = undefined;
       this._tooltip.append(name, text);
     });
     this._place(index);
@@ -802,19 +833,8 @@ export class LineChart extends Component<LineChartOptions> {
 
   /** One scale's labels, each placed by --at, its value's distance down the plot. */
   private _valueAxis(series: Series, end: boolean) {
-    const axis = document.createElement('ol');
-    axis.className = `${this._type}-axis${end ? ' end' : ''}`;
-    axis.setAttribute('aria-hidden', 'true');
     const number = numberFormat(this.el, { notation: 'compact', maximumSignificantDigits: 3 });
-    for (const tick of series.scale.ticks) {
-      const li = document.createElement('li');
-      const label = document.createElement('span');
-      label.textContent = tickText(number, tick, series.affix);
-      li.style.setProperty('--at', `${series.y(tick)}%`);
-      li.append(label);
-      axis.append(li);
-    }
-    return axis;
+    return tickAxis(`${this._type}-axis${end ? ' end' : ''}`, series.scale.ticks, (tick) => tickText(number, tick, series.affix), series.y);
   }
 
   /**
@@ -857,6 +877,19 @@ export class LineChart extends Component<LineChartOptions> {
 
   /** Draws the series, which fill the plot. */
   protected _draw(drawn = this.series): Element {
+    return this._drawLines(drawn);
+  }
+
+  /**
+   * A row's share of the whole, written after its first value in the
+   * tooltip, or undefined. Pie, funnel and treemap charts give one.
+   */
+  protected _share(_index: number): string | undefined {
+    return undefined;
+  }
+
+  /** The series as lines and areas, which a chart that overrides _draw can still call. */
+  protected _drawLines(drawn = this.series): Element {
     const svg = svgNode('svg', {
       viewBox: '0 0 100 100',
       preserveAspectRatio: 'none',
@@ -903,12 +936,7 @@ export class LineChart extends Component<LineChartOptions> {
    * data breaks it into runs.
    */
   private _shape(series: Series, top: RowY, base: RowY): Shape {
-    const runs: number[][] = [[]];
-    series.tops.forEach((value, index) => {
-      if (value === null) runs.push([]);
-      else runs[runs.length - 1].push(index);
-    });
-    const filled = runs.filter((run) => run.length);
+    const filled = splitRuns(series.tops).filter((run) => run.length);
     const points = (run: number[], y: RowY) => run.map((index): [number, number] => [this._x(index), y(index)]);
     const curve = this.el.classList.contains('straight') ? straightPath : monotonePath;
     const tops = filled.map((run) => curve(points(run, top)));

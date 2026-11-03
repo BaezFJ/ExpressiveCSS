@@ -1,4 +1,4 @@
-import { LineChart, LineChartOptions, polarPoint, Series } from './lineChart';
+import { LineChart, LineChartOptions, polarPoint, Series, splitRuns } from './lineChart';
 import { svgNode as node } from '../core/utils';
 
 export type RadarChartOptions = LineChartOptions;
@@ -11,8 +11,7 @@ const RINGS = 4;
  * past the top spoke into the first.
  */
 function runs(values: (number | null)[]) {
-  const list: number[][] = [[]];
-  values.forEach((value, i) => (value === null ? list.push([]) : list[list.length - 1].push(i)));
+  const list = splitRuns(values);
   if (list.length > 1) list[0] = [...list.pop()!, ...list[0]];
   return list.filter((run) => run.length);
 }

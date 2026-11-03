@@ -1,4 +1,4 @@
-import { LineChart, LineChartOptions, percentLabel } from './lineChart';
+import { LineChart, LineChartOptions, ROW_COLORS, percentLabel, seriesColor } from './lineChart';
 
 export type TreemapChartOptions = LineChartOptions;
 
@@ -6,7 +6,6 @@ export type TreemapChartOptions = LineChartOptions;
 type Box = [x: number, y: number, width: number, height: number];
 
 // ponytail: rows past six repeat the colors, so neighbours can match.
-const COLORS = 6;
 /** The keys that move to the next row and to the one before, in any direction. */
 const NEXT = ['ArrowRight', 'ArrowDown'];
 const PREVIOUS = ['ArrowLeft', 'ArrowUp'];
@@ -123,7 +122,6 @@ export class TreemapChart extends LineChart {
     this._boxes[this.activeIndex]?.classList.remove('active');
     this._boxes[row]?.classList.add('active');
     super.show(row);
-    this._share(row);
   }
 
   /** The first row from `index` on with a rectangle, or -1. */
@@ -131,11 +129,9 @@ export class TreemapChart extends LineChart {
     return index < 0 ? index : this._boxes.findIndex((box, i) => i >= index && box);
   }
 
-  /** Adds the row's share of the whole to its cell in the tooltip, as the pie chart writes it. */
-  private _share(row: number) {
-    if (row < 0) return;
-    const share = percentLabel(this.el, this._values[row] / sum(this._values));
-    this._tooltip.querySelector('span:nth-of-type(2)')!.textContent += ` (${share})`;
+  /** The row's share of the whole, written as the pie chart writes it. */
+  protected _share(row: number) {
+    return percentLabel(this.el, this._values[row] / sum(this._values));
   }
 
   /**
@@ -193,7 +189,7 @@ export class TreemapChart extends LineChart {
       if (!value) return null;
       const box = document.createElement('div');
       box.className = 'treemap-chart-box';
-      box.dataset.series = String((drawn++ % COLORS) + 1);
+      box.dataset.series = seriesColor(drawn++, ROW_COLORS);
       const [name, text] = [document.createElement('span'), document.createElement('span')];
       [name.textContent, text.textContent] = [this.labels[i], this.series[0].text[i]];
       box.append(name, text);

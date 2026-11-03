@@ -57,26 +57,11 @@ export class FunnelChart extends LineChart {
     for (const series of this.series) series.color = '1';
   }
 
-  show(index: number) {
-    // Skipping a repeat keeps the percentage from being added twice.
-    if (!this._tooltip || index === this.activeIndex) return;
-    super.show(index);
-    this._addShare(index);
-  }
-
-  /** Writes a row's share after its first value in the tooltip. */
-  private _addShare(index: number) {
-    const share = this._share(index);
-    // A row with a share has a first value, so the first value text is its own.
-    const text = this._tooltip.querySelector('span:nth-of-type(2)');
-    if (share && text) text.textContent += ` (${share})`;
-  }
-
   /**
    * A row's value as a percentage of the first row's, in whole percentages
    * with a tenth below 10%, or '' when either row has no stage.
    */
-  private _share(index: number) {
+  protected _share(index: number) {
     const values = this.series[0].values;
     const [first, value] = [values[0], values[index]];
     if (!(first! > 0 && value! > 0)) return '';
