@@ -208,26 +208,29 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 8px;
     list-style: none;
     position: absolute;
     inset: auto 0 0;
     z-index: 4;
     margin: 0;
-    padding: 8px 0;
+    padding: 0;
     border: 0;
     background: none;
 
+    // Each dot is a 24px button with the 8px dot painted in its content box,
+    // so the targets meet WCAG 2.5.8 without overlapping. They touch, which
+    // keeps the row the height it had and puts the dots 24px apart.
     .indicator-item {
       appearance: none;
       box-sizing: border-box;
       display: block;
-      width: 8px;
-      height: 8px;
+      width: 24px;
+      height: 24px;
       margin: 0;
-      padding: 0;
+      padding: 8px;
       border: 0;
       border-radius: 50%;
+      background-clip: content-box;
       background-color: color-mix(
         in oklab,
         var(--md-sys-color-on-surface) 45%,
@@ -243,7 +246,8 @@
         @include forced-colors-fill;
       }
 
-      @include focus-visible;
+      // Inset to ring the dot as it did, not the whole target.
+      @include focus-visible(-6px);
     }
   }
 

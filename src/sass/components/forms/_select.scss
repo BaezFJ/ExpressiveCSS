@@ -354,10 +354,13 @@ ul[role="tree"] {
       background-color: state-layer(var(--md-comp-menu-item-label-text-color), "hover");
     }
 
+    // The focus layer alone is too faint to find, so the row takes the
+    // shared ring too, inset because the tree scrolls and would clip it.
     &:focus-visible > span {
       background-color: state-layer(var(--md-comp-menu-item-label-text-color), "focus");
+      @include focus-ring(-3px);
 
-      // Forced colors drop the focus fill, and the row has no outline of its own.
+      // Forced colors drop the focus fill and the ring's color.
       @media (forced-colors: active) {
         outline: 2px solid CanvasText;
         outline-offset: -2px;

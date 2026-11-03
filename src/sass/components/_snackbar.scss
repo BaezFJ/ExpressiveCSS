@@ -101,6 +101,13 @@ $_bar: ".snackbar";
   cursor: default;
   @include glass(var(--md-comp-snackbar-container-color));
 
+  // Forced colors paint the fill as Canvas and drop the shadow, so the
+  // surface would blend into the page without an edge.
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+
   @include bp-up("medium") {
     width: max-content;
     min-width: min(344px, 100%);

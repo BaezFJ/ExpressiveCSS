@@ -40,6 +40,13 @@ dialog {
   @include z-depth("3");
   @include glass(var(--md-comp-basic-dialog-container-color));
 
+  // Forced colors paint the fill as Canvas and drop the shadow, so the
+  // surface would blend into the page without an edge.
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+
   &::backdrop {
     background-color: var(--md-comp-scrim-color);
     backdrop-filter: blur(var(--md-comp-basic-dialog-scrim-blur));

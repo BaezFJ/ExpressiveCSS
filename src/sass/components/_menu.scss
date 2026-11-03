@@ -131,6 +131,13 @@ menu[id] li > menu,
   transition: border-radius var(--md-sys-motion-duration-short4) ease;
   @include glass(var(--md-comp-menu-container-color));
 
+  // Forced colors paint the fill as Canvas and drop the shadow, so the
+  // surface would blend into the page without an edge.
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+
   > li > ul[role="group"] {
     @include list-reset;
   }

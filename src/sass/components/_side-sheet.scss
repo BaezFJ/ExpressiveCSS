@@ -58,6 +58,13 @@ $_sheet: "dialog.side-sheet";
   transition: translate var(--md-comp-side-sheet-motion-duration) var(--md-comp-side-sheet-motion), border-radius var(--md-sys-motion-duration-short4) ease;
   @include glass(var(--md-comp-side-sheet-container-color));
 
+  // Forced colors paint the fill as Canvas and drop the shadow, so the
+  // surface would blend into the page without an edge.
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+
   &:not(:modal) {
     z-index: var(--expressive-z-sheet);
     border-radius: 0;

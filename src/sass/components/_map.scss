@@ -192,6 +192,10 @@
   &.bottom-left { inset: auto auto var(--md-comp-map-control-offset) var(--md-comp-map-control-offset); }
   &.bottom-right { inset: auto var(--md-comp-map-control-offset) var(--md-comp-map-control-offset) auto; }
 
+  // .icon-button's display beats the UA [hidden] rule, and MapView hides
+  // the fullscreen button where fullscreen is unavailable.
+  [hidden] { display: none; }
+
   > .icon-button,
   > .map-control-group {
     border-radius: var(--md-sys-shape-corner-full);

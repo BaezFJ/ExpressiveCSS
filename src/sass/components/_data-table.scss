@@ -160,6 +160,12 @@
 
   td button[aria-expanded]:not([aria-haspopup]) > #{$icon} {
     transition: transform var(--md-sys-motion-duration-short4) ease-out;
+
+    // Its own reset: an author's motion duration override outlasts the
+    // layered token zeroing.
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
   }
 
   td button[aria-expanded="true"]:not([aria-haspopup]) > #{$icon} {
@@ -250,6 +256,10 @@
       @include trend-arrow;
       opacity: 0;
       transition: opacity var(--md-sys-motion-duration-short4) ease-out, transform var(--md-sys-motion-duration-short4) ease-out;
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
     }
 
     &:hover::after {

@@ -67,6 +67,13 @@ dialog.bottom-sheet {
   transition: translate var(--md-comp-bottom-sheet-motion-duration) var(--md-comp-bottom-sheet-motion);
   @include glass(var(--md-comp-bottom-sheet-container-color));
 
+  // Forced colors paint the fill as Canvas and drop the shadow, so the
+  // surface would blend into the page without an edge.
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+
   // Non-modal `show()` is not in the top layer — sit above page content
   // and below tooltips and snackbars (tokens/_stacking.scss).
   &:not(:modal) {

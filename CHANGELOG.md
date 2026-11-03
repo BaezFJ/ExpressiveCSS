@@ -30,6 +30,29 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Forced colors: tooltips, snackbars, menus, dialogs and side and bottom
+  sheets get a CanvasText edge, so they no longer blend into the page. The
+  one-time code input keeps its cells and focus line, which were gradients
+  that forced colors dropped.
+
+- The file field's trigger shows a focus ring while its hidden file input
+  has keyboard focus, and a focused tree select row takes the shared ring
+  instead of only a faint state layer.
+
+- Carousel paging dots are 24px targets around the 8px dot, which meets WCAG
+  2.5.8. The dots now sit 24px apart instead of 16px.
+
+- In RTL, the switch handle starts on the right and slides left, and the
+  expanded time picker's AM and PM buttons share one border.
+
+- A modal navigation rail's scrim no longer dims the rail's own surface.
+
+- The map's fullscreen button stays hidden where fullscreen is unavailable.
+
+- The data table detail chevron and sort arrow and the mega menu chevron stop
+  animating under reduced motion, even when a page overrides the motion
+  duration tokens.
+
 - A form reset no longer leaves stale state behind. ColorPicker redraws its
   controls, CharacterCounter recounts, `.validate` fields drop `invalid` and
   `aria-invalid`, the error summary hides, auto-resizing textareas fit their

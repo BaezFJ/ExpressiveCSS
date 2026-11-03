@@ -27,6 +27,12 @@
     align-self: start;
     min-height: 3rem;
     min-width: 0;
+
+    // The focused control is the invisible file input inside, so the
+    // trigger shows its ring.
+    &:has(> input[type="file"]:focus-visible) {
+      @include focus-ring;
+    }
   }
 
   span {
