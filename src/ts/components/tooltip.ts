@@ -1,5 +1,5 @@
 import { Utils, restoreAttribute } from '../core/utils';
-import { Component, BaseOptions } from '../core/component';
+import { Component, BaseOptions, defined } from '../core/component';
 
 export type TooltipPosition = 'top' | 'right' | 'bottom' | 'left';
 
@@ -163,15 +163,19 @@ export class Tooltip extends Component<TooltipOptions> {
   };
   xMovement: number;
   yMovement: number;
+  /** The options passed to init, which data-* attributes never override. */
+  private _given: Set<string>;
 
   constructor(el: HTMLElement, options: Partial<TooltipOptions>) {
     super(el, options);
 
     // Again, so the data-* options sit between the defaults and the options.
+    const given = defined(options ?? {});
+    this._given = new Set(Object.keys(given));
     this.options = {
       ...Tooltip.defaults,
       ...this._getAttributeOptions(),
-      ...options
+      ...given
     };
 
     this.isOpen = false;
@@ -294,8 +298,9 @@ export class Tooltip extends Component<TooltipOptions> {
     if (this.options.openOnClick) {
       this._outsideTimeout = setTimeout(() => this.el.ownerDocument.addEventListener('click', this._handleDocumentClick, { signal }));
     }
-    // Update tooltip content with HTML attribute options
-    this.options = { ...this.options, ...this._getAttributeOptions() };
+    // Picks up a changed data-* attribute, except for an option passed to
+    // init: that one used to lose to its attribute from the first open on.
+    this.options = { ...this.options, ...this._freshAttributeOptions() };
     this._updateTooltipContent();
     this._setEnterDelayTimeout(isManual);
   };
@@ -590,6 +595,11 @@ export class Tooltip extends Component<TooltipOptions> {
   // lands on another element closes a click tooltip.
   private _blurClickTooltip(next: Node | null) {
     if (next && (this.isOpen || this._shown)) this._hideNow();
+  }
+
+  /** The data-* options, without those init was given. */
+  private _freshAttributeOptions(): Partial<TooltipOptions> {
+    return Object.fromEntries(Object.entries(this._getAttributeOptions()).filter(([name]) => !this._given.has(name)));
   }
 
   _getAttributeOptions(): Partial<TooltipOptions> {
