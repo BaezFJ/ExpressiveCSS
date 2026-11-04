@@ -140,6 +140,12 @@ for (const [name, engine, test] of engines) {
         return event.defaultPrevented;
       });
       assert.equal(imeEnter, false, 'the Enter that confirms an IME composition runs nothing');
+      const imeArrows = await input.evaluate((el) => ['ArrowDown', 'ArrowUp'].map((key) => {
+        const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true, isComposing: true });
+        el.dispatchEvent(event);
+        return event.defaultPrevented;
+      }));
+      assert.deepEqual(imeArrows, [false, false], 'the arrows that pick an IME candidate stay the IME\'s');
       assert.equal(await isOpen(), true);
       await page.locator('#late').click();
       assert.deepEqual(await page.evaluate(() => window.ran), ['new', 'keys', 'late']);

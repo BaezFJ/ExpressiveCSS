@@ -125,6 +125,14 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.match(await tooltip.innerText(), /^Apr/);
       await page.keyboard.press('Home');
       assert.match(await tooltip.innerText(), /^Jan/);
+      // Browser shortcuts such as Alt+Left stay the browser's.
+      const claimed = await plot.evaluate((el) => [{ key: 'ArrowRight', altKey: true }, { key: 'End', ctrlKey: true }, { key: 'ArrowRight', metaKey: true }].map((init) => {
+        const event = new KeyboardEvent('keydown', { ...init, bubbles: true, cancelable: true });
+        el.dispatchEvent(event);
+        return event.defaultPrevented;
+      }));
+      assert.deepEqual(claimed, [false, false, false]);
+      assert.match(await tooltip.innerText(), /^Jan/);
       await page.keyboard.press('Escape');
       assert.equal(await tooltip.isVisible(), false);
       await page.keyboard.press('ArrowRight');

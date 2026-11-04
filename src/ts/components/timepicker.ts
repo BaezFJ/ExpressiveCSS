@@ -10,6 +10,8 @@ type Unit = (typeof UNITS)[number];
 
 /** How far each key moves a field, wrapping round. */
 const STEPS: Record<string, number> = { ArrowUp: 1, ArrowDown: -1, PageUp: 5, PageDown: -5 };
+/** Whether a key steps a field. Alt, Ctrl and Meta stay the browser's. */
+const isStepKey = (e: KeyboardEvent) => e.key in STEPS && Utils.plainKey(e);
 
 /** A 12-hour time's hour of the day, 0 to 23. */
 const dayHour = (hours: number, pm: boolean) => (hours % 12) + (pm ? 12 : 0);
@@ -779,7 +781,7 @@ export class Timepicker extends Component<TimepickerOptions> {
    * listener's column holds only the fields; AM/PM is a separate column.
    */
   _handleDigitalKeydown = Utils.ignoringComposition((event: KeyboardEvent) => {
-    if (event.key in STEPS) return this._step(event);
+    if (isStepKey(event)) return this._step(event);
     if (event.key !== 'Enter') return;
     event.preventDefault();
     // Normalize first, as leaving the field would: an emptied field takes its

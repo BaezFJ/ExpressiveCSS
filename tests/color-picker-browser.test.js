@@ -44,6 +44,14 @@ for (const [name, engine, test] of engines) {
       await page.keyboard.press('Shift+ArrowLeft');
       assert.equal(await area.getAttribute('aria-valuetext'), 'Saturation 90%, brightness 99%');
       assert.deepEqual(await page.evaluate(() => log.slice(0, 3)), ['input #fc0000', 'change #fc0000', 'onChange #fc0000']);
+      // Browser shortcuts such as Alt+Left stay the browser's.
+      const claimed = await area.evaluate((el) => [{ key: 'ArrowLeft', altKey: true }, { key: 'ArrowUp', ctrlKey: true }, { key: 'ArrowRight', metaKey: true }].map((init) => {
+        const event = new KeyboardEvent('keydown', { ...init, bubbles: true, cancelable: true });
+        el.dispatchEvent(event);
+        return event.defaultPrevented;
+      }));
+      assert.deepEqual(claimed, [false, false, false]);
+      assert.equal(await area.getAttribute('aria-valuetext'), 'Saturation 90%, brightness 99%');
 
       // Pointer: a press picks the point, and a drag past the edge clamps to
       // it. The area does not mirror in RTL: saturation still grows rightward.

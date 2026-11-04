@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { Utils, svgNode } from '../core/utils';
+import { Utils, numberValue, svgNode } from '../core/utils';
 
 export interface LineChartOptions extends BaseOptions {
   /**
@@ -320,15 +320,6 @@ export interface Series {
 export function cellValue(cell: Element | undefined): number | null {
   if (!cell) return null;
   return numberValue((cell as HTMLElement).dataset.value ?? cell.textContent);
-}
-
-/** Reads text as one number, as cellValue does, or null. */
-export function numberValue(raw: string): number | null {
-  const text = raw.replace(/\u2212/g, '-').replace(/[\s%\p{Sc}]/gu, '');
-  if (!/^[+-]?(\d{1,3}(,\d{3})+|\d+)?(\.\d+)?(e[+-]?\d+)?$/i.test(text)) return null;
-  // The pattern also lets through "e5" (NaN) and "1e400" (Infinity).
-  const value = parseFloat(text.replace(/,/g, ''));
-  return Number.isFinite(value) ? value : null;
 }
 
 /** An axis label: the tick in `format`, with the column's signs after any minus. */
@@ -1062,6 +1053,7 @@ export class LineChart extends Component<LineChartOptions> {
   }
 
   private _onKeyDown = (e: KeyboardEvent) => {
+    if (!Utils.plainKey(e)) return;
     const next = this._keyTarget(e.key);
     if (next === undefined) return;
     e.preventDefault();

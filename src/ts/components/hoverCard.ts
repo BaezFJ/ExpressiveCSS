@@ -51,10 +51,11 @@ export class HoverCard extends Component<HoverCardOptions> {
     const { signal } = this._events;
     this.cardEl.addEventListener('toggle', this._handleToggle, { signal });
     for (const target of [this.el, this.cardEl]) {
-      target.addEventListener('pointerenter', this._handlePointerEnter, { signal });
       target.addEventListener('pointerleave', this._handlePointerLeave, { signal });
       target.addEventListener('focusout', this._handleFocusOut, { signal });
     }
+    this.el.addEventListener('pointerenter', this._handlePointerEnter, { signal });
+    this.cardEl.addEventListener('pointerenter', this._handleCardEnter, { signal });
     this.el.addEventListener('focus', this._handleLinkFocus, { signal });
     this.cardEl.addEventListener('focusin', this._handleCardFocus, { signal });
   }
@@ -154,7 +155,15 @@ export class HoverCard extends Component<HoverCardOptions> {
     if (this.el.matches(':focus-visible')) this._hold('focus');
   };
 
-  private _handleCardFocus = () => this._hold('focus');
+  // Links can share a card, and each listens on it. Only the link showing the
+  // card is held by it; the others would take the card away after enterDelay.
+  private _handleCardEnter = (e: PointerEvent) => {
+    if (this._shown) this._handlePointerEnter(e);
+  };
+
+  private _handleCardFocus = () => {
+    if (this._shown) this._hold('focus');
+  };
 
   private _handleFocusOut = (e: FocusEvent) => {
     const next = e.relatedTarget as Node | null;

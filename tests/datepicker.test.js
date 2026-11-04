@@ -104,6 +104,30 @@ test('minDate and maxDate options are not mutated', () => {
   }
 });
 
+test('the calendar opens inside minDate and maxDate', () => {
+  const opensOn = (options, value = '') => {
+    resetBody();
+    document.body.innerHTML = '<div><input></div>';
+    const input = document.querySelector('input');
+    input.value = value;
+    const picker = Expressive.Datepicker.init(input, options);
+    try {
+      picker.draw();
+      const years = picker.calendarEl.querySelectorAll('.orig-select-year option').length;
+      assert.ok(years > 0, 'the year list has a year to pick');
+      return [picker.calendars[0].year, picker.calendars[0].month];
+    } finally {
+      picker.destroy();
+      resetBody();
+    }
+  };
+  assert.deepEqual(opensOn({ maxDate: new Date(2008, 5, 1) }), [2008, 5], 'no starting date, maxDate in the past');
+  assert.deepEqual(opensOn({ minDate: new Date(2099, 2, 10) }), [2099, 2], 'no starting date, minDate in the future');
+  assert.deepEqual(opensOn({ maxDate: new Date(2008, 5, 1), defaultDate: new Date(2020, 0, 1) }), [2008, 5], 'a default date after maxDate');
+  assert.deepEqual(opensOn({ minDate: new Date(2099, 2, 10), defaultDate: new Date(2020, 0, 1) }), [2099, 2], 'a default date before minDate');
+  assert.deepEqual(opensOn({ maxDate: new Date(2008, 5, 1), defaultDate: new Date(2007, 3, 1) }), [2007, 3], 'a default date in range stays');
+});
+
 test('minDate and maxDate bound the month arrows and the year list', () => {
   resetBody();
   document.body.innerHTML = '<div><input></div>';

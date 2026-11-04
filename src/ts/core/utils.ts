@@ -9,6 +9,19 @@ export function restoreAttribute(el: Element, name: string, value: string | null
 }
 
 /**
+ * Reads text as one number, which currency or percent signs, grouping commas
+ * and a typographic minus may surround, or null for anything else. Charts and
+ * data tables read their cells with it.
+ */
+export function numberValue(raw: string): number | null {
+  const text = raw.replace(/−/g, '-').replace(/[\s%\p{Sc}]/gu, '');
+  if (!/^[+-]?(\d{1,3}(,\d{3})+|\d+)?(\.\d+)?(e[+-]?\d+)?$/i.test(text)) return null;
+  // The pattern also lets through "e5" (NaN) and "1e400" (Infinity).
+  const value = parseFloat(text.replace(/,/g, ''));
+  return Number.isFinite(value) ? value : null;
+}
+
+/**
  * Where a field listens for its form's events. Neither formdata nor reset
  * leaves a shadow root, so a field in one listens there. Otherwise the
  * document, so the listener follows the field into another form.

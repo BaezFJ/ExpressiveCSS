@@ -256,15 +256,15 @@ export class CommandPalette extends Component<CommandPaletteOptions> {
 
   _handleInput = () => this._filter();
 
-  _handleKeydown = (e: KeyboardEvent) => {
+  _handleKeydown = Utils.ignoringComposition((e: KeyboardEvent) => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
       this._move(e.key === 'ArrowDown' ? 1 : -1);
-    } else if (e.key === 'Enter' && !Utils.isComposing(e) && this._active) {
+    } else if (e.key === 'Enter' && this._active) {
       e.preventDefault();
       this._run(this._active);
     }
-  };
+  });
 
   /**
    * The first Escape clears a typed query and the next closes the palette.

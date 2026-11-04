@@ -13,9 +13,11 @@ const toward = (sign: 1 | -1, distance: number, delta: number, velocity: number)
  * Drag-to-dismiss for `dialog.bottom-sheet`, and two heights for
  * `.expandable` sheets.
  *
- * The handle is the top 48dp of the sheet, or an explicit `.drag-handle`. A downward drag past 96dp, or a
- * flick, closes. Anything else snaps back. Content below the handle scrolls
- * normally. Light-dismiss on the scrim stays with {@link Dialogs}.
+ * The handle is the top 48dp of the sheet, or a `.drag-handle` directly in the
+ * sheet. One deeper in belongs to its own control, such as a table column or a
+ * sortable row. A downward drag past 96dp, or a flick, closes. Anything else
+ * snaps back. Content below the handle scrolls normally. Light-dismiss on the
+ * scrim stays with {@link Dialogs}.
  *
  * The drag itself is {@link installSheetDrag}, shared with the side sheet. What
  * is here is what is not shared: a handle written as a `<button>` also closes
@@ -47,7 +49,8 @@ export class BottomSheets {
       motion: '--md-comp-bottom-sheet-motion',
       direction: () => 1,
       inHandle: (event, dialog) => {
-        if (Utils.closestInPath(event, '.drag-handle')) return true;
+        const handle = Utils.closestInPath(event, '.drag-handle');
+        if (handle) return handle.parentElement === dialog;
         const rect = dialog.getBoundingClientRect();
         return event.clientY >= rect.top && event.clientY <= rect.top + 48;
       },
@@ -99,8 +102,8 @@ export class BottomSheets {
     // pointer produced it, so the keyboard path is decided without consulting
     // pointer state at all - a stale drag can never swallow a key press.
     if (event.detail !== 0 && BottomSheets._dragged) return;
-    const dialog = handle.closest(SHEET_SELECTOR);
-    if (dialog instanceof HTMLDialogElement && dialog.open) BottomSheets._activate(dialog);
+    const dialog = handle.parentElement;
+    if (dialog?.matches(`${SHEET_SELECTOR}[open]`)) BottomSheets._activate(dialog as HTMLDialogElement);
   }
 
   /** The handle button switches an .expandable sheet's height, and closes any other. */

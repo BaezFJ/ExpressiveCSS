@@ -1,5 +1,5 @@
 import { imageURL } from '../core/imageURL';
-import { Utils } from '../core/utils';
+import { Utils, afterFormReset } from '../core/utils';
 import { Menu, MenuOptions } from './menu';
 import { Component, BaseOptions } from '../core/component';
 
@@ -176,6 +176,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
   private _searchTimer: ReturnType<typeof setTimeout> | undefined;
   // Counts selections, so a callback that selects again silences the stale event.
   private _selection = 0;
+  /** The selection the field started with, which a form reset restores. */
+  private _startingSelection: AutocompleteData[];
   private _statusInfo: HTMLElement;
   private _announcer: HTMLElement;
   /** The last search returned no suggestions. A text change clears it until the next one returns. */
@@ -223,6 +225,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.$active = null;
     this._pointerDown = false;
     this._setupMenu();
+    this._startingSelection = [...this.selectedValues];
     this._setupEventHandlers();
   }
 
@@ -289,7 +292,20 @@ export class Autocomplete extends Component<AutocompleteOptions> {
     this.container.addEventListener('pointerdown', this._handleContainerPointerDown, { signal });
     this.container.addEventListener('mousedown', this._handleInertRowPress, { capture: true, signal });
     this.container.addEventListener('click', this._handleInertRowPress, { capture: true, signal });
+    afterFormReset(this.el, this._handleReset, signal);
   }
+
+  /** The form restored the input's text. The selection follows it, with no change event, as a native reset fires none. */
+  private _handleReset = () => {
+    this._cancelPendingSearch();
+    this._searchAbort?.abort();
+    this._selection++;
+    this.selectedValues = [...this._startingSelection];
+    if (!this.options.isMultiSelect) this._refreshInputText();
+    this._updateSelectedInfo();
+    this._resetAutocomplete();
+    this.close();
+  };
 
   _setupMenu() {
     this.container = document.createElement('menu');

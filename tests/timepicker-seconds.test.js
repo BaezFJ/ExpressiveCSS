@@ -84,6 +84,21 @@ describe('Timepicker seconds field', () => {
     }
   });
 
+  test('a key with Alt, Ctrl or Meta stays the browser\'s', () => {
+    const { picker } = open('11:20:58 PM', { showSeconds: true });
+    try {
+      const seconds = picker.containerEl.querySelector('.timepicker-input-seconds');
+      for (const init of [{ key: 'ArrowUp', altKey: true }, { key: 'PageUp', ctrlKey: true }, { key: 'ArrowDown', metaKey: true }]) {
+        const event = new window.KeyboardEvent('keydown', { ...init, bubbles: true, cancelable: true });
+        seconds.dispatchEvent(event);
+        assert.equal(event.defaultPrevented, false, init.key);
+      }
+      assert.equal(picker.seconds, 58);
+    } finally {
+      picker.destroy();
+    }
+  });
+
   test('typed seconds take whole numbers from 0 to 59, and an emptied field takes the current second', (t) => {
     t.mock.timers.enable({ apis: ['Date'], now: new Date(2026, 9, 21, 15, 37, 12) });
     const { picker } = open('14:30:45', { showSeconds: true, twelveHour: false });

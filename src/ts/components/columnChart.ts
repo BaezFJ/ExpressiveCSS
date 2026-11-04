@@ -1,4 +1,5 @@
-import { LineChart, LineChartOptions, numberValue, Series } from './lineChart';
+import { numberValue } from '../core/utils';
+import { LineChart, LineChartOptions, Series } from './lineChart';
 
 export type ColumnChartOptions = LineChartOptions;
 

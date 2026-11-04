@@ -154,5 +154,45 @@ for (const [name, browserType, browserTest] of engines) {
       await browser.close();
     }
   });
+
+  browserTest(`${name}: a shared card stays against its link while the pointer or focus is on the card`, { timeout: 30000 }, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage({ viewport: { width: 800, height: 600 }, reducedMotion: 'reduce' });
+      await page.setContent(`<style>${css} body { margin: 0 }</style>
+        <p style="margin: 100px"><a id="first" class="hover-card-trigger" href="#ada" aria-details="card">Ada</a></p>
+        <p style="margin: 300px 100px 0"><a id="second" class="hover-card-trigger" href="#ada" aria-details="card">Ada again</a></p>
+        <button id="start" type="button">Start</button>
+        <div id="card" class="popover" popover="hint"><p>Ada Lovelace</p><a id="inner" href="#profile">Profile</a></div>
+        <script>${js}</script>`);
+      await page.evaluate(() => {
+        document.body.prepend(document.getElementById('start'));
+        for (const id of ['first', 'second']) Expressive.HoverCard.init(document.getElementById(id), { enterDelay: 100, exitDelay: 400 });
+      });
+      const owner = () => page.evaluate(() => ['first', 'second'].filter((id) => Expressive.HoverCard.getInstance(document.getElementById(id))._shown));
+
+      await page.mouse.move(...await center(page, '#first'));
+      await page.waitForFunction(() => document.getElementById('card').matches(':popover-open'), null, { timeout: 2000 });
+      await page.mouse.move(...await center(page, '#card'), { steps: 5 });
+      await page.waitForTimeout(400);
+      assert.deepEqual(await owner(), ['first'], 'the pointer on the card keeps it against the link that showed it');
+
+      await page.mouse.move(5, 590);
+      await page.waitForTimeout(600);
+      assert.deepEqual(await owner(), [], 'the card hides once the pointer has left it');
+
+      await page.focus('#start');
+      await tab(page, name);
+      assert.equal(await active(page), 'first');
+      await page.waitForFunction(() => document.getElementById('card').matches(':popover-open'), null, { timeout: 2000 });
+      await tab(page, name);
+      assert.equal(await active(page), 'inner');
+      await page.waitForTimeout(400);
+      assert.deepEqual(await owner(), ['first'], 'focus in the card keeps it against the link that showed it');
+      assert.equal(await active(page), 'inner', 'and focus stays in the card');
+    } finally {
+      await browser.close();
+    }
+  });
 }
 

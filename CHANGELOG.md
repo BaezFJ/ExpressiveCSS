@@ -30,6 +30,36 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- CurrencyInput no longer reads typed grouping as a decimal in a currency with
+  three decimals. Under `lang="en"` with `KWD`, `5,000` submitted 5 and now
+  submits 5000; `12,345,678` submitted 12345.678 and now submits 12345678.
+  `5.000` still reads 5 there.
+
+- A `.drag-handle` deeper in a bottom sheet, such as a data table's column resize
+  button or a sortable row's handle, no longer closes the sheet, resizes it or
+  starts a sheet drag. Only a handle that is a direct child of the sheet does.
+
+- HoverCard: when links share a card, moving the pointer or focus onto it no
+  longer hands it to another link, which made the card jump away.
+
+- Datepicker opens inside `minDate` and `maxDate`. With no starting date and
+  bounds that exclude today, it opened on today's month with no enabled day and
+  an empty year list. A default date outside the bounds moves to the nearest one.
+
+- Autocomplete follows a form reset. `selectedValues` kept the old choice after
+  the input cleared. It now returns to the starting selection, as the other
+  pickers do, closes the list and drops a waiting search, with no change event.
+
+- Charts, the ColorPicker area and Timepicker's digital fields leave keys held
+  with Alt, Ctrl or Meta to the browser, so Alt+Left goes back instead of moving
+  the chart cursor. Shift still takes the ColorPicker's larger step.
+
+- CommandPalette leaves the arrow keys to an IME during composition. They moved
+  the active command while the user picked a candidate.
+
+- DataTables no longer pulls LineChart into a modular build. It shared one number
+  parser, which now lives in `core/utils`.
+
 - Forced colors: tooltips, snackbars, menus, dialogs and side and bottom
   sheets get a CanvasText edge, so they no longer blend into the page. The
   one-time code input keeps its cells and focus line, which were gradients

@@ -254,11 +254,16 @@ export class ColorPicker extends Component<ColorPickerOptions> {
 
   // Left and right change saturation, up and down brightness; see KEY_STEPS.
   private _onKeyDown = (e: KeyboardEvent) => {
-    const steps = KEY_STEPS[e.key];
-    if (!steps || this.input!.disabled) return;
+    const steps = this._keySteps(e);
+    if (!steps) return;
     e.preventDefault();
     const unit = e.shiftKey ? 0.1 : 0.01;
     const { s, v } = this._hsv;
     this._set({ ...this._hsv, s: clamp(s + steps[0] * unit), v: clamp(v + steps[1] * unit) });
   };
+
+  /** How a key moves the point. Shift is the larger step; Alt, Ctrl and Meta stay the browser's. */
+  private _keySteps(e: KeyboardEvent) {
+    return Utils.plainKey(e) && !this.input!.disabled ? KEY_STEPS[e.key] : undefined;
+  }
 }

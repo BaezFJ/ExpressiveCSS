@@ -36,6 +36,57 @@ test('the last separator is the decimal mark when no more than the fraction digi
   assert.equal(read('1,5', 'JPY'), 15);
 });
 
+test('three digits after a grouping separator group, also when the currency has three decimals', () => {
+  assert.equal(read('5,000', 'KWD', 'en'), 5000);
+  assert.equal(read('12,345,678', 'KWD', 'en'), 12345678);
+  assert.equal(read('1.234.567', 'KWD', 'en'), 1234567);
+  assert.equal(read('5.000', 'KWD', 'de'), 5000);
+  assert.equal(read('1.234.567', 'KWD', 'de'), 1234567);
+  assert.equal(read('1,00,000', 'KWD', 'en-IN'), 100000);
+  // The locale's decimal mark, or a second kind of separator, stays a decimal.
+  assert.equal(read('5.000', 'KWD', 'en'), 5);
+  assert.equal(read('5,000', 'KWD', 'de'), 5);
+  assert.equal(read('1,234.567', 'KWD', 'en'), 1234.567);
+  assert.equal(read('1.234,567', 'KWD', 'en'), 1234.567);
+  assert.equal(read('1.234,567', 'KWD', 'fr'), 1234.567);
+  // Fewer than three digits after either separator stay a decimal.
+  assert.equal(read('5,25', 'KWD', 'en'), 5.25);
+  assert.equal(read('5.25', 'KWD', 'de'), 5.25);
+  assert.equal(read('.5', 'KWD', 'en'), 0.5);
+  // Dots in a symbol before the amount are not separators.
+  assert.equal(read('د.ب. 5.000', 'BHD', 'en'), 5);
+  assert.equal(read('Rs. 5,000', 'KWD', 'en'), 5000);
+});
+
+test('a locale whose currency and number formats mark decimals differently reads both as decimals', () => {
+  // fr-CH writes 1.234 KWD and edits 1,234; so does en-DE, as KWD 1.234.
+  for (const lang of ['fr-CH', 'en-DE']) {
+    assert.equal(read('1.234', 'KWD', lang), 1.234);
+    assert.equal(read('1,234', 'KWD', lang), 1.234);
+    assert.equal(read('1.234,567', 'KWD', lang), 1234.567);
+    assert.equal(read('1,234.567', 'KWD', lang), 1234.567);
+    assert.equal(read('1.234.567', 'KWD', lang), 1234567);
+  }
+  assert.equal(start('KWD', 'fr-CH', '1.234').value, 1.234);
+  // de-AT groups with `.` in currency and a space in numbers, and marks with `,` in both.
+  assert.equal(read('5.000', 'KWD', 'de-AT'), 5000);
+  assert.equal(read('5,000', 'KWD', 'de-AT'), 5);
+});
+
+test('an amount reads back the same from what the field shows and from what it edits', () => {
+  for (const lang of ['en', 'de', 'fr', 'de-CH', 'fr-CH', 'de-AT', 'en-DE', 'en-BE', 'en-FR', 'en-PT', 'en-IN', 'ar-EG', 'ar-BH', 'hi']) {
+    for (const currency of ['USD', 'EUR', 'JPY', 'KWD', 'BHD', 'TND']) {
+      for (const amount of [5000, 1234.5, 1.234, 1234567, 0.5, -5000]) {
+        const field = start(currency, lang, String(amount));
+        const expected = Number(new Intl.NumberFormat('en', { useGrouping: false, maximumFractionDigits: field._digits }).format(amount));
+        assert.equal(field.value, expected, `${lang} ${currency} shows ${field.el.value}`);
+        field.el.dispatchEvent(new window.FocusEvent('focus'));
+        assert.equal(field.value, expected, `${lang} ${currency} edits ${field.el.value}`);
+      }
+    }
+  }
+});
+
 test('signs, spaces and letters are ignored, and a leading minus makes the amount negative', () => {
   assert.equal(read('-12,5'), -12.5);
   assert.equal(read('−12,5'), -12.5);
