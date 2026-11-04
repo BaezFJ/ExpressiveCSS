@@ -4,6 +4,8 @@ import { Utils, restoreAttribute } from '../core/utils';
 const _defaults: BaseOptions = {};
 // Keys that open a full-screen search view from its field.
 const OPEN_KEYS = ['Enter', 'ArrowDown'];
+/** Whether a key opens the view. Alt, Ctrl and Meta stay the browser's, and a composing key the IME's. */
+const opensSearch = (e: KeyboardEvent) => OPEN_KEYS.includes(e.key) && Utils.plainKey(e) && !Utils.isComposing(e);
 
 /**
  * Collapse medium/large flexible app bars on scroll, and open the related
@@ -100,7 +102,7 @@ export class AppBar extends Component<BaseOptions> {
   };
 
   private _onSearchKeydown = (e: KeyboardEvent) => {
-    if (!OPEN_KEYS.includes(e.key) || Utils.isComposing(e) || !(this._view instanceof HTMLDialogElement)) return;
+    if (!opensSearch(e) || !(this._view instanceof HTMLDialogElement)) return;
     e.preventDefault();
     this._openSearch();
   };

@@ -58,8 +58,12 @@ const S = defineSections([
           the currency shows; every other separator groups. So <code>1234.5</code>,
           <code>1234,5</code>, <code>1.234,5</code> and <code>1,234.50</code> all read
           1234.5, and <code>1.234</code> reads 1234 for euros. Yen has no fraction
-          digits, so every separator groups. Full-width digits from an input method
-          editor and the locale's own digits read as digits.
+          digits, so every separator groups. In a currency with three decimals,
+          three digits after the locale's decimal mark are a fraction and three after
+          the other mark group: under <code>lang="en"</code> with <code>KWD</code>,
+          <code>5.000</code> reads 5 and <code>5,000</code> reads 5000. A repeated mark
+          groups too. Full-width digits from an input method editor and the locale's own
+          digits read as digits.
         </p>
   </Section>
   <Section {...S.value}>

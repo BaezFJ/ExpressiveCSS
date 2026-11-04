@@ -9,7 +9,7 @@ Component ID: `currency-input`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `9f0445bfe83967199a334a5bda06b822a4a3359b41a194bc4679e65cf68177cd`
+Contract SHA-256: `5a2e895dffa1b24f69629fceebd686db3ade73971878cc14622b2e26a249ee3c`
 
 #### Selection and adaptation
 
@@ -41,7 +41,7 @@ Add `data-currency` with an ISO 4217 code, such as `EUR`, to an `<input>` of typ
 
 When the field loses focus, it shows the amount rounded to the currency's fraction digits: under `lang="de"` with `EUR`, typing `1234.5` shows `1.234,50 €`. A page's `change` and `blur` listeners read the formatted text. When the field gains focus, it shows the plain number in the locale's decimal mark, without grouping or sign, such as `1234,5`, with the caret at the end.
 
-Typed and pasted text keeps its digits, `.`, `,` and a leading `-` or `−`, and drops anything else, such as spaces, signs and letters. The last `.` or `,` is the decimal mark when it is followed by no more digits than the currency shows; every other separator groups. So `1234.5`, `1234,5`, `1.234,5` and `1,234.50` all read 1234.5, `1.234` reads 1234 for euros, and with yen, which has no fraction digits, every separator groups. Full-width digits from an IME and the locale's own digits read as digits. Text with no digit stays as typed, and the field reports itself invalid with `Enter an amount.` until it holds an amount or is empty, so `.validate` shows the message.
+Typed and pasted text keeps its digits, `.`, `,` and a leading `-` or `−`, and drops anything else, such as spaces, signs and letters. The last `.` or `,` is the decimal mark when it is followed by no more digits than the currency shows; every other separator groups. So `1234.5`, `1234,5`, `1.234,5` and `1,234.50` all read 1234.5, `1.234` reads 1234 for euros, and with yen, which has no fraction digits, every separator groups. In a currency with three decimals, three digits after the locale's decimal mark are a fraction and three after the other mark group: under `lang="en"` with `KWD`, `5.000` reads 5 and `5,000` reads 5000. A repeated mark groups too. Full-width digits from an IME and the locale's own digits read as digits. Text with no digit stays as typed, and the field reports itself invalid with `Enter an amount.` until it holds an amount or is empty, so `.validate` shows the message.
 
 #### Syntax
 

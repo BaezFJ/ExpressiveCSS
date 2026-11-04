@@ -96,6 +96,26 @@ each('a typed amount shows in the locale and currency after blur, and the form g
   assert.deepEqual(read, { formData: '1234.5', submitted: '1234.5' });
 });
 
+each('a three-decimal amount keeps its value where the currency and number formats mark decimals differently', async ({ page, state }) => {
+  await page.evaluate(() => {
+    const form = document.createElement('form');
+    form.id = 'swiss';
+    form.lang = 'fr-CH';
+    form.innerHTML = '<input id="swiss-amount" name="swiss-amount" data-currency="KWD" value="1.234">';
+    document.body.append(form);
+    Expressive.CurrencyInput.init(form.firstElementChild);
+  });
+  const submits = () => page.evaluate(() => new FormData(document.getElementById('swiss')).get('swiss-amount'));
+  assert.match((await state('swiss-amount')).value, /1[.,]234/, 'formatted');
+  assert.equal(await submits(), '1.234', 'formatted');
+  await page.click('#swiss-amount');
+  assert.match((await state('swiss-amount')).value, /^1[.,]234$/, 'focused');
+  assert.equal(await submits(), '1.234', 'focused');
+  await page.keyboard.press('Tab');
+  assert.match((await state('swiss-amount')).value, /1[.,]234/, 'blurred');
+  assert.equal(await submits(), '1.234', 'blurred');
+});
+
 each('focus shows the plain number, and change and blur listeners read the formatted text', async ({ page, state }) => {
   await page.click('#amount');
   await page.keyboard.type('1234.5');

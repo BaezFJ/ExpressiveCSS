@@ -12,14 +12,38 @@ const _defaults: CurrencyInputOptions = Object.freeze({ i18n: Object.freeze({ in
 const LATIN = '9876543210';
 
 /**
- * Splits digits and separators into whole and fraction digits. The last `.`
- * or `,` is the decimal mark when no more than `digits` digits follow it, so
- * `1.234,5` and `1,234.50` both split at the end; any other separator groups.
+ * Whether the separator at `mark` groups even though the currency could show
+ * three digits after it. After a separator of the other kind it is a decimal,
+ * as in `1.234,567`. A repeated separator groups, and so does a lone one that
+ * is not one of the locale's `decimals`. The earlier separators are read from
+ * the first digit, since a symbol such as `د.ب.` may hold marks.
  */
-function split(clean: string, digits: number): [string, string] {
+function groupsThree(clean: string, mark: number, decimals: string[]) {
+  if (clean.length - mark !== 4) return false;
+  const separator = clean[mark];
+  const earlier = clean.slice(0, mark).replace(/^\D+|\d/g, '');
+  if (earlier.split(separator).join('')) return false;
+  return earlier.includes(separator) || !decimals.includes(separator);
+}
+
+/**
+ * Splits digits and separators into whole and fraction digits. The last `.`
+ * or `,` is the decimal mark when no more than `digits` digits follow it and
+ * it does not group, so `1.234,5` and `1,234.50` both split at the end. Any
+ * other separator groups.
+ */
+function split(clean: string, digits: number, decimals: string[]): [string, string] {
   const mark = Math.max(clean.lastIndexOf('.'), clean.lastIndexOf(','));
   const fraction = clean.slice(mark + 1);
-  return mark >= 0 && fraction.length <= digits ? [clean.slice(0, mark), fraction] : [clean, ''];
+  return mark >= 0 && fraction.length <= digits && !groupsThree(clean, mark, decimals) ? [clean.slice(0, mark), fraction] : [clean, ''];
+}
+
+/**
+ * The marks a locale writes decimals with. Some use one for currency and
+ * another for plain numbers: fr-CH shows `1.234 KWD` and edits `1,234`.
+ */
+function decimalMarks(formats: Intl.NumberFormat[]) {
+  return formats.flatMap((format) => format.formatToParts(1.5).filter((part) => part.type === 'decimal').map((part) => part.value));
 }
 
 /**
@@ -28,10 +52,10 @@ function split(clean: string, digits: number): [string, string] {
  * digit makes the amount negative. A separator after the last digit is
  * dropped, since it belongs to a symbol such as `kr.`.
  */
-function parse(text: string, digits: number): number | null {
+function parse(text: string, digits: number, decimals: string[]): number | null {
   const clean = text.replace(/[^\d.,]/g, '').replace(/[.,]+$/, '');
   if (!/\d/.test(clean)) return null;
-  const [whole, fraction] = split(clean, digits);
+  const [whole, fraction] = split(clean, digits, decimals);
   const sign = /^\D*[-−]/.test(text) ? -1 : 1;
   return sign * Number(`${whole.replace(/[.,]/g, '')}.${fraction}`);
 }
@@ -51,9 +75,12 @@ export class CurrencyInput extends Component<CurrencyInputOptions> {
   /** Writes an amount as the form submits it: Latin digits, a `.` mark, no grouping. */
   private _plain: Intl.NumberFormat;
   private _digits: number;
-  /** The locale's digits for 9876543210, and its decimal mark. */
+  /** The locale's digits for 9876543210. */
   private _native: string;
-  private _decimal: string;
+  /** Rewrites a decimal mark that is neither `.` nor `,`, such as Arabic's, to `.`. */
+  private _marks: Record<string, string>;
+  /** The locale's decimal marks, after `_marks`. */
+  private _decimals: string[];
 
   constructor(el: HTMLInputElement, options: Partial<CurrencyInputOptions>) {
     super(el, options);
@@ -68,7 +95,9 @@ export class CurrencyInput extends Component<CurrencyInputOptions> {
     this._edit = new Intl.NumberFormat(locale, { useGrouping: false, maximumFractionDigits: this._digits });
     this._plain = new Intl.NumberFormat('en', { useGrouping: false, maximumFractionDigits: this._digits });
     this._native = new Intl.NumberFormat(locale, { useGrouping: false }).format(9876543210);
-    this._decimal = new Intl.NumberFormat(locale).formatToParts(0.5).find((part) => part.type === 'decimal').value;
+    const decimals = decimalMarks([this._display, this._edit]);
+    this._marks = Object.fromEntries(decimals.filter((mark) => !'.,'.includes(mark)).map((mark) => [mark, '.']));
+    this._decimals = decimals.map((mark) => this._marks[mark] ?? mark);
     const signal = this._events.signal;
     // Capture, so a page's change listener on the field reads the formatted
     // text. Blur covers a visit that changed nothing, which fires no change.
@@ -93,8 +122,8 @@ export class CurrencyInput extends Component<CurrencyInputOptions> {
 
   /** Reads text in the locale's digits, or full-width ones from an IME, as an amount. */
   private _read(text: string) {
-    const latin = Array.from(text.normalize('NFKC'), (ch) => (ch === this._decimal ? '.' : (LATIN[this._native.indexOf(ch)] ?? ch)));
-    return parse(latin.join(''), this._digits);
+    const latin = Array.from(text.normalize('NFKC'), (ch) => this._marks[ch] ?? LATIN[this._native.indexOf(ch)] ?? ch);
+    return parse(latin.join(''), this._digits, this._decimals);
   }
 
   private _round(amount: number | null) {

@@ -117,6 +117,21 @@ describe('Bottom sheet drag', () => {
     tap(handle, 'pointerup', { x: 180, y: 640 });
     assert.equal(dialog.open, false);
   });
+
+  test('a drag on a .drag-handle deeper in the sheet belongs to its control', () => {
+    for (const y of [500, 410]) {
+      const dialog = openSheet();
+      const row = document.createElement('div');
+      row.innerHTML = '<span class="drag-handle" aria-hidden="true"></span>';
+      dialog.querySelector('p').after(row);
+      const handle = row.firstElementChild;
+      // 410 is inside the top strip, which would otherwise start a drag.
+      tap(handle, 'pointerdown', { x: 180, y });
+      tap(handle, 'pointermove', { x: 180, y: 640 });
+      tap(handle, 'pointerup', { x: 180, y: 640 });
+      assert.equal(dialog.open, true, `pressed at ${y}`);
+    }
+  });
 });
 
 // Dragging is a pointer gesture, so a handle that only answers a drag puts
@@ -213,6 +228,16 @@ describe('Bottom sheet handle button', () => {
     const dialog = openSheet();
     activate(dialog.querySelector('h2'));
     assert.equal(dialog.open, true);
+  });
+
+  test('a button handle deeper in the sheet does not close or resize it', () => {
+    const nested = '<div class="data-table"><button type="button" class="drag-handle" id="nested" aria-label="Resize"></button></div>';
+    const dialog = openSheet(nested);
+    activate(dialog.querySelector('#nested'));
+    assert.equal(dialog.open, true, 'a plain sheet stays open');
+    dialog.classList.add('expandable');
+    activate(dialog.querySelector('#nested'));
+    assert.equal(dialog.classList.contains('expanded'), false, 'an expandable sheet keeps its height');
   });
 
   test('a handle outside a sheet dismisses nothing', () => {

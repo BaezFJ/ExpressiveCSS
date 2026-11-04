@@ -127,7 +127,9 @@ const S = defineSections([
           then takes the sheet's shape instead of the vertical one, because
           Material gives the sheet's grabber its own size and colour
           (32&times;4dp at 40% <code>on-surface-variant</code>). The same class
-          works in both places.
+          works in both places. Only a direct child of the dialog is the sheet's
+          handle. One deeper in, such as a data table's column resize button or a
+          sortable row's handle, works its own control and leaves the sheet alone.
         </p>
 <Code code={`
 <dialog class="bottom-sheet" aria-labelledby="sheet-title">

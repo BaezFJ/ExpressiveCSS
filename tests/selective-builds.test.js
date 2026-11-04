@@ -3,7 +3,16 @@ import assert from 'node:assert/strict';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { compile, compileString } from 'sass';
 import { JSDOM } from 'jsdom';
+import { build } from 'esbuild';
 import { fixtures, consumerBuild, sizes, root } from './fixtures/selective-builds.mjs';
+
+test('a consumer of DataTables alone gets no chart code', async () => {
+  const { outputFiles } = await build({
+    stdin: { contents: "import { DataTables } from '@expressivecss/expressive/modular'; window.DataTables = DataTables;", resolveDir: root },
+    bundle: true, minify: true, format: 'iife', target: 'es2020', write: false,
+  });
+  assert.doesNotMatch(outputFiles[0].text, /Expressive_LineChart/);
+});
 
 test('modular imports are inert and share the legacy ESM constructors', async () => {
   const dom = new JSDOM('<input type="range"><div class="chips"><span class="chip">Chip<button class="close">Close</button></span></div>');

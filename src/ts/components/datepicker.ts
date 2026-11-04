@@ -484,10 +484,10 @@ export class Datepicker extends Component<DatepickerOptions> {
         // is once the input is clicked. Its text is left as written.
         this.setDate(defDate, true);
       } else {
-        this.gotoDate(defDate);
+        this.gotoDate(this._withinBounds(defDate));
       }
     } else {
-      this.gotoDate(new Date());
+      this.gotoDate(this._withinBounds(new Date()));
     }
     if (this.options.isDateRange) {
       this.multiple = true;
@@ -768,6 +768,11 @@ export class Datepicker extends Component<DatepickerOptions> {
     if (!Datepicker._isDate(date)) {
       return;
     }
+    return this._withinBounds(date);
+  }
+
+  /** A copy of `date`, moved to minDate or maxDate when it falls outside them. */
+  private _withinBounds(date: Date): Date {
     const min = this.options.minDate,
       max = this.options.maxDate;
     if (Datepicker._isDate(min) && date < min) {

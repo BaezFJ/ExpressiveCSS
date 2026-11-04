@@ -3,6 +3,9 @@ import { Autocomplete, AutocompleteOptions } from './autocomplete';
 import { Component, BaseOptions } from '../core/component';
 import { FormControl, formAssociated, wrapInControl, unwrapControl } from '../core/formControl';
 
+/** Whether a key moves between chips. Alt, Ctrl and Meta stay the browser's. */
+const isMoveKey = (e: KeyboardEvent) => (e.key === 'ArrowLeft' || e.key === 'ArrowRight') && Utils.plainKey(e);
+
 export interface ChipData {
   /**
    * Unique identifier.
@@ -373,7 +376,7 @@ export class Chips extends Component<ChipsOptions> {
       if (index < 0) return;
       e.preventDefault();
       currChips._deleteChip(index, 'previous');
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    } else if (isMoveKey(e)) {
       // Move from the chip that has focus, the same one Backspace deletes.
       const current = (e.target as HTMLElement).closest<HTMLElement>('.chip') ?? currChips._selectedChip;
       const index = currChips._chips.indexOf(current);
@@ -428,15 +431,17 @@ export class Chips extends Component<ChipsOptions> {
       this._input.value = '';
       // The list answered the text Enter just used up.
       this.autocomplete?.close();
-    } else if (
-      this._input.value === '' &&
-      this.chipsData.length &&
-      ['Backspace', Chips._backKey(this.el)].includes(e.key)
-    ) {
+    } else if (this._leavesInput(e)) {
       e.preventDefault();
       this.selectChip(this.chipsData.length - 1);
     }
   };
+
+  /** Whether a key moves from the empty input back to the last chip. */
+  private _leavesInput(e: KeyboardEvent) {
+    return this._input.value === '' && this.chipsData.length > 0 && Utils.plainKey(e) &&
+      ['Backspace', Chips._backKey(this.el)].includes(e.key);
+  }
 
   _renderChip(chip: ChipData): HTMLElement {
     if (!chip.id && chip.id !== 0) return;

@@ -1,5 +1,4 @@
-import { numberValue } from '../components/lineChart';
-import { Utils, afterAnyFormReset, controllerFor } from '../core/utils';
+import { Utils, afterAnyFormReset, controllerFor, numberValue } from '../core/utils';
 
 /** The rows of a table's bodies that hold records, not a row's detail. */
 const ROWS = ':scope > tbody > tr:not(.data-table-detail)';

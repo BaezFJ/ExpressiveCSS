@@ -26,6 +26,9 @@ const _defaults: CommandPaletteOptions = {
 // of the line), so only Command opens the palette there.
 const APPLE = typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.platform);
 
+/** How the arrows move the active command. */
+const MOVE_KEYS: Record<string, number> = { ArrowDown: 1, ArrowUp: -1 };
+
 /** Case- and accent-insensitive text for matching. */
 const fold = (text: string) =>
   text.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
@@ -256,15 +259,16 @@ export class CommandPalette extends Component<CommandPaletteOptions> {
 
   _handleInput = () => this._filter();
 
-  _handleKeydown = (e: KeyboardEvent) => {
-    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+  _handleKeydown = Utils.ignoringComposition((e: KeyboardEvent) => {
+    const step = Utils.plainKey(e) ? MOVE_KEYS[e.key] : undefined;
+    if (step) {
       e.preventDefault();
-      this._move(e.key === 'ArrowDown' ? 1 : -1);
-    } else if (e.key === 'Enter' && !Utils.isComposing(e) && this._active) {
+      this._move(step);
+    } else if (e.key === 'Enter' && this._active) {
       e.preventDefault();
       this._run(this._active);
     }
-  };
+  });
 
   /**
    * The first Escape clears a typed query and the next closes the palette.
