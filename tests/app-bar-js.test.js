@@ -206,6 +206,20 @@ describe('AppBar search view', () => {
     });
   }
 
+  test('ArrowDown or Enter with Alt, Ctrl or Meta stays the browser\'s', () => {
+    const { input, view, instance } = mountFullScreen();
+    try {
+      for (const name of ['ArrowDown', 'Enter']) {
+        for (const init of [{ altKey: true }, { ctrlKey: true }, { metaKey: true }]) {
+          assert.equal(keydown(input, name, init), true, `${name} is not claimed`);
+          assert.equal(view.open, false);
+        }
+      }
+    } finally {
+      instance.destroy();
+    }
+  });
+
   test('an Enter that confirms an IME composition does not open the view', () => {
     const { input, view, instance } = mountFullScreen();
     try {

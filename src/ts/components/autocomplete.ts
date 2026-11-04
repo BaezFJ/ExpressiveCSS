@@ -3,6 +3,9 @@ import { Utils, afterFormReset } from '../core/utils';
 import { Menu, MenuOptions } from './menu';
 import { Component, BaseOptions } from '../core/component';
 
+/** Whether a key works the list. Alt, Ctrl and Meta stay the browser's. */
+const isListKey = (e: KeyboardEvent) => (e.key === 'ArrowUp' || e.key === 'ArrowDown') && Utils.plainKey(e);
+
 export interface AutocompleteData {
   /**
    * A primitive value that can be converted to string.
@@ -504,7 +507,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
       return;
     }
     // Capture up and down key
-    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+    if (isListKey(e)) {
       e.preventDefault();
       // A list that is already opening keeps its rendered results.
       if (!this.menu.isOpen && this._openTimer === undefined) {

@@ -50,9 +50,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   the input cleared. It now returns to the starting selection, as the other
   pickers do, closes the list and drops a waiting search, with no change event.
 
-- Charts, the ColorPicker area and Timepicker's digital fields leave keys held
-  with Alt, Ctrl or Meta to the browser, so Alt+Left goes back instead of moving
-  the chart cursor. Shift still takes the ColorPicker's larger step.
+- Charts, the ColorPicker area, Timepicker's digital fields, Chips, Autocomplete,
+  CommandPalette and the AppBar search field leave keys held with Alt, Ctrl or
+  Meta to the browser, so Alt+Left goes back instead of moving the chart cursor.
+  On an empty Chips input that includes Backspace, and on the AppBar search field
+  Enter. Shift still takes the ColorPicker's larger step.
 
 - CommandPalette leaves the arrow keys to an IME during composition. They moved
   the active command while the user picked a candidate.

@@ -146,6 +146,12 @@ for (const [name, engine, test] of engines) {
         return event.defaultPrevented;
       }));
       assert.deepEqual(imeArrows, [false, false], 'the arrows that pick an IME candidate stay the IME\'s');
+      const modifiedArrows = await input.evaluate((el) => [{ key: 'ArrowDown', altKey: true }, { key: 'ArrowUp', metaKey: true }, { key: 'ArrowDown', ctrlKey: true }].map((init) => {
+        const event = new KeyboardEvent('keydown', { ...init, bubbles: true, cancelable: true });
+        el.dispatchEvent(event);
+        return event.defaultPrevented;
+      }));
+      assert.deepEqual(modifiedArrows, [false, false, false], 'an arrow with Alt, Ctrl or Meta stays the browser\'s');
       assert.equal(await isOpen(), true);
       await page.locator('#late').click();
       assert.deepEqual(await page.evaluate(() => window.ran), ['new', 'keys', 'late']);

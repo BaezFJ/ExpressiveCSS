@@ -367,6 +367,27 @@ describe('Chips input and data', () => {
     }
   });
 
+  test('arrow keys with Alt, Ctrl or Meta stay the browser\'s', () => {
+    const [el, chips] = mount({ data: [{ id: 'A' }, { id: 'B' }, { id: 'C' }] });
+    const modifiers = [{ altKey: true }, { ctrlKey: true }, { metaKey: true }];
+    const selected = () => el.querySelector('.chip.selected')?.textContent.slice(0, 1);
+    try {
+      const input = el.querySelector('input');
+      for (const init of modifiers) {
+        assert.equal(key(input, 'ArrowLeft', init), true, 'the empty input leaves the key alone');
+        assert.equal(selected(), undefined);
+      }
+      key(input, 'ArrowLeft');
+      assert.equal(selected(), 'C');
+      for (const init of modifiers) {
+        key(document.activeElement, 'ArrowLeft', init);
+        assert.equal(selected(), 'C', 'a chip does not move on the key either');
+      }
+    } finally {
+      chips.destroy();
+    }
+  });
+
   test('arrow keys follow the reading direction in RTL', () => {
     const [el, chips] = mount({ data: [{ id: 'A' }, { id: 'B' }, { id: 'C' }] });
     el.style.direction = 'rtl';
