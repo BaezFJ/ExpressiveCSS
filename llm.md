@@ -3003,7 +3003,7 @@ Expressive.AutoInit(document.body, {
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `duration` | Number | `200` | Milliseconds allowed for a programmatic scroll to land, and the part of each auto-advance rest that is not `interval`. |
-| `indicators` | Boolean | `false` | Legacy paging dots. M3 recommends a nearby Show all path instead of overlay controls. |
+| `indicators` | Boolean | `false` | Legacy paging dots, each an 8px dot in a 24px target. M3 recommends a nearby Show all path instead of overlay controls. |
 | `noWrap` | Boolean | `false` | Stop auto-advance at the last item instead of looping back to the first. Arrow keys and `set()` stop at the ends either way — a scroll track has ends. |
 | `interval` | Number | `0` | Milliseconds to rest between automatic advances, on top of `duration`; a full cycle takes `duration + interval`. `0` leaves auto-advance off. Each rest is armed by the move before it rather than on a fixed phase. |
 | `height` | Number | `null` | Fixed track height in pixels. `null` sizes the carousel from its content. |
@@ -8617,7 +8617,7 @@ Two trailing icon buttons with `data-step="down"` and `data-step="up"` step a nu
 
 ### One-time code
 
-`input.otp` draws one native input as a row of six cells, so paste, autofill and undo keep working and a screen reader hears one field. Use `type="text"` with `inputmode="numeric"`, `autocomplete="one-time-code"` and a `maxlength` equal to the cell count, and label it outside any `.field`. Set `--md-comp-otp-length` for another length. Digits read left to right in every language.
+`input.otp` draws one native input as a row of six cells, so paste, autofill and undo keep working and a screen reader hears one field. Use `type="text"` with `inputmode="numeric"`, `autocomplete="one-time-code"` and a `maxlength` equal to the cell count, and label it outside any `.field`. Set `--md-comp-otp-length` for another length. Digits read left to right in every language. In forced colors each cell is a CanvasText line, Highlight while the code has focus.
 
 ```html
 <label for="code">Verification code</label>

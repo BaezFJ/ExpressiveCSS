@@ -9,7 +9,7 @@ Component ID: `carousel`
 
 Contract: ExpressiveCSS 0.16.0
 
-Contract SHA-256: `feea0da16620941f65dc393bfbee61ee4f72ecb95c812c14266685f7851cfd80`
+Contract SHA-256: `9f0445bfe83967199a334a5bda06b822a4a3359b41a194bc4679e65cf68177cd`
 
 #### Selection and adaptation
 
@@ -70,7 +70,7 @@ The default is multi-browse: one large, one medium, and one small item adapt as 
 | Name | Type | Default | Description |
 | --- | --- | --- | --- |
 | `duration` | Number | `200` | Milliseconds allowed for a programmatic scroll to land, and the part of each auto-advance rest that is not `interval`. |
-| `indicators` | Boolean | `false` | Legacy paging dots. M3 recommends a nearby Show all path instead of overlay controls. |
+| `indicators` | Boolean | `false` | Legacy paging dots, each an 8px dot in a 24px target. M3 recommends a nearby Show all path instead of overlay controls. |
 | `noWrap` | Boolean | `false` | Stop auto-advance at the last item instead of looping back to the first. Arrow keys and `set()` stop at the ends either way — a scroll track has ends. |
 | `interval` | Number | `0` | Milliseconds to rest between automatic advances, on top of `duration`; a full cycle takes `duration + interval`. `0` leaves auto-advance off. Each rest is armed by the move before it rather than on a fixed phase. |
 | `height` | Number | `null` | Fixed track height in pixels. `null` sizes the carousel from its content. |

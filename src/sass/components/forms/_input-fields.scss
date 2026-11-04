@@ -584,11 +584,31 @@ input.otp:not(.browser-default) {
     opacity: 0.38;
   }
 
+  // Forced colors drop gradients, which are the cells and the focus ring, so
+  // the code keeps them in system colors: a CanvasText line under each cell,
+  // Highlight while focused and GrayText when disabled.
   @media (forced-colors: active) {
+    --md-comp-otp-cell-color: Canvas;
     --md-comp-otp-indicator-color: CanvasText;
+
+    forced-color-adjust: none;
+    color: CanvasText;
+    caret-color: CanvasText;
+    background-color: Canvas;
+
+    &::placeholder {
+      color: GrayText;
+    }
 
     &:focus {
       --md-comp-otp-indicator-color: Highlight;
+    }
+
+    &:disabled {
+      --md-comp-otp-indicator-color: GrayText;
+
+      color: GrayText;
+      opacity: 1;
     }
   }
 }

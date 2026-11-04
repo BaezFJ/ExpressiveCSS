@@ -292,8 +292,9 @@ input[type=text].timepicker-input-seconds {
     border: 1px solid var(--md-sys-color-outline);
   }
 
+  // The buttons share one edge: the start of PM, which is its right in RTL.
   .timepicker-container .pm-btn {
-    border-left: 0;
+    border-inline-start: 0;
   }
 
   .timepicker-plate {

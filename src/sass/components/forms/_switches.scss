@@ -31,6 +31,9 @@
 
 // Paint the switch on the checkbox. The class goes on the <label> that wraps
 // it; a checkbox nested deeper is an ordinary checkbox.
+// The selected handle's distance from the start edge of the padding box.
+$_on: calc(var(--md-comp-switch-track-width) - 4px - 2px - var(--md-comp-switch-handle-selected));
+
 .switch > [type="checkbox"] {
   @include selection-control(var(--md-comp-switch-track-width), var(--md-comp-switch-track-height), var(--md-sys-color-outline));
   border-radius: var(--md-sys-shape-corner-large);
@@ -69,10 +72,17 @@
     );
     background-size: var(--md-comp-switch-handle-selected) var(--md-comp-switch-handle-selected);
     // padding-box is track minus the 2px border on each side; 2px inset.
-    background-position: calc(
-        var(--md-comp-switch-track-width) - 4px - 2px - var(--md-comp-switch-handle-selected)
-      )
-      50%;
+    background-position: $_on 50%;
+  }
+
+  // Off is at the start edge and on at the end, so RTL measures from the
+  // right. The same edge in both states keeps the slide animating.
+  &:dir(rtl) {
+    background-position: right 6px center;
+
+    &:checked {
+      background-position: right $_on center;
+    }
   }
 
   // A fixed 8px ring around the default 32px track, for a 48dp target.

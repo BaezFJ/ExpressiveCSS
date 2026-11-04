@@ -108,6 +108,15 @@ describe('Forced colors edges and glyphs', () => {
     'mega menu chevron': [/^\.mega-menu > button::after$/, GLYPH],
     'rail panel chevron': [/^\.navigation-rail-panel summary::after$/, GLYPH],
     'cascader popover': [/^\.cascader-popover$/, EDGE],
+    'tooltip': [/^\.tooltip$/, EDGE],
+    'snackbar': [/^\.snackbar$/, EDGE],
+    'menu surface': [/^menu\[id\]$/, EDGE],
+    'submenu surface': [/^menu\[id\] li > menu$/, EDGE],
+    'dialog': [/^dialog$/, EDGE],
+    'side sheet': [/^dialog\.side-sheet$/, EDGE],
+    'bottom sheet': [/^dialog\.bottom-sheet$/, EDGE],
+    // Its cells and focus line are gradients, which forced colors drop.
+    'one-time code cells': [/^input\.otp:not\(\.browser-default\)$/, /forced-color-adjust:\s*none;[\s\S]*background-color:\s*Canvas/],
     'bottom sheet handle': [/^dialog\.bottom-sheet::before$/, GLYPH],
     'slider stops': [/\.stops::after$/, /--_stop:\s*HighlightText;\s*forced-color-adjust:\s*none/],
   };

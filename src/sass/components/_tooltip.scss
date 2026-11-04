@@ -43,6 +43,13 @@
   pointer-events: auto;
   z-index: var(--expressive-z-tooltip);
   @include glass(var(--md-comp-plain-tooltip-container-color));
+
+  // Forced colors paint the fill as Canvas and drop the shadow, so the
+  // surface would blend into the page without an edge.
+  @media (forced-colors: active) {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
 }
 
 // CSS-only: a child of the activator. Default sits above (M3 preferred).

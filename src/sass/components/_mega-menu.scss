@@ -56,6 +56,10 @@
     mask: $caret-down center / 18px no-repeat;
     transition: transform var(--md-sys-motion-duration-short3) ease-out;
     @include forced-colors-fill;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
   }
 
   > button:has(+ .mega-menu-panel:popover-open)::after {

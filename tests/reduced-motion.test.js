@@ -28,6 +28,9 @@ describe('Reduced motion', () => {
     'loading overlay scrim': /^\.loading-overlay::after$/,
     'loading overlay indicator': /^\.loading-overlay > \.loading-indicator$/,
     'tree select chevron': /^ul\[role=tree\] li\[role=treeitem\] > span::before$/,
+    'data table detail chevron': /^\.data-table td button\[aria-expanded\]:not\(\[aria-haspopup\]\) > /,
+    'data table sort arrow': /^\.data-table th > button:where\(:not\(\.drag-handle\)\)::after$/,
+    'mega menu chevron': /^\.mega-menu > button::after$/,
   };
   for (const [name, pattern] of Object.entries(targets)) {
     test(`cancels the ${name} transition`, () => assert.ok(cancels(pattern), name));

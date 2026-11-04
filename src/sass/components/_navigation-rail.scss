@@ -55,6 +55,23 @@
     background-color: var(--md-comp-scrim-color);
     z-index: -1;
   }
+
+  // The rail's z-index makes it the stacking context, which paints its own
+  // background under the -1 scrim, so the scrim would dim the rail too. This
+  // later layer repaints the surface over the scrim and under the content.
+  // Fixed, not absolute, so it stays put while the rail scrolls.
+  &::after {
+    content: "";
+    box-sizing: border-box;
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: inherit;
+    z-index: -1;
+    background: inherit;
+    border-radius: inherit;
+    pointer-events: none;
+  }
 }
 
 .navigation-rail {
