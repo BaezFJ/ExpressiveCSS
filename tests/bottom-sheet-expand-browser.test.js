@@ -83,3 +83,27 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 }
+
+for (const [engine, browserType, browserTest] of engines) {
+  browserTest(`${engine}: an expanded sheet in a shadow root goes back to partial when it closes`, async () => {
+    const browser = await browserType.launch({ headless: true });
+    try {
+      const page = await browser.newPage({ viewport: { width: 400, height: VIEWPORT } });
+      await page.setContent(`<!doctype html><html lang="en"><body><div id="host"></div><script>${js}</script></body></html>`);
+      const expanded = await page.evaluate(async () => {
+        const root = document.getElementById('host').attachShadow({ mode: 'open' });
+        root.innerHTML = `<dialog class="bottom-sheet expandable" aria-label="Filters">
+          <button type="button" class="drag-handle" aria-label="Sheet height" aria-expanded="false"></button></dialog>`;
+        const sheet = root.querySelector('dialog');
+        sheet.showModal();
+        sheet.querySelector('.drag-handle').click();
+        const open = sheet.classList.contains('expanded');
+        await new Promise((resolve) => { sheet.addEventListener('close', () => setTimeout(resolve), { once: true }); sheet.close(); });
+        return [open, sheet.classList.contains('expanded'), sheet.querySelector('.drag-handle').getAttribute('aria-expanded')];
+      });
+      assert.deepEqual(expanded, [true, false, 'false']);
+    } finally {
+      await browser.close();
+    }
+  });
+}

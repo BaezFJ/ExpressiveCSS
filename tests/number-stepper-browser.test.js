@@ -54,3 +54,26 @@ for (const [name, engine, test] of engines) {
     }
   });
 }
+
+for (const [name, engine, test] of engines) {
+  test(`${name}: a number stepper button at its limit fires nothing`, { timeout: 30000 }, async () => {
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+        ${field('top', 'value="2" min="0" max="2"')}
+        ${field('bottom', 'value="0" min="0" max="2"')}
+        <script>${js}</script>
+        <script>window.log = []; for (const t of ['input', 'change']) document.addEventListener(t, (e) => log.push(t + ' ' + e.target.id));</script>
+      </body></html>`);
+      await page.locator('#top ~ [aria-label="Increase"]').click();
+      await page.locator('#bottom ~ [aria-label="Decrease"]').click();
+      assert.deepEqual(await page.evaluate(() => log), [], 'the value did not change');
+
+      await page.locator('#top ~ [aria-label="Decrease"]').click();
+      assert.deepEqual(await page.evaluate(() => log), ['input top', 'change top'], 'a real step still reports');
+    } finally {
+      await browser.close();
+    }
+  });
+}

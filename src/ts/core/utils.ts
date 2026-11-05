@@ -72,6 +72,13 @@ export function afterAnyFormReset(restored: (form: HTMLFormElement) => void) {
   }, true);
 }
 
+/** The focused element, followed down through open shadow roots. */
+export function deepActiveElement(root: Document | ShadowRoot): Element | null {
+  let active = root.activeElement;
+  while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
+  return active;
+}
+
 /** A picker footer text button; a hidden one is also out of the tab order. */
 function footerButton(parent: HTMLElement, text: string | undefined, className: string, onClick: () => void, visible = true) {
   const button = document.createElement('button');

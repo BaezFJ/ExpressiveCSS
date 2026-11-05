@@ -138,3 +138,26 @@ for (const [name, engine, test] of engines) {
     }
   });
 }
+
+for (const [name, engine, test] of engines) {
+  test(`${name}: a finished burst on a removed overlay leaves the current overlay in use`, { timeout: 30000 }, async () => {
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage();
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await page.setContent(markup.replace('</body>', () => `<script>${js}</script></body>`));
+      await page.evaluate(() => {
+        Expressive.Confetti.fire({ ticks: 5 });
+        document.querySelector('canvas.confetti-overlay').remove();
+        Expressive.Confetti.fire({ ticks: 6000 });
+      });
+      // Long enough for the short burst on the removed canvas to end.
+      await page.waitForTimeout(400);
+      // In braces: fire() returns a promise that waits for the whole burst.
+      await page.evaluate(() => { Expressive.Confetti.fire({ ticks: 6000 }); });
+      assert.equal(await page.locator('canvas.confetti-overlay').count(), 1, 'one overlay serves every burst');
+    } finally {
+      await browser.close();
+    }
+  });
+}

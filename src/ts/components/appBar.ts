@@ -69,7 +69,8 @@ export class AppBar extends Component<BaseOptions> {
   }
 
   private _onIntersect = (entries: IntersectionObserverEntry[]) => {
-    const entry = entries[0];
+    // The newest: a busy frame can queue several.
+    const entry = entries.at(-1);
     if (!entry) return;
     // Collapse only when the sentinel has gone above the pinned header. A
     // sentinel below the viewport would move back into view as the bar shrank,

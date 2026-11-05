@@ -479,3 +479,35 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 }
+
+for (const [engine, browserType, browserTest] of engines) {
+  browserTest(`${engine}: heatmap chart tooltip stays on its cell when the chart is resized`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
+      await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+        <div id="box" style="width: 600px">${chart('class="heatmap-chart" id="sales"', 'Sales', '<th>Jan</th><th>Feb</th><th>Mar</th>', [
+          ['<th>Priya</th>', '$10', '$20', '$30'], ['<th>Leo</th>', '$40', 'n/a', '$50']])}</div>
+        <script>${js}</script></body></html>`);
+      // Where the tooltip's edge should be: the cell's far edge on the start
+      // side of the plot, its near edge on the end side.
+      const gap = () => page.evaluate(() => {
+        const el = document.getElementById('sales');
+        const [plot, cell, tooltip] = ['.heatmap-chart-plot', '.heatmap-chart-cell.active', '.heatmap-chart-tooltip'].map((s) => el.querySelector(s));
+        const [p, c] = [plot.getBoundingClientRect(), cell.getBoundingClientRect()];
+        const want = c.left - p.left + (tooltip.classList.contains('end') ? 0 : c.width);
+        return Math.abs(parseFloat(tooltip.style.left) - want);
+      });
+      await page.evaluate(() => {
+        Expressive.AutoInit();
+        Expressive.HeatmapChart.getInstance(document.getElementById('sales')).show(1);
+      });
+      assert.ok(await gap() < 1, 'it starts on its cell');
+      await page.evaluate(() => { document.getElementById('box').style.width = '320px'; });
+      await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+      assert.ok(await gap() < 1, `it follows the cell after a resize: ${await gap()}px away`);
+    } finally {
+      await browser.close();
+    }
+  });
+}

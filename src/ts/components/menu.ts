@@ -470,7 +470,8 @@ export class Menu extends Component<MenuOptions> {
     // Closed shadow roots hide the original target from document listeners.
     this._menuClickTargets.set(e, target);
     const li = target.closest('li');
-    if (li?.matches('.disabled, [aria-disabled="true"]')) {
+    // Neither a disabled row nor one that is not an item is a choice.
+    if (li?.matches('.disabled, [aria-disabled="true"], .divider, .gap, .label, .optgroup')) {
       e.preventDefault();
       e.stopPropagation();
       return;

@@ -383,9 +383,10 @@ export class MapView<L extends MapLibre = MapLibre> extends Component<MapViewOpt
       const [feature] = e.features;
       // `_draw` registered this id as a clustered GeoJSON source.
       const source = this.map.getSource(id) as MapClusterSource;
-      const zoom = await source.getClusterExpansionZoom(feature.properties.cluster_id);
+      // The data may have changed since the click, leaving no such cluster.
+      const zoom = await source.getClusterExpansionZoom(feature.properties.cluster_id).catch((): null => null);
       // destroy() may have run while the zoom was looked up.
-      this.map?.easeTo({ center: feature.geometry.coordinates, zoom });
+      if (zoom !== null) this.map?.easeTo({ center: feature.geometry.coordinates, zoom });
     };
     const pointer = () => { this.map.getCanvas().style.cursor = 'pointer'; };
     const reset = () => { this.map.getCanvas().style.cursor = ''; };
@@ -553,7 +554,8 @@ export class MapView<L extends MapLibre = MapLibre> extends Component<MapViewOpt
   // A tap on a draggable marker picks it up, or puts it back down; the click
   // that ends a drag does neither.
   private _tapMarker(element: HTMLElement | null) {
-    if (element?.hasAttribute('data-draggable')) this._tapMovable(element);
+    // aria-pressed: one skipped for a bad data-lng-lat is no marker to pick up.
+    if (element?.matches('[data-draggable][aria-pressed]')) this._tapMovable(element);
     else if (this._markerPopups.has(element)) this._toggle(element);
   }
 

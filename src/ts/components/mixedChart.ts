@@ -1,5 +1,5 @@
 import { ColumnChart } from './columnChart';
-import { LineChartOptions, Series, niceStep, steps } from './lineChart';
+import { LineChartOptions, Series, hasClass as has, niceStep, steps } from './lineChart';
 
 export type MixedChartOptions = LineChartOptions;
 
@@ -10,9 +10,6 @@ function fitSteps(min: number, max: number, parts: number): [low: number, step: 
   while (Math.floor(min / step) * step + parts * step < max) step = niceStep(step * parts * 1.001, parts);
   return [Math.floor(min / step) * step, step];
 }
-
-/** Whether a series header cell has a class. */
-const has = (series: Series, name: string) => series.className.split(/\s+/).includes(name);
 
 /**
  * Mixed chart. It reads its <table> like LineChart, and draws each series

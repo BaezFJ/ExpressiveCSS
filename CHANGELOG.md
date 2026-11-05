@@ -7,6 +7,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- ColorPicker takes an `i18n` option for its accessible names. The defaults are
+  the English names it always used.
+
 - The ExpressiveCSS skill offers four visual styles: Bold and Dramatic, Minimalist
   and Clean, Brutalist and Neo-Brutalist, and Organic and Natural. Each one uses
   documented attributes, classes and variants only. The skill asks, with a reason,
@@ -29,6 +32,45 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   grid rules that they then undid.
 
 ### Fixed
+
+- A click on a Menu label, divider or gap no longer closes the menu or reports a
+  selection.
+
+- Number stepper buttons at `min` or `max` no longer fire `input` and `change`,
+  since the value did not change.
+
+- A password revealed in a form inside a shadow root is hidden again on submit
+  and reset, and an expanded bottom sheet in a shadow root goes back to partial
+  when it closes. The error summary and `.validate` styling still need the form
+  in the light DOM.
+
+- Lightbox closes on the Escape keydown and takes the key, so one press no longer
+  also closes a dialog around it.
+
+- In a date range, clicking a day before the start moves the start. The click
+  used to do nothing.
+
+- Carousel's `dragged` ends with the drag, so a later scroll no longer reports
+  `dragged: true`. A mouse click inside the carousel no longer pauses
+  auto-advance. Keyboard focus still does, as the option has always said.
+
+- HeatmapChart's tooltip stays on its cell when the chart changes size.
+
+- Autocomplete `selectOption()` and Chips duplicate checks compare ids as text,
+  so `'01'` is no longer the entry `1`. `1` and `'1'` still match.
+
+- Holding CommandPalette's shortcut toggles it once instead of flickering.
+
+- InputMask leaves a delete to the browser during an IME composition, or when
+  the event cannot be cancelled.
+
+- MapView ignores a tap on a draggable marker it skipped for a bad `data-lng-lat`,
+  which made the next tap on the map throw, and a cluster zoom that MapLibre
+  refuses no longer rejects unhandled.
+
+- AppBar reads the newest entry when an IntersectionObserver batch holds several,
+  and Confetti keeps its current overlay when a burst finishes on one the page
+  removed.
 
 - CurrencyInput no longer reads typed grouping as a decimal in a currency with
   three decimals. Under `lang="en"` with `KWD`, `5,000` submitted 5 and now

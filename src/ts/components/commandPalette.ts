@@ -26,6 +26,17 @@ const _defaults: CommandPaletteOptions = {
 // of the line), so only Command opens the palette there.
 const APPLE = typeof navigator !== 'undefined' && /Mac|iPhone|iPad|iPod/.test(navigator.platform);
 
+/** Whether the platform's shortcut modifier is held, and not the other one. */
+const commandKey = (e: KeyboardEvent) => (APPLE ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey);
+
+/**
+ * Whether a key event is `letter`. A non-Latin layout reports its own letter
+ * in e.key, so that falls back to the physical key. A Latin layout matches on
+ * the letter it types.
+ */
+const isLetter = (e: KeyboardEvent, letter: string) =>
+  e.key.toLowerCase() === letter || (!/^[a-z]$/i.test(e.key) && /^[a-z]$/.test(letter) && e.code === `Key${letter.toUpperCase()}`);
+
 /** How the arrows move the active command. */
 const MOVE_KEYS: Record<string, number> = { ArrowDown: 1, ArrowUp: -1 };
 
@@ -314,16 +325,11 @@ export class CommandPalette extends Component<CommandPaletteOptions> {
 
   _handleShortcut = (e: KeyboardEvent) => {
     const { shortcut } = this.options;
-    if (!shortcut || e.defaultPrevented || e.altKey || e.shiftKey) return;
-    if (!(APPLE ? e.metaKey && !e.ctrlKey : e.ctrlKey && !e.metaKey)) return;
-    // A non-Latin layout reports its own letter in e.key, so fall back to the
-    // physical key there. A Latin layout matches on the letter it types.
-    const letter = shortcut.toLowerCase();
-    const latin = /^[a-z]$/i.test(e.key);
-    const hit = e.key.toLowerCase() === letter ||
-      (!latin && /^[a-z]$/.test(letter) && e.code === `Key${letter.toUpperCase()}`);
-    if (!hit) return;
+    if (!shortcut || e.defaultPrevented || e.altKey || e.shiftKey || !commandKey(e)) return;
+    if (!isLetter(e, shortcut.toLowerCase())) return;
     e.preventDefault();
+    // A held shortcut stays away from the browser but toggles only once.
+    if (e.repeat) return;
     if (this.el.open) this.close();
     else this.open();
   };

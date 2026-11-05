@@ -41,3 +41,15 @@ test('an arrow with Alt, Ctrl or Meta neither opens the list nor moves through i
     picker.destroy();
   }
 });
+
+test('selectOption matches an id as written, so 01 is not 1', () => {
+  const { picker } = start();
+  try {
+    picker.selectOption('01');
+    assert.deepEqual(picker.selectedValues, [], '01 is not an entry');
+    picker.selectOption('1');
+    assert.equal(picker.selectedValues[0]?.id, 1, 'the row attribute is a string, so 1 and "1" stay equal');
+  } finally {
+    picker.destroy();
+  }
+});

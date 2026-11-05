@@ -1,5 +1,5 @@
 import { numberValue } from '../core/utils';
-import { LineChart, LineChartOptions, Series } from './lineChart';
+import { LineChart, LineChartOptions, Series, hasClass } from './lineChart';
 
 export type ColumnChartOptions = LineChartOptions;
 
@@ -64,7 +64,7 @@ export class ColumnChart extends LineChart {
 
   /** A `range` series' low ends become its base; ranges do not stack. */
   protected _arrange(series: Series[]) {
-    const ranges = (this._ranges = series.filter((each) => each.className.split(/\s+/).includes('range')));
+    const ranges = (this._ranges = series.filter((each) => hasClass(each, 'range')));
     for (const range of ranges) {
       const ends = this._rows.map((row) => rangeValue(row.cells[range.column]));
       range.base = ends.map(([low]) => low);

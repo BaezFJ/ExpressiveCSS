@@ -1,4 +1,4 @@
-import { Utils, controllerFor, restoreAttribute } from '../core/utils';
+import { Utils, controllerFor, deepActiveElement, restoreAttribute } from '../core/utils';
 import { BaseOptions, Component } from '../core/component';
 
 export interface LightboxOptions extends BaseOptions {
@@ -119,8 +119,7 @@ export class Lightbox extends Component<LightboxOptions> {
   // a click on the overlay, which cannot take focus, leaves it.
   private _restoreFocus() {
     const root = this.el.getRootNode() as Document | ShadowRoot;
-    let active = document.activeElement;
-    while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
+    const active = deepActiveElement(document);
     if ([document.body, (root as ShadowRoot).host].includes(active)) this._trigger.focus({ preventScroll: true });
   }
 
@@ -189,8 +188,12 @@ export class Lightbox extends Component<LightboxOptions> {
     if (this.overlayActive) this.close();
   };
 
+  // On keydown, and taken, so a dialog around the lightbox does not close on
+  // the same press.
   private _handleWindowEscape = (e: KeyboardEvent) => {
-    if (e.key === 'Escape') this.close();
+    if (e.key !== 'Escape') return;
+    e.preventDefault();
+    this.close();
   };
 
   // The image zooms in place, not in a modal, so Tab would reach the page
@@ -386,7 +389,7 @@ export class Lightbox extends Component<LightboxOptions> {
     const { signal } = this._windowEvents;
     window.addEventListener('scroll', this._handleWindowChange, { passive: true, signal });
     window.addEventListener('resize', this._handleWindowChange, { passive: true, signal });
-    window.addEventListener('keyup', this._handleWindowEscape, { signal });
+    window.addEventListener('keydown', this._handleWindowEscape, { signal });
     window.addEventListener('keydown', this._handleWindowTab, { signal });
     this._animateImageIn();
   };

@@ -576,6 +576,8 @@ describe('Carousel auto-advance', () => {
       t.mock.timers.tick(cycle(1000));
       assert.equal(instance.center, 1, 'did not resume when the pointer left');
 
+      // jsdom never matches :focus-visible. The browser test covers a mouse click.
+      el.matches = (selector) => selector === ':focus-visible';
       el.dispatchEvent(new window.FocusEvent('focusin', { bubbles: true }));
       t.mock.timers.tick(cycle(1000) * 3);
       assert.equal(instance.center, 1, 'kept advancing under keyboard focus');

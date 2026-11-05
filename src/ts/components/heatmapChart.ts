@@ -34,6 +34,8 @@ export class HeatmapChart extends LineChart {
   private _endLevels: [number, number];
   /** The box the cells scroll in, beside the row labels. */
   private _scroll: HTMLElement;
+  /** Keeps the tooltip on its cell when the chart changes size. */
+  private _resizes: ResizeObserver;
 
   protected get _type() {
     return 'heatmap-chart';
@@ -48,6 +50,11 @@ export class HeatmapChart extends LineChart {
 
   protected get _count() {
     return this.labels.length * this.series.length;
+  }
+
+  destroy() {
+    this._resizes?.disconnect();
+    super.destroy();
   }
 
   /** Redraws the grid, scrolled where it was. */
@@ -299,6 +306,9 @@ export class HeatmapChart extends LineChart {
     scroll.tabIndex = -1;
     scroll.addEventListener('focus', () => this._plot.focus());
     scroll.addEventListener('scroll', () => this._follow(scroll), { passive: true });
+    this._resizes?.disconnect();
+    this._resizes = new ResizeObserver(() => this._follow(scroll));
+    this._resizes.observe(scroll);
     scroll.append(cells);
     grid.append(rows, scroll);
     return grid;

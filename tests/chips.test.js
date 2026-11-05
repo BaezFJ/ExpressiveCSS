@@ -150,6 +150,9 @@ describe('Chips rendered markup', () => {
         chips.deleteChip(0);
         assert.deepEqual(chips.getData(), []);
         assert.equal(el.querySelector('.chip'), null);
+        chips.addChip({ id: 0 });
+        chips.addChip({ id: '00' });
+        assert.equal(chips.getData().length, 2, '00 is not the chip 0');
       } finally {
         chips.destroy();
       }

@@ -258,6 +258,17 @@ export function percentLabel(el: Element, share: number, formats: Intl.NumberFor
   return formats[digits].format(share);
 }
 
+/** Whether a series header cell has a class. */
+export const hasClass = (series: Series, name: string) => series.className.split(/\s+/).includes(name);
+
+/** Colors the tooltip's swatches like a mark; no color leaves the default. */
+export function tintTooltip(tooltip: HTMLElement, color?: string) {
+  tooltip.querySelectorAll<HTMLElement>('[data-series]').forEach((span) => {
+    if (color) span.dataset.series = color;
+    else delete span.dataset.series;
+  });
+}
+
 /** A span holding `text`. */
 export const textSpan = (text: string) => Object.assign(document.createElement('span'), { textContent: text });
 
@@ -828,7 +839,7 @@ export class LineChart extends Component<LineChartOptions> {
    */
   protected _axes(): Element[] {
     if (!this._axis) return [];
-    const isEnd = (series: Series) => series.className.split(/\s+/).includes('end');
+    const isEnd = (series: Series) => hasClass(series, 'end');
     const start = this.series.find((series) => !isEnd(series)) ?? this.series[0];
     const end = this.series.find((series) => series.y !== start.y);
     return [start, end].filter(Boolean).map((series, i) => this._valueAxis(series!, i > 0));

@@ -91,6 +91,7 @@ el.querySelector('input[type="color"]').addEventListener('input', (e) => {
   <Section {...S.options}>
         <OptionsTable>
           <tr><td><code>onChange</code></td><td>Function</td><td><code>null</code></td><td>Called with the new <code>#rrggbb</code> value when a change is committed. For live updates, listen for <code>input</code> on the native input.</td></tr>
+          <tr><td><code>i18n</code></td><td>Object</td><td><code>{"{ area: 'Saturation and brightness', value: (saturation, brightness) => `Saturation ${saturation}%, brightness ${brightness}%`, hue: 'Hue', hex: 'Hex color' }"}</code></td><td>The accessible names. <code>area</code> names the saturation and brightness area, and <code>value</code> says what it reports, from two whole percentages. <code>hue</code> names the hue slider and <code>hex</code> the hex field.</td></tr>
         </OptionsTable>
   </Section>
   <Section {...S.methods}>
