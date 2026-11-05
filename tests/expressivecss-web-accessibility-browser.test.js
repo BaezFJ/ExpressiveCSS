@@ -1084,7 +1084,7 @@ for (const action of ['default', 'multiple', 'range', 'clear']) scenario(`date p
     await page.keyboard.press('Enter');
     await expect(page.locator('#end')).toHaveValue('2024-02-28');
     await day(19).click();
-    await expect(page.locator('#date')).toHaveValue('2024-02-20');
+    await expect(page.locator('#date')).toHaveValue('2024-02-19');
     await expect(page.locator('#end')).toHaveValue('2024-02-28');
     await page.locator('#after').focus();
     await page.evaluate(() => { window.destroyed = window.instances.pop(); window.destroyed.destroy(); });

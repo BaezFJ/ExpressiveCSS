@@ -127,7 +127,6 @@ export class Forms {
   private static _initialized = false;
   private static _fileErrors = new WeakMap<HTMLInputElement, string>();
   private static _fileSelections = new WeakMap<HTMLInputElement, { files: File[]; constraints: string }>();
-  private static _fileResetForms = new WeakSet<HTMLFormElement>();
 
   private static _validatedFile(input: HTMLInputElement) {
     return input.matches(FILE_RULES) || Forms._fileErrors.has(input);
@@ -141,7 +140,7 @@ export class Forms {
 
   private static _validateFiles(input: HTMLInputElement) {
     if (input.matches(':disabled')) return;
-    Forms._bindFileReset(input);
+    Forms._bindShadowForm(input);
     const failure = Forms._checkFiles(input);
     Forms._showFileError(input, failure?.message ?? input.validationMessage);
     return failure;
@@ -230,7 +229,7 @@ export class Forms {
   };
 
   private static _updateDropZone(input: HTMLInputElement) {
-    Forms._bindFileReset(input);
+    Forms._bindShadowForm(input);
     const zone = input.closest('.drop-zone');
     const files = Array.from(input.files ?? []);
     const failure = Forms._validateDropZone(input);
@@ -261,12 +260,11 @@ export class Forms {
       !previous.files.every((file, index) => file === files[index]);
   }
 
-  private static _bindFileReset(input: HTMLInputElement) {
+  // Submit and reset do not leave a shadow root, so the document never hears
+  // them. Adding the same listener again does nothing.
+  private static _bindShadowForm(input: HTMLInputElement) {
     if (!(input.getRootNode() as ShadowRoot).host) return;
-    const form = input.form;
-    if (!form || Forms._fileResetForms.has(form)) return;
-    Forms._fileResetForms.add(form);
-    form.addEventListener('reset', Forms.resetFormExtras);
+    for (const type of ['submit', 'reset']) input.form?.addEventListener(type, Forms.resetFormExtras, true);
   }
 
   private static _resetFileInput(input: HTMLInputElement) {
@@ -363,6 +361,7 @@ export class Forms {
       'input[type="password"], input[data-password]'
     );
     if (!input) return;
+    Forms._bindShadowForm(input);
     const show = input.type === 'password';
     // Marked so the input is still found once it has become type="text".
     input.toggleAttribute('data-password', show);
@@ -373,7 +372,7 @@ export class Forms {
   /**
    * A [data-step="up"] or [data-step="down"] button in a .field steps the
    * field's number input as the arrow keys would, within min, max and step,
-   * and fires input and change. A disabled, read-only or step="any" input
+   * and fires input and change if the value moved. A disabled, read-only or step="any" input
    * is left alone; stepUp() would throw on step="any".
    */
   static stepNumber(e: MouseEvent) {
@@ -382,7 +381,9 @@ export class Forms {
       ':scope > input[type="number"]:not(:disabled, [readonly], [step="any"])'
     );
     if (!input) return;
+    const before = input.value;
     input[button!.dataset.step === 'down' ? 'stepDown' : 'stepUp']();
+    if (input.value === before) return;
     input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
     input.dispatchEvent(new Event('change', { bubbles: true }));
   }

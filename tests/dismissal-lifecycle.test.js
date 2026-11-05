@@ -144,6 +144,43 @@ describe('Dismissal and lifecycle', () => {
     }
   });
 
+  test('MapView shrugs off a cluster zoom that is refused', async () => {
+    document.body.innerHTML = '<div class="map"></div>';
+    const restoreCanvas = shimCanvas();
+    let map;
+    try {
+      map = Expressive.MapView.init(document.querySelector('.map'), { maplibregl: fakeMapLibre() });
+      map.map.getSource = () => ({ getClusterExpansionZoom: () => Promise.reject(new Error('No cluster with the specified id.')) });
+      let eased = false;
+      map.map.easeTo = () => { eased = true; };
+      map.addClusters('stores', { type: 'FeatureCollection', features: [] });
+      const [, , zoomIn] = map.map.handlers.find(([type, layer]) => type === 'click' && layer === 'stores-clusters');
+      await assert.doesNotReject(zoomIn({ features: [{ properties: { cluster_id: 1 }, geometry: { coordinates: [0, 0] } }] }));
+      assert.equal(eased, false);
+    } finally {
+      restoreCanvas();
+      map?.destroy();
+    }
+  });
+
+  test('MapView does not pick up a draggable marker it skipped', (t) => {
+    t.mock.method(console, 'warn', () => {});
+    document.body.innerHTML = '<div class="map"><span class="map-marker" data-lng-lat="nowhere" data-draggable></span></div>';
+    const restoreCanvas = shimCanvas();
+    let map;
+    try {
+      map = Expressive.MapView.init(document.querySelector('.map'), { maplibregl: fakeMapLibre() });
+      const skipped = document.querySelector('.map-marker');
+      skipped.click();
+      assert.equal(skipped.hasAttribute('aria-pressed'), false);
+      const [, onClick] = map.map.handlers.find(([type, layer]) => type === 'click' && typeof layer === 'function');
+      assert.doesNotThrow(() => onClick({ originalEvent: { target: map.el }, lngLat: { lng: 0, lat: 0 } }));
+    } finally {
+      restoreCanvas();
+      map?.destroy();
+    }
+  });
+
   test('MapView handles a refused fullscreen request', async () => {
     document.body.innerHTML = '<div class="map"><div class="map-controls"><button type="button" data-action="fullscreen">Full screen</button></div></div>';
     const el = document.querySelector('.map');

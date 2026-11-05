@@ -85,6 +85,8 @@ export class BottomSheets {
   /** Sets an .expandable sheet to its full height or back to partial, and tells its handle. */
   static setExpanded(dialog: HTMLDialogElement, expanded: boolean) {
     dialog.classList.toggle('expanded', expanded);
+    // Close does not leave a shadow root, so the sheet listens as well as the document.
+    if (expanded) dialog.addEventListener('close', BottomSheets._onClose, { once: true });
     dialog.querySelector(':scope > button.drag-handle')?.setAttribute('aria-expanded', String(expanded));
   }
 

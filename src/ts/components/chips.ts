@@ -588,7 +588,7 @@ export class Chips extends Component<ChipsOptions> {
   _isValidAndNotExist(chip: ChipData) {
     // A blank or whitespace-only label is no chip.
     const isValid = (!!chip.id || chip.id === 0) && String(chip.id).trim() !== '';
-    const doesNotExist = !this.chipsData.some((item) => item.id == chip.id);
+    const doesNotExist = !this.chipsData.some((item) => String(item.id) === String(chip.id));
     return isValid && doesNotExist;
   }
 

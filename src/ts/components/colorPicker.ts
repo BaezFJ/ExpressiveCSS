@@ -1,6 +1,17 @@
 import { Component, BaseOptions } from '../core/component';
 import { Utils, afterFormReset, controllerFor } from '../core/utils';
 
+export interface ColorPickerI18n {
+  /** The name of the saturation and brightness area. */
+  area: string;
+  /** What the area reports as its value, from two whole percentages. */
+  value: (saturation: number, brightness: number) => string;
+  /** The name of the hue slider. */
+  hue: string;
+  /** The name of the hex field. */
+  hex: string;
+}
+
 export interface ColorPickerOptions extends BaseOptions {
   /**
    * Called with the new `#rrggbb` value when a change is committed: the end
@@ -8,10 +19,18 @@ export interface ColorPickerOptions extends BaseOptions {
    * @default null
    */
   onChange: ((value: string) => void) | null;
+  /** The accessible names, for a page in another language. */
+  i18n: Partial<ColorPickerI18n>;
 }
 
 const _defaults: ColorPickerOptions = {
-  onChange: null
+  onChange: null,
+  i18n: {
+    area: 'Saturation and brightness',
+    value: (saturation, brightness) => `Saturation ${saturation}%, brightness ${brightness}%`,
+    hue: 'Hue',
+    hex: 'Hex color'
+  }
 };
 
 /** Hue in degrees, saturation and value from 0 to 1. */
@@ -119,13 +138,14 @@ export class ColorPicker extends Component<ColorPickerOptions> {
 
   private _build() {
     const disabled = this.input!.disabled;
+    const { i18n } = this.options;
 
     const area = document.createElement('div');
     area.className = 'color-picker-area';
     const thumb = document.createElement('div');
     thumb.className = 'color-picker-thumb';
     thumb.setAttribute('role', 'slider');
-    thumb.setAttribute('aria-label', 'Saturation and brightness');
+    thumb.setAttribute('aria-label', i18n.area!);
     thumb.setAttribute('aria-valuemin', '0');
     thumb.setAttribute('aria-valuemax', '100');
     thumb.tabIndex = disabled ? -1 : 0;
@@ -137,13 +157,13 @@ export class ColorPicker extends Component<ColorPickerOptions> {
     hue.className = 'color-picker-hue';
     hue.min = '0';
     hue.max = '359';
-    hue.setAttribute('aria-label', 'Hue');
+    hue.setAttribute('aria-label', i18n.hue!);
     hue.disabled = disabled;
 
     const hex = document.createElement('input');
     hex.type = 'text';
     hex.className = 'color-picker-hex';
-    hex.setAttribute('aria-label', 'Hex color');
+    hex.setAttribute('aria-label', i18n.hex!);
     hex.autocomplete = 'off';
     hex.spellcheck = false;
     hex.maxLength = 7;
@@ -180,7 +200,7 @@ export class ColorPicker extends Component<ColorPickerOptions> {
     thumb.style.setProperty('--_color-picker-y', String(1 - v));
     thumb.style.setProperty('--_color-picker-color', hex);
     thumb.setAttribute('aria-valuenow', String(Math.round(s * 100)));
-    thumb.setAttribute('aria-valuetext', `Saturation ${Math.round(s * 100)}%, brightness ${Math.round(v * 100)}%`);
+    thumb.setAttribute('aria-valuetext', this.options.i18n.value!(Math.round(s * 100), Math.round(v * 100)));
     this._hue!.value = String(Math.round(h));
     // The hex field only commits on change, so rewriting it never fights typing.
     this._hex!.value = hex;

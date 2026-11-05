@@ -86,3 +86,122 @@ for (const [engine, type, browserTest] of engines) {
     }
   });
 }
+
+for (const [engine, type, browserTest] of engines) {
+  const carouselPage = async (browser, options) => {
+    const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
+    await page.setContent(`<!doctype html><html lang="en"><head><style>${css}
+        .carousel { width: 480px; margin: 40px 180px; }
+      </style></head><body>
+      <button type="button" id="before">Before</button>
+      <div class="carousel uncontained" aria-label="Places">
+        <div class="carousel-item"><button type="button" id="inside" style="margin: 20px">One</button></div>
+        <div class="carousel-item">Two</div><div class="carousel-item">Three</div><div class="carousel-item">Four</div>
+      </div><script>${js}</script></body></html>`);
+    await page.evaluate((options) => {
+      window.log = [];
+      window.carousel = Expressive.Carousel.init(document.querySelector('.carousel'), { ...options, onCycleTo: (item, dragged) => log.push(dragged) });
+    }, options);
+    return page;
+  };
+
+  browserTest(`Carousel reports only the drag itself as dragged (${engine})`, async () => {
+    const browser = await type.launch();
+    try {
+      const page = await carouselPage(browser, {});
+      const box = await page.locator('.carousel').boundingBox();
+      await page.mouse.move(box.x + box.width - 20, box.y + 20);
+      await page.mouse.down();
+      await page.mouse.move(box.x + box.width - 340, box.y + 20, { steps: 12 });
+      await page.mouse.up();
+      assert.equal(await page.evaluate(() => carousel.dragged), false, 'it ends with the drag');
+      assert.equal(await page.evaluate(() => log.at(-1)), true, 'the drag itself reported dragged');
+
+      await page.evaluate(() => { log.length = 0; });
+      // Each try scrolls the other way, in case an engine let the last one go by unread.
+      await expect.poll(() => page.evaluate(() => {
+        const track = document.querySelector('.carousel-track');
+        track.scrollLeft = track.scrollLeft ? 0 : track.scrollWidth;
+        return log.length;
+      })).toBeGreaterThan(0);
+      assert.deepEqual(await page.evaluate(() => [...new Set(log)]), [false], 'a later scroll is not a drag');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`Carousel pauses auto-advance for keyboard focus inside a shadow root (${engine})`, async () => {
+    const browser = await type.launch();
+    try {
+      const page = await carouselPage(browser, { interval: 150, duration: 0 });
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await page.evaluate(() => {
+        const host = document.createElement('div');
+        host.id = 'host';
+        host.attachShadow({ mode: 'open' }).innerHTML = '<button type="button">Inside</button>';
+        document.getElementById('inside').replaceWith(host);
+        carousel.set(0);
+        document.getElementById('before').focus();
+      });
+      // Firefox stops on the scrollable track first.
+      await page.keyboard.press('Tab');
+      await page.waitForTimeout(50);
+      if (!await page.evaluate(() => host.shadowRoot.activeElement)) await page.keyboard.press('Tab');
+      await page.waitForFunction(() => host.shadowRoot.activeElement?.localName === 'button');
+      const held = await page.evaluate(() => [carousel._focused, carousel.center]);
+      await page.waitForTimeout(600);
+      assert.deepEqual(await page.evaluate(() => [carousel._focused, carousel.center]), [true, held[1]], 'focus in the web component holds it');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`Carousel pauses auto-advance once keys move focus on from a mouse click inside a shadow root (${engine})`, async () => {
+    const browser = await type.launch();
+    try {
+      const page = await carouselPage(browser, { interval: 150, duration: 0 });
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      await page.evaluate(() => {
+        const host = document.createElement('div');
+        host.id = 'host';
+        host.attachShadow({ mode: 'open' }).innerHTML = '<button type="button" id="a">A</button> <button type="button" id="b">B</button>';
+        document.getElementById('inside').replaceWith(host);
+        carousel.set(0);
+      });
+      await page.locator('#host #a').click();
+      await page.mouse.move(5, 590);
+      assert.equal(await page.evaluate(() => carousel._focused), false, 'the click does not hold it');
+      await page.keyboard.press('Tab');
+      await page.waitForFunction(() => host.shadowRoot.activeElement?.id === 'b');
+      const held = await page.evaluate(() => [carousel._focused, carousel.center]);
+      assert.equal(held[0], true, 'the key does');
+      await page.waitForTimeout(600);
+      assert.equal(await page.evaluate(() => carousel.center), held[1]);
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`Carousel pauses auto-advance for keyboard focus and not for a mouse click (${engine})`, async () => {
+    const browser = await type.launch();
+    try {
+      const page = await carouselPage(browser, { interval: 150, duration: 0 });
+      await page.emulateMedia({ reducedMotion: 'no-preference' });
+      const center = () => page.evaluate(() => carousel.center);
+      await page.locator('#inside').click();
+      await page.mouse.move(5, 590);
+      const clicked = await center();
+      await expect.poll(center, { timeout: 5000 }).not.toBe(clicked);
+
+      await page.evaluate(() => { carousel.set(0); document.getElementById('before').focus(); });
+      await page.keyboard.press('Tab');
+      // Firefox stops on the scrollable track first.
+      await page.waitForFunction(() => document.querySelector('.carousel').contains(document.activeElement));
+      const focused = await center();
+      await page.waitForTimeout(600);
+      assert.equal(await center(), focused, 'keyboard focus holds it');
+    } finally {
+      await browser.close();
+    }
+  });
+}

@@ -227,3 +227,18 @@ each('destroy() stops formatting', async ({ page, state }) => {
   await page.keyboard.type('5551');
   assert.equal((await state()).value, '5551');
 });
+
+each('a delete during a composition, or one that cannot be cancelled, is left to the browser', async ({ page }) => {
+  await page.click('#phone');
+  await page.keyboard.type('5551');
+  const fire = (init) => page.evaluate((init) => {
+    const field = document.getElementById('phone');
+    field.setSelectionRange(6, 6);
+    const event = new InputEvent('beforeinput', { bubbles: true, inputType: 'deleteContentBackward', ...init });
+    field.dispatchEvent(event);
+    return [event.defaultPrevented, field.value];
+  }, init);
+  assert.deepEqual(await fire({ cancelable: true, isComposing: true }), [false, '(555) 1'], 'composing');
+  assert.deepEqual(await fire({ cancelable: false }), [false, '(555) 1'], 'not cancelable');
+  assert.deepEqual(await fire({ cancelable: true }), [true, '(551'], 'a plain delete still crosses the literal');
+});

@@ -299,3 +299,22 @@ test('a container selector that matches nothing falls back to the default placem
     resetBody();
   }
 });
+
+for (const [label, defaultEndDate, end] of [['a whole range', new Date(2026, 8, 25), 25], ['only a start', undefined, undefined]]) {
+  test(`a day before the start moves the start of ${label}`, () => {
+    resetBody();
+    document.body.innerHTML = '<div><input id="start"><input id="end"></div>';
+    const picker = Expressive.Datepicker.init(document.getElementById('start'), {
+      isDateRange: true, dateRangeEndEl: '#end', format: 'yyyy-mm-dd', autoSubmit: false,
+      defaultDate: new Date(2026, 8, 20), setDefaultDate: true,
+      ...(defaultEndDate ? { defaultEndDate, setDefaultEndDate: true } : {})
+    });
+    try {
+      picker.calendarEl.querySelector('.datepicker-day-button[data-year="2026"][data-month="8"][data-day="10"]').click();
+      assert.equal(picker.date.getDate(), 10, 'the earlier day is the new start');
+      assert.equal(picker.endDate?.getDate(), end, 'the end stays where it was');
+    } finally {
+      picker.destroy();
+    }
+  });
+}

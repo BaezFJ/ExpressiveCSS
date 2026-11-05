@@ -1,4 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
+import { deepActiveElement } from '../core/utils';
 
 export interface NavigationRailOptions extends BaseOptions {
   /**
@@ -30,13 +31,6 @@ const COMPACT = '(width < 600px)';
 // Delay before a hovered destination opens its panel, and before the panel
 // closes once the pointer leaves; it covers the trip across the rail's padding.
 const HOVER_DELAY = 200;
-
-/** The focused element, followed down through open shadow roots. */
-function deepActiveElement(root: Document | ShadowRoot): Element | null {
-  let active = root.activeElement;
-  while (active?.shadowRoot?.activeElement) active = active.shadowRoot.activeElement;
-  return active;
-}
 
 /**
  * Navigation rail. Layout is CSS (collapsed / .expanded). This class

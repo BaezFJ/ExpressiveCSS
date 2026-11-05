@@ -11,6 +11,8 @@ const SLOTS: Record<string, RegExp> = { '0': /[0-9]/, a: /\p{L}/u, '*': /[0-9\p{
 
 /** Which way a one-character delete from a collapsed caret goes. */
 const DELETES: Record<string, number> = { deleteContentBackward: -1, deleteContentForward: 1 };
+/** How a delete moves, unless it is the IME's or cannot be taken over. */
+const deleteStep = (e: InputEvent) => (e.isComposing || !e.cancelable ? undefined : DELETES[e.inputType]);
 
 /** Splits a mask into tokens. A backslash makes the character after it a literal. */
 const parse = (mask: string): Token[] =>
@@ -123,7 +125,7 @@ export class InputMask extends Component<BaseOptions> {
    * across the literal instead.
    */
   private _onBeforeInput = (e: InputEvent) => {
-    const step = DELETES[e.inputType];
+    const step = deleteStep(e);
     const index = step && this.el.selectionStart === this.el.selectionEnd ? this._acrossLiteral(step) : -1;
     if (index < 0) return;
     e.preventDefault();

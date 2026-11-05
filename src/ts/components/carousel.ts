@@ -1,4 +1,4 @@
-import { restoreAttribute } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 export interface CarouselI18nOptions {
@@ -281,6 +281,7 @@ export class Carousel extends Component<CarouselOptions> {
       this.el.addEventListener('mouseleave', this._handleAutoAdvanceState, { signal });
       this.el.addEventListener('focusin', this._handleAutoAdvanceState, { signal });
       this.el.addEventListener('focusout', this._handleAutoAdvanceState, { signal });
+      this.el.addEventListener('keydown', this._handleAutoAdvanceKey, { signal });
       // Browsers clamp a background tab's timers rather than stopping them, so
       // without this the track keeps cycling out of sight.
       document.addEventListener('visibilitychange', this._handleAutoAdvanceState, { signal });
@@ -373,8 +374,17 @@ export class Carousel extends Component<CarouselOptions> {
   _handleAutoAdvanceState = (e: Event) => {
     if (e.type === 'mouseenter') this._hovered = true;
     else if (e.type === 'mouseleave') this._hovered = false;
-    else if (e.type === 'focusin') this._focused = true;
+    // A mouse click focuses what it hits, and only keyboard focus holds the track.
+    // The real target: a shadow host's own :focus-visible can differ from what is inside.
+    else if (e.type === 'focusin') this._focused = (Utils.eventTarget(e) as Element).matches(':focus-visible');
     else if (e.type === 'focusout') this._focused = this.el.contains((e as FocusEvent).relatedTarget as Node);
+    this._syncAutoAdvance();
+  };
+
+  // A key pressed in here means keyboard use, with no new focus event when the
+  // focus began with a mouse click or moves within a shadow root.
+  private _handleAutoAdvanceKey = () => {
+    this._focused = true;
     this._syncAutoAdvance();
   };
 
@@ -503,6 +513,7 @@ export class Carousel extends Component<CarouselOptions> {
       this._suppressClick = false;
     }, 0);
     this._syncActive(this._nearestIndex(), true);
+    this.dragged = false;
   };
 
   _handleTrackClick = (e: MouseEvent) => {

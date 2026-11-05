@@ -102,3 +102,29 @@ for (const [name, engine, test] of engines) {
     }
   });
 }
+
+for (const [name, engine, test] of engines) {
+  test(`${name}: color picker takes its accessible names from i18n`, { timeout: 30000 }, async () => {
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage();
+      await page.setContent(markup);
+      const labels = () => page.evaluate(() => {
+        const thumb = document.querySelector('.color-picker-thumb');
+        return [thumb.getAttribute('aria-label'), thumb.getAttribute('aria-valuetext'),
+          document.querySelector('.color-picker-hue').getAttribute('aria-label'),
+          document.querySelector('.color-picker-hex').getAttribute('aria-label')];
+      });
+      assert.deepEqual(await labels(), ['Saturation and brightness', 'Saturation 100%, brightness 100%', 'Hue', 'Hex color']);
+      await page.evaluate(() => {
+        picker.destroy();
+        window.picker = Expressive.ColorPicker.init(document.getElementById('picker'), {
+          i18n: { area: 'Saturación y brillo', value: (s, v) => `Saturación ${s}%, brillo ${v}%`, hue: 'Tono', hex: 'Color hexadecimal' }
+        });
+      });
+      assert.deepEqual(await labels(), ['Saturación y brillo', 'Saturación 100%, brillo 100%', 'Tono', 'Color hexadecimal']);
+    } finally {
+      await browser.close();
+    }
+  });
+}

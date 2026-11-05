@@ -253,7 +253,8 @@ function stop(canvas: HTMLCanvasElement) {
   scene.ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (scene.overlay) {
     canvas.remove();
-    overlay = null;
+    // A newer overlay may have replaced one the page removed.
+    if (overlay === canvas) overlay = null;
   }
   for (const resolve of scene.done) resolve();
 }

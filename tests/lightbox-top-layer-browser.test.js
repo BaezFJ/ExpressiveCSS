@@ -96,3 +96,28 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 }
+
+for (const [engine, browserType, browserTest] of engines) {
+  browserTest(`${engine}: Escape closes a lightbox in a dialog and leaves the dialog open`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
+      await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>
+        <dialog id="dialog"><img id="photo" class="lightboxed" src="${image}" width="120" height="80" alt="Teal" tabindex="0" role="button"></dialog>
+        <script>${js}</script></body></html>`);
+      await page.evaluate(() => {
+        document.getElementById('dialog').showModal();
+        window.box = Expressive.Lightbox.init(document.getElementById('photo'), { inDuration: 0, outDuration: 0 });
+        box.open();
+      });
+      await page.waitForFunction(() => box.doneAnimating);
+      await page.keyboard.press('Escape');
+      await page.waitForFunction(() => !box.overlayActive);
+      assert.equal(await page.evaluate(() => document.getElementById('dialog').open), true, 'one press closes one layer');
+      await page.keyboard.press('Escape');
+      await page.waitForFunction(() => !document.getElementById('dialog').open);
+    } finally {
+      await browser.close();
+    }
+  });
+}

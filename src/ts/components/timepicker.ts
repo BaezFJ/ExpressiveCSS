@@ -245,7 +245,7 @@ export class Timepicker extends Component<TimepickerOptions> {
   hours: number;
   minutes: number;
   seconds: number;
-  /** The selected time. */
+  /** The selected time as the clock shows it. On a 12-hour clock `amOrPm` says which half of the day. */
   time: string;
   /**
    * If the time is AM or PM on twelve-hour clock.

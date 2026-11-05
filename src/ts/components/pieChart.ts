@@ -1,4 +1,4 @@
-import { LineChart, LineChartOptions, ROW_COLORS as COLORS, numberFormat, percentLabel, polarPoint as at, rowLegend, signs } from './lineChart';
+import { LineChart, LineChartOptions, ROW_COLORS as COLORS, numberFormat, percentLabel, polarPoint as at, rowLegend, signs, tintTooltip } from './lineChart';
 import { svgNode as node } from '../core/utils';
 
 export type PieChartOptions = LineChartOptions;
@@ -140,11 +140,7 @@ export class PieChart extends LineChart {
     // LineChart hides the tooltip for -1 and for an index past the last row.
     if (this._tooltip.hidden) return;
 
-    const color = this._colors[index];
-    this._tooltip.querySelectorAll<HTMLElement>('[data-series]').forEach((span) => {
-      if (color) span.dataset.series = color;
-      else delete span.dataset.series;
-    });
+    tintTooltip(this._tooltip, this._colors[index]);
   }
 
   /** CSS places the tooltip on the slice's middle from --turn. */

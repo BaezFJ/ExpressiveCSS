@@ -1619,11 +1619,8 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   _handleDateRangeCalendarClick = (date: Date) => {
     if (this.endDate == null || !Datepicker._compareDates(date, this.endDate)) {
-      if (Datepicker._isDate(this.date) && date < this.date) {
-        return;
-      }
-
-      this.setDate(date, false, Datepicker._isDate(this.date));
+      // A day before the start moves the start.
+      this.setDate(date, false, Datepicker._isDate(this.date) && date >= this.date);
       return;
     }
 

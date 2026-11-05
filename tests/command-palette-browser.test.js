@@ -186,3 +186,24 @@ for (const [name, engine, test] of engines) {
     }
   });
 }
+
+for (const [name, engine, test] of engines) {
+  test(`${name}: holding the command palette shortcut toggles it once`, { timeout: 30000 }, async () => {
+    const browser = await engine.launch({ headless: true });
+    try {
+      const page = await browser.newPage();
+      await page.setContent(markup.replace('</body>', () => `<script>${js}</script></body>`));
+      await page.evaluate(() => { window.palette = Expressive.CommandPalette.init(document.getElementById('palette'), {}); });
+      await page.keyboard.press('Control+k');
+      const taken = await page.evaluate(() => {
+        const event = new KeyboardEvent('keydown', { key: 'k', code: 'KeyK', ctrlKey: true, repeat: true, bubbles: true, cancelable: true });
+        document.dispatchEvent(event);
+        return event.defaultPrevented;
+      });
+      assert.equal(taken, true, 'the held key stays away from the browser');
+      assert.equal(await page.evaluate(() => palette.isOpen), true, 'and does not close the palette');
+    } finally {
+      await browser.close();
+    }
+  });
+}

@@ -72,6 +72,18 @@ describe('AppBar collapse', () => {
     instance.destroy();
   });
 
+  test('a batch of entries is read from its newest', () => {
+    document.body.innerHTML = mediumBar;
+    const header = document.querySelector('header');
+    const instance = Expressive.AppBar.init(header);
+    observers[0].cb([
+      { isIntersecting: false, boundingClientRect: { top: -8 } },
+      { isIntersecting: true, boundingClientRect: { top: 0 } },
+    ]);
+    assert.equal(header.classList.contains('collapsed'), false);
+    instance.destroy();
+  });
+
   test('destroy removes the sentinel and the observer', () => {
     document.body.innerHTML = mediumBar;
     const header = document.querySelector('header');

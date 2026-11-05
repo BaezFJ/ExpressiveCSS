@@ -9204,6 +9204,13 @@ The area is a `role="slider"` with `aria-valuetext` such as "Saturation 60%, bri
 ```js
 const picker = Expressive.ColorPicker.init(el, {
   onChange: (value) => console.log(value), // '#6750a4'
+  // The accessible names, for a page in another language.
+  i18n: {
+    area: 'Saturación y brillo',
+    value: (saturation, brightness) => `Saturación ${saturation}%, brillo ${brightness}%`,
+    hue: 'Tono',
+    hex: 'Color hexadecimal',
+  },
 });
 ```
 

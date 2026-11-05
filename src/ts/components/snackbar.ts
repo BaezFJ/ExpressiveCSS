@@ -1,5 +1,5 @@
 import { BaseOptions } from '../core/component';
-import { Utils, controllerFor, restoreAttribute } from '../core/utils';
+import { Utils, controllerFor, deepActiveElement, restoreAttribute } from '../core/utils';
 
 export interface SnackbarOptions extends BaseOptions {
   /**
@@ -247,8 +247,7 @@ export class Snackbar {
 
   /** The focused element, looking inside open shadow roots. */
   private static _focused(): HTMLElement | null {
-    let focused = document.activeElement;
-    while (focused?.shadowRoot?.activeElement) focused = focused.shadowRoot.activeElement;
+    const focused = deepActiveElement(document);
     return focused instanceof HTMLElement ? focused : null;
   }
 

@@ -974,7 +974,7 @@ export class Autocomplete extends Component<AutocompleteOptions> {
    */
   selectOption(id: number | string) {
     // A disabled entry is never found, so it is neither chosen nor removed.
-    const entry = this.menuItems.find((item) => item.id == id && item.disabled !== true);
+    const entry = this.menuItems.find((item) => String(item.id) === String(id) && item.disabled !== true);
     if (!entry) return;
     if (this.options.isMultiSelect) this._toggleOption(entry);
     else this._selectSingle(entry);
