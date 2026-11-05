@@ -5,11 +5,11 @@ A reporting line drawn top down, with each person as a card under their manager.
 
 Component ID: `org-chart`
 
-[Component documentation](https://www.expressivecss.com/org-chart.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/org-chart.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.16.0)
+[Component documentation](https://www.expressivecss.com/org-chart.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/org-chart.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.17.0)
 
-Contract: ExpressiveCSS 0.16.0
+Contract: ExpressiveCSS 0.17.0
 
-Contract SHA-256: `2daea47eaf2e8f656b94768489d36d4f22f63d0e1753ad2f09e01cc0bacf4939`
+Contract SHA-256: `d387239f800aa99e434e7506d785385052043e90e051fce387f0b3a6714cd726`
 
 #### Selection and adaptation
 
