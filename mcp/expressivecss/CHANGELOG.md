@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.5.1 - 2026-11-05
+
+- Bundled guidance matches ExpressiveCSS 0.17.0.
+- Update `@modelcontextprotocol/sdk` to 1.32.2 and `@hono/node-server` to 2.1.5.
+- `scripts/resolve-version.mjs` takes `--package-path` (`packagePath`) for a
+  vendored package. The path must be a relative directory inside the project
+  root, and framework source still takes precedence.
+
 ## 0.5.0 - 2026-10-27
 
 - Security: update the locked `body-parser` to 2.4.0, `fast-uri` to 3.1.9,

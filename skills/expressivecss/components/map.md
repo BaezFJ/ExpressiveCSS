@@ -5,11 +5,11 @@ An interactive map with markers, popups, routes, arcs, clusters and controls, bu
 
 Component ID: `map`
 
-[Component documentation](https://www.expressivecss.com/map.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/map.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.16.0)
+[Component documentation](https://www.expressivecss.com/map.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/map.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.17.0)
 
-Contract: ExpressiveCSS 0.16.0
+Contract: ExpressiveCSS 0.17.0
 
-Contract SHA-256: `2daea47eaf2e8f656b94768489d36d4f22f63d0e1753ad2f09e01cc0bacf4939`
+Contract SHA-256: `d387239f800aa99e434e7506d785385052043e90e051fce387f0b3a6714cd726`
 
 #### Selection and adaptation
 

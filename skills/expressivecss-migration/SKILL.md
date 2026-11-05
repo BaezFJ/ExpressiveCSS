@@ -4,7 +4,7 @@ description: "Migrates Materialize CSS or older @expressivecss/expressive projec
 license: MIT
 metadata:
   author: BaezFJ
-  version: "0.1.0"
+  version: "0.1.1"
   homepage: https://www.expressivecss.com
   repository: https://github.com/BaezFJ/ExpressiveCSS
   tags: expressivecss, materialize, migration, upgrade, material-design-3

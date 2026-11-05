@@ -4,7 +4,7 @@ description: "Builds, refines, reviews and debugs @expressivecss/expressive inte
 license: MIT
 metadata:
   author: BaezFJ
-  version: "0.12.0"
+  version: "0.13.0"
   homepage: https://www.expressivecss.com
   repository: https://github.com/BaezFJ/ExpressiveCSS
   platforms: linux, macos, windows
