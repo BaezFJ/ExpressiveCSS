@@ -343,6 +343,7 @@ $_shaped: ":where(#{$_btn}):where(:not(#{$_fixed}))";
 // group items, the time picker's AM and PM, and the rest of `$_fixed`.
 #{$_shaped} {
   --_shape: var(--md-comp-filled-button-container-shape);
+  corner-shape: var(--md-sys-shape-corner-family);
 
   transition:
     background-color var(--md-sys-motion-duration-short4) ease-out,

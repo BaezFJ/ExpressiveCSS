@@ -851,6 +851,8 @@ Material shapes come in a rounded and a cut family. `corners="cut"` on the root 
 <div class="bordered corner-large corner-cut">One cut panel</div>
 ```
 
+Common-button corner styling ships with the button partial, so plain `<button>` elements, button links and `label.button` also follow this switch in selective Sass builds without utilities. Circle buttons, FABs, icon buttons and controls inside toolbars or app bars retain their own shapes and hit areas.
+
 ---
 
 ## Design tokens

@@ -11,7 +11,75 @@ const sheets = {
   }).css,
 };
 
+const widgetSheets = {
+  full: sheets.full,
+  selective: compileString('@use "custom" with ($components: ("icons-material-design", "buttons", "navbar", "toolbar"), $utilities: (), $expressive-include-fonts: false);', {
+    loadPaths: [fileURLToPath(new URL('../src/sass', import.meta.url))],
+  }).css,
+};
+
 for (const [engine, type, browserTest] of engines) {
+  browserTest(`${engine}: cut corners preserve host-styled icon actions and their circular hit area`, async () => {
+    const browser = await leaseBrowser(type);
+    try {
+      const page = await browser.newPage({ reducedMotion: 'reduce' });
+      for (const [build, css] of Object.entries(widgetSheets)) {
+        await page.setContent(`<style>${css}</style><div corners="cut">
+          <div class="toolbar"><button id="toolbar" class="active" aria-label="Edit"><span class="material-symbols" aria-hidden="true">edit</span></button></div>
+          <header><nav aria-label="Main"><button id="appbar" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button><h1>Title</h1></nav></header>
+          <header><div class="bar"><button id="command" aria-label="Back"><span class="material-symbols" aria-hidden="true">arrow_back</span></button><h2>Commands</h2></div></header>
+          <button class="extend small" id="extended"><span class="material-symbols" aria-hidden="true">edit</span><span>Compose</span></button>
+        </div>`);
+        const actions = await page.evaluate(() => ['toolbar', 'appbar', 'command'].map(id => {
+          const button = document.getElementById(id);
+          const style = getComputedStyle(button);
+          const rect = button.getBoundingClientRect();
+          return { id, shape: style.getPropertyValue('corner-top-left-shape'), radius: style.borderTopLeftRadius,
+            width: rect.width, height: rect.height,
+            hit: document.elementFromPoint(rect.left + rect.width * 0.2, rect.top + rect.height * 0.2)?.closest('button')?.id };
+        }));
+        for (const action of actions) {
+          assert.notEqual(action.shape, 'superellipse(0)', `${build}, ${action.id}: retains round corners`);
+          assert.equal(action.radius, '50%', `${build}, ${action.id}: circular action`);
+          assert.equal(action.width, 48, `${build}, ${action.id}: width`);
+          assert.equal(action.height, 48, `${build}, ${action.id}: height`);
+          assert.equal(action.hit, action.id, `${build}, ${action.id}: circular hit area`);
+        }
+        const extended = await page.locator('#extended').evaluate(el => getComputedStyle(el).getPropertyValue('corner-top-left-shape'));
+        assert.notEqual(extended, 'superellipse(0)', `${build}: the extended FAB retains its own shape`);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  browserTest(`${engine}: cut corners cover semantic buttons without beveling round controls`, async () => {
+    const browser = await leaseBrowser(type);
+    try {
+      const page = await browser.newPage();
+      const supported = await page.evaluate(() => CSS.supports('corner-shape', 'bevel'));
+      for (const [build, css] of Object.entries(sheets)) {
+        await page.setContent(`<style>${css}</style><div corners="cut">
+          <button id="native">Button</button><a id="link" class="button" href="#">Link</a>
+          <label id="label" class="button">Label</label><button id="square" class="square">Square</button>
+          <button id="circle" class="circle">Circle</button><button id="fab" class="extra circle">FAB</button>
+          <button id="icon" class="icon-button">Icon</button><button id="day" class="datepicker-day-button">Day</button>
+          <div corners="round"><button id="round">Round subtree</button></div>
+        </div>`);
+        const shapes = await page.evaluate(() => Object.fromEntries([...document.querySelectorAll('[id]')].map(el => [el.id, getComputedStyle(el).getPropertyValue('corner-top-left-shape')])));
+        for (const id of ['native', 'link', 'label', 'square']) {
+          if (supported) assert.equal(shapes[id], 'superellipse(0)', `${build}, ${id}`);
+          else assert.notEqual(shapes[id], 'superellipse(0)', `${build}, ${id}: rounded fallback`);
+        }
+        for (const id of ['circle', 'fab', 'icon', 'day', 'round']) {
+          assert.notEqual(shapes[id], 'superellipse(0)', `${build}, ${id}: retains its own shape`);
+        }
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: filled button color overrides persist through interaction states`, async () => {
     const browser = await leaseBrowser(type);
     try {

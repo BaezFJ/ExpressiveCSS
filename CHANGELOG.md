@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Cut corners reach semantic buttons and selective button builds without the
+  helpers utility. Circle buttons, FABs and controls styled by their host widget
+  keep their own shapes and hit areas.
+
 - Medium-contrast subtrees restore the standard `on-surface` color when nested
   inside high contrast, including overrides of its light and dark backing pairs.
   Vibrant surfaces retain their matching accent foreground.

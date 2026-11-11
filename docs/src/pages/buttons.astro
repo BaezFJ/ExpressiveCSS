@@ -328,6 +328,14 @@ const S = defineSections([
           beyond) and springs back on release.
         </p>
         <p>
+          <code>corners="cut"</code> on an ancestor bevels common buttons,
+          including plain <code>&lt;button&gt;</code> elements and button links.
+          <code>corners="round"</code> restores round corners for a subtree.
+          Circle buttons, FABs, icon buttons and controls inside toolbars or app
+          bars keep their own shapes. The button partial includes this behavior
+          in selective Sass builds.
+        </p>
+        <p>
           <button type="button">Round</button>
           <button type="button" class="square">Square</button>
           <button type="button" class="tonal square medium">Square medium</button>
