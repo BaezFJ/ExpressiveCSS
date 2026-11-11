@@ -1966,7 +1966,7 @@ The standard motion scheme is the default. `motion="expressive"` on the root or 
 }
 ```
 
-In Sass, `spring($damping, $stiffness)` and `spring-duration($damping, $stiffness)` turn any spring into the same pair.
+In Sass, `spring($damping, $stiffness)` and `spring-duration($damping, $stiffness)` return the easing and duration in milliseconds. Both arguments must be unitless numbers: damping must be greater than 0 and at most 1, and stiffness must be positive. Invalid arguments fail compilation.
 
 ```scss
 .drawer {

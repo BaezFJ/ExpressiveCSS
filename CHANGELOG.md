@@ -5,6 +5,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Sass spring functions reject invalid damping and stiffness instead of hanging
+  compilation or emitting invalid easing values.
+
 ## [0.17.0] - 2026-11-05
 
 This release adds Sass mixins and a few component options, and fixes form reset,
