@@ -83,7 +83,10 @@ $_neutral-tones: (
 }
 
 [contrast='medium'],
-:host([contrast='medium']) { @include _scheme("medium"); }
+:host([contrast='medium']) {
+  --md-sys-color-on-surface: var(--_expressive-vibrant-foreground, light-dark(var(--md-sys-color-on-surface-light), var(--md-sys-color-on-surface-dark)));
+  @include _scheme("medium");
+}
 
 [contrast='high'],
 :host([contrast='high']) { @include _scheme("high"); }

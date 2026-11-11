@@ -5,6 +5,25 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Cut corners reach semantic buttons and selective button builds without the
+  helpers utility. Circle buttons, FABs and controls styled by their host widget
+  keep their own shapes and hit areas.
+
+- Medium-contrast subtrees restore the standard `on-surface` color when nested
+  inside high contrast, including overrides of its light and dark backing pairs.
+  Vibrant surfaces retain their matching accent foreground.
+
+- Filled-button hover, focus and pressed state layers retain the authored
+  component container and label colors.
+
+- Filled buttons follow the live colors of a contrast subtree while retaining
+  color token overrides on the root, an ancestor or the button.
+
+- Sass spring functions reject invalid damping and stiffness instead of hanging
+  compilation or emitting invalid easing values.
+
 ## [0.17.0] - 2026-11-05
 
 This release adds Sass mixins and a few component options, and fixes form reset,

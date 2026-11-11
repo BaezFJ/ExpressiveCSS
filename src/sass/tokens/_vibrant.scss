@@ -59,6 +59,12 @@ $_vibrant-surfaces: ();
   }
 }
 
+// A shadow root loading its own token layer starts with neutral emphasis.
+:root,
+:host {
+  --_expressive-vibrant-foreground: initial;
+}
+
 // :host([vibrant]) for the same reason tokens/_theme.scss carries :host - a
 // sheet loaded inside a shadow root cannot reach its own host with a descendant
 // selector, so <my-panel vibrant> would leave the whole shadow tree neutral.
@@ -68,6 +74,8 @@ $_vibrant-surfaces: ();
     --md-sys-color-#{$role}: var(--md-sys-color-tertiary-container);
   }
 
-  --md-sys-color-on-surface: var(--md-sys-color-on-tertiary-container);
+  // Keep the foreground paired with this surface when a descendant changes contrast.
+  --_expressive-vibrant-foreground: var(--md-sys-color-on-tertiary-container);
+  --md-sys-color-on-surface: var(--_expressive-vibrant-foreground);
   --md-sys-color-on-surface-variant: var(--md-sys-color-on-tertiary-container);
 }

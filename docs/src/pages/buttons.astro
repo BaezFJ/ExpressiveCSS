@@ -51,6 +51,14 @@ const S = defineSections([
           at 38% on a 12% container.
         </p>
         <p>
+          Filled buttons resolve <code>primary</code> and <code>on-primary</code>
+          where the button sits, so they follow a subtree's contrast setting.
+          The optional <code>--md-comp-filled-button-container-color</code> and
+          <code>--md-comp-filled-button-label-text-color</code> overrides can be
+          set on the root, an ancestor or the button. Hover, focus and pressed
+          state layers mix the chosen label color over that container color.
+        </p>
+        <p>
           A label that does not fit wraps between words, and the button grows
           taller. With enlarged text, 200% zoom or a narrow column, the label stays
           inside the button and the button stays inside its parent. The size's height
@@ -318,6 +326,14 @@ const S = defineSections([
           extra large. When pressed, every common button morphs its corners to the
           pressed shape of its size (8dp up to small, 12dp at medium and 16dp
           beyond) and springs back on release.
+        </p>
+        <p>
+          <code>corners="cut"</code> on an ancestor bevels common buttons,
+          including plain <code>&lt;button&gt;</code> elements and button links.
+          <code>corners="round"</code> restores round corners for a subtree.
+          Circle buttons, FABs, icon buttons and controls inside toolbars or app
+          bars keep their own shapes. The button partial includes this behavior
+          in selective Sass builds.
         </p>
         <p>
           <button type="button">Round</button>

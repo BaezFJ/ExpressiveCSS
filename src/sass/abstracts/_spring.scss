@@ -1,5 +1,6 @@
 @use "sass:list";
 @use "sass:math";
+@use "sass:meta";
 @use "sass:string";
 
 // Springs, solved at compile time. M3 Expressive describes motion as springs
@@ -34,6 +35,12 @@ $_samples: 24;
 // underdamped spring settles when its envelope does; a critically damped one
 // is stepped forward a millisecond at a time.
 @function _settle-time($damping, $stiffness) {
+  @if meta.type-of($damping) != "number" or not math.is-unitless($damping) or not ($damping > 0 and $damping <= 1) {
+    @error "$damping must be a unitless number greater than 0 and at most 1, got #{$damping}.";
+  }
+  @if meta.type-of($stiffness) != "number" or not math.is-unitless($stiffness) or not ($stiffness > 0) {
+    @error "$stiffness must be a positive unitless number, got #{$stiffness}.";
+  }
   $w: math.sqrt($stiffness);
   @if $damping < 1 {
     @return math.div(math.log(math.div(1, $_settle * math.sqrt(1 - $damping * $damping))), $damping * $w);

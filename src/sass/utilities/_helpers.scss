@@ -173,7 +173,7 @@ $_layout: (
 .corner-cut { corner-shape: bevel; }
 
 :where(
-  article, dialog, menu[id], fieldset, .button:not(.circle), .chip, .alert,
+  article, dialog, menu[id], fieldset, .chip, .alert,
   .snackbar, .tooltip, .popover, .field.outlined > :is(input, textarea)
 ) {
   corner-shape: var(--md-sys-shape-corner-family);

@@ -2,10 +2,110 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { chromium } from 'playwright';
-import { leaseBrowser } from './browser.js';
+import { engines, leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const browserTest = existsSync(chromium.executablePath()) ? test : test.skip;
+
+for (const [engine, type, run] of engines) {
+  run(`${engine}: medium contrast preserves the foreground of vibrant surfaces`, async () => {
+    const browser = await leaseBrowser(type);
+    try {
+      const page = await browser.newPage();
+      for (const theme of ['light', 'dark']) {
+        await page.setContent(`<html theme="${theme}"><head><style>${css}</style></head><body>
+          <article id="same" vibrant contrast="medium">Vibrant medium</article>
+          <div contrast="high"><article id="high" vibrant contrast="medium">Medium inside high</article></div>
+          <div vibrant><article id="nested" contrast="medium">Medium inside vibrant</article><article id="inherited">Vibrant reference</article></div>
+          <div contrast="medium"><article id="child" vibrant>Vibrant inside medium</article></div>
+        </body></html>`);
+        const surfaces = await page.evaluate(() => {
+          const context = document.createElement('canvas').getContext('2d');
+          const pixel = color => {
+            context.fillStyle = color;
+            context.fillRect(0, 0, 1, 1);
+            return [...context.getImageData(0, 0, 1, 1).data.slice(0, 3)];
+          };
+          return Object.fromEntries(['same', 'high', 'nested', 'inherited', 'child'].map(id => {
+            const style = getComputedStyle(document.getElementById(id));
+            return [id, { color: style.color, foreground: pixel(style.color), background: pixel(style.backgroundColor) }];
+          }));
+        });
+        for (const [id, surface] of Object.entries(surfaces)) {
+          assert.ok(ratio(surface.foreground, surface.background) >= 4.5, `${theme}, ${id}: readable text`);
+        }
+        assert.equal(surfaces.nested.color, surfaces.inherited.color, `${theme}: inherited vibrant foreground`);
+        await page.evaluate(() => {
+          const host = document.createElement('div');
+          host.setAttribute('vibrant', '');
+          host.setAttribute('contrast', 'medium');
+          host.setAttribute('theme', document.documentElement.getAttribute('theme'));
+          const root = host.attachShadow({ mode: 'open' });
+          root.innerHTML = '<span>Shadow text</span>';
+          document.body.append(host);
+          window.host = host;
+        });
+        await page.evaluate(css => {
+          const sheet = new CSSStyleSheet();
+          sheet.replaceSync(css);
+          host.shadowRoot.adoptedStyleSheets = [sheet];
+        }, css);
+        const shadow = await page.evaluate(() => {
+          const reference = document.createElement('span');
+          reference.style.color = 'var(--md-sys-color-on-tertiary-container)';
+          host.shadowRoot.append(reference);
+          return [getComputedStyle(reference).color,
+            getComputedStyle(host.shadowRoot.querySelector('span')).color];
+        });
+        assert.equal(shadow[1], shadow[0], `${theme}: vibrant medium shadow host`);
+        const neutral = await page.evaluate(() => {
+          const parent = document.createElement('div');
+          parent.setAttribute('vibrant', '');
+          document.body.append(parent);
+          parent.append(host);
+          host.removeAttribute('vibrant');
+          const reference = host.shadowRoot.lastElementChild;
+          reference.style.color = 'light-dark(var(--md-sys-color-on-surface-light), var(--md-sys-color-on-surface-dark))';
+          return [getComputedStyle(reference).color, getComputedStyle(host.shadowRoot.querySelector('span')).color];
+        });
+        assert.equal(neutral[1], neutral[0], `${theme}: a neutral shadow host resets inherited emphasis`);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${engine}: medium contrast restores standard on-surface inside high contrast`, async () => {
+    const browser = await leaseBrowser(type);
+    try {
+      const page = await browser.newPage();
+      for (const theme of ['light', 'dark']) {
+        await page.setContent(`<html theme="${theme}"><head><style>${css}
+          .ink { color: var(--md-sys-color-on-surface); }
+        </style></head><body>
+          <div contrast="medium"><span id="plain" class="ink">Medium</span></div>
+          <div contrast="high"><div contrast="medium"><span id="nested" class="ink">Medium inside high</span></div></div>
+          <span id="reference" style="color:light-dark(var(--md-sys-color-on-surface-light),var(--md-sys-color-on-surface-dark))">Standard role</span>
+        </body></html>`);
+        for (const custom of [false, true]) {
+          if (custom) await page.evaluate(() => {
+            document.documentElement.style.setProperty('--md-sys-color-on-surface-light', 'rgb(12, 34, 56)');
+            document.documentElement.style.setProperty('--md-sys-color-on-surface-dark', 'rgb(210, 220, 230)');
+          });
+          const colors = await page.evaluate(() => ['plain', 'nested', 'reference'].map(id => getComputedStyle(document.getElementById(id)).color));
+          assert.equal(colors[0], colors[2], `${theme}, custom=${custom}: standalone medium`);
+          assert.equal(colors[1], colors[2], `${theme}, custom=${custom}: medium inside high`);
+          await page.emulateMedia({ contrast: 'more' });
+          const preferred = await page.locator('#nested').evaluate(el => getComputedStyle(el).color);
+          assert.equal(preferred, colors[2], `${theme}, custom=${custom}: explicit medium with prefers-contrast`);
+          await page.emulateMedia({ contrast: 'no-preference' });
+        }
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+}
 
 browserTest('print is light, hides screen-only surfaces and shows link targets', async () => {
   const browser = await leaseBrowser(chromium);

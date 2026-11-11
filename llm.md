@@ -819,6 +819,8 @@ Material 3 has three contrast levels. Put `contrast="medium"` or `contrast="high
 <html contrast="high">
 ```
 
+Medium contrast restores the standard `on-surface` role even inside high contrast. It reads the standard light and dark backing pairs, including authored overrides of those pairs. Vibrant surfaces keep the accent foreground paired with their background.
+
 ### Corner scale
 
 Component shape tokens on the Material 3 corner scale read the `md.sys.shape.corner` tokens, so one override changes the corners of every component on that step. A component token such as `--md-comp-card-container-shape` still overrides one component. Off-scale corners stay literal.
@@ -848,6 +850,8 @@ Material shapes come in a rounded and a cut family. `corners="cut"` on the root 
 <main corners="cut">…</main>
 <div class="bordered corner-large corner-cut">One cut panel</div>
 ```
+
+Common-button corner styling ships with the button partial, so plain `<button>` elements, button links and `label.button` also follow this switch in selective Sass builds without utilities. Circle buttons, FABs, icon buttons and controls inside toolbars or app bars retain their own shapes and hit areas.
 
 ---
 
@@ -1966,7 +1970,7 @@ The standard motion scheme is the default. `motion="expressive"` on the root or 
 }
 ```
 
-In Sass, `spring($damping, $stiffness)` and `spring-duration($damping, $stiffness)` turn any spring into the same pair.
+In Sass, `spring($damping, $stiffness)` and `spring-duration($damping, $stiffness)` return the easing and duration in milliseconds. Both arguments must be unitless numbers: damping must be greater than 0 and at most 1, and stiffness must be positive. Invalid arguments fail compilation.
 
 ```scss
 .drawer {
@@ -2332,6 +2336,8 @@ A label that does not fit wraps between words and the button grows taller, so en
 ```
 
 ### Filled
+
+Filled buttons use the live `primary` and `on-primary` roles at the button, including inside a contrast subtree. Override `--md-comp-filled-button-container-color` and `--md-comp-filled-button-label-text-color` on the root, an ancestor or the button to choose custom colors. Hover, focus and pressed state layers mix the chosen label color over that container color. These optional overrides are unset by default; reads outside the component should use `var(--md-comp-filled-button-container-color, var(--md-sys-color-primary))` and the corresponding `on-primary` fallback.
 
 High emphasis. This is the default — the main action on a page. Container `primary`, label `on-primary`, no elevation. It has a class of its own, `filled`, so the style axis reads as five names rather than four and a silence; writing it changes nothing.
 
