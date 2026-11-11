@@ -7,6 +7,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Filled-button hover, focus and pressed state layers retain the authored
+  component container and label colors.
+
 - Filled buttons follow the live colors of a contrast subtree while retaining
   color token overrides on the root, an ancestor or the button.
 

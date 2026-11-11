@@ -12,6 +12,41 @@ const sheets = {
 };
 
 for (const [engine, type, browserTest] of engines) {
+  browserTest(`${engine}: filled button color overrides persist through interaction states`, async () => {
+    const browser = await leaseBrowser(type);
+    try {
+      const page = await browser.newPage({ reducedMotion: 'reduce' });
+      for (const [build, css] of Object.entries(sheets)) {
+        await page.setContent(`<html theme="light"><head><style>${css}
+          .hover-reference { background: color-mix(in oklab, black 8%, red); }
+          .focus-reference { background: color-mix(in oklab, black 10%, red); }
+        </style></head><body style="--md-comp-filled-button-container-color:red;--md-comp-filled-button-label-text-color:black">
+          <button id="inherited">Inherited colors</button>
+          <button id="own" style="--md-comp-filled-button-container-color:red;--md-comp-filled-button-label-text-color:black">Own colors</button>
+          <div class="hover-reference"></div><div class="focus-reference"></div>
+        </body></html>`);
+        const read = selector => page.locator(selector).evaluate(el => getComputedStyle(el).backgroundColor);
+        const hover = await read('.hover-reference');
+        const focus = await read('.focus-reference');
+        for (const id of ['inherited', 'own']) {
+          const button = page.locator(`#${id}`);
+          await button.hover();
+          assert.equal(await read(`#${id}`), hover, `${build}, ${id}: hover`);
+          await button.focus();
+          assert.equal(await read(`#${id}`), focus, `${build}, ${id}: focus`);
+          await page.mouse.down();
+          assert.equal(await read(`#${id}`), focus, `${build}, ${id}: press`);
+          await page.mouse.up();
+          await button.evaluate(el => el.blur());
+          await page.mouse.move(0, 0);
+          assert.equal(await read(`#${id}`), 'rgb(255, 0, 0)', `${build}, ${id}: rest`);
+        }
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: filled buttons follow subtree contrast and preserve authored color tokens`, async () => {
     const browser = await leaseBrowser(type);
     try {
