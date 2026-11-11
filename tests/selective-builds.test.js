@@ -544,5 +544,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed shared selection-control, chart, header-bar, text-action and small layout mixins, with charts dropping grid rules they undid: 90,681 gzip bytes (-329).
   // Reviewed the app bar search form focus ring and a configurable $expand-more: 90,693 gzip bytes (+12).
   // Reviewed forced-colors edges on tooltips, snackbars, menus, dialogs and sheets, one-time code cells in forced colors, file field and tree row focus rings, 24px carousel dot targets, RTL switches and AM/PM seams, the modal rail surface over its scrim, hidden map controls and reduced-motion chevrons: 90,881 gzip bytes (+188).
-  assert.ok(sizes(css).gzip <= 90881, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed filled-button colors and nested medium contrast preserving vibrant foregrounds: 90,915 gzip bytes (+34).
+  assert.ok(sizes(css).gzip <= 90915, `CSS gzip: ${sizes(css).gzip}`);
 });

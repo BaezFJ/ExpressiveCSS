@@ -819,6 +819,8 @@ Material 3 has three contrast levels. Put `contrast="medium"` or `contrast="high
 <html contrast="high">
 ```
 
+Medium contrast restores the standard `on-surface` role even inside high contrast. It reads the standard light and dark backing pairs, including authored overrides of those pairs. Vibrant surfaces keep the accent foreground paired with their background.
+
 ### Corner scale
 
 Component shape tokens on the Material 3 corner scale read the `md.sys.shape.corner` tokens, so one override changes the corners of every component on that step. A component token such as `--md-comp-card-container-shape` still overrides one component. Off-scale corners stay literal.

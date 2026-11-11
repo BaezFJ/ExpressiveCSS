@@ -403,6 +403,12 @@ Expressive.Menu.init(document.getElementById('theme-toggle'), {
       Medium brings accents to about 4.5:1 against the surface and high to 7:1, with outlines at 3:1 or more. When the user asks for more contrast (<code>prefers-contrast: more</code>), the page uses the high scheme unless a <code>contrast</code> attribute says otherwise. Set <code>contrast="standard"</code> to opt a page or subtree out.
     </p>
     <p>
+      Medium contrast uses the standard <code>on-surface</code> color, including
+      inside a high-contrast subtree. It resolves the standard light and dark
+      backing pairs, so authored overrides of those pairs still apply. Vibrant
+      surfaces keep the accent foreground paired with their background.
+    </p>
+    <p>
       The tones approximate Material's contrast curves rather than reproducing its color solver. A page that re-themes through the <code>-light</code> and <code>-dark</code> pairs should repeat those overrides inside its own <code>[contrast]</code> rule.
     </p>
 <Code code={`
