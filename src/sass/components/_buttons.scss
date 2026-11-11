@@ -27,8 +27,8 @@
 // partial may not @use another partial.
 
 :root, :host {
-  --md-comp-filled-button-container-color: var(--md-sys-color-primary);
-  --md-comp-filled-button-label-text-color: var(--md-sys-color-on-primary);
+  // Color overrides stay optional so btn-filled() resolves the live roles
+  // on the button, including inside a contrast subtree.
   --md-comp-filled-button-container-shape: var(--md-sys-shape-corner-full);
   @include button-size("small");
 }

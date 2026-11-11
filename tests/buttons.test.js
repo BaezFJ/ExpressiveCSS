@@ -145,15 +145,14 @@ describe('The axes compose without per-combination rules', () => {
     );
   });
 
-  test('every button token a rule reads is one the sheet declares', () => {
+  test('every button token read without a fallback is one the sheet declares', () => {
     // A var() naming a property nothing declares invalidates the whole
-    // declaration, silently - the failure mode that made .display-large a
-    // no-op for three releases.
+    // declaration, silently. Optional author overrides use a live-role fallback.
     const declared = new Set(
       [...css.matchAll(/(--md-comp-filled-button-[\w-]+)\s*:/g)].map((m) => m[1])
     );
     const read = new Set(
-      [...css.matchAll(/var\(\s*(--md-comp-filled-button-[\w-]+)/g)].map((m) => m[1])
+      [...css.matchAll(/var\(\s*(--md-comp-filled-button-[\w-]+)\s*\)/g)].map((m) => m[1])
     );
     const missing = [...read].filter((p) => !declared.has(p));
     assert.deepEqual(missing, [], `read but never declared: ${missing.join(', ')}`);

@@ -9,7 +9,7 @@ Component ID: `marquee`
 
 Contract: ExpressiveCSS 0.17.0
 
-Contract SHA-256: `b45e75e4dd6e853c85aaa6c8983d0d87cb6540570a824a5d367e2c53c16a0a5b`
+Contract SHA-256: `761f057d169528a28fd609c95fd948be1db5570f1d8620325c1a9d088f3042d1`
 
 #### Selection and adaptation
 

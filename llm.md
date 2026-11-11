@@ -2333,6 +2333,8 @@ A label that does not fit wraps between words and the button grows taller, so en
 
 ### Filled
 
+Filled buttons use the live `primary` and `on-primary` roles at the button, including inside a contrast subtree. Override `--md-comp-filled-button-container-color` and `--md-comp-filled-button-label-text-color` on the root, an ancestor or the button to choose custom colors. These optional overrides are unset by default; reads outside the component should use `var(--md-comp-filled-button-container-color, var(--md-sys-color-primary))` and the corresponding `on-primary` fallback.
+
 High emphasis. This is the default — the main action on a page. Container `primary`, label `on-primary`, no elevation. It has a class of its own, `filled`, so the style axis reads as five names rather than four and a silence; writing it changes nothing.
 
 ```html
