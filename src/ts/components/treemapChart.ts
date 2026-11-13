@@ -1,4 +1,4 @@
-import { LineChart, LineChartOptions, ROW_COLORS, percentLabel, seriesColor } from './lineChart';
+import { LineChart, LineChartOptions, ROW_COLORS, linearKey, percentLabel, seriesColor, swapActive } from './lineChart';
 
 export type TreemapChartOptions = LineChartOptions;
 
@@ -6,9 +6,6 @@ export type TreemapChartOptions = LineChartOptions;
 type Box = [x: number, y: number, width: number, height: number];
 
 // ponytail: rows past six repeat the colors, so neighbours can match.
-/** The keys that move to the next row and to the one before, in any direction. */
-const NEXT = ['ArrowRight', 'ArrowDown'];
-const PREVIOUS = ['ArrowLeft', 'ArrowUp'];
 
 const sum = (areas: number[]) => areas.reduce((total, area) => total + area, 0);
 
@@ -92,8 +89,6 @@ export class TreemapChart extends LineChart {
   private _boxes: (HTMLElement | null)[];
   /** Each drawn row's place as fractions of the plot. */
   private _places: Box[];
-  /** Lays the rectangles out again when the plot changes shape. */
-  private _sizes: ResizeObserver;
 
   protected get _type() {
     return 'treemap-chart';
@@ -119,8 +114,7 @@ export class TreemapChart extends LineChart {
     if (!this._tooltip) return;
     const row = this._drawnFrom(index);
     if (row === this.activeIndex) return;
-    this._boxes[this.activeIndex]?.classList.remove('active');
-    this._boxes[row]?.classList.add('active');
+    swapActive(this._boxes, this.activeIndex, row);
     super.show(row);
   }
 
@@ -161,16 +155,9 @@ export class TreemapChart extends LineChart {
    */
   protected _keyTarget(key: string): number | undefined {
     const drawn = this._boxes.flatMap((box, i) => (box ? [i] : []));
-    const [at, last] = [drawn.indexOf(this.activeIndex), drawn.length - 1];
-    const step = NEXT.includes(key) ? Math.min(at + 1, last)
-      : PREVIOUS.includes(key) ? Math.max(at - 1, 0)
-      : ({ Home: 0, End: last } as Record<string, number>)[key];
-    return step === undefined ? super._keyTarget(key) : drawn[step];
-  }
-
-  destroy() {
-    this._sizes?.disconnect();
-    super.destroy();
+    const step = linearKey(key, drawn.indexOf(this.activeIndex), drawn.length - 1);
+    // Escape answers -1, which hides the tooltip rather than naming a row.
+    return step === undefined || step < 0 ? step : drawn[step];
   }
 
   /** Neither row labels nor a legend: each rectangle carries its name. */
@@ -199,17 +186,13 @@ export class TreemapChart extends LineChart {
     // The squares depend on the plot's shape, so it goes in the page to be measured.
     this.el.append(this._plot);
     this._layout();
-    this._sizes?.disconnect();
-    this._sizes = new ResizeObserver(() => this._layout());
-    this._sizes.observe(this._plot);
+    // Lays the rectangles out again when the plot changes shape.
+    this._observeSize(this._plot, () => this._layout());
     return container;
   }
 
   /** Squarifies the positive rows, largest first, equal values in table order, and places their rectangles. */
   private _layout() {
-    // update() with no rows drops the plot without drawing a new one, but
-    // the old plot's observer still fires as that plot leaves the page.
-    if (!this._plot) return this._sizes.disconnect();
     // A hidden plot has no size; lay it out as a square until it shows.
     const [width, height] = [this._plot.clientWidth || 1, this._plot.clientHeight || 1];
     const rows = this._values.map((_, i) => i).filter((i) => this._values[i]).sort((a, b) => this._values[b] - this._values[a]);

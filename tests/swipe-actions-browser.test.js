@@ -339,6 +339,29 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 
+  browserTest(`${engine}: in a shadow root, an action press hands focus to the row's toggle`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<div id="host"></div><script>${js}</script>`);
+      const focused = await page.evaluate((rowMarkup) => {
+        const root = document.getElementById('host').attachShadow({ mode: 'open' });
+        root.innerHTML = `<ul class="list swipeable" aria-label="Inbox">${rowMarkup}</ul>`;
+        const swipe = Expressive.SwipeActions.init(root.querySelector('ul'));
+        swipe.open(root.querySelector('li'));
+        const action = root.querySelector('[data-action="archive"]');
+        action.focus();
+        action.click();
+        const label = root.activeElement?.getAttribute('aria-label');
+        swipe.destroy();
+        return label;
+      }, row(1));
+      assert.equal(focused, 'Actions for message 1', 'focus stayed on the hidden action');
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: destroy() closes the open row silently and undoes what it set`, async () => {
     const browser = await leaseBrowser(browserType);
     try {

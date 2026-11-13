@@ -15,6 +15,20 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The minified JavaScript is 255 bytes smaller gzipped. Components share core
+  helpers for right-to-left checks, `aria-describedby` lists, the active
+  descendant of a combobox and resize handles, and the charts share their plot
+  SVG, highlight and keyboard helpers. Behavior is unchanged.
+
+- Datepicker keeps its month and year selects when paging across a year
+  boundary and refreshes their options in place, instead of rebuilding both
+  FormSelects and their menus. An arrow key in the calendar syncs the roving
+  focus once instead of twice. Timepicker skips recomputing the allowed ranges
+  while a drag stays on one value, or always when no `minTime` or `maxTime` is
+  set. Menu measures a flyout once each time the pointer enters its row, not
+  on every move inside it. DataTables filtering, sorting and paging no longer
+  re-apply every column toggle; `DataTables.sync()` still does.
+
 - The compiled sheet is about 15 KB smaller minified and 564 bytes smaller
   gzipped. Menu flyouts share the menu's surface rules, list rows write their
   selected states once, and pane anatomy hangs off one selector. Every
@@ -25,6 +39,20 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   The compiled sheet has the same declarations in a slightly different order.
 
 ### Fixed
+
+- SwipeActions moves focus to the row's toggle when an action inside a shadow
+  root closes the row. InputMask keeps the caret where the user typed in a
+  shadow root instead of moving it to the end.
+
+- Calling `Forms.InitTextarea()` or `Forms.InitFileInputPath()` again on the
+  same control no longer adds a second set of listeners.
+
+- A chart `update()` that leaves no rows disconnects the old plot's resize
+  observers.
+
+- `expressive:transfer` crosses shadow roots like the other `expressive:*`
+  events. CharacterCounter sets no inline styles; its body-small type comes
+  from the stylesheet inside or outside a `.field`.
 
 - Datepicker validates year ranges and clips the year list before rendering.
   AutoInit rejects nonfinite numeric options from markup.

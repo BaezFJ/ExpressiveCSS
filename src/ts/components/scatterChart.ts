@@ -1,5 +1,5 @@
 import { svgNode } from '../core/utils';
-import { LineChart, LineChartOptions, ChartScale, Series, affix, cellValue, linearKey, morph, tickFormat, pace, textSpan as span, tickAxis, tickText } from './lineChart';
+import { LineChart, LineChartOptions, ChartScale, Series, affix, cellValue, linearKey, morph, plotSvg, tickFormat, pace, textSpan as span, tickAxis, tickText } from './lineChart';
 
 export interface ScatterChartOptions extends LineChartOptions {
   /**
@@ -237,12 +237,7 @@ export class ScatterChart extends LineChart {
   /** One group per series, its points round caps on zero-length lines, so CSS sizes them in pixels. */
   protected _draw(): Element {
     this._marks = this._layout();
-    const svg = svgNode('svg', {
-      viewBox: '0 0 100 100',
-      preserveAspectRatio: 'none',
-      'aria-hidden': 'true',
-      focusable: 'false'
-    });
+    const svg = plotSvg();
     const timing = this._before.length ? pace(this.el) : null;
     const was = new Map(this._drawn.map((old) => [place(old), old]));
     svg.append(...this.series.map((series) => this._group(series, timing, was)));
