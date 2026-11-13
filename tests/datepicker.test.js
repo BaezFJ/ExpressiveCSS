@@ -1,8 +1,54 @@
 import { test, mock } from 'node:test';
 import assert from 'node:assert/strict';
+import { spawnSync } from 'node:child_process';
 import { Expressive, resetBody, window } from './setup.js';
 
 const days = dates => dates.map(date => date.getDate());
+
+test('year ranges cannot stall rendering and keep valid bounds and ordering', () => {
+  // A subprocess makes a stalled synchronous loop fail without hanging the suite.
+  const run = spawnSync(process.execPath, ['--input-type=module', '-e', `
+    import assert from 'node:assert/strict';
+    import { Expressive, resetBody } from ${JSON.stringify(new URL('./setup.js', import.meta.url).href)};
+    document.body.innerHTML = '<input>';
+    const picker = Expressive.Datepicker.init(document.querySelector('input'), {
+      minDate: new Date(2010, 0, 1), maxDate: new Date(2040, 11, 31)
+    });
+    const sequence = (first, last) => Array.from({ length: last - first + 1 }, (_, i) => first + i);
+    const fallback = sequence(2016, 2036);
+    try {
+      for (const [range, expected] of [
+        [1e20, fallback], [Infinity, fallback], [-Infinity, fallback], [NaN, fallback],
+        [-1, fallback], [1.5, fallback], [[], fallback], [[2020], fallback],
+        [[2020, Infinity], fallback], [[-1e20, 1e20], fallback],
+        [['2020', '2030'], fallback], [[2020, 2025, 2030], fallback],
+        [0, [2026]], [2, sequence(2024, 2028)], [[2024, 2028], sequence(2024, 2028)],
+        [[2028, 2024], []], [1e8, sequence(2010, 2040)],
+        [[-Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER], sequence(2010, 2040)]
+      ]) {
+        picker.options.yearRange = range;
+        for (const reverse of [false, true]) {
+          picker.options.yearRangeReverse = reverse;
+          const host = document.createElement('div');
+          host.innerHTML = picker.renderTitle(picker, 0, 2026, 0, 2026, 'title');
+          assert.deepEqual([...host.querySelectorAll('.orig-select-year option')].map(el => Number(el.value)),
+            reverse ? [...expected].reverse() : expected, String(range));
+        }
+      }
+    } finally { picker.destroy(); resetBody(); }
+    for (const range of ['1e20', '1e309', '-1e309']) {
+      document.body.innerHTML = '<input class="date-picker" value="2026-01-01">';
+      const input = document.querySelector('input');
+      input.setAttribute('data-datepicker-options', '{"yearRange":' + range + '}');
+      try {
+        Expressive.AutoInit();
+        assert.equal(Expressive.Datepicker.getInstance(input).calendarEl.querySelectorAll('.orig-select-year option').length, 21);
+      } finally { Expressive.Datepicker.getInstance(input)?.destroy(); resetBody(); }
+    }
+  `], { encoding: 'utf8', timeout: 10000 });
+  assert.equal(run.error, undefined, `year-range subprocess failed: ${run.error}\n${run.stderr}`);
+  assert.equal(run.status, 0, run.stderr);
+});
 
 test('multiple dates sort in engines that only move on a positive comparison', () => {
   resetBody();
