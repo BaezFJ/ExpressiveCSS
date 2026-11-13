@@ -65,6 +65,10 @@ $_points: 24;
   border-radius: 50%;
   background-color: var(--md-comp-loading-indicator-container-color);
   vertical-align: middle;
+  // The spin turns the round host, not the shape: a transform animation that
+  // shares an element with the clip-path morph stays on the main thread, so it
+  // froze whenever the page was busy, which is when an indicator shows.
+  animation: loading-indicator-spin var(--md-comp-loading-indicator-duration) linear infinite;
 
   &::before {
     content: "";
@@ -74,9 +78,7 @@ $_points: 24;
     background-color: var(--md-comp-loading-indicator-active-indicator-color);
     @include forced-colors-fill;
     clip-path: _petal-shape(0, 0);
-    animation:
-      loading-indicator-morph var(--md-comp-loading-indicator-duration) ease-in-out infinite,
-      loading-indicator-spin var(--md-comp-loading-indicator-duration) linear infinite;
+    animation: loading-indicator-morph var(--md-comp-loading-indicator-duration) ease-in-out infinite;
   }
 
   // Contained. M3 pairs the container with `on-secondary-container` for the
@@ -101,6 +103,7 @@ $_points: 24;
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .loading-indicator,
   .loading-indicator::before {
     animation: none;
   }

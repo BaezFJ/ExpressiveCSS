@@ -2561,7 +2561,7 @@
         "sources": [
           {
             "path": "src/sass/components/_pull-to-refresh.scss",
-            "sha256": "82683a82db3309935575713659b0df1707de087802f20aa87d7ac3f875e4ae98"
+            "sha256": "207ebc43febabb0c565bd6100c9f360bee1a4d26b4e7be5be82b8e266208c875"
           },
           {
             "path": "src/ts/components/pullToRefresh.ts",
@@ -6221,7 +6221,7 @@
         "sources": [
           {
             "path": "src/sass/components/_loading-overlay.scss",
-            "sha256": "4d8f10f145a92143a541e454c733756680162970a29382e24e603e849b8aca70"
+            "sha256": "8590fc46360c644750b16d3fad2ba98d12c2b2240666138c0b3895e18acc25ac"
           },
           {
             "path": "src/ts/components/loadingOverlay.ts",

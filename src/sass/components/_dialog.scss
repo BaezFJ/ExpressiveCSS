@@ -49,7 +49,6 @@ dialog {
 
   &::backdrop {
     background-color: var(--md-comp-scrim-color);
-    backdrop-filter: blur(var(--md-comp-basic-dialog-scrim-blur));
   }
 }
 
@@ -69,6 +68,18 @@ $_basic: "dialog:not(.bottom-sheet, .side-sheet, .max, .expanding-card-dialog)";
   transition:
     opacity var(--md-comp-basic-dialog-effects-duration) var(--md-comp-basic-dialog-effects-easing),
     scale var(--md-comp-basic-dialog-duration) var(--md-comp-basic-dialog-easing);
+}
+
+// Only the basic dialog frosts the page behind it (_scrim.scss). A modal
+// sheet or full-screen dialog keeps the plain scrim: the blur is redone on
+// every frame that anything under it repaints, which costs most on the
+// phones where sheets are common.
+#{$_basic}::backdrop {
+  backdrop-filter: blur(var(--md-comp-basic-dialog-scrim-blur));
+
+  @media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+    backdrop-filter: none;
+  }
 }
 
 @starting-style {

@@ -2463,12 +2463,12 @@ A button is round; `square` gives it its size's squared corner, 12dp up to small
 
 ### Disabled
 
-The `disabled` attribute, or the `disabled` class on a link. Applies to every variant.
+The `disabled` attribute on a `<button>`. A link cannot be disabled, so a link button drops its `href` and takes `aria-disabled="true"`, which paints the same and tells a screen reader. The `disabled` class paints the same but announces nothing. Applies to every variant.
 
 ```html
 <button disabled>Filled</button>
 <button class="tonal" disabled>Tonal</button>
-<a class="button disabled">Link</a>
+<a class="button" aria-disabled="true">Link</a>
 ```
 
 ---
@@ -4965,7 +4965,7 @@ The default is coplanar: full-bleed surfaces with a 1px `outline-variant` divide
 
 ### Pane anatomy
 
-A pane is a column. A direct `header` (or `pane-header`) is a 64px title bar — its heading takes Title Large and truncates, and an icon-only `button` in it becomes a 48px round icon button. A direct `main`, `div`, `pane-content`, `pane-body`, or `list` is the scrolling body. A direct `footer`, `pane-footer`, or trailing `nav` is a 56px action bar with a top divider.
+A pane is a column. A direct `header` (or `pane-header`) is a 64px title bar — its heading takes Title Large and truncates, and an icon-only `button` in it becomes a 48px round icon button. A direct `section`, `div`, `pane-content`, `pane-body`, or `list` is the scrolling body. A direct `footer`, `pane-footer`, or trailing `nav` is a 56px action bar with a top divider.
 
 ```html
 <div class="pane">

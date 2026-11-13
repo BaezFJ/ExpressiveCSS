@@ -16,7 +16,7 @@
 //   [type=checkbox], [type=radio] { ... }   - "box sizing / padding in IE 10"
 //   details { display: block }              - "Add display in Edge, IE 10+"
 //   template { display: none }              - "Add display in IE 10+"
-//   [hidden] { display: none }              - "Add display in IE 10" (UA stylesheets do this)
+//   [hidden] { display: none }              - "Add display in IE 10"; base/_global.scss restates it as !important
 //   ::-moz-focus-inner, :-moz-focusring     - pre-FF-50 focus ring; :focus-visible
 //                                             replaces it, see abstracts/_mixins.scss
 //   legend's display:table/max-width/       - "text wrapping in Edge and IE",

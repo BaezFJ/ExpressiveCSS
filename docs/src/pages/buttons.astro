@@ -373,8 +373,11 @@ const S = defineSections([
   </Section>
   <Section {...S.disabled}>
         <p>
-          Use the <code>disabled</code> attribute, or the
-          <code>disabled</code> class on a link. It applies to every variant.
+          Use the <code>disabled</code> attribute on a button. A link cannot
+          be disabled, so a link button drops its <code>href</code> and takes
+          <code>aria-disabled="true"</code>, which a screen reader announces.
+          The <code>disabled</code> class paints the same but announces
+          nothing. It applies to every variant.
         </p>
         <p>
           <button type="button" disabled>Filled</button>
@@ -386,7 +389,7 @@ const S = defineSections([
 <Code code={`
 <button disabled>Filled</button>
 <button class="tonal" disabled>Tonal</button>
-<a class="button disabled">Link</a>
+<a class="button" aria-disabled="true">Link</a>
 `} />
   </Section>
 </DocsLayout>

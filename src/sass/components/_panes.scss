@@ -232,7 +232,13 @@
   height: 100%;
   min-width: 0;
   min-height: 0;
+}
 
+// The children hang off one :is() rather than the five names, so each rule
+// is written once instead of five times. :is() weighs one class, as each
+// name did. The pane itself keeps the plain list above, so engines can still
+// index it by class.
+:is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane) {
   // Header Bar (64dp height, Title Large, action icons)
   > :is(header, .pane-header) {
     @include header-bar(12px);
@@ -251,8 +257,9 @@
     }
   }
 
-  // Scrollable Content Body
-  > :is(main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer)) {
+  // Scrollable content body. A <section> is the documented body; main stays
+  // for markup written before the pane-is-not-main semantics rule.
+  > :is(section:not(.pane-header, .pane-footer), main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer)) {
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;

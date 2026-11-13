@@ -5,6 +5,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- The compiled sheet is about 15 KB smaller minified and 564 bytes smaller
+  gzipped. Menu flyouts share the menu's surface rules, list rows write their
+  selected states once, and pane anatomy hangs off one selector. Every
+  selector keeps its specificity.
+
 ### Fixed
 
 - Datepicker validates year ranges and clips the year list before rendering.
@@ -30,6 +37,35 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Sass spring functions reject invalid damping and stiffness instead of hanging
   compilation or emitting invalid easing values.
+
+- Checkboxes, radio buttons and switches show the shared focus ring on keyboard
+  focus. The focus tint alone was about 1.2:1 against the surface.
+
+- The `hidden` attribute hides every component. A component's own `display`
+  used to beat the browser's rule, so hidden loading indicators, progress bars,
+  skeletons and empty states kept rendering, animating and being announced.
+  `hidden="until-found"` keeps the browser's behavior.
+
+- List rows marked `selected`, as the docs show, get the selected fill.
+
+- A `<section>` directly inside a pane is its scrolling body, as the docs show.
+  A `<main>` body still works for older markup.
+
+- Common buttons and button-group toggles with `aria-disabled="true"` look
+  disabled, as icon buttons already did. The docs now use it, not the
+  `disabled` class, for a link button that cannot be followed.
+
+- Modal side and bottom sheets keep the plain scrim and no longer blur the page
+  behind them. Only the basic dialog blurs its backdrop, and reduced
+  transparency or increased contrast turns that blur off.
+
+- The loading indicator's spin turns its host element, so it keeps running on
+  the compositor while the page is busy. Loading overlays and pull to refresh
+  pause and resume both parts.
+
+- The carousel parallax image follows the scroll without a transition that
+  restarted on every frame, and lightbox thumbnails no longer each get their
+  own compositing layer.
 
 ## [0.17.0] - 2026-11-05
 
