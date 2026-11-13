@@ -4,7 +4,7 @@ Use this reference when a surface must fit an existing application, when several
 
 ## Find the existing record
 
-Start with repository instructions and their links to a README, design notes, ADRs, shared layout, or theme documentation. Follow the nearest relevant record and inspect its named source and one representative sibling surface. Search for a missing decision only when it affects the task. Do not read the entire repository or copy its design documentation into the conversation.
+Start with a `DESIGN.md` at the project root, if there is one, then repository instructions and their links to a README, design notes, ADRs, shared layout, or theme documentation. Follow the nearest relevant record and inspect its named source and one representative sibling surface. Search for a missing decision only when it affects the task. Do not read the entire repository or copy its design documentation into the conversation.
 
 Build the working brief from the relevant facts:
 
@@ -30,7 +30,7 @@ Without design documentation, infer a small working brief from the nearest relev
 
 ## Carry useful decisions forward
 
-When an authorized implementation changes a recorded decision, update the existing owning record as part of that work. In a planning or no-edit review task, report the proposed correction without writing files. Create a new record only when the user asks for one or an existing project convention calls for it; otherwise include a short handoff in the response.
+When an authorized implementation changes a recorded decision, update the existing owning record as part of that work. In a `DESIGN.md`, edit the decision in place and add a dated entry to its Decision log. In a planning or no-edit review task, report the proposed correction without writing files. Create a new record only when the user asks for one or an existing project convention calls for it; otherwise include a short handoff in the response.
 
 Record only what the next task needs: the decision and reason, its scope, the source of acceptance, affected implementation links, and any superseded choice. Follow the project's history convention. Preserve unrelated notes and unresolved proposals; do not turn a local adjustment into a global brand policy. Keep verification evidence separate from approval: a passing contrast check does not approve a new brand, and an approved brand does not establish contrast compliance.
 
