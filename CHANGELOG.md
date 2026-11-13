@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- Datepicker validates year ranges and clips the year list before rendering.
+  AutoInit rejects nonfinite numeric options from markup.
+
+- FormSelect refreshes no longer retain replaced group headings in Menu's
+  attribute snapshots. CommandPalette releases removed rows from its generated-ID
+  bookkeeping while preserving row moves and reinsertion.
+
 - Cut corners reach semantic buttons and selective button builds without the
   helpers utility. Circle buttons, FABs and controls styled by their host widget
   keep their own shapes and hit areas.

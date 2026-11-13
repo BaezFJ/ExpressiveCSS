@@ -17,6 +17,22 @@ const ELEVATIONS = readFileSync(
 );
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+test("Menu restores changed heading attributes and preserves already-inert headings", () => {
+  resetBody();
+  document.body.innerHTML = `<button class="menu-trigger" data-target="restore-menu" aria-expanded="false">Open</button>
+    <menu id="restore-menu"><li class="label" tabindex="7">Changed</li>
+      <li class="label" tabindex="-1">Unchanged</li><li class="label">Generated</li><li>Action</li></menu>`;
+  const trigger = document.querySelector("button");
+  const headings = [...document.querySelectorAll(".label")];
+  const instance = Expressive.Menu.init(trigger, { inDuration: 0, outDuration: 0 });
+  try {
+    assert.ok(headings.every(el => el.tabIndex === -1));
+    instance.open();
+  } finally { instance.destroy(); }
+  assert.deepEqual(headings.map(el => el.getAttribute("tabindex")), ["7", "-1", null]);
+  assert.equal(trigger.getAttribute("aria-expanded"), "false");
+});
+
 describe("Menu", () => {
   test("standard mapping is surface-container-low with tertiary selected", () => {
     assert.match(
