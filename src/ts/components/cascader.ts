@@ -1,4 +1,4 @@
-import { Utils, controllerFor, restoreAttribute } from '../core/utils';
+import { Utils, controllerFor, restoreAttribute, logicalKey } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 import { FormControl, formAssociated, wrapInControl, unwrapControl } from '../core/formControl';
 
@@ -21,7 +21,6 @@ const INPUT_ATTRIBUTES = ['readonly', 'role', 'aria-haspopup', 'aria-expanded', 
 const OPEN_KEYS = ['Enter', ' ', 'ArrowDown'];
 
 /** Arrow keys swapped under dir="rtl", where the next column is to the left. */
-const RTL_KEYS: Record<string, string> = { ArrowLeft: 'ArrowRight', ArrowRight: 'ArrowLeft' };
 
 /** How the input shows a committed path. */
 const SEPARATOR = ' / ';
@@ -403,7 +402,7 @@ export class Cascader extends Component<CascaderOptions> {
 
   /** The key's left-to-right name, so ArrowLeft and ArrowRight follow the columns under dir="rtl". */
   private _keyName(e: KeyboardEvent) {
-    return getComputedStyle(this.el).direction === 'rtl' ? RTL_KEYS[e.key] ?? e.key : e.key;
+    return logicalKey(this.el, e.key);
   }
 
   _handleInputKeydown = Utils.ignoringComposition((e: KeyboardEvent) => {

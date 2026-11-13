@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { afterFormReset } from '../core/utils';
+import { Utils, afterFormReset } from '../core/utils';
 
 const _defaults = Object.freeze({});
 
@@ -154,7 +154,7 @@ export class InputMask extends Component<BaseOptions> {
 
   private _format = () => {
     const caret = this._rewrite();
-    if (caret !== null && this.el.ownerDocument.activeElement === this.el) this.el.setSelectionRange(caret, caret);
+    if (caret !== null && Utils.focusIsIn(this.el)) this.el.setSelectionRange(caret, caret);
   };
 
   /** Rewrites the value to the mask. Returns where the caret goes, or null when the value already fit. */

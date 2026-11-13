@@ -139,6 +139,23 @@ describe('Document delegation reaches into shadow roots', () => {
       }
     });
 
+    test(`${label(mode)}: InputMask keeps the caret where the user typed`, () => {
+      const { host, root } = mount(mode, '<input data-mask="(000) 000-0000">');
+      const input = root.querySelector('input');
+      const mask = Expressive.InputMask.init(input);
+      try {
+        input.focus();
+        input.value = '55512';
+        input.setSelectionRange(2, 2);
+        input.dispatchEvent(new window.InputEvent('input', { bubbles: true, composed: true, inputType: 'insertText' }));
+        assert.equal(input.value, '(555) 12');
+        assert.equal(input.selectionStart, 3, 'the caret jumped to the end');
+      } finally {
+        mask.destroy();
+        host.remove();
+      }
+    });
+
     test(`${label(mode)}: PaneResize answers Home and End`, () => {
       const { host, root } = mount(
         mode,

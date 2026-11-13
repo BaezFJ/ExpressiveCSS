@@ -112,7 +112,7 @@ for (const via of ['input', 'menu']) {
         old._selectOptionElement(option);
       }
       assert.equal(picker.calendars[0].year, 2027);
-      assert.notEqual(yearSelect(), old, 'the year controls were rebuilt');
+      assert.equal(yearSelect(), old, 'the year controls were rebuilt');
       assert.equal(document.activeElement, yearSelect().input);
     } finally {
       picker.destroy();

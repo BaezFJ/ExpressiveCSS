@@ -276,6 +276,8 @@ export class Timepicker extends Component<TimepickerOptions> {
   private _handRefused = false;
   /** The first and last allowed second of the day. */
   private _limits: [number, number] = [0, DAY_END];
+  /** What _updateRanges last drew from, so a drag within one tick redraws nothing. */
+  private _rangesKey = '';
 
   constructor(el: HTMLInputElement, options: Partial<TimepickerOptions>) {
     super(el, { ...localeClock(el), ...options });
@@ -677,6 +679,11 @@ export class Timepicker extends Component<TimepickerOptions> {
    * no allowed time.
    */
   private _updateRanges() {
+    // Without limits every value is allowed, whatever the time.
+    const unlimited = this._limits[0] === 0 && this._limits[1] === DAY_END;
+    const key = `${this._limits}|${this._clockBuilt}|${unlimited || this._time()}`;
+    if (key === this._rangesKey) return;
+    this._rangesKey = key;
     for (const unit of this._units()) {
       const [min, max] = this._range(unit);
       this._input(unit).setAttribute('aria-valuemin', String(min));

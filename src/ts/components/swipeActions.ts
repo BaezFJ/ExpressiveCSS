@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { Utils } from '../core/utils';
+import { Utils, isRtl } from '../core/utils';
 
 /** What `expressive:swipetoggle` carries, and what `onToggle` receives. */
 export interface SwipeActionsDetail {
@@ -153,7 +153,7 @@ export class SwipeActions extends Component<SwipeActionsOptions> {
 
   /** -1 when rows open toward the left, 1 when they open toward the right. */
   private _sign(row: HTMLElement): 1 | -1 {
-    return getComputedStyle(row).direction === 'rtl' ? 1 : -1;
+    return isRtl(row) ? 1 : -1;
   }
 
   /** Slides a row `reveal` pixels open. */
@@ -262,7 +262,7 @@ export class SwipeActions extends Component<SwipeActionsOptions> {
   private _closeFrom(row: HTMLElement | null) {
     if (!row || row !== this._open) return;
     // A row an action removed holds no focus, so it is left alone.
-    const focused = row.querySelector(':scope > .swipe-actions')!.contains(row.ownerDocument.activeElement);
+    const focused = Utils.focusIsIn(row.querySelector(':scope > .swipe-actions'));
     this.close();
     if (focused) this._focusToggle(row);
   }
