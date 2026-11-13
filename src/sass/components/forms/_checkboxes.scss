@@ -231,6 +231,7 @@ label:has(> [type="checkbox"]:disabled):not(.switch),
 
 #{_cb-span(":focus-visible")}::before {
   @include _ring(var(--md-sys-color-primary), "focus");
+  @include focus-ring;
 }
 
 #{_cb-span(".invalid")}::before,

@@ -195,16 +195,14 @@
     @include focus-visible;
   }
 
-  > li:not(.active):not([aria-selected="true"]):not([aria-current]):not(:has(> [aria-current])):not(:has([aria-selected="true"])):not(:has(:checked)):hover {
+  > li:not(.active, .selected):not([aria-selected="true"]):not([aria-current]):not(:has(> [aria-current])):not(:has([aria-selected="true"])):not(:has(:checked)):hover {
     background-color: state-layer(var(--md-sys-color-on-surface), "hover", var(--md-comp-list-item-container-color));
   }
 
-  > li.active,
-  > li[aria-selected="true"],
-  > li[aria-current],
-  > li:has(> [aria-current]),
-  > li:has([aria-selected="true"]),
-  > li:has(:checked) {
+  // One :is() rather than seven rows, so each rule inside is written once
+  // instead of once per state. Every argument weighs (0,1,0), so the row
+  // stays at (0,1,1) as the separate selectors were.
+  > li:is(.active, .selected, [aria-selected="true"], [aria-current], :has(> [aria-current]), :has([aria-selected="true"]), :has(:checked)) {
     background-color: var(--md-comp-list-selected-container-color);
     color: var(--md-comp-list-selected-color);
     @include forced-colors-selected;

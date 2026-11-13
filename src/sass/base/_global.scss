@@ -17,6 +17,15 @@ html,
   box-sizing: inherit;
 }
 
+// The browser's [hidden] rule loses to any author `display`, and most
+// components set one, so a hidden spinner, bar or empty state kept rendering,
+// animating and being announced. Important in the first layer outranks every
+// layer and unlayered CSS. Transitions still outrank it, so allow-discrete
+// exits run, and until-found keeps the browser's content-visibility instead.
+[hidden]:not([hidden="until-found" i]) {
+  display: none !important;
+}
+
 body {
   background-color: var(--md-sys-color-surface);
 }

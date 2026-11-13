@@ -418,6 +418,7 @@ The documentation source lives in `docs/src/` and is published at
 | `skills/expressivecss` | Agent guidance and generated component references | Yes |
 | `skills/expressivecss-review` | Scored interface review that runs five specialist subagents | Yes |
 | `skills/expressivecss-migration` | Step-by-step migration from Materialize or older 0.x releases, and off the names 0.16.0 removes | Yes |
+| `skills/expressivecss-design-md` | Interview that writes a project `DESIGN.md` mapped to ExpressiveCSS tokens, components and WCAG 2.2 AA | Yes |
 | `scripts`, `tests`, `visual` | Generators, verification, and test tooling | Source only |
 | `semantics.json`, `llm.md`, `m3-guidelines.md` | Markup rules, API reference, design guidance | Yes |
 | `SEMANTICS.md`, generated skill/MCP data | Derived files checked for drift | Yes |

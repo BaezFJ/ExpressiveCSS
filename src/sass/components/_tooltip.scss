@@ -50,6 +50,9 @@
     outline: 1px solid CanvasText;
     outline-offset: -1px;
   }
+
+  // Transient messages are not part of the page.
+  @include print-hidden;
 }
 
 // CSS-only: a child of the activator. Default sits above (M3 preferred).
@@ -189,6 +192,3 @@ body > .tooltip,
 .tooltip-content {
   min-width: 0;
 }
-
-// Transient messages are not part of the page.
-.tooltip { @include print-hidden; }

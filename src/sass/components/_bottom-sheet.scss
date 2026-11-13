@@ -89,10 +89,9 @@ dialog.bottom-sheet {
     margin-inline: auto;
   }
 
-  // Standard: no scrim. Modal keeps the basic-dialog backdrop.
+  // Standard: no scrim. Modal keeps the scrim color, without the basic dialog's blur.
   &:not(:modal)::backdrop {
     background: none;
-    backdrop-filter: none;
   }
 
   // Drag handle. 32×4 bar, 48dp hit. Hidden when the author supplies .drag-handle.

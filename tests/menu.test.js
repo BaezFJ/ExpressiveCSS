@@ -17,6 +17,22 @@ const ELEVATIONS = readFileSync(
 );
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
+test("Menu restores changed heading attributes and preserves already-inert headings", () => {
+  resetBody();
+  document.body.innerHTML = `<button class="menu-trigger" data-target="restore-menu" aria-expanded="false">Open</button>
+    <menu id="restore-menu"><li class="label" tabindex="7">Changed</li>
+      <li class="label" tabindex="-1">Unchanged</li><li class="label">Generated</li><li>Action</li></menu>`;
+  const trigger = document.querySelector("button");
+  const headings = [...document.querySelectorAll(".label")];
+  const instance = Expressive.Menu.init(trigger, { inDuration: 0, outDuration: 0 });
+  try {
+    assert.ok(headings.every(el => el.tabIndex === -1));
+    instance.open();
+  } finally { instance.destroy(); }
+  assert.deepEqual(headings.map(el => el.getAttribute("tabindex")), ["7", "-1", null]);
+  assert.equal(trigger.getAttribute("aria-expanded"), "false");
+});
+
 describe("Menu", () => {
   test("standard mapping is surface-container-low with tertiary selected", () => {
     assert.match(
@@ -63,7 +79,7 @@ describe("Menu", () => {
 
   test("end items round to 12dp without inheriting the container radius", () => {
     const first = css.match(
-      /menu\[id\] > li:not\([^)]*\):first-child\s*\{[^}]*\}/,
+      /menu\[id\] > li:not\([^)]*\):first-child[^{]*\{[^}]*\}/,
     )[0];
     assert.match(first, /--md-comp-menu-item-edge-shape/);
     assert.doesNotMatch(first, /--md-comp-menu-container-shape/);
@@ -109,7 +125,7 @@ describe("Menu", () => {
     // M3 puts the menu container at level 2. Sourcing it from $elevations
     // rather than a hand-copied shadow is what keeps it from drifting.
     const level2 = ELEVATIONS.match(/"2":\s*\(([^)]*)\)/)[1].trim();
-    const menu = css.match(/menu\[id\]\s*\{[^}]*\}/)[0];
+    const menu = css.match(/menu\[id\],\s*menu\[id\] li > menu\s*\{[^}]*\}/)[0];
     assert.match(menu, /box-shadow:\s*var\(--md-sys-elevation-level2\)/);
     assert.match(css, new RegExp("--md-sys-elevation-level2:\\s*" + escapeRe(level2)));
   });
@@ -143,7 +159,7 @@ describe("Menu", () => {
   test("supports standard and grouped menu layouts", () => {
     assert.match(
       css,
-      /menu\[id\]\.grouped\s*\{[^}]*padding:\s*0;[^}]*background-color:\s*transparent;[^}]*box-shadow:\s*(?:none|var\(--md-sys-elevation-level0\));[^}]*filter:\s*drop-shadow/s,
+      /menu\[id\]\.grouped[^{]*\{[^}]*padding:\s*0;[^}]*background-color:\s*transparent;[^}]*box-shadow:\s*(?:none|var\(--md-sys-elevation-level0\));[^}]*filter:\s*drop-shadow/s,
     );
     assert.match(
       css,

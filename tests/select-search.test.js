@@ -19,6 +19,23 @@ function search(instance, query) {
   input.dispatchEvent(new window.Event('input', { bubbles: true }));
 }
 
+test('refreshing grouped selects does not retain replaced headings in the Menu', () => {
+  const instance = fixture();
+  const menu = instance.menu;
+  try {
+    for (let i = 0; i < 20; i++) {
+      instance.refresh();
+      assert.equal(instance.menu, menu, 'refresh keeps the Menu instance');
+      assert.equal(instance.input.value, 'Paris');
+      assert.equal(instance.menuEl.querySelectorAll('.optgroup').length, 2);
+      assert.ok([...instance.menuEl.querySelectorAll('.optgroup')].every(el => el.tabIndex === -1));
+      assert.ok([...menu._originalAttributes.keys()].every(el => el.isConnected), 'attribute snapshots retain no detached rows');
+    }
+    search(instance, 'Tokyo');
+    assert.equal(instance.menuEl.querySelectorAll('[role="option"]:not([hidden])').length, 1);
+  } finally { instance.destroy(); }
+});
+
 test('group filtering reads each option ID at most once per search', () => {
   document.body.innerHTML = `<label for="choice">Choice</label><select id="choice">${
     Array.from({ length: 30 }, (_, group) => `<optgroup label="Group ${group}">${

@@ -16,7 +16,7 @@ describe('List', () => {
 
   test('selected rows use secondary-container', () => {
     assert.match(css, /--md-comp-list-selected-container-color:\s*var\(--md-sys-color-secondary-container\)/);
-    assert.match(css, /\.list\s*>\s*li\.active/);
+    assert.match(css, /\.list\s*>\s*li:is\(\.active, \.selected,/);
     assert.match(css, /\[aria-selected=?["']?true["']?\]/);
   });
 

@@ -81,6 +81,7 @@ Use the source that owns the question, at the resolved version:
 - **Shipped contract:** [API reference](https://www.expressivecss.com/llm.md) and component pages for elements, classes, tokens, options, methods, and events. Installed source wins on shipped behavior.
 - **Authored semantics:** [semantics.json](https://github.com/BaezFJ/ExpressiveCSS/blob/master/semantics.json); [SEMANTICS.md](https://www.expressivecss.com/SEMANTICS.md) is generated from it.
 - **Runtime truth:** Sass, TypeScript, registry, neighboring examples, and tests when contributing or resolving drift.
+- **Product decisions:** the target project's `DESIGN.md`, when present. Read it before Design, Theming, Layout or Dashboard work and follow its seed, typefaces, attributes and component choices; the contract and accessibility rules still win, so report conflicts. The sibling `expressivecss-design-md` skill writes it.
 
 Public-site and master links do not prove target-version support. For older versions, use installed sources or a matching tag or commit. Report incompatible contracts.
 

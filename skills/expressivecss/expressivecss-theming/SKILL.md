@@ -18,7 +18,7 @@ Copy this checklist and tick it off:
 
 ## Before changing tokens
 
-Reuse the root version resolution. Before changing a brand choice, check the application's existing theme notes and token owner. For conflicting decisions or a change shared across pages, read the [product context reference](../expressivecss-design/references/product-context.md); a token-only task does not need the full Design workflow.
+Reuse the root version resolution. Before changing a brand choice, check the application's `DESIGN.md` or other theme notes and the token owner. For conflicting decisions or a change shared across pages, read the [product context reference](../expressivecss-design/references/product-context.md); a token-only task does not need the full Design workflow.
 
 ## Core rules
 

@@ -827,7 +827,8 @@ export class Menu extends Component<MenuOptions> {
     // Only set tabindex if it hasn't been set by user
     this.menuEl.querySelectorAll(':scope li').forEach((el) => {
       if (el.matches('.divider, .gap, .label, .optgroup, [role="none"]')) {
-        this._setAttribute(el, 'tabindex', '-1');
+        // FormSelect replaces already-inert headings on refresh; no snapshot is needed.
+        if (el.getAttribute('tabindex') !== '-1') this._setAttribute(el, 'tabindex', '-1');
         return;
       }
       if (!el.getAttribute('tabindex')) this._setAttribute(el, 'tabindex', '0');

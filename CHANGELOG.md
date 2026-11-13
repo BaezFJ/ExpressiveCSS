@@ -5,7 +5,33 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- The `expressivecss-design-md` skill interviews the user and writes a
+  `DESIGN.md` in the google-labs-code DESIGN.md format. The file records the
+  brand seed, typefaces, root attributes and component choices as ExpressiveCSS
+  tokens and markup, and commits to WCAG 2.2 AA. The ExpressiveCSS skill reads a
+  project's `DESIGN.md` before design, theming and layout work.
+
+### Changed
+
+- The compiled sheet is about 15 KB smaller minified and 564 bytes smaller
+  gzipped. Menu flyouts share the menu's surface rules, list rows write their
+  selected states once, and pane anatomy hangs off one selector. Every
+  selector keeps its specificity.
+
+- Expanding card, icon button and select styles are nested under their parent
+  selectors, and six components hide for print from inside their own block.
+  The compiled sheet has the same declarations in a slightly different order.
+
 ### Fixed
+
+- Datepicker validates year ranges and clips the year list before rendering.
+  AutoInit rejects nonfinite numeric options from markup.
+
+- FormSelect refreshes no longer retain replaced group headings in Menu's
+  attribute snapshots. CommandPalette releases removed rows from its generated-ID
+  bookkeeping while preserving row moves and reinsertion.
 
 - Cut corners reach semantic buttons and selective button builds without the
   helpers utility. Circle buttons, FABs and controls styled by their host widget
@@ -23,6 +49,35 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Sass spring functions reject invalid damping and stiffness instead of hanging
   compilation or emitting invalid easing values.
+
+- Checkboxes, radio buttons and switches show the shared focus ring on keyboard
+  focus. The focus tint alone was about 1.2:1 against the surface.
+
+- The `hidden` attribute hides every component. A component's own `display`
+  used to beat the browser's rule, so hidden loading indicators, progress bars,
+  skeletons and empty states kept rendering, animating and being announced.
+  `hidden="until-found"` keeps the browser's behavior.
+
+- List rows marked `selected`, as the docs show, get the selected fill.
+
+- A `<section>` directly inside a pane is its scrolling body, as the docs show.
+  A `<main>` body still works for older markup.
+
+- Common buttons and button-group toggles with `aria-disabled="true"` look
+  disabled, as icon buttons already did. The docs now use it, not the
+  `disabled` class, for a link button that cannot be followed.
+
+- Modal side and bottom sheets keep the plain scrim and no longer blur the page
+  behind them. Only the basic dialog blurs its backdrop, and reduced
+  transparency or increased contrast turns that blur off.
+
+- The loading indicator's spin turns its host element, so it keeps running on
+  the compositor while the page is busy. Loading overlays and pull to refresh
+  pause and resume both parts.
+
+- The carousel parallax image follows the scroll without a transition that
+  restarted on every frame, and lightbox thumbnails no longer each get their
+  own compositing layer.
 
 ## [0.17.0] - 2026-11-05
 
