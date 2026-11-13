@@ -196,7 +196,8 @@ export interface DatepickerOptions extends BaseOptions {
    */
   maxDate: Date | null;
   /**
-   * Number of years either side, or array of upper/lower range.
+   * Nonnegative safe-integer years either side, or two safe-integer range bounds.
+   * Invalid ranges use 10; the year list is clipped to the date bounds.
    * @default 10
    */
   yearRange: number | number[];
@@ -1277,18 +1278,17 @@ export class Datepicker extends Component<DatepickerOptions> {
       arr.join('') +
       '</select>';
 
-    if (Array.isArray(opts.yearRange)) {
-      i = opts.yearRange[0];
-      j = opts.yearRange[1] + 1;
-    } else {
-      i = year - opts.yearRange;
-      j = 1 + year + opts.yearRange;
-    }
+    let range = opts.yearRange;
+    const valid = Array.isArray(range)
+      ? range.length === 2 && range.every(Number.isSafeInteger)
+      : Number.isSafeInteger(range) && range >= 0;
+    if (!valid) range = _defaults.yearRange;
+    // Clamp before iterating so years below minYear never consume work.
+    i = Math.max(Array.isArray(range) ? range[0] : year - range, opts.minYear);
+    j = Math.min(Array.isArray(range) ? range[1] : year + range, opts.maxYear);
 
-    for (arr = []; i < j && i <= opts.maxYear; i++) {
-      if (i >= opts.minYear) {
-        arr.push(`<option value="${i}" ${i === year ? 'selected="selected"' : ''}>${i}</option>`);
-      }
+    for (arr = []; i <= j; i++) {
+      arr.push(`<option value="${i}" ${i === year ? 'selected="selected"' : ''}>${i}</option>`);
     }
     if (opts.yearRangeReverse) arr.reverse();
 

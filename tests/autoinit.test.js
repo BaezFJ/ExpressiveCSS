@@ -285,6 +285,26 @@ describe("AutoInit options from markup", () => {
     `<a class="menu-trigger" id="${id}-trigger" data-target="${id}" data-menu-options='${attribute}'>Open</a><menu id="${id}"><li><a href="#!">one</a></li></menu>`;
   const instance = (name, selector) => Expressive[name].getInstance(document.querySelector(selector));
 
+  test("nonfinite numeric options keep their defaults, including nested numbers", (t) => {
+    start(t,
+      `<a class="tooltipped" data-tooltip="Hi" data-tooltip-options='{"margin":1e309,"transitionMovement":0.5}'>Tip</a>
+       <button class="confetti" data-confetti-options='{"particleCount":-1e309,"origin":{"x":1e309,"y":0.25}}'>Go</button>
+       <input class="autocomplete" data-autocomplete-options='{"maxResults":1e309}'>`,
+      (warnings) => {
+        const tooltip = instance("Tooltip", ".tooltipped").options;
+        const confetti = instance("Confetti", ".confetti").options;
+        assert.equal(tooltip.margin, Expressive.Tooltip.defaults.margin);
+        assert.equal(tooltip.transitionMovement, 0.5, "finite fractional numbers remain valid");
+        assert.equal(confetti.particleCount, Expressive.Confetti.defaults.particleCount);
+        assert.deepEqual(confetti.origin, Expressive.Confetti.defaults.origin);
+        assert.equal(instance("Autocomplete", ".autocomplete").options.maxResults, Infinity, "script defaults may still be infinite");
+        assert.equal(warnings.length, 4);
+        for (const key of ["margin", "particleCount", "origin.x", "maxResults"]) {
+          assert.ok(warnings.some(warning => warning.includes(`"${key}"`)), key);
+        }
+      });
+  });
+
   test("starts two components with options written in markup", (t) => {
     start(
       t,

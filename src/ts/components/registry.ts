@@ -162,6 +162,7 @@ const itemsMatch = (fallback: unknown[], value: unknown[]) =>
 function sameKind(fallback: unknown, value: unknown) {
   const type = kind(fallback);
   if (!SETTABLE.has(type) || kind(value) !== type) return false;
+  if (typeof value === "number" && !Number.isFinite(value)) return false;
   return type !== ARRAY || itemsMatch(fallback as unknown[], value as unknown[]);
 }
 

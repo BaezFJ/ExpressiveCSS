@@ -9,7 +9,7 @@ Component ID: `date-picker`
 
 Contract: ExpressiveCSS 0.17.0
 
-Contract SHA-256: `3ef6aefa79c1b8c4c5a358aba31bfafd2ec383c631fd9eae18ce49718751dae1`
+Contract SHA-256: `a31359a8ad5287c2aba0fc15c379f2876babf7811fea2162bb8be93f6299c995`
 
 #### Selection and adaptation
 
@@ -72,7 +72,7 @@ The calendar defaults to an inline view, hidden with `openByDefault: false`; cli
 | `firstDay` | Number | `0`, or the language's | First day of the week. `0` is Sunday, `1` is Monday. With a `lang` on or around the input, defaults to that language's first day where the browser knows it. |
 | `minDate` | Date | `null` | Earliest selectable date. The calendar does not page or list years before its month. |
 | `maxDate` | Date | `null` | Latest selectable date. The calendar does not page or list years after its month. |
-| `yearRange` | Number or Array | `10` | Years on either side of the viewed year, or `[minYear, maxYear]`. |
+| `yearRange` | Number or Array | `10` | Nonnegative safe-integer years on either side of the viewed year, or `[minYear, maxYear]` with two safe integers. Invalid ranges use `10`; the year list is clipped to the date bounds. |
 | `minYear`, `maxYear`, `minMonth`, `maxMonth` | Number or undefined | `0`, `9999`, `undefined`, `undefined` | Internal calculation fields. Do not configure them directly; use `minDate`, `maxDate` and `yearRange`. |
 | `yearRangeReverse` | Boolean | `false` | Sort the year list in reverse order. |
 | `isRTL` | Boolean | `false` | Render the calendar right-to-left. |
