@@ -195,11 +195,12 @@
     @include focus-visible;
   }
 
-  > li:not(.active):not([aria-selected="true"]):not([aria-current]):not(:has(> [aria-current])):not(:has([aria-selected="true"])):not(:has(:checked)):hover {
+  > li:not(.active, .selected):not([aria-selected="true"]):not([aria-current]):not(:has(> [aria-current])):not(:has([aria-selected="true"])):not(:has(:checked)):hover {
     background-color: state-layer(var(--md-sys-color-on-surface), "hover", var(--md-comp-list-item-container-color));
   }
 
   > li.active,
+  > li.selected,
   > li[aria-selected="true"],
   > li[aria-current],
   > li:has(> [aria-current]),

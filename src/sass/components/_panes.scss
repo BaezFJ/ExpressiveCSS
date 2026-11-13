@@ -251,8 +251,9 @@
     }
   }
 
-  // Scrollable Content Body
-  > :is(main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer)) {
+  // Scrollable content body. A <section> is the documented body; main stays
+  // for markup written before the pane-is-not-main semantics rule.
+  > :is(section:not(.pane-header, .pane-footer), main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer)) {
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;

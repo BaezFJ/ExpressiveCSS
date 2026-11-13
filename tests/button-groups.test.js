@@ -233,10 +233,10 @@ describe('Button group shape morph', () => {
     const focus = ruleFor(`.button-group > ${toggleItem}[aria-pressed]:focus`);
     const pressed = ruleFor(`.button-group > ${toggleItem}[aria-pressed]${press}`);
     const filledDisabled = bodyFor(
-      '.button-group > :is(button:not(.icon-button), a.button):where(.filled, :not(.elevated, .filled, .tonal, .outlined, .text))[aria-pressed]:is(:disabled, [disabled], .disabled)'
+      '.button-group > :is(button:not(.icon-button), a.button):where(.filled, :not(.elevated, .filled, .tonal, .outlined, .text))[aria-pressed]:is(:disabled, [disabled], .disabled, [aria-disabled=true])'
     );
     const outlinedDisabled = bodyFor(
-      '.button-group > :is(button:not(.icon-button), a.button).outlined[aria-pressed=false]:is(:disabled, [disabled], .disabled)'
+      '.button-group > :is(button:not(.icon-button), a.button).outlined[aria-pressed=false]:is(:disabled, [disabled], .disabled, [aria-disabled=true])'
     );
     assert.match(hover, /var\(--_toggle-state-color\) calc\(var\(--md-sys-state-hover-state-layer-opacity\) \* 100%\)/);
     assert.match(hover, /var\(--_toggle-container-color\)/);

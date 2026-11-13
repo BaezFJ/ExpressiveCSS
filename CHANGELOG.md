@@ -24,6 +24,23 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Sass spring functions reject invalid damping and stiffness instead of hanging
   compilation or emitting invalid easing values.
 
+- Checkboxes, radio buttons and switches show the shared focus ring on keyboard
+  focus. The focus tint alone was about 1.2:1 against the surface.
+
+- The `hidden` attribute hides every component. A component's own `display`
+  used to beat the browser's rule, so hidden loading indicators, progress bars,
+  skeletons and empty states kept rendering, animating and being announced.
+  `hidden="until-found"` keeps the browser's behavior.
+
+- List rows marked `selected`, as the docs show, get the selected fill.
+
+- A `<section>` directly inside a pane is its scrolling body, as the docs show.
+  A `<main>` body still works for older markup.
+
+- Common buttons and button-group toggles with `aria-disabled="true"` look
+  disabled, as icon buttons already did. The docs now use it, not the
+  `disabled` class, for a link button that cannot be followed.
+
 ## [0.17.0] - 2026-11-05
 
 This release adds Sass mixins and a few component options, and fixes form reset,
