@@ -308,7 +308,7 @@ Or give the element its options in markup. `AutoInit()` reads a `data-<name>-opt
 ```
 
 - Options passed to `AutoInit(context, options)` win for the keys they set; a nested object such as `i18n` counts as one key. Tooltip reads its own `data-tooltip`, `data-tooltip-id` and `data-position` again each time it opens, so those win over both. Set those, and Menu's `contextMenu` (`data-context-menu`), in one place.
-- Markup can set only options whose default is a string, number, boolean, array or plain object, with a value of the same kind. Nested keys are checked against the default object, and one rejected nested key leaves the whole object at its default. An object whose default is empty, such as FormSelect's `menuOptions`, accepts no keys from markup. Items of a non-empty default array need the kind of its first item. Callbacks, elements, options with a `null` default, Autocomplete's `allowUnsafeHTML` and the `data` lists of Chips and Autocomplete stay script-only.
+- Markup can set only options whose default is a string, number, boolean, array or plain object, with a value of the same kind. Numeric options must be finite. Nested keys are checked against the default object, and one rejected nested key leaves the whole object at its default. An object whose default is empty, such as FormSelect's `menuOptions`, accepts no keys from markup. Items of a non-empty default array need the kind of its first item. Callbacks, elements, options with a `null` default, Autocomplete's `allowUnsafeHTML` and the `data` lists of Chips and Autocomplete stay script-only.
 - Invalid JSON, unknown keys and wrong kinds are skipped with a console warning, and those options keep their defaults. A value that passes the checks but still makes a component throw stops `AutoInit()`, as it would from script.
 - Direct `init()` calls do not read the attribute. Menus inside a `.menubar` take Menubar's `menuOptions` instead.
 
@@ -819,6 +819,8 @@ Material 3 has three contrast levels. Put `contrast="medium"` or `contrast="high
 <html contrast="high">
 ```
 
+Medium contrast restores the standard `on-surface` role even inside high contrast. It reads the standard light and dark backing pairs, including authored overrides of those pairs. Vibrant surfaces keep the accent foreground paired with their background.
+
 ### Corner scale
 
 Component shape tokens on the Material 3 corner scale read the `md.sys.shape.corner` tokens, so one override changes the corners of every component on that step. A component token such as `--md-comp-card-container-shape` still overrides one component. Off-scale corners stay literal.
@@ -848,6 +850,8 @@ Material shapes come in a rounded and a cut family. `corners="cut"` on the root 
 <main corners="cut">…</main>
 <div class="bordered corner-large corner-cut">One cut panel</div>
 ```
+
+Common-button corner styling ships with the button partial, so plain `<button>` elements, button links and `label.button` also follow this switch in selective Sass builds without utilities. Circle buttons, FABs, icon buttons and controls inside toolbars or app bars retain their own shapes and hit areas.
 
 ---
 
@@ -1966,7 +1970,7 @@ The standard motion scheme is the default. `motion="expressive"` on the root or 
 }
 ```
 
-In Sass, `spring($damping, $stiffness)` and `spring-duration($damping, $stiffness)` turn any spring into the same pair.
+In Sass, `spring($damping, $stiffness)` and `spring-duration($damping, $stiffness)` return the easing and duration in milliseconds. Both arguments must be unitless numbers: damping must be greater than 0 and at most 1, and stiffness must be positive. Invalid arguments fail compilation.
 
 ```scss
 .drawer {
@@ -2333,6 +2337,8 @@ A label that does not fit wraps between words and the button grows taller, so en
 
 ### Filled
 
+Filled buttons use the live `primary` and `on-primary` roles at the button, including inside a contrast subtree. Override `--md-comp-filled-button-container-color` and `--md-comp-filled-button-label-text-color` on the root, an ancestor or the button to choose custom colors. Hover, focus and pressed state layers mix the chosen label color over that container color. These optional overrides are unset by default; reads outside the component should use `var(--md-comp-filled-button-container-color, var(--md-sys-color-primary))` and the corresponding `on-primary` fallback.
+
 High emphasis. This is the default — the main action on a page. Container `primary`, label `on-primary`, no elevation. It has a class of its own, `filled`, so the style axis reads as five names rather than four and a silence; writing it changes nothing.
 
 ```html
@@ -2457,12 +2463,12 @@ A button is round; `square` gives it its size's squared corner, 12dp up to small
 
 ### Disabled
 
-The `disabled` attribute, or the `disabled` class on a link. Applies to every variant.
+The `disabled` attribute on a `<button>`. A link cannot be disabled, so a link button drops its `href` and takes `aria-disabled="true"`, which paints the same and tells a screen reader. The `disabled` class paints the same but announces nothing. Applies to every variant.
 
 ```html
 <button disabled>Filled</button>
 <button class="tonal" disabled>Tonal</button>
-<a class="button disabled">Link</a>
+<a class="button" aria-disabled="true">Link</a>
 ```
 
 ---
@@ -4959,7 +4965,7 @@ The default is coplanar: full-bleed surfaces with a 1px `outline-variant` divide
 
 ### Pane anatomy
 
-A pane is a column. A direct `header` (or `pane-header`) is a 64px title bar — its heading takes Title Large and truncates, and an icon-only `button` in it becomes a 48px round icon button. A direct `main`, `div`, `pane-content`, `pane-body`, or `list` is the scrolling body. A direct `footer`, `pane-footer`, or trailing `nav` is a 56px action bar with a top divider.
+A pane is a column. A direct `header` (or `pane-header`) is a 64px title bar — its heading takes Title Large and truncates, and an icon-only `button` in it becomes a 48px round icon button. A direct `section`, `div`, `pane-content`, `pane-body`, or `list` is the scrolling body. A direct `footer`, `pane-footer`, or trailing `nav` is a 56px action bar with a top divider.
 
 ```html
 <div class="pane">
@@ -7834,7 +7840,8 @@ A floating bar can sit beside a companion FAB. Wrap both in `.toolbar-group`; th
 
 `Forms.Init()` installs document behaviors and scans existing textareas and file-path inputs once.
 For markup added later, call `Forms.InitTextarea(textarea)` or `Forms.InitFileInputPath(fileInput)`
-once per new control. After assigning textarea text from script, call
+for each new control. A second call on the same control adds no listeners; `InitTextarea` only
+measures the textarea again. After assigning textarea text from script, call
 `Forms.textareaAutoResize(textarea)`. `Forms.validateField(input)` refreshes validation state
 and error descriptions; for drop-zone file inputs it also refreshes file validation and feedback.
 `Forms.listDropZoneFiles(zone, input)` rebuilds the zone's filename and localized-size list.
@@ -8003,7 +8010,7 @@ Expressive.Datepicker.init(elem, {
 | `firstDay` | Number | `0`, or the language's | First day of the week. `0` is Sunday, `1` is Monday. With a `lang` on or around the input, defaults to that language's first day where the browser knows it. |
 | `minDate` | Date | `null` | Earliest selectable date. The calendar does not page or list years before its month. |
 | `maxDate` | Date | `null` | Latest selectable date. The calendar does not page or list years after its month. |
-| `yearRange` | Number or Array | `10` | Years on either side of the viewed year, or `[minYear, maxYear]`. |
+| `yearRange` | Number or Array | `10` | Nonnegative safe-integer years on either side of the viewed year, or `[minYear, maxYear]` with two safe integers. Invalid ranges use `10`; the year list is clipped to the date bounds. |
 | `minYear`, `maxYear`, `minMonth`, `maxMonth` | Number or undefined | `0`, `9999`, `undefined`, `undefined` | Internal calculation fields. Do not configure them directly; use `minDate`, `maxDate` and `yearRange`. |
 | `yearRangeReverse` | Boolean | `false` | Sort the year list in reverse order. |
 | `isRTL` | Boolean | `false` | Render the calendar right-to-left. |
@@ -10201,7 +10208,7 @@ A `.transfer-list` holds a `.list.transfer-available`, a `.transfer-actions` gro
 
 When the form builds its data, each row of the chosen list adds its checkbox value under the container's `data-name`, in the chosen list's order. A form reset puts every row back where it was before the first move. A list inside a `<fieldset disabled>` submits nothing, as the fieldset's own fields do, but a chosen row whose own checkbox is disabled still submits.
 
-After each move the container fires a bubbling `expressive:transfer` event whose `detail` is `{ rows, from, to }`: the moved rows in their new order, then the two lists. A polite live region after the container announces the move. `Expressive.TransferList.i18n.moved` holds its text, `Moved {count} to {list}` by default, where `{list}` is the destination list's name.
+After each move the container fires a bubbling `expressive:transfer` event that crosses shadow roots, whose `detail` is `{ rows, from, to }`: the moved rows in their new order, then the two lists. A polite live region after the container announces the move. `Expressive.TransferList.i18n.moved` holds its text, `Moved {count} to {list}` by default, where `{list}` is the destination list's name.
 
 ```html
 <form>

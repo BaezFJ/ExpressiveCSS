@@ -106,7 +106,7 @@
     bottom: 0;
     z-index: var(--expressive-z-app-bar);
   }
-}
 
-// Navigation does nothing on paper.
-.navigation-bar { @include print-hidden; }
+  // Navigation does nothing on paper.
+  @include print-hidden;
+}

@@ -351,7 +351,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed Autocomplete minLength gating onSearch, Datepicker date bounds and unchanged-date reads, Clear waiting for Ok, Menu, Chips and Carousel teardown, completed replaced snackbars, shared field reset handling and Confetti fire() defaults: 111,505 gzip bytes (+656).
   // Reviewed clearing the Autocomplete status when text drops below minLength: 111,510 gzip bytes (+5).
   // Reviewed shared form reset handling for pickers, Slider, FormSelect, RichTextEditor, ColorPicker, CharacterCounter, validation, ImageCompare and select-all, disabled month arrow icons, near-whole pie slices, distinct axis labels, reset handling that follows a form into a shadow root, and painting particles on resize: 111,636 gzip bytes (+126).
-  assert.ok(sizes(js).gzip <= 111636, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed shadow-root focus checks through focusIsIn, guarded Forms re-init, chart resize observers released on update(), a composed transfer event, Datepicker selects kept across years, one roving-focus sync per arrow key, memoized Timepicker ranges, flyout measurement per row entry and DataTables views without toggle scans: 111,677 gzip bytes (+41).
+  // Reviewed shared core helpers for right-to-left checks, ID lists, the active descendant and resize handles, and shared chart marks: 111,422 gzip bytes (-255).
+  assert.ok(sizes(js).gzip <= 111422, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -544,5 +546,11 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed shared selection-control, chart, header-bar, text-action and small layout mixins, with charts dropping grid rules they undid: 90,681 gzip bytes (-329).
   // Reviewed the app bar search form focus ring and a configurable $expand-more: 90,693 gzip bytes (+12).
   // Reviewed forced-colors edges on tooltips, snackbars, menus, dialogs and sheets, one-time code cells in forced colors, file field and tree row focus rings, 24px carousel dot targets, RTL switches and AM/PM seams, the modal rail surface over its scrim, hidden map controls and reduced-motion chevrons: 90,881 gzip bytes (+188).
-  assert.ok(sizes(css).gzip <= 90881, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed filled-button colors and nested medium contrast preserving vibrant foregrounds: 90,915 gzip bytes (+34).
+  // Reviewed semantic-button cut corners preserving host-owned shapes: 90,917 gzip bytes (+2).
+  // Reviewed selection-control focus rings, selected list rows, a global hidden rule, section pane bodies and aria-disabled buttons: 91,011 gzip bytes (+94).
+  // Reviewed backdrop blur on basic dialogs only, a parallax image without a transition, no lightbox layer hack and the loading indicator spin on its host: 91,020 gzip bytes (+9).
+  // Reviewed one menu surface for menus and flyouts, one selected-row selector for lists and pane anatomy under one :is(): 90,456 gzip bytes (-564).
+  // Reviewed nesting expanding-card, icon-button and select rules under their parents, with print hiding inside each component block; same declarations, reordered: 90,461 gzip bytes (+5).
+  assert.ok(sizes(css).gzip <= 90461, `CSS gzip: ${sizes(css).gzip}`);
 });

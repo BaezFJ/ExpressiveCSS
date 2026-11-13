@@ -242,7 +242,7 @@ Expressive.Datepicker.init(elem, {
               <td><code>yearRange</code></td>
               <td>Number or Array</td>
               <td><code>10</code></td>
-              <td>Years on either side of the viewed year, or <code>[minYear, maxYear]</code>.</td>
+              <td>Nonnegative safe-integer years on either side of the viewed year, or <code>[minYear, maxYear]</code> with two safe integers. Invalid ranges use <code>10</code>. The year list is clipped to the date bounds.</td>
             </tr>
             <tr>
               <td><code>yearRangeReverse</code></td>

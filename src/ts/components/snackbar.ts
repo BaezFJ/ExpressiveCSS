@@ -598,8 +598,7 @@ export class Snackbar {
   }
 
   private _restoreFocus(remove = false) {
-    const focused = (this.el.getRootNode() as Document | ShadowRoot).activeElement;
-    const returnFocus = focused && this.el.contains(focused) ? this._returnFocus : null;
+    const returnFocus = Utils.focusIsIn(this.el) ? this._returnFocus : null;
     this.el.inert = true;
     if (remove) this._remove(false);
     if (returnFocus?.isConnected) returnFocus.focus({ preventScroll: true });

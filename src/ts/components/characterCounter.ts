@@ -56,8 +56,6 @@ export class CharacterCounter extends Component<BaseOptions> {
     // atomic so "18/20" is read as one figure rather than a changed digit.
     this.counterEl.setAttribute('aria-live', 'polite');
     this.counterEl.setAttribute('aria-atomic', 'true');
-    this.counterEl.style.fontSize = '12px';
-    this.counterEl.style.height = '1';
     this.el.parentElement.appendChild(this.counterEl);
   }
 

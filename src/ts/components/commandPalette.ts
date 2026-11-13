@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, setActiveDescendant } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 export interface CommandPaletteOptions extends BaseOptions {
@@ -82,13 +82,13 @@ export class CommandPalette extends Component<CommandPaletteOptions> {
     // A page adding commands while the user arrows through the list keeps
     // their place.
     this._observer = new MutationObserver(() => this._filter(true));
-    // Also refilter when the page hides, shows, disables or enables a command.
+    // Also refilter when the page hides, disables or changes a command's ID.
     // Not aria-disabled: _filter writes that itself, which would loop.
     this._observer.observe(this.list, {
       childList: true,
       subtree: true,
       attributes: true,
-      attributeFilter: ['hidden', 'disabled']
+      attributeFilter: ['hidden', 'disabled', 'id']
     });
     const { signal } = this._events;
     this.input.addEventListener('input', this._handleInput, { signal });
@@ -142,6 +142,7 @@ export class CommandPalette extends Component<CommandPaletteOptions> {
       const empty = this._empty();
       if (empty) empty.hidden = false;
     }
+    this._generatedIds = [];
     super.destroy();
   }
 
@@ -181,15 +182,22 @@ export class CommandPalette extends Component<CommandPaletteOptions> {
 
   /** Every command, including ones added since the last pass, is an option. */
   private _wireItems() {
+    this._generatedIds = this._generatedIds.filter((el) => {
+      if (this.list.contains(el)) return !!el.id;
+      el.removeAttribute('id');
+      return false;
+    });
     for (const item of this._items()) {
+      this._ensureId(item, 'command-palette-option');
       if (item.getAttribute('role') === 'option') continue;
       item.setAttribute('role', 'option');
-      this._ensureId(item, 'command-palette-option');
       // Focus stays in the input; the commands are reached with the arrows.
       this._action(item)?.setAttribute('tabindex', '-1');
     }
     // A listbox holds only options; a group heading is a visual divider.
     for (const label of this._labels()) label.setAttribute('role', 'none');
+    // The current pass already covers mutations queued before or during wiring.
+    this._observer?.takeRecords();
   }
 
   /** Commands on screen: neither hidden by the page nor filtered out. */
@@ -209,18 +217,12 @@ export class CommandPalette extends Component<CommandPaletteOptions> {
   }
 
   private _setActive(item: HTMLElement | null) {
-    if (this._active === item) return;
-    this._active?.classList.remove('active');
+    if (this._active === item && (!item || this.input.getAttribute('aria-activedescendant') === item.id)) return;
     this._active?.removeAttribute('aria-selected');
+    setActiveDescendant(this.input, this._active, item);
     this._active = item;
-    if (item) {
-      item.classList.add('active');
-      item.setAttribute('aria-selected', 'true');
-      this.input.setAttribute('aria-activedescendant', item.id);
-      item.scrollIntoView({ block: 'nearest' });
-    } else {
-      this.input.removeAttribute('aria-activedescendant');
-    }
+    item?.setAttribute('aria-selected', 'true');
+    item?.scrollIntoView({ block: 'nearest' });
   }
 
   /**

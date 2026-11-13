@@ -24,14 +24,14 @@ article.expanding-card {
   --md-comp-expanding-card-fade-easing: var(--md-sys-motion-spring-fast-effects);
   --md-comp-expanding-card-content-padding: 16px;
   --md-comp-expanding-card-expanded-media-height: min(56dvh, 560px);
-}
 
-article.expanding-card > figure > .expanding-card-trigger {
-  @include card-media-trigger;
-}
+  > figure > .expanding-card-trigger {
+    @include card-media-trigger;
+  }
 
-article.expanding-card > header.expanding-card-summary {
-  padding-bottom: var(--md-comp-expanding-card-content-padding);
+  > header.expanding-card-summary {
+    padding-bottom: var(--md-comp-expanding-card-content-padding);
+  }
 }
 
 dialog.expanding-card-dialog {
@@ -69,92 +69,94 @@ dialog.expanding-card-dialog {
     round var(--md-comp-card-container-shape)
   );
   transition: clip-path var(--md-comp-expanding-card-motion-duration) var(--md-comp-expanding-card-motion-easing);
-}
 
-dialog.expanding-card-dialog[open] {
-  display: block;
-  overflow-y: auto;
-}
+  &[open] {
+    display: block;
+    overflow-y: auto;
+  }
 
-dialog.expanding-card-dialog::backdrop {
-  background: transparent;
-  backdrop-filter: none;
-}
+  &::backdrop {
+    background: transparent;
+    backdrop-filter: none;
+  }
 
-dialog.expanding-card-dialog.expanded {
-  clip-path: inset(0 round var(--md-comp-expanding-card-expanded-shape));
-}
+  > .expanding-card-hero {
+    position: relative;
+    box-sizing: border-box;
+    width: calc(100% - 16px);
+    height: var(--md-comp-expanding-card-from-media-height);
+    min-height: 0;
+    margin: 8px;
+    overflow: hidden;
+    border-radius: var(--md-comp-card-media-shape);
+    transition: height var(--md-comp-expanding-card-motion-duration) var(--md-comp-expanding-card-motion-easing);
 
-dialog.expanding-card-dialog > .expanding-card-hero {
-  position: relative;
-  box-sizing: border-box;
-  width: calc(100% - 16px);
-  height: var(--md-comp-expanding-card-from-media-height);
-  min-height: 0;
-  margin: 8px;
-  overflow: hidden;
-  border-radius: var(--md-comp-card-media-shape);
-  transition: height var(--md-comp-expanding-card-motion-duration) var(--md-comp-expanding-card-motion-easing);
-}
+    > :is(img, picture),
+    > picture > img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
 
-dialog.expanding-card-dialog.expanded > .expanding-card-hero {
-  height: var(--md-comp-expanding-card-expanded-media-height);
-}
+  > .expanding-card-close {
+    position: absolute;
+    inset-block-start: 16px;
+    inset-inline-start: 16px;
+    z-index: 2;
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    margin: 0;
+    padding: 0;
+    color: var(--md-sys-color-on-surface);
+    background-color: var(--md-sys-color-surface);
+    border: 0;
+    border-radius: 50%;
+    box-shadow: none;
+    opacity: 0;
+    transform: scale(0.8);
+    transition:
+      opacity var(--md-comp-expanding-card-fade-duration) var(--md-comp-expanding-card-fade-easing),
+      transform var(--md-comp-expanding-card-content-duration) var(--md-comp-expanding-card-content-easing);
+  }
 
-dialog.expanding-card-dialog > .expanding-card-hero > :is(img, picture),
-dialog.expanding-card-dialog > .expanding-card-hero > picture > img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+  > .expanding-card-content {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0 var(--md-comp-expanding-card-content-padding) 32px;
+    overflow: visible;
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity var(--md-comp-expanding-card-fade-duration) var(--md-comp-expanding-card-fade-easing),
+      transform var(--md-comp-expanding-card-content-duration) var(--md-comp-expanding-card-content-easing);
+  }
 
-dialog.expanding-card-dialog > .expanding-card-close {
-  position: absolute;
-  inset-block-start: 16px;
-  inset-inline-start: 16px;
-  z-index: 2;
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
-  margin: 0;
-  padding: 0;
-  color: var(--md-sys-color-on-surface);
-  background-color: var(--md-sys-color-surface);
-  border: 0;
-  border-radius: 50%;
-  box-shadow: none;
-  opacity: 0;
-  transform: scale(0.8);
-  transition:
-    opacity var(--md-comp-expanding-card-fade-duration) var(--md-comp-expanding-card-fade-easing),
-    transform var(--md-comp-expanding-card-content-duration) var(--md-comp-expanding-card-content-easing);
-}
+  // Expanded. These selectors carry one more class than the closed rules
+  // above, so they win wherever they sit in this block.
+  &.expanded {
+    clip-path: inset(0 round var(--md-comp-expanding-card-expanded-shape));
 
-dialog.expanding-card-dialog.expanded > .expanding-card-close {
-  opacity: 1;
-  transform: scale(1);
-  transition-delay: var(--md-sys-motion-duration-short3);
-}
+    > .expanding-card-hero {
+      height: var(--md-comp-expanding-card-expanded-media-height);
+    }
 
-dialog.expanding-card-dialog > .expanding-card-content {
-  box-sizing: border-box;
-  width: 100%;
-  min-height: 0;
-  margin: 0;
-  padding: 0 var(--md-comp-expanding-card-content-padding) 32px;
-  overflow: visible;
-  opacity: 0;
-  transform: translateY(16px);
-  transition:
-    opacity var(--md-comp-expanding-card-fade-duration) var(--md-comp-expanding-card-fade-easing),
-    transform var(--md-comp-expanding-card-content-duration) var(--md-comp-expanding-card-content-easing);
-}
+    > .expanding-card-close {
+      opacity: 1;
+      transform: scale(1);
+      transition-delay: var(--md-sys-motion-duration-short3);
+    }
 
-dialog.expanding-card-dialog.expanded > .expanding-card-content {
-  opacity: 1;
-  transform: translateY(0);
-  transition-delay: var(--md-comp-expanding-card-content-delay);
+    > .expanding-card-content {
+      opacity: 1;
+      transform: translateY(0);
+      transition-delay: var(--md-comp-expanding-card-content-delay);
+    }
+  }
 }
 
 .expanding-card-detail-header {
@@ -163,10 +165,10 @@ dialog.expanding-card-dialog.expanded > .expanding-card-content {
   justify-content: space-between;
   gap: 16px;
   margin: 0 0 8px;
-}
 
-.expanding-card-detail-header > :is(h1, h2, h3, h4, h5, h6) {
-  @include header-bar-headline;
+  > :is(h1, h2, h3, h4, h5, h6) {
+    @include header-bar-headline;
+  }
 }
 
 .expanding-card-actions {
@@ -174,26 +176,26 @@ dialog.expanding-card-dialog.expanded > .expanding-card-content {
   flex: 0 0 auto;
   align-items: center;
   gap: 8px;
-}
 
-.expanding-card-actions > .expanding-card-favorite {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
-  padding: 0;
-  color: var(--md-sys-color-on-secondary-container);
-  background-color: var(--md-sys-color-secondary-container);
-  border-radius: 50%;
-}
+  > .expanding-card-favorite {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    padding: 0;
+    color: var(--md-sys-color-on-secondary-container);
+    background-color: var(--md-sys-color-secondary-container);
+    border-radius: 50%;
+  }
 
-.expanding-card-actions > .expanding-card-play {
-  width: 88px;
-  height: 48px;
-  min-width: 88px;
-  padding: 0;
-  color: var(--md-sys-color-on-primary-container);
-  background-color: var(--md-sys-color-primary-container);
-  border-radius: 24px;
+  > .expanding-card-play {
+    width: 88px;
+    height: 48px;
+    min-width: 88px;
+    padding: 0;
+    color: var(--md-sys-color-on-primary-container);
+    background-color: var(--md-sys-color-primary-container);
+    border-radius: 24px;
+  }
 }
 
 .expanding-card-track {
@@ -202,30 +204,30 @@ dialog.expanding-card-dialog.expanded > .expanding-card-content {
   gap: 2px 16px;
   align-items: center;
   padding-block: 8px;
-}
 
-.expanding-card-track > :is(strong, span, small, time) {
-  margin: 0;
-}
+  > :is(strong, span, small, time) {
+    margin: 0;
+  }
 
-.expanding-card-track > strong {
-  color: var(--md-sys-color-on-surface);
-  @include typescale("body-large");
-}
+  > strong {
+    color: var(--md-sys-color-on-surface);
+    @include typescale("body-large");
+  }
 
-.expanding-card-track > small,
-.expanding-card-track > time {
-  color: var(--md-sys-color-on-surface-variant);
-  @include typescale("body-small");
-}
+  > small,
+  > time {
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-small");
+  }
 
-.expanding-card-track > small {
-  grid-column: 1;
-}
+  > small {
+    grid-column: 1;
+  }
 
-.expanding-card-track > time {
-  grid-column: 2;
-  grid-row: 1 / span 2;
+  > time {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

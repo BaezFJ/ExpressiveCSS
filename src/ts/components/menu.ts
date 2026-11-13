@@ -1,4 +1,4 @@
-import { Utils, controllerFor, restoreAttribute } from '../core/utils';
+import { Utils, controllerFor, restoreAttribute, isRtl } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 // CSS anchor positioning, where the browser has it. A menu opened from its
@@ -599,12 +599,12 @@ export class Menu extends Component<MenuOptions> {
   }
 
   private _handleSubmenuAlign = (e: MouseEvent) => {
-    const target = e.target;
-    if (!(target instanceof Element)) return;
-    const li = target.closest('li');
-    if (li?.querySelector(':scope > menu') && this.menuEl?.contains(li)) {
-      this._alignSubmenu(li as HTMLElement);
-    }
+    // Mouse events always target an element.
+    const li = (e.target as Element).closest('li');
+    // mouseover repeats for every child the pointer crosses; a move that
+    // started inside the same row needs no new measurement.
+    const entered = li?.querySelector(':scope > menu') && !li.contains(e.relatedTarget as Node | null);
+    if (entered && this.menuEl.contains(li)) this._alignSubmenu(li);
   };
 
   private _alignSubmenu(li: HTMLElement) {
@@ -645,7 +645,7 @@ export class Menu extends Component<MenuOptions> {
   _handleMenuKeydown = (e: KeyboardEvent) => {
     if (!this.isOpen || !Utils.plainKey(e) || Utils.isComposing(e)) return;
     const list = this._containingSubmenu(e) ?? this.menuEl;
-    const rtl = getComputedStyle(list).direction === 'rtl';
+    const rtl = isRtl(list);
     const openKey = rtl ? 'ArrowLeft' : 'ArrowRight';
     const backKey = rtl ? 'ArrowRight' : 'ArrowLeft';
     if ([openKey, backKey, 'ArrowUp', 'ArrowDown', 'Escape', 'Tab'].includes(e.key)) {
@@ -827,7 +827,8 @@ export class Menu extends Component<MenuOptions> {
     // Only set tabindex if it hasn't been set by user
     this.menuEl.querySelectorAll(':scope li').forEach((el) => {
       if (el.matches('.divider, .gap, .label, .optgroup, [role="none"]')) {
-        this._setAttribute(el, 'tabindex', '-1');
+        // FormSelect replaces already-inert headings on refresh; no snapshot is needed.
+        if (el.getAttribute('tabindex') !== '-1') this._setAttribute(el, 'tabindex', '-1');
         return;
       }
       if (!el.getAttribute('tabindex')) this._setAttribute(el, 'tabindex', '0');
@@ -1125,7 +1126,7 @@ export class Menu extends Component<MenuOptions> {
   /** Where a context menu opens without a pointer: the region's start corner. */
   private _regionCorner() {
     const rect = this.el.getBoundingClientRect();
-    const rtl = getComputedStyle(this.el).direction === 'rtl';
+    const rtl = isRtl(this.el);
     return { x: rtl ? rect.right : rect.left, y: rect.bottom };
   }
 
@@ -1154,7 +1155,7 @@ export class Menu extends Component<MenuOptions> {
     this.isScrollable = height < menu.height;
     if (this.isScrollable) this.menuEl.style.height = height + 'px';
 
-    const rtl = getComputedStyle(this.el).direction === 'rtl';
+    const rtl = isRtl(this.el);
     const fitsRight = x + width <= bounds.right;
     const fitsLeft = x - width >= bounds.left;
     const leftward = rtl ? fitsLeft || !fitsRight : !fitsRight && fitsLeft;

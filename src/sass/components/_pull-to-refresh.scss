@@ -49,6 +49,7 @@
       opacity var(--md-comp-pull-to-refresh-motion-duration) var(--md-comp-pull-to-refresh-motion),
       visibility 0s linear var(--md-comp-pull-to-refresh-motion-duration);
 
+    &,
     &::before {
       animation-play-state: paused;
     }
@@ -68,6 +69,7 @@
     // Shown at once; only hiding waits for the motion.
     transition-delay: 0s;
 
+    &,
     &::before {
       animation-play-state: running;
     }

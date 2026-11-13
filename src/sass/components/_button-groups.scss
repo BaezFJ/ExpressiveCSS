@@ -195,18 +195,18 @@ $_connected-corners: (
     background-color: state-layer(var(--_toggle-state-color), "pressed", var(--_toggle-container-color));
   }
 
-  > #{$_label-item}#{$_filled-item}[aria-pressed]:is(:disabled, [disabled], .disabled),
-  > #{$_label-item}:is(.tonal, .elevated)[aria-pressed]:is(:disabled, [disabled], .disabled),
-  > .icon-button:is(.filled, .tonal)[aria-pressed]:is(:disabled, [disabled], .disabled),
-  > #{$_label-item}.outlined[aria-pressed=true]:is(:disabled, [disabled], .disabled),
-  > .icon-button.outlined[aria-pressed=true]:is(:disabled, [disabled], .disabled) {
+  > #{$_label-item}#{$_filled-item}[aria-pressed]#{$expressive-disabled},
+  > #{$_label-item}:is(.tonal, .elevated)[aria-pressed]#{$expressive-disabled},
+  > .icon-button:is(.filled, .tonal)[aria-pressed]#{$expressive-disabled},
+  > #{$_label-item}.outlined[aria-pressed=true]#{$expressive-disabled},
+  > .icon-button.outlined[aria-pressed=true]#{$expressive-disabled} {
     @include _disabled-toggle;
     background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 10%, transparent);
     border-color: transparent;
   }
 
-  > #{$_label-item}.outlined[aria-pressed=false]:is(:disabled, [disabled], .disabled),
-  > .icon-button.outlined[aria-pressed=false]:is(:disabled, [disabled], .disabled) {
+  > #{$_label-item}.outlined[aria-pressed=false]#{$expressive-disabled},
+  > .icon-button.outlined[aria-pressed=false]#{$expressive-disabled} {
     @include _disabled-toggle;
     background-color: transparent;
     border-color: var(--md-sys-color-outline-variant);

@@ -27,8 +27,8 @@
 // partial may not @use another partial.
 
 :root, :host {
-  --md-comp-filled-button-container-color: var(--md-sys-color-primary);
-  --md-comp-filled-button-label-text-color: var(--md-sys-color-on-primary);
+  // Color overrides stay optional so btn-filled() resolves the live roles
+  // on the button, including inside a contrast subtree.
   --md-comp-filled-button-container-shape: var(--md-sys-shape-corner-full);
   @include button-size("small");
 }
@@ -277,13 +277,15 @@ $_extend-sizes: (
   --md-comp-fab-icon-size: #{rem(36px)};
 }
 
+// $expressive-disabled includes `aria-disabled="true"`, the state a screen
+// reader hears; the `.disabled` class alone tells it nothing.
 // The second arm matters for a focusable disabled control (`a.button.disabled`
 // with an href, or a `<button class="disabled">`): a variant's `:focus` state
 // is (0,2,0), so the plain disabled rule would lose its shadow and fill to it.
 // The third covers the FAB, whose own rule is (0,2,0) and its states (0,3,0).
-:where(#{$_btn}):is(:disabled, [disabled], .disabled),
-:where(#{$_btn}):is(:disabled, [disabled], .disabled):is(:hover, :active, :focus),
-:where(#{$_btn}):is(.extra, .large).circle:is(:disabled, [disabled], .disabled) {
+:where(#{$_btn})#{$expressive-disabled},
+:where(#{$_btn})#{$expressive-disabled}:is(:hover, :active, :focus),
+:where(#{$_btn}):is(.extra, .large).circle#{$expressive-disabled} {
   @include btn-disabled;
 }
 
@@ -343,6 +345,7 @@ $_shaped: ":where(#{$_btn}):where(:not(#{$_fixed}))";
 // group items, the time picker's AM and PM, and the rest of `$_fixed`.
 #{$_shaped} {
   --_shape: var(--md-comp-filled-button-container-shape);
+  corner-shape: var(--md-sys-shape-corner-family);
 
   transition:
     background-color var(--md-sys-motion-duration-short4) ease-out,
@@ -366,7 +369,7 @@ $_shaped: ":where(#{$_btn}):where(:not(#{$_fixed}))";
   border-radius: var(--_shape);
 }
 
-#{$_shaped}:not(:disabled, [disabled], .disabled):active {
+#{$_shaped}:not(:disabled, [disabled], .disabled, [aria-disabled="true"]):active {
   border-radius: var(--md-comp-filled-button-pressed-container-shape);
 }
 
@@ -390,7 +393,7 @@ $_shaped: ":where(#{$_btn}):where(:not(#{$_fixed}))";
   }
 }
 
-#{$_shaped}[aria-pressed]:not(.text, :disabled, [disabled], .disabled) {
+#{$_shaped}[aria-pressed]:not(.text, :disabled, [disabled], .disabled, [aria-disabled="true"]) {
   color: var(--_toggle-state);
   background-color: var(--_toggle-container);
 
@@ -423,11 +426,11 @@ $_shaped: ":where(#{$_btn}):where(:not(#{$_fixed}))";
     outline-offset: -1px;
   }
 
-  :where(#{$_btn}):is(:disabled, [disabled], .disabled) {
+  :where(#{$_btn})#{$expressive-disabled} {
     outline-color: GrayText;
   }
 
-  :where(#{$_btn}, .icon-button)[aria-pressed="true"]:not(:disabled, [disabled], .disabled) {
+  :where(#{$_btn}, .icon-button)[aria-pressed="true"]:not(:disabled, [disabled], .disabled, [aria-disabled="true"]) {
     forced-color-adjust: none;
     border-color: Highlight;
     background-color: Highlight !important;

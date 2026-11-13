@@ -145,15 +145,14 @@ describe('The axes compose without per-combination rules', () => {
     );
   });
 
-  test('every button token a rule reads is one the sheet declares', () => {
+  test('every button token read without a fallback is one the sheet declares', () => {
     // A var() naming a property nothing declares invalidates the whole
-    // declaration, silently - the failure mode that made .display-large a
-    // no-op for three releases.
+    // declaration, silently. Optional author overrides use a live-role fallback.
     const declared = new Set(
       [...css.matchAll(/(--md-comp-filled-button-[\w-]+)\s*:/g)].map((m) => m[1])
     );
     const read = new Set(
-      [...css.matchAll(/var\(\s*(--md-comp-filled-button-[\w-]+)/g)].map((m) => m[1])
+      [...css.matchAll(/var\(\s*(--md-comp-filled-button-[\w-]+)\s*\)/g)].map((m) => m[1])
     );
     const missing = [...read].filter((p) => !declared.has(p));
     assert.deepEqual(missing, [], `read but never declared: ${missing.join(', ')}`);
@@ -174,7 +173,7 @@ describe('Disabled buttons and consumer overrides', () => {
   // `a.button.elevated.disabled` with an href takes focus, and the variant's
   // `:focus` rule out-specifies a bare disabled rule.
   test('a focused disabled button keeps the disabled look', () => {
-    const body = ruleFor((selector) => /:is\(:disabled, \[disabled\], \.disabled\):is\(:hover, :active, :focus\)/.test(selector));
+    const body = ruleFor((selector) => /:is\(:disabled, \[disabled\], \.disabled, \[aria-disabled="?true"?\]\):is\(:hover, :active, :focus\)/.test(selector));
     assert.ok(body, 'no state arm on the disabled rule');
     assert.match(body, /box-shadow:\s*(?:none|var\(--md-sys-elevation-level0\))/);
     assert.match(body, /pointer-events:\s*none/);
@@ -183,7 +182,7 @@ describe('Disabled buttons and consumer overrides', () => {
   // The FAB rule is (0,2,0) and its states (0,3,0), so a disabled FAB needs
   // its own arm or it keeps the enabled fill and its level 3 shadow.
   test('a disabled FAB takes the disabled look', () => {
-    const body = ruleFor((selector) => /:is\(\.extra, \.large\)\.circle:is\(:disabled, \[disabled\], \.disabled\)/.test(selector));
+    const body = ruleFor((selector) => /:is\(\.extra, \.large\)\.circle:is\(:disabled, \[disabled\], \.disabled, \[aria-disabled="?true"?\]\)/.test(selector));
     assert.ok(body, 'no FAB arm on the disabled rule');
     assert.match(body, /box-shadow:\s*(?:none|var\(--md-sys-elevation-level0\))/);
   });

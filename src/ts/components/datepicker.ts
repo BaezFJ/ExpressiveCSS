@@ -73,6 +73,8 @@ const READERS: Record<string, (i18n: Partial<DateI18nOptions>) => Reader> = {
 };
 
 const pad = (n: number) => String(n).padStart(2, '0');
+/** A select's options as values and disabled flags, to tell whether a redraw changed them. */
+const optionsKey = (select: HTMLSelectElement) => Array.from(select.options, (o) => `${o.value}${o.disabled ? '-' : ''}`).join();
 /** What each `format` token writes for a date. */
 const FORMATS: Record<string, (date: Date, i18n: Partial<DateI18nOptions>) => string | number> = {
   d: (date) => date.getDate(),
@@ -196,7 +198,8 @@ export interface DatepickerOptions extends BaseOptions {
    */
   maxDate: Date | null;
   /**
-   * Number of years either side, or array of upper/lower range.
+   * Nonnegative safe-integer years either side, or two safe-integer range bounds.
+   * Invalid ranges use 10; the year list is clipped to the date bounds.
    * @default 10
    */
   yearRange: number | number[];
@@ -1221,15 +1224,12 @@ export class Datepicker extends Component<DatepickerOptions> {
   /**
    * Identifies the *shape* of the controls - everything that changes which
    * options the month and year selects contain, as opposed to which one is
-   * picked. While this is stable the two FormSelects can be left alone.
-   *
-   * `year` is in the key because a numeric `yearRange` centres the year list
-   * on the displayed year, so paging across a year boundary does change it.
+   * picked. While this is stable the two FormSelects are kept, and
+   * _reuseControls brings their options up to date.
    */
-  private _controlsCacheKey(year: number): string {
+  private _controlsCacheKey(): string {
     const o = this.options;
     return [
-      year,
       o.minYear,
       o.maxYear,
       o.minMonth,
@@ -1277,18 +1277,17 @@ export class Datepicker extends Component<DatepickerOptions> {
       arr.join('') +
       '</select>';
 
-    if (Array.isArray(opts.yearRange)) {
-      i = opts.yearRange[0];
-      j = opts.yearRange[1] + 1;
-    } else {
-      i = year - opts.yearRange;
-      j = 1 + year + opts.yearRange;
-    }
+    let range = opts.yearRange;
+    const valid = Array.isArray(range)
+      ? range.length === 2 && range.every(Number.isSafeInteger)
+      : Number.isSafeInteger(range) && range >= 0;
+    if (!valid) range = _defaults.yearRange;
+    // Clamp before iterating so years below minYear never consume work.
+    i = Math.max(Array.isArray(range) ? range[0] : year - range, opts.minYear);
+    j = Math.min(Array.isArray(range) ? range[1] : year + range, opts.maxYear);
 
-    for (arr = []; i < j && i <= opts.maxYear; i++) {
-      if (i >= opts.minYear) {
-        arr.push(`<option value="${i}" ${i === year ? 'selected="selected"' : ''}>${i}</option>`);
-      }
+    for (arr = []; i <= j; i++) {
+      arr.push(`<option value="${i}" ${i === year ? 'selected="selected"' : ''}>${i}</option>`);
     }
     if (opts.yearRangeReverse) arr.reverse();
 
@@ -1363,7 +1362,7 @@ export class Datepicker extends Component<DatepickerOptions> {
     // controls as well meant tearing down and reconstructing two FormSelects -
     // each with its own <ul> of 12 or 21+ options, an input, a caret and a
     // Menu - on every single draw.
-    const key = this._controlsCacheKey(year);
+    const key = this._controlsCacheKey();
     if (key === this._controlsKey && this.calendarEl.querySelector('.datepicker-controls')) {
       this._reuseControls(year, month);
     } else {
@@ -1425,20 +1424,30 @@ export class Datepicker extends Component<DatepickerOptions> {
   }
 
   /**
-   * Keep the existing controls and bring them up to date: the selected month,
-   * and the arrow states, which depend on the month rather than on the key.
+   * Keep the existing controls and bring them up to date: the options and
+   * picked value of each select, which a numeric `yearRange` and the min and
+   * max months change from year to year, and the arrow states.
    */
   private _reuseControls(year: number, month: number) {
-    const monthSelect = this.calendarEl.querySelector('.orig-select-month') as HTMLSelectElement;
-    if (monthSelect && monthSelect.value !== month.toString()) {
-      monthSelect.value = month.toString();
-      // Assigning .value fires no change event, so the wrapper needs telling.
-      FormSelect.getInstance(monthSelect)?.refresh();
+    const fresh = document.createElement('template');
+    fresh.innerHTML = this.renderTitle(this, 0, year, month, year, this._randId);
+    for (const selector of ['.orig-select-year', '.orig-select-month']) {
+      this._syncSelect(this.calendarEl.querySelector(selector), fresh.content.querySelector(selector));
     }
 
     const { prev, next } = this._arrowState(year, month);
     this.calendarEl.querySelector('.month-prev')?.classList.toggle('is-disabled', !prev);
     this.calendarEl.querySelector('.month-next')?.classList.toggle('is-disabled', !next);
+  }
+
+  /** Gives a kept select the options and value of the one a redraw rendered. */
+  private _syncSelect(select: HTMLSelectElement, rendered: HTMLSelectElement) {
+    const value = rendered.value;
+    if (optionsKey(select) !== optionsKey(rendered)) select.replaceChildren(...rendered.options);
+    else if (select.value === value) return;
+    select.value = value;
+    // Assigning .value fires no change event, so the wrapper needs telling.
+    FormSelect.getInstance(select)?.refresh();
   }
 
   /** Replace just the day grid, leaving the controls in place. */
@@ -1545,7 +1554,8 @@ export class Datepicker extends Component<DatepickerOptions> {
 
   private _handleCalendarFocus = (event: FocusEvent) => {
     const button = event.target as HTMLElement;
-    if (!button.matches('.datepicker-day-button')) return;
+    // The roving tab stop is already here when a key moved focus to it.
+    if (!button.matches('.datepicker-day-button') || button.tabIndex === 0) return;
     this._focusedDate = this._dayDate(button);
     this._syncCalendarFocus();
   };

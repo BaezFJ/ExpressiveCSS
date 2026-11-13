@@ -70,7 +70,7 @@ const partials = PAGES.flatMap(page => (page.styles ?? []).map(path => ({ path, 
         <tr><td><code>state-opacity($state)</code></td><td>Returns the token opacity as a CSS percentage calculation. Accepts <code>hover</code>, <code>focus</code>, <code>pressed</code> or <code>dragged</code>; unknown states fail compilation.</td></tr>
         <tr><td><code>state-layer($color, $state, $base: transparent)</code></td><td>Returns an OKLab <code>color-mix()</code> of the state color over the base, using that state's opacity token.</td></tr>
         <tr><td><code>spring($damping, $stiffness)</code></td><td>Returns a sampled CSS <code>linear()</code> easing. The arguments are damping ratio and stiffness. Pair it with the matching duration.</td></tr>
-        <tr><td><code>spring-duration($damping, $stiffness)</code></td><td>Returns the settling time in seconds for the same spring. Use positive stiffness and the damping values shown in <a href={route("css_transitions") + "#springs"}>Transitions</a>.</td></tr>
+        <tr><td><code>spring-duration($damping, $stiffness)</code></td><td>Returns the settling time in milliseconds for the same spring. Both spring functions require unitless arguments: damping greater than 0 and at most 1, and positive stiffness. Invalid arguments fail compilation. See <a href={route("css_transitions") + "#springs"}>Transitions</a> for the standard values.</td></tr>
       </tbody>
     </table>
     </div>

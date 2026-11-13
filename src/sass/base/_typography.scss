@@ -39,10 +39,9 @@ h4, h5, h6 {
   margin: 0 0 0.35em;
 }
 
-// Even out heading lines, and keep a lone word off a paragraph's last line.
-// The longhand leaves text-wrap-mode alone, so .truncate and nowrap still win.
+// Even out heading lines. The longhand leaves text-wrap-mode alone, so
+// .truncate and nowrap still win. Paragraphs below use it the same way.
 h1, h2, h3, h4, h5, h6 { text-wrap-style: balance; }
-p { text-wrap-style: pretty; }
 
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
   font-weight: inherit;
@@ -52,6 +51,8 @@ h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
 p {
   @include typescale("body-large");
   margin: 0 0 1em;
+  // Keep a lone word off the last line.
+  text-wrap-style: pretty;
 }
 
 small,

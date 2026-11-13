@@ -5,6 +5,108 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- The `expressivecss-design-md` skill interviews the user and writes a
+  `DESIGN.md` in the google-labs-code DESIGN.md format. The file records the
+  brand seed, typefaces, root attributes and component choices as ExpressiveCSS
+  tokens and markup, and commits to WCAG 2.2 AA. The ExpressiveCSS skill reads a
+  project's `DESIGN.md` before design, theming and layout work.
+
+### Changed
+
+- The minified JavaScript is 255 bytes smaller gzipped. Components share core
+  helpers for right-to-left checks, `aria-describedby` lists, the active
+  descendant of a combobox and resize handles, and the charts share their plot
+  SVG, highlight and keyboard helpers. Behavior is unchanged.
+
+- Datepicker keeps its month and year selects when paging across a year
+  boundary and refreshes their options in place, instead of rebuilding both
+  FormSelects and their menus. An arrow key in the calendar syncs the roving
+  focus once instead of twice. Timepicker skips recomputing the allowed ranges
+  while a drag stays on one value, or always when no `minTime` or `maxTime` is
+  set. Menu measures a flyout once each time the pointer enters its row, not
+  on every move inside it. DataTables filtering, sorting and paging no longer
+  re-apply every column toggle; `DataTables.sync()` still does.
+
+- The compiled sheet is about 15 KB smaller minified and 564 bytes smaller
+  gzipped. Menu flyouts share the menu's surface rules, list rows write their
+  selected states once, and pane anatomy hangs off one selector. Every
+  selector keeps its specificity.
+
+- Expanding card, icon button and select styles are nested under their parent
+  selectors, and six components hide for print from inside their own block.
+  The compiled sheet has the same declarations in a slightly different order.
+
+### Fixed
+
+- SwipeActions moves focus to the row's toggle when an action inside a shadow
+  root closes the row. InputMask keeps the caret where the user typed in a
+  shadow root instead of moving it to the end.
+
+- Calling `Forms.InitTextarea()` or `Forms.InitFileInputPath()` again on the
+  same control no longer adds a second set of listeners.
+
+- A chart `update()` that leaves no rows disconnects the old plot's resize
+  observers.
+
+- `expressive:transfer` crosses shadow roots like the other `expressive:*`
+  events. CharacterCounter sets no inline styles; its body-small type comes
+  from the stylesheet inside or outside a `.field`.
+
+- Datepicker validates year ranges and clips the year list before rendering.
+  AutoInit rejects nonfinite numeric options from markup.
+
+- FormSelect refreshes no longer retain replaced group headings in Menu's
+  attribute snapshots. CommandPalette releases removed rows from its generated-ID
+  bookkeeping while preserving row moves and reinsertion.
+
+- Cut corners reach semantic buttons and selective button builds without the
+  helpers utility. Circle buttons, FABs and controls styled by their host widget
+  keep their own shapes and hit areas.
+
+- Medium-contrast subtrees restore the standard `on-surface` color when nested
+  inside high contrast, including overrides of its light and dark backing pairs.
+  Vibrant surfaces retain their matching accent foreground.
+
+- Filled-button hover, focus and pressed state layers retain the authored
+  component container and label colors.
+
+- Filled buttons follow the live colors of a contrast subtree while retaining
+  color token overrides on the root, an ancestor or the button.
+
+- Sass spring functions reject invalid damping and stiffness instead of hanging
+  compilation or emitting invalid easing values.
+
+- Checkboxes, radio buttons and switches show the shared focus ring on keyboard
+  focus. The focus tint alone was about 1.2:1 against the surface.
+
+- The `hidden` attribute hides every component. A component's own `display`
+  used to beat the browser's rule, so hidden loading indicators, progress bars,
+  skeletons and empty states kept rendering, animating and being announced.
+  `hidden="until-found"` keeps the browser's behavior.
+
+- List rows marked `selected`, as the docs show, get the selected fill.
+
+- A `<section>` directly inside a pane is its scrolling body, as the docs show.
+  A `<main>` body still works for older markup.
+
+- Common buttons and button-group toggles with `aria-disabled="true"` look
+  disabled, as icon buttons already did. The docs now use it, not the
+  `disabled` class, for a link button that cannot be followed.
+
+- Modal side and bottom sheets keep the plain scrim and no longer blur the page
+  behind them. Only the basic dialog blurs its backdrop, and reduced
+  transparency or increased contrast turns that blur off.
+
+- The loading indicator's spin turns its host element, so it keeps running on
+  the compositor while the page is busy. Loading overlays and pull to refresh
+  pause and resume both parts.
+
+- The carousel parallax image follows the scroll without a transition that
+  restarted on every frame, and lightbox thumbnails no longer each get their
+  own compositing layer.
+
 ## [0.17.0] - 2026-11-05
 
 This release adds Sass mixins and a few component options, and fixes form reset,

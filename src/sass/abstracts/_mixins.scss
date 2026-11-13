@@ -99,7 +99,10 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   color: var(--md-comp-filled-button-label-text-color, var(--md-sys-color-on-primary));
   background-color: var(--md-comp-filled-button-container-color, var(--md-sys-color-primary));
 
-  @include btn-states(var(--md-sys-color-on-primary), var(--md-sys-color-primary));
+  @include btn-states(
+    var(--md-comp-filled-button-label-text-color, var(--md-sys-color-on-primary)),
+    var(--md-comp-filled-button-container-color, var(--md-sys-color-primary))
+  );
 }
 
 @mixin btn-tonal {
@@ -508,6 +511,8 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 
 // The hover, checked hover and focus rings of a selection control, from the
 // $inner edge out to $outer. $checked lists the states whose ring is primary.
+// The focus tint is about 1.2:1 against the surface, so focus also takes the
+// shared outline (WCAG 1.4.11), as the slider handle does.
 @mixin selection-control-states($outer, $inner, $checked: ":checked") {
   $checked-hover: ();
   @each $state in $checked {
@@ -524,7 +529,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 
   &:focus-visible {
     @include state-layer-ring($outer, $inner, var(--md-sys-color-primary), "focus");
-    outline: none;
+    @include focus-ring;
   }
 }
 

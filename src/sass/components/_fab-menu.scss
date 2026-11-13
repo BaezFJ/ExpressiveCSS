@@ -224,6 +224,9 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
       );
     }
   }
+
+  // A floating menu would print over the content.
+  @include print-hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -233,6 +236,3 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
     --md-comp-fab-menu-stagger: 0s;
   }
 }
-
-// A floating menu would print over the content.
-.fab-menu { @include print-hidden; }

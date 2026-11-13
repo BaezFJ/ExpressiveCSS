@@ -1,4 +1,5 @@
-import { Utils, afterAnyFormReset, controllerFor, numberValue } from '../core/utils';
+import { Utils, afterAnyFormReset, numberValue, isRtl } from '../core/utils';
+import { dragHandle, keyWidth, stepWidth } from '../core/resizeHandle';
 
 /** The rows of a table's bodies that hold records, not a row's detail. */
 const ROWS = ':scope > tbody > tr:not(.data-table-detail)';
@@ -10,7 +11,6 @@ const BOX = ':scope > :first-child input[type="checkbox"]';
  */
 const HANDLE = '.data-table > table > thead > tr:first-child > th > button.drag-handle:last-child';
 /** How far an arrow key resizes a column; Shift moves four times as far. */
-const STEP = 16;
 /** How each sort direction orders the rows. */
 const ORDER = { ascending: 1, descending: -1 };
 /** A menu checkbox item that shows and hides the column of the header cell it names. */
@@ -128,8 +128,8 @@ function toggledHeader(item: Element) {
 }
 
 /** A column's cells, one per row, leaving out cells that span several columns. */
-function columnCells(table: HTMLTableElement, column: number) {
-  const head = [...headerColumns(table.tHead)].filter(([, each]) => each === column).map(([cell]) => cell as HTMLTableCellElement);
+function columnCells(table: HTMLTableElement, columns: Map<Element, number>, column: number) {
+  const head = [...columns].filter(([, each]) => each === column).map(([cell]) => cell as HTMLTableCellElement);
   const rows = table.querySelectorAll<HTMLTableRowElement>(':scope > tbody > tr, :scope > tfoot > tr');
   return [...head, ...Array.from(rows, (row) => cellAt(row, column))].filter((cell) => cell?.colSpan === 1);
 }
@@ -152,7 +152,8 @@ function applyToggle(item: Element) {
   if (!header) return;
   const table = header.closest('table');
   const show = item.getAttribute('aria-checked') === 'true';
-  columnCells(table, headerColumns(table.tHead).get(header)).forEach(show ? reveal : conceal);
+  const columns = headerColumns(table.tHead);
+  columnCells(table, columns, columns.get(header)).forEach(show ? reveal : conceal);
   refit(table, header);
 }
 
@@ -198,24 +199,6 @@ function bounds(header: HTMLTableCellElement): [number, number] {
   return [min, Math.max(min, header.closest('.data-table').clientWidth)];
 }
 
-/** The next of a column's narrow, middle and wide widths, wrapping to narrow. */
-function nextStep(header: HTMLTableCellElement) {
-  const [min, max] = bounds(header);
-  const current = header.getBoundingClientRect().width;
-  return [min, (min + max) / 2, max].find((width) => width > current + 1) ?? min;
-}
-
-/**
- * The width a key asks for, or undefined for another key. The arrow toward
- * the column's inline-end edge widens it; Home and End jump to the bounds.
- */
-function keyWidth(header: HTMLTableCellElement, e: KeyboardEvent) {
-  const [min, max] = bounds(header);
-  const amount = (e.shiftKey ? 4 : 1) * STEP * (getComputedStyle(header).direction === 'rtl' ? -1 : 1);
-  const current = header.getBoundingClientRect().width;
-  const widths: Record<string, number> = { ArrowRight: current + amount, ArrowLeft: current - amount, Home: min, End: max };
-  return widths[e.key];
-}
 
 /**
  * Data tables. In a `.data-table`, a checkbox in the first header cell
@@ -238,7 +221,7 @@ function keyWidth(header: HTMLTableCellElement, e: KeyboardEvent) {
  */
 export class DataTables {
   private static _initialized = false;
-  private static _dragged = false;
+  private static _drag = { dragged: false };
   private static _serverFilters = new WeakMap<Element, Event>();
   private static _pages = new WeakMap<Element, PageView>();
   private static _pageRequests = new WeakMap<Element, Event>();
@@ -277,19 +260,27 @@ export class DataTables {
    * application total for status and bounds, without local filtering.
    */
   static sync(wrapper: Element) {
-    const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
-    if (table) {
-      table.querySelectorAll(`:scope > tbody > tr[${PAGED}]`).forEach((row) => row.removeAttribute(PAGED));
-      if (DataTables._pages.get(wrapper)?.server) {
-        table.querySelectorAll(`:scope > tbody > tr[${FILTERED}]`).forEach((row) => row.removeAttribute(FILTERED));
-      }
-      DataTables._filter(wrapper, table);
-      DataTables._page(wrapper, table);
-      DataTables._select(DataTables._all(table), DataTables._enabled(table), false);
-    }
+    DataTables._view(wrapper);
     (wrapper.getRootNode() as ParentNode).querySelectorAll(TOGGLE).forEach((item) => {
       if (wrapper.contains(toggledHeader(item))) applyToggle(item);
     });
+  }
+
+  /**
+   * sync() without the column toggles, for a filter, sort or page change:
+   * those only mark the rows already there, whose cells the toggles have
+   * already shown or hidden.
+   */
+  private static _view(wrapper: Element) {
+    const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
+    if (!table) return;
+    table.querySelectorAll(`:scope > tbody > tr[${PAGED}]`).forEach((row) => row.removeAttribute(PAGED));
+    if (DataTables._pages.get(wrapper)?.server) {
+      table.querySelectorAll(`:scope > tbody > tr[${FILTERED}]`).forEach((row) => row.removeAttribute(FILTERED));
+    }
+    DataTables._filter(wrapper, table);
+    DataTables._page(wrapper, table);
+    DataTables._select(DataTables._all(table), DataTables._enabled(table), false);
   }
 
   /** Accepts application page state without slicing its records; null restores local paging. */
@@ -448,7 +439,7 @@ export class DataTables {
     if (view.server) return;
     wrapper.setAttribute('data-page-size', String(request.pageSize));
     DataTables._pages.set(wrapper, { ...view, ...request });
-    DataTables.sync(wrapper);
+    DataTables._view(wrapper);
   }
 
   private static _pageState(wrapper: Element): PageView {
@@ -501,7 +492,7 @@ export class DataTables {
   private static _resetPage(wrapper: Element) {
     if (DataTables._pages.get(wrapper)?.server) return;
     DataTables._pages.delete(wrapper);
-    DataTables.sync(wrapper);
+    DataTables._view(wrapper);
   }
 
   /**
@@ -540,33 +531,19 @@ export class DataTables {
 
   private static _onPointerDown = (e: PointerEvent) => {
     const handle = Utils.closestInPath<HTMLElement>(e, HANDLE);
-    if (handle && e.button === 0) DataTables._drag(handle, e);
+    if (handle && e.button === 0) DataTables._startDrag(handle, e);
   };
 
   /**
    * Moves a column's inline-end edge with the pointer. A few pixels of
    * travel is still a click.
    */
-  private static _drag(handle: HTMLElement, start: PointerEvent) {
+  private static _startDrag(handle: HTMLElement, start: PointerEvent) {
     const header = handle.parentElement as HTMLTableCellElement;
     const from = DataTables.width(header);
-    const sign = getComputedStyle(header).direction === 'rtl' ? -1 : 1;
-    DataTables._dragged = false;
-    handle.setPointerCapture(start.pointerId);
-    const drag = controllerFor(handle);
-    const { signal } = drag;
-    handle.addEventListener('pointermove', (e) => {
-      const delta = e.clientX - start.clientX;
-      if (Math.abs(delta) < 4 && !DataTables._dragged) return;
-      DataTables._dragged = true;
-      DataTables.setWidth(header, from + sign * delta);
-    }, { signal });
-    const end = () => {
-      drag.abort();
-      if (DataTables._dragged) DataTables._resized(header, from);
-    };
-    handle.addEventListener('pointerup', end, { signal });
-    handle.addEventListener('pointercancel', end, { signal });
+    const sign = isRtl(header) ? -1 : 1;
+    DataTables._drag = dragHandle(handle, start, (delta) => DataTables.setWidth(header, from + sign * delta),
+      (dragged) => dragged && DataTables._resized(header, from));
   }
 
   /**
@@ -576,16 +553,17 @@ export class DataTables {
    */
   private static _onHandleClick = (e: MouseEvent) => {
     const handle = Utils.closestInPath(e, HANDLE);
-    if (!handle || (e.detail !== 0 && DataTables._dragged)) return;
+    if (!handle || (e.detail !== 0 && DataTables._drag.dragged)) return;
     const header = handle.parentElement as HTMLTableCellElement;
-    DataTables._resizeTo(header, nextStep(header));
+    DataTables._resizeTo(header, stepWidth(bounds(header), DataTables.width(header)));
   };
 
   private static _onKeyDown = (e: KeyboardEvent) => {
     const handle = Utils.closestInPath(e, HANDLE);
     if (!handle || !Utils.plainKey(e)) return;
     const header = handle.parentElement as HTMLTableCellElement;
-    const width = keyWidth(header, e);
+    // The arrow toward the column's inline-end edge widens it.
+    const width = keyWidth(e, DataTables.width(header), bounds(header), isRtl(header) ? -1 : 1);
     if (width === undefined) return;
     e.preventDefault();
     DataTables._resizeTo(header, width);
