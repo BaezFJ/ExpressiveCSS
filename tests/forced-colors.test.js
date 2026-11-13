@@ -24,7 +24,7 @@ describe('Forced colors', () => {
     'toolbar action': [/^\.toolbar > :is\(a, button\):not\(\.extra, \.icon-button\)\.active$/, OUTLINE],
     'menu item': [/^menu\[id\] > li:is\(\.selected/, OUTLINE],
     'mega menu link': [/^\.mega-menu > :is\(a, button\)\[aria-current=page\]$/, OUTLINE],
-    'list item': [/^\.list > li\.active$/, OUTLINE],
+    'list item': [/^\.list > li:is\(\.active, \.selected/, OUTLINE],
     'filter chip': [/^\.chip-input:checked \+ \.chip$/, OUTLINE],
     'checked checkbox': [/^label:has\(> \[type=checkbox\]\):not\(\.switch\) > \[type=checkbox\]:is\(:checked, :indeterminate\)$/, SYSTEM_FILL],
     'checked radio': [/^label:has\(> \[type=radio\]\) > \[type=radio\]:checked$/, /background-image:\s*radial-gradient\(circle at center, Highlight/],

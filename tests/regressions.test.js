@@ -2507,7 +2507,7 @@ describe('Icon selectors keyed on the <i> element', () => {
   });
 
   test('pane header icon-only actions are a 48dp circle', () => {
-    assertIconIsAClass('panes', /^\.pane\b.*header/, /flex:\s*0 0 48px/);
+    assertIconIsAClass('panes', /^(?:\.pane\b|:is\(\.pane\b).*header/, /flex:\s*0 0 48px/);
   });
 
   test('list leading and trailing icons land in the icon columns', () => {

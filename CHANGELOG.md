@@ -5,6 +5,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- The compiled sheet is about 15 KB smaller minified and 564 bytes smaller
+  gzipped. Menu flyouts share the menu's surface rules, list rows write their
+  selected states once, and pane anatomy hangs off one selector. Every
+  selector keeps its specificity.
+
 ### Fixed
 
 - Cut corners reach semantic buttons and selective button builds without the

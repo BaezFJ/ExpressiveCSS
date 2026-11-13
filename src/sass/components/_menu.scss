@@ -451,9 +451,14 @@ menu[id] li > menu,
   }
 }
 
-menu[id] {
+// One copy of the surface for the menu and its flyouts. Each selector keeps
+// its own specificity, and both blocks below come after it.
+menu[id],
+menu[id] li > menu {
   @include menu-surface;
+}
 
+menu[id] {
   display: none;
   position: absolute;
   // JS positions the menu with physical left/top. Clear the UA [popover]
@@ -488,8 +493,6 @@ menu[id] {
 // a <menu> inside an <li> is a flyout. Hover on fine
 // pointers; .open is the tap / keyboard switch.
 menu[id] li > menu {
-  @include menu-surface;
-
   display: block;
   position: absolute;
   inset-block-start: 0;
