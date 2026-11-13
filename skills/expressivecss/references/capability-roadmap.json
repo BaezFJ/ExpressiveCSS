@@ -1690,9 +1690,9 @@
       "slug": "swipe-actions",
       "title": "Swipe actions",
       "kind": "component",
-      "support": "unassessed",
+      "support": "implemented",
       "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
+      "sourceReview": "source-reviewed",
       "reviewedOn": "2026-10-24",
       "scope": "A touch swipe toward a row's inline start that reveals its .swipe-actions group, opening past half the group's width or on a flick and closing short of it, a [data-swipe-toggle] button with aria-expanded, focus on an action opening its row, Escape, an outside tap or an action closing it, one open row per list, an expressive:swipetoggle event and onToggle callback with { row, open }, open(row) and close(), right-to-left pages and reduced motion.",
       "adaptation": "Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The row slides by a translate on one custom property, and the actions wait past its inline end in a list clipped on the inline axis, so focus on a closed row's action scrolls nothing. The author names the toggle and the actions; the script keeps aria-expanded.",
@@ -1715,7 +1715,7 @@
         },
         {
           "path": "src/ts/components/swipeActions.ts",
-          "sha256": "334ca2c40da4df9722425852ad7e97692d0b4d03e9d17a87ca1911bd51da574c"
+          "sha256": "82c7bffe2de1e12455fc06de5260c9ae860c886d9b868cf613a54e746874bf54"
         }
       ],
       "gaps": [
