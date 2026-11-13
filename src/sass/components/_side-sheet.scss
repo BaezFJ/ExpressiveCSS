@@ -82,7 +82,6 @@ $_sheet: "dialog.side-sheet";
 
   &:not(:modal)::backdrop {
     background: none;
-    backdrop-filter: none;
   }
 
   // Leading-edge dock.

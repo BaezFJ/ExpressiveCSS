@@ -124,8 +124,9 @@
       max-width: none;
       height: 100%;
       object-fit: cover;
+      // No transition: the scroll handler writes the offset every frame, and a
+      // transition restarted on each write made the image trail the scroll.
       transform: translateX(var(--md-comp-carousel-item-parallax, 0px));
-      transition: transform var(--md-sys-motion-duration-short2) linear;
     }
 
     > .carousel-item-content {

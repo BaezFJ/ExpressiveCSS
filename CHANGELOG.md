@@ -41,6 +41,18 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   disabled, as icon buttons already did. The docs now use it, not the
   `disabled` class, for a link button that cannot be followed.
 
+- Modal side and bottom sheets keep the plain scrim and no longer blur the page
+  behind them. Only the basic dialog blurs its backdrop, and reduced
+  transparency or increased contrast turns that blur off.
+
+- The loading indicator's spin turns its host element, so it keeps running on
+  the compositor while the page is busy. Loading overlays and pull to refresh
+  pause and resume both parts.
+
+- The carousel parallax image follows the scroll without a transition that
+  restarted on every frame, and lightbox thumbnails no longer each get their
+  own compositing layer.
+
 ## [0.17.0] - 2026-11-05
 
 This release adds Sass mixins and a few component options, and fixes form reset,
