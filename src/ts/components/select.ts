@@ -1,5 +1,5 @@
 import { imageURL } from '../core/imageURL';
-import { Utils, afterFormReset, restoreAttribute } from '../core/utils';
+import { Utils, afterFormReset, restoreAttribute, toggleIdRef } from '../core/utils';
 import { Menu, MenuOptions } from './menu';
 import { Component, BaseOptions } from '../core/component';
 
@@ -173,8 +173,7 @@ export class FormSelect extends Component<FormSelectOptions> {
       this._validationMessage.className = 'supporting-text';
       this._validationMessage.style.color = 'var(--md-sys-color-error)';
       this.wrapper.append(this._validationMessage);
-      this.input.setAttribute('aria-describedby',
-        [this.input.getAttribute('aria-describedby'), this._validationMessage.id].filter(Boolean).join(' '));
+      toggleIdRef(this.input, 'aria-describedby', this._validationMessage.id, true);
     }
     this.input.ariaInvalid = 'true';
     this._syncValidationError();
@@ -196,10 +195,7 @@ export class FormSelect extends Component<FormSelectOptions> {
 
   private _clearValidationError() {
     if (!this._validationMessage) return;
-    const descriptions = this.input.getAttribute('aria-describedby')?.split(/\s+/)
-      .filter(id => id !== this._validationMessage.id).join(' ');
-    if (descriptions) this.input.setAttribute('aria-describedby', descriptions);
-    else this.input.removeAttribute('aria-describedby');
+    toggleIdRef(this.input, 'aria-describedby', this._validationMessage.id, false);
     this.input.ariaInvalid = this.el.ariaInvalid;
     this._validationMessage.remove();
     this._validationMessage = null;

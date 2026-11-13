@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, toggleIdRef } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 export interface QuestionnaireOptions extends BaseOptions {
@@ -503,10 +503,7 @@ export class Questionnaire extends Component<QuestionnaireOptions> {
   private _setInvalid(item: HTMLFieldSetElement, invalid: boolean) {
     item.classList.toggle('invalid', invalid);
     const error = item.querySelector<HTMLElement>(':scope > .questionnaire-error');
-    const described = (item.getAttribute('aria-describedby') ?? '').split(' ').filter((id) => id && id !== error?.id);
-    if (invalid && error) described.push(this._ensureId(error, 'questionnaire-error'));
-    if (described.length) item.setAttribute('aria-describedby', described.join(' '));
-    else item.removeAttribute('aria-describedby');
+    if (error) toggleIdRef(item, 'aria-describedby', invalid ? this._ensureId(error, 'questionnaire-error') : error.id, invalid);
     for (const control of this._controls(item)) {
       if (invalid) control.setAttribute('aria-invalid', 'true');
       else control.removeAttribute('aria-invalid');

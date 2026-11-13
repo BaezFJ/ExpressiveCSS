@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, isRtl } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 import { Menu, MenuOptions } from './menu';
 
@@ -71,7 +71,7 @@ export class Menubar extends Component<MenubarOptions> {
   }
 
   private _step(key: string): number | null {
-    const rtl = getComputedStyle(this.el).direction === 'rtl';
+    const rtl = isRtl(this.el);
     if (key === 'ArrowRight') return rtl ? -1 : 1;
     if (key === 'ArrowLeft') return rtl ? 1 : -1;
     return null;

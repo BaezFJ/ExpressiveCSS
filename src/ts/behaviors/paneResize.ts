@@ -1,10 +1,10 @@
-import { Utils, controllerFor } from '../core/utils';
+import { Utils } from '../core/utils';
+import { dragHandle, keyWidth, stepWidth } from '../core/resizeHandle';
 
 const container = ':is(.panes, .pane-layout, .list-detail, .supporting-pane-layout):not(.equal, .three-pane)';
 const handleSelector = `${container} > button.drag-handle`;
-// The narrowest a resized pane may get, and the arrow-key step.
+// The narrowest a resized pane may get.
 const minWidth = 240;
-const step = 16;
 
 /**
  * Resizable panes. A `<button class="drag-handle">` between the two panes of a
@@ -19,7 +19,7 @@ const step = 16;
  * `--md-comp-pane-supporting-width` on the container's style.
  */
 export class PaneResize {
-  private static _dragged = false;
+  private static _drag = { dragged: false };
 
   // A second Init adds nothing: addEventListener ignores a listener it has.
   static Init() {
@@ -78,24 +78,9 @@ export class PaneResize {
     if (!handle || e.button !== 0) return;
     const pane = PaneResize._pane(handle);
     if (!pane) return;
-    const startX = e.clientX;
     const startWidth = pane.getBoundingClientRect().width;
     const sign = PaneResize._paneIsLeft(handle) ? 1 : -1;
-    PaneResize._dragged = false;
-    handle.setPointerCapture(e.pointerId);
-    const move = (event: PointerEvent) => {
-      const delta = event.clientX - startX;
-      // A few pixels of travel is still a click.
-      if (Math.abs(delta) < 4 && !PaneResize._dragged) return;
-      PaneResize._dragged = true;
-      PaneResize.setWidth(handle, startWidth + sign * delta);
-    };
-    const drag = controllerFor(handle);
-    const end = () => drag.abort();
-    const { signal } = drag;
-    handle.addEventListener('pointermove', move, { signal });
-    handle.addEventListener('pointerup', end, { signal });
-    handle.addEventListener('pointercancel', end, { signal });
+    PaneResize._drag = dragHandle(handle, e, (delta) => PaneResize.setWidth(handle, startWidth + sign * delta));
   }
 
   private static _onClick(e: MouseEvent) {
@@ -104,25 +89,17 @@ export class PaneResize {
     // The click that ends a mouse drag is not a request to step. A keyboard
     // click (detail 0) always is, even after a touch drag that left the flag
     // set; the next pointerdown clears it. BottomSheets guards the same way.
-    if (e.detail !== 0 && PaneResize._dragged) return;
-    const [min, max] = PaneResize._bounds(handle);
-    const current = PaneResize.width(handle);
-    const next = [min, (min + max) / 2, max].find((width) => width > current + 1) ?? min;
-    PaneResize.setWidth(handle, next);
+    if (e.detail !== 0 && PaneResize._drag.dragged) return;
+    PaneResize.setWidth(handle, stepWidth(PaneResize._bounds(handle), PaneResize.width(handle)));
   }
 
   private static _onKeyDown(e: KeyboardEvent) {
     const handle = Utils.closestInPath(e, handleSelector);
     if (!handle || !Utils.plainKey(e)) return;
-    const current = PaneResize.width(handle);
-    const [min, max] = PaneResize._bounds(handle);
-    const amount = e.shiftKey ? step * 4 : step;
-    const physical = { ArrowLeft: -amount, ArrowRight: amount }[e.key];
-    let width: number;
-    if (physical) width = current + (PaneResize._paneIsLeft(handle) ? physical : -physical);
-    else if (e.key === 'Home') width = min;
-    else if (e.key === 'End') width = max;
-    else return;
+    // The arrow toward the pane's far side widens it.
+    const sign = PaneResize._paneIsLeft(handle) ? 1 : -1;
+    const width = keyWidth(e, PaneResize.width(handle), PaneResize._bounds(handle), sign);
+    if (width === undefined) return;
     e.preventDefault();
     PaneResize.setWidth(handle, width);
   }

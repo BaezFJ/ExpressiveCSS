@@ -15,6 +15,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- The minified JavaScript is 255 bytes smaller gzipped. Components share core
+  helpers for right-to-left checks, `aria-describedby` lists, the active
+  descendant of a combobox and resize handles, and the charts share their plot
+  SVG, highlight and keyboard helpers. Behavior is unchanged.
+
 - Datepicker keeps its month and year selects when paging across a year
   boundary and refreshes their options in place, instead of rebuilding both
   FormSelects and their menus. An arrow key in the calendar syncs the roving

@@ -1,4 +1,4 @@
-import { Utils, controllerFor, restoreAttribute } from '../core/utils';
+import { Utils, controllerFor, restoreAttribute, isRtl } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 // CSS anchor positioning, where the browser has it. A menu opened from its
@@ -645,7 +645,7 @@ export class Menu extends Component<MenuOptions> {
   _handleMenuKeydown = (e: KeyboardEvent) => {
     if (!this.isOpen || !Utils.plainKey(e) || Utils.isComposing(e)) return;
     const list = this._containingSubmenu(e) ?? this.menuEl;
-    const rtl = getComputedStyle(list).direction === 'rtl';
+    const rtl = isRtl(list);
     const openKey = rtl ? 'ArrowLeft' : 'ArrowRight';
     const backKey = rtl ? 'ArrowRight' : 'ArrowLeft';
     if ([openKey, backKey, 'ArrowUp', 'ArrowDown', 'Escape', 'Tab'].includes(e.key)) {
@@ -1126,7 +1126,7 @@ export class Menu extends Component<MenuOptions> {
   /** Where a context menu opens without a pointer: the region's start corner. */
   private _regionCorner() {
     const rect = this.el.getBoundingClientRect();
-    const rtl = getComputedStyle(this.el).direction === 'rtl';
+    const rtl = isRtl(this.el);
     return { x: rtl ? rect.right : rect.left, y: rect.bottom };
   }
 
@@ -1155,7 +1155,7 @@ export class Menu extends Component<MenuOptions> {
     this.isScrollable = height < menu.height;
     if (this.isScrollable) this.menuEl.style.height = height + 'px';
 
-    const rtl = getComputedStyle(this.el).direction === 'rtl';
+    const rtl = isRtl(this.el);
     const fitsRight = x + width <= bounds.right;
     const fitsLeft = x - width >= bounds.left;
     const leftward = rtl ? fitsLeft || !fitsRight : !fitsRight && fitsLeft;
