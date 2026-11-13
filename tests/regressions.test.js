@@ -203,7 +203,8 @@ describe('Lightbox dimensions', () => {
   });
 
   test('closing puts focus dropped on the body back on the image', () => {
-    document.body.innerHTML = `<img class="lightboxed" src="http://localhost/1.jpg">`;
+    // jsdom has no showPopover; override its hidden-popover user-agent rule.
+    document.body.innerHTML = `<img class="lightboxed" src="http://localhost/1.jpg" style="display: block">`;
     const img = document.querySelector('img');
     fixRect(img, 100, 50);
     const instance = Expressive.Lightbox.init(img);
@@ -2868,7 +2869,7 @@ describe('A cancelled pointer drag is not a completed one', () => {
         Object.defineProperty(snackbar.el, 'offsetWidth', { value: 300 });
         drag(snackbar.el, 'pointerup', { from: 0, to });
         assert.equal(snackbar.el.style.transform, `translateX(${offset})`);
-        assert.match(snackbar.el.style.transition, /transform 0ms ease/, 'the slide-out is not animated');
+        assert.match(snackbar.el.style.transition, /transform 0ms(?: ease)?(?:,|$)/, 'the slide-out is not animated');
       } finally {
         snackbar.dismiss();
       }
