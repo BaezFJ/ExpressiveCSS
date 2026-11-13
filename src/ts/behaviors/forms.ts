@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, toggleIdRef } from '../core/utils';
 
 const FILE_RULES = '.drop-zone input[type="file"]:is([data-validate-types], [data-max-size], [data-max-files])';
 
@@ -71,18 +71,12 @@ export class Forms {
   /** Adds the field's `[data-error]` supporting text to its aria-describedby. */
   private static _describeByError(field: HTMLInputElement) {
     const error = field.parentElement?.querySelector(':scope > [data-error]');
-    if (error) Forms._addDescription(field, Forms._idOf(error));
+    if (error) toggleIdRef(field, 'aria-describedby', Forms._idOf(error), true);
   }
 
   private static _idOf(el: Element) {
     if (!el.id) el.id = `field-error-${Utils.guid()}`;
     return el.id;
-  }
-
-  /** Adds an id to a field's aria-describedby once, after the page's own. */
-  private static _addDescription(field: HTMLInputElement, id: string) {
-    const ids = (field.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(Boolean);
-    if (!ids.includes(id)) field.setAttribute('aria-describedby', [...ids, id].join(' '));
   }
 
   /**
@@ -218,7 +212,7 @@ export class Forms {
     Forms._markInvalid(input, !input.validity.valid);
     const error = Forms._fileError(input);
     if (!error) return;
-    Forms._addDescription(input, Forms._idOf(error));
+    toggleIdRef(input, 'aria-describedby', Forms._idOf(error), true);
     error.textContent = message;
     error.hidden = !message;
   }

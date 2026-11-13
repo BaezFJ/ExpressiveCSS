@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { Utils, restoreAttribute } from '../core/utils';
+import { Utils, restoreAttribute, isRtl } from '../core/utils';
 
 export interface TabsOptions extends BaseOptions {
   /**
@@ -189,7 +189,7 @@ export class Tabs extends Component<TabsOptions> {
    * automatic activation, since a panel here shows at once.
    */
   _handleKeydown = (e: KeyboardEvent) => {
-    const steps = STEPS[getComputedStyle(this.el).direction === 'rtl' ? 'rtl' : 'ltr'];
+    const steps = STEPS[isRtl(this.el) ? 'rtl' : 'ltr'];
     const target = Utils.focusTarget(Array.from(this._tabLinks).filter(isShown), e, steps, true) as HTMLAnchorElement | undefined;
     if (!target) return;
     e.preventDefault();
@@ -453,7 +453,7 @@ export class Tabs extends Component<TabsOptions> {
     const index = this._panels.indexOf(this._content);
     if (index < 0 || this._trackAt(index)) return;
     // scrollLeft runs negative in a right-to-left track.
-    const sign = getComputedStyle(this._track).direction === 'rtl' ? -1 : 1;
+    const sign = isRtl(this._track) ? -1 : 1;
     const left = sign * index * this._track.clientWidth;
     this._scrollTarget = index;
     this._waitForScroll();

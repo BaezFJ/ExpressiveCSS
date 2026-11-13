@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, setActiveDescendant } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 export interface CommandPaletteOptions extends BaseOptions {
@@ -218,17 +218,11 @@ export class CommandPalette extends Component<CommandPaletteOptions> {
 
   private _setActive(item: HTMLElement | null) {
     if (this._active === item && (!item || this.input.getAttribute('aria-activedescendant') === item.id)) return;
-    this._active?.classList.remove('active');
     this._active?.removeAttribute('aria-selected');
+    setActiveDescendant(this.input, this._active, item);
     this._active = item;
-    if (item) {
-      item.classList.add('active');
-      item.setAttribute('aria-selected', 'true');
-      this.input.setAttribute('aria-activedescendant', item.id);
-      item.scrollIntoView({ block: 'nearest' });
-    } else {
-      this.input.removeAttribute('aria-activedescendant');
-    }
+    item?.setAttribute('aria-selected', 'true');
+    item?.scrollIntoView({ block: 'nearest' });
   }
 
   /**

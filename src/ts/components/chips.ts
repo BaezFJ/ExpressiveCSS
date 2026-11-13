@@ -1,4 +1,4 @@
-import { Utils, restoreAttribute } from '../core/utils';
+import { Utils, restoreAttribute, isRtl } from '../core/utils';
 import { Autocomplete, AutocompleteOptions } from './autocomplete';
 import { Component, BaseOptions } from '../core/component';
 import { FormControl, formAssociated, wrapInControl, unwrapControl } from '../core/formControl';
@@ -358,7 +358,7 @@ export class Chips extends Component<ChipsOptions> {
 
   /** The arrow that points back towards the first chip, which in RTL is Right. */
   private static _backKey(el: Element) {
-    return getComputedStyle(el).direction === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+    return isRtl(el) ? 'ArrowRight' : 'ArrowLeft';
   }
 
   static _handleChipsKeydown(e: KeyboardEvent) {

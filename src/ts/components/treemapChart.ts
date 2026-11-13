@@ -1,4 +1,4 @@
-import { LineChart, LineChartOptions, ROW_COLORS, percentLabel, seriesColor } from './lineChart';
+import { LineChart, LineChartOptions, ROW_COLORS, linearKey, percentLabel, seriesColor, swapActive } from './lineChart';
 
 export type TreemapChartOptions = LineChartOptions;
 
@@ -6,9 +6,6 @@ export type TreemapChartOptions = LineChartOptions;
 type Box = [x: number, y: number, width: number, height: number];
 
 // ponytail: rows past six repeat the colors, so neighbours can match.
-/** The keys that move to the next row and to the one before, in any direction. */
-const NEXT = ['ArrowRight', 'ArrowDown'];
-const PREVIOUS = ['ArrowLeft', 'ArrowUp'];
 
 const sum = (areas: number[]) => areas.reduce((total, area) => total + area, 0);
 
@@ -117,8 +114,7 @@ export class TreemapChart extends LineChart {
     if (!this._tooltip) return;
     const row = this._drawnFrom(index);
     if (row === this.activeIndex) return;
-    this._boxes[this.activeIndex]?.classList.remove('active');
-    this._boxes[row]?.classList.add('active');
+    swapActive(this._boxes, this.activeIndex, row);
     super.show(row);
   }
 
@@ -159,11 +155,9 @@ export class TreemapChart extends LineChart {
    */
   protected _keyTarget(key: string): number | undefined {
     const drawn = this._boxes.flatMap((box, i) => (box ? [i] : []));
-    const [at, last] = [drawn.indexOf(this.activeIndex), drawn.length - 1];
-    const step = NEXT.includes(key) ? Math.min(at + 1, last)
-      : PREVIOUS.includes(key) ? Math.max(at - 1, 0)
-      : ({ Home: 0, End: last } as Record<string, number>)[key];
-    return step === undefined ? super._keyTarget(key) : drawn[step];
+    const step = linearKey(key, drawn.indexOf(this.activeIndex), drawn.length - 1);
+    // Escape answers -1, which hides the tooltip rather than naming a row.
+    return step === undefined || step < 0 ? step : drawn[step];
   }
 
   /** Neither row labels nor a legend: each rectangle carries its name. */
