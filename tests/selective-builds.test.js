@@ -549,5 +549,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed selection-control focus rings, selected list rows, a global hidden rule, section pane bodies and aria-disabled buttons: 91,011 gzip bytes (+94).
   // Reviewed backdrop blur on basic dialogs only, a parallax image without a transition, no lightbox layer hack and the loading indicator spin on its host: 91,020 gzip bytes (+9).
   // Reviewed one menu surface for menus and flyouts, one selected-row selector for lists and pane anatomy under one :is(): 90,456 gzip bytes (-564).
-  assert.ok(sizes(css).gzip <= 90456, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed nesting expanding-card, icon-button and select rules under their parents, with print hiding inside each component block; same declarations, reordered: 90,461 gzip bytes (+5).
+  assert.ok(sizes(css).gzip <= 90461, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -88,7 +88,7 @@ describe('the ExpressiveCSS agent skill', () => {
     const files = readdirSync(root, { recursive: true }).filter((file) => file.endsWith('/SKILL.md'));
     const names = new Set();
     const allowed = new Set(['name', 'description', 'license', 'compatibility', 'metadata', 'allowed-tools']);
-    assert.equal(files.length, 12);
+    assert.equal(files.length, 13);
     for (const file of files) {
       const source = readFileSync(new URL(file, root), 'utf8');
       const metadata = readSkillMetadata(source);
@@ -117,6 +117,38 @@ describe('the ExpressiveCSS agent skill', () => {
       '---\nname: sample\ndescription: ""\n---\n',
       '---\nname: sample\ndescription: Missing delimiter.\n',
     ]) assert.throws(() => readSkillMetadata(source));
+  });
+
+  test('the DESIGN.md skill links the base skill and keeps its template defaults in step with the framework', () => {
+    const root = new URL('../skills/expressivecss-design-md/', import.meta.url);
+    const read = (path) => readFileSync(new URL(path, root), 'utf8');
+    const [guide, interview, template] = ['SKILL.md', 'references/interview.md', 'references/template.md'].map(read);
+    assert.match(guide, /sibling skill at `\.\.\/expressivecss\/` \(call it `<base>`\)/);
+    for (const [, target] of guide.matchAll(/\]\((\.\/[^)#\s]+)/g)) assert.ok(existsSync(new URL(target, root)), `missing ${target}`);
+    for (const [, path] of `${guide}${interview}${template}`.matchAll(/`<base>\/([^`\s]+)`/g)) {
+      assert.ok(existsSync(new URL(path, skillDirectory)), `<base>/${path} does not exist`);
+    }
+    assert.match(skill, /`DESIGN\.md`[\s\S]*sibling `expressivecss-design-md` skill/, 'root skill does not route to DESIGN.md');
+
+    // The template's YAML records the bundled framework defaults, so it must follow the Sass sources.
+    const shape = readFileSync(new URL('../src/sass/tokens/_shape.scss', import.meta.url), 'utf8');
+    const corners = [...template.matchAll(/^ {2}(none|extra-small|small|medium|large|extra-large|full): (\S+)$/gm)];
+    assert.equal(corners.length, 7);
+    for (const [, step, value] of corners) assert.match(shape, new RegExp(`--md-sys-shape-corner-${step}: ${value};`));
+    const steps = Object.fromEntries([...spacingSass.match(/\$spacing-values: \(([^)]+)\)/)[1].matchAll(/"(\w+)": ([\w.]+)/g)].map(([, name, value]) => [name, value]));
+    const spacing = { xs: steps['1'], sm: steps['2'], md: steps['4'], lg: steps['5'], xl: steps['6'] };
+    for (const [name, value] of Object.entries(spacing)) assert.match(template, new RegExp(`^ {2}${name}: ${value}$`, 'm'));
+    const panes = readFileSync(new URL('../src/sass/components/_panes.scss', import.meta.url), 'utf8');
+    for (const [name, pattern] of [['margin-compact', /--md-comp-pane-margin: (\d+px)/], ['gutter', /--md-comp-pane-gap: (\d+px)/]]) {
+      assert.match(template, new RegExp(`^ {2}${name}: ${panes.match(pattern)[1]}$`, 'm'));
+    }
+    assert.ok(panes.includes('--md-comp-pane-margin: 24px;') && /^ {2}margin-medium: 24px$/m.test(template));
+    const typeTable = readFileSync(foundationReferenceUrls.typography, 'utf8');
+    const roles = [...template.matchAll(/^ {2}([a-z]+-[a-z]+):\n {4}fontFamily: Roboto\n {4}fontSize: (\S+)\n {4}fontWeight: (\d+)\n {4}lineHeight: (\S+)\n {4}letterSpacing: (\S+)$/gm)];
+    assert.ok(roles.length >= 4, 'template lost its typography roles');
+    for (const [, role, size, weight, height, tracking] of roles) {
+      assert.ok(typeTable.includes(`| \`.${role}\` | \`${size}\` | \`${height}\` | \`${weight}\` | \`${tracking}\` |`), `${role} differs from the type scale`);
+    }
   });
 
   test('the review skill preserves requested fixes and uses portable delegation and references', () => {
@@ -1178,8 +1210,9 @@ describe('the ExpressiveCSS agent skill', () => {
     // row at 48,033 bytes (+397); the treemap
     // chart row at 48,433 bytes (+400); the back-to-top row at 48,748 bytes
     // (+315); the show more row at 49,168 bytes (+420); the cascader row at
-    // 49,482 bytes (+314); the tree select row at 49,778 bytes (+296).
-    assert.ok(bytes <= 49778, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
+    // 49,482 bytes (+314); the tree select row at 49,778 bytes (+296); the
+    // DESIGN.md product-decision source at 50,075 bytes (+297).
+    assert.ok(bytes <= 50075, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
     assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
   });
 

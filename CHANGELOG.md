@@ -5,12 +5,24 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- The `expressivecss-design-md` skill interviews the user and writes a
+  `DESIGN.md` in the google-labs-code DESIGN.md format. The file records the
+  brand seed, typefaces, root attributes and component choices as ExpressiveCSS
+  tokens and markup, and commits to WCAG 2.2 AA. The ExpressiveCSS skill reads a
+  project's `DESIGN.md` before design, theming and layout work.
+
 ### Changed
 
 - The compiled sheet is about 15 KB smaller minified and 564 bytes smaller
   gzipped. Menu flyouts share the menu's surface rules, list rows write their
   selected states once, and pane anatomy hangs off one selector. Every
   selector keeps its specificity.
+
+- Expanding card, icon button and select styles are nested under their parent
+  selectors, and six components hide for print from inside their own block.
+  The compiled sheet has the same declarations in a slightly different order.
 
 ### Fixed
 

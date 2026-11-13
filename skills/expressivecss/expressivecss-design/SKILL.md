@@ -18,7 +18,7 @@ Read each reference only when its condition applies.
 | Reference | Read when |
 | --- | --- |
 | [design rules](../references/design-rules.md) | Always, before opening a component guide: hard rules, window sizes, component chooser, and screen recipes. |
-| [product context](./references/product-context.md) | The work spans pages, continues an established product, or changes a recorded design decision. |
+| [product context](./references/product-context.md) | The work spans pages, continues an established product, the project has a `DESIGN.md`, or the work changes a recorded design decision. |
 | [style directions](./references/style-directions.md) | The user names or describes a visual style (bold, minimalist, brutalist, organic), or a new surface or redesign has no established look. |
 | [layout guide](../expressivecss-layout/SKILL.md) | A new page or app shell, or any layout that changes across widths: panes, navigation swaps, grids, spacing, or right-to-left layout. |
 | [scaffold](./references/scaffold.md) | A complete page, app shell, or adaptive pane layout. |
@@ -33,7 +33,7 @@ Read each reference only when its condition applies.
 
 ## 1. Establish the brief
 
-Inspect the existing product, nearby surfaces, manifest, installed ExpressiveCSS version, tokens, shared components, real content, and available assets before proposing a direction. Treat an established interface as evidence even when it has no formal design document. When product context applies, load only the decisions relevant to this task and keep accepted decisions apart from observations and proposals.
+Inspect the existing product, its `DESIGN.md` when present, nearby surfaces, manifest, installed ExpressiveCSS version, tokens, shared components, real content, and available assets before proposing a direction. Treat an established interface as evidence even when it has no formal design document. When product context applies, load only the decisions relevant to this task and keep accepted decisions apart from observations and proposals.
 
 Classify the task before acting. Choose one operating mode, or run Critique followed by Audit for a combined review:
 
