@@ -92,8 +92,6 @@ export class TreemapChart extends LineChart {
   private _boxes: (HTMLElement | null)[];
   /** Each drawn row's place as fractions of the plot. */
   private _places: Box[];
-  /** Lays the rectangles out again when the plot changes shape. */
-  private _sizes: ResizeObserver;
 
   protected get _type() {
     return 'treemap-chart';
@@ -168,11 +166,6 @@ export class TreemapChart extends LineChart {
     return step === undefined ? super._keyTarget(key) : drawn[step];
   }
 
-  destroy() {
-    this._sizes?.disconnect();
-    super.destroy();
-  }
-
   /** Neither row labels nor a legend: each rectangle carries its name. */
   protected _guides(): Element[] {
     return [];
@@ -199,17 +192,13 @@ export class TreemapChart extends LineChart {
     // The squares depend on the plot's shape, so it goes in the page to be measured.
     this.el.append(this._plot);
     this._layout();
-    this._sizes?.disconnect();
-    this._sizes = new ResizeObserver(() => this._layout());
-    this._sizes.observe(this._plot);
+    // Lays the rectangles out again when the plot changes shape.
+    this._observeSize(this._plot, () => this._layout());
     return container;
   }
 
   /** Squarifies the positive rows, largest first, equal values in table order, and places their rectangles. */
   private _layout() {
-    // update() with no rows drops the plot without drawing a new one, but
-    // the old plot's observer still fires as that plot leaves the page.
-    if (!this._plot) return this._sizes.disconnect();
     // A hidden plot has no size; lay it out as a square until it shows.
     const [width, height] = [this._plot.clientWidth || 1, this._plot.clientHeight || 1];
     const rows = this._values.map((_, i) => i).filter((i) => this._values[i]).sort((a, b) => this._values[b] - this._values[a]);

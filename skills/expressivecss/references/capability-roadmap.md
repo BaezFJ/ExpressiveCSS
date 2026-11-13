@@ -40,7 +40,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Message](#message) | implemented | source-reviewed | needs-rerun | 0 |
 | [Message scroller](#message-scroller) | implemented | source-reviewed | needs-rerun | 0 |
 | [Pull-to-refresh](#pull-to-refresh) | implemented | source-reviewed | incomplete | 0 |
-| [Swipe actions](#swipe-actions) | implemented | source-reviewed | incomplete | 0 |
+| [Swipe actions](#swipe-actions) | unassessed | needs-review | incomplete | 0 |
 | [Accordion](#accordion) | implemented | source-reviewed | needs-rerun | 0 |
 | [Show more](#show-more) | unassessed | needs-review | incomplete | 0 |
 | [Data table](#data-table) | unassessed | needs-review | needs-rerun | 0 |
@@ -576,9 +576,9 @@ Web adaptation: Touch events with a non-passive touchmove, because a pointer dra
 
 ## Swipe actions
 
-**implemented within the stated scope.** A touch swipe toward a row's inline start that reveals its .swipe-actions group, opening past half the group's width or on a flick and closing short of it, a [data-swipe-toggle] button with aria-expanded, focus on an action opening its row, Escape, an outside tap or an action closing it, one open row per list, an expressive:swipetoggle event and onToggle callback with { row, open }, open(row) and close(), right-to-left pages and reduced motion.
+**unassessed within the stated scope.** A touch swipe toward a row's inline start that reveals its .swipe-actions group, opening past half the group's width or on a flick and closing short of it, a [data-swipe-toggle] button with aria-expanded, focus on an action opening its row, Escape, an outside tap or an action closing it, one open row per list, an expressive:swipetoggle event and onToggle callback with { row, open }, open(row) and close(), right-to-left pages and reduced motion.
 
-Source review: source-reviewed, 2026-10-24. [src/sass/components/_swipe-actions.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_swipe-actions.scss), [src/ts/components/swipeActions.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/swipeActions.ts).
+Source review: needs-review, 2026-10-24. [src/sass/components/_swipe-actions.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_swipe-actions.scss), [src/ts/components/swipeActions.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/ts/components/swipeActions.ts).
 
 Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-24); [reviewed source](https://m3.material.io/components).
 

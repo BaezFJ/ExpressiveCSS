@@ -236,6 +236,33 @@ describe('destroy() releases shared listeners', () => {
     }
   });
 
+  test('a chart update that leaves no rows releases its resize observers', () => {
+    const original = globalThis.ResizeObserver;
+    const observers = [];
+    globalThis.ResizeObserver = class {
+      constructor() { observers.push(this); }
+      observe() {}
+      disconnect() { this.disconnected = true; }
+    };
+    try {
+      for (const [type, name] of [['line', 'LineChart'], ['heatmap', 'HeatmapChart'], ['treemap', 'TreemapChart']]) {
+        observers.length = 0;
+        document.body.innerHTML = `<figure class="${type}-chart"><table><thead><tr><th>Day</th><th>A</th><th>B</th></tr></thead><tbody><tr><th>Mon</th><td>1</td><td>2</td></tr><tr><th>Tue</th><td>3</td><td>4</td></tr></tbody></table></figure>`;
+        const instance = Expressive[name].init(document.querySelector('figure'));
+        try {
+          assert.ok(observers.length > 0, `${name} observed nothing`);
+          document.querySelector('tbody').replaceChildren();
+          instance.update();
+          assert.deepEqual(observers.map((o) => !!o.disconnected), observers.map(() => true), `${name} kept watching the old plot`);
+        } finally {
+          instance.destroy();
+        }
+      }
+    } finally {
+      globalThis.ResizeObserver = original;
+    }
+  });
+
   test('Carousel detaches the shared resize listener', () => {
     document.body.innerHTML = `
       <div class="carousel">

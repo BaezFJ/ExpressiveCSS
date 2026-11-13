@@ -400,8 +400,8 @@ export class LineChart extends Component<LineChartOptions> {
   /** The highlighted row, or -1. */
   activeIndex = -1;
   private _generated: Element[] = [];
-  /** Watches the row labels' width, to thin them on a narrow chart. */
-  private _labelSizes: ResizeObserver | null = null;
+  /** Resize observers on the drawn nodes, released with them. */
+  private _resizeObservers: ResizeObserver[] = [];
   /** With `watch`, redraws the chart when its table changes. */
   private _tableWatch: MutationObserver | null = null;
   /** Every series in the table, shown or not, as the legend lists them. */
@@ -545,7 +545,7 @@ export class LineChart extends Component<LineChartOptions> {
     // The listeners live on the plot, which goes with the generated nodes.
     this._generated.forEach((node) => node.remove());
     this._generated = [];
-    this._labelSizes?.disconnect();
+    this._unobserveSizes();
     this._tableWatch?.disconnect();
     super.destroy();
   }
@@ -565,6 +565,8 @@ export class LineChart extends Component<LineChartOptions> {
     this._generated = [];
     this.activeIndex = -1;
     this._plot = this._cursor = this._tooltip = undefined;
+    // Before the redraw, which can leave no plot to replace the old one.
+    this._unobserveSizes();
     this._before = startsFrom(this.series);
     this._build();
     this._before = [];
@@ -827,10 +829,20 @@ export class LineChart extends Component<LineChartOptions> {
    * chart's labels run down instead, and no labels leaves nothing to watch.
    */
   protected _observeLabels(container: HTMLElement, items: Element[]) {
-    this._labelSizes?.disconnect();
     if (this._horizontal || !items.length) return;
-    this._labelSizes = new ResizeObserver(() => thinLabels(container, items));
-    this._labelSizes.observe(container);
+    this._observeSize(container, () => thinLabels(container, items));
+  }
+
+  /** Calls back when a drawn node changes size, until the next redraw or destroy(). */
+  protected _observeSize(target: Element, callback: () => void) {
+    const observer = new ResizeObserver(callback);
+    observer.observe(target);
+    this._resizeObservers.push(observer);
+  }
+
+  private _unobserveSizes() {
+    this._resizeObservers.forEach((observer) => observer.disconnect());
+    this._resizeObservers = [];
   }
 
   /**

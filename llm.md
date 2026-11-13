@@ -7840,7 +7840,8 @@ A floating bar can sit beside a companion FAB. Wrap both in `.toolbar-group`; th
 
 `Forms.Init()` installs document behaviors and scans existing textareas and file-path inputs once.
 For markup added later, call `Forms.InitTextarea(textarea)` or `Forms.InitFileInputPath(fileInput)`
-once per new control. After assigning textarea text from script, call
+for each new control. A second call on the same control adds no listeners; `InitTextarea` only
+measures the textarea again. After assigning textarea text from script, call
 `Forms.textareaAutoResize(textarea)`. `Forms.validateField(input)` refreshes validation state
 and error descriptions; for drop-zone file inputs it also refreshes file validation and feedback.
 `Forms.listDropZoneFiles(zone, input)` rebuilds the zone's filename and localized-size list.
@@ -10207,7 +10208,7 @@ A `.transfer-list` holds a `.list.transfer-available`, a `.transfer-actions` gro
 
 When the form builds its data, each row of the chosen list adds its checkbox value under the container's `data-name`, in the chosen list's order. A form reset puts every row back where it was before the first move. A list inside a `<fieldset disabled>` submits nothing, as the fieldset's own fields do, but a chosen row whose own checkbox is disabled still submits.
 
-After each move the container fires a bubbling `expressive:transfer` event whose `detail` is `{ rows, from, to }`: the moved rows in their new order, then the two lists. A polite live region after the container announces the move. `Expressive.TransferList.i18n.moved` holds its text, `Moved {count} to {list}` by default, where `{list}` is the destination list's name.
+After each move the container fires a bubbling `expressive:transfer` event that crosses shadow roots, whose `detail` is `{ rows, from, to }`: the moved rows in their new order, then the two lists. A polite live region after the container announces the move. `Expressive.TransferList.i18n.moved` holds its text, `Moved {count} to {list}` by default, where `{list}` is the destination list's name.
 
 ```html
 <form>

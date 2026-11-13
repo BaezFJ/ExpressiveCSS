@@ -613,8 +613,7 @@ export class Chips extends Component<ChipsOptions> {
    * @param chipIndex  Index of chip
    */
   deleteChip(chipIndex: number) {
-    const root = this.el.getRootNode() as Document | ShadowRoot;
-    this._deleteChip(chipIndex, this._chips[chipIndex]?.contains(root.activeElement) ? 'input' : null);
+    this._deleteChip(chipIndex, Utils.focusIsIn(this._chips[chipIndex]) ? 'input' : null);
   }
 
   private _deleteChip(chipIndex: number, focus: 'input' | 'previous' | null) {

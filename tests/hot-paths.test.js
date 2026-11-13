@@ -462,6 +462,30 @@ describe('textarea auto-resize', () => {
     );
   });
 
+  test('initializing a textarea or file input again adds no second listener', () => {
+    document.body.innerHTML = `<textarea class="expressive-textarea"></textarea>
+      <div class="file-field"><input type="file"><input class="file-path" type="text"></div>`;
+    const textarea = document.querySelector('textarea');
+    const [fileInput, pathInput] = document.querySelectorAll('.file-field input');
+    const resize = Expressive.Forms.textareaAutoResize;
+    let resizes = 0;
+    let pathChanges = 0;
+    pathInput.addEventListener('change', () => pathChanges++);
+    Expressive.Forms.InitTextarea(textarea);
+    Expressive.Forms.InitTextarea(textarea);
+    Expressive.Forms.InitFileInputPath(fileInput);
+    Expressive.Forms.InitFileInputPath(fileInput);
+    Expressive.Forms.textareaAutoResize = (el) => { resizes++; resize(el); };
+    try {
+      textarea.dispatchEvent(new window.Event('input', { bubbles: true }));
+      fileInput.dispatchEvent(new window.Event('change', { bubbles: true }));
+    } finally {
+      Expressive.Forms.textareaAutoResize = resize;
+    }
+    assert.equal(resizes, 1, 'one keystroke resized the textarea more than once');
+    assert.equal(pathChanges, 1, 'one file pick wrote the path more than once');
+  });
+
   test('a textarea hidden at init is measured when shown, not pinned at 0px', () => {
     document.body.innerHTML = `<textarea class="expressive-textarea"></textarea>`;
     const textarea = document.querySelector('textarea');

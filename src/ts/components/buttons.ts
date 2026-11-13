@@ -1,4 +1,4 @@
-import { restoreAttribute } from '../core/utils';
+import { Utils, restoreAttribute } from '../core/utils';
 import { Component, BaseOptions } from "../core/component";
 
 export type FloatingActionButtonOptions = BaseOptions;
@@ -61,8 +61,7 @@ export class FloatingActionButton extends Component<FloatingActionButtonOptions>
 
   close = (): void => {
     if (!this.isOpen) return;
-    const focused = (this.el.getRootNode() as Document | ShadowRoot).activeElement;
-    if (focused && this._list?.contains(focused)) this._anchor?.focus();
+    if (Utils.focusIsIn(this._list)) this._anchor?.focus();
     if (this._list) this._list.inert = true;
     this.isOpen = false;
     this.el.classList.remove('active');

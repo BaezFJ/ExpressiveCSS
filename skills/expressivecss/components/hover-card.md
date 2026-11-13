@@ -9,7 +9,7 @@ Component ID: `hover-card`
 
 Contract: ExpressiveCSS 0.17.0
 
-Contract SHA-256: `2151a0859de257a0e7c6a08eca545b7f3e12659320865f5ad235ba515fa86bef`
+Contract SHA-256: `018516832c11e7970e4d948595a6ba1cc2815f8381ebac1fafab37a660e9ef3e`
 
 #### Selection and adaptation
 

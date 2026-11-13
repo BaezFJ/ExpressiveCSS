@@ -201,7 +201,6 @@ $_floated: '&:focus + label, &:not([placeholder=" "]) + label, &:not(:placeholde
     margin-top: 4px;
     padding: 0 16px;
     color: var(--md-sys-color-on-surface-variant);
-    @include typescale("body-small");
   }
 
   // Shared icon box. Position is set on the leading / trailing rules. The
@@ -658,6 +657,7 @@ input[type="color"] {
 // field's icons, so a page that sets only CSS `direction` keeps it on the right.
 .character-counter {
   float: right;
+  @include typescale("body-small");
 
   &:dir(rtl) {
     float: left;

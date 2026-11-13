@@ -262,7 +262,7 @@ export class SwipeActions extends Component<SwipeActionsOptions> {
   private _closeFrom(row: HTMLElement | null) {
     if (!row || row !== this._open) return;
     // A row an action removed holds no focus, so it is left alone.
-    const focused = row.querySelector(':scope > .swipe-actions')!.contains(row.ownerDocument.activeElement);
+    const focused = Utils.focusIsIn(row.querySelector(':scope > .swipe-actions'));
     this.close();
     if (focused) this._focusToggle(row);
   }

@@ -125,6 +125,8 @@ export class Forms {
   }
 
   private static _initialized = false;
+  /** Textareas and file inputs already given their listeners, so a second Init adds none. */
+  private static _wired = new WeakSet<Element>();
   private static _fileErrors = new WeakMap<HTMLInputElement, string>();
   private static _fileSelections = new WeakMap<HTMLInputElement, { files: File[]; constraints: string }>();
 
@@ -520,6 +522,8 @@ export class Forms {
     // Measured afresh by textareaAutoResize, which skips a hidden textarea.
     textarea.removeAttribute('original-height');
     Forms.textareaAutoResize(textarea);
+    if (Forms._wired.has(textarea)) return;
+    Forms._wired.add(textarea);
     // `input` rather than keydown + keyup: it fires once per actual value
     // change and also covers paste, drag-drop and IME composition, which the
     // key events missed.
@@ -531,6 +535,8 @@ export class Forms {
   }
 
   static InitFileInputPath(fileInput: HTMLInputElement) {
+    if (Forms._wired.has(fileInput)) return;
+    Forms._wired.add(fileInput);
     fileInput.addEventListener('change', () => {
       const fileField = fileInput.closest('.file-field');
       const pathInput = fileField?.querySelector<HTMLInputElement>('input.file-path');

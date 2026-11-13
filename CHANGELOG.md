@@ -26,6 +26,20 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
+- SwipeActions moves focus to the row's toggle when an action inside a shadow
+  root closes the row. InputMask keeps the caret where the user typed in a
+  shadow root instead of moving it to the end.
+
+- Calling `Forms.InitTextarea()` or `Forms.InitFileInputPath()` again on the
+  same control no longer adds a second set of listeners.
+
+- A chart `update()` that leaves no rows disconnects the old plot's resize
+  observers.
+
+- `expressive:transfer` crosses shadow roots like the other `expressive:*`
+  events. CharacterCounter sets no inline styles; its body-small type comes
+  from the stylesheet inside or outside a `.field`.
+
 - Datepicker validates year ranges and clips the year list before rendering.
   AutoInit rejects nonfinite numeric options from markup.
 
