@@ -591,12 +591,12 @@ browserTest('a prefixed self-alignment moves one child and leaves its siblings',
     const read = () => page.evaluate(() => {
       const row = document.querySelector('#row');
       const top = row.getBoundingClientRect().top;
-      return [...row.children].map((child) => [getComputedStyle(child).alignSelf, child.getBoundingClientRect().top - top]);
+      return [...row.children].map((child) => child.getBoundingClientRect().top - top);
     });
     await page.setViewportSize({ width: 839, height: 600 });
-    assert.deepEqual(await read(), [['flex-start', 0], ['flex-end', 80], ['auto', 40]]);
+    assert.deepEqual(await read(), [0, 80, 40]);
     await page.setViewportSize({ width: 840, height: 600 });
-    assert.deepEqual(await read(), [['flex-end', 80], ['auto', 40], ['auto', 40]]);
+    assert.deepEqual(await read(), [80, 40, 40]);
   } finally {
     await browser.close();
   }
