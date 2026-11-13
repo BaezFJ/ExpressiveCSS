@@ -511,6 +511,8 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 
 // The hover, checked hover and focus rings of a selection control, from the
 // $inner edge out to $outer. $checked lists the states whose ring is primary.
+// The focus tint is about 1.2:1 against the surface, so focus also takes the
+// shared outline (WCAG 1.4.11), as the slider handle does.
 @mixin selection-control-states($outer, $inner, $checked: ":checked") {
   $checked-hover: ();
   @each $state in $checked {
@@ -527,7 +529,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 
   &:focus-visible {
     @include state-layer-ring($outer, $inner, var(--md-sys-color-primary), "focus");
-    outline: none;
+    @include focus-ring;
   }
 }
 

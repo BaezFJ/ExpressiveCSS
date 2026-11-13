@@ -118,7 +118,7 @@ Tooltip.init(element, { position: 'top' });
           </li>
           <li>
             Markup can set an option whose default is a string, number, boolean, array or plain
-            object, with a value of the same kind. <code>AutoInit()</code> checks keys inside an object
+            object, with a value of the same kind. Numeric options must be finite. <code>AutoInit()</code> checks keys inside an object
             such as <code>i18n</code> the same way. If it rejects one, the whole object keeps its default. An
             object whose default is empty, such as FormSelect's <code>menuOptions</code>, accepts no
             keys from markup. When the default is a non-empty array, the items need the kind

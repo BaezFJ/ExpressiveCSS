@@ -3,7 +3,6 @@
   cursor: zoom-in;
   position: relative;
   transition: opacity var(--md-sys-motion-duration-medium4);
-  backface-visibility: hidden;
   // Same 12px as .responsive-img. Exclude .circle so a disc stays a disc.
   &:not(.circle) {
     border-radius: var(--md-sys-shape-corner-medium);

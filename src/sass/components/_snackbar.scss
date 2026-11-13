@@ -67,6 +67,9 @@ $_bar: ".snackbar";
     inset-block-start: var(--md-comp-snackbar-container-margin-top);
     inset-block-end: auto;
   }
+
+  // Transient messages are not part of the page.
+  @include print-hidden;
 }
 
 #{$_bar} {
@@ -265,6 +268,3 @@ $_bar: ".snackbar";
     }
   }
 }
-
-// Transient messages are not part of the page.
-#snackbar-container { @include print-hidden; }

@@ -273,6 +273,9 @@
       @include _modal-rail;
     }
   }
+
+  // Navigation does nothing on paper.
+  @include print-hidden;
 }
 
 // A destination whose panel is open keeps its hover state layer.
@@ -380,6 +383,3 @@
     transition: none;
   }
 }
-
-// Navigation does nothing on paper.
-.navigation-rail { @include print-hidden; }

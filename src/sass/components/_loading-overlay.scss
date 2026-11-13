@@ -55,6 +55,7 @@
     z-index: 6;
     margin: auto;
 
+    &,
     &::before {
       animation-play-state: paused;
     }
@@ -74,6 +75,7 @@
     transition-delay: 0s;
   }
 
+  &[aria-busy="true"] > .loading-indicator,
   &[aria-busy="true"] > .loading-indicator::before {
     animation-play-state: running;
   }

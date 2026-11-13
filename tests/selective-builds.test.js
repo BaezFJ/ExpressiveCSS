@@ -546,5 +546,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed forced-colors edges on tooltips, snackbars, menus, dialogs and sheets, one-time code cells in forced colors, file field and tree row focus rings, 24px carousel dot targets, RTL switches and AM/PM seams, the modal rail surface over its scrim, hidden map controls and reduced-motion chevrons: 90,881 gzip bytes (+188).
   // Reviewed filled-button colors and nested medium contrast preserving vibrant foregrounds: 90,915 gzip bytes (+34).
   // Reviewed semantic-button cut corners preserving host-owned shapes: 90,917 gzip bytes (+2).
-  assert.ok(sizes(css).gzip <= 90917, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed selection-control focus rings, selected list rows, a global hidden rule, section pane bodies and aria-disabled buttons: 91,011 gzip bytes (+94).
+  // Reviewed backdrop blur on basic dialogs only, a parallax image without a transition, no lightbox layer hack and the loading indicator spin on its host: 91,020 gzip bytes (+9).
+  // Reviewed one menu surface for menus and flyouts, one selected-row selector for lists and pane anatomy under one :is(): 90,456 gzip bytes (-564).
+  // Reviewed nesting expanding-card, icon-button and select rules under their parents, with print hiding inside each component block; same declarations, reordered: 90,461 gzip bytes (+5).
+  assert.ok(sizes(css).gzip <= 90461, `CSS gzip: ${sizes(css).gzip}`);
 });

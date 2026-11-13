@@ -308,7 +308,7 @@ Or give the element its options in markup. `AutoInit()` reads a `data-<name>-opt
 ```
 
 - Options passed to `AutoInit(context, options)` win for the keys they set; a nested object such as `i18n` counts as one key. Tooltip reads its own `data-tooltip`, `data-tooltip-id` and `data-position` again each time it opens, so those win over both. Set those, and Menu's `contextMenu` (`data-context-menu`), in one place.
-- Markup can set only options whose default is a string, number, boolean, array or plain object, with a value of the same kind. Nested keys are checked against the default object, and one rejected nested key leaves the whole object at its default. An object whose default is empty, such as FormSelect's `menuOptions`, accepts no keys from markup. Items of a non-empty default array need the kind of its first item. Callbacks, elements, options with a `null` default, Autocomplete's `allowUnsafeHTML` and the `data` lists of Chips and Autocomplete stay script-only.
+- Markup can set only options whose default is a string, number, boolean, array or plain object, with a value of the same kind. Numeric options must be finite. Nested keys are checked against the default object, and one rejected nested key leaves the whole object at its default. An object whose default is empty, such as FormSelect's `menuOptions`, accepts no keys from markup. Items of a non-empty default array need the kind of its first item. Callbacks, elements, options with a `null` default, Autocomplete's `allowUnsafeHTML` and the `data` lists of Chips and Autocomplete stay script-only.
 - Invalid JSON, unknown keys and wrong kinds are skipped with a console warning, and those options keep their defaults. A value that passes the checks but still makes a component throw stops `AutoInit()`, as it would from script.
 - Direct `init()` calls do not read the attribute. Menus inside a `.menubar` take Menubar's `menuOptions` instead.
 
@@ -2463,12 +2463,12 @@ A button is round; `square` gives it its size's squared corner, 12dp up to small
 
 ### Disabled
 
-The `disabled` attribute, or the `disabled` class on a link. Applies to every variant.
+The `disabled` attribute on a `<button>`. A link cannot be disabled, so a link button drops its `href` and takes `aria-disabled="true"`, which paints the same and tells a screen reader. The `disabled` class paints the same but announces nothing. Applies to every variant.
 
 ```html
 <button disabled>Filled</button>
 <button class="tonal" disabled>Tonal</button>
-<a class="button disabled">Link</a>
+<a class="button" aria-disabled="true">Link</a>
 ```
 
 ---
@@ -4965,7 +4965,7 @@ The default is coplanar: full-bleed surfaces with a 1px `outline-variant` divide
 
 ### Pane anatomy
 
-A pane is a column. A direct `header` (or `pane-header`) is a 64px title bar — its heading takes Title Large and truncates, and an icon-only `button` in it becomes a 48px round icon button. A direct `main`, `div`, `pane-content`, `pane-body`, or `list` is the scrolling body. A direct `footer`, `pane-footer`, or trailing `nav` is a 56px action bar with a top divider.
+A pane is a column. A direct `header` (or `pane-header`) is a 64px title bar — its heading takes Title Large and truncates, and an icon-only `button` in it becomes a 48px round icon button. A direct `section`, `div`, `pane-content`, `pane-body`, or `list` is the scrolling body. A direct `footer`, `pane-footer`, or trailing `nav` is a 56px action bar with a top divider.
 
 ```html
 <div class="pane">
@@ -8009,7 +8009,7 @@ Expressive.Datepicker.init(elem, {
 | `firstDay` | Number | `0`, or the language's | First day of the week. `0` is Sunday, `1` is Monday. With a `lang` on or around the input, defaults to that language's first day where the browser knows it. |
 | `minDate` | Date | `null` | Earliest selectable date. The calendar does not page or list years before its month. |
 | `maxDate` | Date | `null` | Latest selectable date. The calendar does not page or list years after its month. |
-| `yearRange` | Number or Array | `10` | Years on either side of the viewed year, or `[minYear, maxYear]`. |
+| `yearRange` | Number or Array | `10` | Nonnegative safe-integer years on either side of the viewed year, or `[minYear, maxYear]` with two safe integers. Invalid ranges use `10`; the year list is clipped to the date bounds. |
 | `minYear`, `maxYear`, `minMonth`, `maxMonth` | Number or undefined | `0`, `9999`, `undefined`, `undefined` | Internal calculation fields. Do not configure them directly; use `minDate`, `maxDate` and `yearRange`. |
 | `yearRangeReverse` | Boolean | `false` | Sort the year list in reverse order. |
 | `isRTL` | Boolean | `false` | Render the calendar right-to-left. |

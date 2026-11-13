@@ -127,128 +127,130 @@ select.browser-default {
       border: 0;
     }
   }
+
+  // Filled selects always have a floated label. Put that label in a real row
+  // so translated wrapping and enlarged text reserve space above the value.
+  &:has(> label):not(.outlined) {
+    display: grid;
+
+    > label {
+      grid-row: 1;
+      background-color: var(--md-comp-filled-text-field-container-color);
+      border-start-start-radius: inherit;
+      border-start-end-radius: inherit;
+      position: static;
+      transform: none;
+      margin: 0;
+      padding: 8px 16px 0;
+      padding-inline-end: calc(28px + #{rem(24px)});
+      overflow-wrap: anywhere;
+      pointer-events: auto;
+      @include typescale("body-small");
+      line-height: normal;
+    }
+
+    &:has(> .prefix) > label {
+      padding-inline-start: calc(28px + #{rem(24px)});
+    }
+
+    &.disabled > label {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 4%, transparent);
+    }
+
+    > input.menu-trigger {
+      grid-row: 2;
+      height: auto;
+      min-height: calc(var(--md-sys-typescale-body-large-line-height) + 8px);
+      padding-block: 0 7px;
+      // Narrower than its value at large text sizes; the menu shows it whole.
+      text-overflow: ellipsis;
+      border-start-start-radius: 0;
+      border-start-end-radius: 0;
+    }
+  }
+
+  &.disabled {
+    .caret {
+      background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+    }
+
+    + label,
+    > label {
+      color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
+    }
+  }
+
+  > input.menu-trigger:disabled {
+    cursor: default;
+    user-select: none;
+  }
 }
 
-// Filled selects always have a floated label. Put that label in a real row
-// so translated wrapping and enlarged text reserve space above the value.
-.field:has(> .hide-select):has(> label):not(.outlined) {
-  display: grid;
-
-  > label {
-    grid-row: 1;
-    background-color: var(--md-comp-filled-text-field-container-color);
-    border-start-start-radius: inherit;
-    border-start-end-radius: inherit;
-    position: static;
-    transform: none;
-    margin: 0;
-    padding: 8px 16px 0;
-    padding-inline-end: calc(28px + #{rem(24px)});
-    overflow-wrap: anywhere;
-    pointer-events: auto;
-    @include typescale("body-small");
-    line-height: normal;
-  }
-
-  &:has(> .prefix) > label {
-    padding-inline-start: calc(28px + #{rem(24px)});
-  }
-
-  &.disabled > label {
-    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 4%, transparent);
-  }
-
-  > input.menu-trigger {
-    grid-row: 2;
-    height: auto;
-    min-height: calc(var(--md-sys-typescale-body-large-line-height) + 8px);
-    padding-block: 0 7px;
-    // Narrower than its value at large text sizes; the menu shows it whole.
-    text-overflow: ellipsis;
-    border-start-start-radius: 0;
-    border-start-end-radius: 0;
-  }
-}
-
-.field:has(> .hide-select).disabled {
-  .caret {
-    background-color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
-  }
-
-  + label,
-  > label {
+menu[role="listbox"] {
+  > li.disabled,
+  > li.disabled > span,
+  > li.optgroup {
     color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
   }
-}
 
-.field:has(> .hide-select) > input.menu-trigger:disabled {
-  cursor: default;
-  user-select: none;
-}
-
-menu[role="listbox"] > li.disabled,
-menu[role="listbox"] > li.disabled > span,
-menu[role="listbox"] > li.optgroup {
-  color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
-}
-
-menu[role="listbox"] > li:not(.optgroup, .divider) {
-  display: flex;
-  align-items: center;
-}
-
-menu[role="listbox"] > li.selected:not(.disabled, .optgroup) {
-  background-color: var(--md-comp-menu-item-selected-container-color, var(--md-sys-color-tertiary-container));
-  color: var(--md-comp-menu-item-selected-label-text-color, var(--md-sys-color-on-tertiary-container));
-  border-radius: var(--md-comp-menu-item-selected-container-shape, var(--md-sys-shape-corner-medium));
-}
-
-// Single-select: trailing check. Multi-select already has a leading checkbox.
-menu[role="listbox"]:not(.multiple-select-menu) > li.selected:not(.disabled, .optgroup)::after {
-  content: "";
-  flex: 0 0 20px;
-  width: rem(20px);
-  height: rem(20px);
-  margin-inline-start: auto;
-  margin-inline-end: 8px;
-  background-color: var(--md-comp-menu-item-selected-leading-icon-color, var(--md-sys-color-on-tertiary-container));
-  mask: $_select-check center / 100% no-repeat;
-  @include forced-colors-fill;
-}
-
-menu[role="listbox"] li img {
-  box-sizing: border-box;
-  flex: 0 0 var(--md-comp-menu-item-leading-image-size);
-  width: var(--md-comp-menu-item-leading-image-size);
-  height: var(--md-comp-menu-item-leading-image-size);
-  margin: 4px 12px;
-  object-fit: cover;
-  border-radius: var(--md-sys-shape-corner-extra-small);
-  order: 1;
-  margin-inline-start: auto;
-
-  &.left {
-    order: 0;
-    margin-inline-start: 12px;
-    margin-inline-end: 0;
-  }
-}
-
-menu[role="listbox"] li.optgroup {
-  cursor: default;
-  pointer-events: none;
-
-  &:not(:first-child) {
-    border-top: 1px solid var(--md-sys-color-outline-variant);
+  > li:not(.optgroup, .divider) {
+    display: flex;
+    align-items: center;
   }
 
-  > span {
-    color: var(--md-sys-color-on-surface-variant);
+  > li.selected:not(.disabled, .optgroup) {
+    background-color: var(--md-comp-menu-item-selected-container-color, var(--md-sys-color-tertiary-container));
+    color: var(--md-comp-menu-item-selected-label-text-color, var(--md-sys-color-on-tertiary-container));
+    border-radius: var(--md-comp-menu-item-selected-container-shape, var(--md-sys-shape-corner-medium));
   }
-}
 
-menu[role="listbox"] li.optgroup-option {
-  padding-inline-start: 1rem;
+  // Single-select: trailing check. Multi-select already has a leading checkbox.
+  &:not(.multiple-select-menu) > li.selected:not(.disabled, .optgroup)::after {
+    content: "";
+    flex: 0 0 20px;
+    width: rem(20px);
+    height: rem(20px);
+    margin-inline-start: auto;
+    margin-inline-end: 8px;
+    background-color: var(--md-comp-menu-item-selected-leading-icon-color, var(--md-sys-color-on-tertiary-container));
+    mask: $_select-check center / 100% no-repeat;
+    @include forced-colors-fill;
+  }
+
+  li img {
+    box-sizing: border-box;
+    flex: 0 0 var(--md-comp-menu-item-leading-image-size);
+    width: var(--md-comp-menu-item-leading-image-size);
+    height: var(--md-comp-menu-item-leading-image-size);
+    margin: 4px 12px;
+    object-fit: cover;
+    border-radius: var(--md-sys-shape-corner-extra-small);
+    order: 1;
+    margin-inline-start: auto;
+
+    &.left {
+      order: 0;
+      margin-inline-start: 12px;
+      margin-inline-end: 0;
+    }
+  }
+
+  li.optgroup {
+    cursor: default;
+    pointer-events: none;
+
+    &:not(:first-child) {
+      border-top: 1px solid var(--md-sys-color-outline-variant);
+    }
+
+    > span {
+      color: var(--md-sys-color-on-surface-variant);
+    }
+  }
+
+  li.optgroup-option {
+    padding-inline-start: 1rem;
+  }
 }
 
 .select-search-popup {
