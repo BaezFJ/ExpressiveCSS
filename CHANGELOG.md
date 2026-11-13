@@ -20,6 +20,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   selected states once, and pane anatomy hangs off one selector. Every
   selector keeps its specificity.
 
+- Expanding card, icon button and select styles are nested under their parent
+  selectors, and six components hide for print from inside their own block.
+  The compiled sheet has the same declarations in a slightly different order.
+
 ### Fixed
 
 - Datepicker validates year ranges and clips the year list before rendering.
