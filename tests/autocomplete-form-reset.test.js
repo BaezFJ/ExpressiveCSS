@@ -77,9 +77,13 @@ test('a reset restores a multiple selection and its count', async () => {
   }
 });
 
-test('a reset fires no change and cancels a search that is waiting', async () => {
+test('a reset fires no change and cancels a search that is waiting', (t) => {
   const searches = [];
   const { input, form, picker } = start({ minLength: 1, searchDelay: 10, onSearch: (text) => searches.push(text) });
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  // MockTimers needs an explicit delay for deferred reset callbacks.
+  const timeout = globalThis.setTimeout;
+  globalThis.setTimeout = (callback, delay = 0, ...args) => timeout(callback, delay, ...args);
   try {
     const changes = [];
     input.addEventListener('change', () => changes.push('change'));
@@ -88,13 +92,14 @@ test('a reset fires no change and cancels a search that is waiting', async () =>
     input.dispatchEvent(new window.Event('input', { bubbles: true }));
     // Selecting and then editing the text each fired their own change.
     changes.length = 0;
-    await reset(form);
-    await new Promise((resolve) => setTimeout(resolve, 30));
+    form.reset();
+    t.mock.timers.tick(30);
     assert.deepEqual(changes, []);
     assert.deepEqual(searches, []);
     assert.equal(picker.isOpen, false);
   } finally {
     picker.destroy();
+    t.mock.timers.reset();
   }
 });
 
