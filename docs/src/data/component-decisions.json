@@ -1968,7 +1968,7 @@
         "sources": [
           {
             "path": "src/sass/components/_back-to-top.scss",
-            "sha256": "ed3371d27a1d0dc09b562464e364d4c989653f5b81450e467126fb46cb38f3fd"
+            "sha256": "b665bda0c34dab312b363689d108ea8517d39ba89630d29330c0288d294919e0"
           },
           {
             "path": "src/ts/components/backToTop.ts",

@@ -28,11 +28,11 @@
     opacity: 0;
     transition: none;
   }
+
+  // A floating link would print over the content, as the FAB menu would.
+  @include print-hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .back-to-top { transition: none; }
 }
-
-// A floating link would print over the content, as the FAB menu would.
-.back-to-top { @include print-hidden; }
