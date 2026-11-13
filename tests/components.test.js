@@ -7,6 +7,7 @@ import { test, describe, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 
 import { Expressive, resetBody, fire, window } from "./setup.js";
+import { parseRules, sheet } from "./css.js";
 
 describe("FloatingActionButton", () => {
   beforeEach(resetBody);
@@ -782,6 +783,18 @@ describe("CharacterCounter", () => {
     assert.equal(input.classList.contains("invalid"), true);
     instance.destroy();
     assert.equal(input.classList.contains("invalid"), false);
+  });
+
+  test("leaves the counter's type to the stylesheet", () => {
+    document.body.innerHTML = `<div><input id="t" type="text" maxlength="5"></div>`;
+    const instance = Expressive.CharacterCounter.init(document.querySelector("#t"));
+    try {
+      assert.equal(document.querySelector(".character-counter").getAttribute("style"), null);
+      const rule = parseRules(sheet()).find((r) => r.selectors.includes(".character-counter"));
+      assert.match(rule.body, /font-size:\s*var\(--md-sys-typescale-body-small-font-size\)/, "a counter outside a .field has no type size");
+    } finally {
+      instance.destroy();
+    }
   });
 
   test("counts input against maxlength and flags overflow", () => {

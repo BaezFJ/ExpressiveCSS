@@ -1,3 +1,4 @@
+import { isRtl } from '../core/utils';
 import { ColumnChart, ColumnChartOptions } from './columnChart';
 
 export type BarChartOptions = ColumnChartOptions;
@@ -30,7 +31,7 @@ export class BarChart extends ColumnChart {
     const bars = super._draw() as HTMLElement;
     bars.className = 'bar-chart-bars';
     // Read here rather than with :dir(), which misses CSS `direction`.
-    bars.classList.toggle('rtl', getComputedStyle(this.el).direction === 'rtl');
+    bars.classList.toggle('rtl', isRtl(this.el));
     if (!this.el.classList.contains('values')) return bars;
 
     const values = bars.cloneNode(true) as HTMLElement;

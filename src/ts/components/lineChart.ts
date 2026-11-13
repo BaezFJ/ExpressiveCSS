@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { Utils, numberValue, svgNode } from '../core/utils';
+import { Utils, numberValue, svgNode, isRtl } from '../core/utils';
 
 export interface LineChartOptions extends BaseOptions {
   /**
@@ -94,7 +94,7 @@ function labelStep(boxes: LabelBox[]) {
  * The container gets data-thinned and each hidden label data-skip.
  */
 function thinLabels(container: Element, items: Element[]) {
-  const step = labelStep(labelBoxes(items, getComputedStyle(container).direction === 'rtl'));
+  const step = labelStep(labelBoxes(items, isRtl(container)));
   container.toggleAttribute('data-thinned', step > 1);
   items.forEach((item, index) => item.toggleAttribute('data-skip', index % step > 0));
 }
@@ -274,6 +274,22 @@ export const textSpan = (text: string) => Object.assign(document.createElement('
 
 const ARROW_STEPS: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
 
+/** The stretched 100 by 100 SVG a chart draws its marks in. */
+export function plotSvg() {
+  return svgNode('svg', {
+    viewBox: '0 0 100 100',
+    preserveAspectRatio: 'none',
+    'aria-hidden': 'true',
+    focusable: 'false'
+  });
+}
+
+/** Moves the `active` class from mark `from` to mark `to`; either may be -1 or past the end. */
+export function swapActive(marks: (Element | null | undefined)[], from: number, to: number) {
+  marks[from]?.classList.remove('active');
+  marks[to]?.classList.add('active');
+}
+
 /**
  * The mark a key moves to among marks `0` to `last` in table order, from
  * `active`. The arrows keep their meaning in a right-to-left chart, since
@@ -353,7 +369,7 @@ export function affix(cells: (Element | undefined)[]): [string, string] {
 }
 
 /** Straight lines through the points; one point is a dot. */
-function straightPath(points: [number, number][]): string {
+export function straightPath(points: ([number, number] | string)[]): string {
   return `M${points.join('L')}${points.length > 1 ? '' : 'h0'}`;
 }
 
@@ -400,8 +416,8 @@ export class LineChart extends Component<LineChartOptions> {
   /** The highlighted row, or -1. */
   activeIndex = -1;
   private _generated: Element[] = [];
-  /** Watches the row labels' width, to thin them on a narrow chart. */
-  private _labelSizes: ResizeObserver | null = null;
+  /** Resize observers on the drawn nodes, released with them. */
+  private _resizeObservers: ResizeObserver[] = [];
   /** With `watch`, redraws the chart when its table changes. */
   private _tableWatch: MutationObserver | null = null;
   /** Every series in the table, shown or not, as the legend lists them. */
@@ -512,7 +528,7 @@ export class LineChart extends Component<LineChartOptions> {
   private _build() {
     this._read();
     if (!this.labels.length || !this.series.length) return;
-    this._reversed = !this._horizontal && getComputedStyle(this.el).direction === 'rtl';
+    this._reversed = !this._horizontal && isRtl(this.el);
     this._render();
   }
 
@@ -545,7 +561,7 @@ export class LineChart extends Component<LineChartOptions> {
     // The listeners live on the plot, which goes with the generated nodes.
     this._generated.forEach((node) => node.remove());
     this._generated = [];
-    this._labelSizes?.disconnect();
+    this._unobserveSizes();
     this._tableWatch?.disconnect();
     super.destroy();
   }
@@ -565,6 +581,8 @@ export class LineChart extends Component<LineChartOptions> {
     this._generated = [];
     this.activeIndex = -1;
     this._plot = this._cursor = this._tooltip = undefined;
+    // Before the redraw, which can leave no plot to replace the old one.
+    this._unobserveSizes();
     this._before = startsFrom(this.series);
     this._build();
     this._before = [];
@@ -827,10 +845,20 @@ export class LineChart extends Component<LineChartOptions> {
    * chart's labels run down instead, and no labels leaves nothing to watch.
    */
   protected _observeLabels(container: HTMLElement, items: Element[]) {
-    this._labelSizes?.disconnect();
     if (this._horizontal || !items.length) return;
-    this._labelSizes = new ResizeObserver(() => thinLabels(container, items));
-    this._labelSizes.observe(container);
+    this._observeSize(container, () => thinLabels(container, items));
+  }
+
+  /** Calls back when a drawn node changes size, until the next redraw or destroy(). */
+  protected _observeSize(target: Element, callback: () => void) {
+    const observer = new ResizeObserver(callback);
+    observer.observe(target);
+    this._resizeObservers.push(observer);
+  }
+
+  private _unobserveSizes() {
+    this._resizeObservers.forEach((observer) => observer.disconnect());
+    this._resizeObservers = [];
   }
 
   /**
@@ -904,12 +932,7 @@ export class LineChart extends Component<LineChartOptions> {
 
   /** The series as lines and areas, which a chart that overrides _draw can still call. */
   protected _drawLines(drawn = this.series): Element {
-    const svg = svgNode('svg', {
-      viewBox: '0 0 100 100',
-      preserveAspectRatio: 'none',
-      'aria-hidden': 'true',
-      focusable: 'false'
-    });
+    const svg = plotSvg();
     const timing = this._before.length ? pace(this.el) : null;
     const starts = timing ? this._starts(drawn) : [];
     svg.append(...drawn.map((series, i) => this._line(series, starts[i], timing)));

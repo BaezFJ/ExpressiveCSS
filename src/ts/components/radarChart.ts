@@ -1,4 +1,4 @@
-import { LineChart, LineChartOptions, polarPoint, Series, splitRuns } from './lineChart';
+import { LineChart, LineChartOptions, polarPoint, Series, splitRuns, straightPath } from './lineChart';
 import { svgNode as node } from '../core/utils';
 
 export type RadarChartOptions = LineChartOptions;
@@ -17,9 +17,9 @@ function runs(values: (number | null)[]) {
 }
 
 // A run of corners as a path: closed round a whole shape; open where a gap
-// breaks it, a dot for a lone corner; and filled as a wedge from the middle.
+// breaks it (straightPath, a dot for a lone corner); and filled as a wedge
+// from the middle.
 const closed = (corners: string[]) => `M${corners.join('L')}Z`;
-const open = (corners: string[]) => `M${corners.join('L')}${corners.length > 1 ? '' : 'h0'}`;
 const wedge = (corners: string[]) => `M0,0L${corners.join('L')}Z`;
 
 /**
@@ -95,7 +95,7 @@ export class RadarChart extends LineChart {
       'data-series': series.color
     });
     const lines = runs(series.values).map((run) => run.map(corner));
-    const [outline, fill] = series.values.includes(null) ? [open, wedge] : [closed, closed];
+    const [outline, fill] = series.values.includes(null) ? [straightPath, wedge] : [closed, closed];
     group.append(node('path', { class: 'radar-chart-shape', d: lines.map(outline).join('') }));
     const list = this.el.classList;
     if (list.contains('area')) group.append(node('path', { class: 'radar-chart-area', d: lines.map(fill).join('') }));

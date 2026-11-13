@@ -1,4 +1,4 @@
-import { LineChart, LineChartOptions, ROW_COLORS as COLORS, numberFormat, percentLabel, polarPoint as at, rowLegend, signs, tintTooltip } from './lineChart';
+import { LineChart, LineChartOptions, ROW_COLORS as COLORS, numberFormat, percentLabel, polarPoint as at, rowLegend, signs, swapActive, tintTooltip } from './lineChart';
 import { svgNode as node } from '../core/utils';
 
 export type PieChartOptions = LineChartOptions;
@@ -135,8 +135,8 @@ export class PieChart extends LineChart {
 
   show(index: number) {
     if (!this._tooltip || index === this.activeIndex) return;
+    swapActive(this._slices, this.activeIndex, index);
     super.show(index);
-    this._slices.forEach((slice, i) => slice?.classList.toggle('active', i === index));
     // LineChart hides the tooltip for -1 and for an index past the last row.
     if (this._tooltip.hidden) return;
 

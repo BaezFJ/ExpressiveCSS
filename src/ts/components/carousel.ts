@@ -1,4 +1,4 @@
-import { Utils, restoreAttribute } from '../core/utils';
+import { Utils, restoreAttribute, isRtl } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 export interface CarouselI18nOptions {
@@ -557,7 +557,7 @@ export class Carousel extends Component<CarouselOptions> {
 
   _handleKeydown = (e: KeyboardEvent) => {
     if (this._keyBelongsElsewhere(e)) return;
-    const rtl = getComputedStyle(this._scroller).direction === 'rtl';
+    const rtl = isRtl(this._scroller);
     const forward = this._vertical ? e.key === 'ArrowDown' : e.key === (rtl ? 'ArrowLeft' : 'ArrowRight');
     const backward = this._vertical ? e.key === 'ArrowUp' : e.key === (rtl ? 'ArrowRight' : 'ArrowLeft');
     if (e.key === 'Home') {

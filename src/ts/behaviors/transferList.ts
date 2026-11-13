@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, afterAnyFormReset } from '../core/utils';
 
 const AVAILABLE = '.transfer-available';
 const CHOSEN = '.transfer-chosen';
@@ -26,7 +26,7 @@ interface Start {
  * in; a row moved back returns to its slot in the order the lists had before
  * the first move. A form reset puts every row back there.
  *
- * After each move the container fires a bubbling `expressive:transfer` event
+ * After each move the container fires a bubbling, composed `expressive:transfer` event
  * whose `detail` is `{ rows, from, to }`, and a polite live region beside it
  * announces the move. `TransferList.i18n.moved` holds that text.
  *
@@ -39,13 +39,14 @@ export class TransferList {
   static i18n = { moved: 'Moved {count} to {list}' };
   private static _starts = new WeakMap<Element, Start>();
   private static _regions = new WeakMap<Element, HTMLElement>();
+  private static _initialized = false;
 
-  // A second Init adds nothing: addEventListener ignores a listener it has.
   static Init() {
-    if (typeof document === 'undefined') return;
+    if (TransferList._initialized || typeof document === 'undefined') return;
+    TransferList._initialized = true;
     document.addEventListener('click', TransferList._onClick);
     document.addEventListener('formdata', TransferList._onFormData, { capture: true });
-    document.addEventListener('reset', TransferList._onReset, { capture: true });
+    afterAnyFormReset((form) => form.querySelectorAll('.transfer-list').forEach(TransferList._restore));
   }
 
   private static _onClick(e: MouseEvent) {
@@ -67,7 +68,7 @@ export class TransferList {
     moved.forEach((row) => to.insertBefore(row, TransferList._slot(rank, row, to)));
     const rows = [...to.children].filter((row) => moved.has(row));
     TransferList._announce(container, rows.length, to);
-    container.dispatchEvent(new CustomEvent('expressive:transfer', { bubbles: true, detail: { rows, from, to } }));
+    Utils.emit(container, 'transfer', { rows, from, to });
   }
 
   /** The row checkboxes of one of a container's lists, in order. Only a row's own label counts, so a list nested in a row keeps its boxes. */
@@ -137,15 +138,6 @@ export class TransferList {
    */
   private static _submits(box: HTMLInputElement) {
     return !box.matches('fieldset[disabled] > :not(legend:first-of-type) *');
-  }
-
-  private static _onReset(e: Event) {
-    const containers = [...(e.target as HTMLFormElement).querySelectorAll('.transfer-list')];
-    // The form resets its fields after the event, and the page may cancel it,
-    // so the rows go back a task later.
-    setTimeout(() => {
-      if (!e.defaultPrevented) containers.forEach(TransferList._restore);
-    });
   }
 
   /** Puts every row a container had before its first move back in its list and order. */

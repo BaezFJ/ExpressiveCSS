@@ -1,4 +1,4 @@
-import { Utils, restoreAttribute } from '../core/utils';
+import { Utils, restoreAttribute, toggleIdRef } from '../core/utils';
 import { Component, BaseOptions } from '../core/component';
 
 export type TooltipPosition = 'top' | 'right' | 'bottom' | 'left';
@@ -195,12 +195,7 @@ export class Tooltip extends Component<TooltipOptions> {
     this.isOpen = false;
     this.isHovered = false;
     this.isFocused = false;
-    const descriptions = this.el.getAttribute('aria-describedby')?.split(/\s+/);
-    if (descriptions?.includes(this.tooltipEl.id)) {
-      const remaining = descriptions.filter(id => id && id !== this.tooltipEl.id).join(' ');
-      if (remaining) this.el.setAttribute('aria-describedby', remaining);
-      else this.el.removeAttribute('aria-describedby');
-    }
+    toggleIdRef(this.el, 'aria-describedby', this.tooltipEl.id, false);
     if (this._originalContent) {
       const { el, marker, display, priority, hidden, contentClass } = this._originalContent;
       el.style.setProperty('display', display, priority);
@@ -220,7 +215,7 @@ export class Tooltip extends Component<TooltipOptions> {
     this.tooltipEl.classList.add('tooltip');
     this.tooltipEl.id = `tooltip-${Utils.guid()}`;
     this.tooltipEl.setAttribute('role', 'tooltip');
-    this.el.setAttribute('aria-describedby', [this.el.getAttribute('aria-describedby'), this.tooltipEl.id].filter(Boolean).join(' '));
+    toggleIdRef(this.el, 'aria-describedby', this.tooltipEl.id, true);
 
     const richContentEl = this.options.tooltipId
       ? Utils.getElementById(this.el, this.options.tooltipId)

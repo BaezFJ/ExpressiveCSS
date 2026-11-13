@@ -260,7 +260,7 @@ for (const [name, engine, test] of engines) {
     }
   });
 
-  test(`${name}: expressive:transfer bubbles with the moved rows and both lists`, { timeout: 30000 }, async () => {
+  test(`${name}: expressive:transfer bubbles out of shadow roots with the moved rows and both lists`, { timeout: 30000 }, async () => {
     const browser = await leaseBrowser(engine);
     try {
       const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
@@ -268,6 +268,7 @@ for (const [name, engine, test] of engines) {
       await p.evaluate(() => {
         document.addEventListener('expressive:transfer', (e) => {
           window.__detail = {
+            composed: e.composed,
             target: e.target.className,
             rows: e.detail.rows.map((row) => row.querySelector('input').value),
             from: e.detail.from.className,
@@ -279,6 +280,7 @@ for (const [name, engine, test] of engines) {
       await check(p, 'Olives');
       await press(p, 'Add checked toppings');
       assert.deepEqual(await p.evaluate(() => window.__detail), {
+        composed: true,
         target: 'transfer-list',
         rows: ['olives', 'peppers'],
         from: 'list transfer-available',
@@ -294,6 +296,7 @@ for (const [name, engine, test] of engines) {
       await check(p, 'Olives');
       await press(p, 'Remove checked toppings');
       assert.deepEqual(await p.evaluate(() => window.__detail), {
+        composed: true,
         target: 'transfer-list',
         rows: ['olives', 'peppers'],
         from: 'list transfer-chosen',

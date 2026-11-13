@@ -1,5 +1,5 @@
 import { svgNode } from '../core/utils';
-import { LineChart, LineChartOptions, ROW_COLORS, cellValue, linearKey, morph, pace, seriesColor, textSpan as span } from './lineChart';
+import { LineChart, LineChartOptions, ROW_COLORS, cellValue, linearKey, morph, pace, plotSvg, seriesColor, swapActive, textSpan as span } from './lineChart';
 
 export type SankeyChartOptions = LineChartOptions;
 
@@ -180,8 +180,7 @@ export class SankeyChart extends LineChart {
   /** Highlights one link, numbered in table order among those drawn. Pass -1 to hide the tooltip. */
   show(index: number) {
     if (!this._tooltip || index === this.activeIndex) return;
-    this._paths[this.activeIndex]?.classList.remove('active');
-    this._paths[index]?.classList.add('active');
+    swapActive(this._paths, this.activeIndex, index);
     this.activeIndex = index;
     const link = this._links[index];
     this._tooltip.hidden = !link;
@@ -258,12 +257,7 @@ export class SankeyChart extends LineChart {
    * names, a node by its name.
    */
   protected _draw(): Element {
-    const svg = svgNode('svg', {
-      viewBox: '0 0 100 100',
-      preserveAspectRatio: 'none',
-      'aria-hidden': 'true',
-      focusable: 'false'
-    });
+    const svg = plotSvg();
     const [was, timing] = [this._shapes ?? new Map<string, string>(), this._before.length ? pace(this.el) : null];
     this._shapes = new Map();
     const shape = (className: string, key: string, color: string, d: string) => {

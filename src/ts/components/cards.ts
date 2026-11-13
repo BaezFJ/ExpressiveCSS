@@ -175,9 +175,7 @@ export class Cards extends Component<CardsOptions> {
   close: () => void = () => {
     if (!this.isOpen || !this.cardReveal) return;
 
-    // In a shadow root document.activeElement is the host, never the reveal.
-    const focused = (this.el.getRootNode() as Document | ShadowRoot).activeElement;
-    const focusWasInside = this.cardReveal.contains(focused);
+    const focusWasInside = Utils.focusIsIn(this.cardReveal);
     this.isOpen = false;
     this.cardReveal.classList.remove('open');
     this.cardReveal.inert = true;

@@ -1,4 +1,4 @@
-import { Utils } from '../core/utils';
+import { Utils, logicalKey } from '../core/utils';
 import { FormSelect, FormSelectOptions } from './select';
 
 // Tree select. A native <select data-tree> whose options name their parent's
@@ -61,7 +61,6 @@ const TREE_KEYS: Record<string, TreeKey> = {
 const typeahead: TreeKey = (tree, row, e) => tree._typeahead(row, e.key);
 
 /** In a right-to-left tree the arrows that open and close swap. */
-const MIRRORED: Record<string, string> = { ArrowLeft: 'ArrowRight', ArrowRight: 'ArrowLeft' };
 
 export class TreeSelect extends FormSelect {
   /**
@@ -383,8 +382,7 @@ export class TreeSelect extends FormSelect {
 
   /** The key as in a left-to-right tree. */
   private _logicalKey(key: string) {
-    const rtl = getComputedStyle(this.tree).direction === 'rtl';
-    return (rtl && MIRRORED[key]) || key;
+    return logicalKey(this.tree, key);
   }
 
   private _handleTreeKeydown = Utils.ignoringComposition((e: KeyboardEvent) => {
