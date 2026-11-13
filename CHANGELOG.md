@@ -15,6 +15,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- Datepicker keeps its month and year selects when paging across a year
+  boundary and refreshes their options in place, instead of rebuilding both
+  FormSelects and their menus. An arrow key in the calendar syncs the roving
+  focus once instead of twice. Timepicker skips recomputing the allowed ranges
+  while a drag stays on one value, or always when no `minTime` or `maxTime` is
+  set. Menu measures a flyout once each time the pointer enters its row, not
+  on every move inside it. DataTables filtering, sorting and paging no longer
+  re-apply every column toggle; `DataTables.sync()` still does.
+
 - The compiled sheet is about 15 KB smaller minified and 564 bytes smaller
   gzipped. Menu flyouts share the menu's surface rules, list rows write their
   selected states once, and pane anatomy hangs off one selector. Every

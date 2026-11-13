@@ -351,7 +351,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed Autocomplete minLength gating onSearch, Datepicker date bounds and unchanged-date reads, Clear waiting for Ok, Menu, Chips and Carousel teardown, completed replaced snackbars, shared field reset handling and Confetti fire() defaults: 111,505 gzip bytes (+656).
   // Reviewed clearing the Autocomplete status when text drops below minLength: 111,510 gzip bytes (+5).
   // Reviewed shared form reset handling for pickers, Slider, FormSelect, RichTextEditor, ColorPicker, CharacterCounter, validation, ImageCompare and select-all, disabled month arrow icons, near-whole pie slices, distinct axis labels, reset handling that follows a form into a shadow root, and painting particles on resize: 111,636 gzip bytes (+126).
-  assert.ok(sizes(js).gzip <= 111636, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed shadow-root focus checks through focusIsIn, guarded Forms re-init, chart resize observers released on update(), a composed transfer event, Datepicker selects kept across years, one roving-focus sync per arrow key, memoized Timepicker ranges, flyout measurement per row entry and DataTables views without toggle scans: 111,677 gzip bytes (+41).
+  assert.ok(sizes(js).gzip <= 111677, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

@@ -128,8 +128,8 @@ function toggledHeader(item: Element) {
 }
 
 /** A column's cells, one per row, leaving out cells that span several columns. */
-function columnCells(table: HTMLTableElement, column: number) {
-  const head = [...headerColumns(table.tHead)].filter(([, each]) => each === column).map(([cell]) => cell as HTMLTableCellElement);
+function columnCells(table: HTMLTableElement, columns: Map<Element, number>, column: number) {
+  const head = [...columns].filter(([, each]) => each === column).map(([cell]) => cell as HTMLTableCellElement);
   const rows = table.querySelectorAll<HTMLTableRowElement>(':scope > tbody > tr, :scope > tfoot > tr');
   return [...head, ...Array.from(rows, (row) => cellAt(row, column))].filter((cell) => cell?.colSpan === 1);
 }
@@ -152,7 +152,8 @@ function applyToggle(item: Element) {
   if (!header) return;
   const table = header.closest('table');
   const show = item.getAttribute('aria-checked') === 'true';
-  columnCells(table, headerColumns(table.tHead).get(header)).forEach(show ? reveal : conceal);
+  const columns = headerColumns(table.tHead);
+  columnCells(table, columns, columns.get(header)).forEach(show ? reveal : conceal);
   refit(table, header);
 }
 
@@ -277,19 +278,27 @@ export class DataTables {
    * application total for status and bounds, without local filtering.
    */
   static sync(wrapper: Element) {
-    const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
-    if (table) {
-      table.querySelectorAll(`:scope > tbody > tr[${PAGED}]`).forEach((row) => row.removeAttribute(PAGED));
-      if (DataTables._pages.get(wrapper)?.server) {
-        table.querySelectorAll(`:scope > tbody > tr[${FILTERED}]`).forEach((row) => row.removeAttribute(FILTERED));
-      }
-      DataTables._filter(wrapper, table);
-      DataTables._page(wrapper, table);
-      DataTables._select(DataTables._all(table), DataTables._enabled(table), false);
-    }
+    DataTables._view(wrapper);
     (wrapper.getRootNode() as ParentNode).querySelectorAll(TOGGLE).forEach((item) => {
       if (wrapper.contains(toggledHeader(item))) applyToggle(item);
     });
+  }
+
+  /**
+   * sync() without the column toggles, for a filter, sort or page change:
+   * those only mark the rows already there, whose cells the toggles have
+   * already shown or hidden.
+   */
+  private static _view(wrapper: Element) {
+    const table = wrapper.querySelector<HTMLTableElement>(':scope > table');
+    if (!table) return;
+    table.querySelectorAll(`:scope > tbody > tr[${PAGED}]`).forEach((row) => row.removeAttribute(PAGED));
+    if (DataTables._pages.get(wrapper)?.server) {
+      table.querySelectorAll(`:scope > tbody > tr[${FILTERED}]`).forEach((row) => row.removeAttribute(FILTERED));
+    }
+    DataTables._filter(wrapper, table);
+    DataTables._page(wrapper, table);
+    DataTables._select(DataTables._all(table), DataTables._enabled(table), false);
   }
 
   /** Accepts application page state without slicing its records; null restores local paging. */
@@ -448,7 +457,7 @@ export class DataTables {
     if (view.server) return;
     wrapper.setAttribute('data-page-size', String(request.pageSize));
     DataTables._pages.set(wrapper, { ...view, ...request });
-    DataTables.sync(wrapper);
+    DataTables._view(wrapper);
   }
 
   private static _pageState(wrapper: Element): PageView {
@@ -501,7 +510,7 @@ export class DataTables {
   private static _resetPage(wrapper: Element) {
     if (DataTables._pages.get(wrapper)?.server) return;
     DataTables._pages.delete(wrapper);
-    DataTables.sync(wrapper);
+    DataTables._view(wrapper);
   }
 
   /**

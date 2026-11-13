@@ -599,12 +599,12 @@ export class Menu extends Component<MenuOptions> {
   }
 
   private _handleSubmenuAlign = (e: MouseEvent) => {
-    const target = e.target;
-    if (!(target instanceof Element)) return;
-    const li = target.closest('li');
-    if (li?.querySelector(':scope > menu') && this.menuEl?.contains(li)) {
-      this._alignSubmenu(li as HTMLElement);
-    }
+    // Mouse events always target an element.
+    const li = (e.target as Element).closest('li');
+    // mouseover repeats for every child the pointer crosses; a move that
+    // started inside the same row needs no new measurement.
+    const entered = li?.querySelector(':scope > menu') && !li.contains(e.relatedTarget as Node | null);
+    if (entered && this.menuEl.contains(li)) this._alignSubmenu(li);
   };
 
   private _alignSubmenu(li: HTMLElement) {

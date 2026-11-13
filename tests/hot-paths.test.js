@@ -90,6 +90,29 @@ describe('layout reads per frame and resize', () => {
     }
   });
 
+  test('a Menu measures a flyout once per entry into its row, not on every move inside it', () => {
+    document.body.innerHTML = `<button class="menu-trigger" data-target="m">Open</button>
+      <menu id="m"><li><span>Alpha</span></li><li><button type="button"><span>More</span></button><menu><li><span>Beta</span></li></menu></li></menu>`;
+    const instance = Expressive.Menu.init(document.querySelector('.menu-trigger'));
+    try {
+      const [alpha, row] = document.querySelectorAll('#m > li');
+      const counter = { reads: 0 };
+      stubRect(row.querySelector('menu'), counter);
+      const over = (target, from) => target.dispatchEvent(new window.MouseEvent('mouseover', { bubbles: true, relatedTarget: from }));
+      const [button, label] = [row.querySelector('button'), row.querySelector('button span')];
+      over(button, alpha);
+      over(label, button);
+      over(button, label);
+      over(row, button);
+      assert.equal(counter.reads, 1, `moving inside the row measured its flyout ${counter.reads} times`);
+      over(alpha, row);
+      over(button, alpha);
+      assert.equal(counter.reads, 2, 'entering the row again did not measure');
+    } finally {
+      instance.destroy();
+    }
+  });
+
   test('a full-screen Carousel re-measures at most once per burst of resize events', async () => {
     const { instance, counter } = await fullScreenCarousel();
     try {
@@ -232,6 +255,32 @@ describe('Datepicker redraws', () => {
     );
   });
 
+  test('an arrow key syncs the roving focus once, not again for the focus it moves', () => {
+    withDrawCounter(
+      `<input type="text" class="date-picker" value="Jan 15, 2024">`,
+      {},
+      (input, instance) => {
+        const day = (n) => instance.calendarEl.querySelector(`.datepicker-day-button[data-year="2024"][data-month="0"][data-day="${n}"]`);
+        const sync = instance._syncCalendarFocus.bind(instance);
+        let syncs = 0;
+        instance._syncCalendarFocus = (restore) => (syncs++, sync(restore));
+        input.dispatchEvent(new window.MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+        // jsdom moves no focus into the calendar, so each focus() fires the
+        // focusin a browser would.
+        for (const button of instance.calendarEl.querySelectorAll('.datepicker-day-button')) {
+          button.focus = () => button.dispatchEvent(new window.FocusEvent('focusin', { bubbles: true }));
+        }
+        syncs = 0;
+        day(15).dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true, cancelable: true }));
+        assert.equal(day(16).tabIndex, 0);
+        assert.equal(syncs, 1, `one arrow key synced the grid ${syncs} times`);
+        day(20).focus();
+        assert.equal(syncs, 2, 'focusing another day by pointer must still sync');
+        assert.equal(day(20).tabIndex, 0);
+      }
+    );
+  });
+
   test('the calendar is rendered synchronously, before init() returns', () => {
     document.body.innerHTML = `<input type="text" class="date-picker">`;
 
@@ -287,19 +336,22 @@ describe('Datepicker redraws', () => {
     });
   });
 
-  test('crossing a year boundary rebuilds them, since the year list re-centres', () => {
+  test('crossing a year boundary keeps the selects and re-centres the year list', () => {
     withDrawCounter(`<input type="text" class="date-picker">`, {}, (input, instance) => {
       instance.gotoDate(new Date(2024, 11, 1)); // December
-      const before = instance.calendarEl.querySelector('.orig-select-year');
+      const [year, month] = ['.orig-select-year', '.orig-select-month'].map((s) => instance.calendarEl.querySelector(s));
+      const wrapper = Expressive.FormSelect.getInstance(year);
 
       instance.nextMonth(); // -> January 2025
 
-      assert.notEqual(
-        instance.calendarEl.querySelector('.orig-select-year'),
-        before,
-        'the year select was reused across a year change, so its options are stale'
-      );
+      assert.equal(instance.calendarEl.querySelector('.orig-select-year'), year, 'the year select was rebuilt');
+      assert.equal(instance.calendarEl.querySelector('.orig-select-month'), month, 'the month select was rebuilt');
+      assert.equal(Expressive.FormSelect.getInstance(year), wrapper);
       assert.equal(instance.calendars[0].year, 2025);
+      assert.deepEqual([year.value, month.value], ['2025', '0']);
+      const years = [...year.options].map((option) => Number(option.value));
+      assert.deepEqual([years[0], years.at(-1)], [2015, 2035], 'the year list still centres on 2024');
+      assert.equal(wrapper.wrapper.querySelector('input').value, '2025', 'the visible year field was not refreshed');
     });
   });
 
@@ -361,6 +413,31 @@ describe('Timepicker dial construction', () => {
       assert.ok(dial.ticks > 0, 'no dial ticks were built');
     } finally {
       instance.destroy();
+    }
+  });
+
+  test('a drag that leaves the time or the allowed range unchanged recomputes no ranges', () => {
+    for (const [options, recomputes] of [[{}, false], [{ minTime: '09:00 AM', maxTime: '05:00 PM' }, true]]) {
+      document.body.innerHTML = `<input type="text" class="time-picker" value="10:15 AM">`;
+      const input = document.querySelector('.time-picker');
+      const instance = Expressive.Timepicker.init(input, { displayPlugin: 'docked', ...options });
+      try {
+        input.dispatchEvent(new window.MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+        let ranges = 0;
+        const range = instance._range.bind(instance);
+        instance._range = (unit) => (ranges++, range(unit));
+        instance._afterChange();
+        instance._afterChange();
+        assert.equal(ranges, 0, `${JSON.stringify(options)}: an unchanged time recomputed the ranges`);
+        instance.hours = 4;
+        instance.amOrPm = 'PM';
+        instance._afterChange();
+        assert.equal(ranges > 0, recomputes, `${JSON.stringify(options)}: a new hour ${recomputes ? 'kept stale' : 'recomputed'} ranges`);
+        const tick = [...instance.minutesView.querySelectorAll('.timepicker-tick')].find((t) => t.textContent === '30');
+        assert.equal(tick.classList.contains('is-disabled'), false);
+      } finally {
+        instance.destroy();
+      }
     }
   });
 

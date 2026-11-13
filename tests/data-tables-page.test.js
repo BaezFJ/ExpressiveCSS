@@ -38,9 +38,10 @@ test('page size clamps the last page and handles one native input/change pair on
   const events = [];
   for (const name of ['change', 'filter', 'sort', 'page']) wrapper().addEventListener(`expressive:${name}`, () => events.push(name));
   control.focus();
-  const original = Expressive.DataTables.sync;
+  // Each handled change redraws the page view once.
+  const original = Expressive.DataTables._view;
   let calls = 0;
-  Expressive.DataTables.sync = (owner) => { calls++; original(owner); };
+  Expressive.DataTables._view = (owner) => { calls++; original(owner); };
   try {
     control.value = '4';
     input(control);
@@ -56,7 +57,7 @@ test('page size clamps the last page and handles one native input/change pair on
     assert.equal(calls, 1);
     assert.deepEqual(events, ['page']);
   } finally {
-    Expressive.DataTables.sync = original;
+    Expressive.DataTables._view = original;
   }
 });
 
