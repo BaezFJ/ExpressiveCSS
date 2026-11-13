@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { deepActiveElement } from '../core/utils';
+import { Utils, deepActiveElement } from '../core/utils';
 
 export interface NavigationRailOptions extends BaseOptions {
   /**
@@ -145,8 +145,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     if (!panel || panel.contains(target)) return;
     this._hoverTimer = setTimeout(() => {
       // Keyboard focus inside the panel keeps it open, as a click would.
-      const root = this.el.getRootNode() as Document | ShadowRoot;
-      if (panel.matches(':popover-open') && !panel.contains(root.activeElement)) panel.hidePopover();
+      if (panel.matches(':popover-open') && !Utils.focusIsIn(panel)) panel.hidePopover();
       if (this._hoverPanel === panel) this._hoverPanel = null;
     }, HOVER_DELAY);
   }
@@ -207,8 +206,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     if (!panel) return false;
     // A popover open inside the panel is on top; the browser closes it first.
     if (panel.querySelector(':popover-open')) return true;
-    const root = this.el.getRootNode() as Document | ShadowRoot;
-    const hadFocus = panel.contains(root.activeElement);
+    const hadFocus = Utils.focusIsIn(panel);
     panel.hidePopover();
     if (hadFocus) (panel.previousElementSibling as HTMLElement | null)?.focus();
     e.preventDefault();
@@ -228,7 +226,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     if (e.key !== 'Escape' || e.defaultPrevented || this._escapePanel(e)) return;
     if (this.isExpanded && this._isModal()) {
       const root = this.el.getRootNode() as Document | ShadowRoot;
-      const restoreFocus = this.el.contains(root.activeElement);
+      const restoreFocus = Utils.focusIsIn(this.el);
       const focused = deepActiveElement(root);
       this.collapse();
       if (!this.isExpanded && restoreFocus && deepActiveElement(root) === focused) {

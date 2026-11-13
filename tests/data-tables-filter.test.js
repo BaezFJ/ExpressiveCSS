@@ -339,3 +339,24 @@ test('a table in a hidden panel keeps its records for the filter and its count',
   assert.equal(count(), '2');
   assert.deepEqual(['alpha', 'beta', 'locked'].map(filtered), [false, true, false]);
 });
+
+test('a filter keystroke leaves column toggles alone, and sync() still applies them', () => {
+  document.body.innerHTML = markup.replace('<th>Status</th>', '<th id="h-status">Status</th>')
+    + '<ul><li role="menuitemcheckbox" aria-checked="false" data-column="h-status">Status</li></ul>';
+  Expressive.DataTables.sync(wrapper());
+  const statusCell = () => document.querySelector('#alpha td:last-child');
+  assert.equal(statusCell().hidden, true);
+  const scan = document.querySelectorAll.bind(document);
+  let scans = 0;
+  document.querySelectorAll = (selector) => (scans += String(selector).includes('menuitemcheckbox'), scan(selector));
+  try {
+    query('alpha');
+    query('alph');
+    assert.equal(scans, 0, `two keystrokes scanned the document for column toggles ${scans} times`);
+    assert.equal(statusCell().hidden, true, 'the hidden column came back');
+    Expressive.DataTables.sync(wrapper());
+    assert.equal(scans, 1);
+  } finally {
+    delete document.querySelectorAll;
+  }
+});

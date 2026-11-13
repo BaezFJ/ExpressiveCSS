@@ -1,5 +1,5 @@
 import { imageURL } from '../core/imageURL';
-import { Utils, afterFormReset } from '../core/utils';
+import { Utils, afterFormReset, setActiveDescendant } from '../core/utils';
 import { Menu, MenuOptions } from './menu';
 import { Component, BaseOptions } from '../core/component';
 
@@ -197,14 +197,8 @@ export class Autocomplete extends Component<AutocompleteOptions> {
    * choice as unselected the moment the user arrowed past it.
    */
   private _setActive(item: HTMLElement | null) {
-    this.$active?.classList.remove('active');
+    setActiveDescendant(this.el, this.$active, item);
     this.$active = item;
-    if (item) {
-      item.classList.add('active');
-      this.el.setAttribute('aria-activedescendant', item.id);
-    } else {
-      this.el.removeAttribute('aria-activedescendant');
-    }
   }
   private _pointerDown: boolean;
   container: HTMLElement;

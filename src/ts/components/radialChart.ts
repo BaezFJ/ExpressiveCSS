@@ -1,4 +1,4 @@
-import { LineChart, LineChartOptions, rowLegend, seriesColor, tintTooltip } from './lineChart';
+import { LineChart, LineChartOptions, rowLegend, seriesColor, swapActive, tintTooltip } from './lineChart';
 import { svgNode as node } from '../core/utils';
 
 export type RadialChartOptions = LineChartOptions;
@@ -110,9 +110,9 @@ export class RadialChart extends LineChart {
 
   show(index: number) {
     if (!this._tooltip || index === this.activeIndex) return;
+    swapActive(this._rings, this.activeIndex, index);
+    swapActive(this._sweeps, this.activeIndex, index);
     super.show(index);
-    this._rings.forEach((ring, i) => ring.classList.toggle('active', i === index));
-    this._sweeps.forEach((sweep, i) => sweep?.classList.toggle('active', i === index));
     // LineChart hides the tooltip for -1 and for an index past the last row.
     if (this._tooltip.hidden) return;
     tintTooltip(this._tooltip, seriesColor(index));

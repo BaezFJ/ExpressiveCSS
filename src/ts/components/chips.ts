@@ -1,4 +1,4 @@
-import { Utils, restoreAttribute } from '../core/utils';
+import { Utils, restoreAttribute, isRtl } from '../core/utils';
 import { Autocomplete, AutocompleteOptions } from './autocomplete';
 import { Component, BaseOptions } from '../core/component';
 import { FormControl, formAssociated, wrapInControl, unwrapControl } from '../core/formControl';
@@ -358,7 +358,7 @@ export class Chips extends Component<ChipsOptions> {
 
   /** The arrow that points back towards the first chip, which in RTL is Right. */
   private static _backKey(el: Element) {
-    return getComputedStyle(el).direction === 'rtl' ? 'ArrowRight' : 'ArrowLeft';
+    return isRtl(el) ? 'ArrowRight' : 'ArrowLeft';
   }
 
   static _handleChipsKeydown(e: KeyboardEvent) {
@@ -613,8 +613,7 @@ export class Chips extends Component<ChipsOptions> {
    * @param chipIndex  Index of chip
    */
   deleteChip(chipIndex: number) {
-    const root = this.el.getRootNode() as Document | ShadowRoot;
-    this._deleteChip(chipIndex, this._chips[chipIndex]?.contains(root.activeElement) ? 'input' : null);
+    this._deleteChip(chipIndex, Utils.focusIsIn(this._chips[chipIndex]) ? 'input' : null);
   }
 
   private _deleteChip(chipIndex: number, focus: 'input' | 'previous' | null) {

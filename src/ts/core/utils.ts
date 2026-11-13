@@ -60,6 +60,39 @@ export function afterFormReset(
   return bind;
 }
 
+/** Whether an element lays out right to left, read from its computed CSS `direction` rather than the `dir` attribute. */
+export function isRtl(el: Element) {
+  return getComputedStyle(el).direction === 'rtl';
+}
+
+/**
+ * Adds `id` to, or removes it from, an ID-list attribute such as
+ * `aria-describedby`. The other ids keep their order, an id already in place
+ * stays where it is, and the attribute goes once the list is empty.
+ */
+export function toggleIdRef(el: Element, attribute: string, id: string, on: boolean) {
+  const ids = (el.getAttribute(attribute) ?? '').split(/\s+/).filter(Boolean);
+  if (ids.includes(id) === on) return;
+  const next = on ? [...ids, id] : ids.filter((each) => each !== id);
+  if (next.length) el.setAttribute(attribute, next.join(' '));
+  else el.removeAttribute(attribute);
+}
+
+/** Moves the `.active` highlight from `previous` to `next` and points the combobox's `aria-activedescendant` at it. */
+export function setActiveDescendant(combobox: Element, previous: Element | null, next: Element | null) {
+  previous?.classList.remove('active');
+  next?.classList.add('active');
+  if (next) combobox.setAttribute('aria-activedescendant', next.id);
+  else combobox.removeAttribute('aria-activedescendant');
+}
+
+const MIRRORED_KEYS: Record<string, string> = { ArrowLeft: 'ArrowRight', ArrowRight: 'ArrowLeft' };
+
+/** The key as in a left-to-right layout: ArrowLeft and ArrowRight swap when `el` is right to left. */
+export function logicalKey(el: Element, key: string) {
+  return (isRtl(el) && MIRRORED_KEYS[key]) || key;
+}
+
 /**
  * Runs `restored(form)` a task after any form in the document resets, once
  * the form has restored its fields, unless the reset was cancelled. For

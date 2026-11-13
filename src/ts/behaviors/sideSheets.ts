@@ -1,9 +1,10 @@
+import { isRtl } from '../core/utils';
 import { installSheetDrag } from './sheetDrag';
 
 const startDocked = (dialog: HTMLDialogElement): boolean => dialog.classList.contains('start');
 
 const leftDocked = (dialog: HTMLDialogElement): boolean =>
-  startDocked(dialog) !== (getComputedStyle(dialog).direction === 'rtl');
+  startDocked(dialog) !== (isRtl(dialog));
 
 /**
  * Drag-to-dismiss for side sheets (`dialog.side-sheet`).
