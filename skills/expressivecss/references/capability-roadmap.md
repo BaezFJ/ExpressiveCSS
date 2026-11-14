@@ -88,6 +88,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Lightbox](#lightbox) | unassessed | needs-review | needs-rerun | 0 |
 | [Map](#map) | unassessed | needs-review | needs-rerun | 0 |
 | [Toolbars](#toolbars) | unassessed | needs-review | no-mapped-checks | 0 |
+| [Status bar](#status-bar) | implemented | source-reviewed | incomplete | 0 |
 | [Search](#search) | unassessed | needs-review | needs-rerun | 1 |
 | [Command palette](#command-palette) | unassessed | needs-review | needs-rerun | 0 |
 | [Fieldsets](#fieldsets) | unassessed | needs-review | needs-rerun | 0 |
@@ -1396,6 +1397,23 @@ Web adaptation: CSS-only commands; no automatic composite toolbar keyboard model
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
 No directly scoped browser check is mapped. This does not mean the component fails or has no unit tests.
+
+<a id="status-bar"></a>
+
+## Status bar
+
+**implemented within the stated scope.** A 24px bar of button, link and read-only text items, an end group, a vibrant bar, items colored with the color helpers, low-priority items hidden below 600px and wrapping instead of scrolling.
+
+Source review: source-reviewed, 2026-11-14. [src/sass/components/_status-bar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/src/sass/components/_status-bar.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-11-14); [reviewed source](https://m3.material.io/components).
+
+Web adaptation: A <footer> or labelled <div> with one tab stop per item and no composite role; only the changing text item is a live region.
+
+- verification: Bar size, sticking, item targets, the end group, colors, priority hiding, wrapping, RTL, enlarged text, forced colors and blocked filled-button states are checked in a browser; spoken output and a real safe-area inset remain unverified. Next: Tab through the bar with a screen reader and confirm each item's name and a single announcement of the status item's update; open the bar on a phone with a home indicator.
+
+- not-recorded: [tests/status-bar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/tests/status-bar-browser.test.js): `chromium: status bar is a 24px sticky row of 24px items`. A 24px, window-wide, surface-container bar in body-small that sticks to the window bottom, 24px items with 16px icons, and an end group pushed to the end edge. No spoken-output assertion.
+- not-recorded: [tests/status-bar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/165ce2c04e03d738503898ca7eb5a34f565d668f/tests/status-bar-browser.test.js): `chromium: status bar items drop native chrome and show state`. Transparent, borderless items that inherit the bar color, an inset focus ring, hover over a helper fill, no filled-button fill on hover, press or focus, and no state on read-only or disabled items.
 
 <a id="search"></a>
 

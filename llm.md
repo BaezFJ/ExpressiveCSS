@@ -7882,6 +7882,45 @@ A floating bar can sit beside a companion FAB. Wrap both in `.toolbar-group`; th
 <div class="toolbar docked fixed">…</div>
 ```
 
+## Status bar
+
+A thin bar of app state along the bottom of an app shell, like the status bar in a code editor.
+
+A `<footer class="status-bar">` is the bar. Use a `<div class="status-bar" aria-label="Status">` instead when the page already has a site footer, so the page keeps one footer landmark. Direct children are the items: a `<button>` opens something, an `<a>` goes somewhere, and a `<span>` is read-only text. An item holds a `<span class="material-symbols" aria-hidden="true">` icon, text in a `<span>`, or both. A button or link with no visible text needs an `aria-label`, and a label that stands in for visible numbers repeats them ("0 errors, 2 warnings"). CSS only; there is no JavaScript component and nothing to AutoInit.
+
+The bar is not `role="toolbar"`, because every item is its own tab stop and arrow keys do nothing. It is not a live region either. Put `role="status"` on the single text item whose text changes, never on the bar, or a screen reader reads every button label with each update.
+
+`.end` on the first trailing item pushes it and every item after it to the end edge. `.vibrant` paints the bar primary-container, as on the toolbar, for a mode the user should notice. Color one item with the color helpers, such as `primary on-primary-text` or `error-container on-error-container-text`; the item's text still has to say what the color means. Below 600px, items with `data-priority="low"` are hidden. Items that still do not fit wrap to a second row.
+
+The bar is 24px tall in `body-small`, and it grows with enlarged text. Items are 24px targets, which meets WCAG 2.5.8 but not M3's 48dp; hide the bar on touch-first layouts that need larger targets. It sticks to the bottom of a scrolling page and pads for the bottom safe area. Do not show it at the same time as `nav.navigation-bar`.
+
+```html
+<footer class="status-bar">
+  <button type="button" class="primary on-primary-text" aria-label="Remote: SSH devbox">
+    <span class="material-symbols" aria-hidden="true">terminal</span>
+  </button>
+  <button type="button" class="menu-trigger" data-target="branch-menu" data-menu-options='{"placement": "top"}' aria-label="Branch master, switch branch">
+    <span class="material-symbols" aria-hidden="true">fork_right</span>
+    <span>master</span>
+  </button>
+  <a href="#problems" aria-label="0 errors, 2 warnings">
+    <span class="material-symbols" aria-hidden="true">error</span><span>0</span>
+    <span class="material-symbols" aria-hidden="true">warning</span><span>2</span>
+  </a>
+  <span role="status">Ln 42, Col 7</span>
+  <span data-priority="low">UTF-8</span>
+  <button type="button" class="end" aria-label="Notifications, 3 new">
+    <span class="material-symbols" aria-hidden="true">notifications<span class="badge">3</span></span>
+  </button>
+</footer>
+<menu id="branch-menu">
+  <li><button type="button">master</button></li>
+  <li><button type="button">feature/status-bar</button></li>
+</menu>
+```
+
+Tokens: `--md-comp-status-bar-container-height` (1.5rem), `--md-comp-status-bar-container-color` (surface-container), `--md-comp-status-bar-color` (on-surface-variant), `--md-comp-status-bar-item-space` (8px) and `--md-comp-status-bar-icon-size` (1rem).
+
 ---
 
 # Forms

@@ -193,6 +193,7 @@ Paths are relative to `src/sass`, without the underscore or extension. The catal
 | `components/lightbox` | [Lightbox](https://www.expressivecss.com/media.html.md) |
 | `components/map` | [Map](https://www.expressivecss.com/map.html.md) |
 | `components/toolbar` | [Toolbars](https://www.expressivecss.com/toolbars.html.md) |
+| `components/status-bar` | [Status bar](https://www.expressivecss.com/status-bar.html.md) |
 | `components/search` | [Search](https://www.expressivecss.com/search.html.md) |
 | `components/command-palette` | [Command palette](https://www.expressivecss.com/command-palette.html.md) |
 | `components/forms/fieldset` | [Fieldsets](https://www.expressivecss.com/fieldsets.html.md) |

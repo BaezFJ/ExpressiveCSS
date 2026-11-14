@@ -4655,6 +4655,62 @@
       ]
     },
     {
+      "slug": "status-bar",
+      "title": "Status bar",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-11-14",
+      "scope": "A 24px bar of button, link and read-only text items, an end group, a vibrant bar, items colored with the color helpers, low-priority items hidden below 600px and wrapping instead of scrolling.",
+      "adaptation": "A <footer> or labelled <div> with one tab stop per item and no composite role; only the changing text item is a live region.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-11-14",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. In M3, status bar names the system bar, not a component. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Give every item a tab stop and a name, keep live announcements to the changing text item, state in text what an item color means and keep targets at least 24px."
+      },
+      "relationship": "none",
+      "sources": [
+        {
+          "path": "src/sass/components/_status-bar.scss",
+          "sha256": "d1b16ea2ac6d33bef3575f54bb373d54f8a46c75f319f69683aeffeb8385da04"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Bar size, sticking, item targets, the end group, colors, priority hiding, wrapping, RTL, enlarged text, forced colors and blocked filled-button states are checked in a browser; spoken output and a real safe-area inset remain unverified.",
+          "nextStep": "Tab through the bar with a screen reader and confirm each item's name and a single announcement of the status item's update; open the bar on a phone with a home indicator."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/status-bar-browser.test.js",
+          "name": "chromium: status bar is a 24px sticky row of 24px items",
+          "scope": "A 24px, window-wide, surface-container bar in body-small that sticks to the window bottom, 24px items with 16px icons, and an end group pushed to the end edge. No spoken-output assertion.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/status-bar-browser.test.js",
+          "name": "chromium: status bar items drop native chrome and show state",
+          "scope": "Transparent, borderless items that inherit the bar color, an inset focus ring, hover over a helper fill, no filled-button fill on hover, press or focus, and no state on read-only or disabled items.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
       "slug": "search",
       "title": "Search",
       "kind": "component",

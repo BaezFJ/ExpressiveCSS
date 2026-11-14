@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**108 of 108 rows enforced; 0 remaining.**
+**109 of 109 rows enforced; 0 remaining.**
 
-103 of those rows are components - a part of the framework an author writes markup for.
+104 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 103 components declare conformance debt.**
+**2 of 104 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -1306,6 +1306,24 @@ Added with the stat component. A description list pairs each value with its labe
 | `stats-are-a-description-list` | forbid | `.stats:not(dl)` | must not match |
 
 - **stats-are-a-description-list** - Write .stats as a <dl> with a <dt> label and <dd> value per tile. Without the pairing a screen reader reads a run of numbers with nothing to say what each one is.
+
+### status-bar
+
+Added with the status bar. A bar of ambient app state whose items are buttons, links and read-only text. Each button is a tab stop; the bar implements no arrow-key model, and only a changing text item is a live region.
+
+**Rejected role:** `toolbar` is not withheld but declined - its items are independent buttons, links and text reached with Tab - the bar is a row of app state, not a composite widget, so there is no arrow-key model to implement and none to promise. `status-bar-not-a-composite-widget` enforces that, keeping every composite role out.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `status-bar-not-a-composite-widget` | forbid-composite-roles | `.status-bar` | must not match with any composite role |
+| `status-bar-is-not-a-live-region` | forbid | `.status-bar:is([role="status"], [role="alert"], [role="log"], [aria-live])` | must not match |
+| `status-bar-not-nav` | forbid | `nav.status-bar` | must not match |
+| `status-bar-item-is-named` | require-accessible-name | `.status-bar > :is(button, a)` | must end up with an accessible name |
+
+- **status-bar-not-a-composite-widget** - A status bar takes no composite role; its items are reached with Tab, not arrow keys.
+- **status-bar-is-not-a-live-region** - Put role="status" on the one text item that changes, not on the bar. A live region reads its buttons' labels as part of every update.
+- **status-bar-not-nav** - A status bar shows app state and commands, so it is not a <nav> landmark. Write it as a <footer>, or a <div> with an aria-label.
+- **status-bar-item-is-named** - Every status bar button and link needs a name. An icon-only item takes an aria-label that includes any visible number, such as "0 errors, 2 warnings".
 
 ### stepper
 

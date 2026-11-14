@@ -2506,6 +2506,44 @@
           }
         ]
       },
+      "status-bar": {
+        "status": "enforced",
+        "note": "Added with the status bar. A bar of ambient app state whose items are buttons, links and read-only text. Each button is a tab stop; the bar implements no arrow-key model, and only a changing text item is a live region.",
+        "rejects": {
+          "rejected_role": "toolbar",
+          "because": "its items are independent buttons, links and text reached with Tab - the bar is a row of app state, not a composite widget, so there is no arrow-key model to implement and none to promise",
+          "rule": "status-bar-not-a-composite-widget"
+        },
+        "rules": [
+          {
+            "id": "status-bar-not-a-composite-widget",
+            "kind": "forbid-composite-roles",
+            "selector": ".status-bar",
+            "fragmentSafe": true,
+            "message": "A status bar takes no composite role; its items are reached with Tab, not arrow keys."
+          },
+          {
+            "id": "status-bar-is-not-a-live-region",
+            "kind": "forbid",
+            "selector": ".status-bar:is([role=\"status\"], [role=\"alert\"], [role=\"log\"], [aria-live])",
+            "fragmentSafe": true,
+            "message": "Put role=\"status\" on the one text item that changes, not on the bar. A live region reads its buttons' labels as part of every update."
+          },
+          {
+            "id": "status-bar-not-nav",
+            "kind": "forbid",
+            "selector": "nav.status-bar",
+            "fragmentSafe": true,
+            "message": "A status bar shows app state and commands, so it is not a <nav> landmark. Write it as a <footer>, or a <div> with an aria-label."
+          },
+          {
+            "id": "status-bar-item-is-named",
+            "kind": "require-accessible-name",
+            "selector": ".status-bar > :is(button, a)",
+            "message": "Every status bar button and link needs a name. An icon-only item takes an aria-label that includes any visible number, such as \"0 errors, 2 warnings\"."
+          }
+        ]
+      },
       "tooltip": {
         "status": "enforced",
         "note": "Swept 0.8.0.",

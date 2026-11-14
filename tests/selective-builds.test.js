@@ -555,5 +555,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed .grid-auto-fit, .tabular-nums, .max-w-prose, summary.button, list rows without a leading element (supporting text under bare label text included) and lone-button list rows that dim when disabled: 90,717 gzip bytes (+256).
   // Reviewed .field.label-above, its select and date input alignment, and Datepicker range and multiple-selection inputs stacking under it: 90,891 gzip bytes (+174).
   // Reviewed --md-sys-state-focus-indicator-* tokens behind every 3px component focus ring (snackbar included), and the .focus-ring utility: 91,061 gzip bytes (+170).
-  assert.ok(sizes(css).gzip <= 91061, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed .status-bar (bar, items, end group, vibrant bar, compact priority hiding, forced-colors edge) and the page footer stepping aside for it: 91,393 gzip bytes (+332).
+  assert.ok(sizes(css).gzip <= 91393, `CSS gzip: ${sizes(css).gzip}`);
 });

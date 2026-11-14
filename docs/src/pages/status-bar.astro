@@ -1,0 +1,180 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import TokenTable from "../components/api/TokenTable.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "items", label: "Items" },
+  { id: "color", label: "Color" },
+  { id: "narrow", label: "Narrow windows" },
+  { id: "placement", label: "Placement" },
+  { id: "accessibility", label: "Accessibility" },
+  { id: "tokens", label: "Tokens" },
+]);
+---
+<DocsLayout page="status-bar" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A status bar is a thin row of app state along the bottom of an app
+          shell, like the one in a code editor. It shows things such as the
+          branch, problem counts and the cursor position, and each item can
+          open what it describes.
+        </p>
+        <p>
+          Write it as a <code>&lt;footer class="status-bar"&gt;</code>. Its
+          direct children are the items. <code>.end</code> on the first
+          trailing item pushes that item and the ones after it to the end edge.
+          The status bar is CSS only. Material Design has no status bar
+          component, and in Material "status bar" means the phone's system bar,
+          so this one follows the code editor pattern instead.
+        </p>
+        <div data-markdown-ignore>
+          <footer class="status-bar">
+            <button type="button" class="primary on-primary-text" aria-label="Remote: SSH devbox">
+              <span class="material-symbols" aria-hidden="true">terminal</span>
+            </button>
+            <button type="button" class="menu-trigger" data-target="status-bar-branch-menu" data-menu-options='{"placement": "top"}' aria-label="Branch master, switch branch">
+              <span class="material-symbols" aria-hidden="true">fork_right</span>
+              <span>master</span>
+            </button>
+            <a href="#accessibility" aria-label="0 errors, 2 warnings">
+              <span class="material-symbols" aria-hidden="true">error</span><span>0</span>
+              <span class="material-symbols" aria-hidden="true">warning</span><span>2</span>
+            </a>
+            <span role="status">Ln 42, Col 7</span>
+            <span data-priority="low">UTF-8</span>
+            <button type="button" class="end" aria-label="Notifications, 3 new">
+              <span class="material-symbols" aria-hidden="true">notifications<span class="badge">3</span></span>
+            </button>
+          </footer>
+          <menu id="status-bar-branch-menu">
+            <li><button type="button">master</button></li>
+            <li><button type="button">feature/status-bar</button></li>
+          </menu>
+        </div>
+<Code code={`
+<footer class="status-bar">
+  <button type="button" class="primary on-primary-text" aria-label="Remote: SSH devbox">
+    <span class="material-symbols" aria-hidden="true">terminal</span>
+  </button>
+  <button type="button" class="menu-trigger" data-target="branch-menu" data-menu-options='{"placement": "top"}' aria-label="Branch master, switch branch">
+    <span class="material-symbols" aria-hidden="true">fork_right</span>
+    <span>master</span>
+  </button>
+  <a href="#problems" aria-label="0 errors, 2 warnings">
+    <span class="material-symbols" aria-hidden="true">error</span><span>0</span>
+    <span class="material-symbols" aria-hidden="true">warning</span><span>2</span>
+  </a>
+  <span role="status">Ln 42, Col 7</span>
+  <span data-priority="low">UTF-8</span>
+  <button type="button" class="end" aria-label="Notifications, 3 new">
+    <span class="material-symbols" aria-hidden="true">notifications<span class="badge">3</span></span>
+  </button>
+</footer>
+<menu id="branch-menu">
+  <li><button type="button">master</button></li>
+  <li><button type="button">feature/status-bar</button></li>
+</menu>
+`} />
+  </Section>
+  <Section {...S.items}>
+        <p>Pick the element by what the item does:</p>
+        <ul>
+          <li>A <code>&lt;button&gt;</code> opens something, such as a <a href="menu.html">menu</a> or a dialog. Give a menu trigger <code>data-menu-options='{"placement": "top"}'</code> so the menu opens above the bar.</li>
+          <li>An <code>&lt;a&gt;</code> goes somewhere, such as the problems panel.</li>
+          <li>A <code>&lt;span&gt;</code> is read-only text. It has no hover state.</li>
+        </ul>
+        <p>
+          An item holds an icon, text in a <code>&lt;span&gt;</code>, or both.
+          A <a href="badges.html">badge</a> nested in the icon sits on the
+          icon's corner and may rise above the bar. Items are 24px targets with
+          16px icons and 8px of padding on each side.
+        </p>
+  </Section>
+  <Section {...S.color}>
+        <p>
+          <code>.vibrant</code> paints the whole bar primary-container, the
+          same colors as a vibrant <a href="toolbars.html">toolbar</a>. Use it
+          for a mode the user has to notice, such as a debugging session.
+        </p>
+        <p>
+          To color one item, use the <a href="color.html">color helpers</a>,
+          such as <code>primary on-primary-text</code> or
+          <code>error-container on-error-container-text</code>. Hover still
+          shows over the fill. The text has to say what the color means,
+          because a screen reader doesn't announce it and forced colors remove
+          it.
+        </p>
+        <div data-markdown-ignore>
+          <footer class="status-bar vibrant">
+            <span role="status">Debugging: server.js</span>
+            <span class="error-container on-error-container-text">Build failed</span>
+            <button type="button" class="end">Stop</button>
+          </footer>
+        </div>
+<Code code={`
+<footer class="status-bar vibrant">
+  <span role="status">Debugging: server.js</span>
+  <span class="error-container on-error-container-text">Build failed</span>
+  <button type="button" class="end">Stop</button>
+</footer>
+`} />
+  </Section>
+  <Section {...S.narrow}>
+        <p>
+          Below 600px, items with <code>data-priority="low"</code> are hidden.
+          Mark the items people can do without, such as the encoding or the
+          indentation size. Items that still don't fit wrap to a second row,
+          so the page never scrolls sideways and every item stays reachable.
+        </p>
+  </Section>
+  <Section {...S.placement}>
+        <p>
+          Put the bar last in the app shell. It sticks to the bottom of a page
+          that scrolls and pads for the bottom safe area on phones.
+        </p>
+        <p>
+          A <code>&lt;footer&gt;</code> that is a child of
+          <code>&lt;body&gt;</code> is the page's footer landmark. If the page
+          already has a site footer, write the bar as
+          <code>&lt;div class="status-bar" aria-label="Status"&gt;</code>
+          instead, so the page doesn't end up with two footer landmarks.
+        </p>
+        <p>
+          Don't show a status bar at the same time as a
+          <a href="navigation-bar.html">navigation bar</a>. Both sit at the
+          bottom of the window. Its 24px items are too small for a
+          touch-first layout, so hide the bar there or move what it shows
+          into the page.
+        </p>
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The bar takes no <code>role="toolbar"</code>. Every item is its own
+          tab stop, and arrow keys do nothing. It isn't a live region either.
+          Put <code>role="status"</code> on the one text item whose text
+          changes, such as the cursor position, never on the bar. A live
+          region on the bar would read every button label with each update.
+        </p>
+        <p>
+          A button or link with only an icon needs an
+          <code>aria-label</code>. When the label stands in for visible
+          numbers, repeat them, as in <code>aria-label="0 errors, 2 warnings"</code>.
+          Items meet the WCAG 2.5.8 minimum target size of 24px, but not
+          Material's 48dp.
+        </p>
+  </Section>
+  <Section {...S.tokens}>
+        <p>Override these on the <code>.status-bar</code>.</p>
+        <TokenTable>
+          <tr><td><code>--md-comp-status-bar-container-height</code></td><td>1.5rem (24px)</td></tr>
+          <tr><td><code>--md-comp-status-bar-container-color</code></td><td><code>--md-sys-color-surface-container</code> (<code>primary-container</code> when vibrant)</td></tr>
+          <tr><td><code>--md-comp-status-bar-color</code></td><td><code>--md-sys-color-on-surface-variant</code> (<code>on-primary-container</code> when vibrant)</td></tr>
+          <tr><td><code>--md-comp-status-bar-item-space</code></td><td>8px</td></tr>
+          <tr><td><code>--md-comp-status-bar-icon-size</code></td><td>1rem (16px)</td></tr>
+        </TokenTable>
+  </Section>
+</DocsLayout>
