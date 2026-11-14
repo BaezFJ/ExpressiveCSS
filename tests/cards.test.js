@@ -213,8 +213,10 @@ describe('Cards CSS', () => {
     assert.match(css, /--md-comp-card-focus-state-layer-opacity:\s*var\(--md-sys-state-focus-state-layer-opacity\)/);
     assert.match(css, /--md-comp-card-pressed-state-layer-opacity:\s*var\(--md-sys-state-pressed-state-layer-opacity\)/);
     assert.match(css, /--md-comp-card-dragged-state-layer-opacity:\s*var\(--md-sys-state-dragged-state-layer-opacity\)/);
-    assert.match(css, /--md-comp-card-focus-indicator-thickness:\s*3px/);
-    assert.match(css, /--md-comp-card-focus-indicator-offset:\s*2px/);
+    assert.match(css, /--md-sys-state-focus-indicator-thickness:\s*3px/);
+    assert.match(css, /--md-sys-state-focus-indicator-outer-offset:\s*2px/);
+    assert.match(css, /--md-comp-card-focus-indicator-thickness:\s*var\(--md-sys-state-focus-indicator-thickness\)/);
+    assert.match(css, /--md-comp-card-focus-indicator-offset:\s*var\(--md-sys-state-focus-indicator-outer-offset\)/);
     assert.match(
       css,
       /--md-comp-card-focus-indicator-color:\s*var\(--md-sys-color-secondary\)/

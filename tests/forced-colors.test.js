@@ -75,7 +75,7 @@ describe('Forced colors', () => {
   });
 
   test('a keyboard-focused tab gets a focus ring, not only a tint', () => {
-    const rule = parseRules(css).find((r) => r.selectors.includes('.tabs > a:focus-visible') && /outline:\s*3px solid/.test(r.body));
+    const rule = parseRules(css).find((r) => r.selectors.includes('.tabs > a:focus-visible') && /outline:\s*var\(--md-sys-state-focus-indicator-thickness\) solid/.test(r.body));
     assert.ok(rule, 'no focus ring on .tabs > a:focus-visible');
   });
 });

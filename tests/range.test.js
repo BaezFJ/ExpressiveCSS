@@ -48,8 +48,8 @@ describe('Slider CSS', () => {
     // The 10% state-layer tint alone was about 1.1:1 against the surface.
     for (const thumb of ['::-webkit-slider-thumb', '::-moz-range-thumb']) {
       const rule = css.match(new RegExp(`input\\[type=range\\]:focus-visible:not\\(:disabled\\)${thumb} \\{([^}]*)\\}`))?.[1] ?? '';
-      assert.match(rule, /outline:\s*3px solid var\(--md-sys-color-secondary\)/, `${thumb} has the focus ring`);
-      assert.match(rule, /outline-offset:\s*2px/, `${thumb} ring sits 2px out`);
+      assert.match(rule, /outline:\s*var\(--md-sys-state-focus-indicator-thickness\) solid var\(--md-sys-color-secondary\)/, `${thumb} has the focus ring`);
+      assert.match(rule, /outline-offset:\s*var\(--md-sys-state-focus-indicator-outer-offset\)/, `${thumb} ring sits the token offset out`);
     }
   });
 

@@ -1650,6 +1650,7 @@ The `hoverable` class adds an animation for box shadow as seen below. It can be 
 | `.pointer-events-none` | `pointer-events: none`. Clicks, taps and hovers on the element and its children reach whatever lies beneath it. |
 | `.pointer-events-auto` | `pointer-events: auto`. A child of a `.pointer-events-none` element takes pointer input again. |
 | `.cursor-pointer` | `cursor: pointer` |
+| `.focus-ring` | The components' keyboard focus ring on `:focus-visible`: a 3px `secondary` outline, 2px outside the element. A mouse click draws none. |
 
 ```html
 <div class="relative">
@@ -2179,6 +2180,25 @@ reached without touching the rest.
 Most components draw the layer as an overlay filling the control. Checkboxes and radio buttons have
 no room for one, so they draw it as a ring growing out from the control's edge. Both read the same
 opacity, so they stay in step.
+
+#### Focus indicator
+
+Keyboard focus also draws a ring outside the control, in `--md-sys-color-secondary`. Its size comes
+from two more `md.sys.state` tokens, and every 3px component focus ring reads them. Put
+`.focus-ring` on an app's own focusable element to give it the same ring. Text fields and selects
+mark focus with their own 2px `primary` outline instead.
+
+| Token | Value | Sets |
+| --- | --- | --- |
+| `--md-sys-state-focus-indicator-thickness` | 3px | The ring's width. |
+| `--md-sys-state-focus-indicator-outer-offset` | 2px | The gap between the element and the ring. |
+
+```css
+:root { --md-sys-state-focus-indicator-thickness: 4px; }
+```
+
+A few rows inside scrolling lists draw the ring inside their edge instead, so the list does not clip
+it. Those keep their own inset and still take the width from the token.
 
 ---
 

@@ -957,3 +957,93 @@ browserTest('position helpers leave component .fixed modifiers alone and static 
   assert.match(css, /\\:flex-row\b/);
   assert.doesNotMatch(css, /\\:(position-(absolute|fixed|static)|inset-0|top-0|bottom-0|start-0|end-0)\b/);
 });
+
+// WCAG 2.2 non-text contrast: a focus ring needs 3:1 against what it sits on.
+// Colors come back as oklch, so a canvas pixel turns them into sRGB bytes.
+const srgb = (color) => {
+  const ctx = Object.assign(document.createElement('canvas'), { width: 1, height: 1 }).getContext('2d');
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, 1, 1);
+  return [...ctx.getImageData(0, 0, 1, 1).data.slice(0, 3)];
+};
+const luminance = (rgb) => {
+  const [r, g, b] = rgb.map((v) => {
+    const c = v / 255;
+    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+const contrast = (a, b) => {
+  const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (hi + 0.05) / (lo + 0.05);
+};
+
+for (const [name, engine, engineTest] of engines) {
+  engineTest(`${name}: .focus-ring draws the components' keyboard ring at 3:1 in light, dark and forced colors`, { timeout: 30000 }, async () => {
+    const browser = await leaseBrowser(engine);
+    try {
+      const page = await browser.newPage();
+      const ring = (id) => page.locator(id).evaluate((el, toRgb) => {
+        const s = getComputedStyle(el);
+        return { style: s.outlineStyle, width: s.outlineWidth, offset: s.outlineOffset, color: new Function(`return ${toRgb}`)()(s.outlineColor) };
+      }, srgb.toString());
+      const modes = [['light', 'none'], ['dark', 'none']];
+      if (name === 'chromium') modes.push(['light', 'active']);
+      for (const [theme, forcedColors] of modes) {
+        await page.emulateMedia({ forcedColors });
+        await page.setContent(`<!doctype html><html lang="en" theme="${theme}"><head><style>${css}</style></head><body>
+          <button id="before" type="button">Before</button>
+          <div id="tile" class="focus-ring" tabindex="0">Tile</div>
+          <button id="button" class="button" type="button">Button</button>
+          ${['surface', 'surface-container-highest'].map((role) => `<i data-role="${role}" style="background-color: var(--md-sys-color-${role})"></i>`).join('')}
+        </body></html>`);
+
+        // A click is not keyboard focus, so it draws no ring.
+        await page.locator('#tile').click();
+        assert.equal((await ring('#tile')).style, 'none', `${theme}/${forcedColors}: no ring on click`);
+
+        await page.locator('#before').focus();
+        await page.keyboard.press('Tab');
+        const tile = await ring('#tile');
+        assert.deepEqual([tile.style, tile.width, tile.offset], ['solid', '3px', '2px'], `${theme}/${forcedColors}: the ring`);
+        const backgrounds = await page.locator('[data-role]').evaluateAll((els, toRgb) => els.map((el) => [el.dataset.role, new Function(`return ${toRgb}`)()(getComputedStyle(el).backgroundColor)]), srgb.toString());
+        for (const [role, background] of backgrounds) {
+          const ratio = contrast(tile.color, background);
+          assert.ok(ratio >= 3, `${theme}/${forcedColors}: ${ratio.toFixed(2)}:1 on ${role}`);
+        }
+
+        // The utility and a component ring are the same ring.
+        await page.keyboard.press('Tab');
+        assert.deepEqual(await ring('#button'), tile, `${theme}/${forcedColors}: same as a button's ring`);
+      }
+
+      // One token override restyles every ring.
+      await page.emulateMedia({ forcedColors: 'none' });
+      await page.addStyleTag({ content: ':root { --md-sys-state-focus-indicator-thickness: 4px; --md-sys-state-focus-indicator-outer-offset: 3px; }' });
+      await page.locator('#tile').focus();
+      await page.keyboard.press('Tab');
+      assert.deepEqual([(await ring('#button')).width, (await ring('#button')).offset], ['4px', '3px'], 'tokens drive component rings');
+
+      // The snackbar keeps its inverse ring colors and takes the size from the tokens.
+      await page.setContent(`<style>${css} :root { --md-sys-state-focus-indicator-thickness: 4px; --md-sys-state-focus-indicator-outer-offset: 3px; }</style>
+        <button id="before" type="button">Before</button>
+        <div class="snackbar active" role="status"><span>Saved</span><button id="undo" class="text" type="button">Undo</button>
+          <button id="close" class="circle" type="button" aria-label="Close"><span class="material-symbols" aria-hidden="true">close</span></button></div>`);
+      for (const [id, role] of [['#undo', 'inverse-primary'], ['#close', 'inverse-on-surface']]) {
+        await page.locator('#before').focus();
+        await page.keyboard.press('Tab');
+        if (id === '#close') await page.keyboard.press('Tab');
+        const snack = await ring(id);
+        const expected = await page.evaluate(([r, toRgb]) => {
+          const probe = document.body.appendChild(document.createElement('i'));
+          probe.style.color = `var(--md-sys-color-${r})`;
+          return new Function(`return ${toRgb}`)()(getComputedStyle(probe).color);
+        }, [role, srgb.toString()]);
+        assert.deepEqual([snack.style, snack.width, snack.offset], ['solid', '4px', '3px'], `${id}: token size`);
+        assert.deepEqual(snack.color, expected, `${id}: ${role} ring`);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+}

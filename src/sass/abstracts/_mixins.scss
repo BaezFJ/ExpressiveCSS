@@ -209,12 +209,13 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 // `&:focus-visible` on the focused element - a filter chip draws its ring on
 // the <label>, but the focus is on the checkbox before it. A row inside a
 // scrolling list passes a negative `$offset` so the list does not clip it.
-@mixin focus-ring($offset: 2px) {
-  outline: 3px solid var(--md-sys-color-secondary);
+// Width and default offset are the md.sys.state.focus-indicator tokens.
+@mixin focus-ring($offset: var(--md-sys-state-focus-indicator-outer-offset)) {
+  outline: var(--md-sys-state-focus-indicator-thickness) solid var(--md-sys-color-secondary);
   outline-offset: $offset;
 }
 
-@mixin focus-visible($offset: 2px) {
+@mixin focus-visible($offset: var(--md-sys-state-focus-indicator-outer-offset)) {
   &:focus-visible {
     @include focus-ring($offset);
   }

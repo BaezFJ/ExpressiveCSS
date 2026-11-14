@@ -24,6 +24,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   disabled colors. Icons, a select's caret and the number stepper stay on the
   well when the label wraps. FormSelect, Datepicker and Character Counter work
   in it.
+- `--md-sys-state-focus-indicator-thickness` (3px) and
+  `--md-sys-state-focus-indicator-outer-offset` (2px) size the keyboard focus
+  ring, and every 3px component focus ring reads them. `.focus-ring` draws
+  that ring on an app's own element on `:focus-visible`. It keeps at least 3:1
+  contrast on the surface colors in light and dark, and forced colors replace
+  its color with a system color.
 
 ### Changed
 

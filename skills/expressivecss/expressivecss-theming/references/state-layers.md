@@ -15,6 +15,8 @@ A state layer is a foundation with no markup of its own. ExpressiveCSS component
 
 The values are unitless numbers used as opacity, so keep overrides from `0` through `1`. Focus and pressed both use `0.1`. Do not copy secondary sources that use `0.12` for focus. ExpressiveCSS declares the four system tokens on both `:root` and `:host`, so the same stylesheet can seed a document or a shadow root.
 
+The keyboard focus ring has two more: `--md-sys-state-focus-indicator-thickness` (`3px`) and `--md-sys-state-focus-indicator-outer-offset` (`2px`). Every 3px component focus ring reads them, and its color is `--md-sys-color-secondary`. Give a custom focusable element `.focus-ring` instead of writing an outline, so it follows those tokens.
+
 Set a system token on `:root` to affect every component that inherits it. Set it on a subtree to change descendants, or override the documented `--md-comp-*` token on one component when that component exposes one.
 
 ```css

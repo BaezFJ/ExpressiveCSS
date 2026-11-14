@@ -12,6 +12,12 @@
 // Two shapes consume these. An overlay pseudo-element uses the number as an
 // `opacity` directly; a `color-mix()` tint needs a percentage, which
 // `state-opacity()` in abstracts supplies.
+//
+// The focus indicator is the 3px ring outside a control with visible focus,
+// md.sys.state.focus-indicator.* in the same token set. Its color is
+// --md-sys-color-secondary (the snackbar keeps its inverse colors). Every 3px
+// component ring and the .focus-ring utility read these two, so one override
+// restyles them all.
 
 :root,
 :host {
@@ -19,4 +25,6 @@
   --md-sys-state-focus-state-layer-opacity: 0.1;
   --md-sys-state-pressed-state-layer-opacity: 0.1;
   --md-sys-state-dragged-state-layer-opacity: 0.16;
+  --md-sys-state-focus-indicator-thickness: 3px;
+  --md-sys-state-focus-indicator-outer-offset: 2px;
 }
