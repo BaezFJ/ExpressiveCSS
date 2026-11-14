@@ -5,11 +5,11 @@ A data table drawn as a grid of cells shaded by value, for patterns across two c
 
 Component ID: `heatmap-chart`
 
-[Component documentation](https://www.expressivecss.com/heatmap-chart.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/heatmap-chart.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.17.0)
+[Component documentation](https://www.expressivecss.com/heatmap-chart.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/heatmap-chart.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.18.0)
 
-Contract: ExpressiveCSS 0.17.0
+Contract: ExpressiveCSS 0.18.0
 
-Contract SHA-256: `26478e06c42ed70fe37de3f8278e7ed43b7f6bd964ee55af5e8bbd5602018f94`
+Contract SHA-256: `583c0d5e1d3b9dff374b82876bc6fe7bbb5e6e0196108c9e6cca13f99627701e`
 
 #### Selection and adaptation
 
