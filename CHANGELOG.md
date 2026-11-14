@@ -18,6 +18,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `65ch`.
 - `summary.button` draws the toggle of a plain `<details>` as a common button,
   with any style or size, and hides the disclosure marker.
+- `.field.label-above` draws a text field's label above the control instead
+  of floating it, on filled and outlined fields. The label keeps its place
+  after the control, so it stays linked and still takes the focus, error and
+  disabled colors. Icons, a select's caret and the number stepper stay on the
+  well when the label wraps. FormSelect, Datepicker and Character Counter work
+  in it.
 
 ### Changed
 

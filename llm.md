@@ -8569,6 +8569,25 @@ Put `invalid` or `aria-invalid="true"` on the input for the error state. Do not 
 
 A field icon needs a side. `.prefix` is leading and `.suffix` is trailing; an icon without either is not positioned.
 
+### Label above
+
+Add `label-above` to draw the label above the control instead of floating it, on a filled or outlined field. The label is `label-large` in `on-surface-variant`, 4dp above the 56dp well, and lines up with the supporting text. It turns `primary` while the control has focus, `error` when the control is invalid, and dims when it is disabled. A long label wraps and pushes the well down; icons, a select's caret and a number stepper stay on the well.
+
+Keep the `<label>` after the control, as in a floating field. The grid draws it first, and the focus, disabled and error colors reach it from the control, so a label written first loses them. With nothing to float, the placeholder can hold a real example. FormSelect, Datepicker and Character Counter work in a label-above field. When a form grid stretches the field to a taller neighbor, the label and well stay at the top, so the wells line up across the row.
+
+```html
+<div class="field label-above">
+  <input id="work_email" type="email" placeholder="name@example.com" aria-describedby="work_email_help">
+  <label for="work_email">Work email</label>
+  <small id="work_email_help">We never share it</small>
+</div>
+
+<div class="field label-above outlined">
+  <input id="company" type="text">
+  <label for="company">Company</label>
+</div>
+```
+
 ### Input types
 
 `email`, `password`, and the other native text-like types are styled the same way. `validate` uses HTML5 constraint validation on `change` and toggles `invalid` and `aria-invalid="true"` on the input, so a screen reader hears the error state too. It adds the field's `[data-error]` supporting text to the input's `aria-describedby`, giving it an id if it has none and keeping the ids already there, so the error the CSS shows is read with the field. A form reset clears `invalid` and `aria-invalid`. There is no green `valid` style.

@@ -6,6 +6,7 @@ import { defineSections } from "../lib/sections";
 
 const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "label-above", label: "Label above" },
   { id: "types", label: "Input types" },
   { id: "inline", label: "Inline" },
   { id: "password-visibility", label: "Password visibility" },
@@ -105,6 +106,48 @@ const S = defineSections([
           wrapper. That class is a color utility and fills the field.
           <code>.supporting-text</code> and <code>.prefix</code> /
           <code>.suffix</code> remain as aliases.
+        </p>
+  </Section>
+  <Section {...S["label-above"]}>
+        <p>
+          Add <code>label-above</code> to draw the label above the control instead of
+          floating it, on a filled or outlined field. The label is <code>label-large</code>
+          in <code>on-surface-variant</code>, 4dp above the 56dp well, and lines up with the
+          supporting text. It turns <code>primary</code> while the control has focus,
+          <code>error</code> when the control is invalid, and dims when it is disabled. A
+          long label wraps and pushes the well down; icons, a select's caret and a number
+          stepper stay on the well.
+        </p>
+        <form class="row">
+          <div class="s12 m6 field label-above">
+            <input id="work_email" type="email" placeholder="name@example.com" aria-describedby="work_email-help">
+            <label for="work_email">Work email</label>
+            <small id="work_email-help">We never share it</small>
+          </div>
+          <div class="s12 m6 field label-above outlined">
+            <input id="company" type="text">
+            <label for="company">Company</label>
+          </div>
+        </form>
+<Code code={`
+<div class="field label-above">
+  <input id="work_email" type="email" placeholder="name@example.com" aria-describedby="work_email_help">
+  <label for="work_email">Work email</label>
+  <small id="work_email_help">We never share it</small>
+</div>
+
+<div class="field label-above outlined">
+  <input id="company" type="text">
+  <label for="company">Company</label>
+</div>
+`} />
+        <p>
+          Keep the <code>&lt;label&gt;</code> after the control, as in a floating field.
+          The grid draws it first, and the focus, disabled and error colors reach it from
+          the control, so a label written first loses them. With nothing to float, the
+          placeholder can hold a real example. FormSelect, Datepicker and Character Counter
+          work in a label-above field. When a form grid stretches the field to a taller
+          neighbor, the label and well stay at the top, so the wells line up across the row.
         </p>
   </Section>
   <Section {...S.types}>
