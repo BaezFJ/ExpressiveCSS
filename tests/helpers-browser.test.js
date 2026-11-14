@@ -559,6 +559,50 @@ for (const [engine, browserType, utilityTest] of engines) {
       await browser.close();
     }
   });
+
+  utilityTest(`grid-auto-fit stretches a short row across the container (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<style>${css} html { font-size: 16px; }</style>
+        <div id="fit" class="grid-auto-fit" style="--grid-column-min: 100px; width: 450px"><div></div><div></div></div>
+        <div id="full" class="grid-auto-fit" style="--grid-column-min: 100px; width: 450px">${'<div></div>'.repeat(6)}</div>
+        <div id="fallback" class="grid-auto-fit">${'<div></div>'.repeat(4)}</div>`);
+      const layout = (id, width) => page.locator(`#${id}`).evaluate((el, width) => {
+        if (width) el.style.width = `${width}px`;
+        const boxes = [...el.children].map((child) => child.getBoundingClientRect());
+        return { columns: new Set(boxes.map((box) => box.left)).size, widths: boxes.map((box) => box.width), overflows: el.scrollWidth > el.clientWidth };
+      }, width);
+      // auto-fill would keep four 112.5px tracks with two of them empty.
+      assert.deepEqual((await layout('fit')).widths, [225, 225], 'empty tracks collapse');
+      assert.equal((await layout('full')).columns, 4, 'a full row still fits as many columns as the minimum allows');
+      assert.deepEqual([(await layout('fallback', 479)).columns, (await layout('fallback', 480)).columns], [1, 2], 'the fallback minimum is 240px');
+      const narrow = await layout('fallback', 180);
+      assert.deepEqual([narrow.columns, narrow.widths[0], narrow.overflows], [1, 180, false], 'a narrow container gets one column');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  utilityTest(`tabular-nums and max-w-prose set one property each (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<style>${css} html { font-size: 16px; }</style>
+        <p id="nums" class="tabular-nums">1,111</p>
+        <div style="width: 2000px"><p id="prose" class="max-w-prose">Text</p><p id="ref" style="max-width: 65ch">Text</p></div>`);
+      const result = await page.evaluate(() => ({
+        nums: getComputedStyle(document.getElementById('nums')).fontVariantNumeric,
+        prose: document.getElementById('prose').getBoundingClientRect().width,
+        ref: document.getElementById('ref').getBoundingClientRect().width
+      }));
+      assert.equal(result.nums, 'tabular-nums');
+      assert.ok(result.prose < 2000, 'the measure caps the width');
+      assert.equal(result.prose, result.ref, '65 characters of the element\'s font');
+    } finally {
+      await browser.close();
+    }
+  });
 }
 
 test('line clamp classes come with every window-size prefix', () => {

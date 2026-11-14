@@ -75,6 +75,7 @@ const S = defineSections([
             <tr><td><code>.block</code>, <code>.inline-block</code></td><td><code>display: block</code>, <code>display: inline-block</code></td></tr>
             <tr><td><code>.grid</code>, <code>.inline-grid</code></td><td><code>display: grid</code>, <code>display: inline-grid</code></td></tr>
             <tr><td><code>.grid-auto-fill</code></td><td>A grid with as many columns as fit, each at least <code>--grid-column-min</code> wide (240px by default)</td></tr>
+            <tr><td><code>.grid-auto-fit</code></td><td>The same grid, but empty columns collapse, so a short row stretches across the container</td></tr>
             <tr><td><code>.contents</code></td><td><code>display: contents</code>; the element's box goes away and its children join the parent's layout</td></tr>
             <tr><td><code>.relative</code></td><td><code>position: relative</code></td></tr>
             <tr><td><code>.sticky-top</code></td><td><code>position: sticky; top: 0</code></td></tr>
@@ -138,6 +139,23 @@ const S = defineSections([
           items. A container narrower than the minimum gets one column as wide as itself. The
           class sets no gap, so pair it with <code>.gap-*</code>. It has no window-size prefixes,
           because the column count already follows the container's width.
+        </p>
+        <div class="grid-auto-fit gap-3" style="--grid-column-min: 10rem">
+          <div class="surface-container p-4">Revenue</div>
+          <div class="surface-container p-4">Orders</div>
+        </div>
+<Code code={`
+<div class="grid-auto-fit gap-3" style="--grid-column-min: 12rem">
+  <div class="stat">…</div>
+  <div class="stat">…</div>
+</div>
+`} />
+        <p>
+          <code>.grid-auto-fit</code> uses <code>auto-fit</code> in the same track rule. Empty
+          columns collapse, so when fewer items than fit are in the row, they share the whole
+          width. A full row looks the same under both classes. Use <code>.grid-auto-fit</code>
+          for a few summary tiles that should fill the row, and <code>.grid-auto-fill</code>
+          when every item should keep the column width.
         </p>
   </Section>
   <Section {...S.flex}>
@@ -299,6 +317,7 @@ const S = defineSections([
             <tr><td><code>.min-h-0</code></td><td><code>min-height: 0</code></td></tr>
             <tr><td><code>.w-full</code>, <code>.h-full</code></td><td><code>width: 100%</code>, <code>height: 100%</code></td></tr>
             <tr><td><code>.max-w-full</code></td><td><code>max-width: 100%</code></td></tr>
+            <tr><td><code>.max-w-prose</code></td><td><code>max-width: 65ch</code>, a readable line length in the element's own font</td></tr>
             <tr><td><code>.aspect-1x1</code>, <code>.aspect-4x3</code>, <code>.aspect-16x9</code></td><td><code>aspect-ratio</code>; the height follows the width</td></tr>
             <tr><td><code>.object-cover</code>, <code>.object-contain</code></td><td><code>object-fit</code> on an <code>&lt;img&gt;</code> or <code>&lt;video&gt;</code> with a set ratio</td></tr>
             <tr><td><code>.overflow-x-auto</code></td><td><code>overflow-x: auto</code></td></tr>

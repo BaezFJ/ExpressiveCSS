@@ -168,6 +168,13 @@ const S = defineSections([
 <span class="upper">upper</span>
 `} />
         <p>
+          <code>.tabular-nums</code> gives every digit the same width, so figures in a column
+          line up and a changing value does not shift its neighbors. Data table
+          <code>.numeric</code> cells, KPIs, stats and the countdown already set it.
+        </p>
+        <p><span class="tabular-nums">1,204.50</span></p>
+<Code code={`<span class="tabular-nums">1,204.50</span>`} />
+        <p>
           <code>body-large</code>, <code>body-medium</code>, and
           <code>body-small</code> apply the three body roles to an element
           that is not a <code>&lt;p&gt;</code> or <code>&lt;small&gt;</code>.

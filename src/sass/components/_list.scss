@@ -2,7 +2,8 @@
 
 // List. Anatomy is the HTML: a ul/ol/menu.list of items. A leading icon,
 // image, or input is the first child; a trailing icon, kbd, button, time,
-// or .meta is the last child; a following <p> is supporting text.
+// or .meta is the last child; a following <p> is supporting text. An item
+// whose only child is an <a>, <label> or plain <button> puts the row on it.
 //
 // Two variants (M3 Expressive):
 //   (default)  standard — transparent rows, selected is a pill
@@ -23,6 +24,13 @@
 //   --md-comp-list-segmented-gap            2px
 //
 // Nest descendants inside this block.
+
+// An item's only child that is the whole row: an <a>, a <label>, or a plain
+// <button> (a .button or .icon-button stays a button). The guard is :where(),
+// so every arm weighs one element, as the old :is(a, label) did.
+$_row: ":is(a, label, button:where(:not(.button, .icon-button))):only-child";
+// What takes the leading column.
+$_leading: ":is(#{$icon}, img, input, .drag-handle):first-child";
 
 .list {
   --md-comp-list-item-height: 56px;
@@ -60,9 +68,9 @@
     --checkbox-mark-inset: var(--md-comp-list-item-padding);
   }
 
-  // The row grid lives on the item, or on a wrapping <a>/<label>.
-  > li:not(:has(> :is(a, label):only-child)),
-  > li > :is(a, label):only-child {
+  // The row grid lives on the item, or on a wrapping <a>/<label>/<button>.
+  > li:not(:has(> #{$_row})),
+  > li > #{$_row} {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-rows: auto auto;
@@ -187,12 +195,44 @@
     }
   }
 
-  > li > :is(a, label):only-child {
+  > li > #{$_row} {
     color: inherit;
     text-decoration: none;
     border-radius: inherit;
     cursor: pointer;
     @include focus-visible;
+  }
+
+  // Undo the common button: full width, no fill, start-aligned text that
+  // wraps. The item's hover and selected fills show through.
+  > li > button#{$_row} {
+    width: 100%;
+    height: auto;
+    max-width: none;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    text-align: start;
+    white-space: normal;
+  }
+
+  // An empty leading column keeps its gutter, which put the text a gap
+  // further in than the row padding. Rows without a leading element drop the
+  // gutters, and the trailing element takes the gap as a margin.
+  > li:not(:has(> #{$_row}, > #{$_leading})),
+  > li > #{$_row}:not(:has(> #{$_leading})) {
+    column-gap: 0;
+
+    // Bare label text lands in the first column, so supporting text spans
+    // both to start under it, as it does under a wrapped label.
+    > p {
+      grid-column: 1 / 3;
+    }
+
+    > :is(#{$icon}, kbd, button, time, .meta, .badge, .button, a, .sortable-actions):last-child:not(:first-child),
+    > [data-swipe-toggle] {
+      margin-inline-start: var(--md-comp-list-gap);
+    }
   }
 
   > li:not(.active, .selected):not([aria-selected="true"]):not([aria-current]):not(:has(> [aria-current])):not(:has([aria-selected="true"])):not(:has(:checked)):hover {
@@ -216,7 +256,7 @@
     }
 
     > #{$icon}:first-child,
-    > :is(a, label):only-child > #{$icon}:first-child {
+    > #{$_row} > #{$icon}:first-child {
       --md-icon-fill: 1;
     }
   }
@@ -244,8 +284,11 @@
     pointer-events: none;
   }
 
+  // A disabled row button dims its item the same way. The row button's own
+  // color inherits, so the common button's disabled color would not reach it.
   > li.disabled,
-  > li[aria-disabled="true"] {
+  > li[aria-disabled="true"],
+  > li:has(> button#{$_row}#{$expressive-disabled}) {
     pointer-events: none;
     color: color-mix(in oklab, var(--md-sys-color-on-surface) 38%, transparent);
   }

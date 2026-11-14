@@ -1229,6 +1229,7 @@ To center text on mobile only, add `center-on-small-only`.
 | `.block`, `.inline-block` | `display: block`, `display: inline-block` |
 | `.grid`, `.inline-grid` | `display: grid`, `display: inline-grid` |
 | `.grid-auto-fill` | A grid with as many columns as fit, each at least `--grid-column-min` wide (240px by default) |
+| `.grid-auto-fit` | The same grid, but empty columns collapse, so a short row stretches across the container |
 | `.contents` | `display: contents`; the element's box goes away and its children join the parent's layout |
 | `.relative` | `position: relative` |
 | `.sticky-top` | `position: sticky; top: 0` |
@@ -1247,6 +1248,15 @@ To center text on mobile only, add `center-on-small-only`.
   <article class="outlined">…</article>
   <article class="outlined">…</article>
   <article class="outlined">…</article>
+</div>
+```
+
+`.grid-auto-fit` uses `auto-fit` in the same track rule. Empty columns collapse, so when fewer items than fit are in the row, they share the whole width. A full row looks the same under both classes. Use `.grid-auto-fit` for a few summary tiles that should fill the row, and `.grid-auto-fill` when every item should keep the column width.
+
+```html
+<div class="grid-auto-fit gap-3" style="--grid-column-min: 12rem">
+  <div class="stat">…</div>
+  <div class="stat">…</div>
 </div>
 ```
 
@@ -1345,6 +1355,7 @@ Flex and grid children can retain a minimum size based on their content. Clear t
 | `.min-h-0` | `min-height: 0` |
 | `.w-full`, `.h-full` | `width: 100%`, `height: 100%` |
 | `.max-w-full` | `max-width: 100%` |
+| `.max-w-prose` | `max-width: 65ch`, a readable line length in the element's own font |
 | `.aspect-1x1`, `.aspect-4x3`, `.aspect-16x9` | `aspect-ratio`; the height follows the width |
 | `.object-cover`, `.object-contain` | `object-fit` on an `<img>` or `<video>` with a set ratio |
 | `.overflow-x-auto` | `overflow-x: auto` |
@@ -2053,6 +2064,12 @@ When the tag cannot say the role, use the class. Display-large and display-mediu
 <span class="upper">upper</span>
 ```
 
+`.tabular-nums` gives every digit the same width, so figures in a column line up and a changing value does not shift its neighbors. Data table `.numeric` cells, KPIs, stats and the countdown already set it.
+
+```html
+<span class="tabular-nums">1,204.50</span>
+```
+
 `body-large`, `body-medium`, and `body-small` apply the three body roles to an element that is not a `<p>` or `<small>`.
 
 Each of the fifteen roles has an emphasized counterpart from Material 3 Expressive: the same family, size and spacing, heavier. Add `-emphasized` to the role class, such as `.label-large-emphasized` or `.headline-small-emphasized`. Display, headline, title-large and body roles go to `500`; title-medium, title-small and label roles go to `700`. The weight is a token, `--md-sys-typescale-emphasized-{role}-font-weight`. Roboto and Noto Sans are bundled at `700` and load only when a page uses it.
@@ -2333,6 +2350,15 @@ A label that does not fit wraps between words and the button grows taller, so en
 </button>
 
 <a class="button" href="/docs">Docs</a>
+```
+
+A plain `<details>` can use a button as its toggle: give the `<summary>` the `button` class and any style or size. The disclosure triangle goes away, and the browser still opens and closes the panel and reports its state. Inside an `.accordion`, leave the summary unclassed.
+
+```html
+<details>
+  <summary class="button outlined">More filters</summary>
+  …
+</details>
 ```
 
 ### Filled
@@ -3407,7 +3433,9 @@ A leading icon is a quick visual cue for the label. A trailing icon is status or
 
 ### Links
 
-Wrap the row in an `<a>` or `<label>` to make the whole item the target. `aria-current` on the link, or a checked radio inside the label, paints the selected pill.
+Wrap the row in an `<a>` or `<label>` to make the whole item the target. `aria-current` on the link, or a checked radio inside the label, paints the selected pill. A plain `<button>` that is the item's only child is a row too, for an action rather than a destination. A `<button class="button">` stays a common button.
+
+A row with nothing in the leading slot starts its text at the 16dp row padding.
 
 In a list whose rows are each a single link or button, Up and Down move focus to the row before or after, and Home and End to the first and last, skipping disabled rows and stopping at the ends. Every row stays a Tab stop, so the keys are a shortcut that needs the script; rows with more than one control, and radio rows, which the browser already moves with the arrows, keep their native keys.
 

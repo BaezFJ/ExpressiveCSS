@@ -9,7 +9,7 @@ Component ID: `stat`
 
 Contract: ExpressiveCSS 0.17.0
 
-Contract SHA-256: `f7a4c1cf6c54d19ad66db7bc8d13717321cc865b6a66c6989771574d9c19cb00`
+Contract SHA-256: `75e6cc0ce5ea7524717ccd443919687a545bc4a7a4e28bc30c618af47eb14375`
 
 #### Selection and adaptation
 

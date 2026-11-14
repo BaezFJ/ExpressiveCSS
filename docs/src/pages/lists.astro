@@ -238,7 +238,12 @@ const S = defineSections([
           Wrap the row in an <code>&lt;a&gt;</code> or
           <code>&lt;label&gt;</code> to make the whole item the target.
           <code>aria-current</code> on the link, or a checked radio
-          inside the label, paints the selected pill.
+          inside the label, paints the selected pill. A plain
+          <code>&lt;button&gt;</code> that is the item's only child is a row
+          too, for an action rather than a destination. A
+          <code>&lt;button class="button"&gt;</code> stays a common button.
+          A row with nothing in the leading slot starts its text at the 16dp
+          row padding.
         </p>
         <p>
           In a list where each row is a single link or button, the script adds arrow-key shortcuts. Up and Down move focus to the row before or after. Home and End move it to the first and last row. The keys skip disabled rows and stop at the ends. Every row stays a Tab stop, so the keys are only a shortcut. Rows with more than one control keep their native keys. So do radio rows, which the browser already moves with the arrows.

@@ -149,6 +149,7 @@ Never use display hiding as the only way to provide required content or actions.
 | `.position-absolute`, `.position-fixed`, `.position-static` | The matching `position`. | Give an absolute element's parent `.relative`. There is no bare `.fixed`; that is a component modifier. `.position-fixed` sets no `z-index`, so add a `--expressive-z-*` value, and a transformed, filtered or contained ancestor captures it. `.position-static` undoes `.relative` and `.sticky-top`. |
 | `.inset-0`, `.top-0`, `.bottom-0`, `.start-0`, `.end-0` | `inset: 0`, or 0 on one edge. | `.start-0` and `.end-0` are logical and swap sides in RTL. None of the position classes take a window-size prefix. |
 | `.block`, `.inline-block`, `.grid`, `.inline-grid`, `.contents` | The matching `display`. | There is no `display: inline` class; `.inline` is the checkbox and radio row. Keep `.contents` off buttons, lists, tables and headings. |
+| `.grid-auto-fill`, `.grid-auto-fit` | A grid with as many columns as fit, each at least `--grid-column-min` wide (240px by default). | `auto-fill` keeps empty columns so a short row keeps the column width; `auto-fit` collapses them so a short row fills the width. Pair with `.gap-*`. |
 | `.divider` | Draws a 1px `outline-variant` divider. | Keep decorative dividers out of the accessibility tree; use semantic grouping or headings for real structure. |
 
 ```html
@@ -222,6 +223,7 @@ Prefixes are mobile first; there is no max-width form. To hide content at a size
 | `.min-w-0` | `min-width: 0` | Lets a flex or grid child shrink below its content's minimum width. |
 | `.min-h-0` | `min-height: 0` | Lets a child shrink inside a bounded column before its content scrolls. |
 | `.w-full`, `.h-full`, `.max-w-full` | `width: 100%`, `height: 100%`, `max-width: 100%` | `.h-full` needs a parent with a definite height. |
+| `.max-w-prose` | `max-width: 65ch` | Measured in the element's own font; for running text, not for layout columns. |
 | `.aspect-1x1`, `.aspect-4x3`, `.aspect-16x9` | `aspect-ratio` | The height follows the width; an explicit height wins over the ratio. |
 | `.object-cover`, `.object-contain` | `object-fit` | On an `<img>` or `<video>` with a set ratio; keep intrinsic `width` and `height` attributes. |
 | `.overflow-x-auto` | `overflow-x: auto` | For wide tables or action rows in a bounded container. |

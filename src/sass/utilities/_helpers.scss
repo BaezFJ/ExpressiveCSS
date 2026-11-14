@@ -107,6 +107,13 @@ $_layout: (
   grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--grid-column-min, #{rem(240px)})), 1fr));
 }
 
+// The same, but empty tracks collapse, so a short row stretches its items
+// across the whole width.
+.grid-auto-fit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--grid-column-min, #{rem(240px)})), 1fr));
+}
+
 .contents { display: contents; }
 
 // Allow flex and grid children to shrink around their content.
@@ -124,6 +131,8 @@ $_layout: (
 .w-full { width: 100%; }
 .h-full { height: 100%; }
 .max-w-full { max-width: 100%; }
+// A comfortable line length for running text, in the element's own font.
+.max-w-prose { max-width: 65ch; }
 
 // Fixed proportions. With an explicit width the height follows; on an <img>
 // or <video>, pair with .object-cover or .object-contain.
