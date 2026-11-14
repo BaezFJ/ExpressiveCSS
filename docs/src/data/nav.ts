@@ -893,6 +893,14 @@ export const NAV: DocsGroup[] = [
         aliases: ["/bottom-app-bar.html"],
       },
       {
+        id: "status-bar",
+        styles: ["components/status-bar"],
+        label: "Status bar",
+        route: "/status-bar.html",
+        description:
+          "A thin row of app state and shortcuts along the bottom of an app shell.",
+      },
+      {
         id: "search",
         styles: ["components/search"],
         label: "Search",

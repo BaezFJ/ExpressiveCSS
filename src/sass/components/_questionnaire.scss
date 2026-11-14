@@ -177,7 +177,7 @@
   }
 
   // The selector matches the page footer's, which every <footer> gets.
-  > footer:not(:has(> .navigation-bar:only-child)) {
+  > footer:not(.status-bar, :has(> .navigation-bar:only-child)) {
     margin: 0;
     padding: 0;
     border: 0;

@@ -30,6 +30,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   that ring on an app's own element on `:focus-visible`. It keeps at least 3:1
   contrast on the surface colors in light and dark, and forced colors replace
   its color with a system color.
+- `.status-bar` is a 24px row of app state along the bottom of an app shell,
+  like the status bar in a code editor. Its items are buttons and links,
+  each a tab stop of its own, and read-only text. `.end` starts the trailing
+  group, `.vibrant` paints the bar primary-container, and the color helpers
+  color one item. Below 600px, `data-priority="low"` items are hidden, and
+  items that still don't fit wrap to a second row. The bar sticks to the
+  bottom of a scrolling page and pads for the bottom safe area. CSS only.
+  Status bar items stay out of the common button styles, and a
+  `<footer class="status-bar">` no longer picks up the page footer's, a
+  pane footer's or a questionnaire footer's padding, margin and border.
 
 ### Changed
 

@@ -1208,7 +1208,7 @@ try {
   for (const query of ['app-bar', '  APP BAR  ', 'navbar', 'screen-level actions']) {
     const result = await client.callTool({ name: 'component_catalog', arguments: { query, limit: 1 } });
     const matchType = query.includes('actions') ? 'heuristic' : query === 'navbar' ? 'exact-alias' : 'exact-name';
-    assertCatalogSearch(result, { query, limit: 1, entries: [{ ...appBarEntry, matchType }], totalMatches: matchType === 'exact-name' ? 3 : 1 });
+    assertCatalogSearch(result, { query, limit: 1, entries: [{ ...appBarEntry, matchType }], totalMatches: matchType === 'exact-name' ? 4 : 1 });
   }
   const recoveredSlugs = new Set();
   for (const entry of expectedCatalog) {

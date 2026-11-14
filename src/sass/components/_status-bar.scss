@@ -1,0 +1,142 @@
+@use "../abstracts" as *;
+
+// Status bar. A framework extra: M3 has no component for it, and in M3
+// "status bar" names the operating system's bar.
+//
+// Anatomy is the HTML. A <footer class="status-bar">, or a
+// <div role="region" aria-label="Status"> when the page already has a site
+// footer, is the bar. Its direct
+// children are the items: a <button> opens something, an <a> goes somewhere
+// and a <span> is read-only text. An item holds a Material Symbols icon,
+// text, or both. `.end` on the first trailing item pushes it and every later
+// item to the end edge.
+//
+// The bar takes no role="toolbar", because that composite role promises
+// arrow-key navigation and every item here is its own tab stop. It is no live
+// region either, since one would read its buttons' labels with every update.
+// The single text item that changes takes role="status".
+//
+// Items that do not fit wrap to another row, so the page never scrolls
+// sideways and nothing clips a tooltip or badge that rises above an item.
+// Compact widths hide `data-priority="low"` items with a media query.
+// container-type would add layout containment and make the bar the containing
+// block for any fixed-position popup inside it, and the bar spans the window
+// anyway.
+//
+// An item is colored with the color helpers (.primary with .on-primary-text,
+// .error-container with .on-error-container-text); the bar adds no item color
+// classes of its own.
+//
+// Items are 24px, which meets WCAG 2.5.8 but not M3's 48dp touch target.
+// Every selector stays under .status-bar, because .end and .vibrant already
+// mean other things on other components.
+$_bar: ".status-bar";
+
+#{$_bar} {
+  --md-comp-status-bar-container-height: #{rem(24px)};
+  --md-comp-status-bar-container-color: var(--md-sys-color-surface-container);
+  --md-comp-status-bar-color: var(--md-sys-color-on-surface-variant);
+  --md-comp-status-bar-item-space: 8px;
+  --md-comp-status-bar-icon-size: #{rem(16px)};
+
+  position: sticky;
+  inset-block-end: 0;
+  z-index: var(--expressive-z-toolbar);
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  min-block-size: var(--md-comp-status-bar-container-height);
+  margin: 0;
+  padding: 0 0 env(safe-area-inset-bottom, 0px);
+  background-color: var(--md-comp-status-bar-container-color);
+  color: var(--md-comp-status-bar-color);
+  @include typescale("body-small");
+
+  @media (forced-colors: active) {
+    border-block-start: 1px solid CanvasText;
+  }
+
+  > :is(a, button, span) {
+    box-sizing: border-box;
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    min-block-size: var(--md-comp-status-bar-container-height);
+    min-inline-size: var(--md-comp-status-bar-container-height);
+    margin: 0;
+    padding: 0 var(--md-comp-status-bar-item-space);
+    white-space: nowrap;
+
+    > #{$icon} {
+      flex: none;
+      @include icon-size(var(--md-comp-status-bar-icon-size));
+
+      // A badge anchors to the 16px glyph, not the 24px one it assumes.
+      > .badge {
+        --md-comp-badge-icon-size: var(--md-comp-status-bar-icon-size);
+      }
+    }
+  }
+
+  // _buttons.scss leaves `.status-bar > *` out of the common button rules,
+  // so this is the whole of a button item's style, and it has no transition.
+  > :is(a, button) {
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    appearance: none;
+    // A negative offset keeps the ring inside the item, clear of its
+    // neighbors.
+    @include focus-visible(calc(-1 * var(--md-sys-state-focus-indicator-thickness)));
+
+    // The state layer is an image over the fill, so an item colored with a
+    // helper such as .primary or .error-container still shows it.
+    &:hover:not(#{$expressive-disabled}) {
+      background-image: linear-gradient(state-layer(currentColor, "hover") 0 0);
+    }
+
+    &:active:not(#{$expressive-disabled}) {
+      background-image: linear-gradient(state-layer(currentColor, "pressed") 0 0);
+    }
+
+    // Opacity rather than a text color, so an item colored with a helper,
+    // whose utilities layer outranks this one, dims too. No pointer events,
+    // as on a common button, so .disabled and aria-disabled items ignore
+    // clicks as well as hover.
+    &#{$expressive-disabled} {
+      opacity: 0.38;
+      pointer-events: none;
+    }
+  }
+
+  // Only the first .end moves; later ones sit right after it.
+  > .end:not(.end ~ .end) {
+    margin-inline-start: auto;
+  }
+
+  @include bp-down("medium") {
+    > [data-priority="low"] {
+      display: none;
+    }
+
+    // A hidden first .end takes its push with it, so the first visible one
+    // takes over.
+    > .end:not(.end:not([data-priority="low"]) ~ .end) {
+      margin-inline-start: auto;
+    }
+  }
+}
+
+// The same colors as .toolbar.vibrant.
+#{$_bar}.vibrant {
+  --md-comp-status-bar-container-color: var(--md-sys-color-primary-container);
+  --md-comp-status-bar-color: var(--md-sys-color-on-primary-container);
+}
