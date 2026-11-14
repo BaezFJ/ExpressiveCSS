@@ -14,6 +14,9 @@ const bar = (id, cls = '', extra = '') => `<footer class="status-bar ${cls}" id=
   <span role="status" id="${id}-pos">Ln 42, Col 7</span>
   <span class="error-container on-error-container-text" id="${id}-err">${icon('error')}<span>3</span></span>
   <button type="button" id="${id}-dis" disabled>Format</button>
+  <button type="button" id="${id}-ad" aria-disabled="true">Lint</button>
+  <button type="button" class="disabled primary on-primary-text" id="${id}-cd">Deploy</button>
+  <button type="button" id="${id}-tog" aria-pressed="true">Wrap</button>
   <span data-priority="low" id="${id}-low">UTF-8</span>
   ${extra}
   <button type="button" class="end" id="${id}-acct" aria-label="Accounts">${icon('account_circle')}</button>
@@ -103,7 +106,28 @@ for (const [name, type, run] of engines) {
       assert.equal(await style('#a-pos', 'backgroundImage'), 'none', 'read-only text has no state layer');
       await tab.hover('#a-dis', { force: true });
       assert.equal(await style('#a-dis', 'backgroundImage'), 'none', 'disabled has no state layer');
-      assert.notEqual(await style('#a-dis', 'color'), await style('#a', 'color'), 'disabled text is dimmed');
+      for (const id of ['dis', 'ad', 'cd']) assert.equal(await style(`#a-${id}`, 'opacity'), '0.38', `${id} is dimmed`);
+      // A mouse click at a disabled item's center must not reach it.
+      for (const id of ['ad', 'cd']) {
+        const clicked = await tab.locator(`#a-${id}`).evaluate((el) => {
+          el.dataset.clicks = '0';
+          el.addEventListener('click', () => { el.dataset.clicks = '1'; });
+          const r = el.getBoundingClientRect();
+          return [r.left + r.width / 2, r.top + r.height / 2];
+        });
+        await tab.mouse.click(...clicked);
+        assert.equal(await tab.locator(`#a-${id}`).getAttribute('data-clicks'), '0', `${id} ignores a mouse click`);
+      }
+      assert.equal(await style('#a-tog', 'backgroundColor'), 'rgba(0, 0, 0, 0)', 'a toggle item takes no filled toggle color');
+
+      // A mouse click leaves :focus without :focus-visible, and a press reshapes common buttons.
+      await tab.hover('#a-branch');
+      await tab.mouse.down();
+      assert.equal(await style('#a-branch', 'borderTopLeftRadius'), '0px', 'pressing keeps the item square');
+      await tab.mouse.up();
+      await tab.mouse.move(5, 700);
+      assert.equal(await tab.evaluate(() => document.activeElement.id), 'a-branch');
+      assert.equal(await style('#a-branch', 'backgroundColor'), 'rgba(0, 0, 0, 0)', 'mouse focus paints no fill');
     } finally {
       await browser.close();
     }
@@ -151,14 +175,33 @@ for (const [name, type, run] of engines) {
     }
   });
 
-  run(`${name}: status bar mirrors in RTL and grows with enlarged text`, { timeout: 30000 }, async () => {
+run(`${name}: status bar end group, pane footers and badges`, { timeout: 30000 }, async () => {
+    const endBar = `<footer class="status-bar" id="e"><span>Ln 1</span><span class="end" data-priority="low">UTF-8</span><button type="button" class="end" id="e-bell" aria-label="Notifications">${icon('notifications')}</button></footer>`;
+    const pane = `<section class="pane"><div>Body</div>${bar('p')}</section>`;
+    const badge = `<footer class="status-bar" id="b"><button type="button" aria-label="Notifications, 3 new"><span class="material-symbols" id="b-icon" aria-hidden="true">notifications<span class="badge" id="b-badge">3</span></span></button></footer>`;
+    const { browser, box, style } = await open(type, 599, page(`${endBar}${pane}${badge}`));
+    try {
+      assert.ok(Math.abs((await box('#e-bell')).right - (await box('#e')).right) < 1, 'the first visible .end starts the end group when the first .end is hidden');
+      assert.equal((await box('#p')).height, 24, 'a pane footer rule leaves the bar 24px tall');
+      assert.equal(await style('#p', 'borderTopWidth'), '0px', 'no pane footer divider');
+      const glyph = await box('#b-icon');
+      const dot = await box('#b-badge');
+      assert.ok(Math.abs(dot.left + dot.width / 2 - glyph.right) < 1, 'the badge centers on the end edge of the glyph');
+      assert.ok(Math.abs(dot.top + dot.height / 2 - glyph.top) < 1, 'the badge centers on the top edge of the glyph');
+    } finally {
+      await browser.close();
+    }
+  });
+
+    run(`${name}: status bar mirrors in RTL and grows with enlarged text`, { timeout: 30000 }, async () => {
     const rtl = await open(type, 1024, page(bar('a'), { dir: 'rtl' }));
     try {
       assert.ok(Math.abs((await rtl.box('#a-bell')).left - (await rtl.box('#a')).left) < 1, 'the end group sits at the left in RTL');
     } finally {
       await rtl.browser.close();
     }
-    const big = await open(type, 1024, page(bar('a'), { root: 'font-size:32px' }));
+    const short = `<footer class="status-bar" id="a"><button type="button" aria-label="Remote">${icon('terminal')}</button><button type="button">${icon('fork_right')}<span>master</span></button><span role="status">Ln 42, Col 7</span><button type="button" class="end" aria-label="Notifications">${icon('notifications')}</button></footer>`;
+    const big = await open(type, 1024, page(short, { root: 'font-size:32px' }));
     try {
       const bar = await big.box('#a');
       assert.ok(bar.height >= 48, `the bar grows with the text (${bar.height}px)`);

@@ -3,8 +3,9 @@
 // Status bar. A framework extra: M3 has no component for it, and in M3
 // "status bar" names the operating system's bar.
 //
-// Anatomy is the HTML. A <footer class="status-bar">, or a <div> with an
-// aria-label when the page already has a site footer, is the bar. Its direct
+// Anatomy is the HTML. A <footer class="status-bar">, or a
+// <div role="region" aria-label="Status"> when the page already has a site
+// footer, is the bar. Its direct
 // children are the items: a <button> opens something, an <a> goes somewhere
 // and a <span> is read-only text. An item holds a Material Symbols icon,
 // text, or both. `.end` on the first trailing item pushes it and every later
@@ -72,9 +73,16 @@ $_bar: ".status-bar";
     > #{$icon} {
       flex: none;
       @include icon-size(var(--md-comp-status-bar-icon-size));
+
+      // A badge anchors to the 16px glyph, not the 24px one it assumes.
+      > .badge {
+        --md-comp-badge-icon-size: var(--md-comp-status-bar-icon-size);
+      }
     }
   }
 
+  // _buttons.scss leaves `.status-bar > *` out of the common button rules,
+  // so this is the whole of a button item's style, and it has no transition.
   > :is(a, button) {
     border: none;
     border-radius: 0;
@@ -89,30 +97,23 @@ $_bar: ".status-bar";
     // neighbors.
     @include focus-visible(calc(-1 * var(--md-sys-state-focus-indicator-thickness)));
 
-    // The global button state rules carry a pseudo-class and outrank the
-    // reset above (see _buttons.scss), so the states restate the transparent
-    // fill. A color helper is in the utilities layer and still wins.
-    &:is(:hover, :active, :focus-visible) {
-      background-color: transparent;
-    }
-
     // The state layer is an image over the fill, so an item colored with a
     // helper such as .primary or .error-container still shows it.
-    &:hover:not(:disabled) {
+    &:hover:not(#{$expressive-disabled}) {
       background-image: linear-gradient(state-layer(currentColor, "hover") 0 0);
     }
 
-    &:active:not(:disabled) {
+    &:active:not(#{$expressive-disabled}) {
       background-image: linear-gradient(state-layer(currentColor, "pressed") 0 0);
     }
 
-    &:disabled {
-      color: color-mix(in oklab, currentColor 38%, transparent);
-      cursor: default;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      transition: none;
+    // Opacity rather than a text color, so an item colored with a helper,
+    // whose utilities layer outranks this one, dims too. No pointer events,
+    // as on a common button, so .disabled and aria-disabled items ignore
+    // clicks as well as hover.
+    &#{$expressive-disabled} {
+      opacity: 0.38;
+      pointer-events: none;
     }
   }
 
@@ -124,6 +125,12 @@ $_bar: ".status-bar";
   @include bp-down("medium") {
     > [data-priority="low"] {
       display: none;
+    }
+
+    // A hidden first .end takes its push with it, so the first visible one
+    // takes over.
+    > .end:not(.end:not([data-priority="low"]) ~ .end) {
+      margin-inline-start: auto;
     }
   }
 }

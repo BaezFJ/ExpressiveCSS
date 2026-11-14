@@ -85,8 +85,15 @@ const S = defineSections([
         <ul>
           <li>A <code>&lt;button&gt;</code> opens something, such as a <a href="menu.html">menu</a> or a dialog. Give a menu trigger <code>{`data-menu-options='{"placement": "top"}'`}</code> so the menu opens above the bar.</li>
           <li>An <code>&lt;a&gt;</code> goes somewhere, such as the problems panel.</li>
-          <li>A <code>&lt;span&gt;</code> is read-only text. It has no hover state.</li>
+          <li>A <code>&lt;span&gt;</code> is read-only text. It has no hover state and is not a tab stop.</li>
         </ul>
+        <p>
+          A disabled button or link (<code>disabled</code>,
+          <code>.disabled</code> or <code>aria-disabled="true"</code>) is drawn
+          at 38% opacity. Button items don't take the common button styles,
+          so <code>.tonal</code>, <code>.outlined</code> and toggle colors
+          don't apply inside the bar.
+        </p>
         <p>
           An item holds an icon, text in a <code>&lt;span&gt;</code>, or both.
           A <a href="badges.html">badge</a> nested in the icon sits on the
@@ -127,8 +134,10 @@ const S = defineSections([
         <p>
           Below 600px, items with <code>data-priority="low"</code> are hidden.
           Mark the items people can do without, such as the encoding or the
-          indentation size. Items that still don't fit wrap to a second row,
-          so the page never scrolls sideways and every item stays reachable.
+          indentation size. If that hides the first <code>.end</code> item,
+          the next visible <code>.end</code> item starts the end group. Items
+          that still don't fit wrap to a second row, so the page never scrolls
+          sideways and every item stays reachable.
         </p>
   </Section>
   <Section {...S.placement}>
@@ -140,8 +149,10 @@ const S = defineSections([
           A <code>&lt;footer&gt;</code> that is a child of
           <code>&lt;body&gt;</code> is the page's footer landmark. If the page
           already has a site footer, write the bar as
-          <code>&lt;div class="status-bar" aria-label="Status"&gt;</code>
-          instead, so the page doesn't end up with two footer landmarks.
+          <code>&lt;div class="status-bar" role="region" aria-label="Status"&gt;</code>
+          instead, so the page doesn't end up with two footer landmarks. Keep
+          the role: ARIA ignores an <code>aria-label</code> on a plain
+          <code>&lt;div&gt;</code>.
         </p>
         <p>
           Don't show a status bar at the same time as a

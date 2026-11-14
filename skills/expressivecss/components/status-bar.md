@@ -9,7 +9,7 @@ Component ID: `status-bar`
 
 Contract: ExpressiveCSS 0.17.0
 
-Contract SHA-256: `342fc8a0ed38b193bdaf934d669f05472f44192b66502b9b9bd2256f24ff5516`
+Contract SHA-256: `963ce590b0a4c5a8b5e502dc27c3936787debb14e273283dba7e81af263a3714`
 
 #### Selection and adaptation
 
@@ -37,7 +37,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 A thin bar of app state along the bottom of an app shell, like the status bar in a code editor.
 
-A `<footer class="status-bar">` is the bar. Use a `<div class="status-bar" aria-label="Status">` instead when the page already has a site footer, so the page keeps one footer landmark. Direct children are the items: a `<button>` opens something, an `<a>` goes somewhere, and a `<span>` is read-only text. An item holds a `<span class="material-symbols" aria-hidden="true">` icon, text in a `<span>`, or both. A button or link with no visible text needs an `aria-label`, and a label that stands in for visible numbers repeats them ("0 errors, 2 warnings"). CSS only; there is no JavaScript component and nothing to AutoInit.
+A `<footer class="status-bar">` is the bar. Use a `<div class="status-bar" role="region" aria-label="Status">` instead when the page already has a site footer, so the page keeps one footer landmark. A plain `<div>` cannot take a name: ARIA ignores `aria-label` on it. Direct children are the items: a `<button>` opens something, an `<a>` goes somewhere, and a `<span>` is read-only text. An item holds a `<span class="material-symbols" aria-hidden="true">` icon, text in a `<span>`, or both. A button or link with no visible text needs an `aria-label`, and a label that stands in for visible numbers repeats them ("0 errors, 2 warnings"). CSS only; there is no JavaScript component and nothing to AutoInit.
 
 The bar is not `role="toolbar"`, because every item is its own tab stop and arrow keys do nothing. It is not a live region either. Put `role="status"` on the single text item whose text changes, never on the bar, or a screen reader reads every button label with each update.
 
@@ -72,5 +72,6 @@ The bar is not `role="toolbar"`, because every item is its own tab stop and arro
 
 - `status-bar-not-a-composite-widget`: A status bar takes no composite role; its items are reached with Tab, not arrow keys.
 - `status-bar-is-not-a-live-region`: Put role="status" on the one text item that changes, not on the bar. A live region reads its buttons' labels as part of every update.
+- `status-bar-is-a-footer-or-region`: Write the bar as a <footer>, or as <div role="region" aria-label="Status"> when the page already has a site footer. ARIA ignores an aria-label on a plain <div>, so the bar would have no name.
 - `status-bar-not-nav`: A status bar shows app state and commands, so it is not a <nav> landmark. Write it as a <footer>, or a <div> with an aria-label.
 - `status-bar-item-is-named`: Every status bar button and link needs a name. An icon-only item takes an aria-label that includes any visible number, such as "0 errors, 2 warnings".

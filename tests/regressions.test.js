@@ -2156,14 +2156,16 @@ describe('Chips', () => {
   });
 
   test('excluding a chip does not widen the button selector specificity', () => {
-    // Every entry in $_not-btn has to stay a single class. A descendant
-    // selector such as `.chip .close` would make the `:not()` two classes and
-    // silently shift the specificity of every button rule in the sheet.
+    // Every entry in $_not-btn has to stay one class of specificity. A
+    // descendant selector such as `.chip .close` would make the `:not()` two
+    // classes and silently shift the specificity of every button rule in the
+    // sheet. `.status-bar > *` is allowed: the universal selector adds nothing.
     const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
     const args = css.match(/:where\(button:not\(([^)]*)\)/)[1];
     for (const entry of args.split(',').map((s) => s.trim())) {
-      assert.match(entry, /^\.[\w-]+$/, `\`${entry}\` must be a bare class`);
+      assert.match(entry, /^\.[\w-]+( > \*)?$/, `\`${entry}\` must be one class, alone or as \`.class > *\``);
     }
+    assert.ok(args.split(',').some((s) => s.trim() === '.status-bar > *'), 'status bar items stay out of the common button rules');
   });
 });
 

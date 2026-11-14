@@ -48,11 +48,16 @@
 // shape. Without the exclusion it would inherit 40dp geometry and a filled
 // primary container before its own partial ever ran.
 //
+// `.status-bar > *` keeps status bar items out of the whole stack: they are
+// 24px bar items, not common buttons, and patching each state the filled
+// button paints (focus, pressed corners, toggles, disabled) did not hold.
+// `.status-bar > *` is still one class of specificity.
+//
 // Every entry stays a single class so the `:not()` keeps its one-class
 // specificity; `.chip .close` would make it two and shift every button rule.
 // The delete button needs no entry: `.chip .close` is already two classes, so
 // it ties the state rules and wins on order.
-$_not-btn: ".datepicker-day-button, .month-prev, .month-next, .chip, .icon-button, .map-marker, .chart-toggle, .maplibregl-popup-close-button, .maplibregl-ctrl-attrib-button";
+$_not-btn: ".datepicker-day-button, .month-prev, .month-next, .chip, .icon-button, .map-marker, .chart-toggle, .maplibregl-popup-close-button, .maplibregl-ctrl-attrib-button, .status-bar > *";
 
 // `label.button` is here for the file input: the control has to be a <label>
 // so that clicking it reaches the <input type="file"> it wraps, but it is a

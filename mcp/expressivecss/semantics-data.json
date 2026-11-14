@@ -2530,6 +2530,13 @@
             "message": "Put role=\"status\" on the one text item that changes, not on the bar. A live region reads its buttons' labels as part of every update."
           },
           {
+            "id": "status-bar-is-a-footer-or-region",
+            "kind": "forbid",
+            "selector": ".status-bar:not(footer, [role=\"region\"])",
+            "fragmentSafe": true,
+            "message": "Write the bar as a <footer>, or as <div role=\"region\" aria-label=\"Status\"> when the page already has a site footer. ARIA ignores an aria-label on a plain <div>, so the bar would have no name."
+          },
+          {
             "id": "status-bar-not-nav",
             "kind": "forbid",
             "selector": "nav.status-bar",

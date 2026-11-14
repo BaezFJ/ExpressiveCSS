@@ -9,7 +9,7 @@ Component ID: `description-list`
 
 Contract: ExpressiveCSS 0.17.0
 
-Contract SHA-256: `342fc8a0ed38b193bdaf934d669f05472f44192b66502b9b9bd2256f24ff5516`
+Contract SHA-256: `963ce590b0a4c5a8b5e502dc27c3936787debb14e273283dba7e81af263a3714`
 
 #### Selection and adaptation
 

@@ -7341,7 +7341,7 @@
         "sources": [
           {
             "path": "src/sass/components/_status-bar.scss",
-            "sha256": "d1b16ea2ac6d33bef3575f54bb373d54f8a46c75f319f69683aeffeb8385da04"
+            "sha256": "631e36922e63b9e1511803167b6c43eeef52522f9940ad60e36ac9c80677b931"
           }
         ],
         "gaps": [

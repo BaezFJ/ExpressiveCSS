@@ -11,9 +11,10 @@ const hits = (html) => violations(html, rules, data.compositeRoles).map((v) => v
 
 const item = '<button type="button" aria-label="Notifications"><span class="material-symbols" aria-hidden="true">notifications</span></button>';
 
-test('a status bar row is enforced with its four rules', () => {
+test('a status bar row is enforced with its five rules', () => {
   assert.equal(data.rows['status-bar']?.status, 'enforced');
   assert.deepEqual(rules.map((r) => r.id).sort(), [
+    'status-bar-is-a-footer-or-region',
     'status-bar-is-not-a-live-region',
     'status-bar-item-is-named',
     'status-bar-not-a-composite-widget',
@@ -21,9 +22,9 @@ test('a status bar row is enforced with its four rules', () => {
   ]);
 });
 
-test('a footer or labelled div bar with named items and a status item passes', () => {
+test('a footer or labelled region bar with named items and a status item passes', () => {
   assert.deepEqual(hits(`<footer class="status-bar">${item}<span role="status">Ln 4, Col 2</span><a href="#p">Problems</a></footer>`), []);
-  assert.deepEqual(hits(`<div class="status-bar" aria-label="Status">${item}</div>`), []);
+  assert.deepEqual(hits(`<div class="status-bar" role="region" aria-label="Status">${item}</div>`), []);
 });
 
 for (const [name, html, id] of [
@@ -31,6 +32,7 @@ for (const [name, html, id] of [
   ['an aria-live bar', `<footer class="status-bar" aria-live="polite">${item}</footer>`, 'status-bar-is-not-a-live-region'],
   ['a toolbar-role bar', `<footer class="status-bar" role="toolbar">${item}</footer>`, 'status-bar-not-a-composite-widget'],
   ['a nav bar', `<nav class="status-bar">${item}</nav>`, 'status-bar-not-nav'],
+  ['a plain div bar named with aria-label', `<div class="status-bar" aria-label="Status">${item}</div>`, 'status-bar-is-a-footer-or-region'],
   ['an unnamed icon-only item', '<footer class="status-bar"><button type="button"><span class="material-symbols" aria-hidden="true">sync</span></button></footer>', 'status-bar-item-is-named'],
 ]) {
   test(`${name} is flagged by ${id}`, () => {

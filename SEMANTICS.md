@@ -1317,11 +1317,13 @@ Added with the status bar. A bar of ambient app state whose items are buttons, l
 | --- | --- | --- | --- |
 | `status-bar-not-a-composite-widget` | forbid-composite-roles | `.status-bar` | must not match with any composite role |
 | `status-bar-is-not-a-live-region` | forbid | `.status-bar:is([role="status"], [role="alert"], [role="log"], [aria-live])` | must not match |
+| `status-bar-is-a-footer-or-region` | forbid | `.status-bar:not(footer, [role="region"])` | must not match |
 | `status-bar-not-nav` | forbid | `nav.status-bar` | must not match |
 | `status-bar-item-is-named` | require-accessible-name | `.status-bar > :is(button, a)` | must end up with an accessible name |
 
 - **status-bar-not-a-composite-widget** - A status bar takes no composite role; its items are reached with Tab, not arrow keys.
 - **status-bar-is-not-a-live-region** - Put role="status" on the one text item that changes, not on the bar. A live region reads its buttons' labels as part of every update.
+- **status-bar-is-a-footer-or-region** - Write the bar as a <footer>, or as <div role="region" aria-label="Status"> when the page already has a site footer. ARIA ignores an aria-label on a plain <div>, so the bar would have no name.
 - **status-bar-not-nav** - A status bar shows app state and commands, so it is not a <nav> landmark. Write it as a <footer>, or a <div> with an aria-label.
 - **status-bar-item-is-named** - Every status bar button and link needs a name. An icon-only item takes an aria-label that includes any visible number, such as "0 errors, 2 warnings".
 

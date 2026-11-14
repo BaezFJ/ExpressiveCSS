@@ -19,7 +19,7 @@ Authors of editor-style and dashboard apps who want a VS Code-like bar of branch
 
 A CSS-only component:
 
-- A bar root, `.status-bar`, written as `<footer>` or as a `<div>` with an `aria-label`.
+- A bar root, `.status-bar`, written as `<footer>` or as `<div role="region" aria-label="Status">`.
 - Items as direct children: `<button>` for an item that opens something, `<a>` for one that goes somewhere, `<span>` for read-only text. An item holds a Material Symbols icon, text, or both.
 - `.end` on the first trailing item starts the end group.
 - A `.vibrant` bar. One item is colored with the existing color helpers.
@@ -51,27 +51,29 @@ A CSS-only component:
 | `.vibrant` uses primary-container, as `.toolbar.vibrant` does | Decided from evidence | Keeps the two bars consistent. Colors go through `--md-comp-status-bar-*` tokens pointed at system roles, so the `[vibrant]` foundation repaints the bar with no component code, as it does the toolbar. |
 | `.end` is scoped under `.status-bar` | Decided from evidence | `.popover.end` already uses `.end`, so unscoped selectors would collide. |
 | Items that don't fit wrap instead of scrolling inside the bar | Decided during the build | A scrolling bar (`overflow-x: auto`) also clips vertically, which cut off CSS-only tooltips and badges rising above an item, and Firefox made the bar itself a tab stop when it overflowed. Wrapping keeps every item visible and reachable and never scrolls the page. |
-| Item hover is a `background-image` overlay, and the item states restate a transparent fill | Decided during the build | The overlay shows over a helper fill. The global filled-button hover, pressed and focus rules carry a pseudo-class and out-rank the item reset, as `_buttons.scss` documents for chips, so the item's state rules restate `background-color: transparent`. |
-| `_page-footer.scss` skips `footer.status-bar` | Decided during the build | The page footer styles every bare `<footer>`. It already skips a footer around a lone navigation bar, and the same `:not()` now skips the status bar without changing the selector's specificity. |
+| Item hover is a `background-image` overlay, and `_buttons.scss` leaves `.status-bar > *` out of the common button rules | Decided during the build, revised after `/code-review` | The overlay shows over a helper fill. Restating one state at a time missed plain `:focus`, the pressed corner shape, `aria-pressed` colors and `.disabled`/`aria-disabled`, so the bar's items now skip the whole common button stack. `.status-bar > *` keeps the `:not()` at one class of specificity, and the guard in `tests/regressions.test.js` now accepts `.class > *` entries alongside bare classes. |
+| The page, pane and questionnaire footer rules skip `footer.status-bar` | Decided during the build, extended after `/code-review` | Each styles a bare `<footer>`. Each already skips a footer around a lone navigation bar, and the same `:not()` now skips the status bar without changing the selector's specificity. |
+| A plain `<div>` bar takes `role="region"` | Decided after `/code-review` | ARIA prohibits `aria-label` on the generic role, so a labelled plain `<div>` has no name. A named region keeps the bar reachable as a landmark, like the footer form. |
 
 ## Requirements
 
 - **R1** `.status-bar` is a full-width row: flex, `flex-wrap: wrap`, `align-items: center`, `min-block-size: rem(24px)`, surface-container background, on-surface-variant text and the complete body-small type role (size, line height, weight, letter-spacing). It is `position: sticky; inset-block-end: 0` with `z-index: var(--expressive-z-toolbar)`, and pads its block end by `env(safe-area-inset-bottom, 0px)`.
 - **R2** Direct `button`, `a` and `span` children lay out as items: inline-flex, centered, a 4px gap between icon and text, 8px inline padding, and `min-block-size` and `min-inline-size` of `rem(24px)`. A Material Symbols icon in an item is `rem(16px)`.
-- **R3** Button and link items drop native chrome: transparent background, no border, inherited color and font, no underline. Hover and pressed draw a state layer from the shared state tokens as a `background-image`, over any fill. The global filled-button fill never shows on hover, press or focus. Focus draws the `focus-ring` mixin with a negative offset, inside the item. A disabled button's text is 38% of its color and shows no state layer. Read-only `span` items get no state layer.
-- **R4** The first item carrying `.end` gets `margin-inline-start: auto`, which pushes it and every later item to the end. Logical properties mirror the layout under `dir="rtl"`.
+- **R3** Button and link items drop native chrome: transparent background, no border, inherited color and font, no underline. Hover and pressed draw a state layer from the shared state tokens as a `background-image`, over any fill. The global filled-button fill never shows on hover, press or focus. Focus draws the `focus-ring` mixin with a negative offset, inside the item. A disabled button or link (`disabled`, `.disabled` or `aria-disabled="true"`) is drawn at 38% opacity, so a helper fill dims too, ignores pointer events as a common disabled button does, and shows no state layer. Pressing keeps the item square, and `aria-pressed` adds no fill. Read-only `span` items get no state layer.
+- **R4** The first item carrying `.end` gets `margin-inline-start: auto`, which pushes it and every later item to the end. Below 600px, when that item is a hidden `data-priority="low"` item, the first visible `.end` item takes over. Logical properties mirror the layout under `dir="rtl"`. A badge nested in an item icon anchors to the 16px glyph.
 - **R5** `.status-bar.vibrant` paints primary-container with on-primary-container text. All bar and item colors read `--md-comp-status-bar-*` custom properties that point at `--md-sys-color-*` roles.
 - **R6** An item colored with the helpers, such as `primary on-primary-text` or `error-container on-error-container-text`, keeps that fill and text color on a plain and a `.vibrant` bar.
 - **R7** Below 600px window width, items with `data-priority="low"` are `display: none`. At every width the bar adds no horizontal page scroll: items that don't fit wrap to another row.
 - **R8** Text enlarged to 200% grows the bar's height through `rem()` sizing. Items that fit stay on one row and their text is not clipped vertically.
 - **R9** In forced colors the bar keeps a visible top edge and focused items keep a visible ring. A helper fill disappears there, so its meaning has to be in the item's text (R13).
 - **R10** Items add no transition of their own. The global button transition drops to `transition: none` under `prefers-reduced-motion: reduce`, in the component's own rule.
-- **R11** A `status-bar` row in `semantics.json` is `enforced`, with these rules:
+- **R11** A `status-bar` row in `semantics.json` is `enforced`, with a `rejects` record for the toolbar role and these rules:
   - The bar takes no composite role (`forbid-composite-roles` on `.status-bar`).
   - The bar is not a live region. The rule forbids `.status-bar:is([role="status"], [role="alert"], [role="log"], [aria-live])`, because a live region reads its buttons' labels with every update.
   - The bar is not written as `nav.status-bar`.
+  - The bar is a `<footer>` or a `[role="region"]` (`.status-bar:not(footer, [role="region"])` is forbidden).
   - Every `button` and `a` item ends up with an accessible name (`require-accessible-name` on `.status-bar > :is(button, a)`).
-- **R12** No selector this component adds matches outside `.status-bar`. Unscoped `.end` or `.vibrant` rules from this partial would restyle the popover, the toolbar and other components. A `<footer>` page footer keeps its styles, and a `footer.status-bar` gets none of them.
+- **R12** No selector this component adds matches outside `.status-bar`. Unscoped `.end` or `.vibrant` rules from this partial would restyle the popover, the toolbar and other components. A `<footer>` page footer keeps its styles, and a `footer.status-bar` gets none of them, nor any pane or questionnaire footer styles.
 - **R13** The docs page `docs/src/pages/status-bar.astro` is listed in `docs/src/data/nav.ts` after Toolbars in "Search and commands". It shows:
   - the anatomy and both root forms: `<footer>`, or a `<div>` with `aria-label` when the page already has a site footer
   - `role="status"` on a changing text item and never on the bar
