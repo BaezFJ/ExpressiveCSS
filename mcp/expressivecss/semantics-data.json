@@ -750,6 +750,13 @@
             "message": "A label that does not wrap its control has to name it. The floating label sits *after* the control and cannot wrap it, so it always needs `for`; a label that does wrap its control (the file input trigger) does not."
           },
           {
+            "id": "field-label-above-order",
+            "kind": "forbid",
+            "selector": ".field.label-above > label ~ :is(input, textarea, select)",
+            "message": "Keep the <label> after the control in a .label-above field too. The grid draws it first; a label written first loses the focus, disabled and error colors, which reach it from the control.",
+            "fragmentSafe": true
+          },
+          {
             "id": "field-control-id",
             "kind": "require-attr",
             "selector": ".field > :is(input, textarea, select)",

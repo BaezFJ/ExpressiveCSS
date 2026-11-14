@@ -7,7 +7,8 @@
 // .suffix icon the trailing one. Icons come before the control in the documented markup, so
 // trailing cannot be selected with :last-child — that left .suffix
 // in flow above the well. <small> is supporting text. .outlined is
-// the outlined variant; the default is filled.
+// the outlined variant; the default is filled. .label-above draws the
+// label above the control instead of floating it, on either variant.
 //
 // Tokens follow https://m3.material.io/components/text-fields/specs
 //   filled     surface-container-highest well, 1rem corners, 1dp/2dp bottom indicator
@@ -347,6 +348,69 @@ $_floated: '&:focus + label, &:not([placeholder=" "]) + label, &:not(:placeholde
       }
     }
   }
+
+  // Label above the control. The label stays after the control in the
+  // markup, so the focus, disabled and error rules that reach it with + and ~
+  // still apply and its for/id link is untouched; the grid draws it first.
+  // Absolutely positioned children take the control's row as their
+  // containing block, so the icons, caret and hidden select stay on the
+  // control however many lines the label wraps to.
+  &.label-above {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    // A field stretched by a form grid keeps its rows packed at the top.
+    align-content: start;
+
+    > * {
+      grid-column: 1 / -1;
+    }
+
+    > label:not(.button, .icon-button) {
+      grid-row: 1;
+      position: static;
+      cursor: default;
+      pointer-events: auto;
+      user-select: auto;
+      @include typescale("label-large");
+    }
+
+    // Both lines: an absolutely positioned child's auto end line is the
+    // field's edge, which would stretch the hidden select to the bottom.
+    // Only the first control: Datepicker appends a range's end input and
+    // each extra multiple-selection input, which take rows of their own
+    // after it, as they stack in a floating field.
+    > :is(input, textarea):first-of-type,
+    > :is(.hide-select, .prefix, .suffix, .caret) {
+      grid-row: 2 / 3;
+    }
+
+    // The supporting text and the counter share a row, as the float did.
+    > :is(small, .supporting-text) {
+      grid-column: 1;
+    }
+
+    > .character-counter {
+      grid-column: 2;
+    }
+
+    // No floating label to clear, so the text centres in the well.
+    > input {
+      padding-top: rem(8px);
+    }
+
+    > textarea.expressive-textarea {
+      padding-top: rem(16px);
+    }
+
+    // The label never floats or takes the outlined notch. As heavy as the
+    // floated rules, (0,3,2), and later, so it wins.
+    > :is(input, textarea) ~ label:not(.button, .icon-button) {
+      margin: 0 0 4px;
+      padding: 0 16px;
+      background-color: transparent;
+      transform: none;
+    }
+  }
 }
 
 .inline {
@@ -467,6 +531,11 @@ textarea {
     &:focus:after {
       text-indent: -9999px;
     }
+  }
+
+  // With no floating label above the value, the date centres in the well.
+  .field.label-above > .datepicker-date-input::after {
+    top: calc(50% - var(--md-sys-typescale-body-large-line-height) / 2);
   }
 }
 

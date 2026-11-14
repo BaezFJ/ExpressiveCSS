@@ -9,7 +9,7 @@ Component ID: `select`
 
 Contract: ExpressiveCSS 0.17.0
 
-Contract SHA-256: `75e6cc0ce5ea7524717ccd443919687a545bc4a7a4e28bc30c618af47eb14375`
+Contract SHA-256: `07da1f8d39af28962cc1b948b4659ccbf3a62323bd39f33c06a3027670a08e4a`
 
 #### Selection and adaptation
 
@@ -129,6 +129,7 @@ The Select section of the [API reference](https://www.expressivecss.com/llm.md) 
 - `field-icon-hidden`: The ligature is read aloud. A field icon is decoration; the label names the control.
 - `field-icon-side`: A field icon must name its side with .prefix or .suffix. Fields have no positional fallback.
 - `field-label-for`: A label that does not wrap its control has to name it. The floating label sits *after* the control and cannot wrap it, so it always needs `for`; a label that does wrap its control (the file input trigger) does not.
+- `field-label-above-order`: Keep the <label> after the control in a .label-above field too. The grid draws it first; a label written first loses the focus, disabled and error colors, which reach it from the control.
 - `field-control-id`: Without an id the label has nothing to point at.
 - `field-supporting-text-id`: Supporting and error text has to be referenceable to be announced with the control.
 - `field-supporting-text-linked`: A field with supporting text must point at it with aria-describedby, or the text is never read out with the control.

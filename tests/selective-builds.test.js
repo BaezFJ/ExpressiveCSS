@@ -553,5 +553,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed one menu surface for menus and flyouts, one selected-row selector for lists and pane anatomy under one :is(): 90,456 gzip bytes (-564).
   // Reviewed nesting expanding-card, icon-button and select rules under their parents, with print hiding inside each component block; same declarations, reordered: 90,461 gzip bytes (+5).
   // Reviewed .grid-auto-fit, .tabular-nums, .max-w-prose, summary.button, list rows without a leading element (supporting text under bare label text included) and lone-button list rows that dim when disabled: 90,717 gzip bytes (+256).
-  assert.ok(sizes(css).gzip <= 90717, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed .field.label-above, its select and date input alignment, and Datepicker range and multiple-selection inputs stacking under it: 90,891 gzip bytes (+174).
+  assert.ok(sizes(css).gzip <= 90891, `CSS gzip: ${sizes(css).gzip}`);
 });
