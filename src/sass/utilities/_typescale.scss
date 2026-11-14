@@ -45,3 +45,5 @@ $typescale-roles: (
 .upper { text-transform: uppercase; }
 .lower { text-transform: lowercase; }
 .capitalize { text-transform: capitalize; }
+// Digits of equal width, so numbers in a column or a ticking value line up.
+.tabular-nums { font-variant-numeric: tabular-nums; }

@@ -85,7 +85,7 @@ describe('Forced colors edges and glyphs', () => {
   const EDGE = /outline:\s*1px solid (ButtonText|CanvasText);\s*outline-offset:\s*-1px/;
   const GLYPH = /forced-color-adjust:\s*none;\s*background-color:\s*CanvasText/;
   const cases = {
-    'filled, tonal and elevated button and FAB': [/^:where\(button:not\(.*\), a\.button, label\.button\):is\(\.filled, \.tonal, \.elevated, \.button, \.extra, \.extend, :where\(\.large\.circle\)\):where\(:not\(\.outlined, \.text\)\)$/, EDGE],
+    'filled, tonal and elevated button and FAB': [/^:where\(button:not\(.*\), a\.button, label\.button, summary\.button\):is\(\.filled, \.tonal, \.elevated, \.button, \.extra, \.extend, :where\(\.large\.circle\)\):where\(:not\(\.outlined, \.text\)\)$/, EDGE],
     'column chart track': [/^\.column-chart\.track \.column-chart-columns > div$/, EDGE],
     'color picker area': [/^\.color-picker-area$/, /outline:\s*1px solid CanvasText/],
     'aura ring on every variant': [/^\.aura\.aura::before$/, /background:\s*Highlight;[\s\S]*filter:\s*none/],

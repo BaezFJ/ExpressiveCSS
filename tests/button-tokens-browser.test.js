@@ -161,3 +161,43 @@ for (const [engine, type, browserTest] of engines) {
     }
   });
 }
+
+for (const [engine, type, browserTest] of engines) {
+  browserTest(`${engine}: summary.button is drawn like the same button and still toggles its details`, async () => {
+    const browser = await leaseBrowser(type);
+    try {
+      const page = await browser.newPage({ reducedMotion: 'reduce' });
+      for (const [build, css] of Object.entries(sheets)) {
+        await page.setContent(`<style>${css}</style>
+          <details id="details"><summary id="summary" class="button tonal">Filters</summary><p>Panel</p></details>
+          <button id="reference" class="tonal">Filters</button>
+          <details><summary id="plain">Plain</summary></details>`);
+        // The previous build's click leaves the pointer over the summary.
+        await page.mouse.move(0, 500);
+        const result = await page.evaluate(() => {
+          const pick = (id) => {
+            const style = getComputedStyle(document.getElementById(id));
+            const rect = document.getElementById(id).getBoundingClientRect();
+            return { display: style.display, height: rect.height, background: style.backgroundColor, color: style.color, radius: style.borderTopLeftRadius, font: style.font };
+          };
+          return {
+            summary: pick('summary'),
+            reference: pick('reference'),
+            marker: getComputedStyle(document.getElementById('summary')).listStyleType,
+            plain: getComputedStyle(document.getElementById('plain')).display
+          };
+        });
+        assert.deepEqual(result.summary, result.reference, `${build}: same box and colors as the button`);
+        assert.equal(result.marker, 'none', `${build}: no disclosure marker`);
+        assert.equal(result.plain, 'list-item', `${build}: a summary without the class is untouched`);
+        await page.click('#summary');
+        assert.equal(await page.locator('#details').evaluate((el) => el.open), true, `${build}: clicking opens the details`);
+        await page.focus('#summary');
+        await page.keyboard.press('Enter');
+        assert.equal(await page.locator('#details').evaluate((el) => el.open), false, `${build}: Enter closes it`);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+}

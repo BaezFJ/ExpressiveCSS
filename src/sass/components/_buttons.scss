@@ -65,7 +65,18 @@ $_not-btn: ".datepicker-day-button, .month-prev, .month-next, .chip, .icon-butto
 // lists that let hosts (footer, drawer, app bar, rail, list, snackbar) step
 // aside for a button - an invariant with no test behind it, for markup that
 // has a working spelling. `a.button` is that spelling, and the docs say so.
-$_btn: "button:not(#{$_not-btn}), a.button, label.button";
+// `summary.button` is the toggle of a plain <details> drawn as a button.
+$_btn: "button:not(#{$_not-btn}), a.button, label.button, summary.button";
+
+// display: inline-flex drops the marker everywhere but WebKit, which draws
+// it on its own pseudo-element.
+summary.button {
+  list-style: none;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+}
 
 :where(#{$_btn}) {
   @include btn;

@@ -93,6 +93,23 @@ const S = defineSections([
 
 <a class="button" href="/docs">Link</a>
 `} />
+        <p>
+          A plain <code>&lt;details&gt;</code> can use a button as its toggle: give the
+          <code>&lt;summary&gt;</code> the <code>button</code> class and any style or size.
+          The disclosure triangle goes away, and the browser still opens and closes the
+          panel and reports its state. Inside an <code>.accordion</code>, leave the summary
+          unclassed.
+        </p>
+        <details>
+          <summary class="button outlined">More filters</summary>
+          <p>Filter controls go here.</p>
+        </details>
+<Code code={`
+<details>
+  <summary class="button outlined">More filters</summary>
+  …
+</details>
+`} />
   </Section>
   <Section {...S.filled}>
         <p>

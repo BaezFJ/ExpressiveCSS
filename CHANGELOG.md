@@ -12,6 +12,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   brand seed, typefaces, root attributes and component choices as ExpressiveCSS
   tokens and markup, and commits to WCAG 2.2 AA. The ExpressiveCSS skill reads a
   project's `DESIGN.md` before design, theming and layout work.
+- `.grid-auto-fit` is `.grid-auto-fill` with collapsing empty columns, so a
+  short row stretches across the container. `.tabular-nums` sets
+  `font-variant-numeric: tabular-nums`, and `.max-w-prose` caps an element at
+  `65ch`.
+- `summary.button` draws the toggle of a plain `<details>` as a common button,
+  with any style or size, and hides the disclosure marker.
 
 ### Changed
 
@@ -39,6 +45,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   The compiled sheet has the same declarations in a slightly different order.
 
 ### Fixed
+
+- A list row with nothing in the leading slot starts its text at the 16dp row
+  padding, and supporting text under bare label text starts under it. The
+  empty leading column kept its gutter and pushed the text 16px further in. A plain `<button>` that is an item's only child is now drawn as
+  the row, edge to edge, as the arrow-key script already treated it, instead of
+  a filled button in the leading column.
 
 - SwipeActions moves focus to the row's toggle when an action inside a shadow
   root closes the row. InputMask keeps the caret where the user typed in a
