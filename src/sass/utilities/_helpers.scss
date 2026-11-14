@@ -207,6 +207,9 @@ $_layout: (
 .pointer-events-none { pointer-events: none; }
 .pointer-events-auto { pointer-events: auto; }
 .cursor-pointer { cursor: pointer; }
+// The components' keyboard focus ring for an app's own focusable element.
+// It shows on :focus-visible only, so a mouse click draws no ring.
+.focus-ring:focus-visible { @include focus-ring; }
 // Opacity. 38 is M3's disabled-content opacity. Dimming hides nothing from
 // pointers, keyboards or screen readers; use .hide or `hidden` for that.
 @each $step, $value in ("0": 0, "25": 0.25, "38": 0.38, "50": 0.5, "75": 0.75, "100": 1) {

@@ -47,8 +47,8 @@
   --md-comp-carousel-pressed-state-layer-opacity: var(--md-sys-state-pressed-state-layer-opacity);
   --md-comp-carousel-disabled-opacity: 0.38;
   --md-comp-carousel-focus-indicator-color: var(--md-sys-color-secondary);
-  --md-comp-carousel-focus-indicator-thickness: 3px;
-  --md-comp-carousel-focus-indicator-offset: 2px;
+  --md-comp-carousel-focus-indicator-thickness: var(--md-sys-state-focus-indicator-thickness);
+  --md-comp-carousel-focus-indicator-offset: var(--md-sys-state-focus-indicator-outer-offset);
 
   position: relative;
   width: 100%;

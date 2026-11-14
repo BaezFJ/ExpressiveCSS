@@ -246,13 +246,13 @@ test('a search bar shows the focus ring its input clears', () => {
   // needs a ring of its own outside forced colors too.
   // The forced-colors rule for the same selector draws Highlight instead.
   const ringed = rules.filter((r) => r.selector === ':is(.search-bar):not(.search-view *):has(input:focus-visible)')
-    .some((r) => /outline:\s*3px solid var\(--md-sys-color-secondary\)/.test(r.body));
+    .some((r) => /outline:\s*var\(--md-sys-state-focus-indicator-thickness\) solid var\(--md-sys-color-secondary\)/.test(r.body));
   assert.ok(ringed, 'the focused bar takes the shared focus ring');
 });
 
 test('a plain app bar form shows the focus ring its input clears', () => {
   const form = 'header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)) > :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar) > form:has(input:focus-visible)';
-  const ringed = rules.some((r) => r.selector === form && /outline:\s*3px solid var\(--md-sys-color-secondary\)/.test(r.body));
+  const ringed = rules.some((r) => r.selector === form && /outline:\s*var\(--md-sys-state-focus-indicator-thickness\) solid var\(--md-sys-color-secondary\)/.test(r.body));
   assert.ok(ringed, 'the form around the focused input takes the shared focus ring');
 });
 

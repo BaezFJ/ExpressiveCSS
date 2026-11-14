@@ -9,6 +9,7 @@ const S = defineSections([
   { id: "opacities", label: "Opacities" },
   { id: "overriding", label: "Overriding" },
   { id: "shapes", label: "Two shapes" },
+  { id: "focus-indicator", label: "Focus indicator" },
 ]);
 ---
 <DocsLayout page="state_layers" sections={S}>
@@ -64,6 +65,32 @@ const S = defineSections([
       Most components draw the layer as an overlay filling the control. Checkboxes and radio
       buttons have no room for one, so they draw it as a ring growing out from the control's edge
       to the state layer size. Both read the same opacity, so they stay in step.
+    </p>
+  </Section>
+  <Section {...S["focus-indicator"]}>
+    <p>
+      Keyboard focus also draws a ring outside the control, in
+      <code>--md-sys-color-secondary</code>. Its size comes from two more <code>md.sys.state</code>
+      tokens, and every 3px component focus ring reads them. Put <code>.focus-ring</code> on an
+      app's own focusable element to give it the same ring. Text fields and selects mark focus with
+      their own 2px <code>primary</code> outline instead.
+    </p>
+    <table class="striped">
+      <thead><tr><th>Token</th><th>Value</th><th>Sets</th></tr></thead>
+      <tbody>
+        <tr><td><code>--md-sys-state-focus-indicator-thickness</code></td><td>3px</td><td>The ring's width.</td></tr>
+        <tr><td><code>--md-sys-state-focus-indicator-outer-offset</code></td><td>2px</td><td>The gap between the element and the ring.</td></tr>
+      </tbody>
+    </table>
+<Code code={`
+<style>
+  :root { --md-sys-state-focus-indicator-thickness: 4px; }
+</style>
+<div class="focus-ring" tabindex="0">Drop files here</div>
+`} />
+    <p>
+      A few rows inside scrolling lists draw the ring inside their edge instead, so the list does
+      not clip it. Those keep their own inset and still take the width from the token.
     </p>
   </Section>
 </DocsLayout>

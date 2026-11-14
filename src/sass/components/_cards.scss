@@ -49,8 +49,8 @@ $_media-figure: "figure:where(:not(.line-chart, .column-chart, .bar-chart, .pie-
   --md-comp-card-disabled-container-opacity: 38%;
   --md-comp-outlined-card-disabled-outline-opacity: 12%;
   --md-comp-card-focus-indicator-color: var(--md-sys-color-secondary);
-  --md-comp-card-focus-indicator-thickness: 3px;
-  --md-comp-card-focus-indicator-offset: 2px;
+  --md-comp-card-focus-indicator-thickness: var(--md-sys-state-focus-indicator-thickness);
+  --md-comp-card-focus-indicator-offset: var(--md-sys-state-focus-indicator-outer-offset);
   --md-comp-card-horizontal-media-width: 40%;
   --md-comp-card-horizontal-min-height: #{rem(240px)};
 

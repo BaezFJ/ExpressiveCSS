@@ -94,7 +94,7 @@ describe('Material 3 Carousel CSS', () => {
     assert.match(css, /--md-comp-carousel-hover-state-layer-opacity:\s*var\(--md-sys-state-hover-state-layer-opacity\)/);
     assert.match(css, /--md-comp-carousel-focus-state-layer-opacity:\s*var\(--md-sys-state-focus-state-layer-opacity\)/);
     assert.match(css, /--md-comp-carousel-pressed-state-layer-opacity:\s*var\(--md-sys-state-pressed-state-layer-opacity\)/);
-    assert.match(css, /--md-comp-carousel-focus-indicator-thickness:\s*3px/);
+    assert.match(css, /--md-comp-carousel-focus-indicator-thickness:\s*var\(--md-sys-state-focus-indicator-thickness\)/);
     assert.match(
       css,
       /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.carousel\s*\{[\s\S]*transition:\s*none[\s\S]*transform:\s*none/
