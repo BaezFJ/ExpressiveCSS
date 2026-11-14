@@ -167,7 +167,7 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(bodyStart > 4, 'frontmatter is not closed');
     assert.match(frontmatter, /^name: expressivecss$/m);
     assert.match(frontmatter, /^  author: BaezFJ$/m);
-    assert.match(frontmatter, /^  version: "0\.13\.0"$/m);
+    assert.match(frontmatter, /^  version: "0\.14\.0"$/m);
 
     const description = readSkillMetadata(skill).description;
     assert.ok(description, 'description is missing');

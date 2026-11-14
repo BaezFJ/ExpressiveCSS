@@ -5,6 +5,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.18.0] - 2026-11-14
+
+This release adds the status bar, labels drawn above text fields, focus ring
+tokens with a `.focus-ring` utility, and a few utilities. It also trims the
+compiled CSS and JavaScript and fixes list rows, button states, contrast
+subtrees and hidden components. It removes nothing, so there is no migration.
+
 ### Added
 
 - The `expressivecss-design-md` skill interviews the user and writes a
@@ -4279,7 +4286,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.17.0...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.18.0...HEAD
+[0.18.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.17.0...v0.18.0
 [0.17.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.15.0...v0.16.0
 [0.15.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.14.1...v0.15.0
