@@ -66,10 +66,12 @@ Covers R14. Checks V14, V16.
 
 Prerequisites: group 4.
 
-- [ ] Commit groups 1 to 4, then pin `sourceRevision` for the new record to that branch commit, since no master commit holds the files yet. After the squash merge, a follow-up re-pins it to the merge commit.
+- [x] Commit groups 1 to 4, then pin `sourceRevision` for the new record to that branch commit, since no master commit holds the files yet. After the squash merge, a follow-up re-pins it to the merge commit.
 - [x] Measure the full and selective CSS gzip size from the merge-base build, with the sourceMappingURL comment stripped, and add the reviewed budget line to `tests/selective-builds.test.js`.
-- [ ] Run `npm run build:skill` last, after the final source edit, since the contract hash covers the changelog and tests.
-- [ ] Run V16: `npm run verify`, `npm test --prefix mcp/expressivecss`, the MCP smoke test and `npm run verify:packages`. Rerun a known flaky test alone before debugging it.
-- [ ] Record each V result in validation.md, and copy the human checks into the pull request body as a checklist.
+- [x] Run `npm run build:skill` last, after the final source edit, since the contract hash covers the changelog and tests.
+- [x] Run V16: `npm run verify`, `npm test --prefix mcp/expressivecss`, the MCP smoke test and `npm run verify:packages`. Rerun a known flaky test alone before debugging it.
+- [x] Record each V result in validation.md.
+- [ ] Copy the human checks into the pull request body as a checklist when the PR is opened.
+- [ ] After the squash merge, re-pin `sourceRevision` to the merge commit and run `npm run build:skill`.
 
 Done when every agent-run check passes and `git status` shows only intended files.
