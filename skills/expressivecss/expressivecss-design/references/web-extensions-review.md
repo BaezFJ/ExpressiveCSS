@@ -6,7 +6,7 @@ Read the linked component guide for the ExpressiveCSS 0.16.0 markup and API cont
 
 ## Contents
 
-Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Show more, Data table, Avatar, Skeleton, Empty state, Alert, Stepper, Popover, Drop zone, Tree, Stat, Description list, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire, Marquee, Rich text editor, Confetti, Particles, Map, Mega menu, Menubar, Calendar, Tour, Image compare.
+Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion, Show more, Data table, Avatar, Skeleton, Empty state, Alert, Stepper, Popover, Drop zone, Tree, Stat, Description list, KPI, Countdown, Line chart, Column chart, Bar chart, Pie chart, Heatmap chart, Radar chart, Radial chart, Mixed chart, Timeline, Command palette, Rating, Aura, Questionnaire, Marquee, Rich text editor, Confetti, Particles, Map, Mega menu, Menubar, Calendar, Tour, Image compare, Status bar.
 
 Each section lists the relationship, reviewed sections, requirements, and framework comparison, then any verification, feature, or integration gap and the mapped browser scope. Read only the selected component's section.
 
@@ -922,3 +922,17 @@ Framework comparison: No dedicated Google component exists in the reviewed inven
 Verification gap: Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified. Next check: Pick a color with a screen reader and with touch in each engine, and confirm the area valuetext and the hex field are announced; check forced colors and 200% text.
 
 Mapped browser scope: Group and control names, Down and Shift+Left steps with valuetext, input, change and onChange order, a press and a drag past the corner in an RTL page, hue changes keeping saturation and brightness, hex Enter without form submission, an invalid hex reverting, the silent value setter, a native input event updating the hue, one submitted field and destroy leaving only the native input. No spoken-output assertion.
+
+## [Status bar](../../components/status-bar.md)
+
+Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). In M3, "status bar" names the system bar, not a component. Requirements below are web accessibility guidance, not a Google component specification.
+
+Reviewed sections: No standalone Material component.
+
+Requirements: Give every item a tab stop and a name, keep live announcements to the changing text item, state in text what an item color means and keep targets at least 24px.
+
+Framework comparison: No dedicated Google component exists in the reviewed inventory. The framework lays out the bar, its items and the end group and hides low-priority items at compact widths; the page owns the item text, names, live status item and what each item opens.
+
+Verification gap: Bar size, sticking, item targets, the end group, colors, priority hiding, wrapping, RTL, enlarged text, forced colors and blocked filled-button states are checked in a browser; spoken output and a real safe-area inset remain unverified. Next check: Tab through the bar with a screen reader and confirm each item's name and a single announcement of the status item's update; open the bar on a phone with a home indicator.
+
+Mapped browser scope: A 24px, window-wide, surface-container bar in body-small that sticks to the window bottom, 24px items with 16px icons, an end group pushed to the end edge, transparent items with an inset focus ring, hover over a helper fill and no filled-button fill on hover, press or focus. No spoken-output assertion.
