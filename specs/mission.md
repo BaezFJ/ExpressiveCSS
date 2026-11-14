@@ -24,6 +24,7 @@ Every phase keeps these:
 - Public exports, markup compatibility and accessibility contracts stay stable unless an accepted change replaces them with a migration note.
 - A change to how existing markup behaves is opt-in, or it ships with a migration note. A page should not have to change because a component learned something new.
 - Generated guidance agrees with its sources, as [data ownership](tech-stack.md#data-ownership) assigns them.
+- Where outside guidance, such as another company's interface guidelines, disagrees with Material Design or WCAG, Material and WCAG win. Rules drawn from outside guidance are written fresh, not copied.
 
 Native controls own submitted values, validity, disabled state and defaults. Enhanced choice popups keep focus separate from selection; navigation-only branches never become submitted choices. Filtering a displayed view does not erase hidden selections.
 
@@ -36,7 +37,7 @@ Applications own server data operations. Cancelable table requests expose intent
 | Components and behaviors | Interactive components cover the keyboard, form and pointer patterns comparable frameworks provide, tested in Chromium, Firefox and WebKit. |
 | Utilities | Sass helpers cover the layout and text patterns Tailwind and Bootstrap provide, with window-size prefixes where a layout changes. |
 | Initialization | Markup can start and configure components without page script. |
-| MCP server and skill | Agents can discover components and retrieve complete, version-specific rules and runtime API guidance within predictable response limits. They can also read the shipped documentation as versioned resources. |
+| MCP server and skill | Agents can discover components and retrieve complete, version-specific rules and runtime API guidance within predictable response limits. They can also read the shipped documentation as versioned resources. The skill also guides app behavior tied to a component, such as loading feedback, Undo, URL state and form submission, in that component's guide. |
 
 ## Success criteria
 
@@ -53,3 +54,4 @@ MCP work keeps live protocol checks, compatibility with existing tool names and 
 - Framework-specific bindings, such as React or Vue components, and runtime dependencies.
 - A repository split, HTTP hosting, or an SDK or language migration for the MCP server.
 - Theme-writing tools or page recipes in the MCP server.
+- General web-quality guidance that no component owns.

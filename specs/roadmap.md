@@ -16,11 +16,12 @@ Later phases build on these:
   - A `.funnel-chart` draws each row as a stage as wide as its value, and a `.treemap-chart` as a rectangle whose area follows its value. A `.sankey-chart` draws flows between nodes from source, target and value columns.
 - **Touch gestures:** a `.pull-to-refresh` container refreshes on a pull down at its top or from its `[data-refresh]` button. In a `.list.swipeable`, a swipe reveals a row's `.swipe-actions`, which its `[data-swipe-toggle]` button and the keyboard also reach.
 - **Data tables:** a sticky header, `data-sort` sorting and a select-all box. `.sticky-column` pins the first column, a `.drag-handle` resizes a column by pointer or keyboard and fires `expressive:resize`, and menu checkbox items with `data-column` hide and show columns.
-- **Utilities:** layout helpers take `medium:`, `expanded:`, `large:` and `extra-large:` prefixes, and spacing uses the same window sizes. Line clamp, opacity, pointer, position and inset helpers, `.grid-auto-fill` and `.list-unstyled` cover text, layout and list patterns without page CSS.
+- **Utilities:** layout helpers take `medium:`, `expanded:`, `large:` and `extra-large:` prefixes, and spacing uses the same window sizes. Line clamp, opacity, pointer, position and inset helpers, `.grid-auto-fill` and `.list-unstyled` cover text, layout and list patterns without page CSS. Row and column gaps, flex sizing, self-alignment and visual order also take window-size prefixes.
 - **Pickers:** Datepicker and Timepicker follow the page's `lang` and read typed dates in their own format. Timepicker's `showSeconds` adds a seconds field, and `minTime` and `maxTime` bound the times a person can choose.
 - **Chips:** submit their values under the input's `name` through the form-associated `expressive-chips-control` element, so the browser handles reset, validity and disabled state.
 - **Menus:** Home and End keys, `placement`, and anchored menus that open on whichever side fits. Checkbox items toggle and keep the menu open, and radio items check within a named group.
-- **Autocomplete:** `searchDelay` waits for typing to pause before calling `onSearch`, and a text change aborts the running search's signal. `allowCreate` ends the list in an `Add "text"` row, and a search with no match shows a "No results" row.
+- **Autocomplete:** `searchDelay` waits for typing to pause before calling `onSearch`, and a text change aborts the running search's signal. `allowCreate` ends the list in an `Add "text"` row, and a search with no match shows a "No results" row. Entries can be disabled or grouped under labelled headings.
+- **Selects:** an opt-in search filters a FormSelect's options in single and multiple selection, and the native select still submits the value.
 - **Tooltips:** open on a long press on touch, or on a click with `openOnClick`. A tooltip opened just after another closes skips its `enterDelay`.
 - **Forms:** `.validate` fields set `aria-invalid` and are described by their error text. `data-mask` formats typed and pasted text to a pattern. `data-currency` shows an amount in the page's locale and currency after blur, and the form submits the plain number.
 - **Choosing values:** a `.transfer-list` moves checkbox rows between an available and a chosen list and submits the chosen ones in order. A `select[data-tree]` opens an ARIA tree and submits one leaf, and a `.field.cascader` picks a path through nested options in columns and submits every level.
@@ -31,6 +32,10 @@ Later phases build on these:
   - Lists and searches the catalogue.
   - Returns complete rules and the documented Options and Methods within response limits.
   - Serves the shipped catalogue and component guides as versioned resources with name completion.
+
+## Up next
+
+1. [Milestone: apps that feel finished](#milestone-apps-that-feel-finished)
 
 ## Milestone: MCP authoring guidance
 
@@ -75,8 +80,6 @@ Completed 2026-10-06. See [spec](2026/10/06/mcp-component-resources/).
 Completed 2026-10-06. See [spec](2026/10/06/mcp-resource-completion/).
 
 ## Milestone: component gaps
-
-These close the second tier of the TypeScript gap review. Each phase stands alone unless it names a dependency.
 
 ### Phase 11: menu checkbox items
 
@@ -124,8 +127,6 @@ Completed 2026-10-21. See [spec](2026/10/21/autoinit-watch/).
 
 ## Milestone: deferred polish
 
-These came up while closing earlier gaps and were set aside on purpose.
-
 ### Phase 22: chart transitions between datasets
 
 Completed 2026-10-21. See [spec](2026/10/21/chart-transitions/).
@@ -139,8 +140,6 @@ Completed 2026-10-21. See [spec](2026/10/21/chart-table-sync/).
 Completed 2026-10-21. See [spec](2026/10/21/chips-form-associated/).
 
 ## Milestone: utility gaps
-
-Authors can build common layout and text patterns from utility classes without page CSS. This milestone and the three after it come from the framework gap review of 2026-10-23, which compared ExpressiveCSS with Bootstrap, Tailwind, Materialize, MUI, Vuetify, Quasar, Ant Design, shadcn/ui and Mantine.
 
 ### Phase 25: line clamp utilities
 
@@ -168,8 +167,6 @@ Completed 2026-10-23. See [spec](2026/10/23/unstyled-lists/).
 
 ## Milestone: data table and chart gaps
 
-Data tables handle wide data, and charts can plot one measure against another.
-
 ### Phase 31: data table sticky first column
 
 Completed 2026-10-23. See [spec](2026/10/23/data-table-sticky-column/).
@@ -192,8 +189,6 @@ Completed 2026-10-24. See [spec](2026/10/24/bubble-sizes/).
 
 ## Milestone: touch and input gaps
 
-Touch gestures that mobile frameworks offer work in ExpressiveCSS, each with a non-gesture alternative, and text fields can format what people type.
-
 ### Phase 36: pull-to-refresh
 
 Completed 2026-10-24. See [spec](2026/10/24/pull-to-refresh/).
@@ -211,8 +206,6 @@ Completed 2026-10-25. See [spec](2026/10/24/input-mask/).
 Completed 2026-10-25. See [spec](2026/10/25/currency-input/).
 
 ## Milestone: lower-value gaps
-
-These came from the same review but are rarer in apps. Each phase stands alone unless it names a dependency.
 
 ### Phase 40: deferred rendering for long lists
 
@@ -264,10 +257,6 @@ Completed 2026-10-25. See [spec](2026/10/25/sankey-chart/).
 
 ## Milestone: stylesheet review fixes
 
-Text and icons grow with the reader's font size, and components read the shared theme tokens instead of copying their values. These phases come from the `src/sass` review of 2026-10-26. Each phase stands alone unless it names a dependency.
-
-Deferred with no phase: a shared mixin for the overflow, ellipsis and nowrap declarations that 15 rules write by hand. It would not change the compiled CSS.
-
 ### Phase 52: size the remaining px font sizes in rem
 
 Completed 2026-10-26. See [spec](2026/10/26/rem-icon-font-sizes/).
@@ -298,69 +287,41 @@ Completed 2026-10-26. See [spec](2026/10/26/chart-base-rules/).
 
 ## Milestone: responsive layout refinements
 
-Authors can control each gap axis and adapt individual children to the window size. These phases cover G1 and G2 from the framework gap review.
-
 ### Phase 59: axis-specific gap utilities
 
-No dependencies. Authors set row and column gaps independently on the existing spacing scale, with the same window-size prefixes as other spacing helpers.
-
-Completion check: a wrapping grid combines a base gap with an axis-specific breakpoint override, and its computed row and column gaps match the requested values on either side of that breakpoint.
+Completed 2026-10-26. See [spec](2026/10/26/axis-specific-gap-utilities/).
 
 ### Phase 60: responsive child sizing
 
-No dependencies. Existing flex sizing helpers gain window-size variants, so a child can change how it shares available space without page CSS.
-
-Completion check: a flex child changes from its base sizing to a prefixed sizing at the selected breakpoint while its sibling retains its requested space.
-
-Open for spec: which reset values are needed to reverse the existing sizing helpers without changing their unprefixed behavior.
+Completed 2026-10-26. See [spec](2026/10/26/responsive-child-sizing/).
 
 ### Phase 61: responsive self-alignment
 
-No dependencies. Authors override an individual child's alignment at a window-size breakpoint and can return it to the parent's alignment.
-
-Completion check: one child follows its base self-alignment below a breakpoint and the requested prefixed alignment above it, without changing its siblings' alignment.
+Completed 2026-10-26. See [spec](2026/10/26/responsive-self-alignment/).
 
 ### Phase 62: responsive visual ordering
 
-No dependencies. Authors change a child's visual order at a window-size breakpoint and can restore its normal order. DOM and keyboard order stay unchanged.
-
-Completion check: a child moves to its requested visual position across a breakpoint while keyboard focus still follows the authored DOM order.
+Completed 2026-10-26. See [spec](2026/10/26/responsive-visual-ordering/).
 
 ## Milestone: filtered choices
 
-Authors can search native select options and present richer autocomplete results. These phases cover G3 and G4 from the framework gap review.
-
 ### Phase 63: filter single-select options
 
-No dependencies. An opt-in search narrows a FormSelect's single-choice list while the native select continues to own its submitted value.
-
-Completion check: a person filters a grouped select, chooses a matching option and submits the form; the submitted value is the option's value, not the search query.
-
-Open for spec: whether search edits the combobox or uses a separate popup field, including its keyboard and ARIA contract.
+Completed 2026-10-26. See [spec](2026/10/26/single-select-filtering/).
 
 ### Phase 64: filter multiple-select options
 
-Depends on phase 63. The same opt-in search works with multiple selection, retaining choices that the current query does not show.
-
-Completion check: a person selects an option, changes the query and selects another; the native multiple select submits both values.
+Completed 2026-10-27. See [spec](2026/10/27/multiple-select-filtering/).
 
 ### Phase 65: autocomplete disabled choices
 
-No dependencies. Autocomplete entries can remain visible while unavailable for selection. Pointer, keyboard and programmatic selection follow the same disabled policy.
-
-Completion check: attempting to select a disabled suggestion through each selection path leaves the chosen values unchanged.
+Completed 2026-10-27. See [spec](2026/10/27/autocomplete-disabled-choices/).
 
 ### Phase 66: autocomplete option groups
 
-Depends on phase 65. Autocomplete results can have labelled groups whose headings are excluded from selection and result counts.
-
-Completion check: keyboard navigation crosses a group heading to reach the next selectable result, with the active option and announced result count identifying only actual choices.
-
-Open for spec: group metadata and the labelled listbox structure.
+Completed 2026-10-27. See [spec](2026/10/27/autocomplete-option-groups/).
 
 ## Milestone: filtered table pages
-
-Authors can filter and page records through the existing data table, with application-owned server operations when needed. These phases cover G5 and G6 from the framework gap review.
 
 ### Phase 67: data table text filtering
 
@@ -384,8 +345,6 @@ Completed 2026-10-27. See [spec](2026/10/27/server-table-paging/).
 
 ## Milestone: validated file choices
 
-Authors can reject invalid file selections through the existing drop zone and form feedback. These phases cover G7 from the framework gap review. Validation is opt-in, treats browse and drop consistently, and invalidates the whole selection when any file fails. Uploading files and filtering a FileList are outside this milestone; the server still validates received files.
-
 ### Phase 72: drop-zone type validation
 
 Completed 2026-10-27. See [spec](2026/10/27/drop-zone-type-validation/).
@@ -400,8 +359,6 @@ Completed 2026-10-27. See [spec](2026/10/27/drop-zone-count-limit/).
 
 ## Milestone: searchable tree choices
 
-Authors can filter a hierarchy and choose multiple leaves through the existing tree select. These phases cover G8 and G9 from the framework gap review.
-
 ### Phase 75: tree-select filtering
 
 Completed 2026-10-27. See [spec](2026/10/27/tree-select-filtering/).
@@ -410,6 +367,90 @@ Completed 2026-10-27. See [spec](2026/10/27/tree-select-filtering/).
 
 Completed 2026-10-27. See [spec](2026/10/27/tree-select-multiple/).
 
-## Completion evidence for phases 67-76
+## Milestone: apps that feel finished
 
-The [requirement audit](2026/10/27/roadmap-completion/audit.md) maps all 64 requirements to current source and assertions. [Primary GitHub records](2026/10/27/roadmap-completion/merge-evidence.json) identify each merged PR, exact successful head and resolved conversations. Physical capability limits remain explicit; no package was published.
+Apps that agents build with the skill handle loading, mistakes, sharing and forms the way people expect. The ideas come from a review of Vercel's Web Interface Guidelines on 2026-11-14. Skill guidance comes first, then framework defaults, then lint checks. The last phase of each stage reruns the phase 78 prompts and records the change.
+
+### Phase 77: add a finished-app rubric to the quality inspector
+
+No dependencies. The quality inspector in `expressivecss-review` checks loading feedback, recovery from destructive actions, URL state and the form submit flow, and reports a finding for each problem it sees.
+
+Completion check: reviewing a page that disables its submit button before any input, deletes a row without Undo and keeps its selected tab out of the URL produces one finding for each.
+
+Open for spec: whether the rubric's rules live in `semantics.json` or only in the inspector's agent file.
+
+### Phase 78: record a finished-app baseline from three fixed prompts
+
+Depends on phase 77. An agent builds one app from each of three fixed prompts with the current skill: a settings form, a list with destructive delete, and a filtered dashboard. The quality inspector's finished-app findings for each app become the baseline.
+
+Completion check: the prompts, the generated apps and their finding counts are committed, so a later phase can rerun the prompts and compare.
+
+Open for spec: which agent and model build the apps, and how many runs per prompt smooth out variation between runs.
+
+### Phase 79: guide loading feedback on buttons
+
+Depends on phase 78. The button guide tells agents that a command button keeps its label while its request runs, shows progress beside the label and doesn't run the command twice. A spinner waits a moment before it appears and then stays for a minimum time, and an in-progress label ends with the `…` character.
+
+Completion check: rebuilt from the baseline prompt, the settings form keeps its button label during submission, and the quality inspector reports no loading-feedback finding.
+
+### Phase 80: guide destructive actions to an Undo snackbar
+
+Depends on phase 78. The snackbar and list guides tell agents to remove an item at once and offer Undo as the snackbar's action. A confirmation dialog stays for actions that can't be undone.
+
+Completion check: in the rebuilt destructive-delete app, deleting a row removes it and offers Undo, and pressing Undo restores the row in place.
+
+### Phase 81: guide tabs, filters and pages into the URL
+
+Depends on phase 78. The tabs and data table guides tell agents to keep the selected tab, filter text and page in the URL, so reloading, sharing a link and going Back all restore the same view.
+
+Completion check: in the rebuilt dashboard, reloading after choosing a tab, a filter and a page restores all three.
+
+Open for spec: whether any component needs an option to take its initial state from the URL, or the existing markup and `expressive:*` events are enough.
+
+### Phase 82: guide the form submit flow
+
+Depends on phase 78. The form and text field guides tell agents to leave submit enabled until submission starts, let Enter submit, show each error beside its field and focus the first one, set `name`, `autocomplete`, `type` and `inputmode`, turn spellcheck off for codes and emails, allow paste, and write placeholders as examples ending in `…`. This phase closes the guidance stage.
+
+Completion check: submitting the rebuilt settings form empty leaves the submit button enabled and moves focus to the first invalid field.
+
+### Phase 83: ship a button loading state that keeps its label
+
+Depends on phase 79. An opt-in loading state on `.button` shows progress beside the label, reports busy to assistive technology and stops a repeat press from running the command. Existing buttons don't change, and the button guide from phase 79 points at the shipped state. A minimum spinner duration stays guidance and is not runtime behavior.
+
+Completion check: in Chromium, Firefox and WebKit, a button in the loading state keeps its accessible name, reports busy, and a second press doesn't reach its handler.
+
+Open for spec: class or attribute, and whether the state needs runtime code or CSS alone.
+
+### Phase 84: offset anchored headings below sticky bars
+
+No dependencies. A heading reached through a fragment link comes to rest below a sticky app bar instead of behind it. This phase closes the framework stage.
+
+Completion check: following a link to a heading on a page with a sticky app bar leaves the whole heading visible below the bar.
+
+Open for spec: whether every heading with an `id` gets the offset by default or authors opt in, given the product rule on changing how existing markup behaves, and whether it reuses the scrollspy offset token.
+
+### Phase 85: lint flags `transition: all`
+
+No dependencies. `expressivecss-lint` reports `transition: all` in the markup it checks.
+
+Completion check: a fixture with `transition: all` in a `style` attribute gets one finding, and the same fixture listing its transitioned properties gets none.
+
+Open for spec: whether the check also reads `<style>` blocks and linked stylesheets.
+
+### Phase 86: lint flags disabled zoom
+
+No dependencies. `expressivecss-lint` reports a viewport meta tag that stops people from zooming, through `user-scalable=no` or `maximum-scale=1`.
+
+Completion check: fixtures with either setting get a finding, and the standard `width=device-width, initial-scale=1` viewport gets none.
+
+### Phase 87: lint flags paste blocking
+
+No dependencies. `expressivecss-lint` reports a text field whose inline handler blocks paste. This phase closes the lint stage and the milestone's final baseline comparison.
+
+Completion check: a field with `onpaste="return false"` gets a finding, and a field whose paste handler doesn't cancel the event gets none.
+
+## Deferred work
+
+No phases yet:
+
+- A shared mixin for the overflow, ellipsis and nowrap declarations that 15 rules write by hand. It would not change the compiled CSS.
