@@ -20,6 +20,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   the pane's scroll where the browser supports `timeline-scope`. CSS only.
   `.scaffold.tall-rail` runs the rail and the trailing region from the top of
   the window to the bottom, with the app bar over the pane only.
+- A `<button>` outside a navigation rail, such as an app bar menu button,
+  toggles the rail when its `aria-controls` names the rail's `id`. The rail
+  keeps the button's `aria-expanded` in sync, also for a button added after it
+  started, and Escape on a modal rail returns focus to the button that opened
+  it.
+
+### Changed
+
+- A navigation rail's own menu button has to be its first child, as its styles
+  already required. A later `<button>` is a destination, not the toggle.
+  Migration: if a rail's menu button isn't its first child, move it there.
 
 ## [0.18.1] - 2026-11-15
 

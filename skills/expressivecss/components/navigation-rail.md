@@ -9,7 +9,7 @@ Component ID: `navigation-rail`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `913f01e54264c87e0172f4792fa308beb99ad405d70fdc5a747c15f978730dc0`
+Contract SHA-256: `3b194d7fc3cfa54ca5947804207d36acf372b9e4ac04d25dcf273c0c109cb0e3`
 
 #### Selection and adaptation
 
@@ -42,28 +42,20 @@ Switch between UI views on mid-sized devices. A `nav.navigation-rail` holds 3–
 
 Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp, icon and label on one row, and an extended FAB. The menu button toggles that class (`AutoInit()` starts it). On compact windows an expanded rail is modal — a scrim, and Escape or a scrim tap collapses it. Add `modal` to keep that overlay at every breakpoint. Expanding and collapsing run on the default spatial spring (`--md-comp-nav-rail-motion` and `--md-comp-nav-rail-motion-duration`), so `motion="expressive"` lets the rail overshoot its width slightly before it settles.
 
-Escape closes an open nested menu first. A second Escape collapses the modal rail and returns focus from inside it to the rail toggle, unless a close callback moves focus elsewhere.
+Escape closes an open nested menu first. A second Escape collapses the modal rail and returns focus from inside it to the toggle that opened it, unless a close callback moves focus elsewhere.
 
 #### Syntax
 
 ```html
-<nav class="navigation-rail" aria-label="Main">
-  <button type="button" aria-label="Menu">
-    <span class="material-symbols" aria-hidden="true">menu</span>
-  </button>
-  <a class="button" href="/compose">
-    <span class="material-symbols" aria-hidden="true">edit</span>
-    <span>Compose</span>
-  </a>
-  <a href="/" aria-current="page">
-    <span class="material-symbols" aria-hidden="true">star</span>
-    Label
-  </a>
-  <a href="/two" aria-label="Starred, 3 unread">
-    <span class="material-symbols" aria-hidden="true">star<span class="badge">3</span></span>
-    Label
-  </a>
-</nav>
+<header>
+  <div class="bar">
+    <button type="button" aria-label="Main menu" aria-controls="main-rail" aria-expanded="false">
+      <span class="material-symbols" aria-hidden="true">menu</span>
+    </button>
+    <h1>Mail</h1>
+  </div>
+</header>
+<nav class="navigation-rail" id="main-rail" aria-label="Main">…</nav>
 ```
 
 #### Also documented

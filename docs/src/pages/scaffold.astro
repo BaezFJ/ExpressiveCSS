@@ -33,19 +33,22 @@ const S = defineSections([
           <a href="toolbars.html">toolbar</a> share the row below it, from the
           leading edge to the trailing one. The scaffold is as tall as the
           window and only <code>&lt;main&gt;</code> scrolls. The scaffold is
-          CSS only.
+          CSS only. The app bar's menu button toggles the rail when its
+          <code>aria-controls</code> names the rail's <code>id</code>; see
+          <a href="navigation-rail.html#outside-toggle">toggling the rail from
+          outside it</a>.
         </p>
         <div data-markdown-ignore>
           <div class="scaffold" style="block-size: 26rem; border: 1px solid var(--md-sys-color-outline-variant)">
             <header>
               <div class="bar">
-                <button type="button" aria-label="Main menu">
+                <button type="button" aria-label="Main menu" aria-controls="scaffold-demo-rail" aria-expanded="false">
                   <span class="material-symbols" aria-hidden="true">menu</span>
                 </button>
                 <h2>Mail</h2>
               </div>
             </header>
-            <nav class="navigation-rail" aria-label="Scaffold demo navigation">
+            <nav class="navigation-rail" id="scaffold-demo-rail" aria-label="Scaffold demo navigation">
               <a href="#anatomy" aria-current="page"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a>
               <a href="#regions"><span class="material-symbols" aria-hidden="true">star</span>Starred</a>
               <a href="#scrolling"><span class="material-symbols" aria-hidden="true">send</span>Sent</a>
@@ -75,13 +78,13 @@ const S = defineSections([
   <header>
     <a class="visually-hidden-focusable" href="#main">Skip to content</a>
     <div class="bar">
-      <button type="button" aria-label="Main menu">
+      <button type="button" aria-label="Main menu" aria-controls="rail" aria-expanded="false">
         <span class="material-symbols" aria-hidden="true">menu</span>
       </button>
       <h1>Mail</h1>
     </div>
   </header>
-  <nav class="navigation-rail" aria-label="Primary">
+  <nav class="navigation-rail" id="rail" aria-label="Primary">
     <a href="/inbox" aria-current="page"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a>
     <a href="/starred"><span class="material-symbols" aria-hidden="true">star</span>Starred</a>
   </nav>
