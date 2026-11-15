@@ -299,6 +299,22 @@ const S = defineSections([
           with its content below 600px, so the page scrolls around it.
         </p>
         <p>
+          On phones with a notch or home indicator, add
+          <code>viewport-fit=cover</code> to the page's viewport meta tag. The
+          scaffold then keeps every region inside the safe areas: it pads its
+          sides by the side insets at every width, and its top and bottom from
+          600px up (the status bar pads its own bottom). Below 600px the app bar
+          pads its own top inside its background, the navigation bar and
+          floating toolbar keep their bottom insets, and an open rail overlay
+          clears the notch and the home indicator. Without
+          <code>viewport-fit=cover</code> the insets are zero and nothing
+          changes. Overlays the scaffold doesn't place, such as a modal side
+          sheet or a fixed toolbar, keep their own positioning.
+        </p>
+<Code code={`
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+`} />
+        <p>
           Printing drops the fixed height, so the whole pane prints. The rail
           and the navigation bar don't print.
         </p>

@@ -43,6 +43,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - From 1200px up an open standard `.side-sheet` that is a direct child of a
   `.scaffold` becomes a 400px column between the pane and the trailing
   toolbar, and the pane narrows while it is open.
+- With `viewport-fit=cover`, a `.scaffold` keeps its regions clear of the
+  `env(safe-area-inset-*)` edges: the shell pads its sides, its top and bottom
+  from 600px up, and the compact app bar and rail overlay pad their own,
+  without doubling the navigation bar's and status bar's insets.
 
 ### Changed
 
