@@ -1,0 +1,285 @@
+{
+  "label": "baseline",
+  "date": "2026-11-15",
+  "claudeCode": "2.1.325",
+  "model": "claude-opus-5-5",
+  "command": "claude -p --safe-mode --strict-mcp-config --model claude-opus-5-5 --no-session-persistence --output-format json",
+  "commit": "16b6632ada2153e8b185c5c72387d3896d7ad794",
+  "dist": {
+    "css/expressive.min.css": "b1ba049750e05269d1a1a8d3124fd78aa5fea1b741ff53376e7d9ccabce442ad",
+    "js/expressive.min.js": "8e0d791b7ec83c84e981cd137cf2297e2af1aa3ec9bcbbd4d42336e388018ce1"
+  },
+  "skillTrees": {
+    "skills/expressivecss": "a7de269b7bf10baa2fd2d08c90964c50ebf748e8",
+    "skills/expressivecss-review": "6f8aa197c069c5f1546b9d2899ec596c8f50549b"
+  },
+  "briefs": {
+    "build": "2f096aa65b688ba640c93e2b30bfdaa5ff76a6597d1f2fbff9968384952a1be3",
+    "review": "1be3237aaf63f5f6df96f2300e385098b6fe114fe809f7735eca7692c9153e67"
+  },
+  "failedRuns": [],
+  "notes": [
+    "settings-form run 2 also wrote ok.png and err.png screenshots; index.html does not reference them, so they are not part of the app and are not committed."
+  ],
+  "apps": [
+    {
+      "prompt": "settings-form",
+      "run": 1,
+      "files": {
+        "settings-form-run1.html": "e6b3e7dd0901cbf2da717a196351a1aac5bf6929bc3e80de135b51b56bb41639"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 73,
+      "countable": [],
+      "notCounted": [
+        {
+          "area": "loading",
+          "location": "index.html:68-71 #save-status",
+          "lensSeverity": "major",
+          "description": "Saving status is not announced by a live region.",
+          "reason": "Describes a WCAG 4.1.3 announcement gap. The button keeps its label, shows a loading indicator and Saving… beside it, and the saving flag ignores a repeat press, so no finished-app anchor in SKILL.md section 5 matches. It stays a check 4 major and is not counted."
+        }
+      ],
+      "polish": [],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 0,
+        "submit-flow": 0
+      },
+      "total": 0
+    },
+    {
+      "prompt": "settings-form",
+      "run": 2,
+      "files": {
+        "settings-form-run2.html": "b17183ea0670651bddd69871db999ab6dbdcfafa4a3ec56dddbd971fbada8c18"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 177,
+      "countable": [
+        {
+          "area": "submit-flow",
+          "severity": "major",
+          "location": "index.html:196-200 submit .catch; #email at 67-71; #save-error at 87-90",
+          "description": "The server rejection of the email shows only in an alert above the actions; the email field is not marked and focus stays on Save."
+        }
+      ],
+      "notCounted": [],
+      "polish": [
+        {
+          "area": "submit-flow",
+          "location": "index.html:77-80 #phone",
+          "description": "Help text, pattern and error message disagree on allowed characters."
+        }
+      ],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 0,
+        "submit-flow": 1
+      },
+      "total": 1
+    },
+    {
+      "prompt": "destructive-list",
+      "run": 1,
+      "files": {
+        "destructive-list-run1.html": "7da1b1a36096956d83ae1adacc82aec1ae5f1b7b2eb381beffa88902e726fb42"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 138,
+      "countable": [
+        {
+          "area": "loading",
+          "severity": "major",
+          "location": "index.html:189-193 deleteAddress",
+          "description": "The Delete button is replaced by a spinner alone while the request runs."
+        },
+        {
+          "area": "loading",
+          "severity": "major",
+          "location": "index.html:212-216 Retry snackbar; guard at 172",
+          "description": "Retry calls deleteAddress without the aria-busy guard while the restored Delete button is also live, so the delete can start twice."
+        }
+      ],
+      "notCounted": [],
+      "polish": [
+        {
+          "area": "destructive",
+          "location": "index.html:174-180, 206",
+          "description": "A confirmation dialog stands in front of a delete Undo could reverse; the deleted snackbar has no Undo."
+        }
+      ],
+      "counts": {
+        "loading": 2,
+        "destructive": 0,
+        "url-state": 0,
+        "submit-flow": 0
+      },
+      "total": 2
+    },
+    {
+      "prompt": "destructive-list",
+      "run": 2,
+      "files": {
+        "destructive-list-run2.html": "c8cf1bd92de14cf0872adefbac3106c3781d26d07336153c1ed4848c6098d9c6"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 165,
+      "countable": [
+        {
+          "area": "loading",
+          "severity": "major",
+          "location": "index.html:246-253 setSaving, #address-save",
+          "description": "Save address changes to Saving… and is disabled, but nothing shows progress beside it."
+        }
+      ],
+      "notCounted": [],
+      "polish": [
+        {
+          "area": "destructive",
+          "location": "index.html:172-183 confirmDelete",
+          "description": "A confirmation dialog stands in front of a delete Undo could reverse."
+        },
+        {
+          "area": "submit-flow",
+          "location": "index.html:65 #addr-postal",
+          "description": "Spellcheck is left on for the postal code field."
+        }
+      ],
+      "counts": {
+        "loading": 1,
+        "destructive": 0,
+        "url-state": 0,
+        "submit-flow": 0
+      },
+      "total": 1
+    },
+    {
+      "prompt": "filtered-dashboard",
+      "run": 1,
+      "files": {
+        "filtered-dashboard-run1.html": "7e1ec3a22dde586fa88a476d57af53d37417f6c90832719dd3a67b196c4f790d"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 184,
+      "countable": [
+        {
+          "area": "url-state",
+          "severity": "major",
+          "location": "index.html:64-68 nav.tabs; 207-209",
+          "description": "The selected tab is never written to the URL, and startup forces the Open panel over any hash."
+        },
+        {
+          "area": "url-state",
+          "severity": "major",
+          "location": "index.html:75 #customer-filter",
+          "description": "The filter text is not kept in the URL."
+        },
+        {
+          "area": "url-state",
+          "severity": "major",
+          "location": "index.html:96-110 nav.pagination",
+          "description": "The page is not kept in the URL and resets to 1 on load."
+        }
+      ],
+      "notCounted": [],
+      "polish": [],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 3,
+        "submit-flow": 0
+      },
+      "total": 3
+    },
+    {
+      "prompt": "filtered-dashboard",
+      "run": 2,
+      "files": {
+        "filtered-dashboard-run2.html": "06aeb5c94d8192425b504de92887ed454fa00eebe30e2fed44576d62698ebbff"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 180,
+      "countable": [
+        {
+          "area": "url-state",
+          "severity": "major",
+          "location": "index.html:68-72 nav.tabs; script 164-198",
+          "description": "The selected tab is never written to the URL."
+        },
+        {
+          "area": "url-state",
+          "severity": "major",
+          "location": "index.html:62 #customer-filter",
+          "description": "The filter text is not kept in the URL."
+        },
+        {
+          "area": "url-state",
+          "severity": "major",
+          "location": "index.html:145-151 nav.pagination",
+          "description": "The page is not kept in the URL."
+        }
+      ],
+      "notCounted": [],
+      "polish": [],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 3,
+        "submit-flow": 0
+      },
+      "total": 3
+    }
+  ],
+  "totals": {
+    "loading": 3,
+    "destructive": 0,
+    "url-state": 6,
+    "submit-flow": 1,
+    "total": 10
+  }
+}

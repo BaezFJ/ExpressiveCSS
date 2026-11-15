@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orders dashboard</title>
+  <link rel="stylesheet" href="dist/css/expressive.min.css">
+  <style>
+    body { margin: 0; }
+    .app-content { display: flex; flex-direction: column; min-height: 100dvh; }
+    main { flex: 1; min-width: 0; }
+
+    /* Dashboard surfaces: tokens are set on the component elements themselves. */
+    .dashboard { padding: 16px; }
+    @media (width >= 600px) { .dashboard { padding: 24px; } }
+    .dashboard .stats {
+      --md-comp-filled-card-container-color: var(--md-sys-color-surface-container);
+      --md-comp-card-container-shape: 24px;
+      --md-comp-card-content-padding: 24px;
+      --md-comp-card-subhead-color: var(--md-sys-color-on-surface-variant);
+      --md-comp-stat-container-color: var(--md-sys-color-surface-container);
+      --md-comp-stat-shape: 24px;
+    }
+
+    /* Toolbar and pager live inside the table wrapper; keep them pinned when the table scrolls sideways. */
+    .orders-toolbar, .orders-pager {
+      position: sticky; inset-inline-start: 0;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px;
+      padding: 12px 16px;
+    }
+    .orders-toolbar .field { flex: 1 1 240px; max-width: 360px; margin: 0; }
+    .orders-pager { justify-content: flex-end; border-top: 1px solid var(--md-sys-color-outline-variant); }
+    .orders-pager .pagination { margin: 0; }
+    .orders-pager .pagination ol { display: flex; align-items: center; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    .orders-pager output { min-width: 4.5rem; text-align: center; }
+    .data-table { margin: 0; }
+  </style>
+</head>
+<body>
+  <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+  <div class="app-content">
+    <header>
+      <nav aria-label="Workspace">
+        <h2>Northwind store</h2>
+        <button type="button" aria-label="Help"><span class="material-symbols" aria-hidden="true">help</span></button>
+      </nav>
+    </header>
+
+    <main id="main" class="dashboard" tabindex="-1">
+      <div class="mb-4">
+        <h1 class="headline-medium my-0">Orders</h1>
+        <p class="body-medium on-surface-variant-text my-0">Sample data · 40 orders, Oct 1 – Nov 14, 2026</p>
+      </div>
+
+      <section aria-labelledby="kpi-title" class="mb-5">
+        <h2 id="kpi-title" class="visually-hidden">Orders by state</h2>
+        <dl class="stats my-0" id="stats"></dl>
+      </section>
+
+      <section aria-labelledby="list-title">
+        <h2 id="list-title" class="title-large my-0">Order list</h2>
+        <p class="body-medium on-surface-variant-text mt-1 mb-3">Choose a state, then filter by customer. Totals in US dollars.</p>
+        <div>
+          <nav class="tabs" aria-label="Order state">
+            <a class="active" aria-current="page" href="#panel-open"><span>Open</span></a>
+            <a href="#panel-shipped"><span>Shipped</span></a>
+            <a href="#panel-returned"><span>Returned</span></a>
+          </nav>
+
+          <div id="panel-open" data-state="Open" class="pt-4">
+            <div class="data-table" id="orders" data-sort data-page-size="10" role="region" aria-labelledby="orders-caption" tabindex="0">
+              <div class="orders-toolbar">
+                <div class="field outlined">
+                  <span class="material-symbols prefix" aria-hidden="true">search</span>
+                  <input id="customer-filter" type="search" data-table-filter placeholder=" " autocomplete="off">
+                  <label for="customer-filter">Filter by customer</label>
+                </div>
+                <p class="body-medium on-surface-variant-text my-0">
+                  <output id="match-count" data-table-filter-count role="status" aria-live="polite" aria-label="Matching orders">0</output>
+                  matching orders
+                </p>
+              </div>
+              <table>
+                <caption id="orders-caption" class="visually-hidden">Open orders</caption>
+                <thead>
+                  <tr>
+                    <th scope="col"><button type="button">Order</button></th>
+                    <th scope="col" data-filter><button type="button">Customer</button></th>
+                    <th scope="col" aria-sort="descending"><button type="button">Date</button></th>
+                    <th scope="col" class="numeric"><button type="button">Total</button></th>
+                  </tr>
+                </thead>
+                <tbody id="orders-body"></tbody>
+              </table>
+              <div class="orders-pager">
+                <nav class="pagination" aria-label="Order pages">
+                  <ol>
+                    <li>
+                      <button type="button" class="icon-button" data-table-page="previous" aria-label="Previous page">
+                        <span class="material-symbols" aria-hidden="true">chevron_left</span>
+                      </button>
+                    </li>
+                    <li><output data-table-page-status role="status" aria-live="polite" aria-label="Pages" class="body-medium">1 / 1</output></li>
+                    <li>
+                      <button type="button" class="icon-button" data-table-page="next" aria-label="Next page">
+                        <span class="material-symbols" aria-hidden="true">chevron_right</span>
+                      </button>
+                    </li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+
+            <div class="empty-state" id="orders-empty" hidden>
+              <span class="material-symbols" aria-hidden="true">search_off</span>
+              <h3 id="empty-title">No matching orders</h3>
+              <p id="empty-text">No orders match this filter.</p>
+              <div class="empty-state-actions">
+                <button type="button" class="outlined" id="clear-filter">Clear filter</button>
+              </div>
+            </div>
+          </div>
+          <div id="panel-shipped" data-state="Shipped" class="pt-4"></div>
+          <div id="panel-returned" data-state="Returned" class="pt-4"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="dist/js/expressive.min.js"></script>
+  <script>
+    (() => {
+      // Deterministic sample data so the numbers stay consistent between loads.
+      let seed = 20261115;
+      const random = () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
+      const customers = ['Maya Patel', 'Liam Chen', 'Sofia Rossi', 'Noah Okafor', 'Ava Lindqvist', 'Mateo García',
+        'Hana Suzuki', 'Ethan Brooks', 'Zara Ahmed', 'Lucas Moreau', 'Isla Murphy', 'Omar Haddad'];
+      const states = ['Open', 'Shipped', 'Returned'];
+      const start = Date.UTC(2026, 9, 1);
+      const orders = Array.from({ length: 40 }, (_, i) => {
+        const roll = random();
+        return {
+          id: `ORD-${1001 + i}`,
+          customer: customers[Math.floor(random() * customers.length)],
+          date: new Date(start + Math.floor(random() * 45) * 86400000),
+          total: Math.round((15 + random() * 485) * 100) / 100,
+          state: roll < 0.45 ? states[0] : roll < 0.85 ? states[1] : states[2],
+        };
+      }).sort((a, b) => b.date - a.date);
+
+      const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+      const day = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+      const count = new Intl.NumberFormat('en-US');
+
+      // Key figures: count and value per state. They add up to the 40 orders.
+      const stats = document.getElementById('stats');
+      states.forEach((state) => {
+        const group = orders.filter((o) => o.state === state);
+        const value = group.reduce((sum, o) => sum + o.total, 0);
+        const tile = document.createElement('div');
+        tile.innerHTML = `<dt>${state} orders</dt><dd>${count.format(group.length)}</dd>` +
+          `<dd class="body-medium on-surface-variant-text">${money.format(value)} total</dd>`;
+        stats.append(tile);
+      });
+
+      const body = document.getElementById('orders-body');
+      orders.forEach((o) => {
+        const row = body.insertRow();
+        row.dataset.state = o.state;
+        row.innerHTML = `<th scope="row" class="text-nowrap">${o.id}</th><td class="text-nowrap"></td>` +
+          `<td class="text-nowrap" data-value="${o.date.toISOString().slice(0, 10)}">${day.format(o.date)}</td>` +
+          `<td class="numeric">${money.format(o.total)}</td>`;
+        row.cells[1].textContent = o.customer;
+      });
+
+      const wrapper = document.getElementById('orders');
+      const filter = document.getElementById('customer-filter');
+      const caption = document.getElementById('orders-caption');
+      const empty = document.getElementById('orders-empty');
+      const matchCount = document.getElementById('match-count');
+      let current = 'Open';
+
+      const updateEmpty = () => {
+        const none = matchCount.textContent.trim() === '0';
+        empty.hidden = !none;
+        wrapper.querySelector('.orders-pager').hidden = none;
+        if (none) {
+          const query = filter.value.trim();
+          document.getElementById('empty-title').textContent = `No ${current.toLowerCase()} orders match`;
+          document.getElementById('empty-text').textContent = query
+            ? `No ${current.toLowerCase()} orders for customers matching “${query}”.`
+            : `There are no ${current.toLowerCase()} orders.`;
+          document.getElementById('clear-filter').hidden = !query;
+        }
+      };
+
+      // Show only the rows in the chosen state, then let the data table refilter and return to page 1.
+      const showState = (panel) => {
+        current = panel.dataset.state;
+        panel.append(wrapper, empty);
+        caption.textContent = `${current} orders`;
+        body.querySelectorAll('tr').forEach((row) => { row.hidden = row.dataset.state !== current; });
+        Expressive.DataTables.setPage(wrapper, null);
+        updateEmpty();
+      };
+
+      document.addEventListener('DOMContentLoaded', () => {
+        Expressive.AutoInit(document.body, { Tabs: { onShow: showState } });
+        showState(document.getElementById('panel-open'));
+        // Registered after the framework's own input handler, so the count is already updated.
+        document.addEventListener('input', (e) => { if (e.target === filter) updateEmpty(); });
+        document.getElementById('clear-filter').addEventListener('click', () => {
+          filter.value = '';
+          filter.dispatchEvent(new Event('input', { bubbles: true }));
+          filter.focus();
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

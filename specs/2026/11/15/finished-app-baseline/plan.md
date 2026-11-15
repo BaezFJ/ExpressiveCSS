@@ -20,8 +20,8 @@ Covers R3, R8. Checks V2.
 Prerequisites: group 1 and `npm run build` at a committed HEAD.
 
 - [x] Commit group 1 so the recorded commit holds the briefs.
-- [ ] For each prompt and run, make a scratch directory with a copy of `dist/` and of `skills/expressivecss` as `expressivecss/`, and run the build command there with `timeout 1800`, at most three at once.
-- [ ] After each build, check `git status` in the repository, hash the app files, and copy them unchanged into the evidence directory.
+- [x] For each prompt and run, make a scratch directory with a copy of `dist/` and of `skills/expressivecss` as `expressivecss/`, and run the build command there with `timeout 1800`, at most three at once.
+- [x] After each build, check `git status` in the repository, hash the app files, and copy them unchanged into the evidence directory.
 
 Done when six apps exist, or each missing one has a recorded rerun and failure.
 
@@ -31,10 +31,10 @@ Covers R4, R5, R6, R7, R8. Checks V3, V4.
 
 Prerequisites: group 2.
 
-- [ ] For each app, make a review directory with the app, its local files, a copy of `dist/` and the two skill trees; run the lint there and save its output.
-- [ ] Run the review command there with `--allowedTools Read Glob Grep` and save the lens block.
-- [ ] Confirm each labelled finding by R5 and set its severity from the SKILL.md section 5 anchors.
-- [ ] Write `findings.json` and fill the six baseline rows.
+- [x] For each app, make a review directory with the app, its local files, a copy of `dist/` and the two skill trees; run the lint there and save its output.
+- [x] Run the review command there with `--allowedTools Read Glob Grep` and save the lens block.
+- [x] Confirm each labelled finding by R5 and set its severity from the SKILL.md section 5 anchors.
+- [x] Write `findings.json` and fill the six baseline rows.
 
 Done when V3 and V4 pass.
 

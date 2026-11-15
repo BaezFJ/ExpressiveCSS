@@ -113,7 +113,7 @@ A run fails when the build writes no `index.html`, the page doesn't load `dist/`
 The person running the comparison confirms each finding whose rule field holds a `finished-app:` label, and adds none of their own:
 
 1. A finding is confirmed when the location it cites exists in the app and shows the behavior it describes. It is dropped when the source contradicts it, and the reason is recorded.
-2. Its final severity follows the anchors in `skills/expressivecss-review/SKILL.md` section 5 of the baseline commit. A WCAG overlap takes the critical anchor and keeps both IDs.
+2. Its final severity follows the anchors in `skills/expressivecss-review/SKILL.md` section 5 of the baseline commit. A WCAG overlap takes the critical anchor and keeps both IDs. A labelled finding that matches no finished-app anchor (for example a missing announcement the reviewer filed under `finished-app:loading`) keeps its other severity and is recorded as not counted, with the reason.
 3. A countable finding is a confirmed major or critical finding with a label, as SKILL.md section 6 defines it. Labelled polish findings are recorded and not counted.
 
 ### Records
@@ -132,3 +132,15 @@ Counts are countable findings per area. A failed run shows `failed` in every col
 
 | Date | Label | Prompt | Run | Loading | Destructive | URL state | Submit flow | Total |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 2026-11-15 | baseline | settings-form | 1 | 0 | 0 | 0 | 0 | 0 |
+| 2026-11-15 | baseline | settings-form | 2 | 0 | 0 | 0 | 1 | 1 |
+| 2026-11-15 | baseline | destructive-list | 1 | 2 | 0 | 0 | 0 | 2 |
+| 2026-11-15 | baseline | destructive-list | 2 | 1 | 0 | 0 | 0 | 1 |
+| 2026-11-15 | baseline | filtered-dashboard | 1 | 0 | 0 | 3 | 0 | 3 |
+| 2026-11-15 | baseline | filtered-dashboard | 2 | 0 | 0 | 3 | 0 | 3 |
+
+Baseline notes, from [the baseline records](evidence/finished-app/2026-11-15-baseline/findings.json):
+
+- Both `destructive-list` builds put a confirmation dialog in front of delete. The rubric scores that as polish, so the destructive column is 0 while neither build offers Undo.
+- Neither `filtered-dashboard` build writes anything to the URL: tab, filter and page are each one finding in both runs.
+- Both `settings-form` builds kept the Save label and showed progress beside it. Run 1's labelled loading finding was a missing announcement, which matches no finished-app anchor and is not counted.
