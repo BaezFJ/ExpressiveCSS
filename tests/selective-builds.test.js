@@ -556,5 +556,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed .field.label-above, its select and date input alignment, and Datepicker range and multiple-selection inputs stacking under it: 90,891 gzip bytes (+174).
   // Reviewed --md-sys-state-focus-indicator-* tokens behind every 3px component focus ring (snackbar included), and the .focus-ring utility: 91,061 gzip bytes (+170).
   // Reviewed .status-bar (bar, items, end group and its compact fallback, vibrant bar, compact priority hiding, forced-colors edge, badge anchor), status bar items leaving the common button rules, and the page, pane and questionnaire footers stepping aside for it: 91,445 gzip bytes (+384).
-  assert.ok(sizes(css).gzip <= 91445, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed a --md-sys-typescale-{role}-font shorthand token for each of the 15 roles, built from the role's longhand tokens: 91,770 gzip bytes (+325).
+  assert.ok(sizes(css).gzip <= 91770, `CSS gzip: ${sizes(css).gzip}`);
 });

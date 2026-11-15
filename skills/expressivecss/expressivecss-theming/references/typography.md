@@ -55,6 +55,8 @@ Display, headline, and `title-large` use the brand typeface token. Body, label, 
 
 Every role exposes `--md-sys-typescale-{role}-font-family-name`, `-font-family-style`, `-font-weight`, `-font-size`, `-line-height`, and `-letter-spacing`. The role utilities consume all except `-font-family-style`; its `Regular` and `Medium` values describe weight and are not valid CSS `font-style` values.
 
+`--md-sys-typescale-{role}-font` is the `font` shorthand built from the role's weight, size, line height and family tokens. Pair it with `letter-spacing: var(--md-sys-typescale-{role}-letter-spacing)`, because the shorthand cannot carry tracking. It resolves on `:root` and `:host`, so a longhand override on a subtree does not change it there. Prefer a role class or semantic element when one fits; use the shorthand in app CSS that cannot take a class.
+
 ## Expressive emphasis and current limits
 
 Google's [typography guidance](https://m3.material.io/styles/typography/overview) and [Android typography implementation](https://github.com/material-components/material-components-android/blob/master/docs/theming/Typography.md) include an emphasized counterpart for each baseline role. They use stronger weight to distinguish selected content, actions, headlines, and editorial hierarchy. Reviewed 2026-09-07. The Android style names are design evidence, not CSS classes.

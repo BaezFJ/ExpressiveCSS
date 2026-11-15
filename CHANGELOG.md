@@ -5,6 +5,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `--md-sys-typescale-{role}-font` is the `font` shorthand for each of the 15
+  type roles, built from the role's weight, size, line height and family
+  tokens. Pair it with the role's `-letter-spacing` token, which the shorthand
+  cannot hold.
+
 ## [0.18.1] - 2026-11-15
 
 0.18.0 was tagged but never reached npm: release validation failed on a Firefox

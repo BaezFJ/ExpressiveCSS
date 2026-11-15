@@ -9,7 +9,7 @@ Component ID: `heatmap-chart`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `30d6b0b954965d89951834f85e49c5b4ffe37350bcbe4259a0c34d1e6aeff983`
+Contract SHA-256: `69d63c1e1eb582771f1bdd970246a9b8737b5e0138c47599afbb154980808747`
 
 #### Selection and adaptation
 

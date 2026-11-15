@@ -198,7 +198,10 @@ $_emphasized-weights: (
   --md-ref-typeface-plain: "Roboto";
   --md-ref-typeface-fallback: "Noto Sans", "Noto Sans Arabic", "Noto Sans Hebrew", "Noto Sans Thai", sans-serif;
 
-  // Type roles.
+  // Type roles. -font is the `font` shorthand built from the role's other
+  // tokens; it cannot carry letter-spacing, so pair it with -letter-spacing.
+  // It resolves where it is declared, on :root and :host, so overriding a
+  // longhand on a subtree does not change it there.
   @each $role, $face, $weight, $size, $line-height, $tracking in $_typescale {
     --md-sys-typescale-#{$role}-font-family-name: var(--md-ref-typeface-#{$face}), var(--md-ref-typeface-fallback);
     --md-sys-typescale-#{$role}-font-family-style: #{map.get((400: Regular, 500: Medium), $weight)};
@@ -206,6 +209,7 @@ $_emphasized-weights: (
     --md-sys-typescale-#{$role}-font-size: #{$size};
     --md-sys-typescale-#{$role}-line-height: #{$line-height};
     --md-sys-typescale-#{$role}-letter-spacing: #{$tracking};
+    --md-sys-typescale-#{$role}-font: var(--md-sys-typescale-#{$role}-font-weight) var(--md-sys-typescale-#{$role}-font-size) / var(--md-sys-typescale-#{$role}-line-height) var(--md-sys-typescale-#{$role}-font-family-name);
   }
 
   // emphasized - M3 Expressive's heavier counterpart of each role. Only the

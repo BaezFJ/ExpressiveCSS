@@ -51,3 +51,28 @@ for (const [name, engine, test] of engines) {
     }
   });
 }
+
+const roles = ['display', 'headline', 'title', 'body', 'label'].flatMap(group => ['large', 'medium', 'small'].map(size => `${group}-${size}`));
+
+for (const [name, engine, test] of engines) {
+  test(`${name}: each role's -font token with its -letter-spacing token matches the role class`, async () => {
+    const browser = await leaseBrowser(engine);
+    try {
+      const page = await browser.newPage();
+      // The token also has to replace an inherited font completely.
+      await page.setContent(`<style>${css}</style><div style="font: italic 700 40px/3 serif">${roles.map(role => `
+        <span data-class="${role}" class="${role}">Type</span>
+        <span data-token="${role}" style="font: var(--md-sys-typescale-${role}-font); letter-spacing: var(--md-sys-typescale-${role}-letter-spacing)">Type</span>`).join('')}</div>`);
+      const read = (attribute) => page.evaluate((attr) => Object.fromEntries([...document.querySelectorAll(`[${attr}]`)].map(el => {
+        const style = getComputedStyle(el);
+        return [el.getAttribute(attr), ['fontFamily', 'fontSize', 'fontWeight', 'lineHeight', 'letterSpacing'].map(property => style[property])];
+      })), attribute);
+      const [classes, tokens] = [await read('data-class'), await read('data-token')];
+      assert.equal(Object.keys(tokens).length, 15);
+      for (const role of roles) assert.deepEqual(tokens[role], classes[role], role);
+      assert.equal(await page.locator('[data-token="body-large"]').evaluate(el => getComputedStyle(el).fontStyle), 'normal', 'the shorthand resets the inherited italic');
+    } finally {
+      await browser.close();
+    }
+  });
+}
