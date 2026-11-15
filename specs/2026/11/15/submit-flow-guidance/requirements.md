@@ -67,3 +67,4 @@ The text field guide (`## Text Inputs` in `llm.md`) covers markup, `.validate`, 
 - The submit check skips `<fieldset>` when it looks for the first invalid field, since a fieldset matches `:invalid` around an invalid field.
 - The delete-and-Undo check ignores `.tooltip` and `role="tooltip"` text in a row, since a focus tooltip changed the restored row's text in stage run 1.
 - The text field App behavior says the first submit button saves and Cancel takes `type="button"`, after `destructive-list` run 2's dialog cancelled on Enter. The stage runs predate the clause.
+- The text field App behavior says to give every field with a constraint `class="validate"`, after code review found that the snippet skips a `required` field without it, and `novalidate` lets that field submit empty. The stage runs predate the clause.

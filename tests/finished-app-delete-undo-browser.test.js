@@ -50,6 +50,17 @@ test('the delete-and-Undo check passes a list that restores the row in place', a
   assert.equal(code, 0);
 });
 
+test('the delete-and-Undo check ignores a tooltip that focus adds to the restored row', async () => {
+  const tooltip = `list.addEventListener('focusin', (event) => {
+    event.target.closest('li').insertAdjacentHTML('beforeend', '<span class="tooltip" role="tooltip">Delete</span>');
+  });
+  undo.addEventListener('click', () => last.row.querySelector('button').focus());`;
+  const { code, line } = await check(app(tooltip));
+  assert.equal(line.pass, true, line.reason);
+  assert.equal(line.focusOnRestoredRow, true);
+  assert.equal(code, 0);
+});
+
 test('the delete-and-Undo check fails an app whose page throws, even when Undo works', async () => {
   const { code, line } = await check(app("setTimeout(() => { throw new Error('boom'); });"));
   assert.equal(line.pass, false);

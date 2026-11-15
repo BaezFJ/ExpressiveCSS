@@ -300,7 +300,7 @@ export class DataTables {
    * locally paged table and a positive safe-integer page.
    */
   static showPage(wrapper: Element, page: number): number | false {
-    if (!DataTables._localPaged(wrapper) || !Number.isSafeInteger(page) || page < 1) return false;
+    if (!DataTables._showable(wrapper, page)) return false;
     DataTables._pageRequests.delete(wrapper);
     // _view() recounts the records, so no count is needed here.
     DataTables._pages.set(wrapper, { page, pageSize: pageSize(wrapper), total: 0 });
@@ -308,8 +308,13 @@ export class DataTables {
     return DataTables._pages.get(wrapper)?.page ?? false;
   }
 
+  private static _showable(wrapper: Element, page: number) {
+    return Number.isSafeInteger(page) && page >= 1 && DataTables._localPaged(wrapper);
+  }
+
   private static _localPaged(wrapper: Element) {
-    return Boolean(wrapper?.matches?.('.data-table:has(> table)') && pageSize(wrapper)) && !DataTables._pages.get(wrapper)?.server;
+    const table = Boolean(wrapper?.matches?.('.data-table:has(> table)'));
+    return table && Boolean(pageSize(wrapper)) && !DataTables._pages.get(wrapper)?.server;
   }
 
   private static _storePage(wrapper: Element, state: TablePageState | null) {

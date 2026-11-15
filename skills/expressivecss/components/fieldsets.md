@@ -9,7 +9,7 @@ Component ID: `fieldsets`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `302d760d2bf0b63eff8d619238e8d5b3d82f9f7d87a36eb0590142a2d53bc1d7`
+Contract SHA-256: `d379e79a50aacd58dfe1d899e23dcf92ef51d6f74a9f57484f75a0b4646e8a08`
 
 #### Selection and adaptation
 
@@ -61,7 +61,7 @@ Material Design 3 has no fieldset component. Tokens follow the outlined grouping
 
 #### App behavior
 
-For how a form with these groups submits, shows its errors and moves focus, follow the Text Inputs App behavior.
+For how a form with these groups submits, shows its errors and moves focus, follow the App behavior in the text field guide (Text Inputs).
 
 #### Also documented
 

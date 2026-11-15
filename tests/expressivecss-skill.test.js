@@ -220,7 +220,8 @@ describe('the ExpressiveCSS agent skill', () => {
     const syntax = guide.slice(guide.indexOf('#### Syntax'), guide.indexOf('#### ', guide.indexOf('#### Syntax') + 1));
     assert.match(syntax, /name="/);
     assert.match(syntax, /autocomplete="/);
-    assert.match(appBehaviorOf('fieldsets').behavior, /Text Inputs App behavior/);
+    assert.match(appBehaviorOf('fieldsets').behavior, /App behavior in the text field guide/);
+    for (const input of syntax.match(/<input\b[^>]*>/g) ?? []) assert.match(input, /\bname="/, `${input} lacks name`);
   });
 
   test('the tabs and data table guides carry the URL state App behavior', () => {

@@ -28,7 +28,8 @@
   "notes": [
     "destructive-list run 1 first failed the delete-and-Undo check: its restored row was back in place, but the check compared raw row text and a focus tooltip added \"Delete\" to the row. The script now ignores tooltip text (undo-check-fixed.jsonl); rerun on the baseline, phase 80 and stage apps, it gives the same results for the first four and passes stage run 1.",
     "destructive-list run 2's submit-flow count (Cancel first, so Enter cancels) is inside this phase's guidance; the text gained a clause about the first submit button after this run set. The runs were not repeated, since the gate is the settings-form submit check.",
-    "filtered-dashboard run 2's URL-state count is a page listener that does not cancel a pending filter write, which the phase 81 snippet does; it is a note for the phase 84 stage."
+    "filtered-dashboard run 2's URL-state count is a page listener that does not cancel a pending filter write, which the phase 81 snippet does; it is a note for the phase 84 stage.",
+    "After this run set, review added clauses the runs never saw: give every constrained field class=\"validate\", put a field's own message back after a server error, iterate form.elements so fields linked with form= are checked, and keep .error-summary out of a form using the snippet. The phase 84 stage rerun tests them."
   ],
   "apps": [
     {

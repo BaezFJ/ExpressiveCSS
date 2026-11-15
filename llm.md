@@ -8722,14 +8722,14 @@ Add `placeholder=" "` (one space) so the label floats with CSS only. A missing p
 </div>
 
 <div class="field outlined">
-  <input id="last_name" type="text" placeholder=" ">
+  <input id="last_name" name="last_name" type="text" autocomplete="family-name" placeholder=" ">
   <label for="last_name">Last name</label>
 </div>
 
 <div class="field">
   <span class="material-symbols prefix" aria-hidden="true">place</span>
   <span class="material-symbols suffix" aria-hidden="true">gps_fixed</span>
-  <input id="loc" type="text" placeholder=" ">
+  <input id="loc" name="location" type="text" placeholder=" ">
   <label for="loc">Location</label>
 </div>
 ```
@@ -8752,7 +8752,7 @@ Keep the `<label>` after the control, as in a floating field. The grid draws it 
 </div>
 
 <div class="field label-above outlined">
-  <input id="company" type="text">
+  <input id="company" name="company" type="text" autocomplete="organization">
   <label for="company">Company</label>
 </div>
 ```
@@ -8898,12 +8898,12 @@ Expressive.CharacterCounter.init(
 
 ### App behavior
 
-Leave submit enabled until submission starts, and put fields in a `<form>` whose first submit button saves, so Enter submits; give Cancel `type="button"`. Mark required fields `required`. Use `novalidate` and, on submit, call `Expressive.Forms.validateField(input)` on each `.validate` field, which sets `aria-invalid` and shows its `data-error` text beside it, then focus the first field with `aria-invalid="true"`. A server error about one field goes into that field's `data-error` text, with `aria-invalid="true"` and focus on the field. Give every field a `name`. Give a field for the person's own data the one `autocomplete` token for its purpose, and split a field that asks for several. Set `type` for the keyboard, never `type="number"` for phones, codes or card numbers, and `inputmode` where `type` doesn't bring the keyboard. Turn spellcheck off for codes, emails and usernames, allow paste, and check that a `pattern` compiles with the `v` flag the browser uses. Keep `placeholder=" "` for a floating label; put an example ending in `…` in a label-above placeholder or the supporting text.
+Leave submit enabled until submission starts, and put fields in a `<form>` whose first submit button saves, so Enter submits; give Cancel `type="button"`. Mark required fields `required` and give every field with a constraint `class="validate"`, because `novalidate` stops the browser checking the rest. Use `novalidate` and, on submit, call `Expressive.Forms.validateField(input)` on each `.validate` field, which sets `aria-invalid` and shows its `data-error` text beside it, then focus the first field with `aria-invalid="true"`. Don't add an `.error-summary` to this form: it cancels the submit before this handler runs. A server error about one field goes into that field's `data-error` text, with `aria-invalid="true"` and focus on the field, and put the field's own message back when it changes. Give every field a `name`. Give a field for the person's own data the one `autocomplete` token for its purpose, and split a field that asks for several. Set `type` for the keyboard, never `type="number"` for phones, codes or card numbers, and `inputmode` where `type` doesn't bring the keyboard. Turn spellcheck off for codes, emails and usernames, allow paste, and check that a `pattern` compiles with the `v` flag the browser uses. Keep `placeholder=" "` for a floating label; put an example ending in `…` in a label-above placeholder or the supporting text.
 
 ```js
 form.addEventListener('submit', (event) => {
   event.preventDefault();
-  const fields = [...form.querySelectorAll('.validate')];
+  const fields = [...form.elements].filter((field) => field.classList.contains('validate'));
   fields.forEach((field) => Expressive.Forms.validateField(field));
   const first = fields.find((field) => field.getAttribute('aria-invalid') === 'true');
   if (first) return first.focus();
@@ -9265,7 +9265,7 @@ The HTML `disabled` attribute on a fieldset disables every control inside it. Th
 
 ### App behavior
 
-For how a form with these groups submits, shows its errors and moves focus, follow the Text Inputs App behavior.
+For how a form with these groups submits, shows its errors and moves focus, follow the App behavior in the text field guide (Text Inputs).
 
 ---
 

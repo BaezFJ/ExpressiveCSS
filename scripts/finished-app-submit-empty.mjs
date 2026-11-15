@@ -22,13 +22,15 @@ const markForm = (page) => page.evaluate(() => {
   return fields.length;
 });
 
-const submitState = (page) => page.locator('[data-check-submit]').evaluate((button) => ({
-  disabled: button.disabled || button.getAttribute('aria-disabled') === 'true',
-}));
+const submitState = (page) => page.evaluate(() => {
+  const button = document.querySelector('[data-check-submit]');
+  return { disabled: !button || button.disabled || button.getAttribute('aria-disabled') === 'true' };
+});
 
 // The first invalid field in form order, and whether focus is on it or in its `.field`.
 const focusState = (page) => page.evaluate(() => {
   const form = document.querySelector('[data-check-form]');
+  if (!form) return { firstInvalid: null, onFirst: false, replaced: true };
   // A fieldset is in form.elements too and matches :invalid around an invalid field.
   const first = [...form.elements].find((el) => el.matches('input, select, textarea') && el.matches(':invalid, [aria-invalid="true"]'));
   if (!first) return { firstInvalid: null, onFirst: false };
@@ -37,25 +39,37 @@ const focusState = (page) => page.evaluate(() => {
   return { firstInvalid: first.id || first.name || first.tagName, focused: active?.id || active?.tagName, onFirst };
 });
 
+// The first reason the empty submit fails, or '' when it passes.
+const REASONS = [
+  [(state) => state.replaced, 'the form was replaced on submit'],
+  [(state) => !state.firstInvalid, 'no field became invalid'],
+  [(state) => !state.onFirst, 'focus is not on the first invalid field'],
+  [(state) => state.disabledAfter, 'submit is disabled after the empty submit'],
+  [(state) => state.errors.length, 'page error'],
+];
+const reasonFor = (state) => REASONS.find(([failed]) => failed(state))?.[1] ?? '';
+
+// Empties the form and submits it; returns a reason it can't, or the state afterwards.
+async function emptySubmit(page) {
+  const fields = await markForm(page);
+  if (fields < 0) return { reason: 'no visible form with a submit button' };
+  for (const field of await page.locator('[data-check-field]').all()) await field.fill('');
+  if ((await submitState(page)).disabled) return { reason: 'submit is disabled before submission' };
+  const before = page.url();
+  await page.locator('[data-check-submit]').click();
+  await wait(300);
+  if (page.url() !== before) return { reason: 'the page navigated on an empty submit' };
+  return { fields, ...(await focusState(page)), disabledAfter: (await submitState(page)).disabled };
+}
+
 async function checkPage(page, url, dir) {
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(url);
   await wait(800);
-  const fields = await markForm(page);
-  if (fields < 0) return { app: dir, pass: false, reason: 'no visible form with a submit button', errors };
-  for (const field of await page.locator('[data-check-field]').all()) await field.fill('');
-  if ((await submitState(page)).disabled) return { app: dir, pass: false, reason: 'submit is disabled before submission', errors };
-  await page.locator('[data-check-submit]').click();
-  await wait(300);
-  if (page.url() !== url) return { app: dir, pass: false, reason: 'the page navigated on an empty submit', errors };
-  const focus = await focusState(page);
-  const stillEnabled = !(await submitState(page)).disabled;
-  const reason = !focus.firstInvalid ? 'no field became invalid'
-    : !focus.onFirst ? 'focus is not on the first invalid field'
-      : !stillEnabled ? 'submit is disabled after the empty submit'
-        : errors.length ? 'page error' : '';
-  return { app: dir, pass: !reason, reason, fields, ...focus, errors };
+  const state = await emptySubmit(page);
+  const reason = state.reason ?? reasonFor({ ...state, errors });
+  return { app: dir, pass: !reason, ...state, reason, errors };
 }
 
 async function check(browser, dir) {

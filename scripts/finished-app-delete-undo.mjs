@@ -48,13 +48,11 @@ async function deleteAndUndo(page) {
   const restored = await until(same, 3000);
   await wait(2000);
   const stillRestored = await same();
-  const focus = await page.evaluate((row) => {
-    const holder = document.activeElement?.closest(row);
-    if (!holder) return null;
-    const copy = holder.cloneNode(true);
-    copy.querySelectorAll('.tooltip, [role="tooltip"]').forEach((tip) => tip.remove());
-    return copy.textContent.replace(/\s+/g, ' ').trim();
-  }, ROW);
+  // The focused row's key comes from rowTexts, so it is built the same way as the others.
+  const keys = await rowTexts(page);
+  const index = await page.getByRole('button', { name: DELETE })
+    .evaluateAll((buttons, row) => buttons.findIndex((button) => button.closest(row)?.contains(document.activeElement)), ROW);
+  const focus = index >= 0 ? keys[index] : null;
   const reason = restored && stillRestored ? '' : 'the rows did not come back in their old order';
   return { pass: !reason, reason, removedMs, focusInRow: focus !== null, focusOnRestoredRow: focus === before[1] };
 }

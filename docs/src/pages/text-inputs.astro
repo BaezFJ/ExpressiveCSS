@@ -56,7 +56,7 @@ const S = defineSections([
             <small id="first_name-help">Supporting text</small>
           </div>
           <div class="s12 m6 field outlined">
-            <input id="last_name" type="text" placeholder=" " maxlength="20">
+            <input id="last_name" name="last_name" type="text" autocomplete="family-name" placeholder=" " maxlength="20">
             <label for="last_name">Last name</label>
           </div>
           <div class="s12 m6 field">
@@ -70,7 +70,7 @@ const S = defineSections([
           <div class="s12 m6 field">
             <span class="material-symbols prefix" aria-hidden="true">place</span>
             <span class="material-symbols suffix" aria-hidden="true">gps_fixed</span>
-            <input id="inp-location" type="text" placeholder=" " value="Planet Earth">
+            <input id="inp-location" name="location" type="text" placeholder=" " value="Planet Earth">
             <label for="inp-location">Location</label>
           </div>
           <div class="s12 m6 field outlined">
@@ -89,14 +89,14 @@ const S = defineSections([
 </div>
 
 <div class="field outlined">
-  <input id="last_name" type="text" placeholder=" ">
+  <input id="last_name" name="last_name" type="text" autocomplete="family-name" placeholder=" ">
   <label for="last_name">Last name</label>
 </div>
 
 <div class="field">
   <span class="material-symbols prefix" aria-hidden="true">place</span>
   <span class="material-symbols suffix" aria-hidden="true">gps_fixed</span>
-  <input id="loc" type="text" placeholder=" ">
+  <input id="loc" name="location" type="text" placeholder=" ">
   <label for="loc">Location</label>
 </div>
 `} />
@@ -125,7 +125,7 @@ const S = defineSections([
             <small id="work_email-help">We never share it</small>
           </div>
           <div class="s12 m6 field label-above outlined">
-            <input id="company" type="text">
+            <input id="company" name="company" type="text" autocomplete="organization">
             <label for="company">Company</label>
           </div>
         </form>
@@ -137,7 +137,7 @@ const S = defineSections([
 </div>
 
 <div class="field label-above outlined">
-  <input id="company" type="text">
+  <input id="company" name="company" type="text" autocomplete="organization">
   <label for="company">Company</label>
 </div>
 `} />

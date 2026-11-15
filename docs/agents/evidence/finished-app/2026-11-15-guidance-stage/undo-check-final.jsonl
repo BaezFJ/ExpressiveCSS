@@ -1,0 +1,6 @@
+{"app":"baseline/destructive-list-run1","pass":false,"reason":"a confirmation dialog opened","errors":[],"twoDeletes":null}
+{"app":"baseline/destructive-list-run2","pass":false,"reason":"a confirmation dialog opened","errors":[],"twoDeletes":null}
+{"app":"phase-80/destructive-list-run1","pass":true,"reason":"","removedMs":24,"focusInRow":true,"focusOnRestoredRow":true,"errors":[],"twoDeletes":{"undoShownForSecond":true,"rowsBefore":5,"rowsAfter":3}}
+{"app":"phase-80/destructive-list-run2","pass":true,"reason":"","removedMs":37,"focusInRow":true,"focusOnRestoredRow":true,"errors":[],"twoDeletes":{"undoShownForSecond":true,"rowsBefore":5,"rowsAfter":3}}
+{"app":"guidance-stage/destructive-list-run1","pass":true,"reason":"","removedMs":24,"focusInRow":true,"focusOnRestoredRow":true,"errors":[],"twoDeletes":{"undoShownForSecond":true,"rowsBefore":5,"rowsAfter":3}}
+{"app":"guidance-stage/destructive-list-run2","pass":true,"reason":"","removedMs":38,"focusInRow":true,"focusOnRestoredRow":true,"errors":[],"twoDeletes":{"undoShownForSecond":true,"rowsBefore":5,"rowsAfter":3}}
