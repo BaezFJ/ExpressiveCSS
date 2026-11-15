@@ -42,12 +42,14 @@ A build directory holds:
 
 - `dist/`: a copy of the framework's built `dist/` from the recorded commit.
 - `expressivecss/`: a copy of `skills/expressivecss` from the commit under test.
+- `build-brief.txt` and `build-result.json`, the build command's input and output.
 
 A review directory holds:
 
 - `index.html` and any local file it references, copied from the build.
 - `dist/`: the same copy the build had.
-- `expressivecss/` and `expressivecss-review/`: copies of `skills/expressivecss` and `skills/expressivecss-review` from the baseline commit, exported with `git archive <baseline-commit> skills/`. Every comparison reviews with these trees, so a change to the guides moves the builds and not the reviewer.
+- `expressivecss/` and `expressivecss-review/`: copies of `skills/expressivecss` and `skills/expressivecss-review` from the baseline commit, exported with `git archive <baseline-commit> skills/expressivecss skills/expressivecss-review | tar -x --strip-components=1`. Every comparison reviews with these trees, so a change to the guides moves the builds and not the reviewer.
+- `lint.txt`, `review-brief.txt` and `review-result.json`, the review command's inputs and output.
 - Nothing else. The reviewer never sees the other apps, `findings.json` or this file.
 
 Run at most three processes at once, each under `timeout 1800`.
@@ -77,10 +79,10 @@ After each build, run `git status --short` in the repository to confirm the buil
 
 ### Review command
 
-Run inside the review directory. First run the lint and keep its output:
+Run the lint from the baseline commit too, so its output, which the reviewer reads, doesn't change between run sets: create a worktree at the baseline commit (`git worktree add <baseline-worktree> <baseline-commit>`) and run `npm ci --prefix <baseline-worktree>/mcp/expressivecss` once. Then, inside the review directory, run the lint and keep its output:
 
 ```sh
-node <repo>/mcp/expressivecss/lint.mjs index.html > lint.txt
+node <baseline-worktree>/mcp/expressivecss/lint.mjs index.html > lint.txt
 timeout 1800 claude -p --safe-mode --strict-mcp-config --model claude-opus-5-5 \
   --no-session-persistence --output-format json --allowedTools Read Glob Grep \
   < review-brief.txt > review-result.json
@@ -113,7 +115,7 @@ A run fails when the build writes no `index.html`, the page doesn't load `dist/`
 The person running the comparison confirms each finding whose rule field holds a `finished-app:` label, and adds none of their own:
 
 1. A finding is confirmed when the location it cites exists in the app and shows the behavior it describes. It is dropped when the source contradicts it, and the reason is recorded.
-2. Its final severity follows the anchors in `skills/expressivecss-review/SKILL.md` section 5 of the baseline commit. A WCAG overlap takes the critical anchor and keeps both IDs. A labelled finding that matches no finished-app anchor (for example a missing announcement the reviewer filed under `finished-app:loading`) keeps its other severity and is recorded as not counted, with the reason.
+2. Its final severity follows the anchors in `skills/expressivecss-review/SKILL.md` section 5 of the baseline commit. A WCAG overlap takes the critical anchor and keeps both IDs.
 3. A countable finding is a confirmed major or critical finding with a label, as SKILL.md section 6 defines it. Labelled polish findings are recorded and not counted.
 
 ### Records
@@ -132,9 +134,9 @@ Counts are countable findings per area. A failed run shows `failed` in every col
 
 | Date | Label | Prompt | Run | Loading | Destructive | URL state | Submit flow | Total |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 2026-11-15 | baseline | settings-form | 1 | 0 | 0 | 0 | 0 | 0 |
+| 2026-11-15 | baseline | settings-form | 1 | 1 | 0 | 0 | 0 | 1 |
 | 2026-11-15 | baseline | settings-form | 2 | 0 | 0 | 0 | 1 | 1 |
-| 2026-11-15 | baseline | destructive-list | 1 | 2 | 0 | 0 | 0 | 2 |
+| 2026-11-15 | baseline | destructive-list | 1 | 1 | 0 | 0 | 0 | 1 |
 | 2026-11-15 | baseline | destructive-list | 2 | 1 | 0 | 0 | 0 | 1 |
 | 2026-11-15 | baseline | filtered-dashboard | 1 | 0 | 0 | 3 | 0 | 3 |
 | 2026-11-15 | baseline | filtered-dashboard | 2 | 0 | 0 | 3 | 0 | 3 |
@@ -142,5 +144,7 @@ Counts are countable findings per area. A failed run shows `failed` in every col
 Baseline notes, from [the baseline records](evidence/finished-app/2026-11-15-baseline/findings.json):
 
 - Both `destructive-list` builds put a confirmation dialog in front of delete. The rubric scores that as polish, so the destructive column is 0 while neither build offers Undo.
+- Both `destructive-list` builds swap the row's Delete button for a named spinner while the request runs. The run 1 reviewer flagged that under `finished-app:loading` and the run 2 reviewer passed it, so part of the 2 against 1 in the loading column comes from the reviewer, not the app.
 - Neither `filtered-dashboard` build writes anything to the URL: tab, filter and page are each one finding in both runs.
-- Both `settings-form` builds kept the Save label and showed progress beside it. Run 1's labelled loading finding was a missing announcement, which matches no finished-app anchor and is not counted.
+- Both `settings-form` builds kept the Save label, showed progress beside it and ignored a repeat press. Run 1's reviewer filed a missing announcement under `finished-app:loading`; it counts, because the counting rule counts every confirmed labelled finding at major or above.
+- `destructive-list` run 1's reviewer also reported that a delete could start twice. The source contradicts it, so it was dropped; `findings.json` keeps the reason.

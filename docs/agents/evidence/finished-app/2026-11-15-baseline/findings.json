@@ -3,7 +3,10 @@
   "date": "2026-11-15",
   "claudeCode": "2.1.325",
   "model": "claude-opus-5-5",
-  "command": "claude -p --safe-mode --strict-mcp-config --model claude-opus-5-5 --no-session-persistence --output-format json",
+  "commands": {
+    "build": "claude -p --safe-mode --strict-mcp-config --model claude-opus-5-5 --no-session-persistence --output-format json --permission-mode bypassPermissions",
+    "review": "claude -p --safe-mode --strict-mcp-config --model claude-opus-5-5 --no-session-persistence --output-format json --allowedTools Read Glob Grep"
+  },
   "commit": "16b6632ada2153e8b185c5c72387d3896d7ad794",
   "dist": {
     "css/expressive.min.css": "b1ba049750e05269d1a1a8d3124fd78aa5fea1b741ff53376e7d9ccabce442ad",
@@ -19,7 +22,8 @@
   },
   "failedRuns": [],
   "notes": [
-    "settings-form run 2 also wrote ok.png and err.png screenshots; index.html does not reference them, so they are not part of the app and are not committed."
+    "settings-form run 2 also wrote ok.png and err.png screenshots; index.html does not reference them, so they are not part of the app and are not committed.",
+    "Confirmation (2026-11-15, after code review): settings-form run 1 counts its labelled loading finding as the written rule says, and destructive-list run 1 drops \"the delete can start twice\" because the source contradicts it. An exception for labelled findings that match no finished-app anchor was added during confirmation and then removed, since it was not in the recorded procedure."
   ],
   "apps": [
     {
@@ -37,24 +41,24 @@
         "claude-opus-5-5"
       ],
       "buildSeconds": 73,
-      "countable": [],
-      "notCounted": [
+      "countable": [
         {
           "area": "loading",
+          "severity": "major",
           "location": "index.html:68-71 #save-status",
-          "lensSeverity": "major",
           "description": "Saving status is not announced by a live region.",
-          "reason": "Describes a WCAG 4.1.3 announcement gap. The button keeps its label, shows a loading indicator and Saving… beside it, and the saving flag ignores a repeat press, so no finished-app anchor in SKILL.md section 5 matches. It stays a check 4 major and is not counted."
+          "note": "The lens filed a missing announcement (WCAG 4.1.3, estimated) under finished-app:loading. Counted as the written procedure says: SKILL.md section 6 counts every confirmed major or critical finding that carries a label. The button itself keeps its label, shows progress beside it and ignores a repeat press."
         }
       ],
+      "dropped": [],
       "polish": [],
       "counts": {
-        "loading": 0,
+        "loading": 1,
         "destructive": 0,
         "url-state": 0,
         "submit-flow": 0
       },
-      "total": 0
+      "total": 1
     },
     {
       "prompt": "settings-form",
@@ -79,7 +83,7 @@
           "description": "The server rejection of the email shows only in an alert above the actions; the email field is not marked and focus stays on Save."
         }
       ],
-      "notCounted": [],
+      "dropped": [],
       "polish": [
         {
           "area": "submit-flow",
@@ -116,15 +120,17 @@
           "severity": "major",
           "location": "index.html:189-193 deleteAddress",
           "description": "The Delete button is replaced by a spinner alone while the request runs."
-        },
-        {
-          "area": "loading",
-          "severity": "major",
-          "location": "index.html:212-216 Retry snackbar; guard at 172",
-          "description": "Retry calls deleteAddress without the aria-busy guard while the restored Delete button is also live, so the delete can start twice."
         }
       ],
-      "notCounted": [],
+      "dropped": [
+        {
+          "area": "loading",
+          "lensSeverity": "major",
+          "location": "index.html:212-216 Retry snackbar; guard at 172",
+          "description": "Retry calls deleteAddress without the aria-busy guard while the restored Delete button is also live, so the delete can start twice.",
+          "reason": "The source contradicts it: deleteAddress replaces the Delete button before awaiting the request, so a second call during a running delete finds no button and throws a TypeError before sending anything, and after a failure only one path starts a new request at a time. No order of presses sends two DELETE requests. The uncaught exception is a defect outside the rubric."
+        }
+      ],
       "polish": [
         {
           "area": "destructive",
@@ -133,12 +139,12 @@
         }
       ],
       "counts": {
-        "loading": 2,
+        "loading": 1,
         "destructive": 0,
         "url-state": 0,
         "submit-flow": 0
       },
-      "total": 2
+      "total": 1
     },
     {
       "prompt": "destructive-list",
@@ -163,7 +169,7 @@
           "description": "Save address changes to Saving… and is disabled, but nothing shows progress beside it."
         }
       ],
-      "notCounted": [],
+      "dropped": [],
       "polish": [
         {
           "area": "destructive",
@@ -219,7 +225,7 @@
           "description": "The page is not kept in the URL and resets to 1 on load."
         }
       ],
-      "notCounted": [],
+      "dropped": [],
       "polish": [],
       "counts": {
         "loading": 0,
@@ -264,7 +270,7 @@
           "description": "The page is not kept in the URL."
         }
       ],
-      "notCounted": [],
+      "dropped": [],
       "polish": [],
       "counts": {
         "loading": 0,
@@ -281,5 +287,6 @@
     "url-state": 6,
     "submit-flow": 1,
     "total": 10
-  }
+  },
+  "lint": "mcp/expressivecss/lint.mjs at commit 16b6632ada2153e8b185c5c72387d3896d7ad794"
 }

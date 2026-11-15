@@ -21,7 +21,7 @@ Prerequisites: group 1 and `npm run build` at a committed HEAD.
 
 - [x] Commit group 1 so the recorded commit holds the briefs.
 - [x] For each prompt and run, make a scratch directory with a copy of `dist/` and of `skills/expressivecss` as `expressivecss/`, and run the build command there with `timeout 1800`, at most three at once.
-- [x] After each build, check `git status` in the repository, hash the app files, and copy them unchanged into the evidence directory.
+- [x] After each build, check `git status` in the repository, hash the app files, and copy them unchanged into the evidence directory. The builds ran in parallel, so `git status` ran once after all six (see V2).
 
 Done when six apps exist, or each missing one has a recorded rerun and failure.
 
