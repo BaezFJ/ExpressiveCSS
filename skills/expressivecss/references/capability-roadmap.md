@@ -193,7 +193,7 @@ Web adaptation: CSS viewport and container queries; the application chooses the 
 
 ## Scaffold
 
-**implemented within the stated scope.** A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling, and a tall-rail modifier that runs the rail and trailing region the full height with the bar over the pane.
+**implemented within the stated scope.** A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane.
 
 Source review: source-reviewed, 2026-11-15. [src/sass/components/_scaffold.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/9ca9e3cf2fd27644544cb717a5197f83f594092c/src/sass/components/_scaffold.scss).
 

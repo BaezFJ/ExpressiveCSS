@@ -40,3 +40,8 @@ None. The modifier changes grid placement only, which the agent-run checks measu
   - The docs limit line now names the tall rail.
   - The RTL test now checks that the bar stops at the pane and the toolbar is centered.
   - The results are filled in below once V6 and V7 run.
+- 2026-11-15, `code-review-and-quality` (five-axis review by an independent read-only subagent): no Critical or Required findings; R1 to R8 trace to code and tests that fail without the rule. Fixed:
+  - Optional: R5's below-600px sentence had no test. A 500px case now checks that the expanded rail is `position: fixed` and the bar starts at 0.
+  - Nit: the docs limit wording implied the panel differs by layout. It now says "in either layout".
+  - Nit: the 200% check now asserts that the bar grew.
+  - Nit: the decision record's `documentedSupport` is split into two sentences.

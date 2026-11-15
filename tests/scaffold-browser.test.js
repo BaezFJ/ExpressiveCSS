@@ -241,8 +241,10 @@ for (const [name, type, run] of engines) {
       near(tb.left - main.right, 24, 'and 24px from the pane');
       near((tb.top + tb.bottom) / 2, 400, 'the toolbar is centered in the full height');
 
+      const restHeight = bar.height;
       await tab.evaluate(() => { document.documentElement.style.fontSize = '32px'; });
       [nav, bar, main] = await measure();
+      assert.ok(bar.height > restHeight, 'the bar grew with the text');
       near(nav.top, 0, 'at 200% text the rail still starts at the top');
       near(nav.bottom, 800, 'and reaches the window bottom');
       near(main.top, bar.bottom, 'and the taller bar only shortens the pane');
@@ -252,6 +254,12 @@ for (const [name, type, run] of engines) {
       [nav, bar, main] = await measure();
       near(bar.left, nav.right, 'the expanded rail pushes the bar');
       near(main.left, nav.right, 'and the pane');
+
+      await tab.setViewportSize({ width: 500, height: 800 });
+      [nav, bar] = await measure();
+      near(bar.left, 0, 'below 600px the expanded rail is modal and leaves the grid');
+      assert.equal(await style('#rail', 'position'), 'fixed', 'the modal rail is fixed');
+      await tab.setViewportSize({ width: 1280, height: 800 });
 
       await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ cls: 'tall-rail', nav: '', trailing: '' }));
       [bar, main] = await Promise.all(['#bar', '#pane'].map(box));
