@@ -86,3 +86,10 @@ test('the submit check names a form replaced on submit', async () => {
   assert.equal(line.reason, 'the form was replaced on submit');
   assert.equal(code, 1);
 });
+
+test('the submit check leaves fields in a disabled fieldset alone', async () => {
+  const html = form().replace('</fieldset>', '</fieldset><fieldset disabled><legend>Plan</legend><label>Plan <input id="plan" name="plan" value="Pro"></label></fieldset>');
+  const { code, line } = await check(html);
+  assert.equal(line.pass, true, line.reason);
+  assert.equal(code, 0);
+});

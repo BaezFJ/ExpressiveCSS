@@ -17,7 +17,7 @@ const markForm = (page) => page.evaluate(() => {
   form.setAttribute('data-check-form', '');
   submitOf(form).setAttribute('data-check-submit', '');
   const text = (el) => (el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && !/^(checkbox|radio|file|range|color|submit|button|reset|hidden|image)$/.test(el.type)));
-  const fields = [...form.elements].filter((el) => text(el) && el.checkVisibility() && !el.disabled && !el.readOnly);
+  const fields = [...form.elements].filter((el) => text(el) && el.checkVisibility() && !el.matches(':disabled') && !el.readOnly);
   fields.forEach((el) => el.setAttribute('data-check-field', ''));
   return fields.length;
 });
