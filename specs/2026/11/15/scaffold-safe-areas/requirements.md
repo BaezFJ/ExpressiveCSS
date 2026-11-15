@@ -16,9 +16,10 @@ In a `.scaffold`:
 
 - At every width, the scaffold pads its left and right by the side insets (physical `padding-left`/`-right`), so every region, custom ones included, clears a landscape notch.
 - From 600px up, the scaffold also pads its top by the top inset and its bottom by the bottom inset, unless a shown `.status-bar` pads the bottom itself. Every region that meets those edges (bar, tall rail, sheet column, a pane without a bar) clears them. The strips show the shell's `surface-container`, which is the bar's and status bar's rest color.
-- Below 600px, where the document scrolls and the app bar sticks to the window's top, the bar region pads its own top by the top inset inside its background. Without a shown bar the scaffold pads its top instead; without a shown navigation bar it pads its bottom. The navigation bar and the floating toolbar keep their own bottom insets.
+- From 600px up, a header app bar reaches into the top inset strip (and, in the default layout, the side strips) with negative margins and matching padding, so its scrolled fill has no seam; its content stays inside the insets.
+- Below 600px, where the document scrolls and the app bar sticks to the window's top, a header app bar pads its own top by the top inset inside its background. A custom `.scaffold-bar` keeps its own padding and pads the inset itself; the docs say so. Without a shown bar the scaffold pads its top instead; without a shown navigation bar it pads its bottom. The navigation bar and the floating toolbar keep their own bottom insets.
 - The compact scroll padding's top adds the top inset.
-- An expanded rail overlay (fixed to the window) adds the top inset to its top padding, the bottom inset to its bottom padding, and the side inset on its docked side to that side's padding, choosing the side by `:dir()`.
+- An expanded rail overlay (fixed to the window) adds the top inset to its top padding, the bottom inset to its bottom padding, and the side inset on its docked side to that side's padding and to its width, so its content keeps its width, choosing the side by `:dir()`.
 
 ## Exclusions
 

@@ -41,3 +41,15 @@ Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, th
   - Unchecked requirements now have checks.
   - The env() rewrite gets a fallback-tolerant regex and a none-left assert.
   - The docs site's shared layout stays unchanged.
+- 2026-11-15, `/code-review high --fix --max-findings all` on `dfc7648ad..HEAD`: eight findings, each checked against the source.
+  - Fixed by the review:
+    - A duplicate compact bar block was merged.
+    - The engine-independent rewrite check moved out of the engine loop.
+    - Assertions now cover the compact shell's top padding without a bar and a `.modal` overlay at 1280px.
+    - A stale "arrive in later phases" note in the decision record was removed.
+  - Also fixed, though the reviewer skipped them:
+    - The compact top inset replaced a custom `.scaffold-bar`'s own padding even with zero insets. It now applies only to a header app bar, and the docs tell custom bars to pad themselves.
+    - The overlay rail's side inset came out of its 220–360px content. The overlay now widens by the inset, with a test (310px at 390).
+    - The app bar's scrolled fill left a seam against the inset strips. From 600px up the bar reaches into the top strip, and into the side strips in the default layout, with a test that its background spans 0–1280 while its content clears the insets.
+  - Skipped, outside the phase: moving the insets into the rail's own `_modal-rail` would change rails outside a scaffold. The mixin's comment names the hard-coded values.
+  - CSS budget 93,350. The scaffold suite passes 124 of 124.

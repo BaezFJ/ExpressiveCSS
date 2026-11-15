@@ -9,7 +9,7 @@ Component ID: `scaffold`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `9fc41a49bab79c8c53c8c0862209e37caf8bfa819da759b17c0380a2cbca0182`
+Contract SHA-256: `37eb7b6ef9c76a4b9c64f50b384e83db310431dc20ec5548a02882ad593d6df8`
 
 #### Selection and adaptation
 
@@ -23,7 +23,7 @@ Relationship: pattern. Layout foundation pattern; the scaffold positions existin
 
 Upstream: requirements-prose-reviewed (2026-11-15); [evidence](https://m3.material.io/foundations/layout/scaffold/overview).
 
-Requirements and boundaries: design reference layout-material-review. Compact, medium and safe-area adaptations arrive in later phases of the scaffold milestone. Full visual parity and spoken output unverified.
+Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
 
 Support (2026-11-15, `llm.md#scaffold`): A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay. A trailing vertical toolbar floats there as a centered row above the navigation bar. A status bar takes a full-width row along the bottom from 600px up. From 600px up the pane floats as a rounded surface on a surface-container shell. From 1200px up an open standard side sheet becomes a third column. With viewport-fit=cover its regions stay inside the safe areas.
 

@@ -575,5 +575,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the sheet column existing only while a sheet is open, its scrolling, stacking and effects-spring snap-back: 93,078 gzip bytes (+47).
   // Reviewed a .modal rail keeping its held column with a side sheet open: 93,092 gzip bytes (+14).
   // Reviewed the scaffold's safe-area insets (shell padding, compact bar and shell, rail overlay, scroll padding): 93,258 gzip bytes (+166).
-  assert.ok(sizes(css).gzip <= 93258, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the app bar reaching into the inset strips, the widened rail overlay and the compact inset on the app bar only: 93,350 gzip bytes (+92).
+  assert.ok(sizes(css).gzip <= 93350, `CSS gzip: ${sizes(css).gzip}`);
 });

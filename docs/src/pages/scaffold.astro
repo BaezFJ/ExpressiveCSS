@@ -304,7 +304,9 @@ const S = defineSections([
           scaffold then keeps every region inside the safe areas: it pads its
           sides by the side insets at every width, and its top and bottom from
           600px up (the status bar pads its own bottom). Below 600px the app bar
-          pads its own top inside its background, the navigation bar and
+          pads its own top inside its background (a custom
+          <code>.scaffold-bar</code> pads its own, with
+          <code>env(safe-area-inset-top)</code>), the navigation bar and
           floating toolbar keep their bottom insets, and an open rail overlay
           clears the notch and the home indicator. Without
           <code>viewport-fit=cover</code> the insets are zero and nothing

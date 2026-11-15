@@ -58,15 +58,20 @@ $_sheet-open: "dialog.side-sheet[open]:not(:modal, .start, [hidden])";
 $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])";
 
 // The expanded rail's own padding (20px 16px 16px) plus the insets it meets.
+// Hard-coded from _navigation-rail.scss; the rail's own overlay outside a
+// scaffold doesn't read the insets. It widens by its side inset, so the inset
+// doesn't come out of its content.
 @mixin _overlay-rail-insets {
   padding-top: calc(20px + env(safe-area-inset-top, 0px));
   padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
 
   &:dir(ltr) {
+    width: calc(clamp(220px, var(--md-comp-nav-rail-expanded-width, 280px), 360px) + env(safe-area-inset-left, 0px));
     padding-left: calc(16px + env(safe-area-inset-left, 0px));
   }
 
   &:dir(rtl) {
+    width: calc(clamp(220px, var(--md-comp-nav-rail-expanded-width, 280px), 360px) + env(safe-area-inset-right, 0px));
     padding-right: calc(16px + env(safe-area-inset-right, 0px));
   }
 }
@@ -94,6 +99,22 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
 
     &:has(> .status-bar:not([hidden])) {
       padding-bottom: 0;
+    }
+
+    // The app bar reaches into the top inset strip, and in the default layout
+    // the side strips too, so its scrolled fill has no seam at the edges.
+    > header:has(> nav, > .bar) {
+      margin-top: calc(-1 * env(safe-area-inset-top, 0px));
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    // width: auto, not the bar's 100%, so the margins stretch it.
+    &:not(.tall-rail) > header:has(> nav, > .bar) {
+      width: auto;
+      margin-right: calc(-1 * env(safe-area-inset-right, 0px));
+      margin-left: calc(-1 * env(safe-area-inset-left, 0px));
+      padding-right: env(safe-area-inset-right, 0px);
+      padding-left: env(safe-area-inset-left, 0px);
     }
   }
 
@@ -334,17 +355,19 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
       z-index: var(--expressive-z-app-bar);
     }
 
+    // The document scrolls here, so the app bar pads its own top inset inside
+    // its background; padding above it would scroll away. A custom
+    // .scaffold-bar keeps its own padding and pads the inset itself.
+    > header:has(> nav, > .bar) {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
     > #{$_pane} {
       overflow: visible;
     }
 
-    // The document scrolls here and the app bar sticks to the window's top,
-    // so the bar pads its own top inset inside its background; padding above
-    // it would scroll away. Without a bar or a navigation bar the shell pads.
-    > #{$_bar} {
-      padding-top: env(safe-area-inset-top, 0px);
-    }
-
+    // Without a shown bar the shell pads the top inset, and without a shown
+    // navigation bar the bottom one.
     &:not(:has(> #{$_bar}:not([hidden]))) {
       padding-top: env(safe-area-inset-top, 0px);
     }

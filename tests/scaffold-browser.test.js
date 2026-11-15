@@ -45,6 +45,17 @@ test('every compiled scaffold selector starts at the scaffold or a region class'
   }
 });
 
+// Desktop browsers report zero safe-area insets, so the tests rewrite every
+// env(safe-area-inset-*) in the stylesheet, with or without a fallback.
+const INSETS = { top: 40, right: 50, bottom: 20, left: 30 };
+const insetCss = css.replace(/env\(safe-area-inset-(top|right|bottom|left)(\s*,[^)]*)?\)/g, (_, side) => `${INSETS[side]}px`);
+const withInsets = (body, opts) => page(body, opts).replace(css, () => insetCss);
+
+test('the inset rewrite leaves no env(safe-area) behind', () => {
+  assert.ok(css.includes('env(safe-area-inset-'), 'the stylesheet reads the insets');
+  assert.ok(!insetCss.includes('env(safe-area'), 'every inset was rewritten');
+});
+
 for (const [name, type, run] of engines) {
   run(`${name}: scaffold places the bar above the rail, pane and toolbar, and only the pane scrolls`, { timeout: 30000 }, async () => {
     const { browser, tab, box, style } = await open(type, page(scaffold()));
@@ -992,21 +1003,12 @@ for (const [name, type, run] of engines) {
     }
   });
 
-  // Desktop browsers report zero safe-area insets, so the test rewrites every
-  // env(safe-area-inset-*) in the stylesheet, with or without a fallback.
-  const INSETS = { top: 40, right: 50, bottom: 20, left: 30 };
-  const insetCss = css.replace(/env\(safe-area-inset-(top|right|bottom|left)(\s*,[^)]*)?\)/g, (_, side) => `${INSETS[side]}px`);
-  const withInsets = (body, opts) => page(body, opts).replace(css, () => insetCss);
-
-  test(`${name}: the inset rewrite leaves no env(safe-area) behind`, () => {
-    assert.ok(css.includes('env(safe-area-inset-'), 'the stylesheet reads the insets');
-    assert.ok(!insetCss.includes('env(safe-area'), 'every inset was rewritten');
-  });
-
   run(`${name}: from 600px up the scaffold keeps every region inside the safe areas`, { timeout: 30000 }, async () => {
     const { browser, tab, box, style } = await open(type, withInsets(`<div id="host">${scaffold()}</div>`), { width: 1280 });
     try {
-      near((await box('#bar')).top, 40, 'the bar clears the top inset');
+      const barBox = await box('#bar');
+      assert.deepEqual([Math.round(barBox.top), Math.round(barBox.left), Math.round(barBox.right)], [0, 0, 1280], 'the app bar background reaches into the inset strips');
+      assert.ok((await box('#menu')).top >= 40 && (await box('#menu')).left >= 30, 'while its content clears the insets');
       near((await box('#rail')).left, 30, 'the rail clears the left inset');
       near((await box('#rail')).bottom, 780, 'and the bottom inset');
       near((await box('#tools')).right, 1206, 'the toolbar clears the right inset and keeps its margin');
@@ -1038,6 +1040,8 @@ for (const [name, type, run] of engines) {
       await tab.evaluate(() => window.scrollTo(0, 0));
       await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, scaffold({ trailing: '' }));
       assert.equal(await style('#s', 'paddingBottom'), '20px', 'without a navigation bar the scaffold pads the bottom inset');
+      await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, scaffold({ bar: '' }));
+      assert.equal(await style('#s', 'paddingTop'), '40px', 'without a bar the scaffold pads the top inset');
     } finally {
       await browser.close();
     }
@@ -1050,13 +1054,17 @@ for (const [name, type, run] of engines) {
   });
 
   run(`${name}: the rail overlay clears the safe areas on its own side`, { timeout: 30000 }, async () => {
-    const { browser, tab, style } = await open(type, withInsets(scaffold({ bottom: navbar })), { width: 390 });
+    const { browser, tab, box, style } = await open(type, withInsets(scaffold({ bottom: navbar })), { width: 390 });
     try {
       await tab.locator('#rail').evaluate((el) => el.classList.add('expanded'));
       assert.deepEqual(await Promise.all(['paddingTop', 'paddingBottom', 'paddingLeft'].map((p) => style('#rail', p))), ['60px', '36px', '46px']);
+      near((await box('#rail')).width, 310, 'it widens by the side inset, so its content keeps 280px');
       await tab.evaluate(() => { document.documentElement.dir = 'rtl'; });
       await tab.setViewportSize({ width: 700, height: 800 });
       assert.deepEqual(await Promise.all(['paddingRight', 'paddingLeft'].map((p) => style('#rail', p))), ['66px', '16px'], 'under rtl it takes the right inset');
+      await tab.locator('#rail').evaluate((el) => el.classList.add('modal'));
+      await tab.setViewportSize({ width: 1280, height: 800 });
+      assert.deepEqual(await Promise.all(['paddingTop', 'paddingRight'].map((p) => style('#rail', p))), ['60px', '66px'], 'a modal rail overlay clears them at any width');
     } finally {
       await browser.close();
     }

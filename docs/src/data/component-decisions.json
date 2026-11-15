@@ -451,7 +451,7 @@
           "source": "https://m3.material.io/foundations/layout/scaffold/overview",
           "reviewedOn": "2026-11-15",
           "scope": "requirements-prose-reviewed",
-          "note": "Requirements and boundaries: design reference layout-material-review. Compact, medium and safe-area adaptations arrive in later phases of the scaffold milestone. Full visual parity and spoken output unverified.",
+          "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
           "sections": [
             "Scaffold/Overview, Bars, Rails and Panes"
           ],
@@ -472,7 +472,7 @@
         "sources": [
           {
             "path": "src/sass/components/_scaffold.scss",
-            "sha256": "3a222341b621fbdb50cf61f1e2e6d4e32350f9b1191e433b6fbef1900a08ad12"
+            "sha256": "7b8defdecbfbed7e859365852c3067e21b9d83db825adf2b09f967cc2a7539af"
           }
         ],
         "gaps": [
