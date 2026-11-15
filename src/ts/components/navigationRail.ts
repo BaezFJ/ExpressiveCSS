@@ -149,9 +149,8 @@ export class NavigationRail extends Component<NavigationRailOptions> {
   // Where Escape sends focus: the opener, else the inside toggle, else the
   // first outside toggle, skipping any that are gone, disabled or hidden.
   private _returnTarget(): HTMLButtonElement | null {
-    const outside = this._outsideToggles();
-    const names = (button: HTMLButtonElement) => button === this._toggle || outside.includes(button);
-    return [this._opener, this._toggle, ...outside].find((button) => usable(button) && names(button)) ?? null;
+    const names = (button: HTMLButtonElement) => button === this._toggle || this._controls(button);
+    return [this._opener, this._toggle, ...this._outsideToggles()].find((button) => usable(button) && names(button)) ?? null;
   }
 
   private _isCompact() {
@@ -295,10 +294,6 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     const before = Utils.focusIsIn(this.el) ? deepActiveElement(root) : null;
     const target = before && this._returnTarget();
     this.collapse();
-    if (!this.isExpanded) this._restoreFocus(root, before, target);
-  }
-
-  private _restoreFocus(root: Document | ShadowRoot, before: Element | null, target: HTMLButtonElement | null) {
-    if (before && deepActiveElement(root) === before) target?.focus();
+    if (!this.isExpanded && deepActiveElement(root) === before) target?.focus();
   }
 }

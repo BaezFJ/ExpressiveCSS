@@ -57,3 +57,11 @@ Commands: `npm run build`, then `node --test tests/navigation-rail.test.js tests
   - A click on any `aria-controls` button no longer runs a document query; the clicked button is checked directly.
   - Escape with focus outside the rail no longer looks up a return target.
   JS budget 111,737 (+345 over the 111,392 base build). The rail jsdom, toggle browser and panel browser suites pass (35 of 35).
+- 2026-11-15, `code-review-and-quality` (five-axis review by an independent read-only subagent): no Critical or Required findings. Re-init, destroy, a changed rail id, a toggle inside another rail, two rails, Escape with focus on the outside button, and the scrim were all traced and behave correctly. Fixed:
+  - Optional: the R3 clauses for an opener that no longer names the rail and an opener that was removed had no test. Both cases are added; with `names()` made always true, the first fails.
+  - Optional: the spec still described `[aria-controls~=]` with `CSS.escape`. It now describes the string comparison the code uses.
+  - Nit: `names()` reuses `_controls`.
+  - Nit: the redundant `_restoreFocus` helper is folded into `_escapeRail`.
+  - Nit: the budget comment is shortened (111,716, +324).
+  - FYI: the decision row now states that a rail moved into a closed shadow root after starting keeps its document listener.
+  - Kept: the root lookup that resembles `formEventScope()` stays inline, because that helper is named for forms.

@@ -304,6 +304,21 @@ describe('NavigationRail outside toggles', () => {
       $('#bare a').focus();
       escape();
       assert.equal(document.activeElement, $('#b1'), 'a disabled opener is skipped');
+      $('#b2').disabled = false;
+
+      click($('#b2'));
+      $('#b2').setAttribute('aria-controls', 'other');
+      $('#bare a').focus();
+      escape();
+      assert.equal(document.activeElement, $('#b1'), 'an opener that no longer names the rail is skipped');
+      $('#b2').setAttribute('aria-controls', 'bare');
+
+      click($('#b2'));
+      const removed = $('#b2');
+      removed.remove();
+      $('#bare a').focus();
+      escape();
+      assert.equal(document.activeElement, $('#b1'), 'a removed opener is skipped');
 
     } finally {
       rail.destroy();
