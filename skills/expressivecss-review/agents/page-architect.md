@@ -11,7 +11,7 @@ All paths are relative to the base skill directory in your shared context.
 - `expressivecss-usage/references/helpers.md` if it uses spacing, flex, alignment, or visibility helpers.
 - `expressivecss-design/references/scaffold.md` and `expressivecss-design/references/layout-material-review.md` for page regions and adaptive layout.
 - `references/design-rules.md` for the navigation and pane choosers.
-- The closest template in `assets/templates/` (`layout-compact`, `layout-rail`, `layout-expanded`, `layout-list-detail`, `layout-dashboard`, `layout-toolbar`, `layout-status`, `layout-sheet`) as a reference shape.
+- The closest template in `assets/templates/` (`layout-compact`, `layout-rail`, `layout-expanded`, `layout-list-detail`, `layout-dashboard`, `layout-toolbar`, `layout-status`, `layout-sheet`, `layout-workspace`) as a reference shape.
 
 If an `expressivecss-mcp` server is connected, `page_architect` returns the expected sections, landmarks, and skeleton for a set of components; compare the target against it.
 

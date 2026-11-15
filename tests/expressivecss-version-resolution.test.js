@@ -773,6 +773,7 @@ describe('ExpressiveCSS version resolution', () => {
       'docs/public/layout-toolbar.html',
       'docs/public/layout-status.html',
       'docs/public/layout-sheet.html',
+      'docs/public/layout-workspace.html',
     ];
     const decisions = JSON.parse(await readFile(path.join(sourceRoot, 'docs/src/data/component-decisions.json'), 'utf8'));
     // Include reviewed inputs so the Git-free snapshot has the same evidence availability.

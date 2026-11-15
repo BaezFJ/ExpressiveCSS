@@ -68,7 +68,7 @@ const TOOL_COPIES = [
 ];
 
 // Copy-ready pages from the docs site, bundled so the Install and Design guides work offline.
-const TEMPLATES = ['starter', 'layout-compact', 'layout-rail', 'layout-expanded', 'layout-list-detail', 'layout-dashboard', 'layout-toolbar', 'layout-status', 'layout-sheet'];
+const TEMPLATES = ['starter', 'layout-compact', 'layout-rail', 'layout-expanded', 'layout-list-detail', 'layout-dashboard', 'layout-toolbar', 'layout-status', 'layout-sheet', 'layout-workspace'];
 
 // Secondary contracts omitted by each component's first example.
 const BEHAVIOR_CONTRACTS = [

@@ -160,6 +160,7 @@ for (const asset of [
   '/layout-toolbar.html',
   '/layout-status.html',
   '/layout-sheet.html',
+  '/layout-workspace.html',
   '/CNAME',
 ]) {
   nonempty(asset, 'asset');

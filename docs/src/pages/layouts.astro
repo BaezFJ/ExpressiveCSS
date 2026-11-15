@@ -16,6 +16,7 @@ const layouts = [
   { id: "toolbar", title: "Trailing toolbar", description: "A vertical toolbar at the trailing edge holds actions for the page's content. Below 600px it floats as a row above the navigation bar." },
   { id: "status", title: "Status bar", description: "A status bar along the bottom shows the app's state from 600px up. Compact windows show the navigation bar instead." },
   { id: "sheet", title: "Side sheet", description: "Selecting a project opens its details in a standard side sheet, a column beside the content from 1200px and an overlay below." },
+  { id: "workspace", title: "All regions", description: "Every region at once: app bar, rail, pane, side sheet, trailing toolbar and status bar, with the navigation bar on compact windows. Resize it to see how each region adapts." },
 ];
 // Each diagram is a list of [class, x, y, width, height, radius] rectangles.
 type Rect = [string, number, number, number, number, number];
@@ -29,6 +30,7 @@ const diagrams: Record<string, Rect[]> = {
   toolbar: [rail, ["diagram-content", 56, 16, 136, 128, 12], ["diagram-region", 204, 44, 20, 72, 10]],
   status: [["diagram-navigation", 16, 16, 28, 108, 10], ["diagram-content", 56, 16, 168, 108, 12], ["diagram-region", 16, 132, 208, 12, 6]],
   sheet: [rail, ["diagram-content", 56, 16, 92, 128, 12], ["diagram-region", 160, 16, 64, 128, 12]],
+  workspace: [["diagram-navigation", 16, 16, 208, 16, 8], ["diagram-navigation", 16, 40, 28, 84, 10], ["diagram-content", 56, 40, 84, 84, 12], ["diagram-region", 148, 40, 48, 84, 12], ["diagram-region", 204, 56, 20, 52, 10], ["diagram-region", 16, 132, 208, 12, 6]],
 };
 const S = defineSections([
   { id: "choose", label: "Choose a layout" },

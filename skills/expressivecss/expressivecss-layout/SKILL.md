@@ -75,6 +75,7 @@ Read the [canonical layouts reference](./references/canonical-layouts.md) to cho
 | [Trailing toolbar template](../assets/templates/layout-toolbar.html) | A pane with a vertical toolbar of actions for its content, which floats as a row below 600px |
 | [Status bar template](../assets/templates/layout-status.html) | A workspace with a status bar along the bottom from 600px up |
 | [Side sheet template](../assets/templates/layout-sheet.html) | A list whose details open in a standard side sheet, a column from 1200px up |
+| [All regions template](../assets/templates/layout-workspace.html) | Every scaffold region at once: app bar, rail, pane, side sheet, trailing toolbar, status bar and navigation bar |
 | [List-detail template](../assets/templates/layout-list-detail.html) and [list-detail example](../assets/examples/list-detail.html) | Selecting an item from a list to see its detail |
 | [Panes guide](../components/panes.md) | List-detail, supporting pane and equal panes |
 | [Dashboard guide](../expressivecss-dashboard/SKILL.md) | Dashboards and reporting pages; start from its reference implementation |

@@ -7,8 +7,8 @@ import { pathToFileURL } from 'node:url';
 import { expect } from '@playwright/test';
 import { engines } from './browser.js';
 
-const LAYOUTS = ['compact', 'rail', 'expanded', 'dashboard', 'list-detail', 'toolbar', 'status', 'sheet'];
-const RAIL_FROM = { rail: 600, dashboard: 600, expanded: 840, toolbar: 600, status: 600, sheet: 600 };
+const LAYOUTS = ['compact', 'rail', 'expanded', 'dashboard', 'list-detail', 'toolbar', 'status', 'sheet', 'workspace'];
+const RAIL_FROM = { rail: 600, dashboard: 600, expanded: 840, toolbar: 600, status: 600, sheet: 600, workspace: 600 };
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
 nodeTest('the app templates are scaffolds without shell CSS or shell helpers', async () => {
@@ -38,6 +38,11 @@ const regionChecks = {
     await expect(page.locator('.status-bar'))[width < 600 ? 'toBeHidden' : 'toBeVisible']();
     if (width >= 600) assert.ok(Math.round((await box(page, '.status-bar')).bottom) === 812, `the status bar runs along the bottom at ${width}px`);
   },
+  async workspace(page, width) {
+    await regionChecks.toolbar(page, width);
+    await regionChecks.status(page, width);
+    if (width >= 600) assert.ok((await box(page, '.toolbar.vertical')).bottom <= (await box(page, '.status-bar')).top + 1, `the toolbar ends above the status bar at ${width}px`);
+  },
 };
 
 // The side sheet opens from a project, takes a column from 1200px, and returns focus.
@@ -50,6 +55,7 @@ async function sheetChecks(page) {
     await expect(page.locator('#details-title')).toBeFocused();
     const sheet = await box(page, '#details');
     if (width >= 1200) assert.ok(sheet.left >= (await box(page, 'main')).right, 'from 1200px the sheet is a column after the pane');
+    if (width >= 1200 && await page.locator('.toolbar.vertical').count()) assert.ok(sheet.right <= (await box(page, '.toolbar.vertical')).left, 'and before the trailing toolbar');
     else assert.ok(sheet.right > 0 && sheet.width > 0, 'below 1200px the sheet opens over the page');
     await page.locator('#details button[aria-label="Close details"]').click();
     await expect(page.locator('#details')).toBeHidden();
@@ -80,7 +86,7 @@ for (const [name, engine, test] of engines) {
           if (width >= 600) {
             const pane = await page.locator('main').evaluate((el) => [getComputedStyle(el).marginInlineEnd, getComputedStyle(el).borderTopLeftRadius]);
             // Beside a trailing toolbar, the toolbar's own margin is the gap.
-            assert.equal(pane[0], layout === 'toolbar' ? '0px' : '16px', `${layout}: main floats with its gap at ${width}px`);
+            assert.equal(pane[0], ['toolbar', 'workspace'].includes(layout) ? '0px' : '16px', `${layout}: main floats with its gap at ${width}px`);
             assert.notEqual(pane[1], '0px', `${layout}: and rounded corners at ${width}px`);
           }
           if (layout === 'list-detail') {
@@ -150,7 +156,7 @@ for (const [name, engine, test] of engines) {
             await expect(rail).toBeHidden();
           }
         }
-        if (layout === 'sheet') await sheetChecks(page);
+        if (layout === 'sheet' || layout === 'workspace') await sheetChecks(page);
         await page.evaluate(() => {
           document.querySelectorAll('.navigation-rail').forEach(rail => Expressive.NavigationRail.getInstance(rail)?.destroy());
         });
