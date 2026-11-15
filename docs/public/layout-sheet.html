@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en" theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Side sheet app | My project</title>
+  <!-- Copy this file as index.html beside the framework's complete dist directory. -->
+  <link rel="stylesheet" href="dist/css/expressive.min.css">
+</head>
+<body>
+  <div class="scaffold">
+    <header>
+      <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+      <div class="bar">
+        <button id="menu" type="button" aria-label="Main menu" aria-controls="rail" aria-expanded="false">
+          <span class="material-symbols" aria-hidden="true">menu</span>
+        </button>
+        <h2>My project</h2>
+        <a class="button text" href="https://www.expressivecss.com/">Docs</a>
+      </div>
+    </header>
+    <nav id="rail" class="navigation-rail" aria-label="Primary navigation">
+      <a href="#main" aria-current="page"><span class="material-symbols" aria-hidden="true">home</span>Overview</a>
+      <a href="https://www.expressivecss.com/buttons.html"><span class="material-symbols" aria-hidden="true">widgets</span>Components</a>
+      <a href="https://www.expressivecss.com/"><span class="material-symbols" aria-hidden="true">help</span>Setup</a>
+    </nav>
+    <main id="main" tabindex="-1">
+      <div class="container py-4">
+        <h1>Projects</h1>
+        <p class="flow-text">Select a project to see its details in a side sheet.</p>
+        <ul id="projects" class="list">
+          <li><a href="#details" data-title="Website refresh" data-body="Update the home page and the pricing page. Due at the end of the month."><div>Website refresh<p>3 open tasks</p></div></a></li>
+          <li><a href="#details" data-title="Mobile app" data-body="Ship the first version of the app to a small group of testers."><div>Mobile app<p>8 open tasks</p></div></a></li>
+          <li><a href="#details" data-title="Help center" data-body="Move the help articles to the new site and fix the broken links."><div>Help center<p>1 open task</p></div></a></li>
+        </ul>
+      </div>
+    </main>
+    <!-- From 1200px up an open standard sheet is a column beside the content. Below that it opens over it. -->
+    <dialog id="details" class="side-sheet" aria-labelledby="details-title">
+      <header>
+        <h2 id="details-title" tabindex="-1">Website refresh</h2>
+        <form method="dialog">
+          <button type="submit" aria-label="Close details"><span class="material-symbols" aria-hidden="true">close</span></button>
+        </form>
+      </header>
+      <div>
+        <p id="details-body">Update the home page and the pricing page. Due at the end of the month.</p>
+      </div>
+    </dialog>
+    <!-- Replace these documentation destinations with your application's URLs. -->
+    <footer>
+      <nav class="navigation-bar" aria-label="Compact navigation">
+        <a href="#main" aria-current="page"><span class="material-symbols" aria-hidden="true">home</span>Overview</a>
+        <a href="https://www.expressivecss.com/buttons.html"><span class="material-symbols" aria-hidden="true">widgets</span>Components</a>
+        <a href="https://www.expressivecss.com/"><span class="material-symbols" aria-hidden="true">help</span>Setup</a>
+      </nav>
+    </footer>
+  </div>
+  <script src="dist/js/expressive.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Expressive.AutoInit();
+      // A standard (non-modal) side sheet. The application owns its content and focus.
+      const sheet = document.getElementById('details');
+      const title = document.getElementById('details-title');
+      let opener = null;
+      document.getElementById('projects').addEventListener('click', (event) => {
+        const link = event.target.closest('a[data-title]');
+        if (!link) return;
+        event.preventDefault();
+        opener = link;
+        title.textContent = link.dataset.title;
+        document.getElementById('details-body').textContent = link.dataset.body;
+        if (!sheet.open) sheet.show();
+        title.focus();
+      });
+      sheet.addEventListener('close', () => opener?.focus());
+    });
+  </script>
+</body>
+</html>

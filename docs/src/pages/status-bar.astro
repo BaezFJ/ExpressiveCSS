@@ -155,11 +155,18 @@ const S = defineSections([
           <code>&lt;div&gt;</code>.
         </p>
         <p>
-          Don't show a status bar at the same time as a
+          Outside a scaffold, don't show a status bar at the same time as a
           <a href="navigation-bar.html">navigation bar</a>. Both sit at the
           bottom of the window. Its 24px items are too small for a
           touch-first layout, so hide the bar there or move what it shows
           into the page.
+        </p>
+        <p>
+          In a <a href="scaffold.html">scaffold</a>, a status bar that is a
+          direct child takes a full-width row along the bottom, under the
+          rail, pane and toolbar, or under the navigation bar when the
+          scaffold shows no rail, and hides below 600px, where the scaffold
+          shows its navigation bar.
         </p>
   </Section>
   <Section {...S.accessibility}>

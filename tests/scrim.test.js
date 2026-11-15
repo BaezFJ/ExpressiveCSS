@@ -31,10 +31,11 @@ describe('Scrim', () => {
     assert.match(css, /dialog::backdrop \{\s*background-color: var\(--md-comp-scrim-color\);/);
   });
 
-  test('the modal navigation rail consumes it, at both breakpoints', () => {
+  test('the modal navigation rail consumes it: compact, .modal and a scaffold\'s medium window', () => {
     const rail = css.match(
       /\.navigation-rail\.expanded(?:\.modal|:not\(\.modal\))::before \{[^}]*background-color: var\(--md-comp-scrim-color\);/g
     );
-    assert.equal(rail?.length, 2);
+    assert.equal(rail?.length, 3);
+    assert.match(css, /\.scaffold > \.navigation-rail\.expanded:not\(\.modal\)::before \{[^}]*background-color: var\(--md-comp-scrim-color\);/);
   });
 });

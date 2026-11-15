@@ -358,7 +358,10 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the BusyButtons keydown guard for components that activate on Enter or Space: 111,622 gzip bytes (+21).
   // Reviewed the navigation rail peek under nav-rail="hover" (mouse rest or keyboard focus entering the rail), read from the rail, an ancestor or its shadow host: 111,666 gzip bytes (+244).
   // Reviewed the milestone merged with the compact and hover navigation rail from master: 111,898 gzip bytes (+32 over the two sides' sum).
-  assert.ok(sizes(js).gzip <= 111898, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed outside navigation rail toggles and the first-child toggle lookup: 111,741 gzip bytes (+349).
+  // Reviewed the rail reading its overlay state from the stylesheet: 111,750 gzip bytes (+9).
+  // Reviewed the scaffold milestone merged with master's busy buttons, data table pages and compact and hover rail: 112,245 gzip bytes.
+  assert.ok(sizes(js).gzip <= 112245, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -567,5 +570,29 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed anchored headings resting below a page-level sticky top app bar, outside dialogs and panes, with the offset token per bar size: 92,310 gzip bytes (+150).
   // Reviewed nav-rail="compact" (72dp icon-only rail) and nav-rail="hover" (the expanded layout as a .peek over the page, keeping the collapsed footprint and row heights from the live indicator token, raised only while it peeks and never over a modal rail, which rises at once), set on the root, a shadow host or one rail: 92,124 gzip bytes (+354).
   // Reviewed the milestone merged with the compact and hover navigation rail from master: 92,665 gzip bytes (+1 over the two sides' sum).
-  assert.ok(sizes(css).gzip <= 92665, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed .scaffold (window-height grid areas, child and region-class placement, the pane scroller and its scroll timeline, scrolling custom rail and trailing content, the rail's height override, the trailing toolbar's position, the app bar's private timeline property, print): 92,076 gzip bytes (+306).
+  // Reviewed .scaffold.tall-rail (full-height rail and trailing areas, bar over the pane): 92,098 gzip bytes (+22).
+  // Reviewed the scaffold's medium rail overlay, its held rail column (released for a hidden rail), the snapping collapse and the overlay flag the runtime reads: 92,242 gzip bytes (+144).
+  // Reviewed the scaffold's compact layout (document scrolling, the pinned navigation bar region, the hidden rail): 92,350 gzip bytes (+108).
+  // Reviewed the compact scaffold's pinned custom bar and unstretched trailing toolbar: 92,373 gzip bytes (+23).
+  // Reviewed compact scroll padding that keeps focus clear of the pinned bars: 92,421 gzip bytes (+48).
+  // Reviewed the compact scaffold's floating trailing toolbar (row layout, sticky placement, top tooltips, scroll padding, safe-area margin): 92,636 gzip bytes (+215).
+  // Reviewed hidden navigation bars and toolbars left out of the compact offsets and scroll padding (plain declarations, no root custom properties): 92,677 gzip bytes (+41).
+  // Reviewed the scaffold's status bar row: 92,695 gzip bytes (+18).
+  // Reviewed the scaffold's floating pane surface (shell and bar colors, rounded pane with gaps, panes exceptions, forced-colors edge): 92,859 gzip bytes (+164).
+  // Reviewed the floating pane kept to screen, so print drops its gaps and corners: 92,866 gzip bytes (+7).
+  // Reviewed the floating pane's top gap without a bar, an empty custom rail counting as absent, and its gaps set once on the shell: 92,906 gzip bytes (+40).
+  // Reviewed the scaffold's side sheet column (a fourth track, the static sheet, its gap): 93,031 gzip bytes (+125).
+  // Reviewed the sheet column existing only while a sheet is open, its scrolling, stacking and effects-spring snap-back: 93,078 gzip bytes (+47).
+  // Reviewed a .modal rail keeping its held column with a side sheet open: 93,092 gzip bytes (+14).
+  // Reviewed the scaffold's safe-area insets (shell padding, compact bar and shell, rail overlay, scroll padding): 93,258 gzip bytes (+166).
+  // Reviewed the app bar reaching into the inset strips, the widened rail overlay and the compact inset on the app bar only: 93,350 gzip bytes (+92).
+  // Reviewed the exact app bar selector in the scaffold and the tall-rail bar reaching into empty side strips: 93,409 gzip bytes (+59).
+  // Reviewed direction-aware tall-rail bar strips: 93,474 gzip bytes (+65).
+  // Reviewed the navigation bar row kept from 600px when no rail shows: 93,509 gzip bytes (+35).
+  // Reviewed the navigation bar leaving the bottom inset to a status bar below it: 93,529 gzip bytes (+20).
+  // Reviewed the trailing toolbar's 4px margin, read from no token: 93,517 gzip bytes (-12).
+  // Reviewed the sheet column as a detached sheet (corners and gaps like the pane): 93,553 gzip bytes (+36).
+  // Reviewed the scaffold milestone merged with master's busy spinner, anchored headings and compact and hover rail, with the scaffold holding a compact rail's 72px column: 94,450 gzip bytes.
+  assert.ok(sizes(css).gzip <= 94450, `CSS gzip: ${sizes(css).gzip}`);
 });

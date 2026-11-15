@@ -13,6 +13,7 @@ const S = defineSections([
   { id: "collapsed", label: "Collapsed" },
   { id: "expanded", label: "Expanded" },
   { id: "modal", label: "Modal" },
+  { id: "outside-toggle", label: "Toggle from outside the rail" },
   { id: "compact", label: "Compact and hover" },
   { id: "side-panel", label: "Side panel" },
   { id: "tokens", label: "Tokens" },
@@ -172,11 +173,41 @@ const S = defineSections([
           On compact windows, <code>expanded</code> already
           overlays the page with a scrim. Add <code>modal</code> if you
           want that overlay on tablets and desktops too. Image 2 in the
-          spec shows this case, a compact window expanding in place.
+          spec shows this case, a compact window expanding in place. A rail
+          that is a direct child of a <a href="scaffold.html">scaffold</a>
+          is modal from 600px to 839px as well.
         </p>
 <Code code={`
 <nav class="navigation-rail expanded modal" aria-label="Main">…</nav>
 `} />
+  </Section>
+  <Section {...S["outside-toggle"]}>
+        <p>
+          A menu button outside the rail, such as one in an app bar, toggles
+          it when its <code>aria-controls</code> names the rail's
+          <code>id</code>. The rail keeps that button's
+          <code>aria-expanded</code> in step, and when Escape closes a modal
+          rail with focus inside it, focus goes back to the button that opened
+          it. A button added after the rail started works too. A rail can have
+          its own menu button as well; both stay in sync. A button controls
+          one rail, and it has to be in the same document or shadow root as
+          the rail.
+        </p>
+<Code code={`
+<header>
+  <div class="bar">
+    <button type="button" aria-label="Main menu" aria-controls="main-rail" aria-expanded="false">
+      <span class="material-symbols" aria-hidden="true">menu</span>
+    </button>
+    <h1>Mail</h1>
+  </div>
+</header>
+<nav class="navigation-rail" id="main-rail" aria-label="Main">…</nav>
+`} />
+        <p>
+          The rail's own menu button has to be its first child, as its
+          styles already require.
+        </p>
   </Section>
   <Section {...S.compact}>
         <p>

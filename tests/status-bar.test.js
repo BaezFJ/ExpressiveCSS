@@ -60,5 +60,7 @@ test('every compiled status bar selector starts at .status-bar', () => {
     // The page footer names the bar only to leave it out, in a :not().
     .filter((part) => part.replace(/:not\((?:[^()]|\([^()]*\))*\)/g, '').includes('status-bar'));
   assert.ok(selectors.length > 5, 'the partial compiled');
-  for (const selector of selectors) assert.match(selector, /^\.status-bar\b/, selector);
+  // A scaffold places a direct-child bar in its status row and reads whether one
+  // shows; those rules start at the scaffold.
+  for (const selector of selectors) assert.match(selector, /^(\.status-bar\b|\.scaffold\b)/, selector);
 });

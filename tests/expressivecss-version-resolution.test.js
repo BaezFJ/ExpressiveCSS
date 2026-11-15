@@ -732,7 +732,7 @@ describe('ExpressiveCSS version resolution', () => {
   test('generated component guides carry deterministic contract provenance', async () => {
     const directory = new URL('../skills/expressivecss/components/', import.meta.url);
     const names = (await readdir(directory)).filter((name) => name.endsWith('.md'));
-    assert.equal(names.length, 100);
+    assert.equal(names.length, 101);
     const hashes = new Set();
     for (const name of names) {
       const guide = await readFile(new URL(name, directory), 'utf8');
@@ -770,6 +770,10 @@ describe('ExpressiveCSS version resolution', () => {
       'docs/public/layout-expanded.html',
       'docs/public/layout-list-detail.html',
       'docs/public/layout-dashboard.html',
+      'docs/public/layout-toolbar.html',
+      'docs/public/layout-status.html',
+      'docs/public/layout-sheet.html',
+      'docs/public/layout-workspace.html',
     ];
     const decisions = JSON.parse(await readFile(path.join(sourceRoot, 'docs/src/data/component-decisions.json'), 'utf8'));
     // Include reviewed inputs so the Git-free snapshot has the same evidence availability.

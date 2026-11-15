@@ -27,15 +27,30 @@ const _defaults: NavigationRailOptions = {
   onCloseEnd: null
 };
 
+// Only for a page without the stylesheet; with it, the CSS flag below decides.
 const COMPACT = '(width < 600px)';
+// The menu toggle: a first-child button that isn't the FAB or a panel trigger. The CSS
+// doesn't style a first-child .icon-button as the toggle, but it still toggles.
+const TOGGLE = ':scope > button:first-child:not(.button, [popovertarget])';
+
+// Rendered: checkVisibility also sees display:none and visibility:hidden from a stylesheet; jsdom lacks it.
+const shown = (el: Element) => el.checkVisibility?.({ visibilityProperty: true }) ?? !el.closest('[hidden]');
+// :disabled also covers a button inside a disabled <fieldset>.
+const operable = (button: HTMLButtonElement) => !button.matches(':disabled') && !button.closest('[inert]');
+/** The IDs a button's aria-controls lists; none once the attribute is removed. */
+const controlledIds = (button: Element) => (button.getAttribute('aria-controls') ?? '').split(/\s+/);
+/** A button focus can return to: still in the page, enabled, shown and not inert. */
+const usable = (button: HTMLButtonElement | null): button is HTMLButtonElement =>
+  Boolean(button?.isConnected) && operable(button) && shown(button);
 // Delay before a hovered destination opens its panel, and before the panel
 // closes once the pointer leaves; it covers the trip across the rail's padding.
 const HOVER_DELAY = 200;
 
 /**
  * Navigation rail. Layout is CSS (collapsed / .expanded). This class
- * toggles that class from the menu button, closes a compact overlay on
- * Escape or a scrim tap, and keeps aria-expanded in sync. A destination's
+ * toggles that class from the menu button, or from any button outside the
+ * rail whose aria-controls names it, closes an overlay on Escape or a
+ * scrim tap, and keeps aria-expanded in sync on every toggle. A destination's
  * .navigation-rail-panel is a native popover; this class also opens it on
  * mouse hover. Under nav-rail="hover" it adds .peek while the mouse rests on
  * the collapsed rail or keyboard focus is in it; that is a preview, so
@@ -44,16 +59,16 @@ const HOVER_DELAY = 200;
 export class NavigationRail extends Component<NavigationRailOptions> {
   isExpanded: boolean;
   private _toggle: HTMLButtonElement | null;
-  private _mql: MediaQueryList;
   private _hoverPanel: HTMLElement | null = null;
   private _hoverTimer: ReturnType<typeof setTimeout> | undefined;
   private _peekTimer: ReturnType<typeof setTimeout> | undefined;
+  // The toggle that last opened the rail, for Escape to return focus to.
+  private _opener: HTMLButtonElement | null = null;
 
   constructor(el: HTMLElement, options: Partial<NavigationRailOptions>) {
     super(el, options);
 
     this._toggle = this._findToggle();
-    this._mql = window.matchMedia(COMPACT);
     this.isExpanded = this.el.classList.contains('expanded');
     this._sync();
     const { signal } = this._events;
@@ -64,6 +79,10 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     this.el.addEventListener('focusin', this._onFocusIn, { signal });
     this.el.addEventListener('focusout', this._onFocusOut, { signal });
     document.addEventListener('keydown', this._onKeyDown, { signal });
+    // A closed shadow root hides its buttons from a document listener.
+    // Only a ShadowRoot has a host; a Document or a detached subtree does not.
+    const root = this.el.getRootNode() as ShadowRoot;
+    (root.host ? root : document).addEventListener('click', this._onDocumentClick, { signal });
   }
 
   static get defaults(): NavigationRailOptions {
@@ -83,6 +102,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
    */
   expand = () => {
     if (this.isExpanded) return;
+    this._opener = null;
     if (!this._notify('open', this.options.onOpenStart, { current: () => !this.isExpanded })) return;
     this.isExpanded = true;
     this.el.classList.add('expanded');
@@ -113,21 +133,50 @@ export class NavigationRail extends Component<NavigationRailOptions> {
   };
 
   private _findToggle(): HTMLButtonElement | null {
-    const first = this.el.querySelector(':scope > button:not(.button, [popovertarget])');
+    const first = this.el.querySelector(TOGGLE);
     return first instanceof HTMLButtonElement ? first : null;
   }
 
-  private _isCompact() {
-    return this._mql.matches;
+  // Looked up on every use, so a button added after the rail started counts.
+  // An ID reference can't cross a shadow boundary, so only the rail's own root.
+  private _outsideToggles(): HTMLButtonElement[] {
+    if (!this.el.id) return [];
+    const root = this.el.getRootNode() as ParentNode;
+    return Array.from(root.querySelectorAll<HTMLButtonElement>('button[aria-controls]')).filter(this._controls);
   }
 
+  // A button in the rail's root, outside the rail, whose aria-controls lists its id.
+  private _controls = (button: HTMLButtonElement) =>
+    Boolean(this.el.id) && button.getRootNode() === this.el.getRootNode() && !this.el.contains(button) &&
+    controlledIds(button).includes(this.el.id);
+
+  // Records the opener only when the rail really opened.
+  private _toggleFrom(button: HTMLButtonElement) {
+    if (this.isExpanded) return this.collapse();
+    this.expand();
+    if (this.isExpanded) this._opener = button;
+  }
+
+  // Where Escape sends focus: the opener, else the inside toggle, else the
+  // first outside toggle, skipping any that are gone, disabled or hidden.
+  private _returnTarget(): HTMLButtonElement | null {
+    const names = (button: HTMLButtonElement) => button === this._toggle || this._controls(button);
+    return [this._opener, this._toggle, ...this._outsideToggles()].find((button) => usable(button) && names(button)) ?? null;
+  }
+
+  // The stylesheet sets --_nav-rail-modal to 1 wherever it draws the rail as
+  // an overlay (.modal, a compact window, a scaffold's medium window), with the
+  // author's own breakpoints. Not the computed position, which an author's own
+  // docked position: fixed rail would also match. Without the stylesheet,
+  // .modal and the default compact width stand in.
   private _isModal() {
-    return this.el.classList.contains('modal') || this._isCompact();
+    const flag = getComputedStyle(this.el).getPropertyValue('--_nav-rail-modal').trim();
+    return flag ? flag === '1' : this.el.matches('.modal') || window.matchMedia(COMPACT).matches;
   }
 
   private _sync() {
-    this.el.setAttribute('aria-expanded', this.isExpanded ? 'true' : 'false');
-    this._toggle?.setAttribute('aria-expanded', this.isExpanded ? 'true' : 'false');
+    const value = this.isExpanded ? 'true' : 'false';
+    for (const el of [this.el, this._toggle, ...this._outsideToggles()]) el?.setAttribute('aria-expanded', value);
   }
 
   /** The side panel of the enabled destination around `target`, if any. */
@@ -240,16 +289,22 @@ export class NavigationRail extends Component<NavigationRailOptions> {
 
   private _onClick = (e: MouseEvent) => {
     const target = e.target;
-    if (!(target instanceof Node) || this._pinPanel(e)) return;
-    if (this._toggle?.contains(target)) {
-      this.toggle();
-      e.preventDefault();
-      return;
-    }
-    if (this._isScrimClick(e) && this.isExpanded && this._isModal()) {
-      this.collapse();
-    }
+    if (!(target instanceof Node) || this._pinPanel(e) || this._insideToggleClick(e, target)) return;
+    if (this._isScrimClick(e) && this._isOverlay()) this.collapse();
   };
+
+  // Reports whether the click was on the rail's own menu toggle.
+  private _insideToggleClick(e: MouseEvent, target: Node): boolean {
+    if (!this._toggle?.contains(target)) return false;
+    this._toggleFrom(this._toggle);
+    e.preventDefault();
+    return true;
+  }
+
+  // An expanded rail drawn as an overlay, which Escape and the scrim close.
+  private _isOverlay() {
+    return this.isExpanded && this._isModal();
+  }
 
   // Escape closes an open side panel before the rail, and reports whether a
   // panel took the key. A hover-opened panel has no focus to return to, so
@@ -280,18 +335,29 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     return e.clientX < left || e.clientX > right;
   }
 
+  // A click on an outside toggle, or on its icon, that page code didn't
+  // already handle. Prevented, so a submit button in an app bar form doesn't submit.
+  private _onDocumentClick = (e: MouseEvent) => {
+    const button = e.defaultPrevented ? null : Utils.closestInPath<HTMLButtonElement>(e, 'button[aria-controls]:enabled');
+    if (!button || !this._controls(button)) return;
+    e.preventDefault();
+    this._toggleFrom(button);
+  };
+
   private _onKeyDown = (e: KeyboardEvent) => {
     if (e.key !== 'Escape' || e.defaultPrevented || this._escapePanel(e)) return;
     // Dismisses a hover peek without moving the pointer, once no panel took the key.
     this._unpeek();
-    if (this.isExpanded && this._isModal()) {
-      const root = this.el.getRootNode() as Document | ShadowRoot;
-      const restoreFocus = Utils.focusIsIn(this.el);
-      const focused = deepActiveElement(root);
-      this.collapse();
-      if (!this.isExpanded && restoreFocus && deepActiveElement(root) === focused) {
-        this._toggle?.focus();
-      }
-    }
+    if (this._isOverlay()) this._escapeRail();
   };
+
+  // Collapses the overlay. Focus that was inside the rail goes to the return
+  // target, unless a close callback moved it.
+  private _escapeRail() {
+    const root = this.el.getRootNode() as Document | ShadowRoot;
+    const before = Utils.focusIsIn(this.el) ? deepActiveElement(root) : null;
+    const target = before && this._returnTarget();
+    this.collapse();
+    if (!this.isExpanded && deepActiveElement(root) === before) target?.focus();
+  }
 }

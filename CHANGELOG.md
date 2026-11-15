@@ -53,6 +53,50 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   the new `--md-comp-nav-rail-compact-width` token. `nav-rail="hover"` expands a
   collapsed rail over the page while the mouse rests on it or keyboard focus is
   in it, without moving the page. A rail's own value replaces the root's, and `nav-rail=""` opts it out.
+- `.scaffold` places an app shell's regions so a page needs no shell grid of
+  its own. Its direct children land by component: a `<header>` app bar across
+  the top, then a navigation rail, `<main>` and a vertical toolbar from the
+  leading edge to the trailing one. `.scaffold-bar`, `.scaffold-rail`,
+  `.scaffold-pane` and `.scaffold-trailing` place custom content. The shell is
+  as tall as the window and only `<main>` scrolls, and a top app bar fills from
+  the pane's scroll where the browser supports `timeline-scope`. CSS only.
+  `.scaffold.tall-rail` runs the rail and the trailing region from the top of
+  the window to the bottom, with the app bar over the pane only.
+- A `<button>` outside a navigation rail, such as an app bar menu button,
+  toggles the rail when its `aria-controls` names the rail's `id`. The rail
+  keeps the button's `aria-expanded` in sync, also for a button added after it
+  started, and Escape on a modal rail returns focus to the button that opened
+  it.
+- In a `.scaffold`, an expanded navigation rail opens over the pane with a
+  scrim from 600px to 839px, and Escape or a scrim tap closes it. The rail's
+  column keeps its collapsed width there and for a `.modal` rail, so the pane
+  doesn't move as the rail opens and closes.
+- Below 600px a `.scaffold` scrolls the document instead of its pane, so a
+  phone's address bar can collapse. The bar region stays pinned, a
+  `nav.navigation-bar` child (or a `<footer>` holding only one) is pinned at
+  the bottom, and the rail is hidden until the app bar's menu button opens it
+  as an overlay. From 600px up the navigation bar hides while a rail is shown
+  and keeps its own bottom row when no rail is shown, meaning the rail has the
+  `hidden` attribute or is an empty `.scaffold-rail`. A trailing vertical
+  toolbar turns into a centered row that floats 16px above the navigation bar.
+- A `.status-bar` child of a `.scaffold` takes a full-width row along the
+  bottom, under the rail, pane and toolbar or a navigation bar, and hides
+  below 600px.
+- From 600px up a `.scaffold` paints `surface-container` and its pane floats
+  on it as a rounded `surface` with 16px gaps. The app bar rests on the shell
+  color and fills with `surface-container-high` on scroll.
+- From 1200px up an open standard `.side-sheet` that is a direct child of a
+  `.scaffold` becomes a 400px column between the pane and the trailing
+  toolbar, and the pane narrows while it is open. The column is a detached
+  sheet, rounded like the pane and inset by the same gaps.
+- With `viewport-fit=cover`, a `.scaffold` keeps its regions clear of the
+  `env(safe-area-inset-*)` edges: the shell pads its sides, its top and bottom
+  from 600px up, and the compact app bar and rail overlay pad their own,
+  without doubling the navigation bar's and status bar's insets.
+- Three layout templates show the scaffold's other regions: a trailing
+  toolbar of page actions, a status bar along the bottom, and a standard
+  side sheet that opens a project's details as a column from 1200px up. A
+  fourth, all regions, uses every region at once.
 
 ### Changed
 
@@ -65,6 +109,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The buttons guide's App behavior now sets `aria-busy="true"` on the busy
   button instead of `aria-disabled` with a pending flag, and holds the spinner
   for about 500ms once it shows.
+- A navigation rail's own menu button has to be its first child, as its styles
+  already required. A later `<button>` is a destination, not the toggle.
+  Migration: if a rail's menu button isn't its first child, move it there.
+- The compact, navigation rail, expanded rail, dashboard and list-detail
+  templates are `.scaffold` shells with no `<style>` block, in its default
+  layout with the app bar across the top. The rail templates open the rail
+  from a menu button in the app bar. Each
+  template adds a skip link and `viewport-fit=cover`, and wraps its content in
+  a `.container` inside `<main>`. Pages copied from an older template keep
+  working as they are.
 
 ## [0.18.1] - 2026-11-15
 

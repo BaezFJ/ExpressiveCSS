@@ -9,7 +9,7 @@ Component ID: `cascader`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `c4d794186bddccc543cfaab4327f0c95e0a451f21c954f3c9d8338abf57cd782`
+Contract SHA-256: `c95df9b05f81ea6cb549bcaaa3c6f0dcc68935a3052f6e3c17264e96c9aa2cc2`
 
 #### Selection and adaptation
 

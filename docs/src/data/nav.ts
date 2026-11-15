@@ -273,6 +273,14 @@ export const NAV: DocsGroup[] = [
           "Material 3 canonical layouts, from the HTML.",
       },
       {
+        id: "scaffold",
+        styles: ["components/scaffold"],
+        label: "Scaffold",
+        route: "/scaffold.html",
+        description:
+          "Place an app's bar, navigation rail, pane and trailing toolbar.",
+      },
+      {
         id: "footer",
         styles: ["components/page-footer"],
         label: "Footer",

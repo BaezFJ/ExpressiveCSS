@@ -1,0 +1,550 @@
+@use "../abstracts" as *;
+
+// Scaffold. Places an app shell's regions; the components inside keep their
+// own look and behavior.
+//
+// Anatomy is the HTML: a div.scaffold, a child of <body>, whose direct children
+// are the regions, placed by component. Not body.scaffold: the body's overflow
+// would move to the viewport and stop clipping the shell.
+//   bar       header (the top app bar), or .scaffold-bar
+//   rail      .navigation-rail, or .scaffold-rail
+//   pane      main, or .scaffold-pane. A .panes layout goes inside main.
+//   trailing  .toolbar.vertical or .toolbar-group.vertical, or .scaffold-trailing
+//   navbar    nav.navigation-bar, or a <footer> whose only child is one (from 600px only while no rail shows)
+//   status    .status-bar, full width along the bottom (600px and up)
+//   sheet     an open standard dialog.side-sheet, between the pane and the
+//             trailing region (1200px and up; an overlay below)
+//
+// The bar spans the top, and the rail, pane and trailing regions share the row
+// below it. .tall-rail runs the rail and trailing region from the top down to
+// the window's bottom, or to a status bar, and puts the bar over the pane
+// only. An empty region takes no space.
+//
+// From 600px up the shell is as tall as the window and only the pane scrolls.
+// `clip` rather than `hidden` keeps focus and find-in-page from scrolling the
+// shell itself, and a trailing toolbar taller than its region is clipped at
+// the bottom, so keep it to the actions that fit.
+//
+// Below 600px the document scrolls instead, so a phone's address bar can
+// collapse: the bar region and the navigation bar stay pinned, a trailing
+// vertical toolbar floats as a centered row above the navigation bar, and the
+// rail is hidden until it opens as the compact overlay.
+//
+// Limits: AppBar's sentinel isn't a region, so .medium/.large bars stay
+// expanded. BackToTop follows the window, so it shows only below 600px. A
+// rail's side panel spans the window height, over the bar. .panes follows the
+// window width unless the author makes main a size container.
+//
+// Nest descendants inside this block.
+
+$_bar: ":is(header, .scaffold-bar)";
+$_rail: ":is(.navigation-rail, .scaffold-rail)";
+$_pane: ":is(main, .scaffold-pane)";
+$_trailing: ":is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing)";
+$_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar:only-child))";
+// The navigation bar's height from its anatomy: 6px top padding, the 32px
+// indicator around the icon, a 4px gap, 10px of destination padding, its
+// label's 1rem line, and a bottom padding of 6px or the safe area, whichever
+// is larger: 74px at 16px text. A sibling can't read it in CSS. An icon-only
+// bar is shorter, so the gap above it comes out larger.
+$_navbar-size: "52px + 1rem + max(6px, env(safe-area-inset-bottom, 0px))";
+// The pane area that floats as a surface: not a panes container itself (it
+// keeps its own margins), and not holding separated or floating panes (they
+// are already cards).
+$_floating-pane: "#{$_pane}:not(:is(.panes, .pane-layout, .list-detail, .supporting-pane-layout), :has(> :is(.panes, .pane-layout):is(.separated, .floating)))";
+// An open standard side sheet that takes the sheet column.
+$_sheet-open: "dialog.side-sheet[open]:not(:modal, .start, [hidden])";
+// The top app bar's own anatomy, as _navbar.scss matches it.
+$_app-bar: ":is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)";
+// A shown navigation bar region, as a :has() argument list.
+$_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])";
+// A shown rail, as a :has() argument. Only the hidden attribute or an empty
+// .scaffold-rail counts as no rail: CSS can't see a helper's display: none.
+$_rail-shown: "> #{$_rail}:not([hidden], :empty)";
+
+// The expanded rail's own padding (20px 16px 16px) plus the insets it meets.
+// Hard-coded from _navigation-rail.scss; the rail's own overlay outside a
+// scaffold doesn't read the insets. It widens by its side inset, so the inset
+// doesn't come out of its content.
+@mixin _overlay-rail-insets {
+  padding-top: calc(20px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+
+  &:dir(ltr) {
+    width: calc(clamp(220px, var(--md-comp-nav-rail-expanded-width, 280px), 360px) + env(safe-area-inset-left, 0px));
+    padding-left: calc(16px + env(safe-area-inset-left, 0px));
+  }
+
+  &:dir(rtl) {
+    width: calc(clamp(220px, var(--md-comp-nav-rail-expanded-width, 280px), 360px) + env(safe-area-inset-right, 0px));
+    padding-right: calc(16px + env(safe-area-inset-right, 0px));
+  }
+}
+
+.scaffold {
+  display: grid;
+  grid-template-areas:
+    "bar bar bar"
+    "rail pane trailing"
+    "navbar navbar navbar"
+    "status status status";
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  block-size: 100dvh;
+  // Safe areas (viewport-fit=cover): the side insets at every width, so every
+  // region clears a landscape notch. Physical, as the insets are.
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
+  overflow: clip;
+
+  // From 600px up the shell also clears the top and bottom insets, for every
+  // region that meets them. A shown status bar pads the bottom itself.
+  @include bp-up("medium") {
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+
+    &:has(> .status-bar:not([hidden])) {
+      padding-bottom: 0;
+    }
+
+    // The app bar reaches into the top inset strip, and in the default layout
+    // the side strips too, so its scrolled fill has no seam at the edges.
+    > header:has(> #{$_app-bar}) {
+      margin-top: calc(-1 * env(safe-area-inset-top, 0px));
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    // width: auto, not the bar's 100%, so the margins stretch it.
+    &:not(.tall-rail) > header:has(> #{$_app-bar}) {
+      width: auto;
+      margin-right: calc(-1 * env(safe-area-inset-right, 0px));
+      margin-left: calc(-1 * env(safe-area-inset-left, 0px));
+      padding-right: env(safe-area-inset-right, 0px);
+      padding-left: env(safe-area-inset-left, 0px);
+    }
+
+    // A tall-rail bar meets a side edge only where that region is empty: the
+    // rail's side is the leading one, the trailing region's the other. The
+    // insets are physical, so each side follows the writing direction.
+    &.tall-rail:not(:has(> #{$_rail}:not([hidden]))) > header:has(> #{$_app-bar}) {
+      width: auto;
+
+      &:dir(ltr) {
+        margin-left: calc(-1 * env(safe-area-inset-left, 0px));
+        padding-left: env(safe-area-inset-left, 0px);
+      }
+
+      &:dir(rtl) {
+        margin-right: calc(-1 * env(safe-area-inset-right, 0px));
+        padding-right: env(safe-area-inset-right, 0px);
+      }
+    }
+
+    &.tall-rail:not(:has(> #{$_trailing}:not([hidden]))) > header:has(> #{$_app-bar}) {
+      width: auto;
+
+      &:dir(ltr) {
+        margin-right: calc(-1 * env(safe-area-inset-right, 0px));
+        padding-right: env(safe-area-inset-right, 0px);
+      }
+
+      &:dir(rtl) {
+        margin-left: calc(-1 * env(safe-area-inset-left, 0px));
+        padding-left: env(safe-area-inset-left, 0px);
+      }
+    }
+  }
+
+  // An expanded rail overlay is fixed to the window's edges, so it clears the
+  // top and bottom insets and the one on its docked side.
+  @include bp-down("expanded") {
+    > .navigation-rail.expanded {
+      @include _overlay-rail-insets;
+    }
+  }
+
+  > .navigation-rail.expanded.modal {
+    @include _overlay-rail-insets;
+  }
+
+  // From 600px up, wherever the rail can open as an overlay (medium windows,
+  // or a .modal rail), its column keeps the collapsed width, open or closed, so the pane
+  // neither jumps when the rail leaves the grid nor follows it as it closes.
+  // Set --md-comp-nav-rail-collapsed-width on the scaffold, not the rail. A
+  // [hidden] rail is an empty region and takes no space. A nav-rail="compact"
+  // rail, its own or inherited, holds the compact width instead.
+  &:has(> .navigation-rail[nav-rail~="compact"]),
+  &[nav-rail~="compact"]:has(> .navigation-rail:not([nav-rail])),
+  &:is([nav-rail~="compact"] *):has(> .navigation-rail:not([nav-rail])),
+  :host([nav-rail~="compact"]) &:has(> .navigation-rail:not([nav-rail])) {
+    --_scaffold-rail-held: var(--md-comp-nav-rail-compact-width, 72px);
+  }
+
+  @include bp-up("medium") {
+    &:has(> .navigation-rail.modal:not([hidden])) {
+      grid-template-columns: var(--_scaffold-rail-held, var(--md-comp-nav-rail-collapsed-width, 96px)) minmax(0, 1fr) auto;
+    }
+  }
+
+  @include bp-between("medium", "expanded") {
+    &:has(> .navigation-rail:not([hidden])) {
+      grid-template-columns: var(--_scaffold-rail-held, var(--md-comp-nav-rail-collapsed-width, 96px)) minmax(0, 1fr) auto;
+    }
+
+    // Collapsing drops the rail back into its held column at the expanded
+    // width; animating it down would draw it under the pane, so it snaps.
+    > .navigation-rail:not(.expanded) {
+      transition: none;
+    }
+  }
+
+  > .navigation-rail.modal:not(.expanded) {
+    transition: none;
+  }
+
+  // The rail and trailing region run from the top to the status row and the
+  // bar sits over the pane only, as in the rail layout template.
+  &.tall-rail {
+    grid-template-areas:
+      "rail bar trailing"
+      "rail pane trailing"
+      "navbar navbar navbar"
+      "status status status";
+  }
+
+  > #{$_bar} {
+    grid-area: bar;
+  }
+
+  > #{$_rail} {
+    grid-area: rail;
+    min-block-size: 0;
+  }
+
+  // A scroll container's automatic minimum size is already 0.
+  > #{$_pane} {
+    grid-area: pane;
+    overflow: auto;
+    scroll-timeline: --scaffold-pane block;
+  }
+
+  > #{$_trailing} {
+    grid-area: trailing;
+  }
+
+  // The status bar's own sticky placement stays; the scaffold doesn't scroll
+  // from 600px up, so the row alone puts it at the window's bottom edge.
+  > .status-bar {
+    grid-area: status;
+  }
+
+  // Sticky like .navigation-bar.fixed, so it stays at the window's bottom
+  // edge while the document scrolls.
+  > #{$_navbar} {
+    grid-area: navbar;
+    position: sticky;
+    inset-block-end: 0;
+    z-index: var(--expressive-z-app-bar);
+  }
+
+  // From 600px up a shown rail takes over from the navigation bar. Without
+  // one the bar stays, in its own row, and pads the bottom inset itself, or
+  // leaves it to a status bar below it.
+  @include bp-up("medium") {
+    &:has(#{$_rail-shown}) > #{$_navbar} {
+      display: none;
+    }
+
+    &:has(#{$_navbar-shown}):not(:has(#{$_rail-shown})) {
+      padding-bottom: 0;
+    }
+
+    &:has(> .status-bar:not([hidden])) > .navigation-bar,
+    &:has(> .status-bar:not([hidden])) > footer > .navigation-bar:only-child {
+      padding-bottom: 6px;
+    }
+  }
+
+  // Custom rail and trailing content scrolls like the navigation rail.
+  > :is(.scaffold-rail, .scaffold-trailing) {
+    overflow-y: auto;
+  }
+
+  // safe: a toolbar taller than the region starts at its top rather than
+  // pushing its first action out. No overflow scroll, which would clip the
+  // .tooltip.left bubbles a trailing toolbar uses. A .fixed toolbar already
+  // insets itself, so a margin would double its offset. The trailing rail
+  // hugs its toolbar with a small margin, as Material's scaffold draws it.
+  > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed) {
+    align-self: safe center;
+    margin-inline: 4px;
+  }
+
+  // From 600px up the pane floats as a rounded surface on a surface-container
+  // shell, and a top app bar blends with the shell. Its scrolled color steps
+  // up one tone so the fill still shows. 16px gaps, except beside a floating
+  // toolbar, whose own 4px margin is the gap, and beside a shown rail.
+  // Screen only: the rail doesn't print, so the gaps would print lopsided.
+  @media screen {
+    @include bp-up("medium") {
+      background-color: var(--md-sys-color-surface-container);
+
+      > header:has(> #{$_app-bar}) {
+        --md-comp-top-app-bar-container-color: var(--md-sys-color-surface-container);
+        --md-comp-top-app-bar-scrolled-container-color: var(--md-sys-color-surface-container-high);
+      }
+
+      // The gaps are set on the shell by what it shows, so the long pane
+      // selector is written once.
+      > #{$_floating-pane} {
+        margin-block: var(--_scaffold-pane-gap-top, 0) 16px;
+        margin-inline: var(--_scaffold-pane-gap-start, 0) var(--_scaffold-pane-gap-end, 16px);
+        border-radius: var(--md-sys-shape-corner-large);
+        background-color: var(--md-sys-color-surface);
+
+        @media (forced-colors: active) {
+          border: 1px solid CanvasText;
+        }
+      }
+
+      // Without a shown bar the rounded top would touch the window's edge.
+      &:not(:has(> #{$_bar}:not([hidden]))) {
+        --_scaffold-pane-gap-top: 16px;
+      }
+
+      // A .scaffold-rail with nothing in it, not even whitespace, takes no
+      // width, so it counts as no rail. Hide any other unused region.
+      &:not(:has(#{$_rail-shown})) {
+        --_scaffold-pane-gap-start: 16px;
+      }
+
+      &:has(> :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed, [hidden])) {
+        --_scaffold-pane-gap-end: 0;
+        --_scaffold-sheet-gap-end: 0;
+      }
+    }
+  }
+
+  // From 1200px up an open standard side sheet is a third pane, in its own
+  // column between the
+  // pane and the trailing region, so the pane narrows instead of hiding under
+  // it. The column exists only while a sheet is open, so a stray child never
+  // fills an empty sheet cell. The sheet drops its fixed overlay, bleed,
+  // divider and entry slide (which would cross the toolbar), scrolls when its
+  // content is taller than the row, and snaps back from a drag on the effects
+  // spring, which doesn't overshoot past its column. Below 1200px, and modal
+  // or leading sheets, keep the overlay.
+  @include bp-up("large") {
+    &:has(> #{$_sheet-open}) {
+      grid-template-areas:
+        "bar bar bar bar"
+        "rail pane sheet trailing"
+        "navbar navbar navbar navbar"
+        "status status status status";
+      grid-template-columns: auto minmax(0, 1fr) auto auto;
+    }
+
+    &.tall-rail:has(> #{$_sheet-open}) {
+      grid-template-areas:
+        "rail bar sheet trailing"
+        "rail pane sheet trailing"
+        "navbar navbar navbar navbar"
+        "status status status status";
+    }
+
+    // A .modal rail keeps its held column with the sheet open too.
+    &:has(> .navigation-rail.modal:not([hidden])):has(> #{$_sheet-open}) {
+      grid-template-columns: var(--_scaffold-rail-held, var(--md-comp-nav-rail-collapsed-width, 96px)) minmax(0, 1fr) auto auto;
+    }
+
+    > #{$_sheet-open} {
+      --md-comp-side-sheet-motion: var(--md-sys-motion-spring-default-effects);
+      --md-comp-side-sheet-motion-duration: var(--md-sys-motion-spring-default-effects-duration);
+
+      grid-area: sheet;
+      position: static;
+      width: var(--md-comp-side-sheet-container-width, 400px);
+      padding-inline-end: 0;
+      overflow-y: auto;
+      border-inline-start: 0;
+    }
+
+    @starting-style {
+      > #{$_sheet-open} {
+        translate: var(--md-comp-side-sheet-shift, 0px) 0;
+      }
+    }
+
+    // The floating pane keeps its 16px gap before the sheet, even beside a
+    // toolbar.
+    &:has(> #{$_sheet-open}) {
+      --_scaffold-pane-gap-end: 16px;
+    }
+
+    // Beside the floating pane the sheet is Material's detached side sheet:
+    // corner-large on every corner, and the pane's gaps around it. A
+    // toolbar's own margin is the gap after it. Screen only, like the pane.
+    @media screen {
+      > #{$_sheet-open} {
+        margin-block: var(--_scaffold-pane-gap-top, 0) 16px;
+        margin-inline-end: var(--_scaffold-sheet-gap-end, 16px);
+        border-radius: var(--md-sys-shape-corner-large);
+      }
+
+      // Beside a tall rail's bar it reaches the window's top edge otherwise.
+      &.tall-rail > #{$_sheet-open} {
+        margin-block-start: 16px;
+      }
+    }
+  }
+
+  // The pane names a scroll timeline and the scope lifts it to the shell. The
+  // top app bar reads its timeline from --_app-bar-timeline, so the scaffold's
+  // own bar fills from the pane's scroll and keeps its animation and range.
+  // Below 600px main doesn't scroll, so the bar keeps its scroll(root).
+  @supports (timeline-scope: --a) {
+    timeline-scope: --scaffold-pane;
+
+    @include bp-up("medium") {
+      > #{$_bar} {
+        --_app-bar-timeline: --scaffold-pane;
+      }
+    }
+  }
+
+  // One column; the rail leaves the grid, so a tall rail changes nothing.
+  @include bp-down("medium") {
+    &,
+    &.tall-rail {
+      grid-template-areas:
+        "bar"
+        "pane"
+        "trailing"
+        "navbar";
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto 1fr auto auto;
+      block-size: auto;
+      min-block-size: 100dvh;
+      overflow: visible;
+    }
+
+    // A header app bar is already sticky; a .scaffold-bar pins the same way.
+    > #{$_bar} {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: var(--expressive-z-app-bar);
+    }
+
+    // The document scrolls here, so the app bar pads its own top inset inside
+    // its background; padding above it would scroll away. A custom
+    // .scaffold-bar keeps its own padding and pads the inset itself.
+    > header:has(> #{$_app-bar}) {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    > #{$_pane} {
+      overflow: visible;
+    }
+
+    // Without a shown bar the shell pads the top inset, and without a shown
+    // navigation bar the bottom one.
+    &:not(:has(> #{$_bar}:not([hidden]))) {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    &:not(:has(#{$_navbar-shown})) {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    // The trailing toolbar floats as a centered row 16px above the navigation
+    // bar (or the window's bottom edge). Its row stays in flow, and its block
+    // margins put its resting place where it sticks, so the end of the page
+    // scrolls clear of it. The navigation bar's height is its anatomy, as in
+    // the scroll padding below.
+    > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed),
+    > .toolbar-group.vertical:not(.fixed) > .toolbar.vertical {
+      flex-direction: row;
+
+      > .max {
+        width: auto;
+      }
+    }
+
+    > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed) {
+      position: sticky;
+      inset-block-end: calc(16px + env(safe-area-inset-bottom, 0px));
+      z-index: var(--expressive-z-toolbar);
+      justify-self: center;
+      // The block margins put its resting place where it sticks (the shell's
+      // bottom padding supplies the safe area without a navigation bar), so
+      // the shift never pulls the toolbar over the pane's last content.
+      margin: 16px 0;
+
+      // A side tooltip would cover the next action in a row; show it above,
+      // as a horizontal toolbar's tooltips do. Under rtl a trailing toolbar
+      // sits on the left and uses right tooltips.
+      .tooltip:is(.left, .right) {
+        inset: 0 auto auto 50%;
+        transform: translate(-50%, calc(-100% - var(--md-comp-tooltip-anchor-gap))) scale(0.96);
+      }
+
+      :is(:hover, :focus-visible, :focus-within) > .tooltip:is(.left, .right),
+      .tooltip:is(.left, .right):hover {
+        transform: translate(-50%, calc(-100% - var(--md-comp-tooltip-anchor-gap))) scale(1);
+      }
+    }
+
+    // :has() can't nest, so the footer form of the navigation bar is spelled out.
+    // The navigation bar already pads the safe area.
+    &:has(#{$_navbar-shown}) > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed) {
+      inset-block-end: calc(#{$_navbar-size} + 16px);
+      margin-block-end: 16px;
+    }
+
+    // The compact layout has no rail region. The status bar hides here too,
+    // because its 24px items are too small for touch and it would compete
+    // with the navigation bar for the bottom edge.
+    > .navigation-rail:not(.expanded),
+    > .scaffold-rail,
+    > .status-bar {
+      display: none;
+    }
+  }
+
+  @media print {
+    display: block;
+    block-size: auto;
+    overflow: visible;
+
+    > #{$_pane} {
+      overflow: visible;
+    }
+  }
+}
+
+// Below 600px the document scrolls under the pinned bar and navigation bar, so
+// focus and anchors scroll clear of both. Top: the small app bar's 4rem.
+// Bottom: the navigation bar's height, which grows with the text. A taller
+// bar needs a larger padding from the page.
+@include bp-down("medium") {
+  // The bottom padding adds up what is shown: the navigation bar (or just
+  // the safe area without one) and a floating toolbar's 64px plus its gap.
+  // Plain declarations, not custom properties on :root, which a shadow-only
+  // load would leave undefined.
+  :root:has(> body > .scaffold) {
+    scroll-padding-block: calc(#{rem(64px)} + env(safe-area-inset-top, 0px)) env(safe-area-inset-bottom, 0px);
+  }
+
+  // :has() can't nest, so the shown-bar list is written out under body here.
+  :root:has(> body > .scaffold > .navigation-bar:not([hidden]), > body > .scaffold > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])) {
+    scroll-padding-block-end: calc(#{$_navbar-size});
+  }
+
+  :root:has(> body > .scaffold > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed, [hidden])) {
+    scroll-padding-block-end: calc(env(safe-area-inset-bottom, 0px) + 80px);
+  }
+
+  :root:has(> body > .scaffold > .navigation-bar:not([hidden]), > body > .scaffold > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])):has(> body > .scaffold > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed, [hidden])) {
+    scroll-padding-block-end: calc(#{$_navbar-size} + 80px);
+  }
+}

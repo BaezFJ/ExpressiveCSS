@@ -9,11 +9,29 @@ const sources = import.meta.glob<string>("../../public/layout-*.html", {
 });
 const layouts = [
   { id: "compact", title: "Compact app", description: "One content column with a bottom navigation bar. Use it for a small app or a focused mobile screen." },
-  { id: "rail", title: "Navigation rail", description: "A collapsed rail beside your content from 600px. Compact windows use the bottom navigation bar." },
+  { id: "rail", title: "Navigation rail", description: "A collapsed rail beside your content from 600px, expanded from the app bar's menu button. Compact windows use the bottom navigation bar." },
   { id: "expanded", title: "Expanded rail", description: "An expanded rail for destinations with longer labels. Below 840px, the bottom navigation bar takes over." },
   { id: "list-detail", title: "List-detail", description: "A selectable list beside its detail from 840px. Narrow windows show one pane, with a Back action and keyboard focus recovery." },
   { id: "dashboard", title: "Dashboard", description: "A navigation rail with a responsive card grid and activity list. Cards stack as the content area narrows." },
+  { id: "toolbar", title: "Trailing toolbar", description: "A vertical toolbar at the trailing edge holds actions for the page's content. Below 600px it floats as a row above the navigation bar." },
+  { id: "status", title: "Status bar", description: "A status bar along the bottom shows the app's state from 600px up. Compact windows show the navigation bar instead." },
+  { id: "sheet", title: "Side sheet", description: "Selecting a project opens its details in a standard side sheet, a column beside the content from 1200px and an overlay below." },
+  { id: "workspace", title: "All regions", description: "Every region at once: app bar, rail, pane, side sheet, trailing toolbar and status bar, with the navigation bar on compact windows. Resize it to see how each region adapts." },
 ];
+// Each diagram is a list of [class, x, y, width, height, radius] rectangles.
+type Rect = [string, number, number, number, number, number];
+const rail: Rect = ["diagram-navigation", 16, 16, 28, 128, 10];
+const diagrams: Record<string, Rect[]> = {
+  compact: [["diagram-content", 72, 16, 96, 96, 12], ["diagram-navigation", 72, 124, 96, 20, 10]],
+  rail: [rail, ["diagram-content", 56, 16, 168, 128, 12]],
+  expanded: [["diagram-navigation", 16, 16, 64, 128, 10], ["diagram-content", 92, 16, 132, 128, 12]],
+  "list-detail": [["diagram-navigation", 16, 16, 80, 128, 12], ["diagram-content", 108, 16, 116, 128, 12]],
+  dashboard: [rail, ...[56, 146].flatMap((x) => [16, 86].map((y): Rect => ["diagram-content", x, y, 78, 58, 12]))],
+  toolbar: [rail, ["diagram-content", 56, 16, 136, 128, 12], ["diagram-region", 204, 44, 20, 72, 10]],
+  status: [["diagram-navigation", 16, 16, 28, 108, 10], ["diagram-content", 56, 16, 168, 108, 12], ["diagram-region", 16, 132, 208, 12, 6]],
+  sheet: [rail, ["diagram-content", 56, 16, 92, 128, 12], ["diagram-region", 160, 16, 64, 128, 12]],
+  workspace: [["diagram-navigation", 16, 16, 208, 16, 8], ["diagram-navigation", 16, 40, 28, 84, 10], ["diagram-content", 56, 40, 84, 84, 12], ["diagram-region", 148, 40, 48, 84, 12], ["diagram-region", 204, 56, 20, 52, 10], ["diagram-region", 16, 132, 208, 12, 6]],
+};
 const S = defineSections([
   { id: "choose", label: "Choose a layout" },
   { id: "setup", label: "Copy and run" },
@@ -23,7 +41,8 @@ const S = defineSections([
 <DocsLayout page="layouts" sections={S} wide>
   <Section {...S.choose}>
     <p>Choose a structure, preview it, and copy the complete HTML into your project.
-      These templates use ExpressiveCSS navigation, panes, and grid classes.</p>
+      Each template is a <a href="scaffold.html">scaffold</a> app shell built
+      from ExpressiveCSS navigation, panes, and grid classes, with no CSS of its own.</p>
     <div class="layout-grid">
       {layouts.map((layout) => (
         <div>
@@ -31,18 +50,7 @@ const S = defineSections([
             <a class="layout-choice" href={`#${layout.id}`}>
               <svg viewBox="0 0 240 160" aria-hidden="true" focusable="false">
                 <rect class="diagram-surface" x="4" y="4" width="232" height="152" rx="16" />
-                {layout.id === "compact" ? <>
-                  <rect class="diagram-content" x="72" y="16" width="96" height="96" rx="12" />
-                  <rect class="diagram-navigation" x="72" y="124" width="96" height="20" rx="10" />
-                </> : <>
-                  {layout.id !== "list-detail" && <rect class="diagram-navigation" x="16" y="16" width={layout.id === "expanded" ? 64 : 28} height="128" rx="10" />}
-                  {layout.id === "list-detail" ? <>
-                    <rect class="diagram-navigation" x="16" y="16" width="80" height="128" rx="12" />
-                    <rect class="diagram-content" x="108" y="16" width="116" height="128" rx="12" />
-                  </> : layout.id === "dashboard" ? <>
-                    {[56, 146].flatMap((x) => [16, 86].map((y) => <rect class="diagram-content" x={x} y={y} width="78" height="58" rx="12" />))}
-                  </> : <rect class="diagram-content" x={layout.id === "expanded" ? 92 : 56} y="16" width={layout.id === "expanded" ? 132 : 168} height="128" rx="12" />}
-                </>}
+                {diagrams[layout.id].map(([cls, x, y, width, height, rx]) => <rect class={cls} x={x} y={y} width={width} height={height} rx={rx} />)}
               </svg>
               <h4>{layout.title}</h4>
             </a>
@@ -97,6 +105,7 @@ cp -R dist my-site/dist`} />
   .diagram-surface { fill: var(--md-sys-color-surface-container); }
   .diagram-content { fill: var(--md-sys-color-primary-container); }
   .diagram-navigation { fill: var(--md-sys-color-secondary-container); }
+  .diagram-region { fill: var(--md-sys-color-tertiary-container); }
   .layout-preview { display: block; width: 100%; height: 460px; border: 1px solid var(--md-sys-color-outline-variant); border-radius: 16px; }
   .compact-preview { max-width: 375px; height: 600px; margin-inline: auto; }
   summary { cursor: pointer; padding-block: 12px; }

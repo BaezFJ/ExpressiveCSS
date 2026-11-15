@@ -4857,9 +4857,9 @@ Add `fixed` to stick the bar to the bottom of the viewport. Padding includes `sa
 
 Switch between UI views on mid-sized devices. A `nav.navigation-rail` holds 3–7 destinations plus an optional FAB. Put it in the same place on every screen.
 
-Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp, icon and label on one row, and an extended FAB. The menu button toggles that class (`AutoInit()` starts it). On compact windows an expanded rail is modal — a scrim, and Escape or a scrim tap collapses it. Add `modal` to keep that overlay at every breakpoint. Expanding and collapsing run on the default spatial spring (`--md-comp-nav-rail-motion` and `--md-comp-nav-rail-motion-duration`), so `motion="expressive"` lets the rail overshoot its width slightly before it settles.
+Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp, icon and label on one row, and an extended FAB. The menu button toggles that class (`AutoInit()` starts it). On compact windows an expanded rail is modal — a scrim, and Escape or a scrim tap collapses it. A rail that is a direct child of a `scaffold` is modal from 600px to 839px as well. Add `modal` to keep that overlay at every breakpoint. Expanding and collapsing run on the default spatial spring (`--md-comp-nav-rail-motion` and `--md-comp-nav-rail-motion-duration`), so `motion="expressive"` lets the rail overshoot its width slightly before it settles.
 
-Escape closes an open nested menu first. A second Escape collapses the modal rail and returns focus from inside it to the rail toggle, unless a close callback moves focus elsewhere.
+Escape closes an open nested menu first. A second Escape collapses the modal rail and returns focus from inside it to the toggle that opened it, unless a close callback moves focus elsewhere.
 
 A destination can open a side panel of more links. Make it a `<button popovertarget>` and put its `.navigation-rail-panel` popover right after it. The panel docks beside the rail at full height. A click toggles it; with a mouse, hovering the destination opens it and leaving the rail and panel closes it. A `<details>` in the panel is a dropdown group. Escape closes the panel before the rail and returns focus to its destination. A panel's destination is never the menu toggle, so a rail without one can start with it.
 
@@ -4908,6 +4908,20 @@ The `nav-rail` attribute takes two switches. `compact` makes the collapsed rail 
     <a href="/time-pickers">Time pickers</a>
   </details>
 </div>
+```
+
+A `<button>` outside the rail, such as an app bar menu button, toggles it when its `aria-controls` names the rail's `id`. The rail keeps that button's `aria-expanded` in sync, finds a button added after it started, and returns focus to it on Escape when it opened the rail. A rail can also keep its own menu button, which has to be its first child; both stay in sync. A button controls one rail and must share the rail's document or shadow root.
+
+```html
+<header>
+  <div class="bar">
+    <button type="button" aria-label="Main menu" aria-controls="main-rail" aria-expanded="false">
+      <span class="material-symbols" aria-hidden="true">menu</span>
+    </button>
+    <h1>Mail</h1>
+  </div>
+</header>
+<nav class="navigation-rail" id="main-rail" aria-label="Main">…</nav>
 ```
 
 Offset the rest of the page:
@@ -5136,6 +5150,99 @@ Set these on the container to resize a layout.
 | `--md-comp-pane-list-width` | `360px` | List pane width at 840px and up. |
 | `--md-comp-pane-supporting-width` | `360px` | Supporting pane width at 840px and up. |
 | `--md-comp-pane-primary-min-width` | `360px` | Minimum width for the primary pane. |
+
+---
+
+## Scaffold
+
+Places an app shell's bar, navigation rail, pane and trailing toolbar, so a page needs no shell grid of its own.
+
+Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself: the browser moves the body's overflow to the viewport, and the shell stops clipping. Its direct children are placed by component: a `<header>` top app bar spans the top, and a `.navigation-rail`, `<main>` and a `.toolbar.vertical` (or `.toolbar-group.vertical`) share the row below it, from the leading edge to the trailing one. From 600px up the scaffold is as tall as the window (`100dvh`) and only `<main>` scrolls; a rail with more destinations than fit scrolls them itself. The components keep their own look and behavior. The scaffold itself is CSS only; there is no scaffold JavaScript component. The app bar's menu button toggles the rail when its `aria-controls` names the rail's `id`, once `AutoInit()` has started the rail.
+
+```html
+<div class="scaffold">
+  <header>
+    <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+    <div class="bar">
+      <button type="button" aria-label="Main menu" aria-controls="rail" aria-expanded="false">
+        <span class="material-symbols" aria-hidden="true">menu</span>
+      </button>
+      <h1>Mail</h1>
+    </div>
+  </header>
+  <nav class="navigation-rail" id="rail" aria-label="Primary">
+    <a href="/inbox" aria-current="page"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a>
+    <a href="/starred"><span class="material-symbols" aria-hidden="true">star</span>Starred</a>
+  </nav>
+  <main id="main" tabindex="-1">…</main>
+  <div class="toolbar vertical">
+    <button type="button" aria-label="Calendar"><span class="material-symbols" aria-hidden="true">calendar_month</span></button>
+  </div>
+</div>
+```
+
+From 600px up the scaffold paints `surface-container` and the pane floats on it as a rounded `surface` with 16px gaps (below, after, before it when no rail is shown, and above it when no bar is shown; beside a floating toolbar its 4px margin is the gap). Pad the pane's content, since the rounded corners clip what runs to the edge. A pane holding separated or floating panes keeps no surface, and a `main` that is itself a panes container keeps the panes layout's margins, so put panes inside `<main>`. Below 600px the pane stays flat.
+
+Each region takes one direct child. For custom content use the region classes `scaffold-bar`, `scaffold-rail`, `scaffold-pane` and `scaffold-trailing`. A region with nothing in it takes no space. A second visible child in one region overlaps the first, so give the ones not shown `hidden`. Other direct children are not placed and fall into a free grid cell, so keep a skip link inside the `<header>`.
+
+```html
+<div class="scaffold">
+  <div class="scaffold-bar">…</div>
+  <div class="scaffold-rail">…</div>
+  <div class="scaffold-pane">…</div>
+  <div class="scaffold-trailing">…</div>
+</div>
+```
+
+From 1200px up an open standard `side-sheet` that is a direct child takes a 400px column between the pane and the trailing toolbar, so the pane narrows while it is open; it is then a detached sheet, rounded on every corner (`--md-sys-shape-corner-large`) with the pane's 16px gaps, or the toolbar's margin beside a toolbar. Place it between `<main>` and the toolbar so Tab order matches. Below 1200px, and modal or `.start` sheets, keep the overlay; a sheet nested deeper stays an overlay.
+
+A direct-child `status-bar` takes a full-width row along the bottom, under the rail, pane and toolbar (also with `tall-rail`), and hides below 600px; its `data-priority="low"` hiding therefore never shows in a scaffold.
+
+The rail runs from the bar to the bottom of the window, or to the top of a status bar. At 840px and wider, expanding it widens its column and narrows the pane. From 600px to 839px an expanded rail opens over the pane with a scrim and the pane keeps its width, as a `.modal` rail does at every width; the open rail covers the app bar's menu button, so it closes from the scrim, Escape or its own menu button, and Tab can still reach the pane under it. Set `--md-comp-nav-rail-collapsed-width` on the scaffold, not the rail, since the rail's column reads it there. Hide a rail with the `hidden` attribute; one hidden by page CSS still keeps its column on medium windows. A vertical toolbar is centered in the trailing region, `--md-comp-toolbar-external-space` (24px) from the pane and the window edge. Under `dir="rtl"` the rail is on the right and the toolbar on the left.
+
+Add `tall-rail` to run the rail from the top of the window to the bottom (or to a status bar), with the app bar over the pane only and the trailing toolbar centered in that height.
+
+```html
+<div class="scaffold tall-rail">
+  <header>…</header>
+  <nav class="navigation-rail" aria-label="Primary">…</nav>
+  <main id="main" tabindex="-1">…</main>
+  <div class="toolbar vertical">…</div>
+</div>
+```
+
+Put a `panes` layout inside `<main>`, or put the panes classes on `<main>` itself; the panes fill the pane region and each scrolls on its own. Panes follow the window width, not the narrower pane region. Setting `container-type: inline-size` on `<main>` makes them follow the region, but also makes `<main>` the containing block for fixed descendants such as a FAB.
+
+```html
+<main id="main" class="panes list-detail" tabindex="-1">
+  <div class="list-pane">…</div>
+  <div class="detail-pane">…</div>
+</main>
+```
+
+Below 600px the document scrolls instead, so a phone's address bar can collapse: the bar region (the app bar or `scaffold-bar`) stays pinned at the top, a `nav.navigation-bar` that is a direct child of the scaffold, or the only child of its direct-child `<footer>`, stays pinned at the bottom (from 600px up it hides while a rail is shown, and keeps its own bottom row when no rail is shown; a rail counts as shown unless it has the `hidden` attribute or is an empty `scaffold-rail`, so hide it with `hidden`, not a `hide-on-*` helper), and the rail and any `scaffold-rail` are hidden until the app bar's `aria-controls` menu button opens the rail as an overlay. The app bar needs that button. Don't put `hide-on-compact-only` on the rail, which would keep it from opening. When the scaffold is a direct child of `<body>`, the document gets `scroll-padding-block` below 600px so keyboard focus and anchors land clear of both pinned bars; taller bars need a larger padding on `:root`. A vertical toolbar in the trailing region becomes a centered row below 600px, floating 16px above the navigation bar (or the bottom edge), with its actions in the same order and left or right tooltips shown above them; its row stays at the end of the page so the last content scrolls clear, and the scroll padding grows to match. Landscape phones wider than 600px get the medium layout. A panes layout in `<main>` grows with its content below 600px.
+
+```html
+<div class="scaffold">
+  <header>…</header>
+  <nav class="navigation-rail" id="rail" aria-label="Primary">…</nav>
+  <main id="main" tabindex="-1">…</main>
+  <footer>
+    <nav class="navigation-bar" aria-label="Primary">
+      <a href="/inbox" aria-current="page"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a>
+      <a href="/starred"><span class="material-symbols" aria-hidden="true">star</span>Starred</a>
+    </nav>
+  </footer>
+</div>
+```
+
+Give `<main>` `tabindex="-1"` and a skip link so keyboard users can move into the pane and scroll it. From 600px up a top app bar rests on the shell's `surface-container` and fills with `surface-container-high` once `<main>` has scrolled, in browsers that support `timeline-scope`; elsewhere, and when a panes layout scrolls inside `<main>`, it stays at rest. Below 600px it fills from the document's scroll. Printing drops the fixed height so the whole pane prints.
+
+Add `viewport-fit=cover` to the viewport meta tag on phones with a notch: the scaffold then pads its sides by the safe-area insets at every width and its top and bottom from 600px up (not the bottom when a status bar, or a navigation bar shown without a rail, pads it); below 600px the app bar pads its own top (a custom `scaffold-bar`, or a `<header>` that isn't an app bar, pads its own with `env(safe-area-inset-top)`) and the navigation bar and floating toolbar keep their bottom insets, and an open rail overlay clears the notch and home indicator. Overlays the scaffold doesn't place keep their own positioning.
+
+The scaffold adds no landmark: the `<header>` is the banner, the rail a navigation landmark and `<main>` the main landmark. Never write it as a landmark element or give it a landmark role, and never nest one scaffold in another. `hidden="until-found"` still takes part in layout, so it counts as a visible child.
+
+Limits: `.medium` and `.large` app bars stay expanded in a scaffold. `back-to-top` follows the window, so it appears only below 600px, where it overlaps the navigation bar. On compact windows the rail opens and closes without animating, and a scrim tap leaves focus on the page. A rail's side panel spans the window height and opens over the bar. A trailing toolbar taller than its region is clipped at the bottom, so keep it to the actions that fit. Custom `scaffold-rail` and `scaffold-trailing` content scrolls when it doesn't fit.
 
 ---
 
@@ -7211,6 +7318,8 @@ document.getElementById('sheet').showModal(); // modal
 
 The sheet slides in, and snaps back after a short drag, on the default spatial spring: `--md-comp-side-sheet-motion` and `--md-comp-side-sheet-motion-duration` read `--md-sys-motion-spring-default-spatial` and its `-duration` token, so `motion="expressive"` gives it a slight bounce. The sheet runs on 24px past its docked edge, so the bounce never uncovers the page there. With reduced motion requested it appears without moving.
 
+As a direct child of a `scaffold`, an open standard sheet becomes a 400px column between the pane and the trailing toolbar from 1200px up, so the pane narrows instead of hiding under it; it appears without sliding and closes at once. Below 1200px, and for modal or `.start` sheets, it keeps its overlay.
+
 ### Full-screen
 
 Add `max` for a full-viewport dialog with no corners. That is the M3 full-screen dialog, typically used on small screens.
@@ -8025,7 +8134,7 @@ The bar is not `role="toolbar"`, because every item is its own tab stop and arro
 
 `.end` on the first trailing item pushes it and every item after it to the end edge. `.vibrant` paints the bar primary-container, as on the toolbar, for a mode the user should notice. Color one item with the color helpers, such as `primary on-primary-text` or `error-container on-error-container-text`; the item's text still has to say what the color means. Below 600px, items with `data-priority="low"` are hidden, and when that hides the first `.end` item the next visible `.end` item starts the end group. Items that still do not fit wrap to a second row. A disabled item (`disabled`, `.disabled` or `aria-disabled="true"`) is drawn at 38% opacity.
 
-The bar is 24px tall in `body-small`, and it grows with enlarged text. Items are 24px targets, which meets WCAG 2.5.8 but not M3's 48dp; hide the bar on touch-first layouts that need larger targets. It sticks to the bottom of a scrolling page and pads for the bottom safe area. Do not show it at the same time as `nav.navigation-bar`.
+The bar is 24px tall in `body-small`, and it grows with enlarged text. Items are 24px targets, which meets WCAG 2.5.8 but not M3's 48dp; hide the bar on touch-first layouts that need larger targets. It sticks to the bottom of a scrolling page and pads for the bottom safe area. Outside a scaffold, do not show it at the same time as `nav.navigation-bar`, since both sit at the bottom. As a direct child of a `scaffold`, it takes a full-width row along the bottom, under the navigation bar when no rail is shown, and hides below 600px, where the scaffold shows its navigation bar.
 
 ```html
 <footer class="status-bar">

@@ -304,3 +304,197 @@ describe('NavigationRail', () => {
     });
   });
 });
+
+describe('NavigationRail outside toggles', () => {
+  beforeEach(resetBody);
+
+  const icon = '<span class="material-symbols" aria-hidden="true">menu</span>';
+  const click = (el) => {
+    const event = new window.MouseEvent('click', { bubbles: true, cancelable: true, composed: true });
+    el.dispatchEvent(event);
+    return event;
+  };
+  const escape = () => document.activeElement.dispatchEvent(new window.KeyboardEvent('keydown', {
+    key: 'Escape', bubbles: true, cancelable: true
+  }));
+
+  test('a button outside the rail that names it in aria-controls toggles it', () => {
+    document.body.innerHTML = `<form><button id="out" aria-controls="other rail">${icon}</button></form>
+      <button id="off" aria-controls="rail" disabled>Off</button>
+      <button id="else" aria-controls="other">Else</button>
+      <nav class="navigation-rail" id="rail" aria-label="Main"><button id="in" aria-controls="rail">${icon}</button><a href="#a">A</a></nav>
+      <nav class="navigation-rail" aria-label="Plain"><a href="#b">B</a></nav>
+      <button id="nameless" aria-controls="">Nameless</button>`;
+    let opens = 0;
+    const rail = Expressive.NavigationRail.init(document.querySelector('#rail'), { onOpenStart: () => { opens += 1; } });
+    const plain = Expressive.NavigationRail.init(document.querySelectorAll('nav')[1]);
+    try {
+      const event = click(document.querySelector('#out span'));
+      assert.equal(rail.isExpanded, true, 'a click on the icon expands the rail');
+      assert.equal(event.defaultPrevented, true, 'the click does not submit the form');
+      assert.equal(opens, 1);
+      click(document.querySelector('#out'));
+      assert.equal(rail.isExpanded, false, 'a second click collapses it');
+      click(document.querySelector('#in'));
+      assert.equal(rail.isExpanded, true, 'an inside toggle with aria-controls toggles once');
+      rail.collapse();
+      click(document.querySelector('#off'));
+      click(document.querySelector('#else'));
+      click(document.querySelector('#nameless'));
+      assert.equal(rail.isExpanded, false, 'disabled and unrelated buttons do nothing');
+      assert.equal(plain.isExpanded, false, 'a rail without an id has no outside toggles');
+    } finally {
+      rail.destroy();
+      plain.destroy();
+    }
+  });
+
+  test('outside toggles follow the rail, including ones added later', () => {
+    document.body.innerHTML = `<button id="out" aria-controls="rail" aria-expanded="true">Menu</button>
+      <nav class="navigation-rail" id="rail" aria-label="Main"><button id="in">${icon}</button><a href="#a">A</a></nav>`;
+    const rail = Expressive.NavigationRail.init(document.querySelector('#rail'));
+    const out = document.querySelector('#out');
+    const inside = document.querySelector('#in');
+    try {
+      assert.deepEqual([out, inside].map((b) => b.getAttribute('aria-expanded')), ['false', 'false']);
+      rail.expand();
+      assert.deepEqual([out, inside].map((b) => b.getAttribute('aria-expanded')), ['true', 'true']);
+      document.body.insertAdjacentHTML('beforeend', '<button id="late" aria-controls="rail">Late</button>');
+      const late = document.querySelector('#late');
+      rail.collapse();
+      assert.deepEqual([out, inside, late].map((b) => b.getAttribute('aria-expanded')), ['false', 'false', 'false']);
+      click(late);
+      assert.equal(rail.isExpanded, true, 'a toggle added later works at once');
+    } finally {
+      rail.destroy();
+    }
+  });
+
+  test('Escape returns focus to the toggle that opened a modal rail', () => {
+    document.body.innerHTML = `<button id="a1" aria-controls="rail">A1</button><button id="a2" aria-controls="rail">A2</button>
+      <nav class="navigation-rail modal" id="rail" aria-label="Main"><button id="in">${icon}</button><a href="#a">A</a></nav>
+      <button id="b1" aria-controls="bare">B1</button><button id="b2" aria-controls="bare">B2</button>
+      <nav class="navigation-rail modal" id="bare" aria-label="Bare"><a href="#b">B</a></nav>`;
+    const rail = Expressive.NavigationRail.init(document.querySelector('#rail'));
+    const bare = Expressive.NavigationRail.init(document.querySelector('#bare'));
+    const $ = (sel) => document.querySelector(sel);
+    try {
+      click($('#a2'));
+      $('#rail a').focus();
+      escape();
+      assert.equal(rail.isExpanded, false);
+      assert.equal(document.activeElement, $('#a2'), 'focus returns to the opener');
+
+      rail.expand();
+      $('#rail a').focus();
+      escape();
+      assert.equal(document.activeElement, $('#in'), 'opened another way, focus goes to the inside toggle');
+
+      click($('#b2'));
+      $('#b2').disabled = true;
+      $('#bare a').focus();
+      escape();
+      assert.equal(document.activeElement, $('#b1'), 'a disabled opener is skipped');
+      $('#b2').disabled = false;
+
+      click($('#b2'));
+      $('#b2').setAttribute('aria-controls', 'other');
+      $('#bare a').focus();
+      escape();
+      assert.equal(document.activeElement, $('#b1'), 'an opener that no longer names the rail is skipped');
+      $('#b2').setAttribute('aria-controls', 'bare');
+
+      click($('#b2'));
+      $('#b2').removeAttribute('aria-controls');
+      $('#bare a').focus();
+      escape();
+      assert.equal(bare.isExpanded, false, 'an opener that lost aria-controls does not stop Escape');
+      assert.equal(document.activeElement, $('#b1'), 'and focus falls back to the next toggle');
+      $('#b2').setAttribute('aria-controls', 'bare');
+
+      click($('#b2'));
+      const removed = $('#b2');
+      removed.remove();
+      $('#bare a').focus();
+      escape();
+      assert.equal(document.activeElement, $('#b1'), 'a removed opener is skipped');
+
+    } finally {
+      rail.destroy();
+      bare.destroy();
+    }
+  });
+
+  test('a rail in a shadow root connects to toggles in that shadow root', () => {
+    document.body.innerHTML = '<div id="host"></div>';
+    const shadow = document.querySelector('#host').attachShadow({ mode: 'open' });
+    shadow.innerHTML = `<button id="out" aria-controls="rail" aria-expanded="true">Menu</button>
+      <nav class="navigation-rail" id="rail" aria-label="Main"><a href="#a">A</a></nav>`;
+    const rail = Expressive.NavigationRail.init(shadow.querySelector('#rail'));
+    const out = shadow.querySelector('#out');
+    try {
+      assert.equal(out.getAttribute('aria-expanded'), 'false');
+      click(out);
+      assert.equal(rail.isExpanded, true);
+      assert.equal(out.getAttribute('aria-expanded'), 'true');
+    } finally {
+      rail.destroy();
+    }
+  });
+
+  test('a closed shadow root connects too, and a click page code prevented is left alone', () => {
+    document.body.innerHTML = '<div id="host"></div><button id="out" aria-controls="rail">Menu</button><nav class="navigation-rail" id="rail" aria-label="Main"><a href="#a">A</a></nav>';
+    const shadow = document.querySelector('#host').attachShadow({ mode: 'closed' });
+    shadow.innerHTML = '<button id="sout" aria-controls="srail">Menu</button><nav class="navigation-rail" id="srail" aria-label="Shadow"><a href="#s">S</a></nav>';
+    const inner = Expressive.NavigationRail.init(shadow.querySelector('#srail'));
+    const rail = Expressive.NavigationRail.init(document.querySelector('#rail'));
+    const out = document.querySelector('#out');
+    const handled = (e) => e.preventDefault();
+    try {
+      click(shadow.querySelector('#sout'));
+      assert.equal(inner.isExpanded, true, 'a toggle in a closed shadow root works');
+      out.addEventListener('click', handled);
+      click(out);
+      assert.equal(rail.isExpanded, false, 'a click the page already handled does not toggle');
+    } finally {
+      out.removeEventListener('click', handled);
+      inner.destroy();
+      rail.destroy();
+    }
+  });
+
+  for (const [how, block] of [['an inert', (wrap) => wrap.setAttribute('inert', '')], ['a fieldset-disabled', (wrap) => { wrap.disabled = true; }]]) {
+    test(`Escape skips ${how} opener`, () => {
+      document.body.innerHTML = `<button id="a1" aria-controls="rail">A1</button><fieldset id="wrap"><button id="a2" aria-controls="rail">A2</button></fieldset>
+        <nav class="navigation-rail modal" id="rail" aria-label="Main"><a href="#a">A</a></nav>`;
+      const rail = Expressive.NavigationRail.init(document.querySelector('#rail'));
+      try {
+        click(document.querySelector('#a2'));
+        block(document.querySelector('#wrap'));
+        document.querySelector('#rail a').focus();
+        escape();
+        assert.equal(rail.isExpanded, false);
+        assert.equal(document.activeElement, document.querySelector('#a1'));
+      } finally {
+        rail.destroy();
+      }
+    });
+  }
+
+  test('only a first-child button is the inside toggle', () => {
+    document.body.innerHTML = `<nav class="navigation-rail" id="r1" aria-label="One"><a href="#a">A</a><a href="#b">B</a><button id="dest" type="button">Dest</button></nav>
+      <nav class="navigation-rail" id="r2" aria-label="Two"><button class="icon-button" id="ib">${icon}</button><a href="#c">C</a></nav>`;
+    const one = Expressive.NavigationRail.init(document.querySelector('#r1'));
+    const two = Expressive.NavigationRail.init(document.querySelector('#r2'));
+    try {
+      click(document.querySelector('#dest'));
+      assert.equal(one.isExpanded, false, 'a later button is a destination');
+      assert.equal(document.querySelector('#dest').hasAttribute('aria-expanded'), false);
+      click(document.querySelector('#ib'));
+      assert.equal(two.isExpanded, true, 'a first-child icon button still toggles');
+    } finally {
+      one.destroy();
+      two.destroy();
+    }
+  });
+});

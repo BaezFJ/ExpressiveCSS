@@ -9,7 +9,7 @@ Component ID: `navigation-rail`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `c4d794186bddccc543cfaab4327f0c95e0a451f21c954f3c9d8338abf57cd782`
+Contract SHA-256: `c95df9b05f81ea6cb549bcaaa3c6f0dcc68935a3052f6e3c17264e96c9aa2cc2`
 
 #### Selection and adaptation
 
@@ -40,9 +40,9 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Switch between UI views on mid-sized devices. A `nav.navigation-rail` holds 3–7 destinations plus an optional FAB. Put it in the same place on every screen.
 
-Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp, icon and label on one row, and an extended FAB. The menu button toggles that class (`AutoInit()` starts it). On compact windows an expanded rail is modal — a scrim, and Escape or a scrim tap collapses it. Add `modal` to keep that overlay at every breakpoint. Expanding and collapsing run on the default spatial spring (`--md-comp-nav-rail-motion` and `--md-comp-nav-rail-motion-duration`), so `motion="expressive"` lets the rail overshoot its width slightly before it settles.
+Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp, icon and label on one row, and an extended FAB. The menu button toggles that class (`AutoInit()` starts it). On compact windows an expanded rail is modal — a scrim, and Escape or a scrim tap collapses it. A rail that is a direct child of a `scaffold` is modal from 600px to 839px as well. Add `modal` to keep that overlay at every breakpoint. Expanding and collapsing run on the default spatial spring (`--md-comp-nav-rail-motion` and `--md-comp-nav-rail-motion-duration`), so `motion="expressive"` lets the rail overshoot its width slightly before it settles.
 
-Escape closes an open nested menu first. A second Escape collapses the modal rail and returns focus from inside it to the rail toggle, unless a close callback moves focus elsewhere.
+Escape closes an open nested menu first. A second Escape collapses the modal rail and returns focus from inside it to the toggle that opened it, unless a close callback moves focus elsewhere.
 
 #### Syntax
 

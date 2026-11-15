@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "frameworkVersion": "0.18.1",
-  "sourceRevision": "ce0f5c50a50ae86caf178c22b405c8223e8d1f1f",
+  "sourceRevision": "9ca9e3cf2fd27644544cb717a5197f83f594092c",
   "basis": "Reviewed checkout snapshot, not proof of published package contents or target-browser conformance. Implemented means only the named scope. Full Material parity remains unassessed.",
   "browserRun": {
     "recordedOn": "2026-10-10",
@@ -248,6 +248,151 @@
         }
       ],
       "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "scaffold",
+      "title": "Scaffold",
+      "kind": "component",
+      "support": "implemented",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "source-reviewed",
+      "reviewedOn": "2026-11-15",
+      "scope": "A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay. A trailing vertical toolbar floats there as a centered row above the navigation bar. A status bar takes a full-width row along the bottom from 600px up. From 600px up a navigation bar stays in a row of its own when no rail is shown. From 600px up the pane floats as a rounded surface on a surface-container shell. From 1200px up an open standard side sheet becomes a third column. With viewport-fit=cover its regions stay inside the safe areas.",
+      "adaptation": "CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.",
+      "upstream": {
+        "source": "https://m3.material.io/foundations/layout/scaffold/overview",
+        "reviewedOn": "2026-11-15",
+        "scope": "requirements-prose-reviewed",
+        "note": "Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "Scaffold/Overview, Bars, Rails and Panes"
+        ],
+        "sources": [
+          "https://m3.material.io/foundations/layout/scaffold/overview",
+          "https://m3.material.io/foundations/layout/scaffold/bars",
+          "https://m3.material.io/foundations/layout/scaffold/rails",
+          "https://m3.material.io/foundations/layout/scaffold/panes"
+        ],
+        "requirements": "Bars frame the top of the window, rails sit in the leading and trailing regions beside the panes, and panes hold the content. Keep navigation separate from contextual actions, one main landmark, and content clear of bars and rails."
+      },
+      "relationship": "pattern",
+      "sources": [
+        {
+          "path": "src/sass/components/_scaffold.scss",
+          "sha256": "c81ab1f9d65111349047fc220d0b10ec8769d4d38156a24a2065163d612a5778"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding, and the status bar's row and compact hiding, and the floating pane's colors, corners and gaps, and the side sheet column; the safe-area insets are checked with rewritten env() values; spoken output, a real notch and a mobile browser's collapsing address bar remain unverified.",
+          "nextStep": "Move through a scaffold page by landmarks with a screen reader, and scroll the pane in a phone browser whose address bar collapses."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: scaffold places the bar above the rail, pane and toolbar, and only the pane scrolls",
+          "scope": "Region boxes at 1280 × 800, the centered trailing toolbar, a clipped shell, and a pane that scrolls while the window and the other regions stay put. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: scaffold rail fills its region, scrolls, and widens the pane's column when expanded",
+          "scope": "The rail from the bar to the window bottom, scrolling destinations, and an expanded rail that narrows the pane without overlap. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: a tall-rail scaffold runs the rail and toolbar the full height with the bar over the pane",
+          "scope": "Grid areas, a full-height rail and centered toolbar, the bar over the pane only, 200% text, an expanded rail, empty regions and the pane-scroll fill. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: on medium windows a scaffold's expanded rail overlays the pane, and from 840px it narrows it",
+          "scope": "The rail pushing the pane at 1024px, an overlay with a scrim over the pane and app bar row at 700px in both layouts, a .modal rail at 1280px, and an unmoved pane. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: below 600px the scaffold scrolls the document with the app bar and navigation bar pinned",
+          "scope": "Document scrolling at 390px, a pinned app bar, a pinned navigation bar in footer and bare forms. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: below 600px the collapsed rail is hidden and opens as an overlay from the app bar",
+          "scope": "A hidden rail out of the tab order, opened by the app bar's aria-controls button as a fixed overlay, closed by Escape with focus returned and by a scrim tap. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: the compact layout ends at 599px and the medium layout starts at 600px",
+          "scope": "The navigation bar, the hidden rail and a .modal rail at 599px, and the held rail column at 600px. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: below 600px the toolbar floats centered 16px above the navigation bar",
+          "scope": "A centered row 16px above a 74px navigation bar at the top and mid-scroll, 16px above the window bottom without one, and clear of the bar at 200% text. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: the end of a compact page scrolls clear of the floating toolbar, and focus does too",
+          "scope": "The pane's last content and keyboard focus clear of the floating toolbar, with its matched block margins. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: a status bar spans the scaffold's full width along the bottom",
+          "scope": "Footer and region forms at 1280px, the regions ending above it, the tall rail ending above it, and the held column at 700px. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: from 600px up the pane floats as a rounded surface on a surface-container shell",
+          "scope": "Shell, bar and pane colors with the scrolled bar fill, a 16px radius, and the pane's gaps with and without a rail, toolbar, custom trailing region and status bar, and at 700px. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: the floating surface stays off compact windows and out of separated panes",
+          "scope": "No surface below 600px, no surface or gaps around separated or floating panes, and a panes container keeping its own margins and color. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: from 1200px up an open standard side sheet takes a column between the pane and the toolbar",
+          "scope": "The sheet static in its column at 1440px, the pane giving up 416px and getting it back on close, without a toolbar, and beside a panes container. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: from 600px up the scaffold keeps every region inside the safe areas",
+          "scope": "Rewritten insets (40/50/20/30): the bar, rail, toolbar, floating pane, tall rail, a pane without a bar, a custom rail and the status bar's single bottom inset. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: the scaffold adds no landmark and keeps banner, navigation and main in order",
+          "scope": "Landmark order from the accessibility tree. No spoken-output assertion.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: under forced colors the floating pane keeps a visible edge",
+          "scope": "A 1px solid pane border under forced colors at 1024px.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

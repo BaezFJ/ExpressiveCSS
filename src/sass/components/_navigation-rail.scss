@@ -56,6 +56,10 @@
 
 // Expanded rail as an overlay with a scrim.
 @mixin _modal-rail {
+  // Tells the runtime this rail is an overlay, whatever breakpoints or
+  // classes put it there, so Escape and the scrim close it.
+  --_nav-rail-modal: 1;
+
   position: fixed;
   inset-block: 0;
   inset-inline: 0 auto;
@@ -108,6 +112,9 @@
   --md-comp-nav-rail-motion: var(--md-sys-motion-spring-default-spatial);
   --md-comp-nav-rail-motion-duration: var(--md-sys-motion-spring-default-spatial-duration);
   --_nav-rail-width: var(--md-comp-nav-rail-collapsed-width);
+
+  // 1 while the rail is drawn as an overlay (see _modal-rail).
+  --_nav-rail-modal: 0;
 
   box-sizing: border-box;
   display: flex;
@@ -350,6 +357,14 @@
 
   @include bp-down("medium") {
     &.expanded:not(.modal) {
+      @include _modal-rail;
+    }
+  }
+
+  // A scaffold makes the expanded rail an overlay on medium windows as well,
+  // and holds its column at the collapsed width (see _scaffold.scss).
+  @include bp-between("medium", "expanded") {
+    .scaffold > &.expanded:not(.modal) {
       @include _modal-rail;
     }
   }

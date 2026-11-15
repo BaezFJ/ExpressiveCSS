@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en" theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Status bar app | My project</title>
+  <!-- Copy this file as index.html beside the framework's complete dist directory. -->
+  <link rel="stylesheet" href="dist/css/expressive.min.css">
+</head>
+<body>
+  <div class="scaffold">
+    <header>
+      <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+      <div class="bar">
+        <button id="menu" type="button" aria-label="Main menu" aria-controls="rail" aria-expanded="false">
+          <span class="material-symbols" aria-hidden="true">menu</span>
+        </button>
+        <h2>My project</h2>
+        <a class="button text" href="https://www.expressivecss.com/">Docs</a>
+      </div>
+    </header>
+    <nav id="rail" class="navigation-rail" aria-label="Primary navigation">
+      <a href="#main" aria-current="page"><span class="material-symbols" aria-hidden="true">home</span>Overview</a>
+      <a href="https://www.expressivecss.com/buttons.html"><span class="material-symbols" aria-hidden="true">widgets</span>Components</a>
+      <a href="https://www.expressivecss.com/"><span class="material-symbols" aria-hidden="true">help</span>Setup</a>
+    </nav>
+    <main id="main" tabindex="-1">
+      <div class="container py-4">
+        <h1>Draft</h1>
+        <p class="flow-text">A workspace whose state shows in a status bar along the bottom from 600px up.</p>
+        <article class="outlined mb-4">
+          <h2>Release notes</h2>
+          <p>Replace this content with your own. Keep the status bar to short facts about the app's state, such as whether changes are saved, and a few small commands.</p>
+        </article>
+        <h2>Checklist</h2>
+        <ul class="list">
+          <li><div>Write the summary<p>One paragraph on what changed.</p></div></li>
+          <li><div>List the fixes<p>Link each fix to its issue.</p></div></li>
+          <li><div>Review the draft<p>Ask a teammate to read it.</p></div></li>
+        </ul>
+      </div>
+    </main>
+    <!-- The status bar hides below 600px, where the navigation bar shows. -->
+    <footer class="status-bar">
+      <span role="status">All changes saved</span>
+      <span data-priority="low">Last edit 2 minutes ago</span>
+      <a href="https://www.expressivecss.com/status-bar.html" aria-label="0 errors, 2 warnings">
+        <span class="material-symbols" aria-hidden="true">error</span><span>0</span>
+        <span class="material-symbols" aria-hidden="true">warning</span><span>2</span>
+      </a>
+      <button type="button" class="end" aria-label="Notifications"><span class="material-symbols" aria-hidden="true">notifications</span></button>
+    </footer>
+    <!-- Replace these documentation destinations with your application's URLs. -->
+    <nav class="navigation-bar" aria-label="Compact navigation">
+      <a href="#main" aria-current="page"><span class="material-symbols" aria-hidden="true">home</span>Overview</a>
+      <a href="https://www.expressivecss.com/buttons.html"><span class="material-symbols" aria-hidden="true">widgets</span>Components</a>
+      <a href="https://www.expressivecss.com/"><span class="material-symbols" aria-hidden="true">help</span>Setup</a>
+    </nav>
+  </div>
+  <script src="dist/js/expressive.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Expressive.AutoInit();
+    });
+  </script>
+</body>
+</html>

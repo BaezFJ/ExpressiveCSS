@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en" theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Trailing toolbar app | My project</title>
+  <!-- Copy this file as index.html beside the framework's complete dist directory. -->
+  <link rel="stylesheet" href="dist/css/expressive.min.css">
+</head>
+<body>
+  <div class="scaffold">
+    <header>
+      <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+      <div class="bar">
+        <button id="menu" type="button" aria-label="Main menu" aria-controls="rail" aria-expanded="false">
+          <span class="material-symbols" aria-hidden="true">menu</span>
+        </button>
+        <h2>My project</h2>
+        <a class="button text" href="https://www.expressivecss.com/">Docs</a>
+      </div>
+    </header>
+    <nav id="rail" class="navigation-rail" aria-label="Primary navigation">
+      <a href="#main" aria-current="page"><span class="material-symbols" aria-hidden="true">home</span>Overview</a>
+      <a href="https://www.expressivecss.com/buttons.html"><span class="material-symbols" aria-hidden="true">widgets</span>Components</a>
+      <a href="https://www.expressivecss.com/"><span class="material-symbols" aria-hidden="true">help</span>Setup</a>
+    </nav>
+    <main id="main" tabindex="-1">
+      <div class="container py-4">
+        <h1>Project brief</h1>
+        <p class="flow-text">A page of content with actions for it at the trailing edge.</p>
+        <article class="outlined mb-4">
+          <h2>Goals</h2>
+          <p>Replace this content with your own. The toolbar beside it holds actions that work on this page, not destinations, which stay in the navigation rail.</p>
+        </article>
+        <h2>Milestones</h2>
+        <ul class="list">
+          <li><div>Research<p>Talk to the people who will use the product.</p></div></li>
+          <li><div>Design<p>Sketch the screens for the main task.</p></div></li>
+          <li><div>Build<p>Start from the framework's documented markup.</p></div></li>
+        </ul>
+      </div>
+    </main>
+    <!-- Replace these actions with ones that work on your page's content. -->
+    <div class="toolbar vertical">
+      <button type="button" aria-label="Add comment"><span class="material-symbols" aria-hidden="true">add_comment</span></button>
+      <button type="button" aria-label="Share"><span class="material-symbols" aria-hidden="true">share</span></button>
+      <button type="button" id="print" aria-label="Print"><span class="material-symbols" aria-hidden="true">print</span></button>
+    </div>
+    <!-- Replace these documentation destinations with your application's URLs. -->
+    <footer>
+      <nav class="navigation-bar" aria-label="Compact navigation">
+        <a href="#main" aria-current="page"><span class="material-symbols" aria-hidden="true">home</span>Overview</a>
+        <a href="https://www.expressivecss.com/buttons.html"><span class="material-symbols" aria-hidden="true">widgets</span>Components</a>
+        <a href="https://www.expressivecss.com/"><span class="material-symbols" aria-hidden="true">help</span>Setup</a>
+      </nav>
+    </footer>
+  </div>
+  <script src="dist/js/expressive.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Expressive.AutoInit();
+      document.getElementById('print').addEventListener('click', () => window.print());
+    });
+  </script>
+</body>
+</html>
