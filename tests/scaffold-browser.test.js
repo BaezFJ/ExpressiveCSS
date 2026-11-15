@@ -59,7 +59,7 @@ for (const [name, type, run] of engines) {
       near(main.left, nav.right, 'the pane follows the rail');
       near(main.top, bar.bottom, 'the pane starts below the bar');
       near(nav.bottom, 800, 'the rail reaches the window bottom');
-      near(main.bottom, 800, 'the pane reaches the window bottom');
+      near(main.bottom, 784, 'the pane floats 16px above the window bottom');
       near(tb.left - main.right, 24, 'the toolbar sits 24px from the pane');
       near(1280 - tb.right, 24, 'and 24px from the window edge');
       near((tb.top + tb.bottom) / 2, (bar.bottom + 800) / 2, 'the toolbar is centered in its region');
@@ -89,9 +89,9 @@ for (const [name, type, run] of engines) {
         await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, html);
       };
       await render(scaffold({ nav: '' }));
-      near((await box('#pane')).left, 0, 'no rail: the pane starts at the leading edge');
+      near((await box('#pane')).left, 16, 'no rail: the pane floats 16px from the leading edge');
       await render(scaffold({ trailing: '' }));
-      near((await box('#pane')).right, 1280, 'no toolbar: the pane reaches the trailing edge');
+      near((await box('#pane')).right, 1264, 'no toolbar: the pane floats 16px from the trailing edge');
       await render(scaffold({ bar: '' }));
       near((await box('#pane')).top, 0, 'no bar: the pane starts at the top');
 
@@ -99,7 +99,7 @@ for (const [name, type, run] of engines) {
       const [cb, cr, cp, ct] = await Promise.all(['#cb', '#cr', '#cp', '#ct'].map(box));
       assert.deepEqual([cb.top, cb.width, cb.height], [0, 1280, 50], 'the bar class spans the top');
       assert.deepEqual([cr.left, cr.top, cr.width], [0, 50, 100], 'the rail class leads the second row');
-      assert.deepEqual([cp.left, cp.right, cp.top, cp.bottom], [100, 1220, 50, 800], 'the pane class fills the middle');
+      assert.deepEqual([cp.left, cp.right, cp.top, cp.bottom], [100, 1204, 50, 784], 'the pane class fills the middle, floating with its 16px gaps');
       assert.deepEqual([ct.right, ct.top, ct.bottom], [1280, 50, 800], 'the trailing class fills its region');
       await tab.locator('#cr').evaluate((el) => { el.innerHTML = '<div style="height:2000px">Long</div>'; });
       assert.ok(await tab.locator('#cr').evaluate((el) => { el.scrollTop = 300; return el.scrollTop > 0; }), 'custom rail content scrolls');
@@ -168,7 +168,9 @@ for (const [name, type, run] of engines) {
         const region = await box('#pane');
         const holder = (await tab.locator('#lp').count()) ? await box('#lp') : region;
         near(holder.height, region.height, 'the panes are as tall as the pane region');
-        near(region.bottom, 800, 'the pane region reaches the window bottom');
+        // main floats 16px above the bottom; main.panes keeps the panes layout's own box.
+        const isPanes = await tab.locator('#pane').evaluate((el) => el.classList.contains('panes'));
+        near(region.bottom, isPanes ? 800 : 784, 'the pane region reaches its bottom edge');
         for (const id of ['#b1', '#b2']) {
           assert.ok(await tab.locator(id).evaluate((el) => { el.scrollTop = 300; return el.scrollTop > 0; }), `${id} scrolls`);
         }
@@ -267,7 +269,7 @@ for (const [name, type, run] of engines) {
 
       await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ cls: 'tall-rail', nav: '', trailing: '' }));
       [bar, main] = await Promise.all(['#bar', '#pane'].map(box));
-      assert.deepEqual([bar.left, bar.right, main.left, main.right], [0, 1280, 0, 1280], 'empty regions take no space');
+      assert.deepEqual([bar.left, bar.right, main.left, main.right], [0, 1280, 16, 1264], 'empty regions take no space; the pane keeps its 16px floating gaps');
 
       if (await tab.evaluate(() => CSS.supports('timeline-scope', '--a'))) {
         await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ cls: 'tall-rail' }));
@@ -321,7 +323,7 @@ for (const [name, type, run] of engines) {
         assert.deepEqual(hits, ['rail', 'rail'], `${cls || 'default'}: the scrim covers the pane and the app bar row`);
       }
       await render({ nav: rail().replace('class="navigation-rail"', 'class="navigation-rail" hidden') });
-      near((await box('#pane')).left, 0, 'a hidden rail takes no space at 700px');
+      near((await box('#pane')).left, 16, 'a hidden rail takes no space at 700px; the pane floats 16px in');
 
       await tab.setViewportSize({ width: 1280, height: 800 });
       await render({ nav: rail().replace('class="navigation-rail"', 'class="navigation-rail modal"') });
@@ -738,7 +740,7 @@ for (const [name, type, run] of engines) {
         assert.deepEqual([sb.left, sb.width], [0, 1280], `${label}: full width`);
         near(sb.bottom, 800, `${label}: at the bottom edge`);
         near((await box('#rail')).bottom, sb.top, `${label}: the rail ends at the status bar`);
-        near((await box('#pane')).bottom, sb.top, `${label}: the pane ends at it`);
+        near((await box('#pane')).bottom, sb.top - 16, `${label}: the pane floats 16px above it`);
         const tb = await box('#tools');
         near((tb.top + tb.bottom) / 2, ((await box('#bar')).bottom + sb.top) / 2, `${label}: the toolbar is centered above it`);
       }
@@ -770,7 +772,82 @@ for (const [name, type, run] of engines) {
       const sb = await box('#sb');
       assert.ok(sb.height >= 48, `the status bar grows: ${sb.height}`);
       near(sb.bottom, 800, 'and stays at the bottom');
-      near((await box('#pane')).bottom, sb.top, 'with the pane ending above it');
+      near((await box('#pane')).bottom, sb.top - 16, 'with the pane floating 16px above it');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  // Canvas-normalized colors, so color-mix() and rgb() strings compare.
+  const rgb = (tab, sel, prop = 'backgroundColor') => tab.locator(sel).evaluate((el, prop) => {
+    const ctx = Object.assign(document.createElement('canvas'), { width: 1, height: 1 }).getContext('2d');
+    ctx.fillStyle = getComputedStyle(el)[prop];
+    ctx.fillRect(0, 0, 1, 1);
+    return [...ctx.getImageData(0, 0, 1, 1).data].join(',');
+  }, prop);
+  const roles = ['surface', 'surface-container', 'surface-container-high', 'surface-container-low'];
+  const probes = `<div id="probes">${roles.map((r) => `<i id="p-${r}" style="color:var(--md-sys-color-${r})"></i>`).join('')}</div>`;
+
+  run(`${name}: from 600px up the pane floats as a rounded surface on a surface-container shell`, { timeout: 30000 }, async () => {
+    const { browser, tab, box, style } = await open(type, page(`${probes}<div id="host">${scaffold()}</div>`), { width: 1024 });
+    try {
+      const role = (r) => rgb(tab, `#p-${r}`, 'color');
+      assert.equal(await rgb(tab, '#s'), await role('surface-container'), 'the shell is surface-container');
+      assert.equal(await rgb(tab, '#bar'), await role('surface-container'), 'the app bar blends with it');
+      assert.equal(await rgb(tab, '#pane'), await role('surface'), 'the pane is surface');
+      assert.equal(await style('#pane', 'borderTopLeftRadius'), '16px', 'with 16px corners');
+      if (await tab.evaluate(() => CSS.supports('timeline-scope', '--a'))) {
+        await tab.locator('#pane').evaluate((el) => el.scrollTo(0, 200));
+        await tab.waitForFunction(() => getComputedStyle(document.querySelector('#bar')).getPropertyValue('--md-comp-top-app-bar-scroll').trim() === '1', null, { timeout: 5000 });
+        assert.equal(await rgb(tab, '#bar'), await role('surface-container-high'), 'the scrolled bar fills with surface-container-high');
+      }
+
+      const render = (o) => tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, scaffold(o));
+      await render({ trailing: '' });
+      let main = await box('#pane');
+      near(main.top, (await box('#bar')).bottom, 'the pane meets the bar');
+      near(main.left, (await box('#rail')).right, 'and the rail');
+      near(main.bottom, 784, '16px above the bottom');
+      near(main.right, 1008, '16px from the trailing edge without a toolbar');
+      await render();
+      near((await box('#tools')).left - (await box('#pane')).right, 24, 'the toolbar keeps its 24px margin as the gap');
+      await render({ nav: '', trailing: '' });
+      near((await box('#pane')).left, 16, '16px from the leading edge without a rail');
+      await render({ nav: rail().replace('class="navigation-rail"', 'class="navigation-rail" hidden'), trailing: '' });
+      near((await box('#pane')).left, 16, 'a hidden rail counts as absent');
+      await render({ trailing: '<div class="scaffold-trailing" id="ct" style="width:60px">Tools</div>' });
+      near((await box('#ct')).left - (await box('#pane')).right, 16, 'a custom trailing region gets the 16px gap');
+      await render({ trailing: '', bottom: '<footer class="status-bar" id="sb"><span>Ready</span></footer>' });
+      near((await box('#pane')).bottom, (await box('#sb')).top - 16, '16px above a status bar');
+      await tab.setViewportSize({ width: 700, height: 800 });
+      await render({ trailing: '' });
+      near((await box('#pane')).left, 96, 'at 700px the pane starts at the held rail column');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: the floating surface stays off compact windows and out of separated panes`, { timeout: 30000 }, async () => {
+    const sep = (cls) => `<main id="pane"><div class="${cls}" id="lp"><div class="pane" id="p1"><section>A</section></div><div class="pane"><section>B</section></div></div></main>`;
+    const { browser, tab, box, style } = await open(type, page(`${probes}<div id="host">${scaffold()}</div>`), { width: 390 });
+    try {
+      assert.equal(await style('#s', 'backgroundColor'), 'rgba(0, 0, 0, 0)', 'no shell color below 600px');
+      assert.equal(await style('#pane', 'backgroundColor'), 'rgba(0, 0, 0, 0)', 'no pane surface');
+      assert.equal(await style('#pane', 'borderTopLeftRadius'), '0px', 'square corners');
+      await tab.setViewportSize({ width: 1024, height: 800 });
+      const render = (main) => tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, scaffold({ main, trailing: '' }));
+      for (const cls of ['panes separated', 'pane-layout floating']) {
+        await render(sep(cls));
+        assert.equal(await style('#pane', 'backgroundColor'), 'rgba(0, 0, 0, 0)', `${cls}: no surface around the cards`);
+        assert.equal(await style('#pane', 'borderTopLeftRadius'), '0px', `${cls}: no radius`);
+        const main = await box('#pane');
+        near(main.right, 1024, `${cls}: no trailing gap`);
+        near(main.bottom, 800, `${cls}: no bottom gap`);
+        assert.equal(await rgb(tab, '#p1'), await rgb(tab, '#p-surface-container-low', 'color'), `${cls}: the panes keep their cards`);
+      }
+      await render('<main id="pane" class="panes list-detail"><div class="list-pane">A</div><div class="detail-pane">B</div></main>');
+      assert.equal(await style('#pane', 'marginInlineEnd'), '24px', 'a panes container keeps its own margins');
+      assert.equal(await style('#pane', 'borderTopLeftRadius'), '0px', 'and gets no radius');
     } finally {
       await browser.close();
     }
@@ -799,6 +876,18 @@ if (chromium) {
       assert.ok(order.every((at) => at >= 0), snapshot);
       assert.deepEqual([...order].sort((a, b) => a - b), order, 'landmarks in source order');
       assert.equal((snapshot.match(/- (banner|navigation|main|region|application)\b/g) ?? []).length, 3, 'no extra landmark');
+    } finally {
+      await browser.close();
+    }
+  });
+}
+
+if (chromium) {
+  runChromium('chromium: under forced colors the floating pane keeps a visible edge', { timeout: 30000 }, async () => {
+    const { browser, tab } = await open(chromium, page(scaffold()), { width: 1024, forcedColors: 'active' });
+    try {
+      const border = await tab.locator('#pane').evaluate((el) => [getComputedStyle(el).borderTopStyle, getComputedStyle(el).borderTopWidth]);
+      assert.deepEqual(border, ['solid', '1px']);
     } finally {
       await browser.close();
     }

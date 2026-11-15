@@ -46,6 +46,10 @@ $_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar:only-child))";
 // is larger: 74px at 16px text. A sibling can't read it in CSS. An icon-only
 // bar is shorter, so the gap above it comes out larger.
 $_navbar-size: "52px + 1rem + max(6px, env(safe-area-inset-bottom, 0px))";
+// The pane area that floats as a surface: not a panes container itself (it
+// keeps its own margins), and not holding separated or floating panes (they
+// are already cards).
+$_floating-pane: ":is(main, .scaffold-pane):not(:is(.panes, .pane-layout, .list-detail, .supporting-pane-layout), :has(> :is(.panes, .pane-layout):is(.separated, .floating)))";
 // A shown navigation bar region, as a :has() argument list.
 $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])";
 
@@ -147,6 +151,38 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
   > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed) {
     align-self: safe center;
     margin-inline: var(--md-comp-toolbar-external-space, 24px);
+  }
+
+  // From 600px up the pane floats as a rounded surface on a surface-container
+  // shell, and a top app bar blends with the shell. Its scrolled color steps
+  // up one tone so the fill still shows. 16px gaps, except beside a floating
+  // toolbar, whose own 24px margin is the gap, and beside a shown rail.
+  @include bp-up("medium") {
+    background-color: var(--md-sys-color-surface-container);
+
+    > header:has(> nav, > .bar) {
+      --md-comp-top-app-bar-container-color: var(--md-sys-color-surface-container);
+      --md-comp-top-app-bar-scrolled-container-color: var(--md-sys-color-surface-container-high);
+    }
+
+    > #{$_floating-pane} {
+      margin-block-end: 16px;
+      margin-inline-end: 16px;
+      border-radius: var(--md-sys-shape-corner-large);
+      background-color: var(--md-sys-color-surface);
+
+      @media (forced-colors: active) {
+        border: 1px solid CanvasText;
+      }
+    }
+
+    &:not(:has(> :is(.navigation-rail, .scaffold-rail):not([hidden]))) > #{$_floating-pane} {
+      margin-inline-start: 16px;
+    }
+
+    &:has(> :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed, [hidden])) > #{$_floating-pane} {
+      margin-inline-end: 0;
+    }
   }
 
   // The pane names a scroll timeline and the scope lifts it to the shell. The
