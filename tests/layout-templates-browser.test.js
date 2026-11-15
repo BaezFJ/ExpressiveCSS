@@ -1,11 +1,29 @@
-import { test } from 'node:test';
+import { test as nodeTest } from 'node:test';
 import assert from 'node:assert/strict';
-import { cp, mkdtemp, rm } from 'node:fs/promises';
+import { cp, mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { expect } from '@playwright/test';
 import { engines } from './browser.js';
+
+const LAYOUTS = ['compact', 'rail', 'expanded', 'dashboard', 'list-detail'];
+const RAIL_FROM = { compact: Infinity, rail: 600, dashboard: 600, expanded: 840 };
+const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
+
+nodeTest('the app templates are scaffolds without shell CSS or shell helpers', async () => {
+  for (const layout of LAYOUTS) {
+    const html = await read(`docs/public/layout-${layout}.html`);
+    assert.equal(await read(`skills/expressivecss/assets/templates/layout-${layout}.html`), html, `${layout}: the bundled copy matches`);
+    assert.doesNotMatch(html, /<style|app-shell|app-content/, `${layout}: no shell CSS`);
+    assert.doesNotMatch(html, /<(nav|footer)\b[^>]*hide-on-/, `${layout}: no helper on a shell region`);
+    assert.match(html, /<body>\s*<div class="scaffold[ "]/, `${layout}: the scaffold is the body's child`);
+    assert.match(html, /name="viewport" content="[^"]*viewport-fit=cover/, `${layout}: viewport-fit=cover`);
+    assert.match(html, /<header>\s*<a class="visually-hidden-focusable" href="#main">/, `${layout}: a skip link in the header`);
+    assert.match(html, /<main id="main" tabindex="-1">/, `${layout}: a focusable main`);
+    assert.equal(/class="scaffold tall-rail"/.test(html), layout in RAIL_FROM && layout !== 'compact', `${layout}: tall-rail on rail templates`);
+  }
+});
 
 for (const [name, engine, test] of engines) {
   test(`${name}: copied layout templates adapt and preserve list-detail focus`, async t => {
@@ -18,23 +36,34 @@ for (const [name, engine, test] of engines) {
       const errors = [];
       page.on('pageerror', error => errors.push(error.message));
       page.on('requestfailed', request => errors.push(request.url()));
-      for (const layout of ['compact', 'rail', 'expanded', 'dashboard', 'list-detail']) {
+      for (const layout of LAYOUTS) {
         await cp(new URL(`../docs/public/layout-${layout}.html`, import.meta.url), join(directory, 'index.html'));
-        await page.setViewportSize({ width: 375, height: 812 });
+        await page.setViewportSize({ width: 390, height: 812 });
         await page.goto(pathToFileURL(join(directory, 'index.html')).href);
         await page.evaluate(() => document.fonts.ready);
         assert.equal(await page.evaluate(() => typeof Expressive.AutoInit), 'function');
-        for (const width of [375, 800, 1440]) {
+        for (const width of [390, 700, 1280]) {
           await page.setViewportSize({ width, height: 812 });
           assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${layout} overflows at ${width}px`);
           if (layout === 'list-detail') {
             await expect(page.locator('#items')).toBeVisible();
             await expect(page.locator('#detail'))[width >= 840 ? 'toBeVisible' : 'toBeHidden']();
-          } else {
-            const railVisible = layout !== 'compact' && width >= (layout === 'expanded' ? 840 : 600);
-            await expect(page.locator('.app-navigation'))[railVisible ? 'toBeHidden' : 'toBeVisible']();
-            if (layout !== 'compact') await expect(page.locator('.navigation-rail'))[railVisible ? 'toBeVisible' : 'toBeHidden']();
+            continue;
           }
+          const railShown = width >= RAIL_FROM[layout];
+          await expect(page.locator('.navigation-bar'))[railShown ? 'toBeHidden' : 'toBeVisible']();
+          if (layout !== 'compact') await expect(page.locator('.navigation-rail'))[railShown ? 'toBeVisible' : 'toBeHidden']();
+          if (layout === 'expanded') await expect(page.locator('#menu'))[railShown ? 'toBeVisible' : 'toBeHidden']();
+          // The content keeps its container width inside the floating pane.
+          const fit = await page.evaluate(() => {
+            const main = document.querySelector('main');
+            const container = main.querySelector(':scope > .container');
+            const style = getComputedStyle(container);
+            const share = parseFloat(style.getPropertyValue('--md-comp-container-width')) / 100;
+            const expected = Math.min(parseFloat(style.maxWidth), share * main.clientWidth);
+            return Math.abs(container.getBoundingClientRect().width - expected) <= 1;
+          });
+          assert.ok(fit, `${layout}: the container fills the pane at ${width}px`);
         }
         if (layout === 'list-detail') {
           await page.setViewportSize({ width: 375, height: 812 });
@@ -56,11 +85,25 @@ for (const [name, engine, test] of engines) {
           await expect(page.locator('#detail-title')).toHaveText('Choose your components');
         } else if (layout !== 'compact') {
           const rail = page.locator('.navigation-rail');
+          const menu = page.locator('#menu');
           const expanded = layout === 'expanded';
+          await page.setViewportSize({ width: 1280, height: 812 });
           await expect(rail).toHaveAttribute('aria-expanded', String(expanded));
-          await rail.locator('button').click();
+          await expect(menu).toHaveAttribute('aria-expanded', String(expanded));
+          await menu.click();
           await expect(rail).toHaveAttribute('aria-expanded', String(!expanded));
+          await expect(menu).toHaveAttribute('aria-expanded', String(!expanded));
           assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+          if (!expanded) {
+            await menu.click();
+            await page.setViewportSize({ width: 390, height: 812 });
+            await expect(rail).toBeHidden();
+            await menu.click();
+            await expect(rail).toBeVisible();
+            await expect(menu).toHaveAttribute('aria-expanded', 'true');
+            await page.keyboard.press('Escape');
+            await expect(rail).toBeHidden();
+          }
         }
         await page.evaluate(() => {
           document.querySelectorAll('.navigation-rail').forEach(rail => Expressive.NavigationRail.getInstance(rail)?.destroy());
