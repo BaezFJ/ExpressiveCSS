@@ -15,8 +15,8 @@ const rail = (n = 4) => `<nav class="navigation-rail" id="rail" aria-label="Prim
 const tools = (n = 3) => `<div class="toolbar vertical" id="tools">${Array.from({ length: n }, (_, i) =>
   `<button type="button" id="t${i}" aria-label="Action ${i}">${icon('event')}</button>`).join('')}</div>`;
 const pane = '<main id="pane" tabindex="-1"><div style="height:3000px">Inbox</div></main>';
-const scaffold = ({ bar = header(), nav = rail(), main = pane, trailing = tools() } = {}) =>
-  `<div class="scaffold" id="s">${bar}${nav}${main}${trailing}</div>`;
+const scaffold = ({ bar = header(), nav = rail(), main = pane, trailing = tools(), cls = '' } = {}) =>
+  `<div class="scaffold ${cls}" id="s">${bar}${nav}${main}${trailing}</div>`;
 
 const page = (body, { dir = 'ltr', root = '' } = {}) => `<!doctype html><html lang="en" dir="${dir}" style="${root}"><head><style>${css}</style>
 <style>/* No icon font loads here, so a glyph name renders as wide text. Clip it as the font would. */
@@ -221,6 +221,59 @@ for (const [name, type, run] of engines) {
       assert.equal(await style('#pane', 'overflowY'), 'visible', 'the pane prints whole');
       assert.equal(await style('#s', 'overflowY'), 'visible', 'the shell does not clip in print');
       assert.ok((await box('#s')).height > 3000, 'the shell grows to its content in print');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: a tall-rail scaffold runs the rail and toolbar the full height with the bar over the pane`, { timeout: 30000 }, async () => {
+    const { browser, tab, box, style } = await open(type, page(`<div id="host">${scaffold({ cls: 'tall-rail' })}</div>`));
+    try {
+      const measure = () => Promise.all(['#rail', '#bar', '#pane', '#tools'].map(box));
+      let [nav, bar, main, tb] = await measure();
+      assert.equal((await style('#s', 'gridTemplateAreas')).replace(/\s+/g, ' '), '"rail bar trailing" "rail pane trailing"');
+      assert.deepEqual([nav.left, nav.top], [0, 0], 'the rail starts at the top leading corner');
+      near(nav.bottom, 800, 'the rail reaches the window bottom');
+      near(bar.left, nav.right, 'the bar starts at the rail');
+      near(bar.right, main.right, 'the bar sits over the pane only');
+      near(main.top, bar.bottom, 'the pane starts below the bar');
+      near(1280 - tb.right, 24, 'the toolbar is 24px from the window edge');
+      near(tb.left - main.right, 24, 'and 24px from the pane');
+      near((tb.top + tb.bottom) / 2, 400, 'the toolbar is centered in the full height');
+
+      await tab.evaluate(() => { document.documentElement.style.fontSize = '32px'; });
+      [nav, bar, main] = await measure();
+      assert.deepEqual([nav.top, nav.bottom], [0, 800], 'at 200% text the rail still runs the full height');
+      near(main.top, bar.bottom, 'and the taller bar only shortens the pane');
+      await tab.evaluate(() => { document.documentElement.style.fontSize = ''; });
+
+      await tab.locator('#rail').evaluate((el) => el.classList.add('expanded'));
+      [nav, bar, main] = await measure();
+      near(bar.left, nav.right, 'the expanded rail pushes the bar');
+      near(main.left, nav.right, 'and the pane');
+
+      await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ cls: 'tall-rail', nav: '', trailing: '' }));
+      [, bar, main] = await Promise.all(['#s', '#bar', '#pane'].map(box));
+      assert.deepEqual([bar.left, bar.right, main.left, main.right], [0, 1280, 0, 1280], 'empty regions take no space');
+
+      if (name === 'chromium') {
+        await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ cls: 'tall-rail' }));
+        await tab.locator('#pane').evaluate((el) => el.scrollTo(0, 100));
+        await tab.waitForFunction(() => getComputedStyle(document.querySelector('#bar')).getPropertyValue('--md-comp-top-app-bar-scroll').trim() === '1');
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: a tall-rail scaffold mirrors under dir="rtl"`, { timeout: 30000 }, async () => {
+    const { browser, box } = await open(type, page(scaffold({ cls: 'tall-rail' }), { dir: 'rtl' }));
+    try {
+      const [nav, bar, tb] = await Promise.all(['#rail', '#bar', '#tools'].map(box));
+      assert.deepEqual([nav.right, nav.top], [1280, 0], 'the rail runs down the right edge');
+      near(nav.bottom, 800, 'to the bottom');
+      near(bar.right, nav.left, 'the bar ends at the rail');
+      near(tb.left, 24, 'the toolbar is 24px from the left edge');
     } finally {
       await browser.close();
     }
