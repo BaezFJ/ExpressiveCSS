@@ -21,8 +21,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   a command's request runs, the button keeps its label (or says "Saving…"),
   shows a loading indicator beside it after a short delay, ignores a second
   press without losing focus, and announces the result once. Any component
-  section in `llm.md` can now carry an `### App behavior` subsection, which the
-  generated guide shows in full.
+  section in `llm.md` can now carry an App behavior subsection one heading level
+  below the component's own, which the generated guide shows in full.
 
 ## [0.18.1] - 2026-11-15
 

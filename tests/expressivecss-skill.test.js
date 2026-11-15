@@ -166,7 +166,7 @@ describe('the ExpressiveCSS agent skill', () => {
     const guide = readFileSync(new URL('components/buttons.md', skillDirectory), 'utf8');
     const start = guide.indexOf('#### App behavior');
     assert.ok(start > guide.indexOf('#### Syntax') && start < guide.indexOf('#### Rules'), 'App behavior sits between Syntax and Rules');
-    const behavior = guide.slice(start, guide.indexOf('#### ', start + 1));
+    const behavior = guide.slice(start, guide.indexOf('\n#### ', start + 1));
     for (const phrase of ['…', 'aria-disabled="true"', 'preventDefault()', 'finally', '300ms', '500ms', 'native form post']) {
       assert.ok(behavior.includes(phrase), `App behavior lacks ${phrase}`);
     }
@@ -1250,8 +1250,9 @@ describe('the ExpressiveCSS agent skill', () => {
     // 49,482 bytes (+314); the tree select row at 49,778 bytes (+296); the
     // DESIGN.md product-decision source at 50,075 bytes (+297); the status bar
     // row at 50,469 bytes (+394); the buttons App behavior subsection (loading
-    // feedback for a command that waits on a request) at 51,939 bytes (+1,470).
-    assert.ok(bytes <= 51939, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
+    // feedback for a command that waits on a request) at 51,947 bytes (+1,478),
+    // after review added the timer and reserved-space wording.
+    assert.ok(bytes <= 51947, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
     assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
   });
 

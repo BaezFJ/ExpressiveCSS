@@ -9,7 +9,7 @@ Covers R1, R4. Checks V1, V2.
 Prerequisites: none.
 
 - [x] Add the R4 test and watch it fail.
-- [x] Render `### App behavior` in `renderGuide` (`scripts/gen-expressivecss-skill.mjs`) and add it to the headings that "Also documented" skips.
+- [x] Render `### App behavior` in `renderGuide` (`scripts/gen-expressivecss-skill.mjs`) and cut it out of the section before the other parts read it, so "Also documented" never lists it.
 
 Done when `npm run build:skill` leaves every existing guide unchanged except the contract hash.
 

@@ -80,9 +80,13 @@ const BEHAVIOR_CONTRACTS = [
 ];
 const anchorFor = (heading) => heading.toLowerCase().replaceAll(' ', '-');
 
+// Applies fn to the markdown outside fenced code blocks.
+const mapProse = (markdown, fn) => markdown.split(/(```[\s\S]*?```)/u)
+  .map((part, index) => index % 2 ? part : fn(part)).join('');
+const stripRelativeLinks = (text) => text.replace(/\[([^\]]+)\]\((?!https?:\/\/)[^)]+\)/gu, '$1');
+
 function rebaseHeadings(markdown, offset) {
-  return markdown.split(/(```[\s\S]*?```)/u).map((part, index) => index % 2 ? part
-    : part.replace(/^(#{1,6}) /gmu, (_, hashes) => `${'#'.repeat(hashes.length + offset)} `)).join('');
+  return mapProse(markdown, (part) => part.replace(/^(#{1,6}) /gmu, (_, hashes) => `${'#'.repeat(hashes.length + offset)} `));
 }
 
 function renderBehaviorContracts(llm) {
@@ -233,9 +237,7 @@ function contractSummary(section, description) {
     .split(/\n\s*\n/u)
     .map((paragraph) => paragraph.trim())
     .filter((paragraph) => paragraph && paragraph !== description && !paragraph.startsWith('#') && !paragraph.startsWith('|'))
-    .map((paragraph) => paragraph
-      .replace(/\[([^\]]+)\]\((?!https?:\/\/)[^)]+\)/gu, '$1')
-      .replaceAll('\n', ' '))
+    .map((paragraph) => stripRelativeLinks(paragraph).replaceAll('\n', ' '))
     .filter((paragraph) => /[.!?:]$/u.test(paragraph) || paragraph.includes('`'))
     .slice(0, 3)
     .join('\n\n');
@@ -341,11 +343,12 @@ function renderMaterialMapping(component) {
 // A component section's "App behavior" subsection guides app behavior tied to the
 // component (loading feedback, Undo, URL state, submit flow). It is cut out before the
 // other parts read the section, so its examples never become the Syntax, and rendered
-// in full. The lookahead stops at the next heading or the section's closing `---`.
+// in full. The body takes fenced code blocks whole, so a `# comment` or `---` inside one
+// doesn't end it; the lookahead stops at the next heading or the section's closing `---`.
 function splitAppBehavior(section, level) {
-  const match = new RegExp(`\\n#{${level + 1}} App behavior\\n([\\s\\S]*?)(?=\\n#{1,${level + 1}} |\\n---\\s*(?:\\n|$)|$)`, 'u').exec(section);
+  const match = new RegExp(`\\n#{${level + 1}} App behavior\\n((?:\`\`\`[\\s\\S]*?\`\`\`|[\\s\\S])*?)(?=\\n#{1,${level + 1}} |\\n---\\s*(?:\\n|$)|$)`, 'u').exec(section);
   if (!match) return { rest: section, behavior: '' };
-  const body = match[1].trim().replace(/\[([^\]]+)\]\((?!https?:\/\/)[^)]+\)/gu, '$1');
+  const body = mapProse(match[1].trim(), stripRelativeLinks);
   return { rest: section.replace(match[0], ''), behavior: `#### App behavior\n\n${rebaseHeadings(body, 3 - level)}\n\n` };
 }
 
@@ -404,6 +407,11 @@ async function generatedGuides(provenance) {
   ]);
   const rows = JSON.parse(semanticsText).rows;
   const pages = new Map(PAGES.map((page) => [page.id, page]));
+  // Every App behavior heading must sit one level below a component heading, or its text
+  // would silently land in another guide's Syntax or Also documented list.
+  const declared = llm.replace(/```[\s\S]*?```/gu, '').match(/^#{2,6} app behavior\s*$/gimu)?.length ?? 0;
+  const rendered = components.filter((component) => splitAppBehavior(sectionFor(llm, component.heading, component.level), component.level).behavior).length;
+  if (declared !== rendered) throw new Error(`llm.md has ${declared} App behavior headings but ${rendered} render in a guide; put each one level below its component heading`);
   return new Map(components.map((component) => {
     const page = pages.get(component.page);
     if (!page) throw new Error(`Unknown docs page ${component.page}`);

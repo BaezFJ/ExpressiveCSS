@@ -2530,9 +2530,9 @@ The `disabled` attribute on a `<button>`. A link cannot be disabled, so a link b
 
 ### App behavior
 
-While a command's request runs, keep the button's label, or change it to the verb's in-progress form ending in the `…` character, such as "Saving…". Never swap it for a spinner alone, "Loading" or "Please wait". Put a `.loading-indicator` next to the button, beside the label rather than in its place, `hidden` while idle and keeping its `role="status"` and name; set `--md-comp-loading-indicator-container-size` so the row doesn't grow. Show it after about 300ms and keep it at least 500ms once shown, so a quick request doesn't flash it.
+While a command's request runs, keep the button's label, or change it to the verb's in-progress form ending in the `…` character, such as "Saving…". Never swap it for a spinner alone, "Loading" or "Please wait". Put a `.loading-indicator` beside the button, keeping its `role="status"` and name, with its space reserved while idle (`visibility: hidden`) and `--md-comp-loading-indicator-container-size` set so nothing moves. Show it after about 300ms and keep it at least 500ms once shown.
 
-Ignore a second press. Return early while a pending flag is set, and give the button `aria-disabled="true"`, which paints it disabled and stops pointer presses but keeps focus on it; `disabled` would drop focus. For a form, guard the `submit` handler and call `preventDefault()` before returning, since Enter in a field submits without a click. Clear the flag, `aria-disabled` and the indicator in `finally`, so a failed request leaves the button usable.
+Ignore a second press. Return early while a pending flag is set, and give the button `aria-disabled="true"`, which paints it disabled and stops pointer presses but keeps focus on it; `disabled` would drop focus. For a form, guard the `submit` handler and call `preventDefault()` before returning, since Enter in a field submits without a click. In `finally`, cancel the indicator's timer and, once its 500ms are up, clear the flag, `aria-disabled` and the indicator, so a failed request leaves the button usable.
 
 Announce the result once, in a snackbar or in a `role="status"` region that is in the page from the start (visible or `.visually-hidden`, never `hidden`) and whose text you change. A native form post that leaves the page needs none of this.
 
