@@ -41,6 +41,7 @@ for (const [name, html, id] of [
   ['two rails', shell(`${rail}${rail}<main>Pane</main>`), 'scaffold-one-child-per-region'],
   ['two trailing toolbars', shell(`<main>Pane</main>${tools}<div class="scaffold-trailing">More</div>`), 'scaffold-one-child-per-region'],
   ['two status bars', shell('<main>Pane</main><footer class="status-bar">A</footer><div class="status-bar" role="region" aria-label="B">B</div>'), 'scaffold-one-child-per-region'],
+  ['two navigation bars', shell('<main>Pane</main><nav class="navigation-bar" aria-label="A"><a href="#a">A</a></nav><nav class="navigation-bar" aria-label="B"><a href="#b">B</a></nav>'), 'scaffold-one-child-per-region'],
   ['a nested scaffold', shell(`<main>${shell('<div class="scaffold-pane">Inner</div>')}</main>`), 'scaffold-does-not-nest'],
 ]) {
   test(`${name} is flagged by ${id}`, () => {

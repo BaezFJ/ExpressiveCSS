@@ -5114,9 +5114,9 @@ Each region takes one direct child. For custom content use the region classes `s
 </div>
 ```
 
-The rail runs from the bar to the bottom of the window. At 840px and wider, expanding it widens its column and narrows the pane. From 600px to 839px an expanded rail opens over the pane with a scrim and the pane keeps its width, as a `.modal` rail does at every width; the open rail covers the app bar's menu button, so it closes from the scrim, Escape or its own menu button, and Tab can still reach the pane under it. Set `--md-comp-nav-rail-collapsed-width` on the scaffold, not the rail, since the rail's column reads it there. Hide a rail with the `hidden` attribute; one hidden by page CSS still keeps its column on medium windows. A vertical toolbar is centered in the trailing region, `--md-comp-toolbar-external-space` (24px) from the pane and the window edge. Under `dir="rtl"` the rail is on the right and the toolbar on the left.
+The rail runs from the bar to the bottom of the window, or to the top of a status bar. At 840px and wider, expanding it widens its column and narrows the pane. From 600px to 839px an expanded rail opens over the pane with a scrim and the pane keeps its width, as a `.modal` rail does at every width; the open rail covers the app bar's menu button, so it closes from the scrim, Escape or its own menu button, and Tab can still reach the pane under it. Set `--md-comp-nav-rail-collapsed-width` on the scaffold, not the rail, since the rail's column reads it there. Hide a rail with the `hidden` attribute; one hidden by page CSS still keeps its column on medium windows. A vertical toolbar is centered in the trailing region, `--md-comp-toolbar-external-space` (24px) from the pane and the window edge. Under `dir="rtl"` the rail is on the right and the toolbar on the left.
 
-Add `tall-rail` to run the rail from the top of the window to the bottom, with the app bar over the pane only and the trailing toolbar centered in the full height.
+Add `tall-rail` to run the rail from the top of the window to the bottom (or to a status bar), with the app bar over the pane only and the trailing toolbar centered in that height.
 
 ```html
 <div class="scaffold tall-rail">

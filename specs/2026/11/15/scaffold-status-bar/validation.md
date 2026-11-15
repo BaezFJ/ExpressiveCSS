@@ -35,3 +35,15 @@ None. Placement is measured by the agent-run checks; the status bar's own screen
   - V5 now checks the demo and named strings, and the low-priority note is in scope.
   - The print claim is dropped as unchecked.
   - The stacking-context and scroll-padding notes are now in the decision row.
+- 2026-11-15, `/code-review high --fix --max-findings all` on `c4781e2bb..HEAD`: nine findings, each checked against the source.
+  - Fixed:
+    - The design reference's status bar sentence made the tall-rail "both" ambiguous. It now comes after, and says both regions end above the status bar.
+    - `llm.md` and the docs page said the rail runs to the window's bottom. They now say "or to a status bar".
+    - The demo used `<footer class="status-bar">` inside a page with a site footer. It is now the `<div role="region">` form the status bar guide asks for.
+    - The decision record's gaps text now names the status row.
+    - The status bar test opens empty, measures once and checks the full width at 700px.
+  - Also fixed, though the reviewer skipped them:
+    - The partial's header and compact comments are corrected and re-pinned.
+    - The note listed the navigation bar as a region, but the rule didn't count it. Two direct-child navigation bars are now flagged, with a fixture. Phase 92 added that region; the rule catches up here.
+  - Kept: the status bar hides below 600px even without a navigation bar, because the roadmap says "Under 600px it is hidden".
+  - Results are recorded below after the full verify.

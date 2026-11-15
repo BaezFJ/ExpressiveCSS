@@ -9,7 +9,7 @@ Component ID: `scaffold`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `cd25c69508f7a6d0add8f49434cc3005006bb8bd17f02a000a0d78eb64bc963c`
+Contract SHA-256: `7a2c56046875bcf971e2814aa32f9663b4551d0340cdc12b8151747ce89c6d84`
 
 #### Selection and adaptation
 
@@ -29,7 +29,7 @@ Support (2026-11-15, `llm.md#scaffold`): A window-height grid that places a head
 
 Web adaptation: CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.
 
-Known boundary: Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding; spoken output and a mobile browser's collapsing address bar remain unverified.
+Known boundary: Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding, and the status bar's row and compact hiding; spoken output and a mobile browser's collapsing address bar remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#scaffold).
 
@@ -66,7 +66,7 @@ Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself
 #### Rules
 
 - `scaffold-is-not-a-landmark`: Write the scaffold as a <div> inside <body>. Its header, navigation rail and main are the landmarks; a role on the scaffold would wrap them in another one.
-- `scaffold-one-child-per-region`: Each scaffold region holds one visible child: one header or .scaffold-bar, one navigation rail or .scaffold-rail, one main or .scaffold-pane, one vertical toolbar or .scaffold-trailing, and one .status-bar. A second one lands in the same grid area and overlaps the first. Add hidden to the ones not shown; hidden="until-found" still takes part in layout, so it counts as shown.
+- `scaffold-one-child-per-region`: Each scaffold region holds one visible child: one header or .scaffold-bar, one navigation rail or .scaffold-rail, one main or .scaffold-pane, one vertical toolbar or .scaffold-trailing, one .status-bar, and one navigation bar. A second one lands in the same grid area and overlaps the first. Add hidden to the ones not shown; hidden="until-found" still takes part in layout, so it counts as shown.
 - `scaffold-does-not-nest`: A scaffold is as tall as the window and holds the page's one main, so it can't sit inside another. Use panes or the grid inside the scaffold's main.
 
 #### Guide checks

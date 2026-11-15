@@ -68,10 +68,10 @@ const S = defineSections([
               <button type="button" aria-label="Notes"><span class="material-symbols" aria-hidden="true">sticky_note_2</span></button>
               <button type="button" aria-label="Tasks"><span class="material-symbols" aria-hidden="true">task_alt</span></button>
             </div>
-            <footer class="status-bar">
+            <div class="status-bar" role="region" aria-label="Scaffold demo status">
               <span>Inbox synced</span>
               <button type="button" class="end" aria-label="Notifications"><span class="material-symbols" aria-hidden="true">notifications</span></button>
-            </footer>
+            </div>
             <nav class="navigation-bar" aria-label="Scaffold demo destinations">
               <a href="#anatomy" aria-current="page"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a>
               <a href="#regions"><span class="material-symbols" aria-hidden="true">star</span>Starred</a>
@@ -131,7 +131,7 @@ const S = defineSections([
         </p>
         <p>
           The rail fills its region from the bar down to the bottom of the
-          window and scrolls its own destinations when they don't fit. At
+          window, or to a status bar, and scrolls its own destinations when they don't fit. At
           840px and wider, expanding it widens its column and narrows the
           pane. The vertical toolbar is centered in its region, 24px from the
           pane and from the window edge.
@@ -161,9 +161,9 @@ const S = defineSections([
   <Section {...S["tall-rail"]}>
         <p>
           Add <code>.tall-rail</code> to run the rail from the top of the window
-          to the bottom. The app bar then sits over the pane only, starting at
-          the rail's edge, and the trailing toolbar is centered in the full
-          window height. Expanding the rail pushes the bar and the pane
+          to the bottom, or to a status bar. The app bar then sits over the
+          pane only, starting at the rail's edge, and the trailing toolbar is
+          centered in that height. Expanding the rail pushes the bar and the pane
           together.
         </p>
 <Code code={`

@@ -39,7 +39,7 @@
 - **R4** Without a status bar, every region's box matches phases 88 to 93.
 - **R5** With the root font size at 32px, the status bar grows and the pane gets shorter, with the status bar still at the bottom edge.
 - **R6** These records change: `semantics.json` (R7), the scaffold docs page (a status bar in the demo, and the low-priority note) and `llm.md` section, the status bar docs page and `llm.md` section, the design reference `scaffold.md`, the decision record, `CHANGELOG.md`, the CSS budget, and `npm run build:skill` last.
-- **R7** In `semantics.json`, `scaffold-one-child-per-region` also flags two visible `.status-bar` children, and its message and the row note name the status bar region.
+- **R7** In `semantics.json`, `scaffold-one-child-per-region` also flags two visible `.status-bar` children and two visible direct-child navigation bars, and its message and the row note name both regions.
 
 ## Risks considered
 

@@ -14,8 +14,8 @@
 //   status    .status-bar, full width along the bottom (600px and up)
 //
 // The bar spans the top, and the rail, pane and trailing regions share the row
-// below it. .tall-rail runs the rail and trailing region the full height and
-// puts the bar over the pane only. An empty region takes no space.
+// below it. .tall-rail runs the rail and trailing region from the top down to
+// the window's bottom, or to a status bar, and puts the bar over the pane only. An empty region takes no space.
 //
 // From 600px up the shell is as tall as the window and only the pane scrolls.
 // `clip` rather than `hidden` keeps focus and find-in-page from scrolling the
@@ -233,7 +233,8 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
       margin-block-end: 16px;
     }
 
-    // The status bar guide says not to show it with a navigation bar.
+    // The compact layout has no rail region. The status bar hides here too,
+    // with or without a navigation bar, as the roadmap and its guide ask.
     > .navigation-rail:not(.expanded),
     > .scaffold-rail,
     > .status-bar {

@@ -730,7 +730,7 @@ for (const [name, type, run] of engines) {
   const status = (tag = 'footer') => `<${tag} class="status-bar" id="sb"${tag === 'div' ? ' role="region" aria-label="Status"' : ''}><span>Ready</span><button type="button" class="end" aria-label="Notifications">${icon('notifications')}</button></${tag}>`;
 
   run(`${name}: a status bar spans the scaffold's full width along the bottom`, { timeout: 30000 }, async () => {
-    const { browser, tab, box } = await open(type, page(`<div id="host">${scaffold({ bottom: status() })}</div>`));
+    const { browser, tab, box } = await open(type, page('<div id="host"></div>'));
     try {
       for (const [label, html] of [['footer', scaffold({ bottom: status() })], ['div region', scaffold({ bottom: status('div') })]]) {
         await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, html);
@@ -747,12 +747,15 @@ for (const [name, type, run] of engines) {
       const nav = await box('#rail');
       assert.equal(nav.top, 0);
       near(nav.bottom, sb.top, 'the tall rail ends at the status bar');
-      near(((await box('#tools')).top + (await box('#tools')).bottom) / 2, sb.top / 2, 'the trailing region ends there too');
+      const tb = await box('#tools');
+      near((tb.top + tb.bottom) / 2, sb.top / 2, 'the toolbar is centered above it too');
       assert.deepEqual([sb.left, sb.width], [0, 1280], 'and the status bar runs under the rail');
       await tab.setViewportSize({ width: 700, height: 800 });
       await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, scaffold({ bottom: status() }));
       near((await box('#pane')).left, 96, 'at 700px the rail column is still held');
-      near((await box('#sb')).bottom, 800, 'with the status bar at the bottom');
+      const held = await box('#sb');
+      assert.deepEqual([held.left, held.width], [0, 700], 'with the status bar under the held column');
+      near(held.bottom, 800, 'and at the bottom');
     } finally {
       await browser.close();
     }
