@@ -65,3 +65,4 @@ Commands: `npm run build`, then `node --test tests/navigation-rail.test.js tests
   - Nit: the budget comment is shortened (111,716, +324).
   - FYI: the decision row now states that a rail moved into a closed shadow root after starting keeps its document listener.
   - Kept: the root lookup that resembles `formEventScope()` stays inline, because that helper is named for forms.
+- 2026-11-15, Codex review gate on the uncommitted fixes ([P2]): `_controls` called `.split()` on a missing `aria-controls`, so Escape threw before `collapse()` once an opener lost the attribute. The new `controlledIds()` helper treats a missing attribute as no IDs. A regression test removes the opener's `aria-controls`, presses Escape, and checks the collapse and the fallback focus. On the old code it fails with `TypeError: Cannot read properties of null (reading 'split')`. JS budget 111,727 (+335).

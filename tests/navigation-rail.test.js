@@ -314,6 +314,14 @@ describe('NavigationRail outside toggles', () => {
       $('#b2').setAttribute('aria-controls', 'bare');
 
       click($('#b2'));
+      $('#b2').removeAttribute('aria-controls');
+      $('#bare a').focus();
+      escape();
+      assert.equal(bare.isExpanded, false, 'an opener that lost aria-controls does not stop Escape');
+      assert.equal(document.activeElement, $('#b1'), 'and focus falls back to the next toggle');
+      $('#b2').setAttribute('aria-controls', 'bare');
+
+      click($('#b2'));
       const removed = $('#b2');
       removed.remove();
       $('#bare a').focus();

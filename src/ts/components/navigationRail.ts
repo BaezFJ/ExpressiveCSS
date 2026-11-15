@@ -35,6 +35,8 @@ const TOGGLE = ':scope > button:first-child:not(.button, [popovertarget])';
 // Rendered: checkVisibility also sees display:none from a stylesheet; jsdom lacks it.
 const shown = (el: Element) => el.checkVisibility?.() ?? !el.closest('[hidden]');
 const operable = (button: HTMLButtonElement) => !button.disabled && !button.closest('[inert]');
+/** The IDs a button's aria-controls lists; none once the attribute is removed. */
+const controlledIds = (button: Element) => (button.getAttribute('aria-controls') ?? '').split(/\s+/);
 /** A button focus can return to: still in the page, enabled, shown and not inert. */
 const usable = (button: HTMLButtonElement | null): button is HTMLButtonElement =>
   Boolean(button?.isConnected) && operable(button) && shown(button);
@@ -137,7 +139,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
   // A button in the rail's root, outside the rail, whose aria-controls lists its id.
   private _controls = (button: HTMLButtonElement) =>
     Boolean(this.el.id) && button.getRootNode() === this.el.getRootNode() && !this.el.contains(button) &&
-    button.getAttribute('aria-controls').split(/\s+/).includes(this.el.id);
+    controlledIds(button).includes(this.el.id);
 
   // Records the opener only when the rail really opened.
   private _toggleFrom(button: HTMLButtonElement) {
