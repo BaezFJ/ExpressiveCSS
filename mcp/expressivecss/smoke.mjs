@@ -978,6 +978,15 @@ const transport = new StdioClientTransport({
   const cardContent = lint([cardContentMarkup]);
   assert.equal(cardContent.stdout.match(/legacy-card-content/gu)?.length, 1, cardContent.stdout);
   assert.match(cardContent.stdout, /card-content\.html:3:\d+ legacy-card-content/u);
+  // A transition on `all` is reported in a style attribute and in a style block, and listing the properties clears both.
+  const transitionMarkup = path.join(outsideDir, 'transition.html');
+  await writeFile(transitionMarkup, '<p style="transition: all 200ms">Hi</p>\n<style>.card { transition: all 200ms; }</style>\n');
+  const transition = lint([transitionMarkup]);
+  assert.equal(transition.status, 1, transition.stderr);
+  assert.deepEqual(transition.stdout.match(/transition\.html:\d+:\d+ transition-all/gu), ['transition.html:1:11 transition-all', 'transition.html:2:16 transition-all'], transition.stdout);
+  await writeFile(transitionMarkup, '<p style="transition: opacity 200ms, transform 200ms">Hi</p>\n<style>.card { transition: opacity 200ms, transform 200ms; }</style>\n');
+  const transitionListed = lint([transitionMarkup]);
+  assert.equal(transitionListed.status, 0, transitionListed.stdout);
   // The rules for names 0.16.0 removed, one by one and in process: the lint CLI
   // rewrites className= to class= before inspecting, so it cannot test JSX.
   // Each rule lists markup it must flag and current markup that only shares a
@@ -1044,8 +1053,21 @@ const transport = new StdioClientTransport({
   };
   const legacyIds = authoringRules.map((rule) => rule.id).filter((id) => /^legacy-/.test(id) && !['legacy-btn-class', 'legacy-card-content', 'legacy-nav-wrapper', 'legacy-brand-logo', 'legacy-lever', 'legacy-filled-in', 'legacy-materialized-name', 'legacy-input-field', 'legacy-materialize-textarea'].includes(id));
   assert.deepEqual(Object.keys(legacyCases).sort(), [...legacyIds].sort(), 'every 0.16.0 legacy rule needs cases, and every case a rule');
+  // The regex rules without a `legacy-` prefix, held to the same flag and pass lists.
+  const ruleCases = {
+    'raw-color-in-component-style': {
+      flag: ['<p style="color: #fff">Hi</p>', '.chip { background-color:#1a73e8 }', '.card { border-top: #000 }'],
+      pass: ['<p style="color: var(--md-sys-color-on-surface)">Hi</p>', ':root { --md-ref-seed-color: #6750a4; }'],
+    },
+    'transition-all': {
+      flag: ['.a { transition: all 200ms }', '.a{transition:all .2s}', '.a { TRANSITION: ALL 1s }', '.a { transition: opacity .2s, all .3s }', '.a { transition-property: all }', "<div style={{ transition: 'all 0.2s' }}></div>", '<style>\n  .card { transition: all 200ms; }\n</style>'],
+      pass: ['.a { transition: opacity 200ms, transform 200ms }', '.a { transition-property: opacity }', '.a { transition: opacity .2s allow-discrete }', '.a { transition: none }', '.a { transition: var(--all) }', 'const s = { transition: theme.all };', '.a { --transition: all 1s }', '.a { -webkit-transition: all 1s }', '.a { transition-duration: 200ms; all: unset }', '<p style="transition: opacity 1s" data-x="all"></p>', 'const s = { transition: x, all: y };'],
+    },
+  };
+  const ruleIds = authoringRules.map((rule) => rule.id).filter((id) => !/^legacy-/.test(id));
+  assert.deepEqual(Object.keys(ruleCases).sort(), ruleIds.sort(), 'every regex rule without a legacy- prefix needs cases, and every case a rule');
   const idsFor = (snippet) => inspectAuthoringRules(snippet).map((issue) => issue.id);
-  for (const [id, { flag, pass }] of Object.entries(legacyCases)) {
+  for (const [id, { flag, pass }] of Object.entries({ ...legacyCases, ...ruleCases })) {
     for (const snippet of flag) assert.ok(idsFor(snippet).includes(id), `${id} misses ${JSON.stringify(snippet)}`);
     for (const snippet of pass) assert.ok(!idsFor(snippet).includes(id), `${id} flags ${JSON.stringify(snippet)}`);
   }
@@ -1064,8 +1086,10 @@ const transport = new StdioClientTransport({
     'class="' + fill('btn '),
     // A `.range` host with no `>` after it: an unbounded gap rescanned to the end from every host.
     fill('class="range '),
+    // Whitespace after the colon that the value gap could also take, a run of declarations that never reach `all`, and a value with no end.
+    'transition:' + fill(' '), fill('transition:'), 'transition: opacity' + fill(' 1s,'),
   ];
-  for (const rule of authoringRules.filter((entry) => legacyIds.includes(entry.id) || entry.id === 'legacy-btn-class')) {
+  for (const rule of authoringRules.filter((entry) => legacyIds.includes(entry.id) || ['legacy-btn-class', 'transition-all'].includes(entry.id))) {
     const regex = new RegExp(rule.pattern.source, rule.pattern.flags);
     for (const input of adversarial) {
       regex.lastIndex = 0;
