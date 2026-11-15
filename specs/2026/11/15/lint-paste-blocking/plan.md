@@ -6,15 +6,15 @@ Phase 87. Requirements: [requirements.md](requirements.md). Checks: [validation.
 
 Covers R1 to R5. Checks V1.
 
-- [ ] Add the R3 cases to the non-legacy table, the backtracking inputs and the CLI case to `mcp/expressivecss/smoke.mjs`, run `npm test --prefix mcp/expressivecss` and watch it fail on the missing rule.
-- [ ] Append `paste-blocked` to the regex list in `mcp/expressivecss/server.js`, with statements that can't start with whitespace, bounded repeats, and the attribute name matched in any case without regex modifiers (Node 22 lacks them). Add its ID to the backtracking loop's rule filter. Add no export and no function.
+- [x] Add the R3 cases to the non-legacy table, the backtracking inputs and the CLI case to `mcp/expressivecss/smoke.mjs`, run `npm test --prefix mcp/expressivecss` and watch it fail on the missing rule.
+- [x] Append `paste-blocked` to the regex list in `mcp/expressivecss/server.js`, with statements that can't start with whitespace, bounded repeats, and the attribute name matched in any case without regex modifiers (Node 22 lacks them). Add its ID to the backtracking loop's rule filter. Add no export and no function.
 
 ## 2. Docs
 
 Covers R6. Checks V2.
 
-- [ ] Name the check in the lint paragraph of `mcp/expressivecss/README.md` and in the Unreleased entry of `mcp/expressivecss/CHANGELOG.md`.
-- [ ] Commit groups 1 and 2, so the branch lint in group 3 has a commit to name.
+- [x] Name the check in the lint paragraph of `mcp/expressivecss/README.md` and in the Unreleased entry of `mcp/expressivecss/CHANGELOG.md`.
+- [x] Commit groups 1 and 2, so the branch lint in group 3 has a commit to name.
 
 ## 3. Lint-stage rerun
 
