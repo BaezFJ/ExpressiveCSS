@@ -51,3 +51,10 @@ Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, th
     - An empty `.scaffold-rail` counted as a rail. `:empty` now excludes it, with a test.
     - The repeated pane selector: the gaps are now private properties set on the shell, so the selector is written once. This saved fewer bytes than the new top-gap and empty-rail behavior added.
   - CSS budget 92,906. Scaffold, tokens and shadow-DOM suites pass 120 of 120. Results are recorded after the full verify.
+- 2026-11-15, `code-review-and-quality` (five-axis review by an independent read-only subagent): no Critical findings.
+  - Fixed:
+    - Required: the region paragraph still said the pane meets the edges without a rail or bar. It now says the pane takes that space and advises `hidden` for unused regions.
+    - Optional: `:empty` doesn't match whitespace. The comment and docs now say so and point to `hidden`.
+    - Nits: the list-detail case checks the panes container's own color; hidden-bar, hidden-toolbar and fixed-toolbar gap branches have tests; a long docs line is rewrapped; the decision record lists the compact-and-separated and forced-colors checks.
+  - Rejected: the reviewer said a color utility on `main` would lose to the pane surface's (0,4,0) specificity. Utilities sit in the later `utilities` cascade layer, which wins whatever the specificity. A browser check confirmed it: `main.surface-container-low` in a 1024px scaffold computes to `surface-container-low`, not `surface`.
+  - The scaffold suite passes 102 of 102.

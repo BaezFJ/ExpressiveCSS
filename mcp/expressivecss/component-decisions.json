@@ -473,7 +473,7 @@
         "sources": [
           {
             "path": "src/sass/components/_scaffold.scss",
-            "sha256": "739234f58d818ac04b4ad3fe68519999b6e82746f33a067295e094ffef9e270a"
+            "sha256": "d5ffbbaffc0341148146b58c765b555abe3cfe7d4526848fa7fceb48047427de"
           }
         ],
         "gaps": [
@@ -541,8 +541,18 @@
           },
           {
             "file": "tests/scaffold-browser.test.js",
+            "name": "chromium: the floating surface stays off compact windows and out of separated panes",
+            "scope": "No surface below 600px, no surface or gaps around separated or floating panes, and a panes container keeping its own margins and color. Equivalent Firefox and WebKit cases run in the same suite."
+          },
+          {
+            "file": "tests/scaffold-browser.test.js",
             "name": "chromium: the scaffold adds no landmark and keeps banner, navigation and main in order",
             "scope": "Landmark order from the accessibility tree. No spoken-output assertion."
+          },
+          {
+            "file": "tests/scaffold-browser.test.js",
+            "name": "chromium: under forced colors the floating pane keeps a visible edge",
+            "scope": "A 1px solid pane border under forced colors at 1024px."
           }
         ]
       }

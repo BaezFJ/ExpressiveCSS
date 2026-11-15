@@ -123,16 +123,17 @@ const S = defineSections([
         <p>
           Use the region classes for custom content that isn't one of those
           components. A region with nothing in it takes no space: without a
-          rail the pane meets the leading edge, and without a bar the rail and
-          pane start at the top. A second child in the same region would
+          rail or a bar, the pane takes that space. Give a region you aren't
+          using <code>hidden</code> rather than leaving it empty. A second
+          child in the same region would
           overlap the first, so give the ones you aren't showing
           <code>hidden</code>.
         </p>
         <p>
           From 600px up, the scaffold paints <code>surface-container</code>
           and the pane floats on it as a rounded <code>surface</code>, with
-          16px gaps below it, after it, before it without a rail, and above it without a bar. Beside
-          a floating toolbar the toolbar's own 24px margin is the gap. The
+          16px gaps below it, after it, before it without a rail, and above
+          it without a bar. Beside a floating toolbar the toolbar's own 24px margin is the gap. The
           rounded corners clip content that runs to the edge, so pad the
           pane's content. A pane holding separated or floating panes keeps no
           surface of its own, since its panes are already cards. Put a panes

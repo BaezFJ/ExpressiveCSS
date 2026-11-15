@@ -822,6 +822,12 @@ for (const [name, type, run] of engines) {
       near((await box('#pane')).left, 16, 'an empty custom rail counts as absent');
       await render({ bar: '', trailing: '' });
       near((await box('#pane')).top, 16, 'without a bar the pane floats 16px from the top');
+      await render({ bar: header().replace('<header id="bar"', '<header id="bar" hidden'), trailing: '' });
+      near((await box('#pane')).top, 16, 'a hidden bar counts as absent');
+      for (const [label, trailing] of [['hidden', tools().replace('class="toolbar vertical"', 'class="toolbar vertical" hidden')], ['fixed', tools().replace('class="toolbar vertical"', 'class="toolbar vertical fixed"')]]) {
+        await render({ trailing });
+        near((await box('#pane')).right, 1008, `a ${label} toolbar leaves the 16px end gap`);
+      }
       await render({ trailing: '<div class="scaffold-trailing" id="ct" style="width:60px">Tools</div>' });
       near((await box('#ct')).left - (await box('#pane')).right, 16, 'a custom trailing region gets the 16px gap');
       await render({ trailing: '', bottom: '<footer class="status-bar" id="sb"><span>Ready</span></footer>' });
@@ -854,6 +860,7 @@ for (const [name, type, run] of engines) {
       }
       await render('<main id="pane" class="panes list-detail"><div class="list-pane">A</div><div class="detail-pane">B</div></main>');
       assert.equal(await style('#pane', 'marginInlineEnd'), '24px', 'a panes container keeps its own margins');
+      sameColor(await rgb(tab, '#pane'), await rgb(tab, '#p-surface', 'color'), 'and its own surface color');
       assert.equal(await style('#pane', 'borderTopLeftRadius'), '0px', 'and gets no radius');
     } finally {
       await browser.close();

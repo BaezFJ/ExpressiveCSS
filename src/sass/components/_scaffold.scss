@@ -185,7 +185,8 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
         --_scaffold-pane-gap-top: 16px;
       }
 
-      // An empty .scaffold-rail takes no width, so it counts as no rail.
+      // A .scaffold-rail with nothing in it, not even whitespace, takes no
+      // width, so it counts as no rail. Hide any other unused region.
       &:not(:has(> #{$_rail}:not([hidden], :empty))) {
         --_scaffold-pane-gap-start: 16px;
       }
