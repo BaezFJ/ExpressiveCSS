@@ -248,17 +248,22 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
 @include bp-down("medium") {
   // The bottom padding adds up what is shown: the navigation bar (or just
   // the safe area without one) and a floating toolbar's 64px plus its gap.
+  // Plain declarations, not custom properties on :root, which a shadow-only
+  // load would leave undefined.
   :root:has(> body > .scaffold) {
-    scroll-padding-block: rem(64px)
-      calc(var(--_scaffold-navbar-pad, env(safe-area-inset-bottom, 0px)) + var(--_scaffold-toolbar-pad, 0px));
+    scroll-padding-block: rem(64px) env(safe-area-inset-bottom, 0px);
   }
 
   // :has() can't nest, so the shown-bar list is written out under body here.
   :root:has(> body > .scaffold > .navigation-bar:not([hidden]), > body > .scaffold > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])) {
-    --_scaffold-navbar-pad: calc(#{$_navbar-size});
+    scroll-padding-block-end: calc(#{$_navbar-size});
   }
 
   :root:has(> body > .scaffold > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed, [hidden])) {
-    --_scaffold-toolbar-pad: 80px;
+    scroll-padding-block-end: calc(env(safe-area-inset-bottom, 0px) + 80px);
+  }
+
+  :root:has(> body > .scaffold > .navigation-bar:not([hidden]), > body > .scaffold > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])):has(> body > .scaffold > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed, [hidden])) {
+    scroll-padding-block-end: calc(#{$_navbar-size} + 80px);
   }
 }
