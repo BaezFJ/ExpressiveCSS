@@ -9,7 +9,7 @@ Component ID: `bottom-sheet`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `8eda7601f5f1a062089e74c653a02d44862633971cb4117f70bcc18f296420c6`
+Contract SHA-256: `866cab3877048b0fc7ef1c799ba5e573b7cadaa56f4496615a541a11a3136d4a`
 
 #### Selection and adaptation
 

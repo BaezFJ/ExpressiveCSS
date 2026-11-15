@@ -154,7 +154,8 @@ const S = defineSections([
         </p>
         <p>
           A status bar takes a row of its own under the
-          rail, pane and toolbar, even with a tall rail, and hides below
+          rail, pane and toolbar, even with a tall rail, and under the
+          navigation bar when no rail is shown. It hides below
           600px, where the navigation bar shows. Its low-priority items
           (<code>data-priority="low"</code>) hide below 600px too, so in a
           scaffold that hiding never shows.
@@ -258,7 +259,10 @@ const S = defineSections([
           <code>&lt;footer&gt;</code>, stays
           pinned at the bottom. From 600px up the navigation bar hides while a
           rail is shown; when no rail is shown it stays, in its own row along
-          the bottom. The
+          the bottom. A rail counts as shown unless it
+          has the <code>hidden</code> attribute or is an empty
+          <code>.scaffold-rail</code>, so hide it with <code>hidden</code>, not a
+          <code>hide-on-*</code> helper, to bring the navigation bar back. The
           rail is hidden and out of the tab order until the app bar's menu
           button opens it over the page with a scrim, so the app bar needs a
           button whose <code>aria-controls</code> names the rail. Custom
@@ -305,7 +309,8 @@ const S = defineSections([
           <code>viewport-fit=cover</code> to the page's viewport meta tag. The
           scaffold then keeps every region inside the safe areas: it pads its
           sides by the side insets at every width, and its top and bottom from
-          600px up (the status bar pads its own bottom). Below 600px the app bar
+          600px up (a status bar, or a navigation bar shown without a rail,
+          pads its own bottom). Below 600px the app bar
           pads its own top inside its background (a custom
           <code>.scaffold-bar</code>, or a <code>&lt;header&gt;</code> that
           isn't an app bar, pads its own with

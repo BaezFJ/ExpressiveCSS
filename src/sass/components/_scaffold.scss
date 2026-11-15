@@ -58,6 +58,9 @@ $_sheet-open: "dialog.side-sheet[open]:not(:modal, .start, [hidden])";
 $_app-bar: ":is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)";
 // A shown navigation bar region, as a :has() argument list.
 $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])";
+// A shown rail, as a :has() argument. Only the hidden attribute or an empty
+// .scaffold-rail counts as no rail: CSS can't see a helper's display: none.
+$_rail-shown: "> #{$_rail}:not([hidden], :empty)";
 
 // The expanded rail's own padding (20px 16px 16px) plus the insets it meets.
 // Hard-coded from _navigation-rail.scss; the rail's own overlay outside a
@@ -237,14 +240,20 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
   }
 
   // From 600px up a shown rail takes over from the navigation bar. Without
-  // one the bar stays, in its own row, and pads the bottom inset itself.
+  // one the bar stays, in its own row, and pads the bottom inset itself, or
+  // leaves it to a status bar below it.
   @include bp-up("medium") {
-    &:has(> #{$_rail}:not([hidden], :empty)) > #{$_navbar} {
+    &:has(#{$_rail-shown}) > #{$_navbar} {
       display: none;
     }
 
-    &:has(#{$_navbar-shown}):not(:has(> #{$_rail}:not([hidden], :empty))) {
+    &:has(#{$_navbar-shown}):not(:has(#{$_rail-shown})) {
       padding-bottom: 0;
+    }
+
+    &:has(> .status-bar:not([hidden])) > .navigation-bar,
+    &:has(> .status-bar:not([hidden])) > footer > .navigation-bar:only-child {
+      padding-bottom: 6px;
     }
   }
 
@@ -296,7 +305,7 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
 
       // A .scaffold-rail with nothing in it, not even whitespace, takes no
       // width, so it counts as no rail. Hide any other unused region.
-      &:not(:has(> #{$_rail}:not([hidden], :empty))) {
+      &:not(:has(#{$_rail-shown})) {
         --_scaffold-pane-gap-start: 16px;
       }
 

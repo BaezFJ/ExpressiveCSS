@@ -1083,25 +1083,41 @@ for (const [name, type, run] of engines) {
   run(`${name}: from 600px up a scaffold without a rail keeps its navigation bar`, { timeout: 30000 }, async () => {
     const bare = navbar.replace(/<\/?footer[^>]*>/g, '').replace('class="navigation-bar"', 'class="navigation-bar" id="nb"');
     const status = '<footer class="status-bar" id="sb"><span>Ready</span></footer>';
-    const { browser, tab, box, style } = await open(type, page(`<div id="host">${scaffold({ nav: '', bottom: navbar })}</div>`), { width: 700 });
+    const sheet = '<dialog class="side-sheet" id="sheet" open><p>Details</p></dialog>';
+    // With the INSETS rewrite: the shell pads its sides, the bar pads the bottom.
+    const { browser, tab, box, style } = await open(type, withInsets(`<div id="host">${scaffold({ nav: '', bottom: navbar })}</div>`), { width: 700 });
     try {
       const render = (o) => tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, scaffold(o));
+      const cases = [
+        ['default', { nav: '', bottom: navbar }],
+        ['tall rail', { nav: '', cls: 'tall-rail', bottom: navbar }],
+        ['bare bar', { nav: '', bottom: bare }],
+        ['hidden rail', { nav: rail().replace('<nav ', '<nav hidden '), bottom: navbar }],
+        ['empty custom rail', { nav: '<div class="scaffold-rail"></div>', bottom: navbar }],
+      ];
       for (const width of [700, 1280]) {
         await tab.setViewportSize({ width, height: 800 });
-        for (const [label, o] of [['default', { nav: '', bottom: navbar }], ['tall rail', { nav: '', cls: 'tall-rail', bottom: navbar }], ['bare bar', { nav: '', bottom: bare }]]) {
+        for (const [label, o] of cases) {
           await render(o);
           assert.notEqual(await style('#nb', 'display'), 'none', `${label} at ${width}px: the navigation bar shows without a rail`);
           const nb = await box('#nb');
-          near(nb.left, 0, `${label} at ${width}px: it spans the scaffold`);
-          near(nb.right, width, `${label} at ${width}px: to the trailing edge`);
+          near(nb.left, INSETS.left, `${label} at ${width}px: it spans the scaffold`);
+          near(nb.right, width - INSETS.right, `${label} at ${width}px: to the trailing edge`);
           near(nb.bottom, 800, `${label} at ${width}px: at the bottom`);
           assert.equal(await style('#s', 'paddingBottom'), '0px', `${label} at ${width}px: the shell adds no bottom inset`);
+          assert.equal(await style('#nb .navigation-bar, nav#nb', 'paddingBottom'), '20px', `${label} at ${width}px: the bar pads it once`);
         }
         await render({ nav: '', bottom: navbar + status });
         near((await box('#nb')).bottom, (await box('#sb')).top, `at ${width}px it sits above a status bar`);
+        assert.equal(await style('#nb .navigation-bar', 'paddingBottom'), '6px', `at ${width}px it leaves the inset to the status bar`);
+        assert.equal(await style('#sb', 'paddingBottom'), '20px', `at ${width}px the status bar pads it once`);
         await render({ bottom: navbar });
         assert.equal(await style('#nb', 'display'), 'none', `at ${width}px a shown rail still hides it`);
+        assert.equal(await style('#s', 'paddingBottom'), '20px', `at ${width}px the shell pads the bottom inset again`);
       }
+      await render({ nav: '', bottom: navbar + sheet });
+      near((await box('#nb')).bottom, 800, 'with a side sheet column open at 1280px it stays at the bottom');
+      assert.ok((await box('#sheet')).bottom <= (await box('#nb')).top + 1, 'below the sheet');
     } finally {
       await browser.close();
     }

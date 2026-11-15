@@ -34,10 +34,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `nav.navigation-bar` child (or a `<footer>` holding only one) is pinned at
   the bottom, and the rail is hidden until the app bar's menu button opens it
   as an overlay. From 600px up the navigation bar hides while a rail is shown
-  and keeps its own bottom row when no rail is shown. A trailing vertical toolbar turns
-  into a centered row that floats 16px above the navigation bar.
+  and keeps its own bottom row when no rail is shown, meaning the rail has the
+  `hidden` attribute or is an empty `.scaffold-rail`. A trailing vertical
+  toolbar turns into a centered row that floats 16px above the navigation bar.
 - A `.status-bar` child of a `.scaffold` takes a full-width row along the
-  bottom, under the rail, pane and toolbar, and hides below 600px.
+  bottom, under the rail, pane and toolbar or a navigation bar, and hides
+  below 600px.
 - From 600px up a `.scaffold` paints `surface-container` and its pane floats
   on it as a rounded `surface` with 16px gaps. The app bar rests on the shell
   color and fills with `surface-container-high` on scroll.

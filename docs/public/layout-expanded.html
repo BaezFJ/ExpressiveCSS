@@ -54,20 +54,25 @@
   </div>
   <script src="dist/js/expressive.min.js"></script>
   <script>
+    // Below 840px the navigation bar replaces the rail. From 840px the rail shows expanded.
+    // The first state is set before the page paints, so the layout doesn't jump.
+    const wide = matchMedia('(width >= 840px)');
+    const railEl = document.getElementById('rail');
+    const menu = document.getElementById('menu');
+    railEl.hidden = menu.hidden = !wide.matches;
+    railEl.classList.toggle('expanded', wide.matches);
     document.addEventListener('DOMContentLoaded', () => {
       Expressive.AutoInit();
-      // Below 840px the navigation bar replaces the rail. From 840px the rail shows expanded.
-      const rail = Expressive.NavigationRail.getInstance(document.getElementById('rail'));
-      const menu = document.getElementById('menu');
-      const wide = matchMedia('(width >= 840px)');
-      const fit = () => {
-        rail.el.hidden = !wide.matches;
-        menu.hidden = !wide.matches;
+      const rail = Expressive.NavigationRail.getInstance(railEl);
+      wide.addEventListener('change', () => {
+        // Keep focus on the page when the control holding it hides.
+        if (!wide.matches && (railEl.contains(document.activeElement) || document.activeElement === menu)) {
+          document.getElementById('main').focus();
+        }
+        railEl.hidden = menu.hidden = !wide.matches;
         if (wide.matches) rail.expand();
         else rail.collapse();
-      };
-      fit();
-      wide.addEventListener('change', fit);
+      });
     });
   </script>
 </body>

@@ -8,7 +8,7 @@ import { expect } from '@playwright/test';
 import { engines } from './browser.js';
 
 const LAYOUTS = ['compact', 'rail', 'expanded', 'dashboard', 'list-detail'];
-const RAIL_FROM = { compact: Infinity, rail: 600, dashboard: 600, expanded: 840 };
+const RAIL_FROM = { rail: 600, dashboard: 600, expanded: 840 };
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), 'utf8');
 
 nodeTest('the app templates are scaffolds without shell CSS or shell helpers', async () => {
@@ -20,8 +20,8 @@ nodeTest('the app templates are scaffolds without shell CSS or shell helpers', a
     assert.match(html, /<body>\s*<div class="scaffold[ "]/, `${layout}: the scaffold is the body's child`);
     assert.match(html, /name="viewport" content="[^"]*viewport-fit=cover/, `${layout}: viewport-fit=cover`);
     assert.match(html, /<header>\s*<a class="visually-hidden-focusable" href="#main">/, `${layout}: a skip link in the header`);
-    assert.match(html, /<main id="main" tabindex="-1">/, `${layout}: a focusable main`);
-    assert.equal(/class="scaffold tall-rail"/.test(html), layout in RAIL_FROM && layout !== 'compact', `${layout}: tall-rail on rail templates`);
+    assert.match(html, /<main id="main" tabindex="-1"[ >]/, `${layout}: a focusable main`);
+    assert.equal(/class="scaffold tall-rail"/.test(html), layout in RAIL_FROM, `${layout}: tall-rail on rail templates`);
   }
 });
 
@@ -45,12 +45,17 @@ for (const [name, engine, test] of engines) {
         for (const width of [390, 700, 1280]) {
           await page.setViewportSize({ width, height: 812 });
           assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `${layout} overflows at ${width}px`);
+          if (width >= 600) {
+            const pane = await page.locator('main').evaluate((el) => [getComputedStyle(el).marginInlineEnd, getComputedStyle(el).borderTopLeftRadius]);
+            assert.equal(pane[0], '16px', `${layout}: main floats with its gap at ${width}px`);
+            assert.notEqual(pane[1], '0px', `${layout}: and rounded corners at ${width}px`);
+          }
           if (layout === 'list-detail') {
             await expect(page.locator('#items')).toBeVisible();
             await expect(page.locator('#detail'))[width >= 840 ? 'toBeVisible' : 'toBeHidden']();
             continue;
           }
-          const railShown = width >= RAIL_FROM[layout];
+          const railShown = width >= (RAIL_FROM[layout] ?? Infinity);
           await expect(page.locator('.navigation-bar'))[railShown ? 'toBeHidden' : 'toBeVisible']();
           if (layout !== 'compact') await expect(page.locator('.navigation-rail'))[railShown ? 'toBeVisible' : 'toBeHidden']();
           if (layout === 'expanded') await expect(page.locator('#menu'))[railShown ? 'toBeVisible' : 'toBeHidden']();
