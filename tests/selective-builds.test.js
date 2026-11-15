@@ -577,5 +577,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the scaffold's safe-area insets (shell padding, compact bar and shell, rail overlay, scroll padding): 93,258 gzip bytes (+166).
   // Reviewed the app bar reaching into the inset strips, the widened rail overlay and the compact inset on the app bar only: 93,350 gzip bytes (+92).
   // Reviewed the exact app bar selector in the scaffold and the tall-rail bar reaching into empty side strips: 93,409 gzip bytes (+59).
-  assert.ok(sizes(css).gzip <= 93409, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed direction-aware tall-rail bar strips: 93,474 gzip bytes (+65).
+  assert.ok(sizes(css).gzip <= 93474, `CSS gzip: ${sizes(css).gzip}`);
 });

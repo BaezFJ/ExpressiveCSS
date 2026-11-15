@@ -60,3 +60,4 @@ Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, th
   - Nits: the toolbar margin comment now explains the shell's bottom padding; a tall-rail bar with empty side regions reaches into the side strips, with a test.
   - FYI, no change: the copied rail padding is commented; browsers without `:dir()` fall back to the old overlay.
   - CSS budget 93,409. The scaffold suite passes 124 of 124.
+- 2026-11-15, local Codex review (`codex review --base dfc7648ad`, saved as `codex-review-phase-97.txt` in the worktree's git dir, read to its last line). One [P2] finding, confirmed and fixed: the tall-rail bar's side-strip extension assumed LTR, so under RTL it reached into the rail and covered its top controls. Both rules now pick their side with `:dir()`. An RTL case with a rail and no trailing region failed on the old CSS (30 vs 0) and passes now. CSS budget 93,474.

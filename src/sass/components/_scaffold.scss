@@ -119,17 +119,35 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
       padding-left: env(safe-area-inset-left, 0px);
     }
 
-    // A tall-rail bar meets a side edge only where that region is empty.
+    // A tall-rail bar meets a side edge only where that region is empty: the
+    // rail's side is the leading one, the trailing region's the other. The
+    // insets are physical, so each side follows the writing direction.
     &.tall-rail:not(:has(> #{$_rail}:not([hidden]))) > header:has(> #{$_app-bar}) {
       width: auto;
-      margin-left: calc(-1 * env(safe-area-inset-left, 0px));
-      padding-left: env(safe-area-inset-left, 0px);
+
+      &:dir(ltr) {
+        margin-left: calc(-1 * env(safe-area-inset-left, 0px));
+        padding-left: env(safe-area-inset-left, 0px);
+      }
+
+      &:dir(rtl) {
+        margin-right: calc(-1 * env(safe-area-inset-right, 0px));
+        padding-right: env(safe-area-inset-right, 0px);
+      }
     }
 
     &.tall-rail:not(:has(> #{$_trailing}:not([hidden]))) > header:has(> #{$_app-bar}) {
       width: auto;
-      margin-right: calc(-1 * env(safe-area-inset-right, 0px));
-      padding-right: env(safe-area-inset-right, 0px);
+
+      &:dir(ltr) {
+        margin-right: calc(-1 * env(safe-area-inset-right, 0px));
+        padding-right: env(safe-area-inset-right, 0px);
+      }
+
+      &:dir(rtl) {
+        margin-left: calc(-1 * env(safe-area-inset-left, 0px));
+        padding-left: env(safe-area-inset-left, 0px);
+      }
     }
   }
 

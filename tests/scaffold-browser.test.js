@@ -1023,6 +1023,12 @@ for (const [name, type, run] of engines) {
       await render({ cls: 'tall-rail', nav: '', trailing: '' });
       const tallBar = await box('#bar');
       assert.deepEqual([Math.round(tallBar.left), Math.round(tallBar.right)], [0, 1280], 'a tall-rail bar with empty side regions reaches into the side strips');
+      await tab.evaluate(() => { document.documentElement.dir = 'rtl'; });
+      await render({ cls: 'tall-rail', trailing: '' });
+      const rtlBar = await box('#bar');
+      near(rtlBar.left, 0, 'under rtl, a tall-rail bar without a trailing region reaches into the left strip');
+      near(rtlBar.right, (await box('#rail')).left, 'and stops at the rail on the right');
+      await tab.evaluate(() => { document.documentElement.dir = 'ltr'; });
       await render({ bottom: '<footer class="status-bar" id="sb"><span>Ready</span></footer>' });
       assert.equal(await style('#sb', 'paddingBottom'), '20px', 'the status bar pads the bottom inset once');
       near((await box('#sb')).bottom, 800, 'and reaches the bottom edge');
