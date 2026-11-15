@@ -312,6 +312,7 @@ $_rail-shown: "> #{$_rail}:not([hidden], :empty)";
 
       &:has(> :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed, [hidden])) {
         --_scaffold-pane-gap-end: 0;
+        --_scaffold-sheet-gap-end: 0;
       }
     }
   }
@@ -370,6 +371,22 @@ $_rail-shown: "> #{$_rail}:not([hidden], :empty)";
     // toolbar.
     &:has(> #{$_sheet-open}) {
       --_scaffold-pane-gap-end: 16px;
+    }
+
+    // Beside the floating pane the sheet is Material's detached side sheet:
+    // corner-large on every corner, and the pane's gaps around it. A
+    // toolbar's own margin is the gap after it. Screen only, like the pane.
+    @media screen {
+      > #{$_sheet-open} {
+        margin-block: var(--_scaffold-pane-gap-top, 0) 16px;
+        margin-inline-end: var(--_scaffold-sheet-gap-end, 16px);
+        border-radius: var(--md-sys-shape-corner-large);
+      }
+
+      // Beside a tall rail's bar it reaches the window's top edge otherwise.
+      &.tall-rail > #{$_sheet-open} {
+        margin-block-start: 16px;
+      }
     }
   }
 

@@ -895,7 +895,11 @@ for (const [name, type, run] of engines) {
       near(sh.left, main.right + 16, 'after the pane and its gap');
       near(sh.right, tools0.left - 4, 'before the toolbar and its margin');
       near(sh.top, (await box('#bar')).bottom, 'from the bar');
-      near(sh.bottom, 800, 'to the bottom');
+      near(sh.bottom, 784, 'to the pane\'s bottom gap');
+      assert.deepEqual(
+        await Promise.all(['borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomLeftRadius', 'borderBottomRightRadius'].map((p) => style('#sheet', p))),
+        Array(4).fill(await style('#pane', 'borderTopLeftRadius')),
+        'it is a detached sheet, rounded on every corner like the pane');
       near(before.width - main.width, 416, 'the pane made room');
       assert.deepEqual(await box('#tools'), tools0, 'the toolbar stays put');
       await tab.locator('#sheet').evaluate((el) => el.close());
@@ -904,9 +908,9 @@ for (const [name, type, run] of engines) {
       await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, withSheet({ trailing: '' }));
       const wide = await box('#pane');
       await tab.locator('#sheet').evaluate((el) => el.show());
-      near((await box('#sheet')).right, 1440, 'without a toolbar the sheet meets the window edge');
+      near((await box('#sheet')).right, 1424, 'without a toolbar the sheet keeps a 16px gap to the window edge');
       near((await box('#sheet')).left, (await box('#pane')).right + 16, 'after the pane gap');
-      near(wide.width - (await box('#pane')).width, 400, 'and the pane gives up exactly the sheet');
+      near(wide.width - (await box('#pane')).width, 416, 'and the pane gives up the sheet and its gap');
       assert.equal(
         await tab.locator('#sheet').evaluate((el) => getComputedStyle(el).getPropertyValue('--md-comp-side-sheet-motion').trim()),
         await tab.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--md-sys-motion-spring-default-effects').trim()),
@@ -934,10 +938,10 @@ for (const [name, type, run] of engines) {
       await tab.locator('#sheet').evaluate((el) => el.show());
       assert.equal(await style('#sheet', 'position'), 'static');
       const sh = await box('#sheet');
-      assert.deepEqual([Math.round(sh.top), Math.round(sh.bottom)], [0, 800], 'the tall-rail sheet runs the full height');
+      assert.deepEqual([Math.round(sh.top), Math.round(sh.bottom)], [16, 784], 'the tall-rail sheet runs the full height inside its gaps');
       await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, withSheet({ bottom: status }));
       await tab.locator('#sheet').evaluate((el) => el.show());
-      near((await box('#sheet')).bottom, (await box('#sb')).top, 'with a status bar it ends above it');
+      near((await box('#sheet')).bottom, (await box('#sb')).top - 16, 'with a status bar it ends a gap above it');
       await tab.evaluate(() => { document.documentElement.dir = 'rtl'; });
       await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, withSheet());
       await tab.locator('#sheet').evaluate((el) => el.show());

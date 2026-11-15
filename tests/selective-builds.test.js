@@ -581,5 +581,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the navigation bar row kept from 600px when no rail shows: 93,509 gzip bytes (+35).
   // Reviewed the navigation bar leaving the bottom inset to a status bar below it: 93,529 gzip bytes (+20).
   // Reviewed the trailing toolbar's 4px margin, read from no token: 93,517 gzip bytes (-12).
-  assert.ok(sizes(css).gzip <= 93517, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the sheet column as a detached sheet (corners and gaps like the pane): 93,553 gzip bytes (+36).
+  assert.ok(sizes(css).gzip <= 93553, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -5114,7 +5114,7 @@ Each region takes one direct child. For custom content use the region classes `s
 </div>
 ```
 
-From 1200px up an open standard `side-sheet` that is a direct child takes a 400px column between the pane and the trailing toolbar, so the pane narrows while it is open; place it between `<main>` and the toolbar so Tab order matches. Below 1200px, and modal or `.start` sheets, keep the overlay; a sheet nested deeper stays an overlay.
+From 1200px up an open standard `side-sheet` that is a direct child takes a 400px column between the pane and the trailing toolbar, so the pane narrows while it is open; it is then a detached sheet, rounded on every corner (`--md-sys-shape-corner-large`) with the pane's 16px gaps, or the toolbar's margin beside a toolbar. Place it between `<main>` and the toolbar so Tab order matches. Below 1200px, and modal or `.start` sheets, keep the overlay; a sheet nested deeper stays an overlay.
 
 A direct-child `status-bar` takes a full-width row along the bottom, under the rail, pane and toolbar (also with `tall-rail`), and hides below 600px; its `data-priority="low"` hiding therefore never shows in a scaffold.
 
