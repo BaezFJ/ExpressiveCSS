@@ -42,6 +42,6 @@ Covers R7. Checks V5.
 
 Prerequisites: groups 1 to 3.
 
-- [ ] Run `npm run build:skill` after the last edit, then `npm run verify` and `npm test --prefix mcp/expressivecss`.
+- [x] Run `npm run build:skill` after the last edit, then `npm run verify` and `npm test --prefix mcp/expressivecss`.
 
 Done when V5 passes.
