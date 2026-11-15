@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="en" theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orders</title>
+  <link rel="stylesheet" href="dist/css/expressive.min.css">
+  <style>
+    body { margin: 0; }
+
+    /* Dashboard surfaces: tokens are set on the component element itself. */
+    .dashboard { padding: 16px; }
+    @media (width >= 600px) { .dashboard { padding: 24px; } }
+    .dashboard .stats {
+      --md-comp-stat-container-color: var(--md-sys-color-surface-container);
+      --md-comp-stat-shape: 24px;
+    }
+    .orders-panel { padding-top: 16px; }
+
+    /* Controls that live inside the table wrapper, as the data-table contract requires. */
+    .orders-toolbar {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: 8px 16px; padding: 16px 16px 8px;
+    }
+    .orders-toolbar .field { margin: 0; flex: 1 1 240px; max-inline-size: 360px; }
+    .orders-footer { display: flex; justify-content: flex-end; padding: 8px 16px; }
+    .orders-footer .pagination { margin: 0; }
+    .orders-footer output { padding: 0 8px; font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body>
+  <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+
+  <main id="main" class="dashboard" tabindex="-1">
+    <div class="mb-4">
+      <h1 class="headline-medium my-0">Orders</h1>
+      <p class="body-medium on-surface-variant-text my-0">Sample data · 40 orders from Oct 1 to Nov 14, 2026</p>
+    </div>
+
+    <section aria-labelledby="kpi-title" class="mb-5">
+      <h2 id="kpi-title" class="visually-hidden">Orders by state</h2>
+      <dl class="stats my-0">
+        <div>
+          <dt>Open orders</dt>
+          <dd id="stat-open">0</dd>
+          <dd class="stat-change" id="stat-open-total">$0.00 in value</dd>
+        </div>
+        <div>
+          <dt>Shipped orders</dt>
+          <dd id="stat-shipped">0</dd>
+          <dd class="stat-change" id="stat-shipped-total">$0.00 in value</dd>
+        </div>
+        <div>
+          <dt>Returned orders</dt>
+          <dd id="stat-returned">0</dd>
+          <dd class="stat-change" id="stat-returned-total">$0.00 in value</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="orders-title">
+      <h2 id="orders-title" class="title-large mt-0 mb-2">Order list</h2>
+
+      <nav class="tabs" id="order-tabs" aria-label="Order states">
+        <a class="active" aria-current="page" href="#open"><span class="material-symbols" aria-hidden="true">pending_actions</span><span>Open</span></a>
+        <a href="#shipped"><span class="material-symbols" aria-hidden="true">local_shipping</span><span>Shipped</span></a>
+        <a href="#returned"><span class="material-symbols" aria-hidden="true">assignment_return</span><span>Returned</span></a>
+      </nav>
+
+      <!-- Open -->
+      <div id="open" class="orders-panel">
+        <div class="data-table dense" id="table-open" data-sort data-page-size="10" role="region" aria-labelledby="caption-open" tabindex="0">
+          <div class="orders-toolbar">
+            <div class="field outlined">
+              <span class="material-symbols prefix" aria-hidden="true">search</span>
+              <input id="q-open" name="q" type="search" data-table-filter autocomplete="off" spellcheck="false" placeholder=" ">
+              <label for="q-open">Search customers</label>
+            </div>
+            <p class="body-medium on-surface-variant-text my-0"><output data-table-filter-count role="status" aria-live="polite" aria-label="Matching open orders">0</output> matching</p>
+          </div>
+          <table>
+            <caption id="caption-open" class="visually-hidden">Open orders</caption>
+            <thead>
+              <tr>
+                <th scope="col"><button type="button">Order</button></th>
+                <th scope="col" data-filter><button type="button">Customer</button></th>
+                <th scope="col" class="text-nowrap" aria-sort="descending"><button type="button">Date</button></th>
+                <th scope="col" class="numeric"><button type="button">Total</button></th>
+              </tr>
+            </thead>
+            <tbody data-state="Open"></tbody>
+          </table>
+          <div class="empty-state" hidden>
+            <span class="material-symbols" aria-hidden="true">search_off</span>
+            <h3>No open orders match</h3>
+            <p>No customer name contains your search.</p>
+            <div class="empty-state-actions"><button type="button" class="outlined" data-clear>Clear search</button></div>
+          </div>
+          <div class="orders-footer">
+            <nav class="pagination" aria-label="Open orders pages">
+              <ol>
+                <li><button type="button" data-table-page="previous" aria-label="Previous page"><span class="material-symbols" aria-hidden="true">chevron_left</span></button></li>
+                <li><output data-table-page-status role="status" aria-live="polite" aria-label="Pages">1 / 1</output></li>
+                <li><button type="button" data-table-page="next" aria-label="Next page"><span class="material-symbols" aria-hidden="true">chevron_right</span></button></li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipped -->
+      <div id="shipped" class="orders-panel">
+        <div class="data-table dense" id="table-shipped" data-sort data-page-size="10" role="region" aria-labelledby="caption-shipped" tabindex="0">
+          <div class="orders-toolbar">
+            <div class="field outlined">
+              <span class="material-symbols prefix" aria-hidden="true">search</span>
+              <input id="q-shipped" name="q" type="search" data-table-filter autocomplete="off" spellcheck="false" placeholder=" ">
+              <label for="q-shipped">Search customers</label>
+            </div>
+            <p class="body-medium on-surface-variant-text my-0"><output data-table-filter-count role="status" aria-live="polite" aria-label="Matching shipped orders">0</output> matching</p>
+          </div>
+          <table>
+            <caption id="caption-shipped" class="visually-hidden">Shipped orders</caption>
+            <thead>
+              <tr>
+                <th scope="col"><button type="button">Order</button></th>
+                <th scope="col" data-filter><button type="button">Customer</button></th>
+                <th scope="col" class="text-nowrap" aria-sort="descending"><button type="button">Date</button></th>
+                <th scope="col" class="numeric"><button type="button">Total</button></th>
+              </tr>
+            </thead>
+            <tbody data-state="Shipped"></tbody>
+          </table>
+          <div class="empty-state" hidden>
+            <span class="material-symbols" aria-hidden="true">search_off</span>
+            <h3>No shipped orders match</h3>
+            <p>No customer name contains your search.</p>
+            <div class="empty-state-actions"><button type="button" class="outlined" data-clear>Clear search</button></div>
+          </div>
+          <div class="orders-footer">
+            <nav class="pagination" aria-label="Shipped orders pages">
+              <ol>
+                <li><button type="button" data-table-page="previous" aria-label="Previous page"><span class="material-symbols" aria-hidden="true">chevron_left</span></button></li>
+                <li><output data-table-page-status role="status" aria-live="polite" aria-label="Pages">1 / 1</output></li>
+                <li><button type="button" data-table-page="next" aria-label="Next page"><span class="material-symbols" aria-hidden="true">chevron_right</span></button></li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <!-- Returned -->
+      <div id="returned" class="orders-panel">
+        <div class="data-table dense" id="table-returned" data-sort data-page-size="10" role="region" aria-labelledby="caption-returned" tabindex="0">
+          <div class="orders-toolbar">
+            <div class="field outlined">
+              <span class="material-symbols prefix" aria-hidden="true">search</span>
+              <input id="q-returned" name="q" type="search" data-table-filter autocomplete="off" spellcheck="false" placeholder=" ">
+              <label for="q-returned">Search customers</label>
+            </div>
+            <p class="body-medium on-surface-variant-text my-0"><output data-table-filter-count role="status" aria-live="polite" aria-label="Matching returned orders">0</output> matching</p>
+          </div>
+          <table>
+            <caption id="caption-returned" class="visually-hidden">Returned orders</caption>
+            <thead>
+              <tr>
+                <th scope="col"><button type="button">Order</button></th>
+                <th scope="col" data-filter><button type="button">Customer</button></th>
+                <th scope="col" class="text-nowrap" aria-sort="descending"><button type="button">Date</button></th>
+                <th scope="col" class="numeric"><button type="button">Total</button></th>
+              </tr>
+            </thead>
+            <tbody data-state="Returned"></tbody>
+          </table>
+          <div class="empty-state" hidden>
+            <span class="material-symbols" aria-hidden="true">search_off</span>
+            <h3>No returned orders match</h3>
+            <p>No customer name contains your search.</p>
+            <div class="empty-state-actions"><button type="button" class="outlined" data-clear>Clear search</button></div>
+          </div>
+          <div class="orders-footer">
+            <nav class="pagination" aria-label="Returned orders pages">
+              <ol>
+                <li><button type="button" data-table-page="previous" aria-label="Previous page"><span class="material-symbols" aria-hidden="true">chevron_left</span></button></li>
+                <li><output data-table-page-status role="status" aria-live="polite" aria-label="Pages">1 / 1</output></li>
+                <li><button type="button" data-table-page="next" aria-label="Next page"><span class="material-symbols" aria-hidden="true">chevron_right</span></button></li>
+              </ol>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="dist/js/expressive.min.js"></script>
+  <script>
+    // ---- Sample data: 40 orders from a seeded generator, so every load shows the same set.
+    const STATES = ['Open', 'Shipped', 'Returned'];
+    const CUSTOMERS = [
+      'Amara Okafor', 'Ben Halvorsen', 'Carmen Ruiz', 'Dev Patel', 'Elena Petrova', 'Farid Haddad',
+      'Grace Liu', 'Hiro Tanaka', 'Isla McKenzie', 'Jonas Becker', 'Keira Walsh', 'Luis Fernández-Ortega',
+    ];
+    let seed = 20261115;
+    const random = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 2 ** 32);
+    const pick = (list) => list[Math.floor(random() * list.length)];
+
+    const start = Date.UTC(2026, 9, 1); // Oct 1, 2026
+    const DAY = 86400000;
+    const orders = Array.from({ length: 40 }, (_, i) => {
+      const r = random();
+      return {
+        id: `ORD-${String(1001 + i)}`,
+        customer: pick(CUSTOMERS),
+        date: new Date(start + Math.floor(random() * 45) * DAY),
+        total: Math.round((18 + random() * 1480) * 100) / 100,
+        state: r < 0.45 ? 'Open' : r < 0.85 ? 'Shipped' : 'Returned',
+      };
+    });
+
+    const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+    const day = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+
+    // ---- Key figures, computed from the same orders the tables show.
+    for (const state of STATES) {
+      const list = orders.filter((o) => o.state === state);
+      const key = state.toLowerCase();
+      document.getElementById(`stat-${key}`).textContent = list.length.toLocaleString('en-US');
+      document.getElementById(`stat-${key}-total`).textContent =
+        `${money.format(list.reduce((sum, o) => sum + o.total, 0))} in value`;
+    }
+
+    // ---- Table rows, newest first to match the initial aria-sort on Date.
+    const cell = (tag, text, attrs = {}) => {
+      const el = document.createElement(tag);
+      el.textContent = text;
+      for (const [name, value] of Object.entries(attrs)) el.setAttribute(name, value);
+      return el;
+    };
+    document.querySelectorAll('tbody[data-state]').forEach((body) => {
+      const rows = orders
+        .filter((o) => o.state === body.dataset.state)
+        .sort((a, b) => b.date - a.date || a.id.localeCompare(b.id))
+        .map((o) => {
+          const tr = document.createElement('tr');
+          tr.append(
+            cell('th', o.id, { scope: 'row', class: 'text-nowrap' }),
+            cell('td', o.customer),
+            cell('td', day.format(o.date), { class: 'text-nowrap', 'data-value': o.date.toISOString().slice(0, 10) }),
+            cell('td', money.format(o.total), { class: 'numeric' }),
+          );
+          return tr;
+        });
+      body.replaceChildren(...rows);
+    });
+
+    // ---- URL state: ?view= for the tab, ?q= and ?page= for the table in that tab.
+    const tabs = document.getElementById('order-tabs');
+    const params = new URLSearchParams(location.search);
+    const saved = params.get('view');
+    const savedLink = saved && tabs.querySelector(`a[href="#${CSS.escape(saved)}"]`);
+    if (savedLink) {
+      const current = tabs.querySelector('a.active');
+      current?.classList.remove('active');
+      current?.removeAttribute('aria-current');
+      savedLink.classList.add('active');
+      savedLink.setAttribute('aria-current', 'page');
+    }
+
+    const writeUrl = (changes) => {
+      const url = new URL(location.href);
+      for (const [key, value] of Object.entries(changes)) {
+        if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
+      }
+      history.replaceState(null, '', url);
+    };
+
+    // Show the empty state when a search leaves no rows, and hide the pager with it.
+    const refreshEmpty = (wrapper) => {
+      const rows = wrapper.querySelectorAll(':scope > table > tbody > tr');
+      const none = rows.length > 0 && [...rows].every((row) => row.hasAttribute('data-table-filter-hidden'));
+      wrapper.querySelector('.empty-state').hidden = !none;
+      wrapper.querySelector('.orders-footer').hidden = none;
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      Expressive.AutoInit();
+
+      const wrappers = [...document.querySelectorAll('.data-table')];
+      const activeWrapper = () => document.querySelector(`${tabs.querySelector('a.active').hash} .data-table`);
+
+      // Restore the saved query and page on the table in the selected tab.
+      const restored = activeWrapper();
+      restored.querySelector('[data-table-filter]').value = params.get('q') ?? '';
+      wrappers.forEach((wrapper) => Expressive.DataTables.sync(wrapper));
+      Expressive.DataTables.showPage(restored, Number(params.get('page')) || 1);
+      wrappers.forEach(refreshEmpty);
+
+      let typing;
+      let query = params.get('q') ?? '';
+      for (const wrapper of wrappers) {
+        wrapper.addEventListener('expressive:filter', (event) => {
+          clearTimeout(typing);
+          query = event.detail.query;
+          // The framework applies the filter right after this event; read the result next task.
+          setTimeout(() => refreshEmpty(wrapper));
+          typing = setTimeout(() => writeUrl({ q: query, page: '' }), 300);
+        });
+        wrapper.addEventListener('expressive:page', (event) => {
+          clearTimeout(typing);
+          writeUrl({ q: query, page: event.detail.page });
+        });
+        wrapper.addEventListener('expressive:sort', (event) => {
+          if (!event.defaultPrevented) writeUrl({ page: '' });
+        });
+        wrapper.querySelector('[data-clear]').addEventListener('click', () => {
+          const input = wrapper.querySelector('[data-table-filter]');
+          input.value = '';
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.focus();
+        });
+      }
+
+      // Each tab has its own table, so a tab change drops the query and page from the URL.
+      tabs.addEventListener('expressive:change', (event) => {
+        if (event.target !== tabs) return;
+        clearTimeout(typing);
+        query = event.detail.panel.querySelector('[data-table-filter]').value.trim();
+        const url = new URL(location.href);
+        url.searchParams.set('view', event.detail.panel.id);
+        url.searchParams.delete('q');
+        url.searchParams.delete('page');
+        if ([...tabs.querySelectorAll('a')].some((a) => a.hash === url.hash)) url.hash = '';
+        history.replaceState(null, '', url);
+      });
+    });
+  </script>
+</body>
+</html>

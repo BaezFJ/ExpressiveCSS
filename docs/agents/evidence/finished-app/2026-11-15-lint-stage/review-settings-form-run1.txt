@@ -1,0 +1,26 @@
+FINDINGS
+- none
+
+CHECKED
+- Lifecycle: the full bundle loads at the end of `<body>` (index.html:66), after the markup it uses. The inline script only calls static `Expressive.Forms.validateField` and `new Expressive.Snackbar`. There are no registry components, so `AutoInit()`, `init()` and `no-autoinit` don't apply. No dynamic content, no `destroy()` concerns and no global `M`.
+- Assets and fonts: one stylesheet (`dist/css/expressive.min.css`), and `dist/fonts/` sits next to `dist/css/`. No Google Fonts link, no Material Icons stylesheet, no `.material-icons` markup. The JS bundle is needed here for Forms, BusyButtons and Snackbar. No render-blocking script in `<head>`.
+- States: the custom CSS (index.html:10-11) does not touch focus. No control is disabled, so the class-versus-attribute check doesn't apply. The save request has a busy state: `aria-busy`, the label "Saving…", and a CSS spinner that appears after 300ms. Success and failure both report through a Snackbar. The failure Snackbar has a Retry action, which makes it persistent by default (snackbar.md:44,77). The page has no lists or tables, so no empty state is needed.
+- WCAG 2.2, from source:
+  - Every input has a `<label for>` and both fieldsets have a `<legend>`.
+  - Required fields are shown by marking the others "(optional)" (3.3.2).
+  - `validateField` adds the `[data-error]` helper to `aria-describedby` and sets `aria-invalid`.
+  - The server-side email error rewrites that same associated helper, sets `aria-invalid` and focuses the field (3.3.1).
+  - The skip link points to `main` with `tabindex="-1"`. Everything is native and reachable by keyboard.
+  - The spinner keeps only its show animation under `prefers-reduced-motion` and drops the spin.
+- finished-app:loading: passes. The label becomes "Saving…" and the spinner shows beside it. A second press is cancelled: `BusyButtons.Init()` runs when the bundle loads (expressive.js:17316) and cancels clicks, Enter, Space and implicit submission on `[aria-busy="true"]` buttons in the capture phase (expressive.js:4391-4408). Retry uses `requestSubmit` only after busy is cleared.
+- finished-app:submit-flow: passes. The fields are inside a `<form>` with a `type="submit"` button, which is not disabled before submitting. Errors appear in each field's own helper, and focus moves to the first invalid field. No field blocks paste. Each field has a `name`. `autocomplete` is set to nickname, url, email and tel. Types are url, email and tel with `inputmode="tel"`. `spellcheck` is off for email and url. Placeholders are the floating label's `" "`.
+- finished-app:destructive: not applicable, because the page has no remove or discard action.
+- finished-app:url-state: not applicable, because the page has no tabs, filters, search or pages.
+
+BLOCKED
+- Contrast, focus-ring visibility, the 24×24 target size, and focus being hidden by a sticky header (2.4.11) all need a rendered page, and no browser route was available. The source shows nothing that makes a failure likely, so these are blocked, not passed.
+- Whether screen readers read the CSS-rendered `data-error` text in the description, and whether the focused button's change to "Saving…" or the Snackbar live region gets announced, needs a browser and a screen reader.
+- Process note: the brief said not to run commands, but I ran a few read-only shell listings and greps (`ls`, `cat`, `grep`) before switching to the file tools. No files were changed.
+
+HANDOFFS
+- Markup lens: `<nav aria-label="Account">` at index.html:17-19 holds only the `<h1>` and no links, so it creates an empty navigation landmark.

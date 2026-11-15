@@ -124,6 +124,8 @@ The person running the comparison confirms each finding whose rule field holds a
 
 Each run set has a directory `evidence/finished-app/<date>-<label>/` holding the apps, `lint-<prompt-id>-run<n>.txt`, `review-<prompt-id>-run<n>.txt` (the lens block) and `findings.json`. `findings.json` records the Claude Code version, the models each run used, the commit `dist/` was built from with the sha256 of `dist/css/expressive.min.css` and `dist/js/expressive.min.js`, the tree hashes of both skills, the sha256 of both briefs (of the template text inside the fenced block, without a final newline, as `awk -v N=4 '/^```text$/{n++; f=(n==N); next} /^```$/{f=0; next} f' docs/agents/finished-app-evals.md | head -c -1 | sha256sum` gives for the build brief; use `N=5` for the reviewer brief), the build commit and the review commit as separate fields, and per app the build-time file hashes, the build seconds (and review seconds when the run captures them), the load check, the countable findings, the dropped findings with reasons, the labelled polish findings and the per-area counts.
 
+A stage rerun with an earlier stage to match also records `frameworkStageMatch`: whether the build skill tree and the `dist/` hashes match the framework stage's, and why they differ. The lint-stage run set adds `branchLint`, the branch's own lint over the rebuilds and the baseline apps, with the branch commit, the sha256 of its `server.js`, each app's hits for `transition-all`, `viewport-zoom-disabled` and `paste-blocked` checked against the source, and the raw output in `branch-lint.txt`. Those hits never change a count.
+
 The committed apps load `dist/` by a relative path, so they render only next to a built `dist/`. To render or re-review baseline apps later, check out the recorded commit in a new worktree, run `npm ci` and `npm run build`, and copy its `dist/`.
 
 ### Delete and Undo check
@@ -143,6 +145,8 @@ Every `settings-form` build also gets `npm run eval:finished-app-submit -- <app-
 Each phase's prompt: 79 and 83 use `settings-form` (two of the three baseline loading counts are in `destructive-list`, so a loading change there shows only in a stage rerun); 80 uses `destructive-list`; 81 uses `filtered-dashboard`; 82 uses `settings-form`. Phases 84 to 86 have no prompt of their own, and the stage reruns at 82, 84 and 87 cover them.
 
 A guidance or framework phase rebuilds its own prompt twice with the current skill, reviews both builds with the baseline skill trees, and compares its area's count per run with the baseline rows. A phase that closes a stage rebuilds all three prompts twice. Each run set adds rows below.
+
+The reviewer's lint stays at the baseline commit even after the lint stage adds rules, because the reviewer reads its output: a new rule would change what the reviewer sees on an unchanged app and move counts that the guidance and framework did not move. The lint stage's own rules are measured apart, in the `branchLint` record.
 
 ## Results
 
@@ -174,6 +178,12 @@ Counts are countable findings per area. A failed run shows `failed` in every col
 | 2026-11-15 | framework-stage | destructive-list | 2 | 0 | 0 | 0 | 1 | 1 |
 | 2026-11-15 | framework-stage | filtered-dashboard | 1 | 0 | 0 | 1 | 0 | 1 |
 | 2026-11-15 | framework-stage | filtered-dashboard | 2 | 0 | 0 | 1 | 0 | 1 |
+| 2026-11-15 | lint-stage | settings-form | 1 | 0 | 0 | 0 | 0 | 0 |
+| 2026-11-15 | lint-stage | settings-form | 2 | 0 | 0 | 0 | 0 | 0 |
+| 2026-11-15 | lint-stage | destructive-list | 1 | 0 | 1 | 0 | 2 | 3 |
+| 2026-11-15 | lint-stage | destructive-list | 2 | 0 | 0 | 0 | 0 | 0 |
+| 2026-11-15 | lint-stage | filtered-dashboard | 1 | 0 | 0 | 1 | 0 | 1 |
+| 2026-11-15 | lint-stage | filtered-dashboard | 2 | 0 | 0 | 1 | 0 | 1 |
 
 Baseline notes, from [the baseline records](evidence/finished-app/2026-11-15-baseline/findings.json):
 
@@ -192,3 +202,29 @@ Phase 81 notes, from [its records](evidence/finished-app/2026-11-15-phase-81/fin
 Guidance stage notes, from [its records](evidence/finished-app/2026-11-15-guidance-stage/findings.json): with the button, snackbar, list, tab, data table and text field guidance, the six rebuilds total 2 countable findings against the baseline's 10. Both `settings-form` rebuilds pass the submit check, which the baseline and phase 79 apps also pass ([their results](evidence/finished-app/2026-11-15-guidance-stage/submit-check-baseline.jsonl)), both `destructive-list` rebuilds pass the delete-and-Undo check, and both `filtered-dashboard` rebuilds pass the URL check. The two counts are a dialog whose Cancel is its first submit button and a dashboard that lets a pending filter write clear the page. Later review added text-field clauses these runs never saw (Cancel as `type="button"`, `class="validate"` on every constrained field, restoring a field's own message, `form.elements`, no `.error-summary` with the snippet); the phase 84 stage rerun tests them.
 
 Framework stage notes, from [its records](evidence/finished-app/2026-11-15-framework-stage/findings.json): built from `353ea21b8` with the phase 83 button loading state and the phase 84 heading offset, the six rebuilds total 4 countable findings. That is down from the baseline's 10 and up from the guidance stage's 2. All six load, both `settings-form` rebuilds pass the submit check, both `destructive-list` rebuilds pass the delete-and-Undo check, and both `filtered-dashboard` rebuilds pass the URL check. Both add dialogs make Cancel `type="button"`, so the guidance-stage Cancel defect is gone. The guidance-stage dashboard defect is still in run 2's page listener, which doesn't cancel a pending filter write. Its reviewer didn't report it, and the procedure adds no findings, so it is not counted. Each count is a narrower edge. A Retry snackbar calls `requestSubmit()`, which the busy guard does not stop. A save error snackbar opens under a modal dialog's backdrop. A dashboard reads its tab only from `?view=` while Tabs follows the hash. A Clear filter button leaves a pending filter write running. The first two are on failure paths the stand-ins never take. One loading finding was dropped because the framework spinner shows beside "Saving…" in Chromium. The rise from 2 to 4 is recorded for the phase 87 stage and did not change this phase.
+
+Lint stage notes, from [its records](evidence/finished-app/2026-11-15-lint-stage/findings.json): built from `966ebb905` and reviewed with the baseline trees and the baseline lint, the six rebuilds total 5 countable findings. The baseline had 10, the guidance stage 2 and the framework stage 4. The build skill tree differs from the framework stage's only in the generated contract hash lines, and `dist/js/expressive.min.js` matches. `dist/css/expressive.min.css` differs because two phase 84 review commits changed the top app bar heights after `353ea21b8`, and no finding involves the app bar. So the guides and runtime the builders read are the framework stage's, and the differences from its rows are run-to-run variation. All six load. Both `settings-form` rebuilds pass the submit check and both `destructive-list` rebuilds pass the delete-and-Undo check. `filtered-dashboard` run 1 fails the URL check because it never writes the page to the URL. No rebuild had failed that check since phase 81.
+
+- Loading: 0, against 3 at the baseline, 0 at the guidance stage and 1 at the framework stage. Both `destructive-list` reviewers reported "Saving…" with no progress beside it. Both were dropped because the framework spinner shows beside the label in Chromium.
+- Destructive: 1, against 0 at every earlier stage. `destructive-list` run 1 commits on `pagehide` through a request with no `keepalive`, which the snackbar guide asks for. Both rebuilds remove at once and restore in place.
+- URL state: 2, against 6, 1 and 2. Run 1 is the missing page above. Run 2 drops `q` and `page` from the URL on a tab change while each tab keeps its own search and page.
+- Submit flow: 2, against 1, 1 and 1. Both are on `destructive-list` run 1's failure paths, which the stand-in never takes: a rejected save shows no error, and a failed save shows its snackbar under the modal backdrop.
+
+Handed-on regressions:
+
+- Cancel as the dialog's first submit button (guidance stage) did not come back. Both add dialogs make Cancel `type="button"`.
+- A pending filter write that clears the page (guidance stage) and a Clear filter that leaves the write running (framework stage) did not come back. Both dashboards cancel the write.
+- The error snackbar under a modal dialog's backdrop (framework stage) came back in `destructive-list` run 1 and counts. Run 2 shows the error inside the dialog.
+- The Retry action that calls `requestSubmit()` past the busy guard (framework stage) came back in both `settings-form` rebuilds. Neither reviewer reported it, so it is not counted.
+- Reading the tab only from `?view=` while Tabs follows the hash (framework stage) came back in `filtered-dashboard` run 1. Its reviewer did not report it, so it is not counted.
+
+Milestone summary. Countable findings per area, summed over each stage's six rows, with no failed run in any stage:
+
+| Stage | Loading | Destructive | URL state | Submit flow | Total |
+| --- | --- | --- | --- | --- | --- |
+| baseline | 3 | 0 | 6 | 1 | 10 |
+| guidance-stage | 0 | 0 | 1 | 1 | 2 |
+| framework-stage | 1 | 0 | 2 | 1 | 4 |
+| lint-stage | 0 | 1 | 2 | 2 | 5 |
+
+The guidance cut the count from 10 to 2, mostly in URL state and loading. The two later reruns, with the same guide text, scored 4 and 5. Their counts are narrower edges on failure paths and state shared between tabs, and the baseline's defects did not come back: no confirmation dialog in front of delete, no tab or filter missing from the URL, and no command without progress. The lint-stage rise is recorded here and did not change this phase. The branch lint at `d2a83ef26`, and again at `edee3fb62` after the last rule fixes, found no `transition-all`, `viewport-zoom-disabled` or `paste-blocked` hit in the six rebuilds or the six baseline apps.

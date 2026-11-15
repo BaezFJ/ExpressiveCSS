@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en" theme="auto">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Update your display name and contact details.">
+    <title>Account settings</title>
+    <link rel="stylesheet" href="dist/css/expressive.min.css">
+    <style>
+      .account-form { max-inline-size: 40rem; }
+      .form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+      #save-status { margin: 0; }
+      #save-status:empty { display: none; }
+      #save-status.save-failed { color: var(--md-sys-color-error); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav aria-label="App">
+        <h2>Account</h2>
+      </nav>
+    </header>
+
+    <main class="container py-5">
+      <form id="account-form" class="account-form" action="/api/account" method="post" novalidate>
+        <h1 class="headline-medium mb-2">Account settings</h1>
+        <p class="mb-4">This is how people see and reach you. Changes apply when you save.</p>
+
+        <div class="field outlined mb-4">
+          <input id="display_name" name="display_name" type="text" class="validate" required
+                 autocomplete="nickname" maxlength="60" placeholder=" " aria-describedby="display_name_help">
+          <label for="display_name">Display name</label>
+          <small id="display_name_help" data-error="Enter a display name."><span>Shown on your profile and posts.</span></small>
+        </div>
+
+        <div class="field outlined mb-4">
+          <input id="email" name="email" type="email" class="validate" required
+                 autocomplete="email" spellcheck="false" autocapitalize="off" placeholder=" " aria-describedby="email_help">
+          <label for="email">Email</label>
+          <small id="email_help" data-error="Enter an email address, like name@example.com."><span>We send account notices here.</span></small>
+        </div>
+
+        <div class="field outlined mb-4">
+          <input id="phone" name="phone" type="tel" class="validate"
+                 autocomplete="tel" pattern="[0-9+()\-. ]{7,20}" placeholder=" " aria-describedby="phone_help">
+          <label for="phone">Phone (optional)</label>
+          <small id="phone_help" data-error="Enter a phone number using digits, spaces, +, ( ) or -."><span>Include your country code, like +1 555 010 0199.</span></small>
+        </div>
+
+        <div class="field outlined mb-4">
+          <input id="website" name="website" type="url" class="validate"
+                 autocomplete="url" spellcheck="false" autocapitalize="off" placeholder=" " aria-describedby="website_help">
+          <label for="website">Website (optional)</label>
+          <small id="website_help" data-error="Enter a full web address starting with https://."><span>Starts with https://, like https://example.com.</span></small>
+        </div>
+
+        <div class="form-actions">
+          <button id="save" class="filled" type="submit"><span>Save</span></button>
+          <p id="save-status" role="status"></p>
+        </div>
+      </form>
+    </main>
+
+    <script src="dist/js/expressive.min.js"></script>
+    <script>
+      // Stand-in for POST /api/account: waits 1500 ms, then rejects when the
+      // email ends in @example.invalid and resolves otherwise.
+      function postAccount(formData) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            const email = String(formData.get('email') || '').trim().toLowerCase();
+            if (email.endsWith('@example.invalid')) {
+              const error = new Error("This email address can't receive mail. Use a different one.");
+              error.field = 'email';
+              reject(error);
+            } else {
+              resolve({ ok: true, account: Object.fromEntries(formData) });
+            }
+          }, 1500);
+        });
+      }
+
+      const form = document.getElementById('account-form');
+      const save = document.getElementById('save');
+      const saveLabel = save.firstElementChild;
+      const status = document.getElementById('save-status');
+      const BUSY_DELAY = 300; // --md-comp-button-busy-delay
+
+      // Keep each field's own error text so a server message can be undone.
+      const ownErrors = new Map();
+      form.querySelectorAll('small[data-error]').forEach((el) => ownErrors.set(el, el.dataset.error));
+
+      function setStatus(text, isError) {
+        status.textContent = text;
+        status.classList.toggle('save-failed', Boolean(isError));
+      }
+
+      function showServerError(fieldName, message) {
+        const field = form.elements[fieldName];
+        const help = field.parentElement.querySelector(':scope > small[data-error]');
+        help.dataset.error = message;
+        field.setAttribute('aria-invalid', 'true');
+        field.classList.add('invalid');
+        field.focus();
+        // Put the field's own message back as soon as the person edits it.
+        field.addEventListener('input', () => {
+          help.dataset.error = ownErrors.get(help);
+          Expressive.Forms.validateField(field);
+        }, { once: true });
+      }
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        form.checkValidity();
+        const fields = [...form.elements].filter((f) => f.willValidate && f.classList.contains('validate'));
+        fields.forEach((f) => Expressive.Forms.validateField(f));
+        const firstInvalid = fields.find((f) => f.getAttribute('aria-invalid') === 'true');
+        if (firstInvalid) {
+          setStatus('Not saved. Fix the highlighted field.', true);
+          firstInvalid.focus();
+          return;
+        }
+
+        save.setAttribute('aria-busy', 'true');
+        saveLabel.textContent = 'Saving…';
+        setStatus('', false);
+        const started = performance.now();
+        let outcome;
+        try {
+          await postAccount(new FormData(form));
+          outcome = { ok: true };
+        } catch (error) {
+          outcome = { ok: false, error };
+        } finally {
+          const shown = performance.now() - started - BUSY_DELAY;
+          if (shown > 0 && shown < 500) await new Promise((done) => setTimeout(done, 500 - shown));
+          save.removeAttribute('aria-busy');
+          saveLabel.textContent = 'Save';
+        }
+
+        if (outcome.ok) {
+          setStatus('', false);
+          new Expressive.Snackbar({ text: 'Account settings saved', replace: true });
+        } else if (outcome.error && outcome.error.field) {
+          setStatus('Not saved. Check the email address.', true);
+          showServerError(outcome.error.field, outcome.error.message);
+        } else {
+          setStatus('Not saved.', true);
+          new Expressive.Snackbar({
+            text: "Couldn't save your settings.",
+            action: 'Retry',
+            replace: true,
+            onAction: () => form.requestSubmit(save)
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

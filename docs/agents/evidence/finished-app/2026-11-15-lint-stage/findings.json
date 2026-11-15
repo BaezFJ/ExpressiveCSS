@@ -1,0 +1,519 @@
+{
+  "label": "lint-stage",
+  "date": "2026-11-15",
+  "claudeCode": "2.1.325",
+  "model": "claude-opus-5-5",
+  "commands": {
+    "build": "claude -p --safe-mode --strict-mcp-config --model claude-opus-5-5 --no-session-persistence --output-format json --permission-mode bypassPermissions",
+    "review": "claude -p --safe-mode --strict-mcp-config --model claude-opus-5-5 --no-session-persistence --output-format json --allowedTools Read Glob Grep"
+  },
+  "buildCommit": "966ebb905",
+  "reviewCommit": "16b6632ada2153e8b185c5c72387d3896d7ad794",
+  "lint": "mcp/expressivecss/lint.mjs from a worktree at 16b6632ada2153e8b185c5c72387d3896d7ad794 after npm ci; that commit's server.js sha256 e6fd0d5f8c7147599ebaf63d5aef6cf0aa2431bf7c0034461fd9db89aaee47cc, lint.mjs sha256 02d69179063faa5a997010a8bac823d2105f6ef85f00082e8807774b9fe44f5b",
+  "dist": {
+    "css/expressive.min.css": "a26b89baecc9fd74f50d46a2709f7b21831ef9dc4d6d742b1cf843472c32fc20",
+    "js/expressive.min.js": "d1b1f246b971832024a3475ad3617a292665a15dda6a4a9af928097b4ee6c3f9"
+  },
+  "skillTrees": {
+    "build skills/expressivecss": "9ca0ea291afe165e19b0972fbbc62109b32b5194",
+    "review skills/expressivecss": "a7de269b7bf10baa2fd2d08c90964c50ebf748e8",
+    "review skills/expressivecss-review": "6f8aa197c069c5f1546b9d2899ec596c8f50549b"
+  },
+  "briefs": {
+    "build": "2f096aa65b688ba640c93e2b30bfdaa5ff76a6597d1f2fbff9968384952a1be3",
+    "review": "1be3237aaf63f5f6df96f2300e385098b6fe114fe809f7735eca7692c9153e67"
+  },
+  "frameworkStageMatch": {
+    "frameworkStageBuildCommit": "353ea21b8",
+    "buildSkillTree": "differs: 9ca0ea291afe165e19b0972fbbc62109b32b5194 against 0558afb25b185f26c58420fc05faf574d45b15b6. The only changed lines are the generated contract hash: \"Contract SHA-256\" in 100 component guides and sourceHash in references/contract.json. No guide text changed. The hash covers llm.md and CHANGELOG.md, which the phase 84 review commits 46fd43677 and bbd671594 edited after 353ea21b8.",
+    "dist/css/expressive.min.css": "differs: a26b89baecc9fd74f50d46a2709f7b21831ef9dc4d6d742b1cf843472c32fc20 against 748071d8b94b916a9786d9a737a8ca915859759794f759260badac2f1eaa0ba6. The same two commits changed src/sass/components/_navbar.scss (top app bar heights and the anchor offset). No counted or dropped finding involves the app bar.",
+    "dist/js/expressive.min.js": "matches: d1b1f246b971832024a3475ad3617a292665a15dda6a4a9af928097b4ee6c3f9",
+    "briefs": "match"
+  },
+  "failedRuns": [],
+  "revisions": 0,
+  "notes": [
+    "The load check (load-check.jsonl) loads each app in Chromium and passes when the dist/ stylesheet applied its tokens, the Expressive global exists and the console has no errors. All six pass.",
+    "filtered-dashboard run 1 fails the URL check (url-check.jsonl): the page number never reaches the URL. It is the first rebuild since phase 81 to fail it. Its reviewer reported the same defect, which is its one count.",
+    "Both destructive-list loading findings were dropped: the framework spinner shows beside Saving… in Chromium, as in the framework stage.",
+    "destructive-list run 1 has two submit-flow counts on two failure paths: a rejected request shows nothing, and a resolved failure shows its snackbar under the modal backdrop. They are different code paths, so both count, though one edit (catch the failure and show it inside the dialog, as run 2 does) would fix both. The stand-in never takes either path.",
+    "Both settings-form apps still give the Retry snackbar action form.requestSubmit(save) with no in-flight guard in the submit handler (run 1 index.html:152-155, run 2 index.html:149-154), the framework-stage settings-form run 1 count. Neither reviewer reported it and the procedure adds no findings, so it is not counted.",
+    "filtered-dashboard run 1 reads the tab only from ?view= (index.html:276-285) while Tabs follows the hash, and writeUrl clears a panel hash (index.html:270), the framework-stage run 1 count. Its reviewer did not report it, so it is not counted.",
+    "Both settings-form reviewers tried Bash and were denied (permission_denials in review-result.json). Neither changed a file.",
+    "Unlabelled findings are not counted: Cancel and Escape doing nothing during a save while fields stay editable (destructive-list run 1, polish), a pagehide listener added per delete and never removed (destructive-list run 2, major), and zero figures and stacked panels before the bundle runs and no empty state for a state with no orders (filtered-dashboard run 2, polish)."
+  ],
+  "apps": [
+    {
+      "prompt": "settings-form",
+      "run": 1,
+      "files": {
+        "settings-form-run1.html": "828bd0f924b4a753d7200b3adda17d07139d8589b5a6501997035321ccfc339e"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 121,
+      "reviewSeconds": 76,
+      "loadCheck": "pass",
+      "submitCheck": {
+        "app": "lint-stage/settings-form-run1",
+        "pass": true,
+        "fields": 4,
+        "firstInvalid": "display_name",
+        "focused": "display_name",
+        "onFirst": true,
+        "disabledAfter": false,
+        "reason": "",
+        "errors": []
+      },
+      "countable": [],
+      "dropped": [],
+      "polish": [],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 0,
+        "submit-flow": 0
+      },
+      "total": 0
+    },
+    {
+      "prompt": "settings-form",
+      "run": 2,
+      "files": {
+        "settings-form-run2.html": "d7e3ddd32b09d01476728a0a1da42d98d5e22b0b2f51524dccb8a9637a12f1e5"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 134,
+      "reviewSeconds": 92,
+      "loadCheck": "pass",
+      "submitCheck": {
+        "app": "lint-stage/settings-form-run2",
+        "pass": true,
+        "fields": 4,
+        "firstInvalid": "display_name",
+        "focused": "display_name",
+        "onFirst": true,
+        "disabledAfter": false,
+        "reason": "",
+        "errors": []
+      },
+      "countable": [],
+      "dropped": [],
+      "polish": [],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 0,
+        "submit-flow": 0
+      },
+      "total": 0
+    },
+    {
+      "prompt": "destructive-list",
+      "run": 1,
+      "files": {
+        "destructive-list-run1.html": "f6e541739e18e9d1984fc2cb67a75d89f65b8838d4b1c4a64722733f3b69ce0a"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 120,
+      "reviewSeconds": 100,
+      "loadCheck": "pass",
+      "deleteUndoCheck": {
+        "app": "lint-stage/destructive-list-run1",
+        "pass": true,
+        "reason": "",
+        "removedMs": 27,
+        "focusInRow": true,
+        "focusOnRestoredRow": true,
+        "errors": [],
+        "twoDeletes": {
+          "undoShownForSecond": true,
+          "rowsBefore": 5,
+          "rowsAfter": 3
+        }
+      },
+      "countable": [
+        {
+          "area": "destructive",
+          "severity": "major",
+          "location": "index.html:172-198",
+          "description": "The pagehide listener commits through request(), which takes no options, so the DELETE goes out without keepalive. The snackbar guide says to commit on pagehide with fetch(url, { method: 'DELETE', keepalive: true }). A request started while the page unloads is normally cancelled, so the row is gone on screen and comes back on the next visit. The stand-in is a timer that never fires once the page is gone."
+        },
+        {
+          "area": "submit-flow",
+          "severity": "major",
+          "location": "index.html:232-253",
+          "description": "The save handler wraps request() in try/finally with no catch. A rejected request (a network error, which a real fetch gives and the stand-in never does) resets the button and escapes as an unhandled rejection, and the failure snackbar never shows. The person sees the dialog return to Save address with no error."
+        },
+        {
+          "area": "submit-flow",
+          "severity": "major",
+          "wcag": "4.1.3 (estimated)",
+          "location": "index.html:252",
+          "description": "A save that resolves with ok false shows its error snackbar while the modal dialog is open. Snackbar appends its container to document.body, under the modal dialog's backdrop, so the error is dimmed and away from the form. Chromium, with the POST stand-in forced to ok false, showed the bar blurred under the backdrop. The stand-in POST always resolves ok, so only a real failure reaches this path. This is the framework-stage destructive-list run 2 count."
+        }
+      ],
+      "dropped": [
+        {
+          "area": "loading",
+          "location": "index.html:82, 227-229",
+          "reviewerSeverity": "major",
+          "description": "Saving… with no progress beside it.",
+          "reason": "The button gets aria-busy=\"true\", and the framework draws its ::after spinner beside the label for it (dist/css/expressive.css:2703). Chromium rendered a 14px spinning indicator (button-busy-show, button-busy-spin) next to Saving… during the save."
+        }
+      ],
+      "polish": [],
+      "counts": {
+        "loading": 0,
+        "destructive": 1,
+        "url-state": 0,
+        "submit-flow": 2
+      },
+      "total": 3
+    },
+    {
+      "prompt": "destructive-list",
+      "run": 2,
+      "files": {
+        "destructive-list-run2.html": "e922f60413e15f67e4a13d68a23ddbe780d24f5fea5c6f2103cd4c687a53b53a"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 206,
+      "reviewSeconds": 79,
+      "loadCheck": "pass",
+      "deleteUndoCheck": {
+        "app": "lint-stage/destructive-list-run2",
+        "pass": true,
+        "reason": "",
+        "removedMs": 36,
+        "focusInRow": true,
+        "focusOnRestoredRow": true,
+        "errors": [],
+        "twoDeletes": {
+          "undoShownForSecond": true,
+          "rowsBefore": 5,
+          "rowsAfter": 3
+        }
+      },
+      "countable": [],
+      "dropped": [
+        {
+          "area": "loading",
+          "location": "index.html:278-280",
+          "reviewerSeverity": "major",
+          "description": "Saving… with no progress beside it.",
+          "reason": "The button gets aria-busy=\"true\", and the framework draws its ::after spinner beside the label for it (dist/css/expressive.css:2703). Chromium rendered a 14px spinning indicator (button-busy-show, button-busy-spin) next to Saving… during the save."
+        }
+      ],
+      "polish": [],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 0,
+        "submit-flow": 0
+      },
+      "total": 0
+    },
+    {
+      "prompt": "filtered-dashboard",
+      "run": 1,
+      "files": {
+        "filtered-dashboard-run1.html": "fcaa3a96ef97db046509e6d4f37da7b6dde45ddecea99b2b8e0d62b59c046bfd"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 152,
+      "reviewSeconds": 88,
+      "loadCheck": "pass",
+      "urlStateCheck": {
+        "app": "lint-stage/filtered-dashboard-run1",
+        "pass": false,
+        "reason": "the view after reload differs",
+        "tabIndex": 1,
+        "filter": "a",
+        "url": "index.html?view=shipped&q=a",
+        "expected": {
+          "tab": "local_shipping14\n          Shipped",
+          "search": "a",
+          "rows": [
+            "ORD-1024\tKai Andersen\tOct 1, 2026\t$426.35",
+            "ORD-1012\tOmar Haddad\tSep 29, 2026\t$111.31",
+            "ORD-1018\tMateo Rossi\tSep 23, 2026\t$517.13",
+            "ORD-1039\tChloé Martin\tSep 23, 2026\t$264.10"
+          ],
+          "status": [
+            "2 / 2"
+          ]
+        },
+        "reloaded": {
+          "tab": "local_shipping14\n          Shipped",
+          "search": "a",
+          "rows": [
+            "ORD-1031\tGabriel Costa\tNov 14, 2026\t$515.03",
+            "ORD-1019\tFarah Siddiqui\tNov 12, 2026\t$422.90",
+            "ORD-1004\tOmar Haddad\tNov 5, 2026\t$701.56",
+            "ORD-1009\tAmara Okafor\tOct 25, 2026\t$825.78",
+            "ORD-1030\tHana Kobayashi\tOct 24, 2026\t$401.58",
+            "ORD-1015\tMateo Rossi\tOct 22, 2026\t$586.78",
+            "ORD-1021\tAmara Okafor\tOct 21, 2026\t$762.98",
+            "ORD-1033\tAmara Okafor\tOct 21, 2026\t$216.78",
+            "ORD-1016\tOmar Haddad\tOct 15, 2026\t$668.90",
+            "ORD-1008\tElif Yılmaz\tOct 1, 2026\t$559.57"
+          ],
+          "status": [
+            "1 / 2"
+          ]
+        },
+        "opened": {
+          "tab": "local_shipping14\n          Shipped",
+          "search": "a",
+          "rows": [
+            "ORD-1031\tGabriel Costa\tNov 14, 2026\t$515.03",
+            "ORD-1019\tFarah Siddiqui\tNov 12, 2026\t$422.90",
+            "ORD-1004\tOmar Haddad\tNov 5, 2026\t$701.56",
+            "ORD-1009\tAmara Okafor\tOct 25, 2026\t$825.78",
+            "ORD-1030\tHana Kobayashi\tOct 24, 2026\t$401.58",
+            "ORD-1015\tMateo Rossi\tOct 22, 2026\t$586.78",
+            "ORD-1021\tAmara Okafor\tOct 21, 2026\t$762.98",
+            "ORD-1033\tAmara Okafor\tOct 21, 2026\t$216.78",
+            "ORD-1016\tOmar Haddad\tOct 15, 2026\t$668.90",
+            "ORD-1008\tElif Yılmaz\tOct 1, 2026\t$559.57"
+          ],
+          "status": [
+            "1 / 2"
+          ]
+        },
+        "scrollY": 0,
+        "errors": []
+      },
+      "countable": [
+        {
+          "area": "url-state",
+          "severity": "major",
+          "location": "index.html:105, 265-272",
+          "description": "writeUrl stores only view and q. Nothing listens for expressive:page and the load handler restores no page, so a reload or a shared link opens page 1. The URL check failed on this: on Shipped with filter a it reached page 2, the URL stayed ?view=shipped&q=a, and the reload and the fresh page showed page 1 of 2."
+        }
+      ],
+      "dropped": [],
+      "polish": [
+        {
+          "area": "empty state (check 3)",
+          "location": "index.html:126-133, 252",
+          "description": "With no filter and no orders in a state, the empty state reads No returned orders for “” and offers Clear filter. The seeded data cannot reach it."
+        }
+      ],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 1,
+        "submit-flow": 0
+      },
+      "total": 1
+    },
+    {
+      "prompt": "filtered-dashboard",
+      "run": 2,
+      "files": {
+        "filtered-dashboard-run2.html": "cb6a0be173b896d36b7157f4a43a9bc60c45ad8934c6c2e4bbda7c447806f693"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 174,
+      "reviewSeconds": 121,
+      "loadCheck": "pass",
+      "urlStateCheck": {
+        "app": "lint-stage/filtered-dashboard-run2",
+        "pass": true,
+        "reason": "",
+        "tabIndex": 1,
+        "filter": "a",
+        "url": "index.html?view=shipped&q=a&page=2",
+        "expected": {
+          "tab": "local_shippingShipped",
+          "search": "a",
+          "rows": [
+            "ORD-1030\tCarmen Ruiz\tOct 14, 2026\t$475.26",
+            "ORD-1007\tGrace Liu\tOct 8, 2026\t$1,494.32",
+            "ORD-1004\tCarmen Ruiz\tOct 6, 2026\t$690.43",
+            "ORD-1031\tBen Halvorsen\tOct 6, 2026\t$510.28",
+            "ORD-1023\tHiro Tanaka\tOct 4, 2026\t$71.97"
+          ],
+          "status": [
+            "2 / 2"
+          ]
+        },
+        "reloaded": {
+          "tab": "local_shippingShipped",
+          "search": "a",
+          "rows": [
+            "ORD-1030\tCarmen Ruiz\tOct 14, 2026\t$475.26",
+            "ORD-1007\tGrace Liu\tOct 8, 2026\t$1,494.32",
+            "ORD-1004\tCarmen Ruiz\tOct 6, 2026\t$690.43",
+            "ORD-1031\tBen Halvorsen\tOct 6, 2026\t$510.28",
+            "ORD-1023\tHiro Tanaka\tOct 4, 2026\t$71.97"
+          ],
+          "status": [
+            "2 / 2"
+          ]
+        },
+        "opened": {
+          "tab": "local_shippingShipped",
+          "search": "a",
+          "rows": [
+            "ORD-1030\tCarmen Ruiz\tOct 14, 2026\t$475.26",
+            "ORD-1007\tGrace Liu\tOct 8, 2026\t$1,494.32",
+            "ORD-1004\tCarmen Ruiz\tOct 6, 2026\t$690.43",
+            "ORD-1031\tBen Halvorsen\tOct 6, 2026\t$510.28",
+            "ORD-1023\tHiro Tanaka\tOct 4, 2026\t$71.97"
+          ],
+          "status": [
+            "2 / 2"
+          ]
+        },
+        "scrollY": 0,
+        "errors": []
+      },
+      "countable": [
+        {
+          "area": "url-state",
+          "severity": "major",
+          "location": "index.html:324-334",
+          "description": "A tab change deletes q and page from the URL, but each tab panel keeps its own search field and page. Search in Open, switch to Shipped, switch back: Open is still filtered while the URL is ?view=open, so a reload or a shared link shows it unfiltered. Line 327 reads the panel's query and line 330 deletes q anyway."
+        }
+      ],
+      "dropped": [],
+      "polish": [],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 1,
+        "submit-flow": 0
+      },
+      "total": 1
+    }
+  ],
+  "totals": {
+    "loading": 0,
+    "destructive": 1,
+    "url-state": 2,
+    "submit-flow": 2,
+    "total": 5
+  },
+  "branchLint": {
+    "commit": "edee3fb62",
+    "serverSha256": "027e334ce44d074cb05ea25c5c45e7c9b6a3a946ef0089b729527bcd0a1d4d27",
+    "command": "node mcp/expressivecss/lint.mjs docs/agents/evidence/finished-app/2026-11-15-lint-stage/*-run?.html docs/agents/evidence/finished-app/2026-11-15-baseline/*-run?.html, from the repository root",
+    "output": "branch-lint.txt",
+    "inspected": "12 of 12 files; no file-not-inspected or inspection-truncated result",
+    "rules": [
+      "transition-all",
+      "viewport-zoom-disabled",
+      "paste-blocked"
+    ],
+    "hits": [],
+    "apps": {
+      "lint-stage/destructive-list-run1.html": {
+        "transition-all": 0,
+        "viewport-zoom-disabled": 0,
+        "paste-blocked": 0
+      },
+      "lint-stage/destructive-list-run2.html": {
+        "transition-all": 0,
+        "viewport-zoom-disabled": 0,
+        "paste-blocked": 0
+      },
+      "lint-stage/filtered-dashboard-run1.html": {
+        "transition-all": 0,
+        "viewport-zoom-disabled": 0,
+        "paste-blocked": 0
+      },
+      "lint-stage/filtered-dashboard-run2.html": {
+        "transition-all": 0,
+        "viewport-zoom-disabled": 0,
+        "paste-blocked": 0
+      },
+      "lint-stage/settings-form-run1.html": {
+        "transition-all": 0,
+        "viewport-zoom-disabled": 0,
+        "paste-blocked": 0
+      },
+      "lint-stage/settings-form-run2.html": {
+        "transition-all": 0,
+        "viewport-zoom-disabled": 0,
+        "paste-blocked": 0
+      },
+      "baseline/destructive-list-run1.html": {
+        "transition-all": 0,
+        "viewport-zoom-disabled": 0,
+        "paste-blocked": 0
+      },
+      "baseline/destructive-list-run2.html": {
+        "transition-all": 0,
+        "viewport-zoom-disabled": 0,
+        "paste-blocked": 0
+      },
+      "baseline/filtered-dashboard-run1.html": {
+        "transition-all": 0,
+        "viewport-zoom-disabled": 0,
+        "paste-blocked": 0
+      },
+      "baseline/filtered-dashboard-run2.html": {
+        "transition-all": 0,
+        "viewport-zoom-disabled": 0,
+        "paste-blocked": 0
+      },
+      "baseline/settings-form-run1.html": {
+        "transition-all": 0,
+        "viewport-zoom-disabled": 0,
+        "paste-blocked": 0
+      },
+      "baseline/settings-form-run2.html": {
+        "transition-all": 0,
+        "viewport-zoom-disabled": 0,
+        "paste-blocked": 0
+      }
+    },
+    "sourceCheck": "Zero hits. A search of all twelve files found no transition with all, no paste handler, and only the viewport content \"width=device-width, initial-scale=1\", so there is no missed hit to record.",
+    "otherHits": "One older-rule hit, outside the three new rules: lint-stage/destructive-list-run2.html:189:33 manual-init-without-teardown [medium], the same line the baseline lint gave its reviewer.",
+    "note": "First run at d2a83ef26 (server.js a1aac2ac31c231ff3df51e047cf00a8e0f1b94f8766485fc65dddd3463d80c67), after the rule groups and two mcp fixes on top of the build commit 966ebb905. Rerun at edee3fb62 after the Codex fixes to paste-blocked; branch-lint.txt is byte-identical. The hits change no count."
+  }
+}

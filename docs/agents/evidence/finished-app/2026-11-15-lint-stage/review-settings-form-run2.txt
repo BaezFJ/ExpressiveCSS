@@ -1,0 +1,22 @@
+FINDINGS
+- none
+
+CHECKED
+- Lifecycle: the page loads only the IIFE bundle at the end of `<body>` (index.html:64), so the markup exists before the script runs. It uses no registry components, so it needs no `AutoInit()` or `.init()`. It never uses the global `M`. It adds no dynamic content. `Expressive.Forms.validateField` and `new Expressive.Snackbar` match the bundled API (dist/js/expressive.js:3473, components/snackbar.md:53-84).
+- Assets and fonts: the page loads one stylesheet, `dist/css/expressive.min.css`, with `dist/fonts/` next to it. It has no Google Fonts or Material Icons links and no `.material-icons` markup. The JS bundle is needed by Forms, the busy-button behavior and Snackbar. No script in `<head>` blocks rendering.
+- States: the focus ring is not removed (the page's own CSS is index.html:10-14 only). The page has no class-disabled native controls and no disabled anchors. Saving shows its progress through `aria-busy` (CSS `button-busy-spin` after `--md-comp-button-busy-delay`). Failure shows in the `role="status"` line and in the field error or a Retry snackbar. There are no lists or tables, and no requests start from controls other than command buttons.
+- WCAG 2.2 from source: every input has a `<label for>` and `aria-describedby` pointing at its supporting text. `validateField` keeps the `[data-error]` element in `aria-describedby`, and CSS swaps the shown text to `attr(data-error)`. Error text names the field and is attached to it (3.3.1). The save status is a live region. Autocomplete covers 1.3.5 (nickname, email, tel, url). The keyboard order is just the inputs and the Save button. The CSS includes `prefers-reduced-motion` blocks.
+- finished-app:loading: passes. The label changes to "Saving…" with the ellipsis character (index.html:125), and the spinner shows through `aria-busy`. Second presses are blocked: BusyButtons stops click, Enter and Space during capture on `button[aria-busy="true"]` (dist/js/expressive.js:4391-4408), which also cancels the click that Enter-to-submit fires on the default button. The busy state is cleared in `finally`.
+- finished-app:submit-flow: passes. The fields are inside a `<form>` with a `type="submit"` button, so Enter submits. Save is never disabled before submission. A client failure focuses the first invalid field (index.html:117-121), and the server email error focuses that field and shows inline (index.html:98-110). No handler blocks paste. `name` is set on all four fields. The types are email, tel and url. Email and website have `spellcheck="false"`. The floating label uses `placeholder=" "`.
+- finished-app:destructive: not applicable, because the page has no remove or discard action.
+- finished-app:url-state: not applicable, because the page has no tabs, filters, search or pages.
+
+BLOCKED
+- Contrast: there is no browser route. The source suggests the error text uses `--md-sys-color-error` on the surface, and the status line uses the same token. Not measured.
+- Focus visibility and focus not obscured (2.4.11): not measured. The header is not marked sticky in the page source, but how it renders is unverified.
+- Target size (2.5.8): not measured. The filled button and the 56dp fields are likely to pass.
+- Screen-reader output: the source alone cannot show whether the server error text, which is CSS `::after` content in the field's description, is read when focus moves to the email field.
+- The form posts with stand-in script and never loads the current account values, so a loading or error state for fetching existing data cannot be judged. [adapt] When it is wired to a real API, add a load state (for example a `.loading-overlay` on the form) and an error state for that fetch.
+
+HANDOFFS
+- Component structure: the `<header><nav aria-label="App">` holds only an `<h2>` and no links. It is an empty navigation landmark, and the `<h2>` comes before the page's `<h1>` (index.html:18-22, 26).
