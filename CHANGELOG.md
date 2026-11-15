@@ -32,8 +32,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Below 600px a `.scaffold` scrolls the document instead of its pane, so a
   phone's address bar can collapse. The bar region stays pinned, a
   `nav.navigation-bar` child (or a `<footer>` holding only one) is pinned at
-  the bottom and shows only below 600px, and the rail is hidden until the app
-  bar's menu button opens it as an overlay. A trailing vertical toolbar turns
+  the bottom, and the rail is hidden until the app bar's menu button opens it
+  as an overlay. From 600px up the navigation bar hides while a rail is shown
+  and keeps its own bottom row when no rail is shown. A trailing vertical toolbar turns
   into a centered row that floats 16px above the navigation bar.
 - A `.status-bar` child of a `.scaffold` takes a full-width row along the
   bottom, under the rail, pane and toolbar, and hides below 600px.
@@ -53,6 +54,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - A navigation rail's own menu button has to be its first child, as its styles
   already required. A later `<button>` is a destination, not the toggle.
   Migration: if a rail's menu button isn't its first child, move it there.
+- The compact, navigation rail, expanded rail, dashboard and list-detail
+  templates are `.scaffold` shells with no `<style>` block. The rail templates
+  use `.tall-rail` and open the rail from a menu button in the app bar. Each
+  template adds a skip link and `viewport-fit=cover`, and wraps its content in
+  a `.container` inside `<main>`. Pages copied from an older template keep
+  working as they are.
 
 ## [0.18.1] - 2026-11-15
 

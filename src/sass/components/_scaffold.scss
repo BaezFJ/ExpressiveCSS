@@ -10,7 +10,7 @@
 //   rail      .navigation-rail, or .scaffold-rail
 //   pane      main, or .scaffold-pane. A .panes layout goes inside main.
 //   trailing  .toolbar.vertical or .toolbar-group.vertical, or .scaffold-trailing
-//   navbar    nav.navigation-bar, or a <footer> whose only child is one (compact only)
+//   navbar    nav.navigation-bar, or a <footer> whose only child is one (from 600px only while no rail shows)
 //   status    .status-bar, full width along the bottom (600px and up)
 //   sheet     an open standard dialog.side-sheet, between the pane and the
 //             trailing region (1200px and up; an overlay below)

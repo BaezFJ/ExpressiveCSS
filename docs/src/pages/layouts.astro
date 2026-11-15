@@ -9,7 +9,7 @@ const sources = import.meta.glob<string>("../../public/layout-*.html", {
 });
 const layouts = [
   { id: "compact", title: "Compact app", description: "One content column with a bottom navigation bar. Use it for a small app or a focused mobile screen." },
-  { id: "rail", title: "Navigation rail", description: "A collapsed rail beside your content from 600px. Compact windows use the bottom navigation bar." },
+  { id: "rail", title: "Navigation rail", description: "A collapsed rail beside your content from 600px, expanded from the app bar's menu button. Compact windows use the bottom navigation bar." },
   { id: "expanded", title: "Expanded rail", description: "An expanded rail for destinations with longer labels. Below 840px, the bottom navigation bar takes over." },
   { id: "list-detail", title: "List-detail", description: "A selectable list beside its detail from 840px. Narrow windows show one pane, with a Back action and keyboard focus recovery." },
   { id: "dashboard", title: "Dashboard", description: "A navigation rail with a responsive card grid and activity list. Cards stack as the content area narrows." },
@@ -23,7 +23,8 @@ const S = defineSections([
 <DocsLayout page="layouts" sections={S} wide>
   <Section {...S.choose}>
     <p>Choose a structure, preview it, and copy the complete HTML into your project.
-      These templates use ExpressiveCSS navigation, panes, and grid classes.</p>
+      Each template is a <a href="scaffold.html">scaffold</a> app shell built
+      from ExpressiveCSS navigation, panes, and grid classes, with no CSS of its own.</p>
     <div class="layout-grid">
       {layouts.map((layout) => (
         <div>

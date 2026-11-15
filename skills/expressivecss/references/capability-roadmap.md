@@ -18,7 +18,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Navigation bar](#navigation-bar) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Navigation rail](#navigation-rail) | unassessed | needs-review | needs-rerun | 0 |
 | [Panes](#panes) | unassessed | needs-review | needs-rerun | 1 |
-| [Scaffold](#scaffold) | unassessed | needs-review | incomplete | 0 |
+| [Scaffold](#scaffold) | implemented | source-reviewed | incomplete | 0 |
 | [Footer](#footer) | unassessed | needs-review | needs-rerun | 0 |
 | [Tabs](#tabs) | unassessed | needs-review | needs-rerun | 1 |
 | [Breadcrumbs](#breadcrumbs) | unassessed | needs-review | needs-rerun | 0 |
@@ -193,9 +193,9 @@ Web adaptation: CSS viewport and container queries; the application chooses the 
 
 ## Scaffold
 
-**unassessed within the stated scope.** A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay. A trailing vertical toolbar floats there as a centered row above the navigation bar. A status bar takes a full-width row along the bottom from 600px up. From 600px up the pane floats as a rounded surface on a surface-container shell. From 1200px up an open standard side sheet becomes a third column. With viewport-fit=cover its regions stay inside the safe areas.
+**implemented within the stated scope.** A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay. A trailing vertical toolbar floats there as a centered row above the navigation bar. A status bar takes a full-width row along the bottom from 600px up. From 600px up the pane floats as a rounded surface on a surface-container shell. From 1200px up an open standard side sheet becomes a third column. With viewport-fit=cover its regions stay inside the safe areas.
 
-Source review: needs-review, 2026-11-15. [src/sass/components/_scaffold.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/9ca9e3cf2fd27644544cb717a5197f83f594092c/src/sass/components/_scaffold.scss).
+Source review: source-reviewed, 2026-11-15. [src/sass/components/_scaffold.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/9ca9e3cf2fd27644544cb717a5197f83f594092c/src/sass/components/_scaffold.scss).
 
 Google relationship: pattern. Upstream review: requirements-prose-reviewed (2026-11-15); [reviewed source](https://m3.material.io/foundations/layout/scaffold/overview).
 

@@ -65,13 +65,13 @@ Read the [breakpoints reference](./references/breakpoints.md) for what changes b
 
 ## Start from a canonical layout
 
-Read the [canonical layouts reference](./references/canonical-layouts.md) to choose between feed, list-detail and supporting pane and for their behavior at each breakpoint. These files are the starting points:
+Read the [canonical layouts reference](./references/canonical-layouts.md) to choose between feed, list-detail and supporting pane and for their behavior at each breakpoint. These files are the starting points; the app templates are `.scaffold` shells, so a copy needs no shell CSS:
 
 | Starting point | Use it for |
 | --- | --- |
 | [Compact template](../assets/templates/layout-compact.html) | A single-pane app with a navigation bar |
-| [Navigation rail template](../assets/templates/layout-rail.html) | A single pane beside a collapsed rail |
-| [Expanded rail template](../assets/templates/layout-expanded.html) | A single pane beside an expanded rail |
+| [Navigation rail template](../assets/templates/layout-rail.html) | A single pane beside a collapsed rail from 600px and a navigation bar below 600px |
+| [Expanded rail template](../assets/templates/layout-expanded.html) | A single pane beside an expanded rail from 840px; a short script hides the rail below 840px so the navigation bar takes over |
 | [List-detail template](../assets/templates/layout-list-detail.html) and [list-detail example](../assets/examples/list-detail.html) | Selecting an item from a list to see its detail |
 | [Panes guide](../components/panes.md) | List-detail, supporting pane and equal panes |
 | [Dashboard guide](../expressivecss-dashboard/SKILL.md) | Dashboards and reporting pages; start from its reference implementation |
