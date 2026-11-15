@@ -9,7 +9,7 @@ Component ID: `scaffold`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `d3881e061d34664e0ed676226cd436e40993dce2a8ceeed2b1aa3964f75b72a0`
+Contract SHA-256: `71dfbb5294ed01d92df86ab625d5d1edec5556e74411a0e5ba8f4f37c6720829`
 
 #### Selection and adaptation
 
@@ -27,7 +27,7 @@ Requirements and boundaries: design reference layout-material-review. Compact, m
 
 Support (2026-11-15, `llm.md#scaffold`): A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling.
 
-Web adaptation: CSS grid areas on a div or body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.
+Web adaptation: CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.
 
 Known boundary: Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser; spoken output and a mobile browser's collapsing address bar remain unverified.
 

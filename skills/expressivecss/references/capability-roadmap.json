@@ -263,7 +263,7 @@
       "sourceReview": "source-reviewed",
       "reviewedOn": "2026-11-15",
       "scope": "A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling.",
-      "adaptation": "CSS grid areas on a div or body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.",
+      "adaptation": "CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.",
       "upstream": {
         "source": "https://m3.material.io/foundations/layout/scaffold/overview",
         "reviewedOn": "2026-11-15",
@@ -284,7 +284,7 @@
       "sources": [
         {
           "path": "src/sass/components/_scaffold.scss",
-          "sha256": "f45eb0b2f67d76fd98746a9a4d790d04ffca076b89001418a0d9d9a4abb51cc5"
+          "sha256": "27178e857ae135ad47758c89611811d5d0a5a6a593b1b1ad34c4800299715659"
         }
       ],
       "gaps": [

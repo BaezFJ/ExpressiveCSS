@@ -99,6 +99,8 @@ for (const [name, type, run] of engines) {
       assert.deepEqual([ct.right, ct.top, ct.bottom], [1280, 50, 800], 'the trailing class fills its region');
       await tab.locator('#cr').evaluate((el) => { el.innerHTML = '<div style="height:2000px">Long</div>'; });
       assert.ok(await tab.locator('#cr').evaluate((el) => { el.scrollTop = 300; return el.scrollTop > 0; }), 'custom rail content scrolls');
+      await tab.locator('#ct').evaluate((el) => { el.innerHTML = '<div style="height:2000px">Long</div>'; });
+      assert.ok(await tab.locator('#ct').evaluate((el) => { el.scrollTop = 300; return el.scrollTop > 0; }), 'custom trailing content scrolls');
 
       await render(scaffold({ trailing: group }));
       near(1280 - (await box('#tg')).right, 24, 'a toolbar group takes the trailing region');

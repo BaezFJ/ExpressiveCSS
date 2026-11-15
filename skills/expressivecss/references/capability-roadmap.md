@@ -199,7 +199,7 @@ Source review: source-reviewed, 2026-11-15. [src/sass/components/_scaffold.scss]
 
 Google relationship: pattern. Upstream review: requirements-prose-reviewed (2026-11-15); [reviewed source](https://m3.material.io/foundations/layout/scaffold/overview).
 
-Web adaptation: CSS grid areas on a div or body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.
+Web adaptation: CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.
 
 - verification: Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser; spoken output and a mobile browser's collapsing address bar remain unverified. Next: Move through a scaffold page by landmarks with a screen reader, and scroll the pane in a phone browser whose address bar collapses.
 

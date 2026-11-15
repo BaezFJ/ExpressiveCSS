@@ -13,9 +13,9 @@
 //
 // The bar spans the top, and the rail, pane and trailing regions share the row
 // below it. The shell is as tall as the window and only the pane scrolls. An
-// empty region takes no space. A trailing toolbar taller than its region is
-// clipped at the bottom, so keep it to the actions that fit. `clip` rather than `hidden` keeps focus and
-// find-in-page from scrolling the shell itself.
+// empty region takes no space. `clip` rather than `hidden` keeps focus and
+// find-in-page from scrolling the shell itself. A trailing toolbar taller than
+// its region is clipped at the bottom, so keep it to the actions that fit.
 //
 // Limits: AppBar collapses .medium/.large bars and BackToTop shows on window
 // scroll, so in a scaffold a flexible bar stays expanded and the link stays
@@ -30,9 +30,6 @@ $_pane: ":is(main, .scaffold-pane)";
 $_trailing: ":is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing)";
 
 .scaffold {
-  // The bar's scroll fill reads this timeline; the pane names it below.
-  timeline-scope: --scaffold-pane;
-
   display: grid;
   grid-template-areas:
     "bar bar bar"
@@ -76,10 +73,15 @@ $_trailing: ":is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing)
     margin-inline: var(--md-comp-toolbar-external-space, 24px);
   }
 
-  // The top app bar reads its scroll timeline from this property, so the
-  // bar fills from the pane's scroll and keeps its animation name and range.
+  // The pane names a scroll timeline and the scope lifts it to the shell. The
+  // top app bar reads its timeline from --_app-bar-timeline, so the scaffold's
+  // own bar fills from the pane's scroll and keeps its animation and range.
   @supports (timeline-scope: --a) {
-    --md-comp-top-app-bar-timeline: --scaffold-pane;
+    timeline-scope: --scaffold-pane;
+
+    > #{$_bar} {
+      --_app-bar-timeline: --scaffold-pane;
+    }
   }
 
   @media print {
