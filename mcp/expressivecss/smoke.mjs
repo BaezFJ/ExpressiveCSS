@@ -987,6 +987,22 @@ const transport = new StdioClientTransport({
   await writeFile(transitionMarkup, '<p style="transition: opacity 200ms, transform 200ms">Hi</p>\n<style>.card { transition: opacity 200ms, transform 200ms; }</style>\n');
   const transitionListed = lint([transitionMarkup]);
   assert.equal(transitionListed.status, 0, transitionListed.stdout);
+  // A viewport that stops zoom is reported once per tag at the tag, and the standard viewport passes.
+  const viewportMarkup = path.join(outsideDir, 'viewport.html');
+  const viewportLint = async (content) => {
+    await writeFile(viewportMarkup, `<head>\n  <meta name="viewport" content="${content}">\n</head>\n`);
+    return lint([viewportMarkup]);
+  };
+  const viewportBoth = await viewportLint('width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no');
+  assert.equal(viewportBoth.status, 1, viewportBoth.stderr);
+  assert.deepEqual(viewportBoth.stdout.match(/viewport\.html:\d+:\d+ viewport-zoom-disabled \[\w+\]/gu), ['viewport.html:2:3 viewport-zoom-disabled [high]'], viewportBoth.stdout);
+  for (const content of ['width=device-width, user-scalable=no', 'width=device-width, maximum-scale=1']) {
+    const single = await viewportLint(content);
+    assert.equal(single.status, 1, single.stderr);
+    assert.equal(single.stdout.match(/viewport-zoom-disabled/gu)?.length, 1, single.stdout);
+  }
+  const viewportStandard = await viewportLint('width=device-width, initial-scale=1');
+  assert.equal(viewportStandard.status, 0, viewportStandard.stdout);
   // The rules for names 0.16.0 removed, one by one and in process: the lint CLI
   // rewrites className= to class= before inspecting, so it cannot test JSX.
   // Each rule lists markup it must flag and current markup that only shares a
@@ -1063,6 +1079,10 @@ const transport = new StdioClientTransport({
       flag: ['.a { transition: all 200ms }', '.a{transition:all .2s}', '.a { TRANSITION: ALL 1s }', '.a { transition: opacity .2s, all .3s }', '.a { transition-property: all }', "<div style={{ transition: 'all 0.2s' }}></div>", '<style>\n  .card { transition: all 200ms; }\n</style>', '{"transition": "all 1s"}', "{ 'transition-property': 'all' }"],
       pass: ['.a { transition: opacity 200ms, transform 200ms }', '.a { transition-property: opacity }', '.a { transition: opacity .2s allow-discrete }', '.a { transition: none }', '.a { transition: var(--all) }', 'const s = { transition: theme.all };', '.a { --transition: all 1s }', '.a { -webkit-transition: all 1s }', '.a { transition-duration: 200ms; all: unset }', '<p style="transition: opacity 1s" data-x="all"></p>', 'const s = { transition: x, all: y };', 'const s = { transition: x, all : y };', '.a { transition: $all }', '.a { transition: @all }', 'x.transition: all 1s', '.a { transition: opacity 200ms /* all states */ }'],
     },
+    'viewport-zoom-disabled': {
+      flag: [...['user-scalable=no', 'user-scalable = 0', 'user-scalable=false', 'user-scalable=0.5', 'maximum-scale=1', 'maximum-scale=1.0', 'maximum-scale=1.00', 'maximum-scale=0.5', 'maximum-scale=.5', 'maximum-scale=0'].map((content) => `<meta name="viewport" content="width=device-width, ${content}">`), '<META NAME=VIEWPORT CONTENT="USER-SCALABLE=NO">', '<meta content="initial-scale=1, maximum-scale=1" name="viewport">', '<meta name="viewport" content="width=device-width; initial-scale=1; user-scalable=no">', "<meta name='viewport' content='user-scalable=no' />", '<meta\n  name="viewport"\n  content="width=device-width, initial-scale=1, maximum-scale=1" />'],
+      pass: [...['width=device-width, initial-scale=1', 'width=device-width, initial-scale=1.0', 'minimum-scale=1', 'maximum-scale=1.5', 'maximum-scale=1.01', 'maximum-scale=10', 'user-scalable=yes', 'user-scalable=1', 'user-scalable = 1', 'user-scalable=device-width'].map((content) => `<meta name="viewport" content="${content}">`), '<meta name="description" content="user-scalable=no">', '<meta data-name="viewport" content="user-scalable=no">', '<meta name="viewport" data-content="user-scalable=no" content="width=device-width">', '<meta name="description" content="Avoid user-scalable=no"><meta name="viewport" content="width=device-width, initial-scale=1">'],
+    },
   };
   const ruleIds = authoringRules.map((rule) => rule.id).filter((id) => !/^legacy-/.test(id));
   assert.deepEqual(Object.keys(ruleCases).sort(), ruleIds.sort(), 'every regex rule without a legacy- prefix needs cases, and every case a rule');
@@ -1089,8 +1109,10 @@ const transport = new StdioClientTransport({
     // Whitespace after the colon that the value gap could also take, a run of declarations that never reach `all`, a value with no end,
     // and starts that all reach one `all` whose colon check scans a long whitespace run.
     'transition:' + fill(' '), fill('transition:'), 'transition: opacity' + fill(' 1s,'), 'transition:'.repeat(45) + 'all' + fill(' ') + ':',
+    // Viewport tags: many starts, an unclosed tag that repeats `content=` past the name, and a long content value that never stops zoom.
+    fill('<meta '), '<meta name=viewport ' + fill('content='), '<meta name="viewport" content="' + fill('maximum-scale=1.5,'),
   ];
-  for (const rule of authoringRules.filter((entry) => legacyIds.includes(entry.id) || ['legacy-btn-class', 'transition-all'].includes(entry.id))) {
+  for (const rule of authoringRules.filter((entry) => legacyIds.includes(entry.id) || ['legacy-btn-class', 'transition-all', 'viewport-zoom-disabled'].includes(entry.id))) {
     const regex = new RegExp(rule.pattern.source, rule.pattern.flags);
     for (const input of adversarial) {
       regex.lastIndex = 0;
