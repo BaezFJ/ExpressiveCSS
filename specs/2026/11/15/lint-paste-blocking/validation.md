@@ -1,0 +1,25 @@
+# Lint paste blocking: validation
+
+Phase 87. Requirements: [requirements.md](requirements.md). Plan: [plan.md](plan.md).
+
+## Agent-run checks
+
+| ID | Covers | Setup | Action | Expected result | Fails if | Result |
+| --- | --- | --- | --- | --- | --- | --- |
+| V1 | R1 to R5 | MCP dependencies installed with `npm ci --prefix mcp/expressivecss`. | `npm test --prefix mcp/expressivecss`, before and after the rule. | It fails before the rule and passes after: every flag case reports `paste-blocked`, no pass case does, the CLI file gets one finding at line 2 with `[high]` and exit 1 and its non-cancelling copy exit 0, and each backtracking input finishes under 250ms. | `event.preventDefault(); insertPlain(event)`, `e.preventDefault()`, `RETURN FALSE`, `return false \|\| ok()`, `el.onpaste = ...` or a conditional cancel is flagged, `return false; log()`, the `alert` case or a form-level handler is missed, the location is wrong, or an input backtracks. | Pending |
+| V2 | R6 | After group 2. | Read the README paragraph and the CHANGELOG entry; run the CLI on the README. | Both name the check; the README gets no `paste-blocked` finding. | A text is missing or the README trips the rule. | Pending |
+| V3 | R7 | Six rebuilds, phase 84's rows recorded. | Build, review with the baseline trees and lint, run each prompt's script. | The run set and six `lint-stage` rows are committed; script results, per-area counts, the hash comparison with the framework stage, the comparison with the baseline, guidance-stage and framework-stage rows, the fate of each handed-on regression and the milestone summary are recorded; the summary's totals equal the row sums; `findings.json`'s `lint` field names the baseline commit and its `server.js` hash. | A run set, row, script result, comparison or hand-off is missing, a failed run is dropped or counted as zero, the totals disagree with the rows, or the `lint` field doesn't name the baseline commit. | Pending |
+| V4 | R8 | After V3, groups 1 and 2 committed. | From the repository root, run the branch lint over the twelve committed apps; check each new-rule hit against the source. | `branch-lint.txt` is committed; `findings.json` records each app's hits for the three new rules as confirmed or false positive, with the branch commit and its `server.js` hash, apart from the counts; the evals doc's Records list and comparison section mention it. | An app is missing, any result is `file-not-inspected` or `inspection-truncated`, a hit is unchecked, the commit or hash is missing, or a hit changes a count. | Pending |
+| V5 | R9 | Clean build at the final commit. | `npm run verify`, then `npm test --prefix mcp/expressivecss`, then `npm run verify:packages`. | All pass; known flakes pass alone. | Any check fails on rerun. | Pending |
+
+## Human checks
+
+None.
+
+## Merge conditions
+
+All agent-run checks pass, the milestone PR's required CI checks pass, and the repository's reviews are done.
+
+## Review record
+
+- 2026-11-15, spec review by an independent read-only subagent (Plan agent). Three blocking defects, all addressed: the lint refuses files outside its working directory, so R8 runs it from the repository root over the committed copies, keeps `branch-lint.txt`, and treats `file-not-inspected` as an incomplete record; neither lint's source was recorded, so the `lint` field names the baseline commit and its `server.js` hash, the branch lint record names the branch commit and its hash, and groups 1 and 2 are committed before the rerun; the "milestone report" had no home, so it is the lint stage notes copied into the milestone PR body, and they say whether each handed-on regression came back. Also adopted: the message no longer says paste blocking stops password managers outright, since autofill still works; R7 records whether the skill tree and `dist/` match the framework stage's and reads differences as run-to-run variation, names failed runs and checks the totals; a top-level `return false` after simple statements (`alert(...); return false`) is flagged, and other cancels are listed as exclusions; the value is case-sensitive, statements need `;` or a newline, `return false || ok()` and `el.onpaste = ...` pass, newlines count as whitespace; R5's pass fixture is a handler that doesn't cancel; the Label is `lint-stage`; the suite runs last; V2 drops `check:generated`; the Records list names the new field; R1 is split. A prototype of R2's statement pattern took 26 seconds on an unclosed value of spaces until statements could no longer start with whitespace, which R2 and R4 now state.
