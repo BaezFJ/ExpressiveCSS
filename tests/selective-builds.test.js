@@ -356,7 +356,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed DataTables.showPage, which restores a local page from the URL without events, with its validation split out for the complexity gate: 111,466 gzip bytes (+44).
   // Reviewed the BusyButtons press guard and the keypad's check of the form's default button: 111,601 gzip bytes (+135).
   // Reviewed the BusyButtons keydown guard for components that activate on Enter or Space: 111,622 gzip bytes (+21).
-  assert.ok(sizes(js).gzip <= 111622, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the navigation rail peek under nav-rail="hover" (mouse rest or keyboard focus entering the rail), read from the rail, an ancestor or its shadow host: 111,666 gzip bytes (+244).
+  // Reviewed the milestone merged with the compact and hover navigation rail from master: 111,898 gzip bytes (+32 over the two sides' sum).
+  assert.ok(sizes(js).gzip <= 111898, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -563,5 +565,7 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the aria-busy button spinner on shaped buttons, with its reduced-motion rule and the data table and menu buttons left out: 92,147 gzip bytes (+377).
   // Reviewed leaving buttons with a .shape-* utility out of the busy spinner: 92,160 gzip bytes (+13).
   // Reviewed anchored headings resting below a page-level sticky top app bar, outside dialogs and panes, with the offset token per bar size: 92,310 gzip bytes (+150).
-  assert.ok(sizes(css).gzip <= 92310, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed nav-rail="compact" (72dp icon-only rail) and nav-rail="hover" (the expanded layout as a .peek over the page, keeping the collapsed footprint and row heights from the live indicator token, raised only while it peeks and never over a modal rail, which rises at once), set on the root, a shadow host or one rail: 92,124 gzip bytes (+354).
+  // Reviewed the milestone merged with the compact and hover navigation rail from master: 92,665 gzip bytes (+1 over the two sides' sum).
+  assert.ok(sizes(css).gzip <= 92665, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -48,6 +48,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   snackbar closes without Undo or the page hides, and keep a confirmation
   dialog for actions that can't be undone. The `Dialogs.confirm()` example now
   asks about such an action.
+- The navigation rail takes a `nav-rail` attribute on `<html>` or on one rail.
+  `nav-rail="compact"` makes the collapsed rail 72dp wide and icon-only, with
+  the new `--md-comp-nav-rail-compact-width` token. `nav-rail="hover"` expands a
+  collapsed rail over the page while the mouse rests on it or keyboard focus is
+  in it, without moving the page. A rail's own value replaces the root's, and `nav-rail=""` opts it out.
 
 ### Changed
 

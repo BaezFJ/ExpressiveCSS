@@ -36,6 +36,7 @@ Later phases build on these:
 ## Up next
 
 1. [Milestone: apps that feel finished](#milestone-apps-that-feel-finished)
+2. [Milestone: scaffold app shells](#milestone-scaffold-app-shells)
 
 ## Milestone: MCP authoring guidance
 
@@ -448,6 +449,96 @@ Completion check: fixtures with either setting get a finding, and the standard `
 No dependencies. `expressivecss-lint` reports a text field whose inline handler blocks paste. This phase closes the lint stage and the milestone's final baseline comparison.
 
 Completion check: a field with `onpaste="return false"` gets a finding, and a field whose paste handler doesn't cancel the event gets none.
+
+## Milestone: scaffold app shells
+
+A `.scaffold` container places an app's bars, rails, panes and trailing controls, so pages stop hand-writing a shell grid. Each region holds a component the framework already ships, and the scaffold only positions it. The default layout follows Gmail on the web: the app bar spans the top and holds the rail's menu button, and the rail, pane and trailing toolbar sit below it. The shell fills the window and only the pane scrolls. The decisions come from a design discussion on 2026-11-15.
+
+### Phase 88: lay out the scaffold's default regions
+
+No dependencies. A `.scaffold` places its direct children by component: a `header` app bar across the top, a `.navigation-rail` at the leading edge, `main` as the pane area, and a vertical `.toolbar` at the trailing edge. The shell is as tall as the window, and only the pane area scrolls. Region classes place custom content that isn't one of those components. The component ships with its docs page, `llm.md` section, semantics entry and skill guide, and the design skill's [scaffold reference](../skills/expressivecss/expressivecss-design/references/scaffold.md) maps each region to it.
+
+Completion check: at 1280px, a scaffold with all four regions shows the app bar above the rail, pane and toolbar. Scrolling a long pane leaves the bar, rail and toolbar in place, and under `dir="rtl"` the rail and toolbar swap sides.
+
+Open for spec: the region class names, whether `.panes` can be the pane area directly or sits inside `main`, and how the rail's own `100dvh` height and fixed positioning give way inside the grid.
+
+### Phase 89: run the rail the full height
+
+Depends on phase 88. A modifier on `.scaffold` runs the rail from the top of the window to the bottom, and the app bar sits over the pane area only, as the current layout templates do.
+
+Completion check: with the modifier, the rail starts at the top edge and the app bar starts at the rail's inline end. Without it, the layout matches phase 88.
+
+Open for spec: the modifier's name.
+
+### Phase 90: toggle the rail from outside it
+
+No dependencies. A button outside a `.navigation-rail` that names the rail in `aria-controls` expands and collapses it and keeps its own `aria-expanded` in sync. When Escape closes a modal rail, focus returns to that button. A rail without an outside button keeps using its first-child toggle.
+
+Completion check: clicking an app bar button whose `aria-controls` holds the rail's id expands the rail and sets `aria-expanded="true"` on the button. Pressing Escape inside the modal rail then collapses it and focuses the button.
+
+Open for spec: whether a rail can have an outside toggle and its own first-child toggle at once, and how AutoInit's `watch` mode connects a button added after the rail started.
+
+### Phase 91: overlay the expanded rail on medium windows
+
+Depends on phases 88 and 90. In a scaffold at 840px and wider, an expanded rail narrows the pane. From 600px to 839px it opens over the pane with a scrim, and Escape or a scrim tap collapses it.
+
+Completion check: at 1024px, expanding the rail narrows the pane by the difference between the expanded and collapsed widths. At 700px the pane keeps its width, a scrim appears, and tapping the scrim collapses the rail.
+
+Open for spec: whether the medium overlay reuses the rail's `modal` state, and whether CSS or the runtime sets it, since the rail goes modal only on compact windows today.
+
+### Phase 92: scroll the document on compact windows
+
+Depends on phase 90. Under 600px the scaffold scrolls the document instead of the pane, so mobile browsers can collapse their address bar. The app bar stays pinned, a footer `.navigation-bar` shows at the bottom, and the rail stays hidden until the app bar's menu button opens it as a modal.
+
+Completion check: at 390px, scrolling moves the document while the app bar and navigation bar stay in place. The rail is off-screen and out of the tab order until the menu button opens it with a scrim.
+
+Open for spec: whether scaffold rules or the existing `hide-on-*` helpers swap the rail and the navigation bar.
+
+### Phase 93: float the trailing toolbar on compact windows
+
+Depends on phase 92. Under 600px the trailing vertical toolbar turns horizontal and floats, centered, above the navigation bar. Its buttons keep their keyboard order.
+
+Completion check: at 390px the toolbar is horizontal and sits above the navigation bar without covering it, and the end of the page can scroll clear of the toolbar.
+
+Open for spec: whether CSS overrides the toolbar's `vertical` class or the markup carries a second class, and how the scaffold reserves room at the end of the page.
+
+### Phase 94: add a status bar region
+
+Depends on phase 88. A `.status-bar` child of a scaffold spans the full width along the bottom, below the rail, pane and toolbar. Under 600px it is hidden.
+
+Completion check: at 1280px the status bar is as wide as the scaffold and sits below the pane. At 390px it isn't displayed.
+
+Open for spec: whether the status bar keeps its own sticky placement inside the scaffold or the grid places it.
+
+### Phase 95: float the pane on a surface
+
+Depends on phase 88. From 600px up, the scaffold's background uses `surface-container`, and the pane area sits on a rounded `surface` with a gap around it. Under 600px the pane stays flat against the background.
+
+Completion check: at 1024px the pane area's background color differs from the scaffold's and its corners are rounded. At 390px both backgrounds match and the corners are square.
+
+Open for spec: whether the floating surface is the default or a modifier, given the product rule on changing existing markup, and how it combines with `.panes.separated`.
+
+### Phase 96: open a side sheet as a third column
+
+Depends on phase 88. A standard `.side-sheet` child opens as a column between the pane and the trailing toolbar and narrows the pane while it is open. Closing it gives the width back to the pane.
+
+Completion check: at 1440px, opening the sheet narrows the pane by the sheet's width and leaves the toolbar at the window edge. Closing the sheet restores the pane's width.
+
+Open for spec: what the sheet does below 840px, and whether the column width follows the sheet's open and close motion.
+
+### Phase 97: keep regions inside safe areas
+
+Depends on phases 88 and 92. The scaffold pads its outer regions by `env(safe-area-inset-*)`, so the app bar, rail, navigation bar and toolbar stay clear of a notch or home indicator. Insets that a component already applies are not added twice.
+
+Completion check: with nonzero safe-area insets on every side, no region's controls overlap an inset, and the navigation bar's bottom padding equals one inset.
+
+Open for spec: how tests supply inset values, since desktop browsers report zero.
+
+### Phase 98: move the bundled templates to `.scaffold`
+
+Depends on phases 88 to 97. The six bundled layout templates in `skills/expressivecss/assets/templates/` use `.scaffold` and drop their inline layout CSS. This phase closes the milestone.
+
+Completion check: none of the six templates has a `<style>` block for shell layout, and each one renders the same regions at 390px, 700px and 1280px as before.
 
 ## Deferred work
 

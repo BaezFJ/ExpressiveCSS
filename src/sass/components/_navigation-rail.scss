@@ -19,8 +19,16 @@
 // overlay at every breakpoint. JS toggles .expanded from the menu
 // button; the class is also valid set by the author.
 //
+// nav-rail="compact" and nav-rail="hover" switch every rail when set on
+// <html> or a shadow host, or one rail when set on it. A rail's own value
+// replaces the root's, so nav-rail="" opts it out. Compact is a 72dp
+// icon-only rail. With hover, JS adds .peek while the mouse rests on a
+// collapsed rail or keyboard focus is in it: the expanded layout, drawn over
+// the page while the rail keeps its collapsed footprint.
+//
 // Tokens:
 //   --md-comp-nav-rail-collapsed-width     96px
+//   --md-comp-nav-rail-compact-width       72px
 //   --md-comp-nav-rail-expanded-width      280px (clamped 220–360)
 //   --md-comp-nav-rail-icon-size           24px
 //   --md-comp-nav-rail-indicator-width     56px
@@ -32,7 +40,18 @@
 
 :root, :host {
   --md-comp-nav-rail-collapsed-width: 96px;
+  --md-comp-nav-rail-compact-width: 72px;
   --md-comp-nav-rail-expanded-width: 280px;
+}
+
+// The rail's own nav-rail attribute wins; otherwise an ancestor's, usually
+// <html>, or the shadow host's.
+@mixin _switch($value) {
+  &[nav-rail~="#{$value}"],
+  [nav-rail~="#{$value}"] &:not([nav-rail]),
+  :host([nav-rail~="#{$value}"]) &:not([nav-rail]) {
+    @content;
+  }
 }
 
 // Expanded rail as an overlay with a scrim.
@@ -88,14 +107,15 @@
   // from its docked edge, so an overshoot only widens it for a moment.
   --md-comp-nav-rail-motion: var(--md-sys-motion-spring-default-spatial);
   --md-comp-nav-rail-motion-duration: var(--md-sys-motion-spring-default-spatial-duration);
+  --_nav-rail-width: var(--md-comp-nav-rail-collapsed-width);
 
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  width: var(--md-comp-nav-rail-collapsed-width);
-  min-width: var(--md-comp-nav-rail-collapsed-width);
+  width: var(--_nav-rail-width);
+  min-width: var(--_nav-rail-width);
   min-height: 100dvh;
   margin: 0;
   padding: 20px 8px 16px;
@@ -106,7 +126,9 @@
   color: var(--md-sys-color-on-surface);
   transition: width var(--md-comp-nav-rail-motion-duration) var(--md-comp-nav-rail-motion),
     min-width var(--md-comp-nav-rail-motion-duration) var(--md-comp-nav-rail-motion),
-    padding var(--md-comp-nav-rail-motion-duration) var(--md-comp-nav-rail-motion);
+    padding var(--md-comp-nav-rail-motion-duration) var(--md-comp-nav-rail-motion),
+    margin-inline-end var(--md-comp-nav-rail-motion-duration) var(--md-comp-nav-rail-motion),
+    z-index var(--md-comp-nav-rail-motion-duration) var(--_nav-rail-z-timing, step-end);
   @include glass(var(--md-sys-color-surface-container));
 
   // Menu toggle.
@@ -204,8 +226,65 @@
     @include typescale("title-small");
   }
 
+  @include _switch("compact") {
+    --_nav-rail-width: var(--md-comp-nav-rail-compact-width);
+
+    // Icon only. The label stays in the accessibility tree, clipped below
+    // the indicator; overflow-x stays visible for the badge.
+    &:not(.expanded, .peek) {
+      > a:not(.button, .icon-button),
+      > button:not(.button, .icon-button):is(:not(:first-child), [popovertarget]) {
+        justify-content: flex-start;
+        height: calc(var(--md-comp-nav-rail-indicator-height) + 12px);
+        overflow-y: clip;
+      }
+    }
+
+    // A peek keeps the collapsed destination's height, so nothing moves
+    // under the pointer.
+    &.peek {
+      --_nav-rail-row: calc(var(--md-comp-nav-rail-indicator-height) + 12px);
+    }
+
+    // Pinned open, the rows stay as dense.
+    &.expanded {
+      --md-comp-nav-rail-indicator-height: 44px;
+    }
+  }
+
+  // A flex row must not shrink a peek: its negative margin assumes the full
+  // width. z-index 0, not auto, so the peek's z-index can transition: it rises
+  // at once and drops only when the close ends.
+  @include _switch("hover") {
+    flex-shrink: 0;
+
+    // Not on an expanded rail, so a modal rail keeps its own z-index.
+    &:not(.peek, .expanded) {
+      z-index: 0;
+    }
+  }
+
+  // The negative margin keeps the collapsed footprint, so the page does not
+  // reflow; it runs on the same spring as the width. A peek leaves the
+  // indicator token at its collapsed value, and rows keep the collapsed
+  // destination's height (6px padding twice, the indicator, the 4px gap and
+  // the label line), so a peek moves nothing under the pointer.
+  &.peek {
+    --_nav-rail-row: calc(var(--md-comp-nav-rail-indicator-height) + 16px + var(--md-sys-typescale-label-medium-line-height));
+
+    z-index: var(--expressive-z-modal-rail);
+    margin-inline-end: calc(var(--_nav-rail-width) - clamp(220px, var(--md-comp-nav-rail-expanded-width), 360px));
+    @include z-depth("1");
+  }
+
   &.expanded {
     --md-comp-nav-rail-indicator-height: 56px;
+  }
+
+  &:is(.expanded, .peek) {
+    // A rising z-index (a peek, a modal rail) applies at once; a falling one
+    // waits for the close, through the base step-end.
+    --_nav-rail-z-timing: step-start;
     --md-comp-nav-rail-indicator-shape: var(--md-sys-shape-corner-extra-large);
 
     align-items: stretch;
@@ -242,7 +321,7 @@
       flex-direction: row;
       justify-content: flex-start;
       gap: 12px;
-      min-height: var(--md-comp-nav-rail-indicator-height);
+      min-height: var(--_nav-rail-row, var(--md-comp-nav-rail-indicator-height));
       padding: 0 16px;
       border-radius: var(--md-comp-nav-rail-indicator-shape);
       text-align: start;
@@ -250,12 +329,13 @@
       @include nav-destination-row("nav-rail");
 
       > .badge {
-        top: calc((var(--md-comp-nav-rail-indicator-height) - 24px) / 2);
+        top: calc((var(--_nav-rail-row, var(--md-comp-nav-rail-indicator-height)) - 24px) / 2);
         inset-inline-start: calc(16px + 24px);
       }
     }
 
-    > :is(h1, h2, h3, h4, h5, h6) {
+    // A peek keeps them hidden, so no row moves under the pointer.
+    &:not(.peek) > :is(h1, h2, h3, h4, h5, h6) {
       display: block;
     }
 
@@ -279,8 +359,8 @@
 }
 
 // A destination whose panel is open keeps its hover state layer.
-.navigation-rail:not(.expanded) > button:has(+ .navigation-rail-panel:popover-open):not(.active, [aria-current]) > #{$icon},
-.navigation-rail.expanded > button:has(+ .navigation-rail-panel:popover-open):not(.active, [aria-current]) {
+.navigation-rail:not(.expanded, .peek) > button:has(+ .navigation-rail-panel:popover-open):not(.active, [aria-current]) > #{$icon},
+.navigation-rail:is(.expanded, .peek) > button:has(+ .navigation-rail-panel:popover-open):not(.active, [aria-current]) {
   background-color: state-layer(var(--md-sys-color-on-surface), "hover");
 }
 
