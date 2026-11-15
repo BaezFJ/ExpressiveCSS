@@ -733,7 +733,8 @@ async function verifyComponentResources(catalogueToolPayload, consumerRoots) {
   const guideTemplate = `${base}/{slug}`;
   const sectionTemplate = `${base}/{slug}/{section}`;
   const complete = (peer, uri, name, value, context) => peer.complete({ ref: { type: 'ref/resource', uri }, argument: { name, value }, ...(context ? { context } : {}) });
-  const completed = (values) => ({ completion: { values, total: values.length, hasMore: false } });
+  // The SDK sends at most 100 values and reports the rest through total and hasMore.
+  const completed = (values) => ({ completion: { values: values.slice(0, 100), total: values.length, hasMore: values.length > 100 } });
   const noArgument = { completion: { values: [], hasMore: false } };
   const assertCompletion = async (peer) => {
     for (const template of [guideTemplate, sectionTemplate]) {
@@ -1208,7 +1209,7 @@ try {
   for (const query of ['app-bar', '  APP BAR  ', 'navbar', 'screen-level actions']) {
     const result = await client.callTool({ name: 'component_catalog', arguments: { query, limit: 1 } });
     const matchType = query.includes('actions') ? 'heuristic' : query === 'navbar' ? 'exact-alias' : 'exact-name';
-    assertCatalogSearch(result, { query, limit: 1, entries: [{ ...appBarEntry, matchType }], totalMatches: matchType === 'exact-name' ? 4 : 1 });
+    assertCatalogSearch(result, { query, limit: 1, entries: [{ ...appBarEntry, matchType }], totalMatches: matchType === 'exact-name' ? 5 : 1 });
   }
   const recoveredSlugs = new Set();
   for (const entry of expectedCatalog) {
