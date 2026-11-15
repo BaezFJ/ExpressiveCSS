@@ -77,7 +77,7 @@ Then merge. Give each root cause one home, so the same issue never appears in th
 1. A WCAG A or AA failure goes to Quality Inspector (section 4), even when the fix is deleting an override or rewriting markup. `*:focus { outline: none }`, an unnamed control, a hand-rolled select a keyboard cannot reach, and text a literal color makes unreadable all land there.
 2. Otherwise the finding goes to the lens whose change fixes it. A hardcoded `#fff` card background that still reads fine goes under Rules Enforcer when the fix is "use the token", and a broken `data-target` goes under Component Syntax Expert.
 
-Keep the `finished-app:<area>` label in the rule IDs of every finding that carried one, also when rule 1 moves it to section 4, so later runs can count them.
+Keep the `finished-app:<area>` label in the rule IDs of every finding that carried one, whichever section it lands in, so later runs can count them.
 
 Another section can mention the effect in a few words ("the white card also breaks dark mode, see section 5") without a second bullet.
 
@@ -109,8 +109,8 @@ Specialists propose a severity; you set the final one from these anchors, so the
 - Major: a literal color that still looks right, `!important` against framework rules, a retired class that still renders, or a landmark without a name (lint `nav-needs-label`).
 - Polish: a markup gap the runtime fills at initialization, such as lint `tabs-marks-current` when Tabs sets `aria-current` itself.
 - Polish: off-scale inline spacing or type size, redundant classes, duplicate font stylesheets, a render-blocking script.
-- Major: a finished-app rubric failure from the quality inspector's check 5: `finished-app:loading` (a command button that drops its label, shows no progress, or runs twice), `finished-app:destructive` (a destructive action with neither Undo nor a confirmation), `finished-app:url-state` (a tab, filter, or page a reload or Back loses), or `finished-app:submit-flow` (submit disabled before submission starts, Enter that cannot submit, errors away from their field or focus left behind, blocked paste, a wrong keyboard or missing `name`). When the same defect is also a certain WCAG A or AA failure, the critical anchor applies and the finding keeps both IDs.
-- Polish: the finished-app details, such as an in-progress label without `…`, a confirmation where Undo would do, spellcheck on codes and emails, or a placeholder that is not an example.
+- Major: a finished-app rubric failure from the quality inspector's check 5: `finished-app:loading` (a command button that drops its label, shows no progress, or runs twice), `finished-app:destructive` (a destructive action with neither Undo nor a confirmation, or an Undo that restores the item somewhere else), `finished-app:url-state` (a tab, filter, or page a reload or Back loses), or `finished-app:submit-flow` (submit disabled before submission starts, Enter that cannot submit, errors away from their field or focus left behind, blocked paste, a wrong keyboard or missing `name`). When the same defect is also a certain WCAG A or AA failure, the critical anchor applies and the finding keeps both IDs.
+- Polish: the finished-app details, such as an in-progress label without `…`, a confirmation where Undo would do, an Undo queued behind another snackbar, spellcheck on codes, emails, and usernames, or a placeholder that is not an example (the floating label's `placeholder=" "` passes).
 - No cost: anything unconfirmed. List it under "Not checked" instead.
 - No cost: a defect in the framework's own CSS or docs that the target inherits unchanged, such as a component's built-in selected state. The target cannot fix it without an override. Mention it in one line under the section's polish notes as "Framework note:" so it can be reported upstream.
 

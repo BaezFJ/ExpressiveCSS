@@ -169,9 +169,13 @@ describe('the ExpressiveCSS agent skill', () => {
       assert.ok(inspector.includes(`\`finished-app:${area}\``), `the inspector lacks finished-app:${area}`);
       assert.ok(review.includes(`\`finished-app:${area}\``), `the severity anchors lack finished-app:${area}`);
     }
-    const states = inspector.slice(inspector.indexOf('3. **States.**'), inspector.indexOf('4. **WCAG 2.2.**'));
-    assert.ok(states.length > 0, 'the states check moved');
-    assert.doesNotMatch(states, /async actions/, 'async loading feedback belongs to the finished-app check');
+    const start = inspector.indexOf('3. **States.**');
+    const end = inspector.indexOf('4. **WCAG 2.2.**');
+    assert.ok(start >= 0 && end > start, 'the states check moved');
+    const states = inspector.slice(start, end);
+    assert.doesNotMatch(states, /async actions with no loading indicator/, 'command buttons moved to the finished-app check');
+    assert.match(states, /control other than a command button/, 'the states check lost other async controls');
+    assert.match(states, /Command buttons that wait on a request belong to check 5/);
     assert.match(review, /Keep the `finished-app:<area>` label/);
     assert.match(review, /finished-app rubric applies on a `mismatch`/);
   });
