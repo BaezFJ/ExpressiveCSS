@@ -5,11 +5,11 @@ Frequently used actions for the current page.
 
 Component ID: `toolbars`
 
-[Component documentation](https://www.expressivecss.com/toolbars.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/toolbars.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.18.1)
+[Component documentation](https://www.expressivecss.com/toolbars.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/toolbars.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.19.0)
 
-Contract: ExpressiveCSS 0.18.1
+Contract: ExpressiveCSS 0.19.0
 
-Contract SHA-256: `94a3ea0bc9159612d11dd50e02ddc1acf2e20e595d4fc7222e3db1945aa36fb1`
+Contract SHA-256: `c08c130e20a8125bcaf496afb8e27e41710bed977fe2ff5a75b34e6119a1d072`
 
 #### Selection and adaptation
 

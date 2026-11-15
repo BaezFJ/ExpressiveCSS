@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.6.0 - 2026-11-15
+
+- Bundled guidance matches ExpressiveCSS 0.19.0, including `.scaffold`,
+  busy buttons, the `nav-rail` attribute and the finished-app review checks.
 - The README is now a short overview. The details moved to pages in `docs/`,
   which the package now ships.
 - The lint, `rules_enforcer` and `quality_inspector` report three new

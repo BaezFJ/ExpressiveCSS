@@ -5,6 +5,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.19.0] - 2026-11-15
+
+This release adds `.scaffold` for app shells, busy buttons with
+`aria-busy="true"`, a `nav-rail` attribute for compact and hover rails, a
+`font` shorthand token for each type role, and `DataTables.showPage()`. Three
+changes need a look when upgrading: a button with `aria-busy="true"` now
+ignores presses, a sticky top app bar now offsets fragment targets, and a
+navigation rail's menu button has to be its first child. Each entry below
+carries its migration note.
+
 ### Added
 
 - `aria-busy="true"` on a button is a loading state: the button keeps its
@@ -4408,7 +4418,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.18.1...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.19.0...HEAD
+[0.19.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.18.1...v0.19.0
 [0.18.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.18.0...v0.18.1
 [0.18.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.17.0...v0.18.0
 [0.17.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.16.0...v0.17.0
