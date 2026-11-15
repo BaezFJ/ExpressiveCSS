@@ -573,5 +573,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the floating pane's top gap without a bar, an empty custom rail counting as absent, and its gaps set once on the shell: 92,906 gzip bytes (+40).
   // Reviewed the scaffold's side sheet column (a fourth track, the static sheet, its gap): 93,031 gzip bytes (+125).
   // Reviewed the sheet column existing only while a sheet is open, its scrolling, stacking and effects-spring snap-back: 93,078 gzip bytes (+47).
-  assert.ok(sizes(css).gzip <= 93078, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed a .modal rail keeping its held column with a side sheet open: 93,092 gzip bytes (+14).
+  assert.ok(sizes(css).gzip <= 93092, `CSS gzip: ${sizes(css).gzip}`);
 });

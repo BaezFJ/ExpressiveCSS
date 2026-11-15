@@ -896,10 +896,21 @@ for (const [name, type, run] of engines) {
       near((await box('#sheet')).right, 1440, 'without a toolbar the sheet meets the window edge');
       near((await box('#sheet')).left, (await box('#pane')).right + 16, 'after the pane gap');
       near(wide.width - (await box('#pane')).width, 400, 'and the pane gives up exactly the sheet');
+      assert.equal(
+        await tab.locator('#sheet').evaluate((el) => getComputedStyle(el).getPropertyValue('--md-comp-side-sheet-motion').trim()),
+        await tab.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--md-sys-motion-spring-default-effects').trim()),
+        'in the column the sheet snaps back on the effects spring, which does not overshoot');
 
       await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, withSheet({ trailing: '', main: '<main id="pane" class="panes list-detail"><div class="list-pane">A</div><div class="detail-pane">B</div></main>' }));
       await tab.locator('#sheet').evaluate((el) => el.show());
       near((await box('#sheet')).left, (await box('#pane')).right + 24, 'a panes container keeps its own 24px margin before the sheet');
+
+      await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, withSheet({ nav: rail().replace('class="navigation-rail"', 'class="navigation-rail modal"') }));
+      await tab.locator('#sheet').evaluate((el) => el.show());
+      const held = (await box('#pane')).left;
+      await tab.locator('#rail').evaluate((el) => el.classList.add('expanded'));
+      near((await box('#pane')).left, held, 'a .modal rail keeps its held column with the sheet open');
+      near(held, 96, 'at the collapsed width');
     } finally {
       await browser.close();
     }

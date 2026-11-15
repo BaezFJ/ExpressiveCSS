@@ -51,3 +51,10 @@ None. Placement and the pane's width are measured by the agent-run checks; the s
     - An expanded-rail case at 1200px now checks the pane keeps at least 300px.
   - A combined mutation (no scrolling rule, `z-index: auto`) failed the new test on the stacking check.
   - The scaffold suite passes 114 of 114.
+- 2026-11-15, `code-review-and-quality` (five-axis review by an independent read-only subagent): no Critical findings.
+  - Fixed:
+    - Required: with a sheet open, the four-track rule out-ranked the `.modal` rail's held column, so an expanded modal rail let the pane jump 96px. A combined rule keeps the held column with the sheet, and a test fails without it (0 vs 96).
+    - Optional: the effects-spring override had no test. A check now compares the sheet's motion token with the effects spring's.
+    - Nits: removed the redundant `min-block-size` and an ineffective `max-width`; the comment says "third pane".
+    - FYI: `scaffold.md` now explains why the column starts at 1200px, earlier than Google's extra-large window.
+  - CSS budget 93,092. The scaffold suite passes 114 of 114.

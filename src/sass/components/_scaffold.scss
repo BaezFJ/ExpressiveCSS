@@ -201,7 +201,8 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
     }
   }
 
-  // From 1200px up an open standard side sheet is a third column between the
+  // From 1200px up an open standard side sheet is a third pane, in its own
+  // column between the
   // pane and the trailing region, so the pane narrows instead of hiding under
   // it. The column exists only while a sheet is open, so a stray child never
   // fills an empty sheet cell. The sheet drops its fixed overlay, bleed,
@@ -225,6 +226,11 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
         "status status status status";
     }
 
+    // A .modal rail keeps its held column with the sheet open too.
+    &:has(> .navigation-rail.modal:not([hidden])):has(> #{$_sheet-open}) {
+      grid-template-columns: var(--md-comp-nav-rail-collapsed-width, 96px) minmax(0, 1fr) auto auto;
+    }
+
     > #{$_sheet-open} {
       --md-comp-side-sheet-motion: var(--md-sys-motion-spring-default-effects);
       --md-comp-side-sheet-motion-duration: var(--md-sys-motion-spring-default-effects-duration);
@@ -232,8 +238,6 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
       grid-area: sheet;
       position: static;
       width: var(--md-comp-side-sheet-container-width, 400px);
-      max-width: none;
-      min-block-size: 0;
       padding-inline-end: 0;
       overflow-y: auto;
       border-inline-start: 0;
