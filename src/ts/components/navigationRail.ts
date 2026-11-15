@@ -27,9 +27,11 @@ const _defaults: NavigationRailOptions = {
   onCloseEnd: null
 };
 
+// The medium and expanded breakpoints in abstracts/_breakpoints.scss; keep them in step.
 const COMPACT = '(width < 600px)';
 // Where _navigation-rail.scss also overlays a scaffold's direct-child rail.
 const MEDIUM = '(600px <= width < 840px)';
+const matches = (query: string) => window.matchMedia(query).matches;
 // The menu toggle: a first-child button that isn't the FAB or a panel trigger. The CSS
 // doesn't style a first-child .icon-button as the toggle, but it still toggles.
 const TOGGLE = ':scope > button:first-child:not(.button, [popovertarget])';
@@ -58,7 +60,6 @@ const HOVER_DELAY = 200;
 export class NavigationRail extends Component<NavigationRailOptions> {
   isExpanded: boolean;
   private _toggle: HTMLButtonElement | null;
-  private _mql: MediaQueryList;
   private _hoverPanel: HTMLElement | null = null;
   private _hoverTimer: ReturnType<typeof setTimeout> | undefined;
   // The toggle that last opened the rail, for Escape to return focus to.
@@ -68,7 +69,6 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     super(el, options);
 
     this._toggle = this._findToggle();
-    this._mql = window.matchMedia(COMPACT);
     this.isExpanded = this.el.classList.contains('expanded');
     this._sync();
     const { signal } = this._events;
@@ -158,16 +158,12 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     return [this._opener, this._toggle, ...this._outsideToggles()].find((button) => usable(button) && names(button)) ?? null;
   }
 
-  private _isCompact() {
-    return this._mql.matches;
-  }
-
   // Mirrors the CSS routes to an overlay: .modal, a compact window, or a
   // scaffold's rail on a medium window. Not the computed position, which an
   // author's own docked position: fixed rail would also match. A fresh query,
   // since WebKit updates a kept MediaQueryList only on the next frame.
   private _isModal() {
-    return this._isCompact() || this.el.matches(window.matchMedia(MEDIUM).matches ? '.modal, .scaffold > *' : '.modal');
+    return this.el.matches('.modal') || matches(COMPACT) || (matches(MEDIUM) && this.el.matches('.scaffold > *'));
   }
 
   private _sync() {

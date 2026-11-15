@@ -393,6 +393,15 @@ for (const [name, type, run] of engines) {
       near((await box('#rail')).right, before.left, 'the collapsing rail snaps back into its column instead of drawing under the pane');
       await tab.waitForTimeout(600);
       assert.deepEqual(await box('#pane'), before, 'after the collapse');
+
+      await tab.setViewportSize({ width: 1280, height: 800 });
+      await tab.locator('#rail').evaluate((el) => el.classList.add('modal'));
+      const wide = await box('#pane');
+      await tab.locator('#rail').evaluate((el) => el.classList.add('expanded'));
+      await tab.waitForTimeout(600);
+      await tab.locator('#rail').evaluate((el) => el.classList.remove('expanded'));
+      assert.deepEqual(await box('#pane'), wide, 'a .modal rail at 1280px leaves the pane in place');
+      near((await box('#rail')).right, wide.left, 'and snaps back into its column as it collapses');
     } finally {
       await browser.close();
     }

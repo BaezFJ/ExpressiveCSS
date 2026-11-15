@@ -47,3 +47,11 @@ Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, th
   - The collapsing overlay animated under the pane. Where the column is held, a non-expanded rail drops its transition and snaps back. R6a now states this, and the check fails with the rule removed (265 vs 96).
   - The class comment still said only the compact overlay closes. It now says any overlay closes.
   Budgets: CSS 92,225 (+127), JS 111,786 (+45). The scaffold browser suite passes 50 of 50.
+- 2026-11-15, `code-review-and-quality` (five-axis review by an independent read-only subagent): no Critical findings. Fixed:
+  - Required: no test needed the `.modal` snap rule. The motion-on test now collapses a `.modal` rail at 1280px, and fails with the rule removed (280 vs 96).
+  - Optional: `_isCompact()` read a stored `MediaQueryList`, which WebKit refreshes a frame late. Both queries are now fresh, and `_mql` is gone.
+  - Optional: `_isModal()` reads as `.modal || compact || (medium && scaffold child)`.
+  - Nit: the media query constants point to `_breakpoints.scss`.
+  - Nit: the docs and `llm.md` say only the `hidden` attribute frees the column.
+  - FYI, no change: the specificity, the reduced-motion interplay and the one `.scaffold >` selector in the rail partial were traced and are fine.
+  JS budget 111,761 (+20). Scaffold, rail and toggle suites pass 80 of 80.

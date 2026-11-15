@@ -126,7 +126,9 @@ const S = defineSections([
           own menu button. Tab can still move from the open rail to the pane
           under it, as it can from the compact overlay. The rail's column
           keeps <code>--md-comp-nav-rail-collapsed-width</code>, so set that
-          token on the scaffold, not on the rail. On a medium window the
+          token on the scaffold, not on the rail. To take a rail out of the
+          layout, give it the <code>hidden</code> attribute; a rail hidden by
+          your own CSS still keeps its column on medium windows. On a medium window the
           demo's rail opens over this whole page, as it would in an app.
         </p>
 <Code code={`
