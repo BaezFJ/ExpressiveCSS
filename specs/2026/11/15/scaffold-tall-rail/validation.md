@@ -32,3 +32,11 @@ None. The modifier changes grid placement only, which the agent-run checks measu
   - Medium: R5 ignored the fixed modal rail below 600px and with `.modal`. It is now limited to 600px and up, with a note.
   - Medium: V4's no-rail case and V5 can't fail because of the modifier. Both are now labelled regression checks.
   - Low: the rail panel limit, the docs demo choice, enlarged text and the hand-written `scaffold.md` are now covered in the risks, decisions, R2/V1 and R8/V6.
+- 2026-11-15, `/code-review high --fix --max-findings all` on `abd59e7c5..HEAD`: the CSS was correct, and there were seven findings in the tests, records and comments. All fixed:
+  - The tall-rail timeline check now runs wherever `timeline-scope` is supported and asserts 0 before the scroll.
+  - The 200% check uses tolerance instead of exact pixels.
+  - A wasted measurement was removed.
+  - The header comment was rewrapped, and its pin updated.
+  - The docs limit line now names the tall rail.
+  - The RTL test now checks that the bar stops at the pane and the toolbar is centered.
+  - The results are filled in below once V6 and V7 run.

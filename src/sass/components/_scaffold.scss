@@ -13,10 +13,11 @@
 //
 // The bar spans the top, and the rail, pane and trailing regions share the row
 // below it. .tall-rail runs the rail and trailing region the full height and
-// puts the bar over the pane only. The shell is as tall as the window and only the pane scrolls. An
-// empty region takes no space. `clip` rather than `hidden` keeps focus and
-// find-in-page from scrolling the shell itself. A trailing toolbar taller than
-// its region is clipped at the bottom, so keep it to the actions that fit.
+// puts the bar over the pane only. The shell is as tall as the window and only
+// the pane scrolls. An empty region takes no space. `clip` rather than `hidden`
+// keeps focus and find-in-page from scrolling the shell itself. A trailing
+// toolbar taller than its region is clipped at the bottom, so keep it to the
+// actions that fit.
 //
 // Limits: AppBar collapses .medium/.large bars and BackToTop shows on window
 // scroll, so in a scaffold a flexible bar stays expanded and the link stays

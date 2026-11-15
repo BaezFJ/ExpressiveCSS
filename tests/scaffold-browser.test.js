@@ -243,7 +243,8 @@ for (const [name, type, run] of engines) {
 
       await tab.evaluate(() => { document.documentElement.style.fontSize = '32px'; });
       [nav, bar, main] = await measure();
-      assert.deepEqual([nav.top, nav.bottom], [0, 800], 'at 200% text the rail still runs the full height');
+      near(nav.top, 0, 'at 200% text the rail still starts at the top');
+      near(nav.bottom, 800, 'and reaches the window bottom');
       near(main.top, bar.bottom, 'and the taller bar only shortens the pane');
       await tab.evaluate(() => { document.documentElement.style.fontSize = ''; });
 
@@ -253,11 +254,12 @@ for (const [name, type, run] of engines) {
       near(main.left, nav.right, 'and the pane');
 
       await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ cls: 'tall-rail', nav: '', trailing: '' }));
-      [, bar, main] = await Promise.all(['#s', '#bar', '#pane'].map(box));
+      [bar, main] = await Promise.all(['#bar', '#pane'].map(box));
       assert.deepEqual([bar.left, bar.right, main.left, main.right], [0, 1280, 0, 1280], 'empty regions take no space');
 
-      if (name === 'chromium') {
+      if (await tab.evaluate(() => CSS.supports('timeline-scope', '--a'))) {
         await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ cls: 'tall-rail' }));
+        assert.equal(await tab.locator('#bar').evaluate((el) => getComputedStyle(el).getPropertyValue('--md-comp-top-app-bar-scroll').trim()), '0', 'the tall-rail bar is at rest while the pane is at its top');
         await tab.locator('#pane').evaluate((el) => el.scrollTo(0, 100));
         await tab.waitForFunction(() => getComputedStyle(document.querySelector('#bar')).getPropertyValue('--md-comp-top-app-bar-scroll').trim() === '1');
       }
@@ -269,11 +271,13 @@ for (const [name, type, run] of engines) {
   run(`${name}: a tall-rail scaffold mirrors under dir="rtl"`, { timeout: 30000 }, async () => {
     const { browser, box } = await open(type, page(scaffold({ cls: 'tall-rail' }), { dir: 'rtl' }));
     try {
-      const [nav, bar, tb] = await Promise.all(['#rail', '#bar', '#tools'].map(box));
+      const [nav, bar, main, tb] = await Promise.all(['#rail', '#bar', '#pane', '#tools'].map(box));
       assert.deepEqual([nav.right, nav.top], [1280, 0], 'the rail runs down the right edge');
       near(nav.bottom, 800, 'to the bottom');
       near(bar.right, nav.left, 'the bar ends at the rail');
+      near(bar.left, main.left, 'the bar sits over the pane only');
       near(tb.left, 24, 'the toolbar is 24px from the left edge');
+      near((tb.top + tb.bottom) / 2, 400, 'the toolbar is centered in the full height');
     } finally {
       await browser.close();
     }

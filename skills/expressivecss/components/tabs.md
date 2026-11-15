@@ -9,7 +9,7 @@ Component ID: `tabs`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `7027c1a2a1ff72f9cf6cb3881652189ee86de44120b8c8631632f593ba6dda65`
+Contract SHA-256: `d04ecc663324510be27d6a5717da372ea179fe88a062bfa02ec01af25b279940`
 
 #### Selection and adaptation
 
