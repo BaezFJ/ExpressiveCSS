@@ -12,6 +12,7 @@ const body = `<form id="form" action="#sent">
   <button id="round" class="circle" type="button" aria-busy="true" aria-label="Refresh"><span class="material-symbols" aria-hidden="true">refresh</span></button>
   <button id="off" type="button" aria-busy="true" disabled><span>Off</span></button>
 </form>
+<table class="data-table"><thead><tr><th><button id="sort" type="button" aria-busy="true">Name</button></th></tr></thead></table>
 <script>
   window.counts = { click: 0, submit: 0 };
   document.getElementById('save').addEventListener('click', () => counts.click++);
@@ -33,6 +34,7 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.equal(await save.evaluate((el) => getComputedStyle(el).cursor), 'progress');
       assert.equal(await tab.locator('#round').evaluate((el) => getComputedStyle(el, '::after').content), 'none', 'a circle button has no indicator');
       assert.equal(await tab.locator('#off').evaluate((el) => getComputedStyle(el, '::after').content), 'none', 'a disabled button has no indicator');
+      assert.doesNotMatch(await tab.locator('#sort').evaluate((el) => getComputedStyle(el, '::after').animationName), /button-busy/, 'a sort button keeps its own arrow');
       if (engine === 'chromium') {
         const cdp = await tab.context().newCDPSession(tab);
         const { nodes } = await cdp.send('Accessibility.getFullAXTree');

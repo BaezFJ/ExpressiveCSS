@@ -241,6 +241,7 @@ describe('the ExpressiveCSS agent skill', () => {
     for (const phrase of ['…', 'aria-busy="true"', 'before any `await`', 'finally', '300ms', '500ms', 'native form post']) {
       assert.ok(behavior.includes(phrase), `App behavior lacks ${phrase}`);
     }
+    assert.ok(Buffer.byteLength(behavior) <= 1536, `buttons App behavior is ${Buffer.byteLength(behavior)} bytes`);
     assert.doesNotMatch(behavior, /^---$/m);
     assert.doesNotMatch(guide.slice(guide.indexOf('#### Contract'), guide.indexOf('#### Syntax')), /App behavior|aria-disabled/);
     assert.match(guide, /#### Syntax\n\n```html\n<button>Create<\/button>/);

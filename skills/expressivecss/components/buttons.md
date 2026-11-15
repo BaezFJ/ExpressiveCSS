@@ -9,7 +9,7 @@ Component ID: `buttons`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `11303804480c9e182d22cbe3c68826b3295390b7513d46bfa5bfb1baf5a653fa`
+Contract SHA-256: `e8be680743b32f64d4cd97c3f8b61d76d4e102f7dc8eedba0903054032ffbc78`
 
 #### Selection and adaptation
 
@@ -77,7 +77,10 @@ form.addEventListener('submit', async (event) => {
   event.preventDefault();
   save.setAttribute('aria-busy', 'true');
   save.firstElementChild.textContent = 'Saving…';
+  const started = performance.now();
   try { await send(new FormData(form)); } finally {
+    const shown = performance.now() - started - 300;
+    if (shown > 0) await new Promise((done) => setTimeout(done, 500 - shown));
     save.removeAttribute('aria-busy');
     save.firstElementChild.textContent = 'Save';
   }

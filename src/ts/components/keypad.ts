@@ -1,7 +1,10 @@
 import { Component, BaseOptions } from '../core/component';
 import { Utils } from '../core/utils';
 
-const BUSY_SUBMIT = ':is(button, .button)[aria-busy="true"]:is([type="submit"], button:not([type]))';
+// BusyButtons' selector. Implicit submission clicks the form's default button,
+// its first submit button wherever the markup puts it, so that is the one to check.
+const BUSY = ':is(button, .button)[aria-busy="true"]';
+const defaultButton = (form: HTMLFormElement) => Array.from(form.elements).find((el) => (el as HTMLButtonElement).type === 'submit');
 
 export interface KeypadOptions extends BaseOptions {
   /**
@@ -254,9 +257,10 @@ export class Keypad extends Component<KeypadOptions> {
 
   /** Enter submits an input's form and starts a new line in a textarea. */
   private _enter(field: Field) {
-    // requestSubmit sends no click, so BusyButtons can't stop it: skip a busy submit here.
-    if (field instanceof HTMLInputElement && !field.form?.querySelector(BUSY_SUBMIT)) field.form?.requestSubmit();
-    else this._edit(field, '\n', 'insertLineBreak');
+    if (!(field instanceof HTMLInputElement)) return this._edit(field, '\n', 'insertLineBreak');
+    // requestSubmit sends no click, so BusyButtons can't stop it: skip a busy default button here.
+    const { form } = field;
+    if (form && !defaultButton(form)?.matches(BUSY)) form.requestSubmit();
   }
 
   /** @internal Lights or clears every key a hardware key matches. */

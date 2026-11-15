@@ -48,6 +48,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   dialog for actions that can't be undone. The `Dialogs.confirm()` example now
   asks about such an action.
 
+### Changed
+
+- The buttons guide's App behavior now sets `aria-busy="true"` on the busy
+  button instead of `aria-disabled` with a pending flag, and holds the spinner
+  for about 500ms once it shows.
+
 ## [0.18.1] - 2026-11-15
 
 0.18.0 was tagged but never reached npm: release validation failed on a Firefox

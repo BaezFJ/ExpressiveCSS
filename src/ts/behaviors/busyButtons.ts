@@ -4,9 +4,10 @@ const BUSY = 'button[aria-busy="true"], .button[aria-busy="true"]';
 
 /**
  * Busy buttons. While the page sets `aria-busy="true"` on a `button` or
- * `.button`, a click on it is cancelled in the capture phase, before any
- * handler, so a mouse press, Enter, Space and a form's implicit submission do
- * nothing until the page clears the attribute. Shaped buttons also show a
+ * `.button`, a click on it is cancelled in the document's capture phase,
+ * before handlers on the page's elements, so a mouse press, Enter, Space and
+ * a form's implicit submission do nothing until the page clears the
+ * attribute. Shaped buttons also show a
  * progress indicator (`_buttons.scss`). `requestSubmit()` sends no click, and
  * buttons in closed shadow roots are out of reach.
  */

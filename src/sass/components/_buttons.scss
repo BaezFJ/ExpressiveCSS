@@ -458,7 +458,9 @@ $_shaped: ":where(#{$_btn}):where(:not(#{$_fixed}))";
 // its label; BusyButtons (behaviors/busyButtons.ts) ignores its presses. The
 // spinner fades in after the delay, so a quick request doesn't flash it, and a
 // border in currentColor stays visible in forced colors. Disabled wins.
-#{$_shaped}[aria-busy="true"]:not(#{$expressive-disabled}) {
+// Data table sort buttons and menu triggers draw their own ::after, so they
+// keep it; :where() keeps the list forgiving where :has() is unsupported.
+#{$_shaped}[aria-busy="true"]:not(#{$expressive-disabled}, :where(.data-table th > *, .mega-menu > *, li:has(> menu) > *)) {
   cursor: progress;
 
   &::after {
