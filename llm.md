@@ -5103,8 +5103,6 @@ Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself
 
 Each region takes one direct child. For custom content use the region classes `scaffold-bar`, `scaffold-rail`, `scaffold-pane` and `scaffold-trailing`. A region with nothing in it takes no space. A second visible child in one region overlaps the first, so give the ones not shown `hidden`. Other direct children are not placed and fall into a free grid cell, so keep a skip link inside the `<header>`.
 
-A direct-child `status-bar` takes a full-width row along the bottom, under the rail, pane and toolbar (also with `tall-rail`), and hides below 600px; its `data-priority="low"` hiding therefore never shows in a scaffold.
-
 ```html
 <div class="scaffold">
   <div class="scaffold-bar">…</div>
@@ -5113,6 +5111,8 @@ A direct-child `status-bar` takes a full-width row along the bottom, under the r
   <div class="scaffold-trailing">…</div>
 </div>
 ```
+
+A direct-child `status-bar` takes a full-width row along the bottom, under the rail, pane and toolbar (also with `tall-rail`), and hides below 600px; its `data-priority="low"` hiding therefore never shows in a scaffold.
 
 The rail runs from the bar to the bottom of the window, or to the top of a status bar. At 840px and wider, expanding it widens its column and narrows the pane. From 600px to 839px an expanded rail opens over the pane with a scrim and the pane keeps its width, as a `.modal` rail does at every width; the open rail covers the app bar's menu button, so it closes from the scrim, Escape or its own menu button, and Tab can still reach the pane under it. Set `--md-comp-nav-rail-collapsed-width` on the scaffold, not the rail, since the rail's column reads it there. Hide a rail with the `hidden` attribute; one hidden by page CSS still keeps its column on medium windows. A vertical toolbar is centered in the trailing region, `--md-comp-toolbar-external-space` (24px) from the pane and the window edge. Under `dir="rtl"` the rail is on the right and the toolbar on the left.
 
