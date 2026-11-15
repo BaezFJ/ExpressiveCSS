@@ -1,0 +1,2 @@
+{"app":"guidance-stage/destructive-list-run1","pass":false,"reason":"the rows did not come back in their old order","removedMs":29,"focusInRow":true,"focusOnRestoredRow":false,"errors":[],"twoDeletes":null}
+{"app":"guidance-stage/destructive-list-run2","pass":true,"reason":"","removedMs":34,"focusInRow":true,"focusOnRestoredRow":true,"errors":[],"twoDeletes":{"undoShownForSecond":true,"rowsBefore":5,"rowsAfter":3}}

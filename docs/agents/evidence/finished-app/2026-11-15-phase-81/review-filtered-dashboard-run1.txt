@@ -1,0 +1,22 @@
+FINDINGS
+- none
+
+CHECKED
+- Lifecycle: `Expressive.AutoInit()` is called once, inside `DOMContentLoaded` (index.html:239). By then the three panels and their rows already exist, because the inline script builds them synchronously at the end of `body` (index.html:149-183). No element is both auto-initialized and given a manual `.init()`, and none needs `no-autoinit`. DataTables is a shared runtime: the bundle installs it and syncs every table on document ready, and the page calls `DataTables.sync` again after filtering (index.html:241). Nothing is removed at runtime, so no `destroy()` is needed. The page does not use the retired global `M`. The bundle's UMD global really is `Expressive` (dist/js/expressive.js:1).
+- Assets and fonts: one stylesheet, `dist/css/expressive.min.css`, with `dist/fonts/` present next to `dist/css/`. There is no Google Fonts link, no Material Icons stylesheet and no `.material-icons` markup; every icon uses `.material-symbols` with `aria-hidden="true"`. The JavaScript bundle is needed (Tabs, DataTables paging and sort) and loads at the end of `body`, so nothing blocks rendering in `<head>`. All the files the page references exist under `dist/`.
+- States, from source: the filter has an empty state for each panel (index.html:96-103, 204-210). Its Clear filter action only appears when a query is set, and clicking it moves focus back to the input (index.html:254). Prev/Next pagination are native `button type="button"`, and the runtime sets `aria-disabled` at page bounds (dist/js/expressive.js:5139-5144). The documented `aria-disabled` form is used, so no native `disabled` attribute is missing. No custom CSS removes the focus ring. The page makes no requests, so it needs no loading state.
+- WCAG names and relationships, from source: the filter has a `<label for>`, and its live help text is linked through `aria-describedby`. Each table's scroll region has `role="region"` and is named by its caption through `aria-labelledby`. Each pagination nav gets its own label (index.html:162). The page buttons have `aria-label`s, and the page status has `role="status"`, `aria-live="polite"` and a name. The tabs nav is labelled, and Tabs moves `aria-current="page"` (dist/js/expressive.js:15724). The skip link targets `main` with `tabindex="-1"`. Sort `aria-sort` sits on the `th`. The tabs indicator stops under reduced motion, as the tabs guide states.
+- finished-app:url-state: passes. View, `q` and `page` are written with `history.replaceState` (index.html:218-224) and restored on load (index.html:226-242). Tabs calls `preventDefault` on tab clicks and does not push a hash (dist/js/expressive.js:15525), so Back cannot leave the URL and the view out of step. The page writes the URL on `expressive:change` using `event.detail.panel`, which Tabs emits (dist/js/expressive.js:15845). Sort resets only the page, and sort itself is out of scope.
+- finished-app:loading: not applicable. No command starts a request from script; the data is generated in the page.
+- finished-app:destructive: not applicable. There are no remove or discard actions.
+- finished-app:submit-flow: not applicable. There is no form; the only field is a live client-side filter (`type="search"`, `autocomplete="off"`, labelled) and nothing is submitted.
+
+BLOCKED
+- Contrast (1.4.3 / 1.4.11) of the `on-surface-variant-text` captions, the help text, the tab labels, and the aria-disabled Prev/Next in light and dark (`theme="auto"`): needs rendered measurement. No browser route.
+- Target size (2.5.8) of the icon-only Prev/Next buttons inside `.data-table.dense` and of the sort header buttons: needs rendered measurement.
+- Focus visibility and focus not obscured (2.4.7 / 2.4.11) on the tabs, sort buttons, pagination and the focusable table region: needs a browser. The source shows no sticky overlay outside the tables.
+- Whether the aria-disabled Prev/Next look disabled, and the hover and pressed states of all controls: rendered evidence needed.
+- How often the page-status and filter-help live regions announce while typing (several polite regions update on each keystroke): needs assistive-technology output, which the source cannot settle.
+
+HANDOFFS
+- none

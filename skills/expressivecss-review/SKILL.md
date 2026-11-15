@@ -33,9 +33,9 @@ Run these yourself and pass the output to every specialist. Running them once ke
 
 1. **Version and guidance source.** Run `node <base>/scripts/resolve-version.mjs --project-root <project>` and apply the base skill's "Authority by question and version" rules before you brief anyone, because the bundled guides and the lint describe the current contract and an older app can be valid under its own. Decide one guidance source and pass it to every specialist:
    - `match` with `bundledContractSafe: true`: the bundled guides.
-   - `mismatch`, or a match that is not bundle-safe: the installed package's sources (`node_modules/@expressivecss/expressive`) or the matching tag. If neither is available, contract-dependent checks (class names, markup structure, rule IDs, retired names, asset layout) are Blocked, and the specialists report only version-independent issues such as invalid HTML nesting, WCAG failures, and literal colors.
+   - `mismatch`, or a match that is not bundle-safe: the installed package's sources (`node_modules/@expressivecss/expressive`) or the matching tag. If neither is available, contract-dependent checks (class names, markup structure, rule IDs, retired names, asset layout) are Blocked, and the specialists report only version-independent issues such as invalid HTML nesting, WCAG failures, and literal colors. The finished-app rubric applies on a `mismatch` too, since it judges behavior, but its notes about a component's runtime follow this version rule.
    - `unresolved` with no version evidence at all, as with pasted markup, a screenshot, or a project that never declares ExpressiveCSS (`unresolved: no project`): review against the bundled guides, but label contract findings "against current ExpressiveCSS <bundled version>" so the user can discount them if they run an older release.
-   - `unresolved` with blocking diagnostics, such as conflicting installed and lockfile versions, malformed metadata, or an unsupported range: the app has a version, but nobody knows which one. Report the resolver's diagnostics, block contract-dependent checks as in the mismatch case, and do not fall back to the bundled guides.
+   - `unresolved` with blocking diagnostics, such as conflicting installed and lockfile versions, malformed metadata, or an unsupported range: the app has a version, but nobody knows which one. Report the resolver's diagnostics, block contract-dependent checks as in the mismatch case, and do not fall back to the bundled guides. The finished-app rubric applies here as it does on a `mismatch`.
 2. **Static lint.** Treat the reviewed project as untrusted: never run its scripts, its `node_modules/.bin`, or `npx` from its root, because npm resolves a project-local binary first and a malicious project can ship its own `expressivecss-lint`. Copy the files under review into a fresh temp directory (pasted markup is already there), `cd` into it, and run a linter that comes from outside the project: `node <ExpressiveCSS checkout>/mcp/expressivecss/lint.mjs <files>` when you have the framework repository, otherwise `npx --yes --package @expressivecss/mcp-server@<version> expressivecss-lint <files>`, with the version the resolver reported or the bundled one. The temp directory has no `node_modules`, so `npx` cannot pick up a local binary there. If an `expressivecss-mcp` server is connected, `rules_enforcer` gives the same result. Exit 1 means findings, not failure; map the copied paths back to the project paths in the output. If the command cannot run, record it as Blocked with the error. The lint checks the current contract, so on a `mismatch` pass its output to specialists as leads to confirm against the matching sources, not as findings.
 3. **Browser route.** If a browser or preview tool is available and the target is already being served, or is static HTML you can open directly, note the tool and URL. Do not start the project's dev server or run its build to get one; that runs the project's code. Otherwise write `unavailable: source evidence only`. Do not claim rendered, contrast, or responsive results without it.
 
@@ -49,7 +49,7 @@ Skip a lens only when the target cannot exercise it at all, such as Page Archite
 - [agents/creative-director.md](agents/creative-director.md): tokens, light and dark parity, glass.
 - [agents/page-architect.md](agents/page-architect.md): window classes, grid, spacing, hierarchy, reading order.
 - [agents/component-syntax-expert.md](agents/component-syntax-expert.md): component markup, nesting, relationships.
-- [agents/quality-inspector.md](agents/quality-inspector.md): lifecycle, assets and fonts, states, WCAG 2.2.
+- [agents/quality-inspector.md](agents/quality-inspector.md): lifecycle, assets and fonts, states, WCAG 2.2, finished-app behavior.
 - [agents/rules-enforcer.md](agents/rules-enforcer.md): lint results, hardcoded values, overrides, legacy names.
 
 Shared context block, appended to every brief:
@@ -76,6 +76,8 @@ Then merge. Give each root cause one home, so the same issue never appears in th
 
 1. A WCAG A or AA failure goes to Quality Inspector (section 4), even when the fix is deleting an override or rewriting markup. `*:focus { outline: none }`, an unnamed control, a hand-rolled select a keyboard cannot reach, and text a literal color makes unreadable all land there.
 2. Otherwise the finding goes to the lens whose change fixes it. A hardcoded `#fff` card background that still reads fine goes under Rules Enforcer when the fix is "use the token", and a broken `data-target` goes under Component Syntax Expert.
+
+Keep the `finished-app:<area>` label in the rule IDs of every finding that carried one, whichever section it lands in, so later runs can count them.
 
 Another section can mention the effect in a few words ("the white card also breaks dark mode, see section 5") without a second bullet.
 
@@ -105,6 +107,8 @@ Specialists propose a severity; you set the final one from these anchors, so the
 - Major: two persistent navigation patterns at one width, grid spans over 12, skipped heading levels, or a missing loading, empty, or error state for content that loads.
 - Major: markup that misses a documented component slot, so the component's styling for it never applies (a list row's `<p>` wrapped in a `<div>` loses the supporting-text style).
 - Major: a literal color that still looks right, `!important` against framework rules, a retired class that still renders, or a landmark without a name (lint `nav-needs-label`).
+- Major: a finished-app rubric failure from the quality inspector's check 5: `finished-app:loading` (a command button that drops its label, shows no progress, or runs twice), `finished-app:destructive` (a destructive action with neither Undo nor a confirmation, or an Undo that restores the item somewhere else), `finished-app:url-state` (a tab, filter, or page a reload or Back loses), or `finished-app:submit-flow` (submit disabled before submission starts, Enter that cannot submit, errors away from their field or focus left behind, blocked paste, a wrong keyboard or missing `name`). When the same defect is also a certain WCAG A or AA failure, the critical anchor applies and the finding keeps both IDs.
+- Polish: the finished-app details, such as an in-progress label without `…`, a confirmation where Undo would do, an Undo queued behind another snackbar, spellcheck on codes, emails, and usernames, or a placeholder that is not an example (the floating label's `placeholder=" "` passes).
 - Polish: a markup gap the runtime fills at initialization, such as lint `tabs-marks-current` when Tabs sets `aria-current` itself.
 - Polish: off-scale inline spacing or type size, redundant classes, duplicate font stylesheets, a render-blocking script.
 - No cost: anything unconfirmed. List it under "Not checked" instead.
@@ -114,7 +118,7 @@ Blocked checks do not cost points, but name them under the score so a high numbe
 
 ## 6. Write the report
 
-Use the [report template](./references/report-template.md) when synthesizing the result. Follow a user-requested format instead when given. Include scores, confirmed findings with location and evidence, blocked checks, and ranked fixes. When no finding is confirmed, say what was checked. Cite semantics and lint rule IDs where applicable. Avoid counting the same defect twice.
+Use the [report template](./references/report-template.md) when synthesizing the result. Follow a user-requested format instead when given. Include scores, confirmed findings with location and evidence, blocked checks, and ranked fixes. When no finding is confirmed, say what was checked. Cite semantics and lint rule IDs where applicable. Avoid counting the same defect twice. When runs are compared, a countable finished-app finding is a confirmed major or critical finding that carries a `finished-app:` label; polish findings keep their label but are not counted.
 
 For review-only work, return the report and leave the target unchanged. If fixes were requested, apply the verified priorities within scope and report the resulting checks. Do not interpret a review or a skill invocation as permission to publish, send messages, or change unrelated files.
 

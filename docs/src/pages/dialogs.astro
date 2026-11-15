@@ -201,16 +201,16 @@ const S = defineSections([
           and <code>false</code> on Cancel, Escape or a scrim tap.
         </p>
         <p>
-          <button type="button" id="confirm-demo">Delete draft</button>
+          <button type="button" id="confirm-demo">Delete account</button>
         </p>
         <p id="confirm-demo-result" role="status"></p>
 <Code code={`
 const ok = await Expressive.Dialogs.confirm({
-  headline: 'Delete draft?',
-  text: 'The draft and its attachments are removed.',
+  headline: 'Delete account?',
+  text: 'Your account and its data are removed for good.',
   confirm: 'Delete'
 });
-if (ok) deleteDraft();
+if (ok) deleteAccount();
 `} />
         <p>
           <code>text</code> is the question and is required. <code>headline</code>
@@ -307,11 +307,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const result = document.getElementById('confirm-demo-result');
   document.getElementById('confirm-demo').addEventListener('click', async () => {
     const ok = await Expressive.Dialogs.confirm({
-      headline: 'Delete draft?',
-      text: 'The draft and its attachments are removed.',
+      headline: 'Delete account?',
+      text: 'Your account and its data are removed for good.',
       confirm: 'Delete'
     });
-    result.textContent = ok ? 'Draft deleted.' : 'Draft kept.';
+    result.textContent = ok ? 'Account deleted.' : 'Account kept.';
   });
 });
 </script>

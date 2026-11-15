@@ -1,0 +1,6 @@
+{"app":"baseline/settings-form-run1","pass":true,"fields":4,"firstInvalid":"display_name","focused":"display_name","onFirst":true,"disabledAfter":false,"reason":"","errors":[]}
+{"app":"baseline/settings-form-run2","pass":true,"fields":4,"firstInvalid":"display-name","focused":"display-name","onFirst":true,"disabledAfter":false,"reason":"","errors":[]}
+{"app":"phase-79/settings-form-run1","pass":true,"fields":4,"firstInvalid":"display_name","focused":"display_name","onFirst":true,"disabledAfter":false,"reason":"","errors":[]}
+{"app":"phase-79/settings-form-run2","pass":true,"fields":4,"firstInvalid":"display_name","focused":"display_name","onFirst":true,"disabledAfter":false,"reason":"","errors":[]}
+{"app":"guidance-stage/settings-form-run1","pass":true,"fields":4,"firstInvalid":"display_name","focused":"display_name","onFirst":true,"disabledAfter":false,"reason":"","errors":[]}
+{"app":"guidance-stage/settings-form-run2","pass":true,"fields":4,"firstInvalid":"display_name","focused":"display_name","onFirst":true,"disabledAfter":false,"reason":"","errors":[]}

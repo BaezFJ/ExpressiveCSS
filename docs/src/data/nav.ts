@@ -373,6 +373,7 @@ export const NAV: DocsGroup[] = [
     pages: [
       {
         id: "buttons",
+        exports: ["BusyButtons"],
         styles: ["components/buttons"],
         section: "Actions",
         label: "Buttons",

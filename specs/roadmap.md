@@ -25,18 +25,22 @@ Later phases build on these:
 - **Tooltips:** open on a long press on touch, or on a click with `openOnClick`. A tooltip opened just after another closes skips its `enterDelay`.
 - **Forms:** `.validate` fields set `aria-invalid` and are described by their error text. `data-mask` formats typed and pasted text to a pattern. `data-currency` shows an amount in the page's locale and currency after blur, and the form submits the plain number.
 - **Choosing values:** a `.transfer-list` moves checkbox rows between an available and a chosen list and submits the chosen ones in order. A `select[data-tree]` opens an ARIA tree and submits one leaf, and a `.field.cascader` picks a path through nested options in columns and submits every level.
+- **Buttons:** `aria-busy="true"` keeps a button's label, reports busy and shows a delayed spinner, and `BusyButtons` ignores presses until it clears.
+- **App bars:** a heading reached through a fragment link rests below a page-level sticky top app bar, through `--md-comp-top-app-bar-anchor-offset`.
 - **Dialogs:** `Dialogs.confirm()` asks a yes-or-no question and returns a promise that resolves to the answer.
 - **Page helpers:** `.defer-render` skips layout and paint for a long list's off-screen rows. A `.loading-overlay` with `aria-busy="true"` blocks input under a scrim. A `hover-card-trigger` link shows its card after a delay, `.back-to-top` appears past a scroll threshold and returns to the top, and `.show-more` expands clamped text from a button that hides while the text fits.
 - **AutoInit:** starts every registered component in the page, with a `no-autoinit` opt-out. A `data-<name>-options` attribute supplies a component's options from markup. With `{ watch: true }`, AutoInit also starts components in markup added later and destroys those whose markup is removed.
+- **App behavior guidance:** the buttons, snackbar, lists, tabs, data table and text field guides say how to show loading, offer Undo, keep the view in the URL and submit forms. `Expressive.DataTables.showPage()` restores a local page from the URL.
+- **Finished-app evaluation:** the `expressivecss-review` quality inspector labels `finished-app:` findings, and [three fixed prompts](../docs/agents/finished-app-evals.md) measure them against a baseline.
 - **MCP server:**
   - Lists and searches the catalogue.
   - Returns complete rules and the documented Options and Methods within response limits.
   - Serves the shipped catalogue and component guides as versioned resources with name completion.
+  - `expressivecss-lint` reports `transition: all`, a viewport that stops zoom and an inline handler that always blocks paste.
 
 ## Up next
 
-1. [Milestone: apps that feel finished](#milestone-apps-that-feel-finished)
-2. [Milestone: scaffold app shells](#milestone-scaffold-app-shells)
+1. [Milestone: scaffold app shells](#milestone-scaffold-app-shells)
 
 ## Milestone: MCP authoring guidance
 
@@ -374,81 +378,47 @@ Apps that agents build with the skill handle loading, mistakes, sharing and form
 
 ### Phase 77: add a finished-app rubric to the quality inspector
 
-No dependencies. The quality inspector in `expressivecss-review` checks loading feedback, recovery from destructive actions, URL state and the form submit flow, and reports a finding for each problem it sees.
-
-Completion check: reviewing a page that disables its submit button before any input, deletes a row without Undo and keeps its selected tab out of the URL produces one finding for each.
-
-Open for spec: whether the rubric's rules live in `semantics.json` or only in the inspector's agent file.
+Completed 2026-11-15. See [spec](2026/11/15/finished-app-rubric/).
 
 ### Phase 78: record a finished-app baseline from three fixed prompts
 
-Depends on phase 77. An agent builds one app from each of three fixed prompts with the current skill: a settings form, a list with destructive delete, and a filtered dashboard. The quality inspector's finished-app findings for each app become the baseline.
-
-Completion check: the prompts, the generated apps and their finding counts are committed, so a later phase can rerun the prompts and compare.
-
-Open for spec: which agent and model build the apps, and how many runs per prompt smooth out variation between runs.
+Completed 2026-11-15. See [spec](2026/11/15/finished-app-baseline/).
 
 ### Phase 79: guide loading feedback on buttons
 
-Depends on phase 78. The button guide tells agents that a command button keeps its label while its request runs, shows progress beside the label and doesn't run the command twice. A spinner waits a moment before it appears and then stays for a minimum time, and an in-progress label ends with the `…` character.
-
-Completion check: rebuilt from the baseline prompt, the settings form keeps its button label during submission, and the quality inspector reports no loading-feedback finding.
+Completed 2026-11-15. See [spec](2026/11/15/button-loading-guidance/).
 
 ### Phase 80: guide destructive actions to an Undo snackbar
 
-Depends on phase 78. The snackbar and list guides tell agents to remove an item at once and offer Undo as the snackbar's action. A confirmation dialog stays for actions that can't be undone.
-
-Completion check: in the rebuilt destructive-delete app, deleting a row removes it and offers Undo, and pressing Undo restores the row in place.
+Completed 2026-11-15. See [spec](2026/11/15/undo-snackbar-guidance/).
 
 ### Phase 81: guide tabs, filters and pages into the URL
 
-Depends on phase 78. The tabs and data table guides tell agents to keep the selected tab, filter text and page in the URL, so reloading, sharing a link and going Back all restore the same view.
-
-Completion check: in the rebuilt dashboard, reloading after choosing a tab, a filter and a page restores all three.
-
-Open for spec: whether any component needs an option to take its initial state from the URL, or the existing markup and `expressive:*` events are enough.
+Completed 2026-11-15. See [spec](2026/11/15/url-state-guidance/).
 
 ### Phase 82: guide the form submit flow
 
-Depends on phase 78. The form and text field guides tell agents to leave submit enabled until submission starts, let Enter submit, show each error beside its field and focus the first one, set `name`, `autocomplete`, `type` and `inputmode`, turn spellcheck off for codes and emails, allow paste, and write placeholders as examples ending in `…`. This phase closes the guidance stage.
-
-Completion check: submitting the rebuilt settings form empty leaves the submit button enabled and moves focus to the first invalid field.
+Completed 2026-11-15. See [spec](2026/11/15/submit-flow-guidance/).
 
 ### Phase 83: ship a button loading state that keeps its label
 
-Depends on phase 79. An opt-in loading state on `.button` shows progress beside the label, reports busy to assistive technology and stops a repeat press from running the command. Existing buttons don't change, and the button guide from phase 79 points at the shipped state. A minimum spinner duration stays guidance and is not runtime behavior.
-
-Completion check: in Chromium, Firefox and WebKit, a button in the loading state keeps its accessible name, reports busy, and a second press doesn't reach its handler.
-
-Open for spec: class or attribute, and whether the state needs runtime code or CSS alone.
+Completed 2026-11-15. See [spec](2026/11/15/button-loading-state/).
 
 ### Phase 84: offset anchored headings below sticky bars
 
-No dependencies. A heading reached through a fragment link comes to rest below a sticky app bar instead of behind it. This phase closes the framework stage.
-
-Completion check: following a link to a heading on a page with a sticky app bar leaves the whole heading visible below the bar.
-
-Open for spec: whether every heading with an `id` gets the offset by default or authors opt in, given the product rule on changing how existing markup behaves, and whether it reuses the scrollspy offset token.
+Completed 2026-11-15. See [spec](2026/11/15/anchored-heading-offset/).
 
 ### Phase 85: lint flags `transition: all`
 
-No dependencies. `expressivecss-lint` reports `transition: all` in the markup it checks.
-
-Completion check: a fixture with `transition: all` in a `style` attribute gets one finding, and the same fixture listing its transitioned properties gets none.
-
-Open for spec: whether the check also reads `<style>` blocks and linked stylesheets.
+Completed 2026-11-15. See [spec](2026/11/15/lint-transition-all/).
 
 ### Phase 86: lint flags disabled zoom
 
-No dependencies. `expressivecss-lint` reports a viewport meta tag that stops people from zooming, through `user-scalable=no` or `maximum-scale=1`.
-
-Completion check: fixtures with either setting get a finding, and the standard `width=device-width, initial-scale=1` viewport gets none.
+Completed 2026-11-15. See [spec](2026/11/15/lint-disabled-zoom/).
 
 ### Phase 87: lint flags paste blocking
 
-No dependencies. `expressivecss-lint` reports a text field whose inline handler blocks paste. This phase closes the lint stage and the milestone's final baseline comparison.
-
-Completion check: a field with `onpaste="return false"` gets a finding, and a field whose paste handler doesn't cancel the event gets none.
+Completed 2026-11-15. See [spec](2026/11/15/lint-paste-blocking/).
 
 ## Milestone: scaffold app shells
 

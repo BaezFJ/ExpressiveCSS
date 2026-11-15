@@ -72,10 +72,11 @@ menu.destroy();`} />
     <p>The root bundle installs every behavior below. The modular entry installs none.
       Call the required <code>Init()</code> methods once after a browser document is available.
       These document listeners have no per-element <code>destroy()</code> API.</p>
-    <Code code={`import { Forms, Copy, Dialogs, BottomSheets } from '@expressivecss/expressive/modular';
+    <Code code={`import { Forms, Copy, BusyButtons, Dialogs, BottomSheets } from '@expressivecss/expressive/modular';
 
 Forms.Init();
 Copy.Init();
+BusyButtons.Init();
 Dialogs.Init();
 BottomSheets.Init();`} />
     <div class="docs-table-scroll">
@@ -86,6 +87,7 @@ BottomSheets.Init();`} />
         <tr><td><code>Chips.Init()</code>, <code>Slider.Init()</code>, <code>Cards.Init()</code>, <code>ExpandingCard.Init()</code></td><td>Initial scans for the corresponding element components. Initialize new elements explicitly or use their documented AutoInit support.</td></tr>
         <tr><td><code>Dialogs.Init()</code>, <code>BottomSheets.Init()</code>, <code>SideSheets.Init()</code></td><td>Dialog dismissal and sheet dragging. Include <code>Dialogs.Init()</code> for sheet light dismissal.</td></tr>
         <tr><td><code>Copy.Init()</code>, <code>Theme.Init()</code></td><td><a href={route("copy")}>Copy buttons</a> and <a href={route("themes")}>theme controls</a>.</td></tr>
+        <tr><td><code>BusyButtons.Init()</code></td><td><a href={route("buttons")}>Busy buttons</a> ignore presses while <code>aria-busy="true"</code>.</td></tr>
         <tr><td><code>PaneResize.Init()</code>, <code>ImageCompare.Init()</code></td><td><a href={route("panes")}>Resizable panes</a> and <a href={route("image_compare")}>image comparison</a>.</td></tr>
         <tr><td><code>Tour.Init()</code>, <code>Sortable.Init()</code>, <code>Lists.Init()</code></td><td><a href={route("tour")}>Tours</a>, <a href={route("lists")}>sortable lists and actionable-row keyboard navigation</a>.</td></tr>
         <tr><td><code>DataTables.Init()</code>, <code>TransferList.Init()</code></td><td><a href={route("data_table")}>Data tables</a> and <a href={route("transfer_list")}>transfer lists</a>.</td></tr>

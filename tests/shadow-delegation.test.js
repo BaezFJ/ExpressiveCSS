@@ -245,6 +245,23 @@ describe('Document delegation reaches into shadow roots', () => {
       }
     });
 
+    test(`${label(mode)}: BusyButtons ignores a press on a busy button until it is idle`, () => {
+      const { host, root } = mount(mode, '<form><button aria-busy="true"><span>Saving…</span></button></form>');
+      const button = root.querySelector('button');
+      const counts = { click: 0, submit: 0 };
+      button.addEventListener('click', () => counts.click++);
+      root.querySelector('form').addEventListener('submit', (event) => { event.preventDefault(); counts.submit++; });
+      try {
+        click(button.querySelector('span'));
+        assert.deepEqual(counts, { click: 0, submit: 0 }, 'a press on the label reaches no handler and submits nothing');
+        button.removeAttribute('aria-busy');
+        click(button.querySelector('span'));
+        assert.deepEqual(counts, { click: 1, submit: 1 });
+      } finally {
+        host.remove();
+      }
+    });
+
     for (const sheet of [
       { kind: 'bottom', html: '<dialog class="bottom-sheet"><span class="drag-handle"></span><p>Sheet</p></dialog>', grab: '.drag-handle', property: '--md-comp-bottom-sheet-shift', axis: 'clientY' },
       { kind: 'side', html: '<dialog class="side-sheet"><header>Title</header><p>Sheet</p></dialog>', grab: 'header', property: '--md-comp-side-sheet-shift', axis: 'clientX' }

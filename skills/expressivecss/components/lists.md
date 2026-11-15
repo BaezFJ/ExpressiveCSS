@@ -9,7 +9,7 @@ Component ID: `lists`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `7b49e60faa3fc3392fe5eb832c197de9931f825c5cc91002bc14b07adbd9e898`
+Contract SHA-256: `c95df9b05f81ea6cb549bcaaa3c6f0dcc68935a3052f6e3c17264e96c9aa2cc2`
 
 #### Selection and adaptation
 
@@ -63,6 +63,10 @@ Two variants: standard (the default) and `segmented`.
   </li>
 </ul>
 ```
+
+#### App behavior
+
+Delete a row at once and offer Undo in a snackbar, as the Snackbar App behavior describes. Ignore the second click of a double click (`event.detail > 1`), or the row that slides up gets deleted too. Before removing a row that holds focus, focus the next row's control, else the previous row's, else the empty state's action. At Undo time, find the row that followed the restored one by id, or put the item back into the data and re-render; don't trust an index or a node taken before other changes. Show the list's empty state when the last row goes, and hide it and update any count when Undo brings a row back.
 
 #### Also documented
 

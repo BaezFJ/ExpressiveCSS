@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 /**
  * Command-line front end for the static checks `rules_enforcer` runs: the
- * bundled semantics rules plus the legacy-pattern and initialization checks.
+ * bundled semantics rules, the legacy and retired-markup patterns, raw colors
+ * in component declarations, a transition on the `all` keyword, a viewport
+ * that stops zoom, an inline paste handler that always cancels paste, and the
+ * initialization and teardown checks.
  *
  *   expressivecss-lint <file>...     Report findings; exit 1 when any.
  *   expressivecss-lint --hook        Read a Claude Code PostToolUse payload on

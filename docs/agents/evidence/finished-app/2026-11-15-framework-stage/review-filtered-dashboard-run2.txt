@@ -1,0 +1,24 @@
+FINDINGS
+- [major] index.html:253-258 (`.clear-filter` click handler) together with index.html:239-243 (debounced filter URL write) | source | finished-app:url-state | The Clear filter handler writes `q=''` at once but doesn't cancel the pending `typing` timeout. Say someone types a query that matches nothing, the empty state appears, and they press Clear filter within 300 ms. The old timer then fires `writeUrl({ q: <old query> })`, which writes the cleared query back into the URL. The field is empty but the URL still holds the old filter, so a reload or a shared link brings back the filter the user cleared. | Call `clearTimeout(typing)` in the clear handler before `writeUrl({ q: '', page: '' })`. Better still, have the input handler cancel the timer and write the URL right away whenever the trimmed value is empty.
+
+CHECKED
+- Lifecycle: the inline script sits at the end of `<body>`, after the markup and the template clones it uses. `Expressive.AutoInit()` is called once, on DOMContentLoaded. Nothing calls `.init()` by hand, so `no-autoinit` isn't needed. The retired global `M` isn't used. The tables are cloned in before DOMContentLoaded and their state is synced with `DataTables.sync`/`showPage`, which exist in dist/types/behaviors/dataTables.d.ts. Nothing is removed at runtime, so there is no `destroy()` obligation.
+- Assets and fonts: one framework stylesheet. dist/fonts/ sits next to dist/css/. There's no Google Fonts or Material Icons link and no `.material-icons` markup. Icons use `.material-symbols` with `aria-hidden="true"`. The JS bundle is needed for Tabs and DataTables paging and sorting, and it isn't render-blocking in `<head>` (it's a classic script at the end of body). dist/js/expressive.min.js exists.
+- States: there's no CSS that removes the focus ring. No native control is disabled with a class. Every panel has a filtered-empty state (`.empty` with Clear filter, and the wrapper hidden), and Clear filter moves focus back to the filter input. The data is local and synchronous, so loading and error states don't apply. No switch, menu, drag or autosave starts a request.
+- WCAG names and labels (from source): the filter input has a `<label for>`, and its count is in a named `role="status"` polite output linked through `aria-describedby`. The table regions are `role="region"` and named by their captions. The pagination navs get distinct names. The page buttons have `aria-label`s. The sort headers are native buttons, with `aria-sort` on the `<th>`. There's a skip link to `main[tabindex=-1]`. Hidden empty-state controls stay out of the tab order through `hidden`.
+- Reduced motion: the page adds no custom motion, and the Tabs indicator follows the framework's reduced-motion handling.
+- finished-app:url-state: tab view (`?view=`), filter text (`?q=`) and page (`?page=`) are written with `replaceState` and restored on load (before AutoInit for the tab, and in `applyFilter(page)` for the filter and page). The tab view is written on `expressive:change`, as the bundled guide requires. Sort isn't in the URL, which is out of scope. The one issue is the race reported above.
+- finished-app:loading: not applicable. No command runs a request in script.
+- finished-app:destructive: not applicable. The page has no remove or discard action.
+- finished-app:submit-flow: not applicable. The only field is a live filter with no form or submit, and `autocomplete="off"` is appropriate for a filter that isn't on WCAG's input-purpose list.
+
+BLOCKED
+- Contrast (1.4.3 / 1.4.11) for `on-surface-variant-text` on the overridden `surface-container` stat and card surfaces, the tab labels, and the pagination border: needs rendered measurement, and no browser route was available.
+- Target size (2.5.8) for the icon-only Previous/Next page buttons and the sort header buttons: needs the measured hit area, and no browser route was available.
+- Focus visible and focus not obscured (2.4.7 / 2.4.11) on the tabs, sort buttons, page buttons and scroll regions: needs rendering.
+- Whether Tabs calls `preventDefault` on link clicks. If it doesn't, each tab click pushes a `#hash` history entry, and Back would change the URL without restoring the view, because the page has no `popstate` or `hashchange` listener. The bundled types don't settle this.
+- The shape of the `expressive:change` detail from Tabs (`event.detail.panel`) and of the `expressive:page` detail (`event.detail.page`): both are used, but neither is documented in the bundled guides or types.
+- Whether the live-region announcements are spoken (match count plus the per-panel page status updating on every keystroke): needs assistive-technology testing.
+
+HANDOFFS
+- none

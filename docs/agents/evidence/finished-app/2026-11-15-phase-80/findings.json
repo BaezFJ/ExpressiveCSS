@@ -1,0 +1,179 @@
+{
+  "label": "phase-80",
+  "date": "2026-11-15",
+  "claudeCode": "2.1.325",
+  "model": "claude-opus-5-5",
+  "commands": {
+    "build": "claude -p --safe-mode --strict-mcp-config --model claude-opus-5-5 --no-session-persistence --output-format json --permission-mode bypassPermissions",
+    "review": "claude -p --safe-mode --strict-mcp-config --model claude-opus-5-5 --no-session-persistence --output-format json --allowedTools Read Glob Grep"
+  },
+  "buildCommit": "c154c9119",
+  "reviewCommit": "16b6632ada2153e8b185c5c72387d3896d7ad794",
+  "lint": "mcp/expressivecss/lint.mjs from the repository; lint.mjs and server.js are unchanged from 16b6632",
+  "dist": {
+    "css/expressive.min.css": "b1ba049750e05269d1a1a8d3124fd78aa5fea1b741ff53376e7d9ccabce442ad",
+    "js/expressive.min.js": "8e0d791b7ec83c84e981cd137cf2297e2af1aa3ec9bcbbd4d42336e388018ce1"
+  },
+  "skillTrees": {
+    "build skills/expressivecss": "c10b06f47d219fb260c76347966115ac8d87f6be",
+    "review skills/expressivecss": "a7de269b7bf10baa2fd2d08c90964c50ebf748e8",
+    "review skills/expressivecss-review": "6f8aa197c069c5f1546b9d2899ec596c8f50549b"
+  },
+  "briefs": {
+    "build": "2f096aa65b688ba640c93e2b30bfdaa5ff76a6597d1f2fbff9968384952a1be3",
+    "review": "1be3237aaf63f5f6df96f2300e385098b6fe114fe809f7735eca7692c9153e67"
+  },
+  "deleteUndoScript": "scripts/finished-app-delete-undo.mjs at facfe9230 plus the removal-timing fix in this commit; on the same pass it failed both baseline apps with \"a confirmation dialog opened\"",
+  "failedRuns": [],
+  "revisions": 0,
+  "notes": [
+    "Run 2's pagehide finding exposed a gap in the Snackbar App behavior text, which said to commit on pagehide but not to mark the removal committed. The text was revised after this run set; the count is not the gate (R6), so the runs were not repeated."
+  ],
+  "apps": [
+    {
+      "prompt": "destructive-list",
+      "run": 1,
+      "files": {
+        "destructive-list-run1.html": "36f34f44f9a445e6dafe4d63bde52eef97ddca3596fbc2b393bf9dd8e002ec0a"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 155,
+      "loadCheck": "pass: Chromium found the dist/ stylesheet, the Expressive global and no console errors",
+      "deleteUndoCheck": {
+        "app": "destructive-list-run1",
+        "pass": true,
+        "reason": "",
+        "removedMs": 27,
+        "focusInRow": true,
+        "errors": [],
+        "twoDeletes": {
+          "undoShownForSecond": true,
+          "rowsBefore": 5,
+          "rowsAfter": 3
+        }
+      },
+      "countable": [],
+      "dropped": [],
+      "polish": [
+        {
+          "area": "destructive",
+          "location": "index.html:313, 217-220",
+          "description": "Other snackbars use replace: true, which commits a pending removal early; the reviewer notes the Undo bar has no timer."
+        },
+        {
+          "area": "destructive",
+          "location": "index.html:200-203, 216",
+          "description": "A failed commit restores in front of a row that may also have been deleted."
+        },
+        {
+          "area": "submit-flow",
+          "location": "index.html:86 #addr-postal",
+          "description": "Spellcheck is left on for the postal code."
+        }
+      ],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 0,
+        "submit-flow": 0
+      },
+      "total": 0,
+      "deleteUndoCheckFinal": {
+        "app": "phase-80/destructive-list-run1",
+        "pass": true,
+        "reason": "",
+        "removedMs": 23,
+        "focusInRow": true,
+        "focusOnRestoredRow": true,
+        "errors": [],
+        "twoDeletes": {
+          "undoShownForSecond": true,
+          "rowsBefore": 5,
+          "rowsAfter": 3
+        }
+      }
+    },
+    {
+      "prompt": "destructive-list",
+      "run": 2,
+      "files": {
+        "destructive-list-run2.html": "10fdd2465782ba8132400223ef51d1feb7f402bf51bf657fbae1051efee20ecd"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 99,
+      "loadCheck": "pass: Chromium found the dist/ stylesheet, the Expressive global and no console errors",
+      "deleteUndoCheck": {
+        "app": "destructive-list-run2",
+        "pass": true,
+        "reason": "",
+        "removedMs": 28,
+        "focusInRow": true,
+        "errors": [],
+        "twoDeletes": {
+          "undoShownForSecond": true,
+          "rowsBefore": 5,
+          "rowsAfter": 3
+        }
+      },
+      "countable": [
+        {
+          "area": "destructive",
+          "severity": "major",
+          "location": "index.html:217-223 pagehide; 178-184 Undo snackbar",
+          "description": "pagehide sends DELETE for pending removals but leaves them pending with Undo on screen, so a page restored from the back/forward cache can undo a committed removal."
+        },
+        {
+          "area": "submit-flow",
+          "severity": "major",
+          "location": "index.html:82-83 #addr-city",
+          "description": "One field asks for city, state and ZIP but declares autocomplete=\"address-level2\", city only."
+        }
+      ],
+      "dropped": [],
+      "polish": [],
+      "counts": {
+        "loading": 0,
+        "destructive": 1,
+        "url-state": 0,
+        "submit-flow": 1
+      },
+      "total": 2,
+      "deleteUndoCheckFinal": {
+        "app": "phase-80/destructive-list-run2",
+        "pass": true,
+        "reason": "",
+        "removedMs": 37,
+        "focusInRow": true,
+        "focusOnRestoredRow": true,
+        "errors": [],
+        "twoDeletes": {
+          "undoShownForSecond": true,
+          "rowsBefore": 5,
+          "rowsAfter": 3
+        }
+      }
+    }
+  ],
+  "totals": {
+    "loading": 0,
+    "destructive": 1,
+    "url-state": 0,
+    "submit-flow": 1,
+    "total": 2
+  },
+  "deleteUndoFinal": "undo-check-final.jsonl: the shipped scripts/finished-app-delete-undo.mjs on all four apps. Baseline runs 1 and 2 fail (\"a confirmation dialog opened\"); phase-80 runs 1 and 2 pass with focus on the restored row and an Undo shown for a second delete."
+}

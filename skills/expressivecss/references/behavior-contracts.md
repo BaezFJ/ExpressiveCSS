@@ -5,6 +5,7 @@
 Read only the section needed for the selected behavior. These contracts come from `llm.md`; reuse the resolved framework version and the Runtime guide's ownership rules. The root bundle starts shared document behaviors; the modular entry requires the explicit initialization shown below. ExpandingCard also has per-element instances to destroy.
 
 - [Copy](#copy-button)
+- [BusyButtons](#loading-state)
 - [Theme](#changing-the-theme)
 - [PaneResize](#resizing)
 - [ExpandingCard](#expanding-card)
@@ -28,6 +29,16 @@ Any button copies to the clipboard with `data-copy-for`, naming the id of a fiel
 ```
 
 ---
+
+## Loading state
+
+Export: `BusyButtons`.
+
+Set `aria-busy="true"` on a `<button>` or `.button` while its command runs. The button keeps its label and colors, reports busy to assistive technology, and a shaped common button shows a small spinner after its label, fading in after `--md-comp-button-busy-delay` (300ms) so a quick request doesn't flash it; the button grows by the spinner. Under reduced motion the spinner holds still, and a disabled button shows none. Circle, extended and icon buttons, FABs, buttons in toolbars, groups and other fixed slots, data table sort buttons, menu triggers and buttons with a `.shape-*` utility show no spinner. For those, keep a `.loading-indicator` beside the button, `hidden` while idle. `BusyButtons` ignores every press while the attribute is set: capture-phase click, Enter and Space listeners on the document cancel the press before handlers on the page's elements, so a mouse press, Enter, Space and a form's implicit submission do nothing. The root bundle starts it; with the modular entry, call `BusyButtons.Init()`. `requestSubmit()` sends no click, and buttons in closed shadow roots are out of reach. Remove the attribute to make the button work again.
+
+```html
+<button type="submit" aria-busy="true"><span>Saving…</span></button>
+```
 
 ## Changing the theme
 
@@ -116,12 +127,14 @@ Export: `Dialogs`.
 
 ```js
 const ok = await Expressive.Dialogs.confirm({
-  headline: 'Delete draft?',
-  text: 'The draft and its attachments are removed.',
+  headline: 'Delete account?',
+  text: 'Your account and its data are removed for good.',
   confirm: 'Delete'
 });
-if (ok) deleteDraft();
+if (ok) deleteAccount();
 ```
+
+Ask only before an action that can't be undone. For a removal people can get back, remove it at once and offer Undo in a snackbar, as the Snackbar App behavior describes.
 
 `text` is the question and is required. `headline` is optional. With a headline, the dialog is named by it and described by the text; without one, the text names it. All four strings are set as text, so markup in them is shown, not parsed. If page code removes the open dialog, for example on a route change, the promise resolves `false`. Focus starts on Cancel, the less destructive action, and the browser returns it to the element that had focus before the call. Label the confirm button with the action it takes, such as "Delete" or "Discard", rather than the "OK" default.
 

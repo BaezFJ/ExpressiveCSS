@@ -353,9 +353,15 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed shared form reset handling for pickers, Slider, FormSelect, RichTextEditor, ColorPicker, CharacterCounter, validation, ImageCompare and select-all, disabled month arrow icons, near-whole pie slices, distinct axis labels, reset handling that follows a form into a shadow root, and painting particles on resize: 111,636 gzip bytes (+126).
   // Reviewed shadow-root focus checks through focusIsIn, guarded Forms re-init, chart resize observers released on update(), a composed transfer event, Datepicker selects kept across years, one roving-focus sync per arrow key, memoized Timepicker ranges, flyout measurement per row entry and DataTables views without toggle scans: 111,677 gzip bytes (+41).
   // Reviewed shared core helpers for right-to-left checks, ID lists, the active descendant and resize handles, and shared chart marks: 111,422 gzip bytes (-255).
+  // Reviewed DataTables.showPage, which restores a local page from the URL without events, with its validation split out for the complexity gate: 111,466 gzip bytes (+44).
+  // Reviewed the BusyButtons press guard and the keypad's check of the form's default button: 111,601 gzip bytes (+135).
+  // Reviewed the BusyButtons keydown guard for components that activate on Enter or Space: 111,622 gzip bytes (+21).
+  // Reviewed the navigation rail peek under nav-rail="hover" (mouse rest or keyboard focus entering the rail), read from the rail, an ancestor or its shadow host: 111,666 gzip bytes (+244).
+  // Reviewed the milestone merged with the compact and hover navigation rail from master: 111,898 gzip bytes (+32 over the two sides' sum).
   // Reviewed outside navigation rail toggles and the first-child toggle lookup: 111,741 gzip bytes (+349).
   // Reviewed the rail reading its overlay state from the stylesheet: 111,750 gzip bytes (+9).
-  assert.ok(sizes(js).gzip <= 111750, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the scaffold milestone merged with master's busy buttons, data table pages and compact and hover rail: 112,245 gzip bytes.
+  assert.ok(sizes(js).gzip <= 112245, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -559,6 +565,11 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed --md-sys-state-focus-indicator-* tokens behind every 3px component focus ring (snackbar included), and the .focus-ring utility: 91,061 gzip bytes (+170).
   // Reviewed .status-bar (bar, items, end group and its compact fallback, vibrant bar, compact priority hiding, forced-colors edge, badge anchor), status bar items leaving the common button rules, and the page, pane and questionnaire footers stepping aside for it: 91,445 gzip bytes (+384).
   // Reviewed a --md-sys-typescale-{role}-font shorthand token for each of the 15 roles, built from the role's longhand tokens: 91,770 gzip bytes (+325).
+  // Reviewed the aria-busy button spinner on shaped buttons, with its reduced-motion rule and the data table and menu buttons left out: 92,147 gzip bytes (+377).
+  // Reviewed leaving buttons with a .shape-* utility out of the busy spinner: 92,160 gzip bytes (+13).
+  // Reviewed anchored headings resting below a page-level sticky top app bar, outside dialogs and panes, with the offset token per bar size: 92,310 gzip bytes (+150).
+  // Reviewed nav-rail="compact" (72dp icon-only rail) and nav-rail="hover" (the expanded layout as a .peek over the page, keeping the collapsed footprint and row heights from the live indicator token, raised only while it peeks and never over a modal rail, which rises at once), set on the root, a shadow host or one rail: 92,124 gzip bytes (+354).
+  // Reviewed the milestone merged with the compact and hover navigation rail from master: 92,665 gzip bytes (+1 over the two sides' sum).
   // Reviewed .scaffold (window-height grid areas, child and region-class placement, the pane scroller and its scroll timeline, scrolling custom rail and trailing content, the rail's height override, the trailing toolbar's position, the app bar's private timeline property, print): 92,076 gzip bytes (+306).
   // Reviewed .scaffold.tall-rail (full-height rail and trailing areas, bar over the pane): 92,098 gzip bytes (+22).
   // Reviewed the scaffold's medium rail overlay, its held rail column (released for a hidden rail), the snapping collapse and the overlay flag the runtime reads: 92,242 gzip bytes (+144).
@@ -582,5 +593,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the navigation bar leaving the bottom inset to a status bar below it: 93,529 gzip bytes (+20).
   // Reviewed the trailing toolbar's 4px margin, read from no token: 93,517 gzip bytes (-12).
   // Reviewed the sheet column as a detached sheet (corners and gaps like the pane): 93,553 gzip bytes (+36).
-  assert.ok(sizes(css).gzip <= 93553, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the scaffold milestone merged with master's busy spinner, anchored headings and compact and hover rail, with the scaffold holding a compact rail's 72px column: 94,450 gzip bytes.
+  assert.ok(sizes(css).gzip <= 94450, `CSS gzip: ${sizes(css).gzip}`);
 });

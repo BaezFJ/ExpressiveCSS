@@ -276,6 +276,34 @@ const LegacyPatternList = [
     description: 'Use a Material semantic color role instead of a raw color in component declarations. Theme seed and token definitions are separate concerns.',
     pattern: /(?<![-\w])(?:color|background(?:-color)?|border(?:-(?:top|right|bottom|left))?(?:-color)?|outline-color|fill|stroke)\s*:\s*#[0-9a-fA-F]{3,8}\b/g,
   },
+  {
+    id: 'transition-all',
+    severity: 'medium',
+    description: 'A transition on `all` animates any property that changes, including layout and color properties. List the properties instead, for example `transition: opacity 200ms, transform 200ms`.',
+    // The value gap starts on a non-space so it never shares whitespace with `\s*`, and stops at 500 characters so a run of declarations stays linear.
+    // It stops at `/` too, so a word in a comment after the value is never read as the keyword.
+    pattern: /(?<![-.\w])transition(?:-property)?["'`]?\s*:\s*(?:["'`]\s*)?(?:[^\s;{}<>"'`/][^;{}<>"'`/]{0,499}?)??(?<![-.\w$@])all(?![-.\w$]|\s*:)/giu,
+  },
+  {
+    id: 'viewport-zoom-disabled',
+    severity: 'high',
+    description: 'This viewport stops people from zooming, so they cannot enlarge text (WCAG 1.4.4 Resize Text). Use `width=device-width, initial-scale=1` and drop `maximum-scale` and `user-scalable`.',
+    // Chromium reads any user-scalable value but yes, device-width, device-height or a number at least 1 away from 0 as off, and any maximum-scale but a
+    // device keyword, a negative number or a number above 1 as a cap of 1 or less; a key with no value reads as 0.
+    // It splits values on spaces, `,` and `=` but not `;`, so `yes;` is off too. Attributes are stepped over whole, so text in another
+    // attribute's value can't pass for the name, and every repeat is capped so an unclosed tag stays linear.
+    pattern: /<meta\b(?=(?:\s+[^\s"'<>=/]{1,100}(?:\s*=\s*(?:"[^"<>]{0,500}"|'[^'<>]{0,500}'|[^\s"'<>]{1,500}))?){0,30}?\s+name\s*=\s*(?:"viewport"|'viewport'|viewport(?=[\s/>])))(?:\s+[^\s"'<>=/]{1,100}(?:\s*=\s*(?:"[^"<>]{0,500}"|'[^'<>]{0,500}'|[^\s"'<>]{1,500}))?){0,30}?\s+content\s*=\s*(["'])(?:(?!\1)[^<>]){0,500}?(?<![-\w])(?:user-scalable\s*=\s*(?!\s|(?:yes|device-(?:width|height))(?=[\s,=]|\1)|[-+]?0*[1-9])|maximum-scale\s*=\s*(?!\s|device-(?:width|height)(?=[\s,=]|\1)|-|\+?(?:0*[1-9]\d+|0*[2-9]|0*1\.\d*[1-9]))|(?:user-scalable|maximum-scale)\s*(?=,|\1))/giu,
+  },
+  {
+    id: 'paste-blocked',
+    severity: 'high',
+    description: 'This `onpaste` handler always blocks paste, which stops people pasting from a password manager or pasting a code and can fail WCAG 3.3.8 Accessible Authentication. Remove the handler.',
+    // The lookbehind steps over whole attributes back to the tag, so text in another attribute's value can't pass for the name; quoted values may hold `>`
+    // (Vue `:disabled="n > 3"`) and run to 2,000 characters for long class lists. No `i` flag keeps the value case-sensitive.
+    // Statements can't start with whitespace and every repeat is capped, so an unclosed value stays linear; `return` followed by a newline returns nothing.
+    // A value with a comment or a `;` inside a string is skipped, and a next line that continues `false` isn't its end, so neither is misread.
+    pattern: /[oO][nN][pP][aA][sS][tT][eE](?<=<[A-Za-z][^\s"'<>=/]{0,100}(?:\s{1,100}[^\s"'<>=/]{1,100}(?:\s{0,100}=\s{0,100}(?:"[^"]{0,2000}"|'[^']{0,2000}'|[^\s"'<>]{1,500}))?){0,30}\s{1,100}.{7})\s{0,100}=\s{0,100}(?:(["'])(?!(?:[^"'`/]|\/(?![/*])|(?!\1)(?:"[^";]{0,500}"|'[^';]{0,500}'|`[^`;]{0,500}`)){0,2000}?(?:\/[/*]|(?!\1)["'`][^"'`]{0,500}?;))\s{0,100}(?:event\.preventDefault\(\)(?:[^\S\n]{0,100}[;\n]\s{0,100}event\.preventDefault\(\)){0,49}[^\S\n]{0,100}(?:[;\n]\s{0,100})?\1|(?:(?!(?:if|else|for|while|do|switch|try|with|return|throw|break|continue)(?![\w$]))(?!\1)[^\s;{}](?:(?!\1)[^;\n{}]){0,500}[;\n]\s{0,100}){0,8}return[ \t]{1,100}false[^\S\n]{0,100}(?:;|\n(?!\s{0,100}[-+*/%&|^?:.,=<>(\[`])|\1))|event\.preventDefault\(\);?(?=[\s>]))/gu,
+  },
 ];
 
 
@@ -1223,7 +1251,7 @@ function lineForMatch(text, index) {
   return { line, column: col };
 }
 
-// The legacy and retired-markup rules, for tests that check each one alone.
+// The regex rules, for tests that check each one alone.
 export const authoringRules = LegacyPatternList;
 
 export function inspectAuthoringRules(

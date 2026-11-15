@@ -1,0 +1,3 @@
+index.html:189:33 manual-init-without-teardown [medium] Manual initialization needs an owned teardown path. Provide destroy() evidence or document why the owner is process-lifetime.
+    Expressive.Tooltip.init(
+1 issue(s) in 1 file(s).

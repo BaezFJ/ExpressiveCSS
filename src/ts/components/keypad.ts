@@ -1,6 +1,11 @@
 import { Component, BaseOptions } from '../core/component';
 import { Utils } from '../core/utils';
 
+// BusyButtons' selector. Implicit submission clicks the form's default button,
+// its first submit button wherever the markup puts it, so that is the one to check.
+const BUSY = ':is(button, .button)[aria-busy="true"]';
+const defaultButton = (form: HTMLFormElement) => Array.from(form.elements).find((el) => (el as HTMLButtonElement).type === 'submit');
+
 export interface KeypadOptions extends BaseOptions {
   /**
    * Called after every key press with the text typed ('7', 'A', ' ') or the
@@ -252,8 +257,10 @@ export class Keypad extends Component<KeypadOptions> {
 
   /** Enter submits an input's form and starts a new line in a textarea. */
   private _enter(field: Field) {
-    if (field instanceof HTMLInputElement) field.form?.requestSubmit();
-    else this._edit(field, '\n', 'insertLineBreak');
+    if (!(field instanceof HTMLInputElement)) return this._edit(field, '\n', 'insertLineBreak');
+    // requestSubmit sends no click, so BusyButtons can't stop it: skip a busy default button here.
+    const { form } = field;
+    if (form && !defaultButton(form)?.matches(BUSY)) form.requestSubmit();
   }
 
   /** @internal Lights or clears every key a hardware key matches. */

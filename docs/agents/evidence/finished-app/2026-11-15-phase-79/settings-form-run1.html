@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en" theme="auto">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Edit your display name and contact details.">
+    <title>Account settings</title>
+    <!-- Keep dist/fonts next to dist/css so the bundled fonts load. -->
+    <link rel="stylesheet" href="dist/css/expressive.min.css">
+    <style>
+      .account-form {
+        max-inline-size: 40rem;
+      }
+      .account-form .field {
+        margin-block-end: 1rem;
+      }
+      .save-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem;
+        margin-block-start: 1.5rem;
+      }
+      .save-row .loading-indicator {
+        --md-comp-loading-indicator-container-size: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav aria-label="Account">
+        <h2>Account settings</h2>
+      </nav>
+    </header>
+
+    <main class="container py-5">
+      <form id="account-form" class="account-form" action="/api/account" method="post" novalidate>
+        <h1 class="headline-small mb-2">Your account</h1>
+        <p class="mb-5">These details appear on your profile and are used to contact you.</p>
+
+        <fieldset>
+          <legend>Profile</legend>
+          <div class="field">
+            <input id="display_name" name="displayName" type="text" placeholder=" " required
+                   maxlength="80" autocomplete="nickname" value="Sam Rivera"
+                   aria-describedby="display_name_help">
+            <label for="display_name">Display name</label>
+            <small id="display_name_help" data-error="Enter a display name."><span>Shown to other people.</span></small>
+          </div>
+          <div class="field">
+            <input id="website" name="website" type="url" placeholder=" " autocomplete="url"
+                   inputmode="url" aria-describedby="website_help">
+            <label for="website">Website (optional)</label>
+            <small id="website_help" data-error="Enter a full address that starts with https://"><span>Include https://, for example https://sam.dev</span></small>
+          </div>
+        </fieldset>
+
+        <fieldset class="mt-5">
+          <legend>Contact</legend>
+          <div class="field">
+            <input id="email" name="email" type="email" placeholder=" " required autocomplete="email"
+                   spellcheck="false" value="sam@example.com" aria-describedby="email_help">
+            <label for="email">Email</label>
+            <small id="email_help" data-error="Enter an email address like name@example.com."><span>We send account notices here.</span></small>
+          </div>
+          <div class="field">
+            <input id="phone" name="phone" type="tel" placeholder=" " autocomplete="tel"
+                   pattern="[0-9+()\-.\s]{7,20}" aria-describedby="phone_help">
+            <label for="phone">Phone (optional)</label>
+            <small id="phone_help" data-error="Enter a phone number using digits, spaces, +, -, or parentheses."><span>Include your country code, for example +1 555 0100.</span></small>
+          </div>
+        </fieldset>
+
+        <!-- Failure message. Its region stays in the page so the change is announced. -->
+        <div id="save-error" class="alert critical mt-5" hidden>
+          <span class="material-symbols" aria-hidden="true">error</span>
+          <p id="save-error-text" role="alert"></p>
+        </div>
+
+        <div class="save-row">
+          <button id="save-button" type="submit" class="filled">
+            <span class="material-symbols" aria-hidden="true">check</span><span id="save-label">Save</span>
+          </button>
+          <span id="save-progress" class="loading-indicator" role="status" aria-label="Saving" hidden></span>
+        </div>
+      </form>
+    </main>
+
+    <script src="dist/js/expressive.min.js"></script>
+    <script>
+      (function () {
+        'use strict';
+
+        // Stand-in for POST /api/account: there is no server.
+        function postAccount(url, body) {
+          return new Promise(function (resolve, reject) {
+            setTimeout(function () {
+              var email = String(body.get('email') || '').trim().toLowerCase();
+              if (email.endsWith('@example.invalid')) {
+                reject(Object.assign(new Error('Email rejected'), { status: 422, field: 'email' }));
+              } else {
+                resolve({ ok: true, status: 200, url: url });
+              }
+            }, 1500);
+          });
+        }
+
+        var form = document.getElementById('account-form');
+        var button = document.getElementById('save-button');
+        var label = document.getElementById('save-label');
+        var progress = document.getElementById('save-progress');
+        var errorBox = document.getElementById('save-error');
+        var errorText = document.getElementById('save-error-text');
+        var fields = Array.prototype.slice.call(form.querySelectorAll('.field input'));
+        var pending = false;
+
+        function setInvalid(input, message) {
+          var help = document.getElementById(input.getAttribute('aria-describedby'));
+          if (message) {
+            if (help) help.setAttribute('data-error', message);
+            input.setAttribute('aria-invalid', 'true');
+          } else {
+            input.removeAttribute('aria-invalid');
+          }
+        }
+
+        function defaultError(input) {
+          return document.getElementById(input.getAttribute('aria-describedby')).dataset.defaultError;
+        }
+
+        fields.forEach(function (input) {
+          var help = document.getElementById(input.getAttribute('aria-describedby'));
+          help.dataset.defaultError = help.getAttribute('data-error');
+          // Clear an error as soon as the value becomes valid again.
+          input.addEventListener('input', function () {
+            if (input.getAttribute('aria-invalid') === 'true' && input.checkValidity()) setInvalid(input, null);
+          });
+          input.addEventListener('blur', function () {
+            if (input.value.trim() !== '' || input.required && input.getAttribute('aria-invalid') === 'true') {
+              setInvalid(input, input.checkValidity() ? null : defaultError(input));
+            }
+          });
+        });
+
+        function validate() {
+          var firstInvalid = null;
+          fields.forEach(function (input) {
+            input.value = input.value.trim();
+            var ok = input.checkValidity();
+            setInvalid(input, ok ? null : defaultError(input));
+            if (!ok && !firstInvalid) firstInvalid = input;
+          });
+          return firstInvalid;
+        }
+
+        function clearFailure() {
+          errorBox.hidden = true;
+          errorText.textContent = '';
+        }
+
+        function showFailure(message) {
+          // Reveal the region first, then fill it, so the alert is announced.
+          errorBox.hidden = false;
+          setTimeout(function () { errorText.textContent = message; }, 50);
+        }
+
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          if (pending) return;
+
+          clearFailure();
+          // Drop an old result so it can't sit beside the new one.
+          Expressive.Snackbar.dismissAll();
+          var firstInvalid = validate();
+          if (firstInvalid) {
+            firstInvalid.focus();
+            return;
+          }
+
+          pending = true;
+          button.setAttribute('aria-disabled', 'true');
+          label.textContent = 'Saving…';
+
+          // Show the indicator only for waits over 300 ms, then keep it at least 500 ms.
+          var shownAt = 0;
+          var showTimer = setTimeout(function () {
+            progress.hidden = false;
+            shownAt = Date.now();
+          }, 300);
+
+          function settle() {
+            clearTimeout(showTimer);
+            var wait = shownAt ? Math.max(0, 500 - (Date.now() - shownAt)) : 0;
+            return new Promise(function (r) { setTimeout(r, wait); });
+          }
+
+          postAccount(form.getAttribute('action'), new FormData(form))
+            .then(function () {
+              return settle().then(function () {
+                new Expressive.Snackbar({ text: 'Account saved.' });
+              });
+            }, function (error) {
+              return settle().then(function () {
+                if (error && error.field === 'email') {
+                  var email = document.getElementById('email');
+                  setInvalid(email, 'This email address wasn’t accepted. Use a different one.');
+                  showFailure('Your changes weren’t saved. The email address wasn’t accepted. Change it and select Save again.');
+                  email.focus();
+                } else {
+                  showFailure('Your changes weren’t saved. Check your connection and select Save again.');
+                }
+              });
+            })
+            .finally(function () {
+              pending = false;
+              button.removeAttribute('aria-disabled');
+              label.textContent = 'Save';
+              progress.hidden = true;
+            });
+        });
+      })();
+    </script>
+  </body>
+</html>

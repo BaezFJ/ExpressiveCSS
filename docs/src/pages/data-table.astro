@@ -370,6 +370,16 @@ wrapper.addEventListener('expressive:filter', (event) => {
       surrounding language. No numbered buttons or page-size selector is
       generated. Standalone pagination stays CSS-only.
     </p>
+    <p>
+      To show a local page again, for example from a <code>?page=</code>
+      value after a reload, call
+      <code>Expressive.DataTables.showPage(wrapper, page)</code> once the rows
+      exist. It keeps the local filter and sort, clamps a page past the end,
+      fires no event and returns the page it shows, or 0 when no record is left
+      to show. It returns false for a
+      server-owned table, a table without <code>data-page-size</code> or a
+      page that isn't a positive safe integer.
+    </p>
   </Section>
   <Section {...S["server-paging"]}>
     <p>

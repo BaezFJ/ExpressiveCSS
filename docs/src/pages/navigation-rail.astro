@@ -14,6 +14,7 @@ const S = defineSections([
   { id: "expanded", label: "Expanded" },
   { id: "modal", label: "Modal" },
   { id: "outside-toggle", label: "Toggle from outside the rail" },
+  { id: "compact", label: "Compact and hover" },
   { id: "side-panel", label: "Side panel" },
   { id: "tokens", label: "Tokens" },
   { id: "options", label: "Options" },
@@ -208,6 +209,79 @@ const S = defineSections([
           styles already require.
         </p>
   </Section>
+  <Section {...S.compact}>
+        <p>
+          The <code>nav-rail</code> attribute takes two switches.
+          <code>compact</code> makes the collapsed rail 72dp wide and shows
+          icons only. Screen readers still read each label. Its rows stay
+          44dp tall when it expands.
+          <code>hover</code> expands a collapsed rail while the mouse rests
+          on it or keyboard focus is in it. The expanded rail covers the page
+          and keeps its collapsed footprint, so nothing reflows. It collapses
+          again once the mouse and focus leave it, or on Escape, and the menu
+          button keeps it open. On touch screens, use the menu button.
+        </p>
+        <p>
+          Set the attribute on <code>&lt;html&gt;</code>, or on a shadow host,
+          to switch every rail inside it, or on one rail to switch only that rail. A rail's own value replaces
+          the root's, so <code>nav-rail=""</code> opts one rail out. The
+          script reads the attribute each time the mouse enters, so changing
+          it needs no new instance. A hover expansion adds the
+          <code>peek</code> class and leaves <code>isExpanded</code>,
+          <code>aria-expanded</code> and the open and close events alone.
+        </p>
+        <div class="rail-demo mb-3">
+          <nav class="navigation-rail" nav-rail="compact hover" aria-label="Main — Compact and hover">
+            <button type="button" aria-label="Menu">
+              <span class="material-symbols" aria-hidden="true">menu</span>
+            </button>
+            <a class="button" href="#!">
+              <span class="material-symbols" aria-hidden="true">edit</span>
+              <span>Compose</span>
+            </a>
+            <a href="#!" aria-current="page">
+              <span class="material-symbols" aria-hidden="true">inbox</span>
+              Inbox
+            </a>
+            <a href="#!" aria-label="Starred, 3 unread">
+              <span class="material-symbols" aria-hidden="true">star<span class="badge">3</span></span>
+              Starred
+            </a>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">schedule</span>
+              Snoozed
+            </a>
+            <a href="#!">
+              <span class="material-symbols" aria-hidden="true">send</span>
+              Sent
+            </a>
+          </nav>
+        </div>
+<Code code={`
+<!-- Every rail -->
+<html nav-rail="compact hover">
+
+<!-- One rail -->
+<nav class="navigation-rail" nav-rail="compact hover" aria-label="Main">…</nav>
+
+<!-- Opt one rail out of the root's switches -->
+<nav class="navigation-rail" nav-rail="" aria-label="Main">…</nav>
+`} />
+        <p>
+          Offset the page by <code>--md-comp-nav-rail-compact-width</code>
+          instead of the collapsed width.
+        </p>
+<Code code={`
+@media (width >= 600px) {
+  body {
+    padding-left: var(--md-comp-nav-rail-compact-width);
+  }
+  body:has(.navigation-rail.expanded) {
+    padding-left: var(--md-comp-nav-rail-expanded-width);
+  }
+}
+`} />
+  </Section>
   <Section {...S["side-panel"]}>
         <p>
           A destination can open a panel of more links beside the rail. Make
@@ -280,6 +354,7 @@ const S = defineSections([
   <Section {...S.tokens}>
         <TokenTable>
             <tr><td><code>--md-comp-nav-rail-collapsed-width</code></td><td>96px</td></tr>
+            <tr><td><code>--md-comp-nav-rail-compact-width</code></td><td>72px, with <code>nav-rail="compact"</code></td></tr>
             <tr><td><code>--md-comp-nav-rail-expanded-width</code></td><td>280px (clamped between 220 and 360)</td></tr>
             <tr><td><code>--md-comp-nav-rail-icon-size</code></td><td>24px</td></tr>
             <tr><td><code>--md-comp-nav-rail-indicator-width</code></td><td>56px</td></tr>
@@ -308,7 +383,7 @@ rail.collapse(); // collapses unless already collapsed
 rail.toggle();   // switches between expanded and collapsed
 rail.destroy();  // removes listeners and cancels pending hover work`} />
     <p><code>Expressive.NavigationRail.getInstance(el)</code> retrieves an existing instance.
-      <code>destroy()</code> leaves the current expanded class and ARIA state in place.</p>
+      <code>destroy()</code> leaves the current expanded class and ARIA state in place and removes a hover <code>peek</code>.</p>
     <p>The matching events are <code>expressive:open</code>, <code>expressive:opened</code>,
       <code>expressive:close</code> and <code>expressive:closed</code>.
       They fire after their callbacks and bubble from the rail across shadow roots.

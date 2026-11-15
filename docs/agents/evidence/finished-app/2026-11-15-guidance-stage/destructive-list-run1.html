@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en" theme="auto">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Manage the addresses saved to your account.">
+    <title>Saved addresses</title>
+    <link rel="stylesheet" href="dist/css/expressive.min.css">
+    <style>
+      .page-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .page-actions p { margin: 0; }
+      .address-list { max-width: 720px; }
+      .address-list > li > p { overflow-wrap: anywhere; }
+      .address-list .tooltip { white-space: nowrap; }
+      /* Reserve the indicator's width so the Save button does not move. */
+      .indicator-slot {
+        display: inline-flex;
+        inline-size: 40px;
+        justify-content: center;
+      }
+      .indicator-slot .loading-indicator {
+        --md-comp-loading-indicator-container-size: 32px;
+        --md-comp-loading-indicator-active-indicator-size: 28px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav aria-label="Account">
+        <h2>Account</h2>
+      </nav>
+    </header>
+
+    <main class="container py-5">
+      <section aria-labelledby="addresses-title">
+        <h1 id="addresses-title">Saved addresses</h1>
+        <div class="page-actions mb-4">
+          <p id="address-count">5 saved addresses</p>
+          <button type="button" class="filled" id="add-address" aria-haspopup="dialog">
+            <span class="material-symbols" aria-hidden="true">add</span><span>Add address</span>
+          </button>
+        </div>
+
+        <ul class="list address-list" id="address-list" aria-labelledby="addresses-title"></ul>
+
+        <div class="empty-state" id="empty-state" hidden>
+          <span class="material-symbols" aria-hidden="true">location_off</span>
+          <h2>No saved addresses</h2>
+          <p>Add an address to use it at checkout.</p>
+          <div class="empty-state-actions">
+            <button type="button" class="tonal" id="empty-add" aria-haspopup="dialog">Add address</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="add-dialog" aria-labelledby="add-dialog-title">
+      <h2 id="add-dialog-title">Add address</h2>
+      <div>
+        <div class="field outlined mb-3">
+          <input id="addr-label" form="add-form" name="label" type="text" class="validate" required maxlength="40"
+                 autocomplete="off" placeholder=" " aria-describedby="addr-label-help">
+          <label for="addr-label">Name</label>
+          <small id="addr-label-help" data-error="Enter a name for this address."><span>For example, Home or Work</span></small>
+        </div>
+        <div class="field outlined mb-3">
+          <input id="addr-street" form="add-form" name="street" type="text" class="validate" required
+                 autocomplete="address-line1" placeholder=" " aria-describedby="addr-street-error">
+          <label for="addr-street">Street address</label>
+          <small id="addr-street-error" data-error="Enter a street address."></small>
+        </div>
+        <div class="field outlined mb-3">
+          <input id="addr-city" form="add-form" name="city" type="text" class="validate" required
+                 autocomplete="address-level2" placeholder=" " aria-describedby="addr-city-error">
+          <label for="addr-city">City</label>
+          <small id="addr-city-error" data-error="Enter a city."></small>
+        </div>
+        <div class="field outlined mb-4">
+          <input id="addr-postal" form="add-form" name="postal" type="text" class="validate" required
+                 autocomplete="postal-code" spellcheck="false" placeholder=" " aria-describedby="addr-postal-error">
+          <label for="addr-postal">Postal code</label>
+          <small id="addr-postal-error" data-error="Enter a postal code."></small>
+        </div>
+      </div>
+      <form id="add-form" novalidate>
+          <span class="indicator-slot">
+            <span class="loading-indicator" id="save-indicator" role="status" aria-label="Saving address" hidden></span>
+          </span>
+          <button type="button" class="text" id="add-cancel">Cancel</button>
+          <button type="submit" id="add-submit"><span>Save address</span></button>
+      </form>
+    </dialog>
+
+    <script src="dist/js/expressive.min.js"></script>
+    <script>
+      (() => {
+        'use strict';
+
+        /* ---------- Request stand-ins (no server) ---------- */
+
+        // Stands in for fetch(): waits 800 ms and resolves like a successful response.
+        function fakeRequest(method, url, body) {
+          console.info(`[stand-in] ${method} ${url}`, body ?? '');
+          return new Promise((resolve) => {
+            setTimeout(() => resolve({ ok: true, status: method === 'POST' ? 201 : 204, body }), 800);
+          });
+        }
+
+        let nextId = 6;
+        const api = {
+          async createAddress(data) {
+            const res = await fakeRequest('POST', '/api/addresses', data);
+            if (!res.ok) throw new Error(`POST failed: ${res.status}`);
+            return { id: String(nextId++), ...data };
+          },
+          async deleteAddress(id, { keepalive = false } = {}) {
+            // Real code: fetch(`/api/addresses/${id}`, { method: 'DELETE', keepalive })
+            const res = await fakeRequest('DELETE', `/api/addresses/${encodeURIComponent(id)}`, keepalive ? { keepalive } : undefined);
+            if (!res.ok) throw new Error(`DELETE failed: ${res.status}`);
+          }
+        };
+
+        /* ---------- Data ---------- */
+
+        const addresses = [
+          { id: '1', label: 'Home', street: '1428 Elm Street', city: 'Springfield', postal: '62704' },
+          { id: '2', label: 'Work', street: '500 Market Street, Floor 12', city: 'San Francisco', postal: '94105' },
+          { id: '3', label: 'Parents', street: '27 Willow Lane', city: 'Burlington', postal: '05401' },
+          { id: '4', label: 'Cabin', street: '9 Lakeshore Road', city: 'Lake Placid', postal: '12946' },
+          { id: '5', label: 'Studio', street: '88 Canal Street, Unit 3B', city: 'New York', postal: '10013' }
+        ];
+
+        const iconFor = (label) => {
+          const l = label.toLowerCase();
+          if (l === 'home') return 'home';
+          if (l === 'work' || l === 'office') return 'work';
+          return 'location_on';
+        };
+
+        /* ---------- Elements ---------- */
+
+        const list = document.getElementById('address-list');
+        const emptyState = document.getElementById('empty-state');
+        const emptyAdd = document.getElementById('empty-add');
+        const count = document.getElementById('address-count');
+        const addButton = document.getElementById('add-address');
+        const dialog = document.getElementById('add-dialog');
+        const form = document.getElementById('add-form');
+        const cancelButton = document.getElementById('add-cancel');
+        const submitButton = document.getElementById('add-submit');
+        const indicator = document.getElementById('save-indicator');
+
+        /* ---------- Rendering ---------- */
+
+        function renderRow(address) {
+          const li = document.createElement('li');
+          li.dataset.id = address.id;
+
+          const icon = document.createElement('span');
+          icon.className = 'material-symbols';
+          icon.setAttribute('aria-hidden', 'true');
+          icon.textContent = iconFor(address.label);
+
+          const name = document.createElement('span');
+          name.textContent = address.label;
+
+          const detail = document.createElement('p');
+          detail.textContent = `${address.street}, ${address.city} ${address.postal}`;
+
+          const del = document.createElement('button');
+          del.type = 'button';
+          del.className = 'icon-button';
+          del.dataset.action = 'delete';
+          del.setAttribute('aria-label', `Delete ${address.label} address`);
+          del.setAttribute('aria-describedby', `tip-delete-${address.id}`);
+          const delIcon = document.createElement('span');
+          delIcon.className = 'material-symbols';
+          delIcon.setAttribute('aria-hidden', 'true');
+          delIcon.textContent = 'delete';
+          const tip = document.createElement('span');
+          tip.className = 'tooltip';
+          tip.id = `tip-delete-${address.id}`;
+          tip.textContent = 'Delete';
+          del.append(delIcon, tip);
+
+          li.append(icon, name, detail, del);
+          return li;
+        }
+
+        function updateSummary() {
+          const n = addresses.length;
+          count.textContent = n === 0 ? 'No saved addresses' : `${n} saved address${n === 1 ? '' : 'es'}`;
+          emptyState.hidden = n !== 0;
+          list.hidden = n === 0;
+        }
+
+        function rowFor(id) {
+          return list.querySelector(`li[data-id="${CSS.escape(id)}"]`);
+        }
+
+        // Insert an address back where it was: before the address that followed it, if still present.
+        function insertAddress(address, nextId) {
+          const nextIndex = nextId ? addresses.findIndex((a) => a.id === nextId) : -1;
+          const row = renderRow(address);
+          if (nextIndex >= 0) {
+            addresses.splice(nextIndex, 0, address);
+            list.insertBefore(row, rowFor(nextId));
+          } else {
+            addresses.push(address);
+            list.append(row);
+          }
+          updateSummary();
+          return row;
+        }
+
+        addresses.forEach((a) => list.append(renderRow(a)));
+        updateSummary();
+
+        /* ---------- Delete with Undo ---------- */
+
+        function deleteAddress(id) {
+          const index = addresses.findIndex((a) => a.id === id);
+          if (index < 0) return;
+          const address = addresses[index];
+          const nextId = addresses[index + 1]?.id ?? null;
+          const row = rowFor(id);
+
+          // Move focus before the row goes: next row, else previous row, else the empty state's action.
+          if (row.contains(document.activeElement)) {
+            const target = row.nextElementSibling ?? row.previousElementSibling;
+            if (target) target.querySelector('[data-action="delete"]').focus();
+          }
+
+          addresses.splice(index, 1);
+          row.remove();
+          updateSummary();
+          if (addresses.length === 0 && (document.activeElement === document.body || !document.activeElement)) {
+            emptyAdd.focus();
+          }
+
+          let pending = true;
+          let bar;
+
+          const restore = () => {
+            const restored = insertAddress(address, nextId);
+            restored.querySelector('[data-action="delete"]').focus();
+          };
+
+          const onPageHide = () => {
+            commit(true);
+            bar.dismiss();
+          };
+
+          const commit = async (keepalive = false) => {
+            if (!pending) return;
+            pending = false;
+            removeEventListener('pagehide', onPageHide);
+            try {
+              await api.deleteAddress(id, { keepalive });
+            } catch (err) {
+              console.error(err);
+              insertAddress(address, nextId);
+              new Expressive.Snackbar({
+                text: `Couldn't delete ${address.label}. It's back in your list.`,
+                replace: true
+              });
+            }
+          };
+
+          bar = new Expressive.Snackbar({
+            text: `${address.label} address deleted`,
+            action: 'Undo',
+            replace: true,
+            onAction: () => {
+              if (!pending) return;
+              pending = false;
+              removeEventListener('pagehide', onPageHide);
+              restore();
+            },
+            completeCallback: () => commit(false)
+          });
+
+          addEventListener('pagehide', onPageHide, { once: true });
+        }
+
+        list.addEventListener('click', (event) => {
+          const button = event.target.closest('[data-action="delete"]');
+          if (!button || !list.contains(button)) return;
+          // Ignore the second click of a double click so the row that slides up isn't deleted too.
+          if (event.detail > 1) return;
+          deleteAddress(button.closest('li').dataset.id);
+        });
+
+        /* ---------- Add address ---------- */
+
+        let saving = false;
+        let opener = null;
+
+        function openDialog(from) {
+          opener = from;
+          form.reset();
+          [...form.elements].filter((el) => el.classList.contains('validate')).forEach((input) => {
+            input.classList.remove('invalid');
+            input.removeAttribute('aria-invalid');
+          });
+          dialog.showModal();
+        }
+
+        addButton.addEventListener('click', () => openDialog(addButton));
+        emptyAdd.addEventListener('click', () => openDialog(emptyAdd));
+
+        cancelButton.addEventListener('click', () => {
+          if (!saving) dialog.close();
+        });
+
+        // Keep the dialog open while its request runs, so the result has somewhere to land.
+        dialog.addEventListener('cancel', (event) => {
+          if (saving) event.preventDefault();
+        });
+
+        dialog.addEventListener('close', () => {
+          const target = opener && opener.isConnected && !opener.closest('[hidden]') ? opener : null;
+          (target ?? (addresses.length ? addButton : emptyAdd)).focus();
+        });
+
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          if (saving) return;
+
+          const fields = [...form.elements].filter((el) => el.classList.contains('validate'));
+          fields.forEach((field) => {
+            field.value = field.value.trim();
+            Expressive.Forms.validateField(field);
+          });
+          const firstInvalid = fields.find((f) => f.getAttribute('aria-invalid') === 'true');
+          if (firstInvalid) {
+            firstInvalid.focus();
+            return;
+          }
+
+          const data = Object.fromEntries(new FormData(form));
+          saving = true;
+          submitButton.setAttribute('aria-disabled', 'true');
+          cancelButton.setAttribute('aria-disabled', 'true');
+          submitButton.firstElementChild.textContent = 'Saving…';
+
+          // Show the indicator after ~300 ms; once shown, keep it at least 500 ms.
+          let shownAt = 0;
+          const showTimer = setTimeout(() => {
+            indicator.hidden = false;
+            shownAt = performance.now();
+          }, 300);
+
+          let created = null;
+          try {
+            created = await api.createAddress(data);
+          } catch (err) {
+            console.error(err);
+          } finally {
+            clearTimeout(showTimer);
+            if (shownAt) {
+              const remaining = 500 - (performance.now() - shownAt);
+              if (remaining > 0) await new Promise((r) => setTimeout(r, remaining));
+            }
+            indicator.hidden = true;
+            saving = false;
+            submitButton.removeAttribute('aria-disabled');
+            cancelButton.removeAttribute('aria-disabled');
+            submitButton.firstElementChild.textContent = 'Save address';
+          }
+
+          if (created) {
+            insertAddress(created, null);
+            opener = rowFor(created.id).querySelector('[data-action="delete"]');
+            dialog.close();
+            new Expressive.Snackbar({ text: `${created.label} address added`, replace: true });
+          } else {
+            new Expressive.Snackbar({ text: "Couldn't save the address. Check your connection and try again.", replace: true });
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>

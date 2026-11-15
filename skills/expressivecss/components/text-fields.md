@@ -9,7 +9,7 @@ Component ID: `text-fields`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `7b49e60faa3fc3392fe5eb832c197de9931f825c5cc91002bc14b07adbd9e898`
+Contract SHA-256: `c95df9b05f81ea6cb549bcaaa3c6f0dcc68935a3052f6e3c17264e96c9aa2cc2`
 
 #### Selection and adaptation
 
@@ -45,22 +45,38 @@ Tokens follow the [M3 text field spec](https://m3.material.io/components/text-fi
 
 ```html
 <div class="field">
-  <input id="first_name" type="text" placeholder=" " aria-describedby="first_name_help">
+  <input id="first_name" name="first_name" type="text" autocomplete="given-name" placeholder=" " aria-describedby="first_name_help">
   <label for="first_name">First name</label>
   <small id="first_name_help">Supporting text</small>
 </div>
 
 <div class="field outlined">
-  <input id="last_name" type="text" placeholder=" ">
+  <input id="last_name" name="last_name" type="text" autocomplete="family-name" placeholder=" ">
   <label for="last_name">Last name</label>
 </div>
 
 <div class="field">
   <span class="material-symbols prefix" aria-hidden="true">place</span>
   <span class="material-symbols suffix" aria-hidden="true">gps_fixed</span>
-  <input id="loc" type="text" placeholder=" ">
+  <input id="loc" name="location" type="text" placeholder=" ">
   <label for="loc">Location</label>
 </div>
+```
+
+#### App behavior
+
+Leave submit enabled until submission starts, and put fields in a `<form>` whose first submit button saves, so Enter submits; give Cancel `type="button"`. Mark required fields `required` and give every field with a constraint `class="validate"`, because `novalidate` stops the browser checking the rest. Use `novalidate` and, on submit, call `Expressive.Forms.validateField(input)` on each `.validate` field, which sets `aria-invalid` and shows its `data-error` text beside it, then focus the first field with `aria-invalid="true"` (an enhanced select's visible control). Call `form.checkValidity()` first so enhanced selects mark themselves, and skip fields whose `willValidate` is false. Don't add an `.error-summary` to this form: it cancels the submit before this handler runs. A server error about one field goes into that field's `data-error` text, with `aria-invalid="true"` and focus on the field, and put the field's own message back when it changes. Give every field a `name`. Give a field for the person's own data the one `autocomplete` token for its purpose, and split a field that asks for several. Set `type` for the keyboard, never `type="number"` for phones, codes or card numbers, and `inputmode` where `type` doesn't bring the keyboard. Turn spellcheck off for codes, emails and usernames, allow paste, and check that a `pattern` compiles with the `v` flag the browser uses. Keep `placeholder=" "` for a floating label; put an example ending in `…` in a label-above placeholder or the supporting text.
+
+```js
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  form.checkValidity(); // marks enhanced selects
+  const fields = [...form.elements].filter((field) => field.willValidate && field.classList.contains('validate'));
+  fields.forEach((field) => Expressive.Forms.validateField(field));
+  const first = fields.find((field) => field.getAttribute('aria-invalid') === 'true');
+  if (first) return first.focus();
+  save(new FormData(form));
+});
 ```
 
 #### Also documented

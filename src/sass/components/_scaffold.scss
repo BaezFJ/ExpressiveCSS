@@ -171,16 +171,24 @@ $_rail-shown: "> #{$_rail}:not([hidden], :empty)";
   // or a .modal rail), its column keeps the collapsed width, open or closed, so the pane
   // neither jumps when the rail leaves the grid nor follows it as it closes.
   // Set --md-comp-nav-rail-collapsed-width on the scaffold, not the rail. A
-  // [hidden] rail is an empty region and takes no space.
+  // [hidden] rail is an empty region and takes no space. A nav-rail="compact"
+  // rail, its own or inherited, holds the compact width instead.
+  &:has(> .navigation-rail[nav-rail~="compact"]),
+  &[nav-rail~="compact"]:has(> .navigation-rail:not([nav-rail])),
+  &:is([nav-rail~="compact"] *):has(> .navigation-rail:not([nav-rail])),
+  :host([nav-rail~="compact"]) &:has(> .navigation-rail:not([nav-rail])) {
+    --_scaffold-rail-held: var(--md-comp-nav-rail-compact-width, 72px);
+  }
+
   @include bp-up("medium") {
     &:has(> .navigation-rail.modal:not([hidden])) {
-      grid-template-columns: var(--md-comp-nav-rail-collapsed-width, 96px) minmax(0, 1fr) auto;
+      grid-template-columns: var(--_scaffold-rail-held, var(--md-comp-nav-rail-collapsed-width, 96px)) minmax(0, 1fr) auto;
     }
   }
 
   @include bp-between("medium", "expanded") {
     &:has(> .navigation-rail:not([hidden])) {
-      grid-template-columns: var(--md-comp-nav-rail-collapsed-width, 96px) minmax(0, 1fr) auto;
+      grid-template-columns: var(--_scaffold-rail-held, var(--md-comp-nav-rail-collapsed-width, 96px)) minmax(0, 1fr) auto;
     }
 
     // Collapsing drops the rail back into its held column at the expanded
@@ -346,7 +354,7 @@ $_rail-shown: "> #{$_rail}:not([hidden], :empty)";
 
     // A .modal rail keeps its held column with the sheet open too.
     &:has(> .navigation-rail.modal:not([hidden])):has(> #{$_sheet-open}) {
-      grid-template-columns: var(--md-comp-nav-rail-collapsed-width, 96px) minmax(0, 1fr) auto auto;
+      grid-template-columns: var(--_scaffold-rail-held, var(--md-comp-nav-rail-collapsed-width, 96px)) minmax(0, 1fr) auto auto;
     }
 
     > #{$_sheet-open} {

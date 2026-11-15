@@ -40,8 +40,9 @@ test('every compiled scaffold selector starts at the scaffold or a region class'
   const preludes = [...css.matchAll(/([^{}]*scaffold[^{}]*)\{/g)].map((m) => m[1].trim());
   assert.ok(preludes.length > 5, 'the scaffold rules are in the bundle');
   for (const prelude of preludes) {
-    // The root rules key off a scaffold that is a direct child of <body>.
-    for (const selector of splitSelectorList(prelude)) assert.match(selector, /^(\.scaffold|:root:has\(> body > \.scaffold[ )])/, prelude);
+    // The root rules key off a scaffold that is a direct child of <body>, and
+    // a shadow host's nav-rail switch reaches a scaffold inside it.
+    for (const selector of splitSelectorList(prelude)) assert.match(selector, /^(\.scaffold|:root:has\(> body > \.scaffold[ )]|:host\(\[nav-rail~="?compact"?\]\) \.scaffold)/, prelude);
   }
 });
 
@@ -1122,6 +1123,25 @@ for (const [name, type, run] of engines) {
       await render({ nav: '', bottom: navbar + sheet });
       near((await box('#nb')).bottom, 800, 'with a side sheet column open at 1280px it stays at the bottom');
       assert.ok((await box('#sheet')).bottom <= (await box('#nb')).top + 1, 'below the sheet');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: a nav-rail="compact" rail holds its compact width in the scaffold`, { timeout: 30000 }, async () => {
+    const { browser, tab, box } = await open(type, page(`<div id="host">${scaffold()}</div>`, { root: '' }), { width: 700 });
+    try {
+      const rail = await box('#rail');
+      near((await box('#pane')).left, rail.right, 'at 700px the pane starts at the default rail');
+      await tab.evaluate(() => document.documentElement.setAttribute('nav-rail', 'compact'));
+      near((await box('#rail')).width, 72, 'a root switch makes the rail compact');
+      near((await box('#pane')).left, 72, 'and the held column follows it, with no strip');
+      await tab.locator('#rail').evaluate((el) => el.classList.add('modal'));
+      await tab.setViewportSize({ width: 1280, height: 800 });
+      near((await box('#pane')).left, 72, 'a compact .modal rail holds 72px too');
+      await tab.evaluate(() => document.documentElement.removeAttribute('nav-rail'));
+      await tab.locator('#rail').evaluate((el) => el.setAttribute('nav-rail', 'compact'));
+      near((await box('#pane')).left, 72, 'and so does a rail with its own switch');
     } finally {
       await browser.close();
     }

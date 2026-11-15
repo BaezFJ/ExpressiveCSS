@@ -3,6 +3,7 @@ import { createHash, hash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildCapabilityRoadmap, renderCapabilityRoadmap } from './lib/material-capabilities.mjs';
+import { rebaseHeadings, splitAppBehavior, stripRelativeLinks } from './lib/markdown-sections.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const COMPONENTS_DIR = resolve(ROOT, 'skills/expressivecss/components');
@@ -73,17 +74,13 @@ const TEMPLATES = ['starter', 'layout-compact', 'layout-rail', 'layout-expanded'
 // Secondary contracts omitted by each component's first example.
 const BEHAVIOR_CONTRACTS = [
   { name: 'Copy', heading: 'Copy button', level: 3 },
+  { name: 'BusyButtons', heading: 'Loading state', level: 3 },
   { name: 'Theme', heading: 'Changing the theme', level: 3 },
   { name: 'PaneResize', heading: 'Resizing', level: 3 },
   { name: 'ExpandingCard', heading: 'Expanding card', level: 3 },
   { name: 'Dialogs', heading: 'Confirm from script', level: 3 },
 ];
 const anchorFor = (heading) => heading.toLowerCase().replaceAll(' ', '-');
-
-function rebaseHeadings(markdown, offset) {
-  return markdown.split(/(```[\s\S]*?```)/u).map((part, index) => index % 2 ? part
-    : part.replace(/^(#{1,6}) /gmu, (_, hashes) => `${'#'.repeat(hashes.length + offset)} `)).join('');
-}
 
 function renderBehaviorContracts(llm) {
   return `${GENERATED_MARKER}\n\n# Shared behaviors and secondary contracts\n\nRead only the section needed for the selected behavior. These contracts come from \`llm.md\`; reuse the resolved framework version and the Runtime guide's ownership rules. The root bundle starts shared document behaviors; the modular entry requires the explicit initialization shown below. ExpandingCard also has per-element instances to destroy.\n\n${BEHAVIOR_CONTRACTS.map(({ name, heading }) => `- [${name}](#${anchorFor(heading)})`).join('\n')}\n\n${BEHAVIOR_CONTRACTS.map(({ name, heading, level }) => `## ${heading}\n\nExport: \`${name}\`.\n\n${rebaseHeadings(sectionFor(llm, heading, level), 2 - level)}`).join('\n\n')}\n`;
@@ -233,9 +230,7 @@ function contractSummary(section, description) {
     .split(/\n\s*\n/u)
     .map((paragraph) => paragraph.trim())
     .filter((paragraph) => paragraph && paragraph !== description && !paragraph.startsWith('#') && !paragraph.startsWith('|'))
-    .map((paragraph) => paragraph
-      .replace(/\[([^\]]+)\]\((?!https?:\/\/)[^)]+\)/gu, '$1')
-      .replaceAll('\n', ' '))
+    .map((paragraph) => stripRelativeLinks(paragraph).replaceAll('\n', ' '))
     .filter((paragraph) => /[.!?:]$/u.test(paragraph) || paragraph.includes('`'))
     .slice(0, 3)
     .join('\n\n');
@@ -338,7 +333,8 @@ function renderMaterialMapping(component) {
   ].join('\n\n');
 }
 
-function renderGuide(component, page, section, rules, provenance) {
+function renderGuide(component, page, fullSection, rules, provenance) {
+  const { rest: section, behavior } = splitAppBehavior(fullSection, component.level);
   const title = component.title;
   const officialMarkdown = `https://www.expressivecss.com${page.route}.md`;
   const syntaxLanguage = component.syntaxLanguage ?? 'html';
@@ -382,7 +378,7 @@ function renderGuide(component, page, section, rules, provenance) {
     ? `#### Also documented\n\nThe ${component.heading} section of the [API reference](https://www.expressivecss.com/llm.md) also covers ${subsections.join(', ')}.\n\n`
     : '';
 
-  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nContract SHA-256: \`${provenance.hash}\`\n\n${renderSelection(component, page)}#### Material mapping\n\n${renderMaterialMapping(component)}\n\n#### Contract\n\n${contractSummary(section, page.description)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n${api}${relatedContracts}${alsoDocumented}#### Rules\n\n${ruleLines}\n${guideCheckSection ? `\n${guideCheckSection.trimEnd()}\n` : ''}`;
+  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nContract SHA-256: \`${provenance.hash}\`\n\n${renderSelection(component, page)}#### Material mapping\n\n${renderMaterialMapping(component)}\n\n#### Contract\n\n${contractSummary(section, page.description)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n${api}${relatedContracts}${behavior}${alsoDocumented}#### Rules\n\n${ruleLines}\n${guideCheckSection ? `\n${guideCheckSection.trimEnd()}\n` : ''}`;
 }
 
 async function generatedGuides(provenance) {
@@ -392,6 +388,11 @@ async function generatedGuides(provenance) {
   ]);
   const rows = JSON.parse(semanticsText).rows;
   const pages = new Map(PAGES.map((page) => [page.id, page]));
+  // Every App behavior heading must sit one level below a component heading, or its text
+  // would silently land in another guide's Syntax or Also documented list.
+  const declared = llm.replace(/```[\s\S]*?```/gu, '').match(/^#{2,6} app behavior\s*$/gimu)?.length ?? 0;
+  const rendered = components.filter((component) => splitAppBehavior(sectionFor(llm, component.heading, component.level), component.level).behavior).length;
+  if (declared !== rendered) throw new Error(`llm.md has ${declared} App behavior headings but ${rendered} render in a guide; put each one level below its component heading`);
   return new Map(components.map((component) => {
     const page = pages.get(component.page);
     if (!page) throw new Error(`Unknown docs page ${component.page}`);

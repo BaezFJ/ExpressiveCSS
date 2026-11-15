@@ -9,7 +9,7 @@ Component ID: `snackbar`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `7b49e60faa3fc3392fe5eb832c197de9931f825c5cc91002bc14b07adbd9e898`
+Contract SHA-256: `c95df9b05f81ea6cb549bcaaa3c6f0dcc68935a3052f6e3c17264e96c9aa2cc2`
 
 #### Selection and adaptation
 
@@ -93,6 +93,24 @@ One snackbar shows at a time. A new one waits until the one on screen is dismiss
 
 - `.dismiss()`: Dismiss this snackbar with its exit animation. Runs `completeCallback` when the animation finishes.
 - `Snackbar.dismissAll()`: Dismiss the snackbar on screen and every one waiting behind it.
+
+#### App behavior
+
+For a removal people can get back, act at once instead of asking first. Remove the item, keep its data, and show a snackbar with `action: 'Undo'` and `replace: true`. Leave `displayLength` unset, so the person has as long as they need; Undo stays reachable with Tab or a notification-actions button. Keep one pending flag per removal, and have Undo and the commit each clear it first and do nothing once it is clear, so a removal is undone or committed exactly once. In `onAction`, put the item back where it was and focus its first control. Commit in `completeCallback`, which also runs when a newer snackbar replaces this one, and on `pagehide` with `fetch(url, { method: 'DELETE', keepalive: true })`. Dismiss the bar in the same `pagehide` listener, so a page restored from the back/forward cache can't offer, undo or resend the committed removal. If the commit fails, put the item back and say so. Give every other snackbar on the page `replace: true` as well, so none waits behind the Undo bar. Keep a confirmation dialog for actions that can't be undone, such as deleting an account.
+
+```js
+let pending = true;
+const commit = () => { if (pending) { pending = false; commitDelete(item); } };
+removeItem(item);
+const bar = new Expressive.Snackbar({
+  text: 'Address deleted',
+  action: 'Undo',
+  replace: true,
+  onAction: () => { if (pending) { pending = false; restoreItem(item); } },
+  completeCallback: commit
+});
+addEventListener('pagehide', () => { commit(); bar.dismiss(); }, { once: true });
+```
 
 #### Also documented
 

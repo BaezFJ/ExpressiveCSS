@@ -5,6 +5,7 @@ export { BottomSheets } from './behaviors/bottomSheets';
 export { SideSheets } from './behaviors/sideSheets';
 export { Forms } from './behaviors/forms';
 export { Copy } from './behaviors/copy';
+export { BusyButtons } from './behaviors/busyButtons';
 export { Theme } from './behaviors/theme';
 export { PaneResize } from './behaviors/paneResize';
 export { ImageCompare } from './behaviors/imageCompare';

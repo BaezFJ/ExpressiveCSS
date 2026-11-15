@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en" theme="auto">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Update your account's display name and contact details.">
+    <title>Account settings</title>
+    <link rel="stylesheet" href="dist/css/expressive.min.css">
+    <style>
+      .settings-form { max-width: 40rem; }
+      .form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+      .save-status { display: inline-flex; align-items: center; gap: 8px; margin: 0; }
+      .save-status[hidden] { display: none; }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav aria-label="Account">
+        <h1 class="title-large m-0">Account settings</h1>
+      </nav>
+    </header>
+
+    <main class="container py-5">
+      <form id="account-form" class="settings-form" action="/api/account" method="post" novalidate>
+        <p class="mb-4">Changes take effect when you save.</p>
+
+        <fieldset class="mb-4">
+          <legend>Profile</legend>
+          <div class="field">
+            <input id="display_name" name="displayName" type="text" placeholder=" "
+                   autocomplete="nickname" required maxlength="60"
+                   aria-describedby="display_name_help">
+            <label for="display_name">Display name</label>
+            <small id="display_name_help" data-help="Shown to other people. Required.">Shown to other people. Required.</small>
+          </div>
+          <div class="field">
+            <input id="website" name="website" type="url" placeholder=" "
+                   autocomplete="url" inputmode="url"
+                   aria-describedby="website_help">
+            <label for="website">Website</label>
+            <small id="website_help" data-help="Optional. Include https://, for example https://example.com.">Optional. Include https://, for example https://example.com.</small>
+          </div>
+        </fieldset>
+
+        <fieldset class="mb-4">
+          <legend>Contact</legend>
+          <div class="field">
+            <input id="email" name="email" type="email" placeholder=" "
+                   autocomplete="email" required
+                   aria-describedby="email_help">
+            <label for="email">Email</label>
+            <small id="email_help" data-help="Used for sign-in and account notices. Required.">Used for sign-in and account notices. Required.</small>
+          </div>
+          <div class="field">
+            <input id="phone" name="phone" type="tel" placeholder=" "
+                   autocomplete="tel" inputmode="tel"
+                   pattern="[0-9+()\-.\s]{7,20}"
+                   aria-describedby="phone_help">
+            <label for="phone">Phone</label>
+            <small id="phone_help" data-help="Optional. Include your country code, for example +1 555 010 0199.">Optional. Include your country code, for example +1 555 010 0199.</small>
+          </div>
+        </fieldset>
+
+        <div class="form-actions">
+          <button id="save" type="submit">
+            <span class="material-symbols" aria-hidden="true">check</span><span>Save changes</span>
+          </button>
+          <p id="save-status" class="save-status" hidden>
+            <span class="loading-indicator" role="status" aria-label="Saving changes"></span>
+            <span>Saving…</span>
+          </p>
+        </div>
+
+        <div id="save-error" class="alert critical mt-4" hidden>
+          <span class="material-symbols" aria-hidden="true">error</span>
+          <p id="save-error-text" role="alert"></p>
+        </div>
+      </form>
+    </main>
+
+    <script src="dist/js/expressive.min.js"></script>
+    <script>
+      // Stand-in for POST /api/account: waits 1500 ms, then rejects for
+      // @example.invalid addresses and resolves otherwise.
+      function postAccount(url, formData) {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            const email = String(formData.get('email') || '').trim().toLowerCase();
+            if (email.endsWith('@example.invalid')) {
+              const error = new Error("This email address can't receive mail.");
+              error.field = 'email';
+              reject(error);
+            } else {
+              resolve({ ok: true, account: Object.fromEntries(formData) });
+            }
+          }, 1500);
+        });
+      }
+
+      const form = document.getElementById('account-form');
+      const saveButton = document.getElementById('save');
+      const status = document.getElementById('save-status');
+      const errorBox = document.getElementById('save-error');
+      const errorText = document.getElementById('save-error-text');
+      let saving = false;
+
+      function helpFor(input) {
+        return document.getElementById(input.getAttribute('aria-describedby'));
+      }
+
+      function setFieldError(input, message) {
+        input.setAttribute('aria-invalid', 'true');
+        helpFor(input).textContent = message;
+      }
+
+      function clearFieldError(input) {
+        if (input.getAttribute('aria-invalid') !== 'true') return;
+        input.removeAttribute('aria-invalid');
+        const help = helpFor(input);
+        help.textContent = help.dataset.help;
+      }
+
+      function validationMessage(input) {
+        const v = input.validity;
+        const label = form.querySelector(`label[for="${input.id}"]`).textContent;
+        if (v.valueMissing) return `Enter your ${label.toLowerCase()}.`;
+        if (input.type === 'email') return 'Enter an email address like name@example.com.';
+        if (input.type === 'url') return 'Enter a full web address that starts with https://.';
+        if (input.type === 'tel') return 'Enter a phone number using digits, spaces, +, - or parentheses.';
+        return input.validationMessage;
+      }
+
+      form.addEventListener('input', (event) => {
+        if (event.target.matches('input')) clearFieldError(event.target);
+      });
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (saving) return;
+
+        errorBox.hidden = true;
+        errorText.textContent = '';
+
+        const inputs = Array.from(form.querySelectorAll('input'));
+        inputs.forEach((input) => {
+          input.value = input.value.trim();
+          clearFieldError(input);
+        });
+        const invalid = inputs.filter((input) => !input.checkValidity());
+        if (invalid.length) {
+          invalid.forEach((input) => setFieldError(input, validationMessage(input)));
+          invalid[0].focus();
+          return;
+        }
+
+        saving = true;
+        saveButton.setAttribute('aria-disabled', 'true');
+        form.setAttribute('aria-busy', 'true');
+        status.hidden = false;
+
+        try {
+          await postAccount(form.action, new FormData(form));
+          new Expressive.Snackbar({ text: 'Account settings saved' });
+        } catch (error) {
+          errorText.textContent = `Changes not saved. ${error.message} Check it and save again.`;
+          errorBox.hidden = false;
+          const field = error.field && form.elements[error.field];
+          if (field) {
+            setFieldError(field, error.message);
+            field.focus();
+          }
+        } finally {
+          saving = false;
+          saveButton.removeAttribute('aria-disabled');
+          form.removeAttribute('aria-busy');
+          status.hidden = true;
+        }
+      });
+    </script>
+  </body>
+</html>

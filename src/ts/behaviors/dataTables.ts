@@ -292,6 +292,31 @@ export class DataTables {
     return true;
   }
 
+  /**
+   * Shows a local page without events, as a URL restore needs: the app calls it
+   * once the rows exist. setPage() takes server state; this one only pages local
+   * records, keeping their filter and sort. Returns the page shown, after
+   * clamping (0 when no record is left to show), or false for anything but a
+   * locally paged table and a positive safe-integer page.
+   */
+  static showPage(wrapper: Element, page: number): number | false {
+    if (!DataTables._showable(wrapper, page)) return false;
+    DataTables._pageRequests.delete(wrapper);
+    // _view() recounts the records, so no count is needed here.
+    DataTables._pages.set(wrapper, { page, pageSize: pageSize(wrapper), total: 0 });
+    DataTables._view(wrapper);
+    return DataTables._pages.get(wrapper)?.page ?? false;
+  }
+
+  private static _showable(wrapper: Element, page: number) {
+    return Number.isSafeInteger(page) && page >= 1 && DataTables._localPaged(wrapper);
+  }
+
+  private static _localPaged(wrapper: Element) {
+    const table = Boolean(wrapper?.matches?.('.data-table:has(> table)'));
+    return table && Boolean(pageSize(wrapper)) && !DataTables._pages.get(wrapper)?.server;
+  }
+
   private static _storePage(wrapper: Element, state: TablePageState | null) {
     if (state === null) {
       DataTables._pages.delete(wrapper);
