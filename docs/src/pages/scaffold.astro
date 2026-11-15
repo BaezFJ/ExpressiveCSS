@@ -39,7 +39,8 @@ const S = defineSections([
           outside it</a>.
         </p>
         <div data-markdown-ignore>
-          <div class="scaffold" style="block-size: 26rem; border: 1px solid var(--md-sys-color-outline-variant)">
+          <div class="scaffold-demo">
+          <div class="scaffold">
             <header>
               <div class="bar">
                 <button type="button" aria-label="Main menu" aria-controls="scaffold-demo-rail" aria-expanded="false">
@@ -66,12 +67,19 @@ const S = defineSections([
               <button type="button" aria-label="Notes"><span class="material-symbols" aria-hidden="true">sticky_note_2</span></button>
               <button type="button" aria-label="Tasks"><span class="material-symbols" aria-hidden="true">task_alt</span></button>
             </div>
+            <nav class="navigation-bar" aria-label="Scaffold demo destinations">
+              <a href="#anatomy" aria-current="page"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a>
+              <a href="#regions"><span class="material-symbols" aria-hidden="true">star</span>Starred</a>
+              <a href="#scrolling"><span class="material-symbols" aria-hidden="true">send</span>Sent</a>
+            </nav>
+          </div>
           </div>
         </div>
         <p>
-          The demo gives the scaffold a fixed height and uses
-          <code>.scaffold-pane</code>, because this page already has its own
-          <code>&lt;main&gt;</code>. In an app, write it like this:
+          The demo sits in a box of fixed height, which scrolls in place of
+          the window on narrow screens, and uses <code>.scaffold-pane</code>,
+          because this page already has its own <code>&lt;main&gt;</code>. In
+          an app, write it like this:
         </p>
 <Code code={`
 <div class="scaffold">
@@ -183,8 +191,9 @@ const S = defineSections([
   </Section>
   <Section {...S.scrolling}>
         <p>
-          The scaffold never scrolls the document. <code>&lt;main&gt;</code>
-          scrolls, and so does a rail with more destinations than fit. Give
+          From 600px up, the scaffold is as tall as the window and doesn't
+          scroll the document. <code>&lt;main&gt;</code> scrolls, and so does
+          a rail with more destinations than fit. Give
           <code>&lt;main&gt;</code> <code>tabindex="-1"</code> and a skip link
           that points at it, so keyboard users can move into the pane and
           scroll it with Page Down, Space and the arrow keys. Put the skip link
@@ -199,8 +208,36 @@ const S = defineSections([
           <code>&lt;main&gt;</code> itself doesn't scroll.
         </p>
         <p>
+          Below 600px the document scrolls instead, so a phone's address bar
+          can collapse. The app bar stays pinned at the top, and a
+          <code>nav.navigation-bar</code> that is a direct child of the
+          scaffold, or of its direct-child <code>&lt;footer&gt;</code>, stays
+          pinned at the bottom. The navigation bar only shows below 600px. The
+          rail is hidden and out of the tab order until the app bar's menu
+          button opens it over the page with a scrim, so the app bar needs a
+          button whose <code>aria-controls</code> names the rail. Custom
+          <code>.scaffold-rail</code> content is hidden too. Don't put
+          <code>.hide-on-compact-only</code> on the rail: it would keep the
+          rail from ever opening.
+        </p>
+<Code code={`
+<div class="scaffold">
+  <header>…</header>
+  <nav class="navigation-rail" id="rail" aria-label="Primary">…</nav>
+  <main id="main" tabindex="-1">…</main>
+  <footer>
+    <nav class="navigation-bar" aria-label="Primary">…</nav>
+  </footer>
+</div>
+`} />
+        <p>
+          Landscape phones wider than 600px get the medium layout, where the
+          pane scrolls. A panes layout inside <code>&lt;main&gt;</code> grows
+          with its content below 600px, so the page scrolls around it.
+        </p>
+        <p>
           Printing drops the fixed height, so the whole pane prints. The rail
-          doesn't print.
+          and the navigation bar don't print.
         </p>
   </Section>
   <Section {...S.direction}>
@@ -213,13 +250,18 @@ const S = defineSections([
   <Section {...S.limits}>
         <ul>
           <li>
-            <code>.medium</code> and <code>.large</code> app bars collapse when
-            the window scrolls, so in a scaffold they stay expanded. Use the
-            small bar.
+            <code>.medium</code> and <code>.large</code> app bars stay expanded
+            in a scaffold, even below 600px. Use the small bar.
           </li>
           <li>
             <a href="back-to-top.html">Back to top</a> watches the window, so
-            in a scaffold it never appears.
+            in a scaffold it appears only below 600px, where it overlaps the
+            navigation bar as it does any bottom bar.
+          </li>
+          <li>
+            The rail opens and closes without animating on compact windows,
+            and a scrim tap leaves focus on the page; Escape returns it to the
+            menu button.
           </li>
           <li>
             A navigation rail's side panel spans the window height, so it opens

@@ -562,5 +562,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed .scaffold (window-height grid areas, child and region-class placement, the pane scroller and its scroll timeline, scrolling custom rail and trailing content, the rail's height override, the trailing toolbar's position, the app bar's private timeline property, print): 92,076 gzip bytes (+306).
   // Reviewed .scaffold.tall-rail (full-height rail and trailing areas, bar over the pane): 92,098 gzip bytes (+22).
   // Reviewed the scaffold's medium rail overlay, its held rail column (released for a hidden rail), the snapping collapse and the overlay flag the runtime reads: 92,242 gzip bytes (+144).
-  assert.ok(sizes(css).gzip <= 92242, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the scaffold's compact layout (document scrolling, the pinned navigation bar region, the hidden rail): 92,350 gzip bytes (+108).
+  assert.ok(sizes(css).gzip <= 92350, `CSS gzip: ${sizes(css).gzip}`);
 });

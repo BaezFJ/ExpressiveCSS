@@ -262,7 +262,7 @@
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
       "reviewedOn": "2026-11-15",
-      "scope": "A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim.",
+      "scope": "A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay.",
       "adaptation": "CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.",
       "upstream": {
         "source": "https://m3.material.io/foundations/layout/scaffold/overview",
@@ -284,7 +284,7 @@
       "sources": [
         {
           "path": "src/sass/components/_scaffold.scss",
-          "sha256": "7f568ea000b2d7cd4b9b88cbdce6812c9d033e8ccfe03d43a993a0132c12783d"
+          "sha256": "6f14cc6d6a8018ce2d581c6297732e48b9807a2ff9de36853a9defa8ccf8e44f"
         }
       ],
       "gaps": [
@@ -317,6 +317,12 @@
           "file": "tests/scaffold-browser.test.js",
           "name": "chromium: on medium windows a scaffold's expanded rail overlays the pane, and from 840px it narrows it",
           "scope": "The rail pushing the pane at 1024px, an overlay with a scrim over the pane and app bar row at 700px in both layouts, a .modal rail at 1280px, and an unmoved pane. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: below 600px the scaffold scrolls the document with the app bar and navigation bar pinned",
+          "scope": "Document scrolling at 390px, a pinned app bar, a pinned navigation bar in footer and bare forms. Equivalent Firefox and WebKit cases run in the same suite.",
           "state": "not-recorded"
         },
         {

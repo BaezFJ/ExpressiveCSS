@@ -9,7 +9,7 @@ Component ID: `scaffold`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `c502eca2271e984af48244f863b1b97dd62b16bcf3d7127a5e0397ba030b8ccd`
+Contract SHA-256: `71df52f7e32168a3e0ec39025ba81a32af15c1b19c08c36d52483227fce25543`
 
 #### Selection and adaptation
 
@@ -25,7 +25,7 @@ Upstream: requirements-prose-reviewed (2026-11-15); [evidence](https://m3.materi
 
 Requirements and boundaries: design reference layout-material-review. Compact, medium and safe-area adaptations arrive in later phases of the scaffold milestone. Full visual parity and spoken output unverified.
 
-Support (2026-11-15, `llm.md#scaffold`): A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim.
+Support (2026-11-15, `llm.md#scaffold`): A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay.
 
 Web adaptation: CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.
 
@@ -37,7 +37,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Places an app shell's bar, navigation rail, pane and trailing toolbar, so a page needs no shell grid of its own.
 
-Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself: the browser moves the body's overflow to the viewport, and the shell stops clipping. Its direct children are placed by component: a `<header>` top app bar spans the top, and a `.navigation-rail`, `<main>` and a `.toolbar.vertical` (or `.toolbar-group.vertical`) share the row below it, from the leading edge to the trailing one. The scaffold is as tall as the window (`100dvh`) and only `<main>` scrolls; a rail with more destinations than fit scrolls them itself. The components keep their own look and behavior. The scaffold itself is CSS only; there is no scaffold JavaScript component. The app bar's menu button toggles the rail when its `aria-controls` names the rail's `id`, once `AutoInit()` has started the rail.
+Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself: the browser moves the body's overflow to the viewport, and the shell stops clipping. Its direct children are placed by component: a `<header>` top app bar spans the top, and a `.navigation-rail`, `<main>` and a `.toolbar.vertical` (or `.toolbar-group.vertical`) share the row below it, from the leading edge to the trailing one. From 600px up the scaffold is as tall as the window (`100dvh`) and only `<main>` scrolls; a rail with more destinations than fit scrolls them itself. The components keep their own look and behavior. The scaffold itself is CSS only; there is no scaffold JavaScript component. The app bar's menu button toggles the rail when its `aria-controls` names the rail's `id`, once `AutoInit()` has started the rail.
 
 #### Syntax
 

@@ -5077,7 +5077,7 @@ Set these on the container to resize a layout.
 
 Places an app shell's bar, navigation rail, pane and trailing toolbar, so a page needs no shell grid of its own.
 
-Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself: the browser moves the body's overflow to the viewport, and the shell stops clipping. Its direct children are placed by component: a `<header>` top app bar spans the top, and a `.navigation-rail`, `<main>` and a `.toolbar.vertical` (or `.toolbar-group.vertical`) share the row below it, from the leading edge to the trailing one. The scaffold is as tall as the window (`100dvh`) and only `<main>` scrolls; a rail with more destinations than fit scrolls them itself. The components keep their own look and behavior. The scaffold itself is CSS only; there is no scaffold JavaScript component. The app bar's menu button toggles the rail when its `aria-controls` names the rail's `id`, once `AutoInit()` has started the rail.
+Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself: the browser moves the body's overflow to the viewport, and the shell stops clipping. Its direct children are placed by component: a `<header>` top app bar spans the top, and a `.navigation-rail`, `<main>` and a `.toolbar.vertical` (or `.toolbar-group.vertical`) share the row below it, from the leading edge to the trailing one. From 600px up the scaffold is as tall as the window (`100dvh`) and only `<main>` scrolls; a rail with more destinations than fit scrolls them itself. The components keep their own look and behavior. The scaffold itself is CSS only; there is no scaffold JavaScript component. The app bar's menu button toggles the rail when its `aria-controls` names the rail's `id`, once `AutoInit()` has started the rail.
 
 ```html
 <div class="scaffold">
@@ -5134,11 +5134,24 @@ Put a `panes` layout inside `<main>`, or put the panes classes on `<main>` itsel
 </main>
 ```
 
+Below 600px the document scrolls instead, so a phone's address bar can collapse: the app bar stays pinned at the top, a `nav.navigation-bar` that is a direct child of the scaffold, or of its direct-child `<footer>`, stays pinned at the bottom and shows only below 600px, and the rail and any `scaffold-rail` are hidden until the app bar's `aria-controls` menu button opens the rail as an overlay. The app bar needs that button. Don't put `hide-on-compact-only` on the rail, which would keep it from opening. Landscape phones wider than 600px get the medium layout. A panes layout in `<main>` grows with its content below 600px.
+
+```html
+<div class="scaffold">
+  <header>…</header>
+  <nav class="navigation-rail" id="rail" aria-label="Primary">…</nav>
+  <main id="main" tabindex="-1">…</main>
+  <footer>
+    <nav class="navigation-bar" aria-label="Primary">…</nav>
+  </footer>
+</div>
+```
+
 Give `<main>` `tabindex="-1"` and a skip link so keyboard users can move into the pane and scroll it. A top app bar fills with `surface-container` once `<main>` has scrolled, in browsers that support `timeline-scope`; elsewhere, and when a panes layout scrolls inside `<main>`, it stays at rest. Printing drops the fixed height so the whole pane prints.
 
 The scaffold adds no landmark: the `<header>` is the banner, the rail a navigation landmark and `<main>` the main landmark. Never write it as a landmark element or give it a landmark role, and never nest one scaffold in another. `hidden="until-found"` still takes part in layout, so it counts as a visible child.
 
-Limits: `.medium` and `.large` app bars and `back-to-top` follow the window's scroll, so in a scaffold the bar stays expanded and the link never appears. A rail's side panel spans the window height and opens over the bar. A trailing toolbar taller than its region is clipped at the bottom, so keep it to the actions that fit. Custom `scaffold-rail` and `scaffold-trailing` content scrolls when it doesn't fit.
+Limits: `.medium` and `.large` app bars stay expanded in a scaffold. `back-to-top` follows the window, so it appears only below 600px, where it overlaps the navigation bar. On compact windows the rail opens and closes without animating, and a scrim tap leaves focus on the page. A rail's side panel spans the window height and opens over the bar. A trailing toolbar taller than its region is clipped at the bottom, so keep it to the actions that fit. Custom `scaffold-rail` and `scaffold-trailing` content scrolls when it doesn't fit.
 
 ---
 

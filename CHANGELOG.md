@@ -29,6 +29,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   scrim from 600px to 839px, and Escape or a scrim tap closes it. The rail's
   column keeps its collapsed width there and for a `.modal` rail, so the pane
   doesn't move as the rail opens and closes.
+- Below 600px a `.scaffold` scrolls the document instead of its pane, so a
+  phone's address bar can collapse. The app bar stays pinned, a
+  `nav.navigation-bar` child (or a `<footer>` holding one) is pinned at the
+  bottom and shows only below 600px, and the rail is hidden until the app
+  bar's menu button opens it as an overlay.
 
 ### Changed
 
