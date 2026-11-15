@@ -1,0 +1,27 @@
+# Button loading guidance: validation
+
+Phase 79. Requirements: [requirements.md](requirements.md). Plan: [plan.md](plan.md).
+
+## Agent-run checks
+
+Commands: `npm run build`, `npm run build:skill`, `node --test tests/expressivecss-skill.test.js`, `npm run check:generated`, the build and review commands in `docs/agents/finished-app-evals.md`, `npm run verify`, `npm test --prefix mcp/expressivecss`.
+
+| ID | Covers | Setup | Action | Expected result | Fails if | Result |
+| --- | --- | --- | --- | --- | --- | --- |
+| V1 | R1, R2, R4 | Current tree. | Run `node --test tests/expressivecss-skill.test.js`. | The new test passes after failing before the change; the budget test passes with its new line. | The guide lacks the section or a required phrase, "App behavior" shows under "Also documented", or the budget fails. | Pending |
+| V2 | R1 | After group 1, before group 2 (the generator is not a contract input, so no hash changes). | Run `npm run build:skill` and `git diff --stat skills mcp`. | No generated file changes. | Any generated file changes before any section has the subsection. | Pending |
+| V3 | R1, R3 | After group 2. | Diff `skills/expressivecss/components/buttons.md` against its group 1 version. | The only changes are the contract hash and the new `#### App behavior` block between Syntax and Rules; Contract and Syntax are byte-identical. | Contract or Syntax changed, the block is missing or misplaced, or it ends with `---`. | Pending |
+| V4 | R5, R6 | The two rebuilt `settings-form` apps. | Build, review and confirm under the procedure. | Each run's record lists which R2 elements it implements, and each run has zero countable `finished-app:loading` findings; every run set and its rows are committed. | A run keeps a countable loading finding inside the guidance's scope after the allowed revisions, or a run set is missing. | Pending |
+| V5 | R7 | Clean build. | `npm run verify`, `npm test --prefix mcp/expressivecss`. | All pass; known flakes pass alone. | Any check fails on rerun. | Pending |
+
+## Human checks
+
+None.
+
+## Merge conditions
+
+All agent-run checks pass, the milestone PR's required CI checks pass, and the repository's reviews are done.
+
+## Review record
+
+- 2026-11-15, spec review by an independent read-only subagent (Plan agent). Nine defects and several suggestions, all addressed: V2 now expects no generated change, since the generator isn't a contract input; R4 asserts order, key values and Contract/Syntax stability; R3 and a new exclusion say the MCP tools don't return the section; the guard moved to the `submit` handler after `preventDefault()`, with a `finally` that clears the pending state; the indicator keeps its enforced role and name while the words go in one persistent region or a Snackbar; the generator cuts the subsection out before building the other parts and strips the trailing `---` and relative links; `tests/semantics.test.js` and the guide-wide link test joined the readers; R6 revises only for findings inside the guidance's scope, commits every run set, and each run records which R2 elements it implements; the subsection is capped at 1.5 KB; and the limitation of the completion check is stated.
