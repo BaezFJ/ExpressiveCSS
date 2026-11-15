@@ -1003,6 +1003,15 @@ const transport = new StdioClientTransport({
   }
   const viewportStandard = await viewportLint('width=device-width, initial-scale=1');
   assert.equal(viewportStandard.status, 0, viewportStandard.stdout);
+  // A paste handler that always cancels is reported once at the attribute, and one that doesn't cancel passes.
+  const pasteMarkup = path.join(outsideDir, 'paste.html');
+  await writeFile(pasteMarkup, '<label>Code\n  <input onpaste="return false">\n</label>\n');
+  const pasteBlocked = lint([pasteMarkup]);
+  assert.equal(pasteBlocked.status, 1, pasteBlocked.stderr);
+  assert.deepEqual(pasteBlocked.stdout.match(/paste\.html:\d+:\d+ [\w-]+ \[\w+\]/gu), ['paste.html:2:10 paste-blocked [high]'], pasteBlocked.stdout);
+  await writeFile(pasteMarkup, '<label>Code\n  <input onpaste="this.dataset.pasted = \'yes\'">\n</label>\n');
+  const pasteAllowed = lint([pasteMarkup]);
+  assert.equal(pasteAllowed.status, 0, pasteAllowed.stdout);
   // The rules for names 0.16.0 removed, one by one and in process: the lint CLI
   // rewrites className= to class= before inspecting, so it cannot test JSX.
   // Each rule lists markup it must flag and current markup that only shares a
@@ -1083,6 +1092,10 @@ const transport = new StdioClientTransport({
       flag: [...['user-scalable=no', 'user-scalable = 0', 'user-scalable=false', 'user-scalable=0.5', 'maximum-scale=1', 'maximum-scale=1.0', 'maximum-scale=1.00', 'maximum-scale=0.5', 'maximum-scale=.5', 'maximum-scale=0', 'maximum-scale=no', 'maximum-scale=yes', 'user-scalable=yes; initial-scale=1', 'user-scalable=device-width;', 'user-scalable=device-height;', 'maximum-scale=false', 'maximum-scale=', 'maximum-scale=device-width;', 'user-scalable', 'user-scalable, initial-scale=1'].map((content) => `<meta name="viewport" content="width=device-width, ${content}">`), '<META NAME=VIEWPORT CONTENT="USER-SCALABLE=NO">', '<meta content="initial-scale=1, maximum-scale=1" name="viewport">', '<meta name="viewport" content="width=device-width; initial-scale=1; user-scalable=no">', "<meta name='viewport' content='user-scalable=no' />", '<meta\n  name="viewport"\n  content="width=device-width, initial-scale=1, maximum-scale=1" />'],
       pass: [...['width=device-width, initial-scale=1', 'width=device-width, initial-scale=1.0', 'minimum-scale=1', 'maximum-scale=1.5', 'maximum-scale=1.01', 'maximum-scale=10', 'user-scalable=yes', 'user-scalable=yes, initial-scale=1', 'user-scalable=1', 'user-scalable = 1', 'user-scalable=device-width', 'user-scalable=device-height', 'user-scalable=-1', 'maximum-scale=2', 'maximum-scale=-1', 'maximum-scale=device-width', 'maximum-scale=+2', 'user-scalable=+1'].map((content) => `<meta name="viewport" content="${content}">`), '<meta name="description" content="user-scalable=no">', '<meta name="description" content="Use name=viewport and user-scalable=no">', '<meta name="viewport-x" content="user-scalable=no">', '<meta data-name="viewport" content="user-scalable=no">', '<meta name="viewport" data-content="user-scalable=no" content="width=device-width">', '<meta name="description" content="Avoid user-scalable=no"><meta name="viewport" content="width=device-width, initial-scale=1">'],
     },
+    'paste-blocked': {
+      flag: [...['return false', 'return false;', 'event.preventDefault(); return false;', 'return false; log()', "alert('No pasting'); return false", 'event.preventDefault()\nreturn false'].map((value) => `<input onpaste="${value}">`), "<input onpaste='event.preventDefault()'>", '<input ONPASTE="event.preventDefault(); return false;">', '<input onpaste=event.preventDefault()>', '<input onpaste=event.preventDefault();>', '<input onpaste = " return  false ">', '<form onpaste="return false">', '<input\n  type="password"\n  onpaste="return false">'],
+      pass: [...['handlePaste(event)', 'event.preventDefault(); insertPlain(event)', 'if (busy) return false', 'if (x) { return false }', "return confirm('Paste?')", 'return false || ok()', 'return falsey()', 'e.preventDefault()', 'Event.preventDefault()', 'RETURN FALSE', 'event.preventDefault() return false', "this.dataset.pasted = 'yes'", 'return\nfalse', 'do; return false', 'event.preventDefault(); event.preventDefault() x'].map((value) => `<input onpaste="${value}">`), 'el.onpaste = "return false"', '<input data-onpaste="return false">', '<input oncopy="return false">', '<input title=\'onpaste="return false"\'>', '<p>Never write onpaste="return false"</p>', '<input onpaste=event.preventDefault()x>'],
+    },
   };
   const ruleIds = authoringRules.map((rule) => rule.id).filter((id) => !/^legacy-/.test(id));
   assert.deepEqual(Object.keys(ruleCases).sort(), ruleIds.sort(), 'every regex rule without a legacy- prefix needs cases, and every case a rule');
@@ -1111,8 +1124,11 @@ const transport = new StdioClientTransport({
     'transition:' + fill(' '), fill('transition:'), 'transition: opacity' + fill(' 1s,'), 'transition:'.repeat(45) + 'all' + fill(' ') + ':',
     // Viewport tags: many starts, an unclosed tag that repeats `content=` past the name, and a long content value that never stops zoom.
     fill('<meta '), '<meta name=viewport ' + fill('content='), '<meta name="viewport" content="' + fill('maximum-scale=1.5,'),
+    // Paste handlers: many names, values that never close or never reach `return false`, and a tag with too many attributes to reach the name.
+    fill('onpaste='), '<a' + fill(' onpaste'), '<a onpaste="' + fill(' '), '<a onpaste="' + fill(' \n'), '<a onpaste="' + fill('event.preventDefault();'),
+    '<a onpaste="' + fill('event.preventDefault()  '), '<a onpaste="' + fill('a;'), '<a onpaste=' + fill(' '),
   ];
-  for (const rule of authoringRules.filter((entry) => legacyIds.includes(entry.id) || ['legacy-btn-class', 'transition-all', 'viewport-zoom-disabled'].includes(entry.id))) {
+  for (const rule of authoringRules.filter((entry) => legacyIds.includes(entry.id) || ['legacy-btn-class', 'transition-all', 'viewport-zoom-disabled', 'paste-blocked'].includes(entry.id))) {
     const regex = new RegExp(rule.pattern.source, rule.pattern.flags);
     for (const input of adversarial) {
       regex.lastIndex = 0;
