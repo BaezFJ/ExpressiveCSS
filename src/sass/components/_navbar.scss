@@ -482,6 +482,39 @@ header:has(> #{$_bar}) {
   }
 }
 
+// A fragment link scrolls its heading to the top of the window, under the
+// pinned bar, so headings with an id rest below it. Only a page-level bar
+// (body > header) counts: demo bars in articles, cards and dialogs leave
+// headings alone. Zero specificity leaves a page's own :root token or heading
+// scroll-margin, and .scrollspy, in charge. The offset is the bar's height
+// plus 8px; a collapsed flexible bar is the small one. :has() can't nest, so
+// each test names the bar as a child of the header.
+$_page-bar: ":root:has(> body > header > #{$_bar})";
+
+:where(#{$_page-bar}) {
+  --md-comp-top-app-bar-anchor-offset: #{rem(72px)};
+}
+
+:where(:root:has(> body > header.medium:not(.collapsed) > #{$_bar})) {
+  --md-comp-top-app-bar-anchor-offset: #{rem(120px)};
+}
+
+:where(:root:has(> body > header.medium:not(.collapsed) > #{$_bar} > hgroup > p)) {
+  --md-comp-top-app-bar-anchor-offset: #{rem(144px)};
+}
+
+:where(:root:has(> body > header.large:not(.collapsed) > #{$_bar})) {
+  --md-comp-top-app-bar-anchor-offset: #{rem(128px)};
+}
+
+:where(:root:has(> body > header.large:not(.collapsed) > #{$_bar} > hgroup > p)) {
+  --md-comp-top-app-bar-anchor-offset: #{rem(160px)};
+}
+
+:where(#{$_page-bar} #{$_heading}[id]:not(dialog *)) {
+  scroll-margin-block-start: var(--md-comp-top-app-bar-anchor-offset);
+}
+
 @keyframes top-app-bar-scroll {
   to {
     --md-comp-top-app-bar-scroll: 1;
