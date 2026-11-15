@@ -316,6 +316,8 @@ for (const [name, type, run] of engines) {
         const hits = await tab.evaluate(() => [[650, 400], [690, 20]].map(([x, y]) => document.elementFromPoint(x, y)?.id));
         assert.deepEqual(hits, ['rail', 'rail'], `${cls || 'default'}: the scrim covers the pane and the app bar row`);
       }
+      await render({ nav: rail().replace('class="navigation-rail"', 'class="navigation-rail" hidden') });
+      near((await box('#pane')).left, 0, 'a hidden rail takes no space at 700px');
 
       await tab.setViewportSize({ width: 1280, height: 800 });
       await render({ nav: rail().replace('class="navigation-rail"', 'class="navigation-rail modal"') });
@@ -355,6 +357,16 @@ for (const [name, type, run] of engines) {
     const { browser, tab, box, style } = await open(type, page(`${outside}<div id="host">${scaffold()}</div>`), { width: 700 });
     try {
       assert.notEqual(await style('#lone', 'position'), 'fixed', 'a rail outside a scaffold is not an overlay at 700px');
+      // An author's own docked fixed rail is not an overlay, so Escape leaves it open.
+      await tab.evaluate(() => {
+        const lone = document.querySelector('#lone');
+        lone.style.position = 'fixed';
+        window.lone = Expressive.NavigationRail.init(lone);
+        lone.querySelector('a').focus();
+      });
+      await tab.keyboard.press('Escape');
+      assert.equal(await tab.evaluate(() => window.lone.isExpanded), true, 'Escape leaves an author-fixed rail outside a scaffold open');
+      await tab.evaluate(() => { window.lone.destroy(); document.querySelector('#lone').remove(); });
       await tab.setViewportSize({ width: 500, height: 800 });
       await tab.locator('#rail').evaluate((el) => el.classList.add('expanded'));
       assert.equal(await style('#rail', 'position'), 'fixed', 'the compact overlay is unchanged at 500px');
@@ -378,6 +390,7 @@ for (const [name, type, run] of engines) {
       assert.deepEqual(await box('#pane'), before, 'open');
       await tab.locator('#rail').evaluate((el) => el.classList.remove('expanded'));
       assert.deepEqual(await box('#pane'), before, 'as the collapse starts');
+      near((await box('#rail')).right, before.left, 'the collapsing rail snaps back into its column instead of drawing under the pane');
       await tab.waitForTimeout(600);
       assert.deepEqual(await box('#pane'), before, 'after the collapse');
     } finally {

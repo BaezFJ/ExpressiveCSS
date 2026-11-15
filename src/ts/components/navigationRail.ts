@@ -28,6 +28,8 @@ const _defaults: NavigationRailOptions = {
 };
 
 const COMPACT = '(width < 600px)';
+// Where _navigation-rail.scss also overlays a scaffold's direct-child rail.
+const MEDIUM = '(600px <= width < 840px)';
 // The menu toggle: a first-child button that isn't the FAB or a panel trigger. The CSS
 // doesn't style a first-child .icon-button as the toggle, but it still toggles.
 const TOGGLE = ':scope > button:first-child:not(.button, [popovertarget])';
@@ -48,7 +50,7 @@ const HOVER_DELAY = 200;
 /**
  * Navigation rail. Layout is CSS (collapsed / .expanded). This class
  * toggles that class from the menu button, or from any button outside the
- * rail whose aria-controls names it, closes a compact overlay on Escape or a
+ * rail whose aria-controls names it, closes an overlay on Escape or a
  * scrim tap, and keeps aria-expanded in sync on every toggle. A destination's
  * .navigation-rail-panel is a native popover; this class also opens it on
  * mouse hover.
@@ -160,10 +162,12 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     return this._mql.matches;
   }
 
-  // A rail drawn as an overlay is modal, however the CSS got there: .modal,
-  // a compact window, or a scaffold on a medium window.
+  // Mirrors the CSS routes to an overlay: .modal, a compact window, or a
+  // scaffold's rail on a medium window. Not the computed position, which an
+  // author's own docked position: fixed rail would also match. A fresh query,
+  // since WebKit updates a kept MediaQueryList only on the next frame.
   private _isModal() {
-    return this.el.classList.contains('modal') || this._isCompact() || getComputedStyle(this.el).position === 'fixed';
+    return this._isCompact() || this.el.matches(window.matchMedia(MEDIUM).matches ? '.modal, .scaffold > *' : '.modal');
   }
 
   private _sync() {

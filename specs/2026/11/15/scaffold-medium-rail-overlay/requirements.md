@@ -34,8 +34,8 @@ In a scaffold from 600px to 839px an expanded rail widens its grid column, so on
 | --- | --- | --- |
 | The medium overlay reuses the rail's modal state: the same `_modal-rail` mixin, scrim and Escape and scrim-tap handling | Decided under delegation | The roadmap asks whether to reuse it. Reusing keeps one overlay look and one dismissal contract, and adds no new class or token. |
 | CSS sets it: `_navigation-rail.scss` applies `_modal-rail` to `.scaffold > .navigation-rail.expanded:not(.modal)` from 600px to 839px | Decided under delegation | The mixin is private to the rail partial, so the rule lives beside it. The scaffold has no runtime, and a CSS rule needs no script for the layout. |
-| The runtime asks the rendering: `_isModal()` also returns true when the rail's computed `position` is `fixed` | Decided under delegation | That follows every CSS route to an overlay (compact, `.modal`, the scaffold's medium rule) without the script knowing about the scaffold. The class and media-query checks stay for environments without layout, such as jsdom. |
-| `_scaffold.scss` keeps the rail column at `--md-comp-nav-rail-collapsed-width` for any rail from 600px to 839px, and at every width for a `.modal` rail, expanded or not | Decided under delegation, revised after spec review | The completion check wants the pane to keep its width at 700px. Holding the column only while `.expanded` matched would release it the moment the class is removed, and the pane would jump while the rail animates back to its collapsed width. Holding it always means the collapsing rail briefly overflows its column; the pane, later in the grid, paints over that strip. Covering `.modal` at every width is an extension: it stops the same jump on wide windows, which predates this phase. |
+| The runtime mirrors the CSS: `_isModal()` also returns true for a direct child of `.scaffold` from 600px to 839px | Decided under delegation, revised after code review | An earlier draft read the computed `position`, but an author's own docked `position: fixed` rail outside a scaffold matched it, so Escape collapsed that rail on wide windows, against the exclusion above. A selector and media query follow the same rule as the CSS and also work without layout, such as in jsdom. |
+| `_scaffold.scss` keeps the rail column at `--md-comp-nav-rail-collapsed-width` for any rail from 600px to 839px, and at every width for a `.modal` rail, expanded or not | Decided under delegation, revised after spec review | The completion check wants the pane to keep its width at 700px. Holding the column only while `.expanded` matched would release it the moment the class is removed, and the pane would jump while the rail animates back to its collapsed width. Holding it always would leave the collapsing rail overflowing its column under the pane's content for the length of its transition, so where the column is held the collapse snaps (`transition: none` on a non-expanded rail) while expanding still animates. Covering `.modal` at every width is an extension: it stops the same jump on wide windows, which predates this phase. |
 
 ## Requirements
 
@@ -45,7 +45,7 @@ In a scaffold from 600px to 839px an expanded rail widens its grid column, so on
 - **R4** A `.modal` rail in a scaffold at 1280px keeps the pane's box when it expands (an extension; see the decisions).
 - **R5** Outside a scaffold at 700px, an expanded rail is not `position: fixed`, as before. Below 600px, inside or outside a scaffold, the existing compact overlay is unchanged.
 - **R6** Under `dir="rtl"` at 700px, the overlay rail sits at the right edge and the pane keeps its box.
-- **R6a** With motion on, collapsing the overlay at 700px leaves the pane's box unchanged during the rail's transition.
+- **R6a** With motion on, collapsing the overlay at 700px leaves the pane's box unchanged, and the rail snaps back into its column instead of animating under the pane. Expanding still animates.
 - **R6b** Resizing from 900px to 700px and back with the rail expanded switches it between narrowing the pane and overlaying it, and Escape collapses it only while it is an overlay.
 - **R7** These records change:
   - The scaffold docs page and `llm.md` section describe the medium overlay, how it closes (the scrim, Escape or the rail's own toggle, since the open rail covers the app bar's menu button), the focus limit, where to set the collapsed width, and that the demo rail opens over the whole docs page on medium windows.
@@ -56,12 +56,12 @@ In a scaffold from 600px to 839px an expanded rail widens its grid column, so on
 
 ## Risks considered
 
-- Two at once and bad input: CSS only plus a read of the computed style; nothing is written or parsed.
+- Two at once and bad input: CSS only plus a media query and selector match; nothing is written or parsed.
 - Refusal: none.
 - Other readers:
   - The rail's side panel opens beside the overlay rail as it does on compact windows.
   - The open overlay is at least 220px wide from the inline start and full height, so it covers the app bar's menu button. A click there lands on the rail, not the scrim. The overlay closes from the scrim beside it, Escape or the rail's own toggle; the docs say so.
   - Phase 89's tall rail uses the same rail column, so R2 holds there too; the test checks it.
-  - `getComputedStyle` is read only on Escape and on a click inside the rail's own box, so it adds no work to scrolling or resizing.
+  - The medium media query is read only on Escape and on a click inside the rail's own box, so it adds no work to scrolling or resizing.
 - UI states: RTL (R6), reduced motion (the mixin keeps the rail's existing transitions and their reduced-motion rule), enlarged text (no change to the overlay), no JavaScript (the overlay shows from the `.expanded` class; only Escape and scrim dismissal need the runtime, as on compact windows).
 - `specs/checklist.md` does not exist in this project.

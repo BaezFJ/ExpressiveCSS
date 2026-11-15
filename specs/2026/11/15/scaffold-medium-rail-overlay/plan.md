@@ -11,7 +11,7 @@ Covers R1 to R6b. Checks V1 to V5b.
 - [ ] Add browser tests to `tests/scaffold-browser.test.js` for V1 to V5b. Watch V2 and V3 fail before the change.
 - [ ] `_navigation-rail.scss`: apply `_modal-rail` to a scaffold's expanded rail from 600px to 839px.
 - [ ] `_scaffold.scss`: keep the rail column at the collapsed width for any rail from 600px to 839px and for a `.modal` rail.
-- [ ] `navigationRail.ts`: `_isModal()` also returns true when the rail renders `position: fixed`.
+- [ ] `navigationRail.ts`: `_isModal()` also returns true for a direct child of `.scaffold` from 600px to 839px.
 
 ## 2. Docs, records and checks
 
