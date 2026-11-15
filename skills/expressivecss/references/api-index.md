@@ -120,6 +120,7 @@ Paths are relative to `src/sass`, without the underscore or extension. The catal
 | `components/navigation-bar` | [Navigation bar](https://www.expressivecss.com/navigation-bar.html.md) |
 | `components/navigation-rail` | [Navigation rail](https://www.expressivecss.com/navigation-rail.html.md) |
 | `components/panes` | [Panes](https://www.expressivecss.com/panes.html.md) |
+| `components/scaffold` | [Scaffold](https://www.expressivecss.com/scaffold.html.md) |
 | `components/page-footer` | [Footer](https://www.expressivecss.com/footer.html.md) |
 | `components/tabs` | [Tabs](https://www.expressivecss.com/tabs.html.md) |
 | `components/breadcrumb` | [Breadcrumbs](https://www.expressivecss.com/breadcrumbs.html.md) |

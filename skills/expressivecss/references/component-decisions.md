@@ -10,6 +10,7 @@ Pick the row that matches the job and read its guide. Compare alternatives only 
 | [Navigation bar](../components/navigation-bar.md) | Persistent peer destinations on compact screens. | Commands need buttons; local panels need tabs. | `navigation-rail`, `toolbars` | css-only |
 | [Navigation rail](../components/navigation-rail.md) | Collapsed, expanded, or modal peer navigation; the Expressive drawer replacement. | Compact peers fit a navigation bar; verify nesting support. | `navigation-bar` | auto-init |
 | [Panes](../components/panes.md) | Responsive list-detail or supporting layouts. | A single collection needs a list, not multiple panes. | `lists` | css-only |
+| [Scaffold](../components/scaffold.md) | An app shell needs a top app bar, a navigation rail, one scrolling content area and optionally a trailing vertical toolbar, without page CSS. | A document page that scrolls as a whole needs no scaffold; columns inside the content belong to panes or the grid. | `panes`, `navigation-rail`, `app-bar` | css-only |
 | [Footer](../components/footer.md) | Site links and legal information at page end. | Primary app destinations need persistent navigation. | `navigation-bar` | css-only |
 | [Tabs](../components/tabs.md) | Switch related content panels within one page. | App destinations need navigation; values need inputs. | `navigation-bar`, `button-groups` | auto-init |
 | [Breadcrumbs](../components/breadcrumbs.md) | Ancestor path to the current page. | Peer views need tabs; numbered results need pagination. | `tabs`, `pagination` | css-only |

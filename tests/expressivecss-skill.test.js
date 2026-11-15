@@ -1212,8 +1212,8 @@ describe('the ExpressiveCSS agent skill', () => {
     // (+315); the show more row at 49,168 bytes (+420); the cascader row at
     // 49,482 bytes (+314); the tree select row at 49,778 bytes (+296); the
     // DESIGN.md product-decision source at 50,075 bytes (+297); the status bar
-    // row at 50,469 bytes (+394).
-    assert.ok(bytes <= 50469, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
+    // row at 50,469 bytes (+394); the scaffold row at 50,823 bytes (+354).
+    assert.ok(bytes <= 50823, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
     assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
   });
 
