@@ -36,9 +36,9 @@ Covers R1 to R7. Checks V2, V3.
 
 Prerequisites: groups 1 and 2.
 
-- [ ] Run the quality inspector lens twice on `fixtures/settings-a.html`, each in a fresh subagent briefed with the agent file path and the SKILL.md shared context block (bundled guides, browser route unavailable, the saved lint output).
-- [ ] Run it twice on `fixtures/settings-b.html` the same way.
-- [ ] Record the model and the labelled findings of each run in `validation.md`. If a run misses a defect or flags the clean page, fix the rubric wording and rerun all four.
+- [x] Run the quality inspector lens twice on `fixtures/settings-a.html`, each in a fresh subagent briefed with the agent file path and the SKILL.md shared context block (bundled guides, browser route unavailable, the saved lint output).
+- [x] Run it twice on `fixtures/settings-b.html` the same way.
+- [x] Record the model and the labelled findings of each run in `validation.md`. If a run misses a defect or flags the clean page, fix the rubric wording and rerun all four.
 
 Done when V2 and V3 pass.
 

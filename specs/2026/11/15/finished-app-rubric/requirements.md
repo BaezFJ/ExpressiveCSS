@@ -72,3 +72,7 @@ The milestone measures its guidance phases (79 to 82) by rerunning three fixed p
 - Determinism: V2 and V3 run twice each with fresh subagents, and the fixture names and markup don't describe the defects.
 - UI states: not applicable. No interface ships.
 - `specs/checklist.md`: the project has none.
+
+## Decisions made while building
+
+- R3 gained two placements after a fixture review gave a clean page a major `finished-app:destructive` finding (decided from the round 2 run in `validation.md`). An Undo that waits behind an earlier snackbar is polish, and Snackbar `replace: true` shows it at once. Focus lost when the focused row is removed is a keyboard finding under check 4, not a rubric finding, since no phase of this milestone teaches it. Phase 80's Undo guidance should name `replace: true`.

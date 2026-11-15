@@ -33,7 +33,7 @@
     </section>
 
     <section id="members" aria-labelledby="members-heading">
-      <h2 id="members-heading">Members</h2>
+      <h2 id="members-heading" tabindex="-1">Members</h2>
       <ul class="list" id="member-list">
         <li>
           <span>Ana Ruiz</span>
@@ -53,23 +53,28 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      Expressive.AutoInit();
       document.querySelector('.tabs').addEventListener('expressive:change', (event) => {
         history.replaceState(null, '', '#' + event.detail.panel.id);
       });
 
       const list = document.getElementById('member-list');
+      Array.from(list.children).forEach((li, i) => { li.dataset.order = String(i); });
       list.addEventListener('click', (event) => {
         const button = event.target.closest('[data-remove]');
         if (!button) return;
         const row = button.closest('li');
-        const index = Array.from(list.children).indexOf(row);
         const name = row.querySelector('span').textContent;
+        const neighbor = row.nextElementSibling ?? row.previousElementSibling;
+        (neighbor?.querySelector('[data-remove]') ?? document.getElementById('members-heading')).focus();
         row.remove();
         new Expressive.Snackbar({
           text: name + ' removed',
           action: 'Undo',
+          replace: true,
           onAction: () => {
-            list.insertBefore(row, list.children[index] ?? null);
+            const next = Array.from(list.children).find((li) => Number(li.dataset.order) > Number(row.dataset.order));
+            list.insertBefore(row, next ?? null);
             row.querySelector('[data-remove]').focus();
           },
         });
