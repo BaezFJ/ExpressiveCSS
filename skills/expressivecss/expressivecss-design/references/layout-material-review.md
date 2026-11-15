@@ -6,7 +6,7 @@ Read the linked component guide for the ExpressiveCSS 0.16.0 markup and API cont
 
 ## Contents
 
-App bar, Icon buttons, Button groups, Split button, Floating action button, Panes, Drag handle, Bottom sheet, Side sheet.
+App bar, Icon buttons, Button groups, Split button, Floating action button, Panes, Scaffold, Drag handle, Bottom sheet, Side sheet.
 
 Each section lists the relationship, reviewed sections, requirements, and framework comparison, then any verification, feature, or integration gap and the mapped browser scope. Read only the selected component's section.
 
@@ -93,6 +93,20 @@ Framework comparison: Below 840px the generic layout hides inactive panes, inclu
 Integration gap: Viewport rules at 840px override narrow-container collapse; compact supporting layouts hide rather than stack supporting content. Next check: Use an explicit application layout when both panes must remain visible; test actual container width, reading order, selection and scrolling.
 
 Mapped browser scope: Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
+
+## [Scaffold](../../components/scaffold.md)
+
+Relationship: pattern. Sources: [overview](https://m3.material.io/foundations/layout/scaffold/overview), [bars](https://m3.material.io/foundations/layout/scaffold/bars), [rails](https://m3.material.io/foundations/layout/scaffold/rails), [panes](https://m3.material.io/foundations/layout/scaffold/panes).
+
+Reviewed sections: Scaffold/Overview, Bars, Rails and Panes.
+
+Requirements: Bars frame the top of the window, rails sit in the leading and trailing regions beside the panes, and panes hold the content. Keep navigation separate from contextual actions, one main landmark, and content clear of bars and rails.
+
+Framework comparison: `.scaffold` places a header app bar across the top and a navigation rail, `main` and vertical toolbar below it, with region classes for custom content. The shell is window height and only the pane scrolls, as in Gmail on the web; Google prefers document scrolling unless panes scroll independently. Compact, medium and safe-area adaptations are not part of this first version.
+
+Integration gap: Flexible app bars and back-to-top follow the window's scroll, so in a scaffold they stay expanded and hidden. Panes follow the window width rather than the pane region's. Next check: Make `main` a size container only when nothing fixed sits inside it; test landmark order and pane scrolling with a screen reader.
+
+Mapped browser scope: Region boxes, pane-only scrolling, rail fill and expansion, the trailing toolbar, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order.
 
 ## [Drag handle](../../components/drag-handle.md)
 

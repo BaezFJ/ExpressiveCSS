@@ -11,6 +11,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   type roles, built from the role's weight, size, line height and family
   tokens. Pair it with the role's `-letter-spacing` token, which the shorthand
   cannot hold.
+- `.scaffold` places an app shell's regions so a page needs no shell grid of
+  its own. Its direct children land by component: a `<header>` app bar across
+  the top, then a navigation rail, `<main>` and a vertical toolbar from the
+  leading edge to the trailing one. `.scaffold-bar`, `.scaffold-rail`,
+  `.scaffold-pane` and `.scaffold-trailing` place custom content. The shell is
+  as tall as the window and only `<main>` scrolls, and a top app bar fills from
+  the pane's scroll where the browser supports `timeline-scope`. CSS only.
 
 ## [0.18.1] - 2026-11-15
 

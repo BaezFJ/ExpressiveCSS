@@ -1,0 +1,208 @@
+---
+import DocsLayout from "../layouts/DocsLayout.astro";
+import Section from "../components/Section.astro";
+import Code from "../components/Code.astro";
+import { defineSections } from "../lib/sections";
+
+const S = defineSections([
+  { id: "anatomy", label: "Anatomy", heading: false },
+  { id: "regions", label: "Regions" },
+  { id: "panes", label: "Panes inside the scaffold" },
+  { id: "scrolling", label: "Scrolling" },
+  { id: "direction", label: "Right-to-left" },
+  { id: "limits", label: "Limits" },
+  { id: "accessibility", label: "Accessibility" },
+]);
+---
+<DocsLayout page="scaffold" sections={S}>
+  <Section {...S.anatomy}>
+        <p class="flow-text">
+          A scaffold places an app's bars, rails and panes, so a page doesn't
+          have to write its own shell grid. The components inside keep their
+          own look and behavior; the scaffold only decides where each one goes.
+        </p>
+        <p>
+          Put <code>.scaffold</code> on a <code>&lt;div&gt;</code> or on
+          <code>&lt;body&gt;</code>. Its direct children are placed by what
+          they are: the top app bar <code>&lt;header&gt;</code> spans the top,
+          and the <a href="navigation-rail.html">navigation rail</a>,
+          <code>&lt;main&gt;</code> and a vertical
+          <a href="toolbars.html">toolbar</a> share the row below it, from the
+          leading edge to the trailing one. The scaffold is as tall as the
+          window and only <code>&lt;main&gt;</code> scrolls. The scaffold is
+          CSS only.
+        </p>
+        <div data-markdown-ignore>
+          <div class="scaffold outlined" style="block-size: 26rem">
+            <header>
+              <div class="bar">
+                <button type="button" aria-label="Main menu">
+                  <span class="material-symbols" aria-hidden="true">menu</span>
+                </button>
+                <h2>Mail</h2>
+              </div>
+            </header>
+            <nav class="navigation-rail" aria-label="Scaffold demo navigation">
+              <a href="#anatomy" aria-current="page"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a>
+              <a href="#regions"><span class="material-symbols" aria-hidden="true">star</span>Starred</a>
+              <a href="#scrolling"><span class="material-symbols" aria-hidden="true">send</span>Sent</a>
+            </nav>
+            <div class="scaffold-pane" tabindex="-1">
+              <div class="p-4">
+                <h3>Inbox</h3>
+                <p>The pane scrolls on its own. The bar, rail and toolbar stay where they are.</p>
+                <p style="block-size: 40rem">Keep scrolling.</p>
+                <p>End of the inbox.</p>
+              </div>
+            </div>
+            <div class="toolbar vertical">
+              <button type="button" aria-label="Calendar"><span class="material-symbols" aria-hidden="true">calendar_month</span></button>
+              <button type="button" aria-label="Notes"><span class="material-symbols" aria-hidden="true">sticky_note_2</span></button>
+              <button type="button" aria-label="Tasks"><span class="material-symbols" aria-hidden="true">task_alt</span></button>
+            </div>
+          </div>
+        </div>
+        <p>
+          The demo gives the scaffold a fixed height and uses
+          <code>.scaffold-pane</code>, because this page already has its own
+          <code>&lt;main&gt;</code>. In an app, write it like this:
+        </p>
+<Code code={`
+<body class="scaffold">
+  <header>
+    <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+    <div class="bar">
+      <button type="button" aria-label="Main menu">
+        <span class="material-symbols" aria-hidden="true">menu</span>
+      </button>
+      <h1>Mail</h1>
+    </div>
+  </header>
+  <nav class="navigation-rail" aria-label="Primary">
+    <a href="/inbox" aria-current="page"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a>
+    <a href="/starred"><span class="material-symbols" aria-hidden="true">star</span>Starred</a>
+  </nav>
+  <main id="main" tabindex="-1">…</main>
+  <div class="toolbar vertical">
+    <button type="button" aria-label="Calendar"><span class="material-symbols" aria-hidden="true">calendar_month</span></button>
+  </div>
+</body>
+`} />
+  </Section>
+  <Section {...S.regions}>
+        <p>Each region takes one direct child:</p>
+        <ul>
+          <li>Bar: a <code>&lt;header&gt;</code> top app bar, or <code>.scaffold-bar</code>.</li>
+          <li>Rail: a <code>.navigation-rail</code>, or <code>.scaffold-rail</code>.</li>
+          <li>Pane: <code>&lt;main&gt;</code>, or <code>.scaffold-pane</code>.</li>
+          <li>Trailing: a <code>.toolbar.vertical</code> or <code>.toolbar-group.vertical</code>, or <code>.scaffold-trailing</code>.</li>
+        </ul>
+        <p>
+          Use the region classes for custom content that isn't one of those
+          components. A region with nothing in it takes no space: without a
+          rail the pane meets the leading edge, and without a bar the rail and
+          pane start at the top. A second child in the same region would
+          overlap the first, so give the ones you aren't showing
+          <code>hidden</code>.
+        </p>
+        <p>
+          The rail fills its region from the bar down to the bottom of the
+          window and scrolls its own destinations when they don't fit.
+          Expanding it widens its column and narrows the pane. The vertical
+          toolbar is centered in its region, 24px from the pane and from the
+          window edge.
+        </p>
+<Code code={`
+<div class="scaffold">
+  <div class="scaffold-bar">…</div>
+  <div class="scaffold-rail">…</div>
+  <div class="scaffold-pane">…</div>
+  <div class="scaffold-trailing">…</div>
+</div>
+`} />
+  </Section>
+  <Section {...S.panes}>
+        <p>
+          Put a <a href="panes.html">panes</a> layout inside
+          <code>&lt;main&gt;</code>, or put the panes classes on
+          <code>&lt;main&gt;</code> itself. The panes fill the pane region and
+          each one scrolls on its own.
+        </p>
+<Code code={`
+<main id="main" class="panes list-detail" tabindex="-1">
+  <div class="list-pane">…</div>
+  <div class="detail-pane">…</div>
+</main>
+`} />
+        <p>
+          Panes choose their columns from the window width. The pane region is
+          narrower than the window by the rail and toolbar, so near 840px a
+          list-detail layout can show two columns in a narrow region. To make
+          the panes follow the region instead, set
+          <code>container-type: inline-size</code> on <code>&lt;main&gt;</code>.
+          That also makes <code>&lt;main&gt;</code> the containing block for
+          anything fixed inside it, such as a FAB, which then scrolls with the
+          pane.
+        </p>
+  </Section>
+  <Section {...S.scrolling}>
+        <p>
+          The scaffold never scrolls the document. <code>&lt;main&gt;</code>
+          scrolls, and so does a rail with more destinations than fit. Give
+          <code>&lt;main&gt;</code> <code>tabindex="-1"</code> and a skip link
+          that points at it, so keyboard users can move into the pane and
+          scroll it with Page Down, Space and the arrow keys. Put the skip link
+          inside the <code>&lt;header&gt;</code>: a direct child of the
+          scaffold that isn't a region would land in a free grid cell.
+        </p>
+        <p>
+          A top app bar fills with <code>surface-container</code> once the pane
+          has scrolled, in browsers that support <code>timeline-scope</code>.
+          Elsewhere it stays at rest. When a panes layout scrolls inside
+          <code>&lt;main&gt;</code>, the bar stays at rest too, since
+          <code>&lt;main&gt;</code> itself doesn't scroll.
+        </p>
+        <p>
+          Printing drops the fixed height, so the whole pane prints. The rail
+          doesn't print.
+        </p>
+  </Section>
+  <Section {...S.direction}>
+        <p>
+          The regions follow the writing direction. Under
+          <code>dir="rtl"</code> the rail is on the right and the toolbar on
+          the left.
+        </p>
+  </Section>
+  <Section {...S.limits}>
+        <ul>
+          <li>
+            <code>.medium</code> and <code>.large</code> app bars collapse when
+            the window scrolls, so in a scaffold they stay expanded. Use the
+            small bar.
+          </li>
+          <li>
+            <a href="back-to-top.html">Back to top</a> watches the window, so
+            in a scaffold it never appears.
+          </li>
+          <li>
+            A navigation rail's side panel spans the window height, so it opens
+            over the bar.
+          </li>
+          <li>
+            Other children aren't placed. They fill whatever grid cell is free.
+          </li>
+        </ul>
+  </Section>
+  <Section {...S.accessibility}>
+        <p>
+          The scaffold adds no landmark. Its <code>&lt;header&gt;</code> is the
+          page's banner, the navigation rail is a navigation landmark, and
+          <code>&lt;main&gt;</code> is the main landmark, in that order. Write
+          the scaffold as a <code>&lt;div&gt;</code> or on
+          <code>&lt;body&gt;</code>, never as a landmark element or with a
+          landmark role. A page has one scaffold; use panes or the grid inside
+          <code>&lt;main&gt;</code> for more columns.
+        </p>
+  </Section>
+</DocsLayout>
