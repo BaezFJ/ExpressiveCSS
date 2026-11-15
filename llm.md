@@ -2530,7 +2530,7 @@ The `disabled` attribute on a `<button>`. A link cannot be disabled, so a link b
 
 ### Loading state
 
-Set `aria-busy="true"` on a `<button>` or `.button` while its command runs. The button keeps its label and colors, reports busy to assistive technology, and a shaped common button shows a small spinner after its label, fading in after `--md-comp-button-busy-delay` (300ms) so a quick request doesn't flash it; the button grows by the spinner. Under reduced motion the spinner holds still, and a disabled button shows none. Circle, extended and icon buttons, FABs, buttons in toolbars, groups and other fixed slots, data table sort buttons and menu triggers show no spinner. `BusyButtons` ignores every press while the attribute is set: a capture-phase click listener on the document cancels the click before handlers on the page's elements, so a mouse press, Enter, Space and a form's implicit submission do nothing. The root bundle starts it; with the modular entry, call `BusyButtons.Init()`. `requestSubmit()` sends no click, and buttons in closed shadow roots are out of reach. Remove the attribute to make the button work again.
+Set `aria-busy="true"` on a `<button>` or `.button` while its command runs. The button keeps its label and colors, reports busy to assistive technology, and a shaped common button shows a small spinner after its label, fading in after `--md-comp-button-busy-delay` (300ms) so a quick request doesn't flash it; the button grows by the spinner. Under reduced motion the spinner holds still, and a disabled button shows none. Circle, extended and icon buttons, FABs, buttons in toolbars, groups and other fixed slots, data table sort buttons and menu triggers show no spinner. For those, keep a `.loading-indicator` beside the button, `hidden` while idle. `BusyButtons` ignores every press while the attribute is set: a capture-phase click listener on the document cancels the click before handlers on the page's elements, so a mouse press, Enter, Space and a form's implicit submission do nothing. The root bundle starts it; with the modular entry, call `BusyButtons.Init()`. `requestSubmit()` sends no click, and buttons in closed shadow roots are out of reach. Remove the attribute to make the button work again.
 
 ```html
 <button type="submit" aria-busy="true"><span>Saving…</span></button>
@@ -2538,7 +2538,7 @@ Set `aria-busy="true"` on a `<button>` or `.button` while its command runs. The 
 
 ### App behavior
 
-While a command's request runs, set `aria-busy="true"` on its button synchronously, before any `await`, and remove it in `finally` once the spinner has shown for about 500ms. That keeps the label and focus, shows progress after the 300ms delay and ignores repeat presses, so the handler needs no pending flag. Screen readers may not announce busy, so also change the label to the verb's in-progress form ending in the `…` character, such as "Saving…", never "Loading" or "Please wait". Announce the result once, in a snackbar or a `role="status"` region present from load (visible or `.visually-hidden`, never `hidden`) whose text you change. A native form post that leaves the page needs none of this.
+While a command's request runs, set `aria-busy="true"` on its button synchronously, before any `await`, and remove it in `finally` once the spinner has shown for about 500ms. That keeps the label and focus, shows progress after the 300ms delay and ignores repeat presses while `BusyButtons` runs, so the handler needs no pending flag. Screen readers may not announce busy, so also change the label to the verb's in-progress form ending in the `…` character, such as "Saving…", never "Loading" or "Please wait". Announce the result once, in a snackbar or a `role="status"` region present from load (visible or `.visually-hidden`, never `hidden`) whose text you change. A native form post that leaves the page needs none of this.
 
 ```js
 form.addEventListener('submit', async (event) => {
@@ -2547,7 +2547,7 @@ form.addEventListener('submit', async (event) => {
   save.firstElementChild.textContent = 'Saving…';
   const started = performance.now();
   try { await send(new FormData(form)); } finally {
-    const shown = performance.now() - started - 300;
+    const shown = performance.now() - started - 300; // the spinner's delay token
     if (shown > 0) await new Promise((done) => setTimeout(done, 500 - shown));
     save.removeAttribute('aria-busy');
     save.firstElementChild.textContent = 'Save';

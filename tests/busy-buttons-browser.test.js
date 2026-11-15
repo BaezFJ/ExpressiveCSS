@@ -27,7 +27,8 @@ for (const [engine, browserType, browserTest] of engines) {
       const tab = await browser.newPage();
       await tab.setContent(page(`<script>${js}</script>`));
       const save = tab.locator('#save');
-      await tab.waitForTimeout(400);
+      assert.equal(Number(await save.evaluate((el) => getComputedStyle(el, '::after').opacity)), 0, 'the indicator waits for its delay');
+      await tab.waitForFunction(() => getComputedStyle(document.getElementById('save'), '::after').opacity === '1');
       assert.equal(await tab.getByRole('button', { name: 'Saving…' }).count(), 1, 'the indicator adds nothing to the name');
       assert.equal(await save.evaluate((el) => getComputedStyle(el, '::after').content), '""');
       assert.equal(Number(await save.evaluate((el) => getComputedStyle(el, '::after').opacity)), 1, 'the indicator shows after the delay');
@@ -57,6 +58,19 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 
+  browserTest(`${engine}: under reduced motion the busy indicator holds still`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const tab = await browser.newPage();
+      await tab.emulateMedia({ reducedMotion: 'reduce' });
+      await tab.setContent(page(`<script>${js}</script>`));
+      const name = await tab.locator('#save').evaluate((el) => getComputedStyle(el, '::after').animationName);
+      assert.doesNotMatch(name, /button-busy-spin/);
+    } finally {
+      await browser.close();
+    }
+  });
+
   browserTest(`${engine}: without the runtime a busy button still takes presses`, async () => {
     const browser = await leaseBrowser(browserType);
     try {
@@ -76,7 +90,7 @@ for (const [engine, browserType, browserTest] of engines) {
         const tab = await browser.newPage();
         await tab.emulateMedia({ forcedColors: 'active' });
         await tab.setContent(page(`<script>${js}</script>`));
-        await tab.waitForTimeout(400);
+        await tab.waitForFunction(() => getComputedStyle(document.getElementById('save'), '::after').opacity === '1');
         const style = await tab.locator('#save').evaluate((el) => ({
           content: getComputedStyle(el, '::after').content,
           fill: getComputedStyle(el, '::after').borderBlockStartColor,

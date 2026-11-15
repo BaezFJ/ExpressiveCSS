@@ -9,7 +9,7 @@ Component ID: `buttons`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `e8be680743b32f64d4cd97c3f8b61d76d4e102f7dc8eedba0903054032ffbc78`
+Contract SHA-256: `126c21a1f3a4de2eea4f03d431fb047f7d3768f674496f2af67e8d87160d4f19`
 
 #### Selection and adaptation
 
@@ -70,7 +70,7 @@ Two independent axes dress it: a style (`filled`, `tonal`, `outlined`, `elevated
 
 #### App behavior
 
-While a command's request runs, set `aria-busy="true"` on its button synchronously, before any `await`, and remove it in `finally` once the spinner has shown for about 500ms. That keeps the label and focus, shows progress after the 300ms delay and ignores repeat presses, so the handler needs no pending flag. Screen readers may not announce busy, so also change the label to the verb's in-progress form ending in the `…` character, such as "Saving…", never "Loading" or "Please wait". Announce the result once, in a snackbar or a `role="status"` region present from load (visible or `.visually-hidden`, never `hidden`) whose text you change. A native form post that leaves the page needs none of this.
+While a command's request runs, set `aria-busy="true"` on its button synchronously, before any `await`, and remove it in `finally` once the spinner has shown for about 500ms. That keeps the label and focus, shows progress after the 300ms delay and ignores repeat presses while `BusyButtons` runs, so the handler needs no pending flag. Screen readers may not announce busy, so also change the label to the verb's in-progress form ending in the `…` character, such as "Saving…", never "Loading" or "Please wait". Announce the result once, in a snackbar or a `role="status"` region present from load (visible or `.visually-hidden`, never `hidden`) whose text you change. A native form post that leaves the page needs none of this.
 
 ```js
 form.addEventListener('submit', async (event) => {
@@ -79,7 +79,7 @@ form.addEventListener('submit', async (event) => {
   save.firstElementChild.textContent = 'Saving…';
   const started = performance.now();
   try { await send(new FormData(form)); } finally {
-    const shown = performance.now() - started - 300;
+    const shown = performance.now() - started - 300; // the spinner's delay token
     if (shown > 0) await new Promise((done) => setTimeout(done, 500 - shown));
     save.removeAttribute('aria-busy');
     save.firstElementChild.textContent = 'Save';
