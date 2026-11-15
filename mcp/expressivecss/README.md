@@ -550,7 +550,8 @@ Static inspection uses descriptor-level, no-follow bounded reads and rechecks fi
 `expressivecss-lint` runs the same static checks as `rules_enforcer` (bundled
 semantics rules, retired markup patterns, raw colors in component
 declarations, a `transition` or `transition-property` on the `all` keyword,
-a viewport `<meta>` tag that tries to stop zoom, initialization checks)
+a viewport `<meta>` tag that tries to stop zoom, an inline paste handler
+that always cancels paste, initialization checks)
 without an MCP client. The pattern checks read the whole file, so they cover
 `style` attributes and `<style>` blocks, and you can pass a stylesheet too.
 The command doesn't follow `<link rel="stylesheet">`. It exits 1 when it finds anything, so it fits `pre-commit` and CI:
