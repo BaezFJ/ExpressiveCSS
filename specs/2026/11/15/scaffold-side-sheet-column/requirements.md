@@ -17,7 +17,7 @@ From 1200px up, in a `.scaffold`:
 - A direct-child `dialog.side-sheet` that is open, not modal and not `[hidden]` takes a `sheet` column between the pane and the trailing region, in both the default and `.tall-rail` layouts. It is static in the grid with `z-index: auto`, exactly `--md-comp-side-sheet-container-width` (400px) wide with no bleed padding, no entry slide and no inner-edge divider (the shell's gap separates it), and stretches from the bar (or, in the tall-rail layout, the top) down to the status row or the bottom. Without a trailing toolbar it meets the window's trailing edge, as a docked sheet does.
 - The pane narrows by the sheet's width while it is open and gets it back when the sheet closes.
 - The trailing toolbar stays at the window's trailing edge.
-- The floating pane keeps a 16px gap before the sheet, even when a toolbar sets its trailing gap to the toolbar's margin. A pane area that doesn't float (a panes container, or one holding separated panes, from phase 95) meets the sheet without a gap.
+- The floating pane keeps a 16px gap before the sheet, even when a toolbar sets its trailing gap to the toolbar's margin. A pane area that doesn't float (a panes container, or one holding separated panes, from phase 95) gets no scaffold gap; a panes container keeps its own 24px margin.
 - The docs say to place the sheet between `main` and the toolbar in the markup, so Tab order matches the columns, and that a sheet that isn't a direct child stays an overlay.
 
 ## Exclusions

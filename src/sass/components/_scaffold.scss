@@ -12,6 +12,8 @@
 //   trailing  .toolbar.vertical or .toolbar-group.vertical, or .scaffold-trailing
 //   navbar    nav.navigation-bar, or a <footer> whose only child is one (compact only)
 //   status    .status-bar, full width along the bottom (600px and up)
+//   sheet     an open standard dialog.side-sheet, between the pane and the
+//             trailing region (1200px and up; an overlay below)
 //
 // The bar spans the top, and the rail, pane and trailing regions share the row
 // below it. .tall-rail runs the rail and trailing region from the top down to
@@ -50,16 +52,18 @@ $_navbar-size: "52px + 1rem + max(6px, env(safe-area-inset-bottom, 0px))";
 // keeps its own margins), and not holding separated or floating panes (they
 // are already cards).
 $_floating-pane: "#{$_pane}:not(:is(.panes, .pane-layout, .list-detail, .supporting-pane-layout), :has(> :is(.panes, .pane-layout):is(.separated, .floating)))";
+// An open standard side sheet that takes the sheet column.
+$_sheet-open: "dialog.side-sheet[open]:not(:modal, .start, [hidden])";
 // A shown navigation bar region, as a :has() argument list.
 $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])";
 
 .scaffold {
   display: grid;
   grid-template-areas:
-    "bar bar bar"
-    "rail pane trailing"
-    "status status status";
-  grid-template-columns: auto minmax(0, 1fr) auto;
+    "bar bar bar bar"
+    "rail pane sheet trailing"
+    "status status status status";
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
   grid-template-rows: auto minmax(0, 1fr) auto;
   block-size: 100dvh;
   overflow: clip;
@@ -71,13 +75,13 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
   // [hidden] rail is an empty region and takes no space.
   @include bp-up("medium") {
     &:has(> .navigation-rail.modal:not([hidden])) {
-      grid-template-columns: var(--md-comp-nav-rail-collapsed-width, 96px) minmax(0, 1fr) auto;
+      grid-template-columns: var(--md-comp-nav-rail-collapsed-width, 96px) minmax(0, 1fr) auto auto;
     }
   }
 
   @include bp-between("medium", "expanded") {
     &:has(> .navigation-rail:not([hidden])) {
-      grid-template-columns: var(--md-comp-nav-rail-collapsed-width, 96px) minmax(0, 1fr) auto;
+      grid-template-columns: var(--md-comp-nav-rail-collapsed-width, 96px) minmax(0, 1fr) auto auto;
     }
 
     // Collapsing drops the rail back into its held column at the expanded
@@ -95,9 +99,9 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
   // bar sits over the pane only, as in the rail layout template.
   &.tall-rail {
     grid-template-areas:
-      "rail bar trailing"
-      "rail pane trailing"
-      "status status status";
+      "rail bar sheet trailing"
+      "rail pane sheet trailing"
+      "status status status status";
   }
 
   > #{$_bar} {
@@ -195,6 +199,40 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
         --_scaffold-pane-gap-end: 0;
       }
     }
+  }
+
+  // From 1200px up an open standard side sheet is a third column between the
+  // pane and the trailing region, so the pane narrows instead of hiding under
+  // it. It drops its fixed overlay, bleed, divider and entry slide (which
+  // would cross the toolbar), and keeps its drag shift. Below 1200px, and
+  // modal or leading sheets, keep the overlay.
+  @include bp-up("large") {
+    > #{$_sheet-open} {
+      grid-area: sheet;
+      position: static;
+      z-index: auto;
+      width: var(--md-comp-side-sheet-container-width, 400px);
+      max-width: none;
+      padding-inline-end: 0;
+      border-inline-start: 0;
+    }
+
+    @starting-style {
+      > #{$_sheet-open} {
+        translate: var(--md-comp-side-sheet-shift, 0px) 0;
+      }
+    }
+
+    // The floating pane keeps its 16px gap before the sheet, even beside a
+    // toolbar.
+    &:has(> #{$_sheet-open}) {
+      --_scaffold-pane-gap-end: 16px;
+    }
+  }
+
+  // An open dialog's display: flex would beat the browser's [hidden].
+  > dialog.side-sheet[hidden] {
+    display: none;
   }
 
   // The pane names a scroll timeline and the scope lifts it to the shell. The

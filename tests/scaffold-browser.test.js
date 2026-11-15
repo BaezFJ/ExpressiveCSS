@@ -238,7 +238,7 @@ for (const [name, type, run] of engines) {
     try {
       const measure = () => Promise.all(['#rail', '#bar', '#pane', '#tools'].map(box));
       let [nav, bar, main, tb] = await measure();
-      assert.equal((await style('#s', 'gridTemplateAreas')).replace(/\s+/g, ' '), '"rail bar trailing" "rail pane trailing" "status status status"');
+      assert.equal((await style('#s', 'gridTemplateAreas')).replace(/\s+/g, ' '), '"rail bar sheet trailing" "rail pane sheet trailing" "status status status status"');
       assert.deepEqual([nav.left, nav.top], [0, 0], 'the rail starts at the top leading corner');
       near(nav.bottom, 800, 'the rail reaches the window bottom');
       near(bar.left, nav.right, 'the bar starts at the rail');
@@ -862,6 +862,92 @@ for (const [name, type, run] of engines) {
       assert.equal(await style('#pane', 'marginInlineEnd'), '24px', 'a panes container keeps its own margins');
       sameColor(await rgb(tab, '#pane'), await rgb(tab, '#p-surface', 'color'), 'and its own surface color');
       assert.equal(await style('#pane', 'borderTopLeftRadius'), '0px', 'and gets no radius');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  const sheet = (cls = '', attrs = '') => `<dialog class="side-sheet ${cls}" id="sheet"${attrs}><header><h2>Details</h2></header><p>Body</p></dialog>`;
+  const withSheet = (opts = {}, sheetHtml = sheet()) => scaffold({ ...opts, main: (opts.main ?? pane) + sheetHtml });
+
+  run(`${name}: from 1200px up an open standard side sheet takes a column between the pane and the toolbar`, { timeout: 30000 }, async () => {
+    const { browser, tab, box, style } = await open(type, page(`<div id="host">${withSheet()}</div>`), { width: 1440 });
+    try {
+      const before = await box('#pane');
+      const tools0 = await box('#tools');
+      await tab.locator('#sheet').evaluate((el) => el.show());
+      const sh = await box('#sheet');
+      const main = await box('#pane');
+      assert.equal(await style('#sheet', 'position'), 'static', 'the sheet is a grid item');
+      near(sh.width, 400, 'it is 400px wide');
+      assert.equal(await style('#sheet', 'borderInlineStartWidth'), '0px', 'with no inner divider');
+      near(sh.left, main.right + 16, 'after the pane and its gap');
+      near(sh.right, tools0.left - 24, 'before the toolbar and its margin');
+      near(sh.top, (await box('#bar')).bottom, 'from the bar');
+      near(sh.bottom, 800, 'to the bottom');
+      near(before.width - main.width, 416, 'the pane made room');
+      assert.deepEqual(await box('#tools'), tools0, 'the toolbar stays put');
+      await tab.locator('#sheet').evaluate((el) => el.close());
+      assert.deepEqual(await box('#pane'), before, 'closing gives the width back');
+
+      await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, withSheet({ trailing: '' }));
+      const wide = await box('#pane');
+      await tab.locator('#sheet').evaluate((el) => el.show());
+      near((await box('#sheet')).right, 1440, 'without a toolbar the sheet meets the window edge');
+      near((await box('#sheet')).left, (await box('#pane')).right + 16, 'after the pane gap');
+      near(wide.width - (await box('#pane')).width, 400, 'and the pane gives up exactly the sheet');
+
+      await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, withSheet({ trailing: '', main: '<main id="pane" class="panes list-detail"><div class="list-pane">A</div><div class="detail-pane">B</div></main>' }));
+      await tab.locator('#sheet').evaluate((el) => el.show());
+      near((await box('#sheet')).left, (await box('#pane')).right + 24, 'a panes container keeps its own 24px margin before the sheet');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: the sheet column follows the tall rail and the status row, and mirrors under rtl`, { timeout: 30000 }, async () => {
+    const status = '<footer class="status-bar" id="sb"><span>Ready</span></footer>';
+    const { browser, tab, box, style } = await open(type, page(`<div id="host">${withSheet({ cls: 'tall-rail' })}</div>`), { width: 1440 });
+    try {
+      await tab.locator('#sheet').evaluate((el) => el.show());
+      assert.equal(await style('#sheet', 'position'), 'static');
+      const sh = await box('#sheet');
+      assert.deepEqual([Math.round(sh.top), Math.round(sh.bottom)], [0, 800], 'the tall-rail sheet runs the full height');
+      await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, withSheet({ bottom: status }));
+      await tab.locator('#sheet').evaluate((el) => el.show());
+      near((await box('#sheet')).bottom, (await box('#sb')).top, 'with a status bar it ends above it');
+      await tab.evaluate(() => { document.documentElement.dir = 'rtl'; });
+      await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, withSheet());
+      await tab.locator('#sheet').evaluate((el) => el.show());
+      const r = await box('#sheet');
+      near(r.right, (await box('#pane')).left - 16, 'under rtl it sits before the pane');
+      near(r.left, (await box('#tools')).right + 24, 'and after the toolbar');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: below 1200px, and modal, leading or hidden sheets, stay out of the column`, { timeout: 30000 }, async () => {
+    const { browser, tab, box, style } = await open(type, page(`<div id="host">${withSheet()}</div>`), { width: 1000 });
+    try {
+      const before = await box('#pane');
+      await tab.locator('#sheet').evaluate((el) => el.show());
+      assert.equal(await style('#sheet', 'position'), 'fixed', 'at 1000px the sheet is still an overlay');
+      assert.deepEqual(await box('#pane'), before, 'and the pane keeps its box');
+      await tab.setViewportSize({ width: 1440, height: 800 });
+      assert.equal(await style('#sheet', 'position'), 'static', 'resized to 1440 it takes the column');
+      await tab.setViewportSize({ width: 1000, height: 800 });
+      assert.equal(await style('#sheet', 'position'), 'fixed', 'and back at 1000 it overlays again');
+      await tab.setViewportSize({ width: 1440, height: 800 });
+      for (const [label, html, opener] of [['modal', withSheet(), 'showModal'], ['leading', withSheet({}, sheet('start')), 'show']]) {
+        await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, html);
+        await tab.locator('#sheet').evaluate((el, m) => el[m](), opener);
+        assert.equal(await style('#sheet', 'position'), 'fixed', `a ${label} sheet stays fixed`);
+        await tab.locator('#sheet').evaluate((el) => el.close());
+      }
+      await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, withSheet({}, sheet('', ' hidden')));
+      await tab.locator('#sheet').evaluate((el) => el.show());
+      assert.equal(await style('#sheet', 'display'), 'none', 'a hidden sheet stays hidden');
     } finally {
       await browser.close();
     }
