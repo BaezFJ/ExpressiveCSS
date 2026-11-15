@@ -5101,9 +5101,9 @@ Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself
 </div>
 ```
 
-A direct-child `status-bar` takes a full-width row along the bottom, under the rail, pane and toolbar (also with `tall-rail`), and hides below 600px; its `data-priority="low"` hiding therefore never shows in a scaffold.
-
 Each region takes one direct child. For custom content use the region classes `scaffold-bar`, `scaffold-rail`, `scaffold-pane` and `scaffold-trailing`. A region with nothing in it takes no space. A second visible child in one region overlaps the first, so give the ones not shown `hidden`. Other direct children are not placed and fall into a free grid cell, so keep a skip link inside the `<header>`.
+
+A direct-child `status-bar` takes a full-width row along the bottom, under the rail, pane and toolbar (also with `tall-rail`), and hides below 600px; its `data-priority="low"` hiding therefore never shows in a scaffold.
 
 ```html
 <div class="scaffold">

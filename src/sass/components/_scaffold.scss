@@ -15,7 +15,8 @@
 //
 // The bar spans the top, and the rail, pane and trailing regions share the row
 // below it. .tall-rail runs the rail and trailing region from the top down to
-// the window's bottom, or to a status bar, and puts the bar over the pane only. An empty region takes no space.
+// the window's bottom, or to a status bar, and puts the bar over the pane
+// only. An empty region takes no space.
 //
 // From 600px up the shell is as tall as the window and only the pane scrolls.
 // `clip` rather than `hidden` keeps focus and find-in-page from scrolling the
@@ -86,8 +87,8 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
     transition: none;
   }
 
-  // The rail and trailing region run the full height and the bar sits over
-  // the pane only, as in the rail layout template.
+  // The rail and trailing region run from the top to the status row and the
+  // bar sits over the pane only, as in the rail layout template.
   &.tall-rail {
     grid-template-areas:
       "rail bar trailing"
@@ -234,7 +235,8 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
     }
 
     // The compact layout has no rail region. The status bar hides here too,
-    // with or without a navigation bar, as the roadmap and its guide ask.
+    // because its 24px items are too small for touch and it would compete
+    // with the navigation bar for the bottom edge.
     > .navigation-rail:not(.expanded),
     > .scaffold-rail,
     > .status-bar {

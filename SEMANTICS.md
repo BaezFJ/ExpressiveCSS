@@ -1194,7 +1194,7 @@ Added with the scaffold. A layout container that places an app bar, navigation r
 | `scaffold-does-not-nest` | forbid | `.scaffold .scaffold` | must not match |
 
 - **scaffold-is-not-a-landmark** - Write the scaffold as a <div> inside <body>. Its header, navigation rail and main are the landmarks; a role on the scaffold would wrap them in another one.
-- **scaffold-one-child-per-region** - Each scaffold region holds one visible child: one header or .scaffold-bar, one navigation rail or .scaffold-rail, one main or .scaffold-pane, one vertical toolbar or .scaffold-trailing, one .status-bar, and one navigation bar. A second one lands in the same grid area and overlaps the first. Add hidden to the ones not shown; hidden="until-found" still takes part in layout, so it counts as shown.
+- **scaffold-one-child-per-region** - Each scaffold region holds one visible child: one header or .scaffold-bar, one navigation rail or .scaffold-rail, one main or .scaffold-pane, one vertical toolbar or .scaffold-trailing, one .status-bar, and one direct-child navigation bar. A second one lands in the same grid area and overlaps the first. Add hidden to the ones not shown; hidden="until-found" still takes part in layout, so it counts as shown.
 - **scaffold-does-not-nest** - A scaffold is as tall as the window and holds the page's one main, so it can't sit inside another. Use panes or the grid inside the scaffold's main.
 
 ### scatter-chart

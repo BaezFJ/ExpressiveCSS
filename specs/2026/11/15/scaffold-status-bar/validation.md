@@ -47,3 +47,13 @@ None. Placement is measured by the agent-run checks; the status bar's own screen
     - The note listed the navigation bar as a region, but the rule didn't count it. Two direct-child navigation bars are now flagged, with a fixture. Phase 92 added that region; the rule catches up here.
   - Kept: the status bar hides below 600px even without a navigation bar, because the roadmap says "Under 600px it is hidden".
   - Results are recorded below after the full verify.
+- 2026-11-15, `code-review-and-quality` (five-axis review by an independent read-only subagent): no Critical or Required findings. R1 to R7 trace to code and to tests that fail on the old CSS. Fixed:
+  - Optional: the rule message now says "one direct-child navigation bar", which is the scope R7 checks.
+  - Optional: the copyable sample now includes a status bar.
+  - Nits:
+    - The header comment is rewrapped.
+    - The tall-rail comment says the regions run to the status row.
+    - The compact comment explains the hiding itself instead of pointing to the roadmap.
+    - A docs line is rewrapped.
+    - The `llm.md` status paragraph now follows the region rules.
+  - FYI, no change: RTL and print aren't browser-tested; the spec leaves print out.

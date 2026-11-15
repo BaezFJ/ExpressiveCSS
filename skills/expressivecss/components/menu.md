@@ -9,7 +9,7 @@ Component ID: `menu`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `7a2c56046875bcf971e2814aa32f9663b4551d0340cdc12b8151747ce89c6d84`
+Contract SHA-256: `1e3799a80ecbb593daf7517b3c6af601ccafda5ec4756311357ff50a48461cd5`
 
 #### Selection and adaptation
 
