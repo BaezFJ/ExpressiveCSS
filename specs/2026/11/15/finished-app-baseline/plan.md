@@ -44,6 +44,6 @@ Covers R1 to R8. Checks V5.
 
 Prerequisites: group 3.
 
-- [ ] Run `npm run verify`.
+- [x] Run `npm run verify`.
 
 Done when V5 passes.
