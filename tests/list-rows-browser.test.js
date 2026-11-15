@@ -99,13 +99,15 @@ const slots = `<!doctype html><html lang="en"><head><style>${css}</style></head>
 </ul></body></html>`;
 
 // The text's distance from the row's inline start, and the gap before a trailing <time>.
+// Rounded to 0.01px: Firefox can lay a text box out at 15.99998px.
 const inset = (li) => {
   const rtl = getComputedStyle(li).direction === 'rtl';
   const edge = li.getBoundingClientRect();
-  const from = (box) => (rtl ? edge.right - box.right : box.left - edge.left);
+  const px = (n) => Math.round(n * 100) / 100;
+  const from = (box) => px(rtl ? edge.right - box.right : box.left - edge.left);
   const text = li.querySelector('span:not(.material-symbols), div, button').getBoundingClientRect();
   const time = li.querySelector('time')?.getBoundingClientRect();
-  return { text: from(text), gap: time ? (rtl ? text.left - time.right : time.left - text.right) : null };
+  return { text: from(text), gap: time ? px(rtl ? text.left - time.right : time.left - text.right) : null };
 };
 
 for (const [name, engine, test] of engines) {
@@ -125,7 +127,7 @@ for (const [name, engine, test] of engines) {
           const rtl = getComputedStyle(li).direction === 'rtl';
           const edge = li.getBoundingClientRect();
           const p = li.querySelector('p').getBoundingClientRect();
-          return rtl ? edge.right - p.right : p.left - edge.left;
+          return Math.round((rtl ? edge.right - p.right : p.left - edge.left) * 100) / 100;
         });
         assert.equal(bare, 16, `${dir}: supporting text under bare label text starts at the padding`);
         // 16px padding, a 24px icon and the 16px gap.
