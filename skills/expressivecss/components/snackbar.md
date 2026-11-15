@@ -9,7 +9,7 @@ Component ID: `snackbar`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `313812fda67b160002ed2a944be5a91e92845a425a427f4dfb8f92e3fe74df2c`
+Contract SHA-256: `b065354ccb5987a27bd7e7c70dbc6250392e0b4462e5bef6aa975963f8682278`
 
 #### Selection and adaptation
 
@@ -93,6 +93,22 @@ One snackbar shows at a time. A new one waits until the one on screen is dismiss
 
 - `.dismiss()`: Dismiss this snackbar with its exit animation. Runs `completeCallback` when the animation finishes.
 - `Snackbar.dismissAll()`: Dismiss the snackbar on screen and every one waiting behind it.
+
+#### App behavior
+
+For a removal people can get back, act at once instead of asking first. Remove the item, keep its data, and show a snackbar with `action: 'Undo'` and `replace: true`. Leave `displayLength` unset, so the person has as long as they need; Undo stays reachable with Tab or a notification-actions button. In `onAction`, set an undone flag first, then put the item back where it was and focus its first control. Commit the removal in `completeCallback` unless the flag is set; that callback also runs when a newer snackbar replaces this one. On `pagehide`, commit any removal still pending with `fetch(url, { method: 'DELETE', keepalive: true })`. If the commit fails, put the item back and say so. Give every other snackbar on the page `replace: true` as well, so none waits behind the Undo bar. Keep a confirmation dialog for actions that can't be undone, such as deleting an account.
+
+```js
+let undone = false;
+removeItem(item);
+new Expressive.Snackbar({
+  text: 'Address deleted',
+  action: 'Undo',
+  replace: true,
+  onAction: () => { undone = true; restoreItem(item); },
+  completeCallback: () => { if (!undone) commitDelete(item); }
+});
+```
 
 #### Also documented
 

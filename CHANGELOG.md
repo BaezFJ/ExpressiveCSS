@@ -23,6 +23,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   press without losing focus, and announces the result once. Any component
   section in `llm.md` can now carry an App behavior subsection one heading level
   below the component's own, which the generated guide shows in full.
+- The snackbar and lists guides say how to remove something people can get
+  back: remove it at once, offer Undo with `replace: true`, commit when the
+  snackbar closes without Undo or the page hides, and keep a confirmation
+  dialog for actions that can't be undone. The `Dialogs.confirm()` example now
+  asks about such an action.
 
 ## [0.18.1] - 2026-11-15
 

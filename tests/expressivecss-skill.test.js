@@ -179,6 +179,29 @@ describe('the ExpressiveCSS agent skill', () => {
       { rest: `${fence}html\n<button>💾 Save</button>\n${fence}\n`, behavior: '#### App behavior\n\nKeep the label.\n\n' });
   });
 
+  test('the snackbar and lists guides carry the Undo App behavior for a removal people can get back', () => {
+    const behaviorOf = (slug) => {
+      const guide = readFileSync(new URL(`components/${slug}.md`, skillDirectory), 'utf8');
+      const start = guide.indexOf('#### App behavior');
+      assert.ok(start > guide.indexOf('#### Syntax') && start < guide.indexOf('#### Rules'), `${slug} App behavior sits between Syntax and Rules`);
+      assert.doesNotMatch(guide.slice(guide.indexOf('#### Contract'), guide.indexOf('#### Syntax')), /App behavior|pagehide|event\.detail/);
+      return guide.slice(start, guide.indexOf('\n#### ', start + 1));
+    };
+    const snackbar = behaviorOf('snackbar');
+    for (const phrase of ["action: 'Undo'", 'replace: true', 'onAction', 'completeCallback', 'pagehide', 'keepalive', 'displayLength', "can't be undone"]) {
+      assert.ok(snackbar.includes(phrase), `snackbar App behavior lacks ${phrase}`);
+    }
+    assert.ok(Buffer.byteLength(snackbar) <= 2048, `snackbar App behavior is ${Buffer.byteLength(snackbar)} bytes`);
+    const lists = behaviorOf('lists');
+    for (const phrase of ['Undo', 'event.detail', 'focus', 'empty state']) {
+      assert.ok(lists.includes(phrase), `lists App behavior lacks ${phrase}`);
+    }
+    assert.ok(Buffer.byteLength(lists) <= 1024, `lists App behavior is ${Buffer.byteLength(lists)} bytes`);
+    const contracts = readFileSync(new URL('references/behavior-contracts.md', skillDirectory), 'utf8');
+    assert.doesNotMatch(contracts, /Delete draft\?/);
+    assert.match(contracts, /can't be undone/);
+  });
+
   test('the buttons guide carries the App behavior subsection for a command that waits on a request', () => {
     const guide = readFileSync(new URL('components/buttons.md', skillDirectory), 'utf8');
     const start = guide.indexOf('#### App behavior');

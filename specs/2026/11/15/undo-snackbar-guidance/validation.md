@@ -7,7 +7,7 @@ Phase 80. Requirements: [requirements.md](requirements.md). Plan: [plan.md](plan
 | ID | Covers | Setup | Action | Expected result | Fails if | Result |
 | --- | --- | --- | --- | --- | --- | --- |
 | V1 | R1 to R4, R8 | Current tree. | `node --test tests/expressivecss-skill.test.js`. | The new test passes after failing first. | A key term is missing, or Syntax or Contract changed. | Pending |
-| V2 | R3, R7 | After group 1. | `npm run build:skill`, `npm run check:generated`, `node --test tests/semantics.test.js tests/docs-api.test.js`; measure both subsections. | Generated files current; examples pass; Snackbar subsection under 1.5 KB, Lists under 1 KB. | Any check fails or a subsection is over its cap. | Pending |
+| V2 | R3, R7 | After group 1. | `npm run build:skill`, `npm run check:generated`, `node --test tests/semantics.test.js tests/docs-api.test.js`; measure both subsections. | Generated files current; examples pass; Snackbar App behavior under 2 KB, Lists under 1 KB (asserted in the R4 test). | Any check fails or a subsection is over its cap. | Pending |
 | V3 | R5, R6 | Two rebuilt `destructive-list` apps. | Run the script on the two baseline apps first, then build, review, confirm and run it on each rebuild. | The script fails both baseline apps on their confirmation dialog, and passes both rebuilds; the second sequence and the destructive count are recorded; the run set is committed. | The script passes a baseline app, or a rebuild fails the gate after the allowed revisions, or a run set is missing. | Pending |
 | V4 | R7 | Clean build. | `npm run verify`, `npm test --prefix mcp/expressivecss`. | All pass; known flakes pass alone. | Any check fails on rerun. | Pending |
 

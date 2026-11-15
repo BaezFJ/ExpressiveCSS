@@ -6,9 +6,9 @@ Phase 80. Requirements: [requirements.md](requirements.md). Checks: [validation.
 
 Covers R1 to R4, R7. Checks V1, V2.
 
-- [ ] Add the R4 test and watch it fail.
-- [ ] Write the Snackbar and Lists `### App behavior` subsections and the Dialogs example change in `llm.md`.
-- [ ] Add the CHANGELOG entry, run `npm run build:skill` and the skill, semantics and docs-api tests.
+- [x] Add the R4 test and watch it fail.
+- [x] Write the Snackbar and Lists `### App behavior` subsections and the Dialogs example change in `llm.md`.
+- [x] Add the CHANGELOG entry, run `npm run build:skill` and the skill, semantics and docs-api tests.
 
 Done when V1 and V2 pass.
 
