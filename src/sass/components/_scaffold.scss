@@ -1,0 +1,89 @@
+@use "../abstracts" as *;
+
+// Scaffold. Places an app shell's regions; the components inside keep their
+// own look and behavior.
+//
+// Anatomy is the HTML: a div.scaffold (or body.scaffold) whose direct children
+// are the regions, placed by component.
+//   bar       header (the top app bar), or .scaffold-bar
+//   rail      .navigation-rail, or .scaffold-rail
+//   pane      main, or .scaffold-pane. A .panes layout goes inside main.
+//   trailing  .toolbar.vertical or .toolbar-group.vertical, or .scaffold-trailing
+//
+// The bar spans the top, and the rail, pane and trailing regions share the row
+// below it. The shell is as tall as the window and only the pane scrolls. An
+// empty region takes no space. `clip` rather than `hidden` keeps focus and
+// find-in-page from scrolling the shell itself.
+//
+// Limits: AppBar collapses .medium/.large bars and BackToTop shows on window
+// scroll, so in a scaffold a flexible bar stays expanded and the link stays
+// hidden. A rail's side panel spans the window height, over the bar. .panes
+// follows the window width unless the author makes main a size container.
+//
+// Nest descendants inside this block.
+
+$_bar: ":is(header, .scaffold-bar)";
+$_rail: ":is(.navigation-rail, .scaffold-rail)";
+$_pane: ":is(main, .scaffold-pane)";
+$_trailing: ":is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing)";
+
+.scaffold {
+  // The bar's scroll fill reads this timeline; the pane names it below.
+  timeline-scope: --scaffold-pane;
+
+  display: grid;
+  grid-template-areas:
+    "bar bar bar"
+    "rail pane trailing";
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr);
+  block-size: 100dvh;
+  overflow: clip;
+
+  > #{$_bar} {
+    grid-area: bar;
+  }
+
+  > #{$_rail} {
+    grid-area: rail;
+    min-block-size: 0;
+  }
+
+  > #{$_pane} {
+    grid-area: pane;
+    min-inline-size: 0;
+    min-block-size: 0;
+    overflow: auto;
+    scroll-timeline: --scaffold-pane block;
+  }
+
+  > #{$_trailing} {
+    grid-area: trailing;
+  }
+
+  // safe: a toolbar taller than the region starts at its top rather than
+  // pushing its first action out. No overflow scroll, which would clip the
+  // .tooltip.left bubbles a trailing toolbar uses.
+  > :is(.toolbar.vertical, .toolbar-group.vertical) {
+    align-self: safe center;
+    margin-inline: var(--md-comp-toolbar-external-space, 24px);
+  }
+
+  // (0,2,1) beats the app bar's (0,1,2) header:has() rule. Only the timeline
+  // changes, so the bar keeps its animation name and 8px range.
+  @supports (timeline-scope: --a) {
+    > header:has(> nav, > .bar) {
+      animation-timeline: --scaffold-pane;
+    }
+  }
+
+  @media print {
+    display: block;
+    block-size: auto;
+    overflow: visible;
+
+    > #{$_pane} {
+      overflow: visible;
+    }
+  }
+}

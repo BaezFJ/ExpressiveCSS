@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**109 of 109 rows enforced; 0 remaining.**
+**110 of 110 rows enforced; 0 remaining.**
 
-104 of those rows are components - a part of the framework an author writes markup for.
+105 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 104 components declare conformance debt.**
+**2 of 105 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -1182,6 +1182,20 @@ Added with the sankey chart component. The <table> is the chart's text alternati
 
 - **sankey-chart-is-a-figure-with-a-table** - Write .sankey-chart as a <figure> holding a <table> of the flows. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
 - **sankey-chart-has-a-caption** - Name a .sankey-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
+
+### scaffold
+
+Added with the scaffold. A layout container that places an app bar, navigation rail, main and trailing vertical toolbar it holds as direct children. The landmarks belong to those children, so the scaffold is a plain <div> or the <body>.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `scaffold-is-not-a-landmark` | forbid | `.scaffold:is(main, nav, header, footer, aside, section, [role="application"], [role="banner"], [role="complementary"], [role="contentinfo"], [role="document"], [role="main"], [role="navigation"], [role="region"])` | must not match |
+| `scaffold-one-child-per-region` | forbid | `.scaffold > :is(header, .scaffold-bar):not([hidden]) ~ :is(header, .scaffold-bar):not([hidden]), .scaffold > :is(.navigation-rail, .scaffold-rail):not([hidden]) ~ :is(.navigation-rail, .scaffold-rail):not([hidden]), .scaffold > :is(main, .scaffold-pane):not([hidden]) ~ :is(main, .scaffold-pane):not([hidden]), .scaffold > :is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing):not([hidden]) ~ :is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing):not([hidden])` | must not match |
+| `scaffold-does-not-nest` | forbid | `.scaffold .scaffold` | must not match |
+
+- **scaffold-is-not-a-landmark** - Write the scaffold as a <div> or put the class on <body>. Its header, navigation rail and main are the landmarks; a role on the scaffold would wrap them in another one.
+- **scaffold-one-child-per-region** - Each scaffold region holds one visible child: one header or .scaffold-bar, one navigation rail or .scaffold-rail, one main or .scaffold-pane, and one vertical toolbar or .scaffold-trailing. A second one lands in the same grid area and overlaps the first. Add hidden to the ones not shown.
+- **scaffold-does-not-nest** - A scaffold is as tall as the window and holds the page's one main, so it can't sit inside another. Use panes or the grid inside the scaffold's main.
 
 ### scatter-chart
 

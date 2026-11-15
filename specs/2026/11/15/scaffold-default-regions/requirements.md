@@ -73,7 +73,7 @@ These belong to later phases of the milestone, or stay out:
 - **R10** In print, the scaffold and its pane area drop their fixed height and overflow, so the whole pane prints. The rail already hides in print.
 - **R11** Every selector this phase adds starts at `.scaffold` or a region class. Outside a scaffold, a navigation rail is still at least `100dvh` tall, a top app bar keeps its `scroll(root)` timeline, and a vertical toolbar keeps no margin.
 - **R12** A `scaffold` row in `semantics.json` is `enforced`, with these `fragmentSafe` `forbid` rules:
-  - The scaffold is not a landmark or a role: `.scaffold:is(main, nav, header, footer, aside, section, [role])`.
+  - The scaffold is not a landmark: neither a landmark element (`main`, `nav`, `header`, `footer`, `aside`, `section`) nor a landmark, `region`, `document` or `application` role. Listing the roles instead of `[role]` keeps the rule from blocking the composite roles, which the semantics test would make the row account for.
   - It holds at most one visible child per region. Two visible bar, rail, pane or trailing children (`:not([hidden])`) would overlap in one area.
   - Scaffolds don't nest: `.scaffold .scaffold`.
 - **R13** The docs page `docs/src/pages/scaffold.astro` is listed in `docs/src/data/nav.ts` after Panes. It shows the four regions, the region classes, `.panes` inside `main`, RTL, scrolling, the app bar fill, `tabindex="-1"` on `main` with a skip link, and the excluded limits (flexible bar, back-to-top, rail panel, container queries). Its bounded live demo keeps the docs page to one `main` landmark.
