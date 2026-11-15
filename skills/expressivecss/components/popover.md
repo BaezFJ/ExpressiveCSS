@@ -9,7 +9,7 @@ Component ID: `popover`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `866cab3877048b0fc7ef1c799ba5e573b7cadaa56f4496615a541a11a3136d4a`
+Contract SHA-256: `ea70571b24e79407cd13f1adf29bc241c2a3bf2c186beb45f9fe2b9d2bd51bfc`
 
 #### Selection and adaptation
 

@@ -57,8 +57,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   already required. A later `<button>` is a destination, not the toggle.
   Migration: if a rail's menu button isn't its first child, move it there.
 - The compact, navigation rail, expanded rail, dashboard and list-detail
-  templates are `.scaffold` shells with no `<style>` block. The rail templates
-  use `.tall-rail` and open the rail from a menu button in the app bar. Each
+  templates are `.scaffold` shells with no `<style>` block, in its default
+  layout with the app bar across the top. The rail templates open the rail
+  from a menu button in the app bar. Each
   template adds a skip link and `viewport-fit=cover`, and wraps its content in
   a `.container` inside `<main>`. Pages copied from an older template keep
   working as they are.

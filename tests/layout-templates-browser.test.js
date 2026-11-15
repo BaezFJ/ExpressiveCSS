@@ -21,7 +21,7 @@ nodeTest('the app templates are scaffolds without shell CSS or shell helpers', a
     assert.match(html, /name="viewport" content="[^"]*viewport-fit=cover/, `${layout}: viewport-fit=cover`);
     assert.match(html, /<header>\s*<a class="visually-hidden-focusable" href="#main">/, `${layout}: a skip link in the header`);
     assert.match(html, /<main id="main" tabindex="-1"[ >]/, `${layout}: a focusable main`);
-    assert.equal(/class="scaffold tall-rail"/.test(html), layout in RAIL_FROM, `${layout}: tall-rail on rail templates`);
+    assert.doesNotMatch(html, /tall-rail/, `${layout}: the scaffold's default layout, with the app bar across the top`);
   }
 });
 
