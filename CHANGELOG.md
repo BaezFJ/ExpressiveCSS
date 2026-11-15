@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `Expressive.DataTables.showPage(wrapper, page)` shows a local page of a
+  paged data table without firing events, for restoring a page from the URL
+  after a reload. It keeps the filter and sort, clamps past the end, returns
+  the page it shows and refuses a server-owned table.
+- The tabs and data table guides say how to keep the selected tab, filter
+  text and page in the URL with `history.replaceState`, and how to restore
+  them on load.
 - `--md-sys-typescale-{role}-font` is the `font` shorthand for each of the 15
   type roles, built from the role's weight, size, line height and family
   tokens. Pair it with the role's `-letter-spacing` token, which the shorthand

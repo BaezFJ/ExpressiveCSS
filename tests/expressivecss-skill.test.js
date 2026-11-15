@@ -211,6 +211,18 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(contracts, /can't be undone/);
   });
 
+  test('the tabs and data table guides carry the URL state App behavior', () => {
+    const { behavior: tabs } = appBehaviorOf('tabs');
+    for (const phrase of ['replaceState', 'expressive:change', '.active', 'AutoInit()', 'read the whole URL', 'select(id)']) {
+      assert.ok(tabs.includes(phrase), `tabs App behavior lacks ${phrase}`);
+    }
+    const { behavior: table } = appBehaviorOf('data-table');
+    for (const phrase of ['replaceState', 'expressive:filter', 'expressive:sort', 'expressive:page', 'sync(wrapper)', 'showPage', 'read the whole URL', '.textContent']) {
+      assert.ok(table.includes(phrase), `data table App behavior lacks ${phrase}`);
+    }
+    for (const behavior of [tabs, table]) assert.ok(Buffer.byteLength(behavior) <= 2048, `App behavior is ${Buffer.byteLength(behavior)} bytes`);
+  });
+
   test('the buttons guide carries the App behavior subsection for a command that waits on a request', () => {
     const { guide, behavior } = appBehaviorOf('buttons');
     for (const phrase of ['…', 'aria-disabled="true"', 'preventDefault()', 'finally', '300ms', '500ms', 'native form post']) {

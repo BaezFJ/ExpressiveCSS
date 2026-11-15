@@ -9,7 +9,7 @@ Component ID: `data-table`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `7ecf6ecc686ab235535f945ae6b93d57466365b89ec519e207f6c70d7661383f`
+Contract SHA-256: `d12c5aabf66184e9483635c4ff4c322cbad995994603c5605d02788be21cd78a`
 
 #### Selection and adaptation
 
@@ -70,6 +70,28 @@ Add a labelled `input[type="search"][data-table-filter]` inside the wrapper for 
     </tbody>
   </table>
 </div>
+```
+
+#### App behavior
+
+Keep the filter text and page in the URL as query parameters, written with `history.replaceState`. Write the query wherever the app applies it (`expressive:filter` with `{ query }` for a `data-table-filter` input) and drop the page then, since a new query returns to page 1; drop it on an uncanceled `expressive:sort` too. Write `page`, and `pageSize` when a size select exists, on `expressive:page`. On load, in a `DOMContentLoaded` handler, read the whole URL first, then set the search input's `value`, call `Expressive.DataTables.sync(wrapper)`, then `Expressive.DataTables.showPage(wrapper, page)` on the table in the selected panel. Put URL values into `.value` or `.textContent`, never into markup.
+
+```js
+const wrapper = document.getElementById('orders');
+const params = new URLSearchParams(location.search);
+wrapper.querySelector('[data-table-filter]').value = params.get('q') ?? '';
+Expressive.DataTables.sync(wrapper);
+Expressive.DataTables.showPage(wrapper, Number(params.get('page')) || 1);
+const write = (changes) => {
+  const url = new URL(location.href);
+  for (const [key, value] of Object.entries(changes)) {
+    if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
+  }
+  history.replaceState(null, '', url);
+};
+wrapper.addEventListener('expressive:filter', (event) => write({ q: event.detail.query, page: '' }));
+wrapper.addEventListener('expressive:page', (event) => write({ page: event.detail.page }));
+wrapper.addEventListener('expressive:sort', (event) => { if (!event.defaultPrevented) write({ page: '' }); });
 ```
 
 #### Also documented

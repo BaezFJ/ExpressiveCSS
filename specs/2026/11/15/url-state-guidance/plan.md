@@ -15,7 +15,7 @@ Done when V1 passes.
 
 Covers R4, R5, R8. Checks V2.
 
-- [ ] Write the Tabs and Data table `### App behavior` subsections, the guide test, the CHANGELOG entry, then `npm run build:skill`.
+- [x] Write the Tabs and Data table `### App behavior` subsections, the guide test, the CHANGELOG entry, then `npm run build:skill`.
 
 Done when V2 passes.
 

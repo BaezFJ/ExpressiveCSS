@@ -4290,6 +4290,28 @@ The framework fires no event of its own. To keep the choice across visits, save 
 | `--md-comp-data-table-checkbox-column-width` | cell padding + 18px; used by `sticky-column` |
 | `--md-comp-data-table-column-min-width` | 48px; the narrowest a resized column gets |
 
+### App behavior
+
+Keep the filter text and page in the URL as query parameters, written with `history.replaceState`. Write the query wherever the app applies it (`expressive:filter` with `{ query }` for a `data-table-filter` input) and drop the page then, since a new query returns to page 1; drop it on an uncanceled `expressive:sort` too. Write `page`, and `pageSize` when a size select exists, on `expressive:page`. On load, in a `DOMContentLoaded` handler, read the whole URL first, then set the search input's `value`, call `Expressive.DataTables.sync(wrapper)`, then `Expressive.DataTables.showPage(wrapper, page)` on the table in the selected panel. Put URL values into `.value` or `.textContent`, never into markup.
+
+```js
+const wrapper = document.getElementById('orders');
+const params = new URLSearchParams(location.search);
+wrapper.querySelector('[data-table-filter]').value = params.get('q') ?? '';
+Expressive.DataTables.sync(wrapper);
+Expressive.DataTables.showPage(wrapper, Number(params.get('page')) || 1);
+const write = (changes) => {
+  const url = new URL(location.href);
+  for (const [key, value] of Object.entries(changes)) {
+    if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
+  }
+  history.replaceState(null, '', url);
+};
+wrapper.addEventListener('expressive:filter', (event) => write({ q: event.detail.query, page: '' }));
+wrapper.addEventListener('expressive:page', (event) => write({ page: event.detail.page }));
+wrapper.addEventListener('expressive:sort', (event) => { if (!event.defaultPrevented) write({ page: '' }); });
+```
+
 ---
 
 ## Floating Action Button
@@ -7473,6 +7495,26 @@ Primary tabs stack the icon above the label (64dp). Add `horizontal` to put them
     <span>Luggage</span>
   </a>
 </nav>
+```
+
+### App behavior
+
+Keep the selected tab in the URL, so a reload, a shared link and Back show the same view. Give each tab set its own query parameter, such as `?view=shipped`, and write it with `history.replaceState` from an `expressive:change` listener on the `.tabs` element; data tables and menus fire the same event name. On load, read the whole URL first, then move `.active` to the tab it names before `AutoInit()`. Tabs starts on `a.active` and fires nothing for it, so draw that tab's content yourself after init. Calling `select(id)` after init also works, but it runs your own listeners. A hash naming the panel needs no script, but a shared link then scrolls to the panel and the hash holds only one tab set. Don't push a history entry per change.
+
+```js
+const tabs = document.getElementById('order-tabs');
+const saved = new URLSearchParams(location.search).get('view');
+const link = saved && tabs.querySelector(`a[href="#${CSS.escape(saved)}"]`);
+if (link) {
+  tabs.querySelector('a.active')?.classList.remove('active');
+  link.classList.add('active');
+}
+Expressive.AutoInit();
+tabs.addEventListener('expressive:change', (event) => {
+  const url = new URL(location.href);
+  url.searchParams.set('view', event.detail.panel.id);
+  history.replaceState(null, '', url);
+});
 ```
 
 ---
