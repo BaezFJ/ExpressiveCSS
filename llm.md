@@ -5101,6 +5101,8 @@ Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself
 </div>
 ```
 
+From 600px up the scaffold paints `surface-container` and the pane floats on it as a rounded `surface` with 16px gaps (below, after, and before it when no rail is shown; beside a floating toolbar its 24px margin is the gap). Pad the pane's content, since the rounded corners clip what runs to the edge. A pane holding separated or floating panes keeps no surface, and a `main` that is itself a panes container keeps the panes layout's margins, so put panes inside `<main>`. Below 600px the pane stays flat.
+
 Each region takes one direct child. For custom content use the region classes `scaffold-bar`, `scaffold-rail`, `scaffold-pane` and `scaffold-trailing`. A region with nothing in it takes no space. A second visible child in one region overlaps the first, so give the ones not shown `hidden`. Other direct children are not placed and fall into a free grid cell, so keep a skip link inside the `<header>`.
 
 ```html
@@ -5152,7 +5154,7 @@ Below 600px the document scrolls instead, so a phone's address bar can collapse:
 </div>
 ```
 
-Give `<main>` `tabindex="-1"` and a skip link so keyboard users can move into the pane and scroll it. From 600px up a top app bar fills with `surface-container` once `<main>` has scrolled, in browsers that support `timeline-scope`; elsewhere, and when a panes layout scrolls inside `<main>`, it stays at rest. Below 600px it fills from the document's scroll. Printing drops the fixed height so the whole pane prints.
+Give `<main>` `tabindex="-1"` and a skip link so keyboard users can move into the pane and scroll it. From 600px up a top app bar rests on the shell's `surface-container` and fills with `surface-container-high` once `<main>` has scrolled, in browsers that support `timeline-scope`; elsewhere, and when a panes layout scrolls inside `<main>`, it stays at rest. Below 600px it fills from the document's scroll. Printing drops the fixed height so the whole pane prints.
 
 The scaffold adds no landmark: the `<header>` is the banner, the rail a navigation landmark and `<main>` the main landmark. Never write it as a landmark element or give it a landmark role, and never nest one scaffold in another. `hidden="until-found"` still takes part in layout, so it counts as a visible child.
 

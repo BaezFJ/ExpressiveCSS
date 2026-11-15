@@ -568,5 +568,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the compact scaffold's floating trailing toolbar (row layout, sticky placement, top tooltips, scroll padding, safe-area margin): 92,636 gzip bytes (+215).
   // Reviewed hidden navigation bars and toolbars left out of the compact offsets and scroll padding (plain declarations, no root custom properties): 92,677 gzip bytes (+41).
   // Reviewed the scaffold's status bar row: 92,695 gzip bytes (+18).
-  assert.ok(sizes(css).gzip <= 92695, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the scaffold's floating pane surface (shell and bar colors, rounded pane with gaps, panes exceptions, forced-colors edge): 92,859 gzip bytes (+164).
+  assert.ok(sizes(css).gzip <= 92859, `CSS gzip: ${sizes(css).gzip}`);
 });

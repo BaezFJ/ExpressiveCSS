@@ -440,7 +440,7 @@
         "implementation": {
           "source": "llm.md#scaffold",
           "reviewedOn": "2026-11-15",
-          "documentedSupport": "A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay. A trailing vertical toolbar floats there as a centered row above the navigation bar. A status bar takes a full-width row along the bottom from 600px up.",
+          "documentedSupport": "A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay. A trailing vertical toolbar floats there as a centered row above the navigation bar. A status bar takes a full-width row along the bottom from 600px up. From 600px up the pane floats as a rounded surface on a surface-container shell.",
           "webAdaptation": "CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.",
           "limitations": [
             "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding, and the status bar's row and compact hiding; spoken output and a mobile browser's collapsing address bar remain unverified."
@@ -472,7 +472,7 @@
         "sources": [
           {
             "path": "src/sass/components/_scaffold.scss",
-            "sha256": "4a6a563a1320d3bc724cff897f1da90aae7a6b6c7d59c0c103a036dc9ed820d5"
+            "sha256": "44fb62339574341ddcacad427a884169c1e44c2aa7e7610e2a187c1aa2446296"
           }
         ],
         "gaps": [
@@ -532,6 +532,11 @@
             "file": "tests/scaffold-browser.test.js",
             "name": "chromium: a status bar spans the scaffold's full width along the bottom",
             "scope": "Footer and region forms at 1280px, the regions ending above it, the tall rail ending above it, and the held column at 700px. Equivalent Firefox and WebKit cases run in the same suite."
+          },
+          {
+            "file": "tests/scaffold-browser.test.js",
+            "name": "chromium: from 600px up the pane floats as a rounded surface on a surface-container shell",
+            "scope": "Shell, bar and pane colors with the scrolled bar fill, a 16px radius, and the pane's gaps with and without a rail, toolbar, custom trailing region and status bar, and at 700px. Equivalent Firefox and WebKit cases run in the same suite."
           },
           {
             "file": "tests/scaffold-browser.test.js",

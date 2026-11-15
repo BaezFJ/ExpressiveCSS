@@ -37,6 +37,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   into a centered row that floats 16px above the navigation bar.
 - A `.status-bar` child of a `.scaffold` takes a full-width row along the
   bottom, under the rail, pane and toolbar, and hides below 600px.
+- From 600px up a `.scaffold` paints `surface-container` and its pane floats
+  on it as a rounded `surface` with 16px gaps. The app bar rests on the shell
+  color and fills with `surface-container-high` on scroll.
 
 ### Changed
 

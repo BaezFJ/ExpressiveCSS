@@ -126,7 +126,22 @@ const S = defineSections([
           rail the pane meets the leading edge, and without a bar the rail and
           pane start at the top. A second child in the same region would
           overlap the first, so give the ones you aren't showing
-          <code>hidden</code>. A status bar takes a row of its own under the
+          <code>hidden</code>.
+        </p>
+        <p>
+          From 600px up, the scaffold paints <code>surface-container</code>
+          and the pane floats on it as a rounded <code>surface</code>, with
+          16px gaps below it, after it and, without a rail, before it. Beside
+          a floating toolbar the toolbar's own 24px margin is the gap. The
+          rounded corners clip content that runs to the edge, so pad the
+          pane's content. A pane holding separated or floating panes keeps no
+          surface of its own, since its panes are already cards. Put a panes
+          layout inside <code>&lt;main&gt;</code> to get the surface; a
+          <code>main</code> that is itself a panes container keeps the panes
+          layout's own margins. Below 600px the pane stays flat.
+        </p>
+        <p>
+          A status bar takes a row of its own under the
           rail, pane and toolbar, even with a tall rail, and hides below
           600px, where the navigation bar shows. Its low-priority items
           (<code>data-priority="low"</code>) hide below 600px too, so in a
@@ -214,8 +229,9 @@ const S = defineSections([
           scaffold that isn't a region would land in a free grid cell.
         </p>
         <p>
-          From 600px up, a top app bar fills with
-          <code>surface-container</code> once the pane has scrolled, in
+          From 600px up, a top app bar rests on the shell's
+          <code>surface-container</code> and fills with
+          <code>surface-container-high</code> once the pane has scrolled, in
           browsers that support <code>timeline-scope</code>. Elsewhere it
           stays at rest. When a panes layout scrolls inside
           <code>&lt;main&gt;</code>, the bar stays at rest too, since
