@@ -5134,7 +5134,7 @@ Put a `panes` layout inside `<main>`, or put the panes classes on `<main>` itsel
 </main>
 ```
 
-Below 600px the document scrolls instead, so a phone's address bar can collapse: the app bar stays pinned at the top, a `nav.navigation-bar` that is a direct child of the scaffold, or of its direct-child `<footer>`, stays pinned at the bottom and shows only below 600px, and the rail and any `scaffold-rail` are hidden until the app bar's `aria-controls` menu button opens the rail as an overlay. The app bar needs that button. Don't put `hide-on-compact-only` on the rail, which would keep it from opening. Landscape phones wider than 600px get the medium layout. A panes layout in `<main>` grows with its content below 600px.
+Below 600px the document scrolls instead, so a phone's address bar can collapse: the bar region (the app bar or `scaffold-bar`) stays pinned at the top, a `nav.navigation-bar` that is a direct child of the scaffold, or the only child of its direct-child `<footer>`, stays pinned at the bottom and shows only below 600px, and the rail and any `scaffold-rail` are hidden until the app bar's `aria-controls` menu button opens the rail as an overlay. The app bar needs that button. Don't put `hide-on-compact-only` on the rail, which would keep it from opening. Landscape phones wider than 600px get the medium layout. A panes layout in `<main>` grows with its content below 600px.
 
 ```html
 <div class="scaffold">

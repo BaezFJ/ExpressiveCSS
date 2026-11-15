@@ -30,9 +30,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   column keeps its collapsed width there and for a `.modal` rail, so the pane
   doesn't move as the rail opens and closes.
 - Below 600px a `.scaffold` scrolls the document instead of its pane, so a
-  phone's address bar can collapse. The app bar stays pinned, a
-  `nav.navigation-bar` child (or a `<footer>` holding one) is pinned at the
-  bottom and shows only below 600px, and the rail is hidden until the app
+  phone's address bar can collapse. The bar region stays pinned, a
+  `nav.navigation-bar` child (or a `<footer>` holding only one) is pinned at
+  the bottom and shows only below 600px, and the rail is hidden until the app
   bar's menu button opens it as an overlay.
 
 ### Changed

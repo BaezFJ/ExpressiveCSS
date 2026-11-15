@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { compileString } from 'sass';
 import { engines, leaseBrowser } from './browser.js';
+import { splitSelectorList } from './css.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -39,15 +40,7 @@ test('every compiled scaffold selector starts at the scaffold or a region class'
   const preludes = [...css.matchAll(/([^{}]*scaffold[^{}]*)\{/g)].map((m) => m[1].trim());
   assert.ok(preludes.length > 5, 'the scaffold rules are in the bundle');
   for (const prelude of preludes) {
-    // Split on top-level commas only; :is() and :has() nest their own lists.
-    let depth = 0;
-    const selectors = [''];
-    for (const ch of prelude) {
-      depth += ch === '(' ? 1 : ch === ')' ? -1 : 0;
-      if (ch === ',' && depth === 0) selectors.push('');
-      else selectors[selectors.length - 1] += ch;
-    }
-    for (const selector of selectors) assert.match(selector.trim(), /^\.scaffold/, prelude);
+    for (const selector of splitSelectorList(prelude)) assert.match(selector, /^\.scaffold/, prelude);
   }
 });
 
@@ -466,7 +459,8 @@ for (const [name, type, run] of engines) {
       assert.equal(await tab.evaluate(() => window.scrollY), 1000, 'the window scrolls');
       near((await box('#bar')).top, 0, 'the app bar stays pinned');
       const nb = await box('#nb');
-      assert.deepEqual([nb.left, nb.width], [0, 390], 'the navigation bar spans the window');
+      near(nb.left, 0, 'the navigation bar starts at the edge');
+      near(nb.width, 390, 'and spans the window');
       near(nb.bottom, 800, 'and stays at the bottom');
       assert.equal(await tab.evaluate(([x, y]) => document.elementFromPoint(x, y)?.closest('#nb')?.id, [195, nb.top + nb.height / 2]), 'nb', 'above the content');
 
@@ -474,6 +468,10 @@ for (const [name, type, run] of engines) {
       await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ bar: header('', 'rail'), bottom: navbar.replace(/<\/?footer[^>]*>/g, '').replace('class="navigation-bar"', 'class="navigation-bar" id="nb"') }));
       await tab.evaluate(() => window.scrollTo(0, 1000));
       near((await box('#nb')).bottom, 800, 'a bare navigation bar child is pinned too');
+
+      await tab.evaluate(() => window.scrollTo(0, 0));
+      await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ bottom: navbar.replace('</nav></footer>', '</nav><small>Copyright</small></footer>') }));
+      assert.equal(await style('#nb', 'position'), 'static', 'a footer with more than the navigation bar is a page footer, not the region');
     } finally {
       await browser.close();
     }
@@ -526,6 +524,7 @@ for (const [name, type, run] of engines) {
     try {
       const main = await box('#pane');
       assert.ok((await box('#tools')).top >= main.bottom - 1, 'the toolbar follows the pane');
+      assert.ok((await box('#tools')).width < 100, 'without stretching across the window');
       await tab.locator('#tools').scrollIntoViewIfNeeded();
       assert.ok((await box('#tools')).bottom <= 801, 'and can be scrolled into view');
       await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ cls: 'tall-rail', bottom: navbar }));
@@ -533,6 +532,9 @@ for (const [name, type, run] of engines) {
       near((await box('#pane')).left, 0, 'and the pane starts at the edge');
       await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, custom);
       assert.equal(await style('#cr', 'display'), 'none', 'a .scaffold-rail hides below 600px');
+      await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ bar: '<div class="scaffold-bar" id="cb">Bar</div>', bottom: navbar }));
+      await tab.evaluate(() => window.scrollTo(0, 1000));
+      near((await box('#cb')).top, 0, 'a .scaffold-bar stays pinned');
     } finally {
       await browser.close();
     }

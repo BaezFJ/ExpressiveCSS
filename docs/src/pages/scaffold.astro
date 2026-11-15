@@ -31,8 +31,9 @@ const S = defineSections([
           and the <a href="navigation-rail.html">navigation rail</a>,
           <code>&lt;main&gt;</code> and a vertical
           <a href="toolbars.html">toolbar</a> share the row below it, from the
-          leading edge to the trailing one. The scaffold is as tall as the
-          window and only <code>&lt;main&gt;</code> scrolls. The scaffold is
+          leading edge to the trailing one. From 600px up the scaffold is as
+          tall as the window and only <code>&lt;main&gt;</code> scrolls; below
+          600px the document scrolls. The scaffold is
           CSS only. The app bar's menu button toggles the rail when its
           <code>aria-controls</code> names the rail's <code>id</code>; see
           <a href="navigation-rail.html#outside-toggle">toggling the rail from
@@ -57,7 +58,7 @@ const S = defineSections([
             <div class="scaffold-pane" tabindex="0" role="region" aria-labelledby="scaffold-demo-inbox">
               <div class="p-4">
                 <h3 id="scaffold-demo-inbox">Inbox</h3>
-                <p>The pane scrolls on its own. The bar, rail and toolbar stay where they are.</p>
+                <p>The pane scrolls on its own. The bar, rail and toolbar stay where they are. On a narrow screen the box scrolls instead, with the bar and navigation bar pinned.</p>
                 <p style="block-size: 40rem">Keep scrolling.</p>
                 <p>End of the inbox.</p>
               </div>
@@ -209,9 +210,10 @@ const S = defineSections([
         </p>
         <p>
           Below 600px the document scrolls instead, so a phone's address bar
-          can collapse. The app bar stays pinned at the top, and a
+          can collapse. The bar region stays pinned at the top, and a
           <code>nav.navigation-bar</code> that is a direct child of the
-          scaffold, or of its direct-child <code>&lt;footer&gt;</code>, stays
+          scaffold, or the only child of its direct-child
+          <code>&lt;footer&gt;</code>, stays
           pinned at the bottom. The navigation bar only shows below 600px. The
           rail is hidden and out of the tab order until the app bar's menu
           button opens it over the page with a scrim, so the app bar needs a

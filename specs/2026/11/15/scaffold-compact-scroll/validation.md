@@ -42,3 +42,15 @@ Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, th
   - V7's grep strings couldn't fail. They are now new strings, and the removal of the old one is checked.
   - The stale "never scrolls the document" text, the limits and the partial comment are now in R9 and the scope. Back-to-top overlapping the bar is an exclusion.
   - The 599px and 600px boundary is now in R8 and V2. Landscape phones, the required outside menu button and a non-direct-child navigation bar are now in the exclusions.
+- 2026-11-15, `/code-review high --fix --max-findings all` on `fc08a9e75..HEAD`: ten findings, each checked against the source and all fixed:
+  - Only a header app bar pinned below 600px. The bar region is now sticky for a `.scaffold-bar` too (R2), with a test.
+  - A vertical toolbar stretched across the one-column grid (342px). It now sits at the inline end (R6), with a test.
+  - The demo's sticky bars painted over the site's app bar. The demo box isolates its stacking.
+  - Below 600px the demo bar filled from the page's scroll. It now reads `scroll(nearest)` there.
+  - Stale anatomy and demo text was rewritten.
+  - The test's hand-written comma splitter now uses `splitSelectorList` from `tests/css.js`.
+  - An exact pixel assert now uses `near()`.
+  - An unused binding was removed.
+  - The header comment was rewrapped.
+  - The navigation bar region matched a `<footer>` that also held other content, which then took page-footer padding and stuck to the bottom. The reviewer left this choice open; I settled it under delegation. The region is now a `<footer>` whose only child is the navigation bar, matching the page-footer rule's exemption. A footer with more content stays a page footer, with a test.
+  CSS budget 92,373 (+131 over the phase base). The scaffold browser suite passes 71 of 71.

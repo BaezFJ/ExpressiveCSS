@@ -18,7 +18,7 @@ Below 600px, in a `.scaffold`:
 
 - The scaffold drops its window height and clip, and `main` stops being a scroll container, so the document scrolls.
 - The app bar stays pinned at the top (its existing sticky position).
-- A direct-child `nav.navigation-bar`, or a `<footer>` holding one, takes a bottom region and sticks to the window's bottom edge.
+- A direct-child `nav.navigation-bar`, or a `<footer>` whose only child is one, takes a bottom region and sticks to the window's bottom edge.
 - A collapsed rail is `display: none`. An expanded rail is the existing compact overlay, which opens from an app bar button with `aria-controls` (phase 90), since the rail's own menu button is hidden with it. Custom `.scaffold-rail` content is hidden too, because the compact layout has no rail region.
 - The app bar's scrolled fill follows the document again.
 - The trailing region sits after the pane, in flow, until phase 93 floats it.
@@ -44,18 +44,18 @@ From 600px up the navigation bar region is hidden, and nothing else changes.
 | --- | --- | --- |
 | Scaffold rules swap the rail and the navigation bar, not the `hide-on-*` helpers | Decided under delegation | The roadmap asks which. Scaffold rules mean the markup needs no helper classes, so a page can't show both or neither by forgetting one, and the swap uses the same 600px breakpoint as the rest of the scaffold. A rail must not carry `.hide-on-compact-only`: that helper is `display: none !important`, so the rail could never open as the overlay. The docs say to drop it. |
 | A collapsed rail is `display: none` below 600px | Decided under delegation | The roadmap wants it off-screen and out of the tab order. `display: none` does both. The existing compact overlay rules apply as soon as `.expanded` is added, so the rail opens from the app bar's `aria-controls` button. |
-| The navigation bar region accepts `nav.navigation-bar` or a `<footer>` whose child is one, and makes the region `position: sticky; inset-block-end: 0` with `--expressive-z-app-bar` | Decided under delegation | The templates wrap the bar in a `<footer>`, and `.navigation-bar.fixed` already uses sticky with that z-index. Placing the region keeps the bar component unchanged. |
+| The navigation bar region accepts `nav.navigation-bar` or a `<footer>` whose only child is one, and makes the region `position: sticky; inset-block-end: 0` with `--expressive-z-app-bar` | Decided under delegation | The templates wrap the bar in a `<footer>`, and `.navigation-bar.fixed` already uses sticky with that z-index. Placing the region keeps the bar component unchanged. |
 | The compact grid is one column with the areas `bar`, `pane`, `trailing` and `navbar`, and `.tall-rail` uses it too | Decided under delegation | The rail leaves the grid on compact windows, so a tall rail has nothing to change. The trailing row keeps the toolbar reachable until phase 93. |
 | `--_app-bar-timeline` is set only from 600px up | Decided under delegation | Below 600px `main` doesn't scroll, so a timeline it names would be inactive and the bar would never fill. Without the property the bar falls back to `scroll(root)`, which the document scroll drives. |
 
 ## Requirements
 
 - **R1** At 390 × 800 a scaffold with a 3000px `main` is taller than the window, `main` has no scroll overflow of its own, and scrolling the window moves the content.
-- **R2** While the window scrolls, the app bar stays at the top edge.
+- **R2** While the window scrolls, the bar region stays at the top edge, whether it is a `header` app bar or a `.scaffold-bar`.
 - **R3** A direct-child `nav.navigation-bar`, or a `<footer>` holding one, spans the window width and stays at the bottom edge while the window scrolls, above the content. From 600px up it is `display: none`.
 - **R4** Below 600px a collapsed rail, and a `.scaffold-rail`, are `display: none`, and none of the rail's destinations can take focus. Activating the app bar's `aria-controls` button expands the rail as a fixed overlay with a scrim. Escape collapses it and returns focus to the button, and a scrim tap collapses it.
 - **R5** In engines with scroll-driven animations, the app bar's scrolled fill follows the window's scroll below 600px (progress 0 at the top, 1 after scrolling).
-- **R6** The trailing region follows the pane in flow below 600px and is reachable by scrolling.
+- **R6** The trailing region follows the pane in flow below 600px and is reachable by scrolling. A vertical toolbar there keeps its own width at the inline end instead of stretching across the window.
 - **R7** A `.tall-rail` scaffold uses the same compact layout.
 - **R8** From 600px up the layout matches phases 88 to 91; their tests pass unchanged. At 599px the compact layout applies (the navigation bar shows, the rail is hidden); at 600px the medium layout does (the navigation bar is hidden, the rail holds its column). A `.modal` rail holds no column below 600px.
 - **R8a** A `.panes` layout inside `main` grows with its content below 600px, so the document scrolls instead of the pane bodies.

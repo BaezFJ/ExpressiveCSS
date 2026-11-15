@@ -472,7 +472,7 @@
         "sources": [
           {
             "path": "src/sass/components/_scaffold.scss",
-            "sha256": "6f14cc6d6a8018ce2d581c6297732e48b9807a2ff9de36853a9defa8ccf8e44f"
+            "sha256": "c2a3b2ee48172607c6dc280f774faf53254a30697c5459e76cf814b3dc26b1c1"
           }
         ],
         "gaps": [

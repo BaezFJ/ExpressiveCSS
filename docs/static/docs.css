@@ -251,11 +251,13 @@ main:focus {
 }
 
 /* The scaffold demo: a window-sized box. Below 600px a scaffold scrolls the
-   document, so here the box scrolls in its place. */
+   document, so here the box scrolls in its place. Its own stacking context
+   keeps the demo's pinned bars under the site's app bar. */
 .docs-page-content .scaffold-demo {
   block-size: 26rem;
   overflow: auto;
   border: 1px solid var(--md-sys-color-outline-variant);
+  isolation: isolate;
 }
 
 .docs-page-content .scaffold-demo > .scaffold {
@@ -266,6 +268,11 @@ main:focus {
   .docs-page-content .scaffold-demo > .scaffold {
     block-size: auto;
     min-block-size: 100%;
+  }
+
+  /* The box scrolls here, not the page, so the bar fills from the box. */
+  .docs-page-content .scaffold-demo > .scaffold > header:has(> :is(nav, .bar)) {
+    animation-timeline: scroll(nearest);
   }
 }
 

@@ -10,7 +10,7 @@
 //   rail      .navigation-rail, or .scaffold-rail
 //   pane      main, or .scaffold-pane. A .panes layout goes inside main.
 //   trailing  .toolbar.vertical or .toolbar-group.vertical, or .scaffold-trailing
-//   navbar    nav.navigation-bar, or a <footer> holding one (compact windows only)
+//   navbar    nav.navigation-bar, or a <footer> whose only child is one (compact only)
 //
 // The bar spans the top, and the rail, pane and trailing regions share the row
 // below it. .tall-rail runs the rail and trailing region the full height and
@@ -18,14 +18,14 @@
 // window and only the pane scrolls. Below 600px the document scrolls instead,
 // so a phone's address bar can collapse: the app bar and the navigation bar
 // stay pinned, and the rail is hidden until it opens as the compact overlay.
-// An empty region takes no space. `clip` rather than `hidden`
-// keeps focus and find-in-page from scrolling the shell itself. A trailing
-// toolbar taller than its region is clipped at the bottom, so keep it to the
-// actions that fit.
+// An empty region takes no space. `clip` rather than `hidden` keeps focus and
+// find-in-page from scrolling the shell itself. A trailing toolbar taller than
+// its region is clipped at the bottom, so keep it to the actions that fit.
 //
 // Limits: AppBar's sentinel isn't a region, so .medium/.large bars stay
-// expanded. BackToTop follows the window, so it shows only below 600px. A rail's side panel spans the window height, over the bar. .panes
-// follows the window width unless the author makes main a size container.
+// expanded. BackToTop follows the window, so it shows only below 600px. A
+// rail's side panel spans the window height, over the bar. .panes follows the
+// window width unless the author makes main a size container.
 //
 // Nest descendants inside this block.
 
@@ -33,7 +33,7 @@ $_bar: ":is(header, .scaffold-bar)";
 $_rail: ":is(.navigation-rail, .scaffold-rail)";
 $_pane: ":is(main, .scaffold-pane)";
 $_trailing: ":is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing)";
-$_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar))";
+$_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar:only-child))";
 
 .scaffold {
   display: grid;
@@ -157,8 +157,20 @@ $_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar))";
       overflow: visible;
     }
 
+    // A header app bar is already sticky; a .scaffold-bar pins the same way.
+    > #{$_bar} {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: var(--expressive-z-app-bar);
+    }
+
     > #{$_pane} {
       overflow: visible;
+    }
+
+    // The single column would stretch a vertical toolbar across the window.
+    > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed) {
+      justify-self: end;
     }
 
     > .navigation-rail:not(.expanded),
