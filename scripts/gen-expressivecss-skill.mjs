@@ -3,6 +3,7 @@ import { createHash, hash } from 'node:crypto';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildCapabilityRoadmap, renderCapabilityRoadmap } from './lib/material-capabilities.mjs';
+import { rebaseHeadings, splitAppBehavior, stripRelativeLinks } from './lib/markdown-sections.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const COMPONENTS_DIR = resolve(ROOT, 'skills/expressivecss/components');
@@ -79,15 +80,6 @@ const BEHAVIOR_CONTRACTS = [
   { name: 'Dialogs', heading: 'Confirm from script', level: 3 },
 ];
 const anchorFor = (heading) => heading.toLowerCase().replaceAll(' ', '-');
-
-// Applies fn to the markdown outside fenced code blocks.
-const mapProse = (markdown, fn) => markdown.split(/(```[\s\S]*?```)/u)
-  .map((part, index) => index % 2 ? part : fn(part)).join('');
-const stripRelativeLinks = (text) => text.replace(/\[([^\]]+)\]\((?!https?:\/\/)[^)]+\)/gu, '$1');
-
-function rebaseHeadings(markdown, offset) {
-  return mapProse(markdown, (part) => part.replace(/^(#{1,6}) /gmu, (_, hashes) => `${'#'.repeat(hashes.length + offset)} `));
-}
 
 function renderBehaviorContracts(llm) {
   return `${GENERATED_MARKER}\n\n# Shared behaviors and secondary contracts\n\nRead only the section needed for the selected behavior. These contracts come from \`llm.md\`; reuse the resolved framework version and the Runtime guide's ownership rules. The root bundle starts shared document behaviors; the modular entry requires the explicit initialization shown below. ExpandingCard also has per-element instances to destroy.\n\n${BEHAVIOR_CONTRACTS.map(({ name, heading }) => `- [${name}](#${anchorFor(heading)})`).join('\n')}\n\n${BEHAVIOR_CONTRACTS.map(({ name, heading, level }) => `## ${heading}\n\nExport: \`${name}\`.\n\n${rebaseHeadings(sectionFor(llm, heading, level), 2 - level)}`).join('\n\n')}\n`;
@@ -338,20 +330,6 @@ function renderMaterialMapping(component) {
     ...implementation.limitations.map((limit) => `Known boundary: ${limit}`),
     `Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#${component.slug}).`,
   ].join('\n\n');
-}
-
-// A component section's "App behavior" subsection guides app behavior tied to the
-// component (loading feedback, Undo, URL state, submit flow). It is cut out before the
-// other parts read the section, so its examples never become the Syntax, and rendered
-// in full. The body takes fenced code blocks whole, so a `# comment` or `---` inside one
-// doesn't end it; the lookahead stops at the next heading or the section's closing `---`.
-function splitAppBehavior(trimmed, level) {
-  // sectionFor trims the section, so a leading newline lets the subsection come first.
-  const section = `\n${trimmed}`;
-  const match = new RegExp(`\\n#{${level + 1}} App behavior\\n((?:\`\`\`[\\s\\S]*?\`\`\`|[\\s\\S])*?)(?=\\n#{1,${level + 1}} |\\n---\\s*(?:\\n|$)|$)`, 'u').exec(section);
-  if (!match) return { rest: trimmed, behavior: '' };
-  const body = mapProse(match[1].trim(), stripRelativeLinks);
-  return { rest: section.replace(match[0], '').slice(1), behavior: `#### App behavior\n\n${rebaseHeadings(body, 3 - level)}\n\n` };
 }
 
 function renderGuide(component, page, fullSection, rules, provenance) {

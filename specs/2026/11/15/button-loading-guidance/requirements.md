@@ -74,3 +74,4 @@ The baseline `settings-form` builds already kept their label, showed progress an
 
 - The generator fails the build when an App behavior heading doesn't render in a guide, and accepts the subsection first under its component heading (decided after review). Phases 80 to 82 rely on that check.
 - Notes for later phases (from the five-axis review): quality inspector check 3 flags controls "disabled with a class"; `aria-disabled` is not a class, and both phase 79 reviewers passed it, but phase 82 or 83 should keep the two consistent. Neither run set records review seconds.
+- The App behavior helpers live in `scripts/lib/markdown-sections.mjs` (decided after the Codex review), so the extraction has unit tests; the generator imports them.

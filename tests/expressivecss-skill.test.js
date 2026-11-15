@@ -162,6 +162,23 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(existsSync(template));
   });
 
+  test('App behavior extraction ignores fenced examples and leaves other sections alone', async () => {
+    const { splitAppBehavior } = await import('../scripts/lib/markdown-sections.mjs');
+    const fence = '```';
+    const decoy = `Intro.\n\n${fence}md\n### App behavior\n# a comment\n---\n${fence}\n\n### App behavior\n\nReal text.\n\n${fence}sh\n# install\n---\n${fence}\n\nMore text.\n\n### Next\n\nAfter.`;
+    const split = splitAppBehavior(decoy, 2);
+    assert.equal(split.behavior, `#### App behavior\n\nReal text.\n\n${fence}sh\n# install\n---\n${fence}\n\nMore text.\n\n`);
+    assert.equal(split.rest, `Intro.\n\n${fence}md\n### App behavior\n# a comment\n---\n${fence}\n\n### Next\n\nAfter.`);
+    assert.deepEqual(splitAppBehavior('Text only.\n\n### Other\n\nMore.', 2), { rest: 'Text only.\n\n### Other\n\nMore.', behavior: '' });
+    assert.equal(splitAppBehavior('### App behavior\n\nFirst.\n\n---', 2).behavior, '#### App behavior\n\nFirst.\n\n');
+    assert.equal(splitAppBehavior('Sheet.\n\n#### App behavior\n\nNested.', 3).behavior, '#### App behavior\n\nNested.\n\n');
+    const emoji = splitAppBehavior(`${fence}html\n<button>💾 Save</button>\n${fence}\n\n### App behavior\n\nKeep 💾 the label.\n\n### Next`, 2);
+    assert.equal(emoji.behavior, '#### App behavior\n\nKeep 💾 the label.\n\n');
+    assert.equal(emoji.rest, `${fence}html\n<button>💾 Save</button>\n${fence}\n\n### Next`);
+    assert.deepEqual(splitAppBehavior(`${fence}html\n<button>💾 Save</button>\n${fence}\n\n### App behavior\n\nKeep the label.`, 2),
+      { rest: `${fence}html\n<button>💾 Save</button>\n${fence}\n`, behavior: '#### App behavior\n\nKeep the label.\n\n' });
+  });
+
   test('the buttons guide carries the App behavior subsection for a command that waits on a request', () => {
     const guide = readFileSync(new URL('components/buttons.md', skillDirectory), 'utf8');
     const start = guide.indexOf('#### App behavior');
