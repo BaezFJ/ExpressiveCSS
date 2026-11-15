@@ -176,6 +176,11 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.doesNotMatch(states, /async actions with no loading indicator/, 'command buttons moved to the finished-app check');
     assert.match(states, /control other than a command button/, 'the states check lost other async controls');
     assert.match(states, /Command buttons that wait on a request belong to check 5/);
+    assert.ok(inspector.includes('5. **Finished-app behavior.**'), 'the inspector lacks check 5');
+    const scoring = review.slice(review.indexOf('## 5. Score'), review.indexOf('## 6. Write the report'));
+    assert.match(scoring, /- Major: a finished-app rubric failure/);
+    assert.match(scoring, /- Polish: the finished-app details/);
+    assert.match(scoring, /keeps both IDs/);
     assert.match(review, /Keep the `finished-app:<area>` label/);
     assert.match(review, /finished-app rubric applies on a `mismatch`/);
   });
