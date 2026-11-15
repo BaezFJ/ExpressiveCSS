@@ -9,7 +9,7 @@ Component ID: `column-chart`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `c2a7c29d5fb9b868b93c0be5c75d53db99648d4d3944c6d27c4246e8b0aaeb10`
+Contract SHA-256: `2485216d1adbebdcd8cfe7758388088349d8f74b3dd65212268477d634bb68c7`
 
 #### Selection and adaptation
 

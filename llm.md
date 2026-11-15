@@ -5114,6 +5114,8 @@ Each region takes one direct child. For custom content use the region classes `s
 </div>
 ```
 
+From 1200px up an open standard `side-sheet` that is a direct child takes a 400px column between the pane and the trailing toolbar, so the pane narrows while it is open; place it between `<main>` and the toolbar so Tab order matches. Below 1200px, and modal or `.start` sheets, keep the overlay; a sheet nested deeper stays an overlay.
+
 A direct-child `status-bar` takes a full-width row along the bottom, under the rail, pane and toolbar (also with `tall-rail`), and hides below 600px; its `data-priority="low"` hiding therefore never shows in a scaffold.
 
 The rail runs from the bar to the bottom of the window, or to the top of a status bar. At 840px and wider, expanding it widens its column and narrows the pane. From 600px to 839px an expanded rail opens over the pane with a scrim and the pane keeps its width, as a `.modal` rail does at every width; the open rail covers the app bar's menu button, so it closes from the scrim, Escape or its own menu button, and Tab can still reach the pane under it. Set `--md-comp-nav-rail-collapsed-width` on the scaffold, not the rail, since the rail's column reads it there. Hide a rail with the `hidden` attribute; one hidden by page CSS still keeps its column on medium windows. A vertical toolbar is centered in the trailing region, `--md-comp-toolbar-external-space` (24px) from the pane and the window edge. Under `dir="rtl"` the rail is on the right and the toolbar on the left.
@@ -7231,6 +7233,8 @@ document.getElementById('sheet').showModal(); // modal
 ```
 
 The sheet slides in, and snaps back after a short drag, on the default spatial spring: `--md-comp-side-sheet-motion` and `--md-comp-side-sheet-motion-duration` read `--md-sys-motion-spring-default-spatial` and its `-duration` token, so `motion="expressive"` gives it a slight bounce. The sheet runs on 24px past its docked edge, so the bounce never uncovers the page there. With reduced motion requested it appears without moving.
+
+As a direct child of a `scaffold`, an open standard sheet becomes a 400px column between the pane and the trailing toolbar from 1200px up, so the pane narrows instead of hiding under it; it appears without sliding and closes at once. Below 1200px, and for modal or `.start` sheets, it keeps its overlay.
 
 ### Full-screen
 

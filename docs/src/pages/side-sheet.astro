@@ -192,5 +192,9 @@ sheet.showModal(); // modal, with a scrim`} />
     <p>Use the native dialog's <code>open</code> property, <code>close</code> event and
       <code>cancel</code> event for state and dismissal. SideSheets is a document behavior;
       it has no per-sheet instance, options object or <code>destroy()</code> method.</p>
+    <p>In a <a href="scaffold.html">scaffold</a>, an open standard sheet that is a direct
+      child becomes a 400px column between the pane and the trailing toolbar from 1200px up,
+      so the pane narrows instead of hiding under it. It appears without sliding. Below
+      1200px, and for modal or <code>.start</code> sheets, it keeps its overlay.</p>
   </Section>
 </DocsLayout>

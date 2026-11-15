@@ -571,5 +571,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the scaffold's floating pane surface (shell and bar colors, rounded pane with gaps, panes exceptions, forced-colors edge): 92,859 gzip bytes (+164).
   // Reviewed the floating pane kept to screen, so print drops its gaps and corners: 92,866 gzip bytes (+7).
   // Reviewed the floating pane's top gap without a bar, an empty custom rail counting as absent, and its gaps set once on the shell: 92,906 gzip bytes (+40).
-  assert.ok(sizes(css).gzip <= 92906, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the scaffold's side sheet column (a fourth track, the static sheet, its gap): 93,037 gzip bytes (+131).
+  assert.ok(sizes(css).gzip <= 93037, `CSS gzip: ${sizes(css).gzip}`);
 });

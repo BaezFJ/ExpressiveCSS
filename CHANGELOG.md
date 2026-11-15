@@ -40,6 +40,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - From 600px up a `.scaffold` paints `surface-container` and its pane floats
   on it as a rounded `surface` with 16px gaps. The app bar rests on the shell
   color and fills with `surface-container-high` on scroll.
+- From 1200px up an open standard `.side-sheet` that is a direct child of a
+  `.scaffold` becomes a 400px column between the pane and the trailing
+  toolbar, and the pane narrows while it is open.
 
 ### Changed
 

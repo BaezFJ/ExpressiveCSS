@@ -9,7 +9,7 @@ Component ID: `scaffold`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `c2a7c29d5fb9b868b93c0be5c75d53db99648d4d3944c6d27c4246e8b0aaeb10`
+Contract SHA-256: `2485216d1adbebdcd8cfe7758388088349d8f74b3dd65212268477d634bb68c7`
 
 #### Selection and adaptation
 
@@ -25,7 +25,7 @@ Upstream: requirements-prose-reviewed (2026-11-15); [evidence](https://m3.materi
 
 Requirements and boundaries: design reference layout-material-review. Compact, medium and safe-area adaptations arrive in later phases of the scaffold milestone. Full visual parity and spoken output unverified.
 
-Support (2026-11-15, `llm.md#scaffold`): A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay. A trailing vertical toolbar floats there as a centered row above the navigation bar. A status bar takes a full-width row along the bottom from 600px up. From 600px up the pane floats as a rounded surface on a surface-container shell.
+Support (2026-11-15, `llm.md#scaffold`): A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay. A trailing vertical toolbar floats there as a centered row above the navigation bar. A status bar takes a full-width row along the bottom from 600px up. From 600px up the pane floats as a rounded surface on a surface-container shell. From 1200px up an open standard side sheet becomes a third column.
 
 Web adaptation: CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.
 

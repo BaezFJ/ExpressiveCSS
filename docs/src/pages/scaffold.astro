@@ -119,6 +119,7 @@ const S = defineSections([
           <li>Pane: <code>&lt;main&gt;</code>, or <code>.scaffold-pane</code>.</li>
           <li>Trailing: a <code>.toolbar.vertical</code> or <code>.toolbar-group.vertical</code>, or <code>.scaffold-trailing</code>.</li>
           <li>Status: a <a href="status-bar.html"><code>.status-bar</code></a>, across the full width along the bottom, from 600px up.</li>
+          <li>Sheet: an open standard <a href="side-sheet.html"><code>dialog.side-sheet</code></a>, as a 400px column between the pane and the trailing region, from 1200px up.</li>
         </ul>
         <p>
           Use the region classes for custom content that isn't one of those
@@ -140,6 +141,16 @@ const S = defineSections([
           layout inside <code>&lt;main&gt;</code> to get the surface; a
           <code>main</code> that is itself a panes container keeps the panes
           layout's own margins. Below 600px the pane stays flat.
+        </p>
+        <p>
+          From 1200px up, a standard side sheet opened with
+          <code>show()</code> becomes a column between the pane and the
+          toolbar, so the pane narrows while it is open and gets its width
+          back when it closes. Put the sheet between <code>&lt;main&gt;</code>
+          and the toolbar in the markup, so Tab order follows the columns.
+          Below 1200px, and for modal or <code>.start</code> sheets, it keeps
+          its overlay, and a sheet nested deeper than a direct child stays an
+          overlay too.
         </p>
         <p>
           A status bar takes a row of its own under the
