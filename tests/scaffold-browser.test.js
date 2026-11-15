@@ -992,6 +992,76 @@ for (const [name, type, run] of engines) {
     }
   });
 
+  // Desktop browsers report zero safe-area insets, so the test rewrites every
+  // env(safe-area-inset-*) in the stylesheet, with or without a fallback.
+  const INSETS = { top: 40, right: 50, bottom: 20, left: 30 };
+  const insetCss = css.replace(/env\(safe-area-inset-(top|right|bottom|left)(\s*,[^)]*)?\)/g, (_, side) => `${INSETS[side]}px`);
+  const withInsets = (body, opts) => page(body, opts).replace(css, () => insetCss);
+
+  test(`${name}: the inset rewrite leaves no env(safe-area) behind`, () => {
+    assert.ok(css.includes('env(safe-area-inset-'), 'the stylesheet reads the insets');
+    assert.ok(!insetCss.includes('env(safe-area'), 'every inset was rewritten');
+  });
+
+  run(`${name}: from 600px up the scaffold keeps every region inside the safe areas`, { timeout: 30000 }, async () => {
+    const { browser, tab, box, style } = await open(type, withInsets(`<div id="host">${scaffold()}</div>`), { width: 1280 });
+    try {
+      near((await box('#bar')).top, 40, 'the bar clears the top inset');
+      near((await box('#rail')).left, 30, 'the rail clears the left inset');
+      near((await box('#rail')).bottom, 780, 'and the bottom inset');
+      near((await box('#tools')).right, 1206, 'the toolbar clears the right inset and keeps its margin');
+      near((await box('#pane')).bottom, 764, 'the floating pane clears the bottom inset and keeps its gap');
+      const render = (o) => tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, scaffold(o));
+      await render({ cls: 'tall-rail' });
+      near((await box('#rail')).top, 40, 'a tall rail clears the top inset');
+      await render({ bar: '' });
+      near((await box('#pane')).top, 56, 'without a bar the pane clears the top inset and keeps its gap');
+      await render({ nav: '<div class="scaffold-rail" id="cr" style="width:80px">Rail</div>' });
+      near((await box('#cr')).left, 30, 'a custom rail clears the left inset');
+      await render({ bottom: '<footer class="status-bar" id="sb"><span>Ready</span></footer>' });
+      assert.equal(await style('#sb', 'paddingBottom'), '20px', 'the status bar pads the bottom inset once');
+      near((await box('#sb')).bottom, 800, 'and reaches the bottom edge');
+      near((await box('#rail')).bottom, (await box('#sb')).top, 'with the rail ending above it');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: below 600px the bar, navigation bar and scroll padding clear the safe areas`, { timeout: 30000 }, async () => {
+    const { browser, tab, box, style } = await open(type, withInsets(`<div id="host">${scaffold({ bar: header('', 'rail'), bottom: navbar })}</div>`), { width: 390 });
+    try {
+      await tab.evaluate(() => window.scrollTo(0, 1000));
+      assert.ok((await box('#menu')).top >= 40, `the pinned bar's button clears the notch: ${(await box('#menu')).top}`);
+      assert.equal(await style('#nb nav', 'paddingBottom'), '20px', 'the navigation bar pads the bottom inset once');
+      const tb = await box('#tools');
+      assert.ok(Math.abs(tb.bottom - ((await box('#nb')).top - 16)) < 2, 'the toolbar floats 16px above it');
+      await tab.evaluate(() => window.scrollTo(0, 0));
+      await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, scaffold({ trailing: '' }));
+      assert.equal(await style('#s', 'paddingBottom'), '20px', 'without a navigation bar the scaffold pads the bottom inset');
+    } finally {
+      await browser.close();
+    }
+    const direct = await open(type, withInsets(scaffold({ bottom: navbar })), { width: 390 });
+    try {
+      assert.equal(await direct.tab.evaluate(() => getComputedStyle(document.documentElement).scrollPaddingTop), '104px', 'focus lands below the bar and the notch');
+    } finally {
+      await direct.browser.close();
+    }
+  });
+
+  run(`${name}: the rail overlay clears the safe areas on its own side`, { timeout: 30000 }, async () => {
+    const { browser, tab, style } = await open(type, withInsets(scaffold({ bottom: navbar })), { width: 390 });
+    try {
+      await tab.locator('#rail').evaluate((el) => el.classList.add('expanded'));
+      assert.deepEqual(await Promise.all(['paddingTop', 'paddingBottom', 'paddingLeft'].map((p) => style('#rail', p))), ['60px', '36px', '46px']);
+      await tab.evaluate(() => { document.documentElement.dir = 'rtl'; });
+      await tab.setViewportSize({ width: 700, height: 800 });
+      assert.deepEqual(await Promise.all(['paddingRight', 'paddingLeft'].map((p) => style('#rail', p))), ['66px', '16px'], 'under rtl it takes the right inset');
+    } finally {
+      await browser.close();
+    }
+  });
+
   run(`${name}: Page Down scrolls a focused scaffold pane`, { timeout: 30000 }, async () => {
     const { browser, tab } = await open(type, page(scaffold()));
     try {

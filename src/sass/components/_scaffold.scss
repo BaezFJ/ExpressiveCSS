@@ -57,6 +57,20 @@ $_sheet-open: "dialog.side-sheet[open]:not(:modal, .start, [hidden])";
 // A shown navigation bar region, as a :has() argument list.
 $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])";
 
+// The expanded rail's own padding (20px 16px 16px) plus the insets it meets.
+@mixin _overlay-rail-insets {
+  padding-top: calc(20px + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+
+  &:dir(ltr) {
+    padding-left: calc(16px + env(safe-area-inset-left, 0px));
+  }
+
+  &:dir(rtl) {
+    padding-right: calc(16px + env(safe-area-inset-right, 0px));
+  }
+}
+
 .scaffold {
   display: grid;
   grid-template-areas:
@@ -66,7 +80,34 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
   grid-template-columns: auto minmax(0, 1fr) auto;
   grid-template-rows: auto minmax(0, 1fr) auto;
   block-size: 100dvh;
+  // Safe areas (viewport-fit=cover): the side insets at every width, so every
+  // region clears a landscape notch. Physical, as the insets are.
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
   overflow: clip;
+
+  // From 600px up the shell also clears the top and bottom insets, for every
+  // region that meets them. A shown status bar pads the bottom itself.
+  @include bp-up("medium") {
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+
+    &:has(> .status-bar:not([hidden])) {
+      padding-bottom: 0;
+    }
+  }
+
+  // An expanded rail overlay is fixed to the window's edges, so it clears the
+  // top and bottom insets and the one on its docked side.
+  @include bp-down("expanded") {
+    > .navigation-rail.expanded {
+      @include _overlay-rail-insets;
+    }
+  }
+
+  > .navigation-rail.expanded.modal {
+    @include _overlay-rail-insets;
+  }
 
   // From 600px up, wherever the rail can open as an overlay (medium windows,
   // or a .modal rail), its column keeps the collapsed width, open or closed, so the pane
@@ -297,6 +338,21 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
       overflow: visible;
     }
 
+    // The document scrolls here and the app bar sticks to the window's top,
+    // so the bar pads its own top inset inside its background; padding above
+    // it would scroll away. Without a bar or a navigation bar the shell pads.
+    > #{$_bar} {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    &:not(:has(> #{$_bar}:not([hidden]))) {
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+
+    &:not(:has(#{$_navbar-shown})) {
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
     // The trailing toolbar floats as a centered row 16px above the navigation
     // bar (or the window's bottom edge). Its row stays in flow, and its block
     // margins put its resting place where it sticks, so the end of the page
@@ -318,7 +374,7 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
       justify-self: center;
       // The bottom margin matches the sticky inset, so the shift never pulls
       // the toolbar over the pane's last content.
-      margin: 16px 0 calc(16px + env(safe-area-inset-bottom, 0px));
+      margin: 16px 0;
 
       // A side tooltip would cover the next action in a row; show it above,
       // as a horizontal toolbar's tooltips do. Under rtl a trailing toolbar
@@ -372,7 +428,7 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
   // Plain declarations, not custom properties on :root, which a shadow-only
   // load would leave undefined.
   :root:has(> body > .scaffold) {
-    scroll-padding-block: rem(64px) env(safe-area-inset-bottom, 0px);
+    scroll-padding-block: calc(#{rem(64px)} + env(safe-area-inset-top, 0px)) env(safe-area-inset-bottom, 0px);
   }
 
   // :has() can't nest, so the shown-bar list is written out under body here.
