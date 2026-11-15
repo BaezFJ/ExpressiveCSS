@@ -9,7 +9,7 @@ Component ID: `sankey-chart`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `5f60d91081ce854f12b3d11b7cb5bccfba4a868f4dc33d93cb96c63fa98a89ba`
+Contract SHA-256: `40a04824f646413dc6a9d7bb8bae6f78d390e747b886c9d1e74ee60a68aef652`
 
 #### Selection and adaptation
 

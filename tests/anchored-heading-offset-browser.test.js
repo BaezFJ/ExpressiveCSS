@@ -13,6 +13,8 @@ ${header}
 
 const small = '<header><nav class="bar"><h1>App</h1></nav></header>';
 const medium = '<header class="medium"><nav class="bar"><h1>App</h1></nav></header>';
+const mediumSubtitle = '<header class="medium"><nav class="bar"><hgroup><h1>App</h1><p>Subtitle</p></hgroup></nav></header>';
+const large = '<header class="large"><nav class="bar"><h1>App</h1></nav></header>';
 const largeSubtitle = '<header class="large"><nav class="bar"><hgroup><h1>App</h1><p>Subtitle</p></hgroup></nav></header>';
 const collapsedLarge = '<header class="large collapsed"><nav class="bar"><h1>App</h1></nav></header>';
 const demoOnly = '<article><header class="medium"><nav class="bar"><h1>Demo</h1></nav></header></article>';
@@ -32,7 +34,7 @@ for (const [name, engine, test] of engines) {
     try {
       const p = await browser.newPage({ viewport: { width: 800, height: 600 }, reducedMotion: 'reduce' });
 
-      for (const [label, header] of [['small bar', small], ['medium bar', medium], ['large bar with a subtitle', largeSubtitle], ['collapsed large bar', collapsedLarge]]) {
+      for (const [label, header] of [['small bar', small], ['medium bar', medium], ['medium bar with a subtitle', mediumSubtitle], ['large bar', large], ['large bar with a subtitle', largeSubtitle], ['collapsed large bar', collapsedLarge]]) {
         await p.setContent(page(header));
         const { top, barBottom } = await follow(p);
         assert.ok(barBottom > 0, `${label}: the bar is on screen`);

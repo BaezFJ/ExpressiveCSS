@@ -52,7 +52,10 @@ $_bar: ":is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)";
 $_heading: ":is(h1, h2, h3, h4, h5, h6)";
 $_title: ":is(#{$_heading}, hgroup)";
 $_search: ".search-bar";
-// Flexible bar heights, shared with the anchored-heading offset below.
+// Bar heights, shared with the anchored-heading offset below, and the gap
+// the offset leaves between the bar and the heading.
+$_small-height: 64px;
+$_anchor-gap: 8px;
 $_medium-height: 112px;
 $_medium-subtitle-height: 136px;
 $_large-height: 120px;
@@ -68,7 +71,7 @@ header:has(> #{$_bar}) {
   // the headline; trailing is everything after it.
   --md-comp-top-app-bar-leading-icon-color: inherit;
   --md-comp-top-app-bar-trailing-icon-color: inherit;
-  --md-comp-top-app-bar-container-height: #{rem(64px)};
+  --md-comp-top-app-bar-container-height: #{rem($_small-height)};
   --md-comp-top-app-bar-leading-icon-size: #{rem(24px)};
   --md-comp-top-app-bar-container-shape: 0;
 
@@ -434,7 +437,7 @@ header.large.collapsed:has(> #{$_bar}) > #{$_bar} {
   flex-wrap: nowrap;
   align-content: center;
   align-items: center;
-  min-height: rem(64px);
+  min-height: rem($_small-height);
   padding-top: 0;
   padding-bottom: 0;
 
@@ -497,23 +500,23 @@ header:has(> #{$_bar}) {
 $_page-bar: ":root:has(> body > header > #{$_bar})";
 
 :where(#{$_page-bar}) {
-  --md-comp-top-app-bar-anchor-offset: #{rem(72px)};
+  --md-comp-top-app-bar-anchor-offset: #{rem($_small-height + $_anchor-gap)};
 }
 
 :where(:root:has(> body > header.medium:not(.collapsed) > #{$_bar})) {
-  --md-comp-top-app-bar-anchor-offset: #{rem($_medium-height + 8px)};
+  --md-comp-top-app-bar-anchor-offset: #{rem($_medium-height + $_anchor-gap)};
 }
 
 :where(:root:has(> body > header.medium:not(.collapsed) > #{$_bar} > hgroup > p)) {
-  --md-comp-top-app-bar-anchor-offset: #{rem($_medium-subtitle-height + 8px)};
+  --md-comp-top-app-bar-anchor-offset: #{rem($_medium-subtitle-height + $_anchor-gap)};
 }
 
 :where(:root:has(> body > header.large:not(.collapsed) > #{$_bar})) {
-  --md-comp-top-app-bar-anchor-offset: #{rem($_large-height + 8px)};
+  --md-comp-top-app-bar-anchor-offset: #{rem($_large-height + $_anchor-gap)};
 }
 
 :where(:root:has(> body > header.large:not(.collapsed) > #{$_bar} > hgroup > p)) {
-  --md-comp-top-app-bar-anchor-offset: #{rem($_large-subtitle-height + 8px)};
+  --md-comp-top-app-bar-anchor-offset: #{rem($_large-subtitle-height + $_anchor-gap)};
 }
 
 // Panes scroll themselves, below the bar, so their headings need no offset.
