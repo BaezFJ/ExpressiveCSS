@@ -27,6 +27,7 @@ test('a full scaffold, one with a second hidden main, and one of region classes 
   assert.deepEqual(hits(shell(`${bar}${rail}<main>Inbox</main>${tools}`)), []);
   assert.deepEqual(hits(shell(`${bar}${rail}<main>Inbox</main><main hidden>Draft</main>${tools}`)), []);
   assert.deepEqual(hits(shell('<div class="scaffold-bar">Bar</div><div class="scaffold-pane">Pane</div>')), []);
+  assert.deepEqual(hits(shell('<main>Pane</main><footer class="status-bar">A</footer><footer class="status-bar" hidden>B</footer>')), []);
 });
 
 for (const [name, html, id] of [
@@ -39,6 +40,7 @@ for (const [name, html, id] of [
   ['two headers', shell(`${bar}${bar}<main>Pane</main>`), 'scaffold-one-child-per-region'],
   ['two rails', shell(`${rail}${rail}<main>Pane</main>`), 'scaffold-one-child-per-region'],
   ['two trailing toolbars', shell(`<main>Pane</main>${tools}<div class="scaffold-trailing">More</div>`), 'scaffold-one-child-per-region'],
+  ['two status bars', shell('<main>Pane</main><footer class="status-bar">A</footer><div class="status-bar" role="region" aria-label="B">B</div>'), 'scaffold-one-child-per-region'],
   ['a nested scaffold', shell(`<main>${shell('<div class="scaffold-pane">Inner</div>')}</main>`), 'scaffold-does-not-nest'],
 ]) {
   test(`${name} is flagged by ${id}`, () => {

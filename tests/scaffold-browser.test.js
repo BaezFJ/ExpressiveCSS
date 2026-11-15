@@ -235,7 +235,7 @@ for (const [name, type, run] of engines) {
     try {
       const measure = () => Promise.all(['#rail', '#bar', '#pane', '#tools'].map(box));
       let [nav, bar, main, tb] = await measure();
-      assert.equal((await style('#s', 'gridTemplateAreas')).replace(/\s+/g, ' '), '"rail bar trailing" "rail pane trailing"');
+      assert.equal((await style('#s', 'gridTemplateAreas')).replace(/\s+/g, ' '), '"rail bar trailing" "rail pane trailing" "status status status"');
       assert.deepEqual([nav.left, nav.top], [0, 0], 'the rail starts at the top leading corner');
       near(nav.bottom, 800, 'the rail reaches the window bottom');
       near(bar.left, nav.right, 'the bar starts at the rail');
@@ -722,6 +722,52 @@ for (const [name, type, run] of engines) {
       } finally {
         await tab.evaluate(() => window.ab.destroy());
       }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  const status = (tag = 'footer') => `<${tag} class="status-bar" id="sb"${tag === 'div' ? ' role="region" aria-label="Status"' : ''}><span>Ready</span><button type="button" class="end" aria-label="Notifications">${icon('notifications')}</button></${tag}>`;
+
+  run(`${name}: a status bar spans the scaffold's full width along the bottom`, { timeout: 30000 }, async () => {
+    const { browser, tab, box } = await open(type, page(`<div id="host">${scaffold({ bottom: status() })}</div>`));
+    try {
+      for (const [label, html] of [['footer', scaffold({ bottom: status() })], ['div region', scaffold({ bottom: status('div') })]]) {
+        await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, html);
+        const sb = await box('#sb');
+        assert.deepEqual([sb.left, sb.width], [0, 1280], `${label}: full width`);
+        near(sb.bottom, 800, `${label}: at the bottom edge`);
+        near((await box('#rail')).bottom, sb.top, `${label}: the rail ends at the status bar`);
+        near((await box('#pane')).bottom, sb.top, `${label}: the pane ends at it`);
+        const tb = await box('#tools');
+        near((tb.top + tb.bottom) / 2, ((await box('#bar')).bottom + sb.top) / 2, `${label}: the toolbar is centered above it`);
+      }
+      await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, scaffold({ cls: 'tall-rail', bottom: status() }));
+      const sb = await box('#sb');
+      const nav = await box('#rail');
+      assert.equal(nav.top, 0);
+      near(nav.bottom, sb.top, 'the tall rail ends at the status bar');
+      near(((await box('#tools')).top + (await box('#tools')).bottom) / 2, sb.top / 2, 'the trailing region ends there too');
+      assert.deepEqual([sb.left, sb.width], [0, 1280], 'and the status bar runs under the rail');
+      await tab.setViewportSize({ width: 700, height: 800 });
+      await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, scaffold({ bottom: status() }));
+      near((await box('#pane')).left, 96, 'at 700px the rail column is still held');
+      near((await box('#sb')).bottom, 800, 'with the status bar at the bottom');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: the status bar hides below 600px and grows with the text`, { timeout: 30000 }, async () => {
+    const { browser, tab, box, style } = await open(type, page(`<div id="host">${scaffold({ bottom: status() + navbar })}</div>`), { width: 390 });
+    try {
+      assert.equal(await style('#sb', 'display'), 'none', 'hidden with the navigation bar on compact windows');
+      await tab.setViewportSize({ width: 1280, height: 800 });
+      await tab.evaluate(() => { document.documentElement.style.fontSize = '32px'; });
+      const sb = await box('#sb');
+      assert.ok(sb.height >= 48, `the status bar grows: ${sb.height}`);
+      near(sb.bottom, 800, 'and stays at the bottom');
+      near((await box('#pane')).bottom, sb.top, 'with the pane ending above it');
     } finally {
       await browser.close();
     }

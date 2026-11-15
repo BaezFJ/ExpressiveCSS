@@ -11,6 +11,7 @@
 //   pane      main, or .scaffold-pane. A .panes layout goes inside main.
 //   trailing  .toolbar.vertical or .toolbar-group.vertical, or .scaffold-trailing
 //   navbar    nav.navigation-bar, or a <footer> whose only child is one (compact only)
+//   status    .status-bar, full width along the bottom (600px and up)
 //
 // The bar spans the top, and the rail, pane and trailing regions share the row
 // below it. .tall-rail runs the rail and trailing region the full height and
@@ -51,9 +52,10 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
   display: grid;
   grid-template-areas:
     "bar bar bar"
-    "rail pane trailing";
+    "rail pane trailing"
+    "status status status";
   grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
   block-size: 100dvh;
   overflow: clip;
 
@@ -89,7 +91,8 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
   &.tall-rail {
     grid-template-areas:
       "rail bar trailing"
-      "rail pane trailing";
+      "rail pane trailing"
+      "status status status";
   }
 
   > #{$_bar} {
@@ -110,6 +113,12 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
 
   > #{$_trailing} {
     grid-area: trailing;
+  }
+
+  // The status bar's own sticky placement stays; the scaffold doesn't scroll
+  // from 600px up, so the row alone puts it at the window's bottom edge.
+  > .status-bar {
+    grid-area: status;
   }
 
   // Sticky like .navigation-bar.fixed, so it stays at the window's bottom
@@ -224,8 +233,10 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
       margin-block-end: 16px;
     }
 
+    // The status bar guide says not to show it with a navigation bar.
     > .navigation-rail:not(.expanded),
-    > .scaffold-rail {
+    > .scaffold-rail,
+    > .status-bar {
       display: none;
     }
   }
