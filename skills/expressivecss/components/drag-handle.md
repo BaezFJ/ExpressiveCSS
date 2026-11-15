@@ -9,7 +9,7 @@ Component ID: `drag-handle`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `058fd0be89bcbffd5097b3dcaabcbbad42c95dcc436a1dd2673a5ac9ae6b47f0`
+Contract SHA-256: `4ea6fcc9ae771e675d25c8e4af56a5cc4eee3ff01f81a843927192ea275d3a9b`
 
 #### Selection and adaptation
 

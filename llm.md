@@ -4682,6 +4682,8 @@ A subtitle is an `<hgroup>` wrapping the heading and a `<p>`. There is no `subti
 
 Every top app bar stays pinned with `position: sticky` and `top: 0`. No helper class or wrapper is required. At rest the bar is `surface`, the same as the page. Once content scrolls under it, supporting browsers fill it with `surface-container` via `animation-timeline: scroll()` so it separates from the body. Without that API the bar stays at rest.
 
+A heading with an `id` that a fragment link scrolls to comes to rest below the bar instead of behind it, when the page's top app bar is a direct child of `<body>`. Its `scroll-margin-block-start` reads `--md-comp-top-app-bar-anchor-offset`, which is the bar's height plus 8px: 72px for a small or collapsed bar, 120px for `.medium` (144px with a subtitle) and 128px for `.large` (160px with a subtitle). Headings in a dialog and `.scrollspy` targets keep their own offsets, and bars inside an article, card or dialog move nothing. Set the token on `:root` for a taller bar, such as a small bar whose destinations wrap to a second row, or set it to `0` to turn the offset off.
+
 The documentation header on this site is a fixed small bar. A second fixed bar on this page would sit on top of it, so the live example is the site header itself.
 
 ```html
@@ -4716,6 +4718,7 @@ Component tokens you can set on the header (or on `:root`):
 | `--md-comp-top-app-bar-trailing-icon-color` | `inherit` (spec: `on-surface-variant`) |
 | `--md-comp-top-app-bar-container-height` | 64px |
 | `--md-comp-top-app-bar-leading-icon-size` | 24px |
+| `--md-comp-top-app-bar-anchor-offset` | 72px, more for flexible bars; set on `:root` |
 
 ### Menu
 

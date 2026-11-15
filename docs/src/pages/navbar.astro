@@ -243,6 +243,21 @@ const S = defineSections([
           without that API, the bar keeps its resting color.
         </p>
         <p>
+          A heading with an <code>id</code> that a fragment link scrolls to
+          comes to rest below the bar instead of behind it, when the page's
+          top app bar is a direct child of <code>&lt;body&gt;</code>. Its
+          <code>scroll-margin-block-start</code> reads
+          <code>--md-comp-top-app-bar-anchor-offset</code>, the bar's height
+          plus 8px: 72px for a small or collapsed bar, 120px for
+          <code>.medium</code> (144px with a subtitle) and 128px for
+          <code>.large</code> (160px with a subtitle). Headings in a dialog and
+          <code>.scrollspy</code> targets keep their own offsets, and bars
+          inside an article, card or dialog move nothing. Set the token on
+          <code>:root</code> for a taller bar, such as a small bar whose
+          destinations wrap to a second row, or set it to <code>0</code> to
+          turn the offset off.
+        </p>
+        <p>
           The documentation header on this site is a fixed small bar. A second
           fixed bar on this page would sit on top of it, so the live example
           is the site header itself.
@@ -291,6 +306,7 @@ const S = defineSections([
             <tr><td><code>--md-comp-top-app-bar-trailing-icon-color</code></td><td><code>inherit</code> (spec: <code>on-surface-variant</code>)</td></tr>
             <tr><td><code>--md-comp-top-app-bar-container-height</code></td><td>64px</td></tr>
             <tr><td><code>--md-comp-top-app-bar-leading-icon-size</code></td><td>24px</td></tr>
+            <tr><td><code>--md-comp-top-app-bar-anchor-offset</code></td><td>72px, more for flexible bars; set on <code>:root</code></td></tr>
         </TokenTable>
   </Section>
   <Section {...S["navbar-menu"]}>
