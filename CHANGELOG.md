@@ -11,6 +11,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   type roles, built from the role's weight, size, line height and family
   tokens. Pair it with the role's `-letter-spacing` token, which the shorthand
   cannot hold.
+- The `expressivecss-review` quality inspector checks whether an app behaves
+  the way people expect: command buttons that keep their label and ignore a
+  second press while a request runs, Undo for destructive actions, the selected
+  tab, filter and page kept in the URL, and a form that lets people submit and
+  then shows each error at its field. Each finding carries a
+  `finished-app:<area>` label so runs can be compared.
 
 ## [0.18.1] - 2026-11-15
 

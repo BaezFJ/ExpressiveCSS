@@ -48,8 +48,8 @@ Covers R11. Checks V4, V5.
 
 Prerequisites: groups 2 and 3.
 
-- [ ] Add the Unreleased CHANGELOG entry.
-- [ ] Run `npm run build:skill` after the last edit and commit the regenerated `contract.json` files.
-- [ ] Run `npm run verify`, then `npm test --prefix mcp/expressivecss`.
+- [x] Add the Unreleased CHANGELOG entry.
+- [x] Run `npm run build:skill` after the last edit and commit the regenerated `contract.json` files.
+- [x] Run `npm run verify`, then `npm test --prefix mcp/expressivecss`.
 
 Done when V4 and V5 pass.
