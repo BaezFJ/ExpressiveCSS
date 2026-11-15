@@ -49,7 +49,7 @@ $_navbar-size: "52px + 1rem + max(6px, env(safe-area-inset-bottom, 0px))";
 // The pane area that floats as a surface: not a panes container itself (it
 // keeps its own margins), and not holding separated or floating panes (they
 // are already cards).
-$_floating-pane: ":is(main, .scaffold-pane):not(:is(.panes, .pane-layout, .list-detail, .supporting-pane-layout), :has(> :is(.panes, .pane-layout):is(.separated, .floating)))";
+$_floating-pane: "#{$_pane}:not(:is(.panes, .pane-layout, .list-detail, .supporting-pane-layout), :has(> :is(.panes, .pane-layout):is(.separated, .floating)))";
 // A shown navigation bar region, as a :has() argument list.
 $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])";
 
@@ -157,31 +157,42 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
   // shell, and a top app bar blends with the shell. Its scrolled color steps
   // up one tone so the fill still shows. 16px gaps, except beside a floating
   // toolbar, whose own 24px margin is the gap, and beside a shown rail.
-  @include bp-up("medium") {
-    background-color: var(--md-sys-color-surface-container);
+  // Screen only: the rail doesn't print, so the gaps would print lopsided.
+  @media screen {
+    @include bp-up("medium") {
+      background-color: var(--md-sys-color-surface-container);
 
-    > header:has(> nav, > .bar) {
-      --md-comp-top-app-bar-container-color: var(--md-sys-color-surface-container);
-      --md-comp-top-app-bar-scrolled-container-color: var(--md-sys-color-surface-container-high);
-    }
-
-    > #{$_floating-pane} {
-      margin-block-end: 16px;
-      margin-inline-end: 16px;
-      border-radius: var(--md-sys-shape-corner-large);
-      background-color: var(--md-sys-color-surface);
-
-      @media (forced-colors: active) {
-        border: 1px solid CanvasText;
+      > header:has(> nav, > .bar) {
+        --md-comp-top-app-bar-container-color: var(--md-sys-color-surface-container);
+        --md-comp-top-app-bar-scrolled-container-color: var(--md-sys-color-surface-container-high);
       }
-    }
 
-    &:not(:has(> :is(.navigation-rail, .scaffold-rail):not([hidden]))) > #{$_floating-pane} {
-      margin-inline-start: 16px;
-    }
+      // The gaps are set on the shell by what it shows, so the long pane
+      // selector is written once.
+      > #{$_floating-pane} {
+        margin-block: var(--_scaffold-pane-gap-top, 0) 16px;
+        margin-inline: var(--_scaffold-pane-gap-start, 0) var(--_scaffold-pane-gap-end, 16px);
+        border-radius: var(--md-sys-shape-corner-large);
+        background-color: var(--md-sys-color-surface);
 
-    &:has(> :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed, [hidden])) > #{$_floating-pane} {
-      margin-inline-end: 0;
+        @media (forced-colors: active) {
+          border: 1px solid CanvasText;
+        }
+      }
+
+      // Without a shown bar the rounded top would touch the window's edge.
+      &:not(:has(> #{$_bar}:not([hidden]))) {
+        --_scaffold-pane-gap-top: 16px;
+      }
+
+      // An empty .scaffold-rail takes no width, so it counts as no rail.
+      &:not(:has(> #{$_rail}:not([hidden], :empty))) {
+        --_scaffold-pane-gap-start: 16px;
+      }
+
+      &:has(> :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed, [hidden])) {
+        --_scaffold-pane-gap-end: 0;
+      }
     }
   }
 

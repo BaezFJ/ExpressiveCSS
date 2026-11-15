@@ -93,7 +93,7 @@ for (const [name, type, run] of engines) {
       await render(scaffold({ trailing: '' }));
       near((await box('#pane')).right, 1264, 'no toolbar: the pane floats 16px from the trailing edge');
       await render(scaffold({ bar: '' }));
-      near((await box('#pane')).top, 0, 'no bar: the pane starts at the top');
+      near((await box('#pane')).top, 16, 'no bar: the pane floats 16px from the top');
 
       await render(custom);
       const [cb, cr, cp, ct] = await Promise.all(['#cb', '#cr', '#cp', '#ct'].map(box));
@@ -227,6 +227,7 @@ for (const [name, type, run] of engines) {
       assert.equal(await style('#pane', 'overflowY'), 'visible', 'the pane prints whole');
       assert.equal(await style('#s', 'overflowY'), 'visible', 'the shell does not clip in print');
       assert.ok((await box('#s')).height > 3000, 'the shell grows to its content in print');
+      assert.deepEqual([await style('#pane', 'marginBlockEnd'), await style('#pane', 'borderTopLeftRadius')], ['0px', '0px'], 'the pane prints without its floating gap and corners');
     } finally {
       await browser.close();
     }
@@ -783,8 +784,10 @@ for (const [name, type, run] of engines) {
     const ctx = Object.assign(document.createElement('canvas'), { width: 1, height: 1 }).getContext('2d');
     ctx.fillStyle = getComputedStyle(el)[prop];
     ctx.fillRect(0, 0, 1, 1);
-    return [...ctx.getImageData(0, 0, 1, 1).data].join(',');
+    return [...ctx.getImageData(0, 0, 1, 1).data];
   }, prop);
+  // A color-mix() through oklab can round one byte away from the role itself.
+  const sameColor = (a, b, msg) => assert.ok(a.every((v, i) => Math.abs(v - b[i]) <= 1), `${msg}: ${a} vs ${b}`);
   const roles = ['surface', 'surface-container', 'surface-container-high', 'surface-container-low'];
   const probes = `<div id="probes">${roles.map((r) => `<i id="p-${r}" style="color:var(--md-sys-color-${r})"></i>`).join('')}</div>`;
 
@@ -792,14 +795,14 @@ for (const [name, type, run] of engines) {
     const { browser, tab, box, style } = await open(type, page(`${probes}<div id="host">${scaffold()}</div>`), { width: 1024 });
     try {
       const role = (r) => rgb(tab, `#p-${r}`, 'color');
-      assert.equal(await rgb(tab, '#s'), await role('surface-container'), 'the shell is surface-container');
-      assert.equal(await rgb(tab, '#bar'), await role('surface-container'), 'the app bar blends with it');
-      assert.equal(await rgb(tab, '#pane'), await role('surface'), 'the pane is surface');
+      sameColor(await rgb(tab, '#s'), await role('surface-container'), 'the shell is surface-container');
+      sameColor(await rgb(tab, '#bar'), await role('surface-container'), 'the app bar blends with it');
+      sameColor(await rgb(tab, '#pane'), await role('surface'), 'the pane is surface');
       assert.equal(await style('#pane', 'borderTopLeftRadius'), '16px', 'with 16px corners');
       if (await tab.evaluate(() => CSS.supports('timeline-scope', '--a'))) {
         await tab.locator('#pane').evaluate((el) => el.scrollTo(0, 200));
         await tab.waitForFunction(() => getComputedStyle(document.querySelector('#bar')).getPropertyValue('--md-comp-top-app-bar-scroll').trim() === '1', null, { timeout: 5000 });
-        assert.equal(await rgb(tab, '#bar'), await role('surface-container-high'), 'the scrolled bar fills with surface-container-high');
+        sameColor(await rgb(tab, '#bar'), await role('surface-container-high'), 'the scrolled bar fills with surface-container-high');
       }
 
       const render = (o) => tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, scaffold(o));
@@ -815,6 +818,10 @@ for (const [name, type, run] of engines) {
       near((await box('#pane')).left, 16, '16px from the leading edge without a rail');
       await render({ nav: rail().replace('class="navigation-rail"', 'class="navigation-rail" hidden'), trailing: '' });
       near((await box('#pane')).left, 16, 'a hidden rail counts as absent');
+      await render({ nav: '<div class="scaffold-rail"></div>', trailing: '' });
+      near((await box('#pane')).left, 16, 'an empty custom rail counts as absent');
+      await render({ bar: '', trailing: '' });
+      near((await box('#pane')).top, 16, 'without a bar the pane floats 16px from the top');
       await render({ trailing: '<div class="scaffold-trailing" id="ct" style="width:60px">Tools</div>' });
       near((await box('#ct')).left - (await box('#pane')).right, 16, 'a custom trailing region gets the 16px gap');
       await render({ trailing: '', bottom: '<footer class="status-bar" id="sb"><span>Ready</span></footer>' });
@@ -843,7 +850,7 @@ for (const [name, type, run] of engines) {
         const main = await box('#pane');
         near(main.right, 1024, `${cls}: no trailing gap`);
         near(main.bottom, 800, `${cls}: no bottom gap`);
-        assert.equal(await rgb(tab, '#p1'), await rgb(tab, '#p-surface-container-low', 'color'), `${cls}: the panes keep their cards`);
+        sameColor(await rgb(tab, '#p1'), await rgb(tab, '#p-surface-container-low', 'color'), `${cls}: the panes keep their cards`);
       }
       await render('<main id="pane" class="panes list-detail"><div class="list-pane">A</div><div class="detail-pane">B</div></main>');
       assert.equal(await style('#pane', 'marginInlineEnd'), '24px', 'a panes container keeps its own margins');
@@ -880,9 +887,7 @@ if (chromium) {
       await browser.close();
     }
   });
-}
 
-if (chromium) {
   runChromium('chromium: under forced colors the floating pane keeps a visible edge', { timeout: 30000 }, async () => {
     const { browser, tab } = await open(chromium, page(scaffold()), { width: 1024, forcedColors: 'active' });
     try {

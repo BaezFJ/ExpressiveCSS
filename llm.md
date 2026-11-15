@@ -5101,7 +5101,7 @@ Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself
 </div>
 ```
 
-From 600px up the scaffold paints `surface-container` and the pane floats on it as a rounded `surface` with 16px gaps (below, after, and before it when no rail is shown; beside a floating toolbar its 24px margin is the gap). Pad the pane's content, since the rounded corners clip what runs to the edge. A pane holding separated or floating panes keeps no surface, and a `main` that is itself a panes container keeps the panes layout's margins, so put panes inside `<main>`. Below 600px the pane stays flat.
+From 600px up the scaffold paints `surface-container` and the pane floats on it as a rounded `surface` with 16px gaps (below, after, before it when no rail is shown, and above it when no bar is shown; beside a floating toolbar its 24px margin is the gap). Pad the pane's content, since the rounded corners clip what runs to the edge. A pane holding separated or floating panes keeps no surface, and a `main` that is itself a panes container keeps the panes layout's margins, so put panes inside `<main>`. Below 600px the pane stays flat.
 
 Each region takes one direct child. For custom content use the region classes `scaffold-bar`, `scaffold-rail`, `scaffold-pane` and `scaffold-trailing`. A region with nothing in it takes no space. A second visible child in one region overlaps the first, so give the ones not shown `hidden`. Other direct children are not placed and fall into a free grid cell, so keep a skip link inside the `<header>`.
 

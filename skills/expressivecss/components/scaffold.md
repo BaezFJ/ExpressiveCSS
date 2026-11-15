@@ -9,7 +9,7 @@ Component ID: `scaffold`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `a13ff6ec886244dd646755f579fd16d96dba2da81c1326cd3ef8b90f704dad3e`
+Contract SHA-256: `c05bd088bb3d18d7f27ddb726b61a8f3ea42dd8b6f67b426d559a8c0ee878e55`
 
 #### Selection and adaptation
 
@@ -29,7 +29,7 @@ Support (2026-11-15, `llm.md#scaffold`): A window-height grid that places a head
 
 Web adaptation: CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.
 
-Known boundary: Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding, and the status bar's row and compact hiding; spoken output and a mobile browser's collapsing address bar remain unverified.
+Known boundary: Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding, and the status bar's row and compact hiding, and the floating pane's colors, corners and gaps; spoken output and a mobile browser's collapsing address bar remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#scaffold).
 

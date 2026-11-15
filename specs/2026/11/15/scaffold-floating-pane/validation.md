@@ -39,3 +39,15 @@ Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, th
   - V3 is labelled a guard, and V4 now has cases that fail first.
   - Corner clipping, `.scaffold-bar`'s shell color, the bar token selector, the 16px versus 24px gaps, `[vibrant]` and the demo box are now stated.
   The "unreleased" claim checks out: `.scaffold` sits under `[Unreleased]` with the package at 0.18.1.
+- 2026-11-15, `/code-review high --fix --max-findings all` on `ef84350fa..HEAD`: nine findings, each checked against the source.
+  - Fixed by the review:
+    - `bp-up` matched print too, so the pane printed lopsided. The block is now screen only, with a print assertion.
+    - Exact canvas color compares now allow ±1 per channel.
+    - The decision record's gap text names the floating pane.
+    - The new selectors reuse `$_pane` and `$_rail`.
+    - The forced-colors test moved into the existing Chromium block.
+  - Also fixed, though the reviewer skipped them:
+    - Without a bar, the pane's rounded top touched the window's edge. It now gets a 16px top gap, and the phase 88 no-bar assertion moves to 16.
+    - An empty `.scaffold-rail` counted as a rail. `:empty` now excludes it, with a test.
+    - The repeated pane selector: the gaps are now private properties set on the shell, so the selector is written once. This saved fewer bytes than the new top-gap and empty-rail behavior added.
+  - CSS budget 92,906. Scaffold, tokens and shadow-DOM suites pass 120 of 120. Results are recorded after the full verify.
