@@ -580,5 +580,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed direction-aware tall-rail bar strips: 93,474 gzip bytes (+65).
   // Reviewed the navigation bar row kept from 600px when no rail shows: 93,509 gzip bytes (+35).
   // Reviewed the navigation bar leaving the bottom inset to a status bar below it: 93,529 gzip bytes (+20).
-  assert.ok(sizes(css).gzip <= 93529, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the trailing toolbar's 4px margin, read from no token: 93,517 gzip bytes (-12).
+  assert.ok(sizes(css).gzip <= 93517, `CSS gzip: ${sizes(css).gzip}`);
 });

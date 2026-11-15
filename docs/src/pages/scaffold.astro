@@ -134,7 +134,7 @@ const S = defineSections([
           From 600px up, the scaffold paints <code>surface-container</code>
           and the pane floats on it as a rounded <code>surface</code>, with
           16px gaps below it, after it, before it without a rail, and above
-          it without a bar. Beside a floating toolbar the toolbar's own 24px margin is the gap. The
+          it without a bar. Beside a floating toolbar the toolbar's own 4px margin is the gap. The
           rounded corners clip content that runs to the edge, so pad the
           pane's content. A pane holding separated or floating panes keeps no
           surface of its own, since its panes are already cards. Put a panes
@@ -164,8 +164,8 @@ const S = defineSections([
           The rail fills its region from the bar down to the bottom of the
           window, or to a status bar, and scrolls its own destinations when
           they don't fit. At 840px and wider, expanding it widens its column and narrows the
-          pane. The vertical toolbar is centered in its region, 24px from the
-          pane and from the window edge.
+          pane. The vertical toolbar is centered in its region, 4px from the
+          pane and from the window edge, so the trailing rail hugs it.
         </p>
         <p>
           From 600px to 839px, an expanded rail opens over the pane with a

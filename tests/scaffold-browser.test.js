@@ -71,8 +71,8 @@ for (const [name, type, run] of engines) {
       near(main.top, bar.bottom, 'the pane starts below the bar');
       near(nav.bottom, 800, 'the rail reaches the window bottom');
       near(main.bottom, 784, 'the pane floats 16px above the window bottom');
-      near(tb.left - main.right, 24, 'the toolbar sits 24px from the pane');
-      near(1280 - tb.right, 24, 'and 24px from the window edge');
+      near(tb.left - main.right, 4, 'the toolbar sits 4px from the pane');
+      near(1280 - tb.right, 4, 'and 4px from the window edge');
       near((tb.top + tb.bottom) / 2, (bar.bottom + 800) / 2, 'the toolbar is centered in its region');
       assert.equal(await style('#s', 'overflowX'), 'clip');
       assert.equal(await style('#tools', 'overflowY'), 'visible', 'the toolbar never clips its tooltips');
@@ -118,7 +118,7 @@ for (const [name, type, run] of engines) {
       assert.ok(await tab.locator('#ct').evaluate((el) => { el.scrollTop = 300; return el.scrollTop > 0; }), 'custom trailing content scrolls');
 
       await render(scaffold({ trailing: group }));
-      near(1280 - (await box('#tg')).right, 24, 'a toolbar group takes the trailing region');
+      near(1280 - (await box('#tg')).right, 4, 'a toolbar group takes the trailing region');
 
       await render(scaffold({ trailing: tools().replace('toolbar vertical', 'toolbar vertical fixed right') }));
       near(1280 - (await box('#tools')).right, 24, 'a fixed toolbar keeps its own inset and gets no scaffold margin');
@@ -197,7 +197,7 @@ for (const [name, type, run] of engines) {
     const { browser, box } = await open(type, page(scaffold(), { dir: 'rtl' }));
     try {
       near((await box('#rail')).right, 1280, 'the rail is at the right edge');
-      near((await box('#tools')).left, 24, 'the toolbar is 24px from the left edge');
+      near((await box('#tools')).left, 4, 'the toolbar is 4px from the left edge');
     } finally {
       await browser.close();
     }
@@ -255,8 +255,8 @@ for (const [name, type, run] of engines) {
       near(bar.left, nav.right, 'the bar starts at the rail');
       near(bar.right, main.right, 'the bar sits over the pane only');
       near(main.top, bar.bottom, 'the pane starts below the bar');
-      near(1280 - tb.right, 24, 'the toolbar is 24px from the window edge');
-      near(tb.left - main.right, 24, 'and 24px from the pane');
+      near(1280 - tb.right, 4, 'the toolbar is 4px from the window edge');
+      near(tb.left - main.right, 4, 'and 4px from the pane');
       near((tb.top + tb.bottom) / 2, 400, 'the toolbar is centered in the full height');
 
       const restHeight = bar.height;
@@ -302,7 +302,7 @@ for (const [name, type, run] of engines) {
       near(nav.bottom, 800, 'to the bottom');
       near(bar.right, nav.left, 'the bar ends at the rail');
       near(bar.left, main.left, 'the bar sits over the pane only');
-      near(tb.left, 24, 'the toolbar is 24px from the left edge');
+      near(tb.left, 4, 'the toolbar is 4px from the left edge');
       near((tb.top + tb.bottom) / 2, 400, 'the toolbar is centered in the full height');
     } finally {
       await browser.close();
@@ -824,7 +824,7 @@ for (const [name, type, run] of engines) {
       near(main.bottom, 784, '16px above the bottom');
       near(main.right, 1008, '16px from the trailing edge without a toolbar');
       await render();
-      near((await box('#tools')).left - (await box('#pane')).right, 24, 'the toolbar keeps its 24px margin as the gap');
+      near((await box('#tools')).left - (await box('#pane')).right, 4, 'the toolbar keeps its 4px margin as the gap');
       await render({ nav: '', trailing: '' });
       near((await box('#pane')).left, 16, '16px from the leading edge without a rail');
       await render({ nav: rail().replace('class="navigation-rail"', 'class="navigation-rail" hidden'), trailing: '' });
@@ -893,7 +893,7 @@ for (const [name, type, run] of engines) {
       near(sh.width, 400, 'it is 400px wide');
       assert.equal(await style('#sheet', 'borderInlineStartWidth'), '0px', 'with no inner divider');
       near(sh.left, main.right + 16, 'after the pane and its gap');
-      near(sh.right, tools0.left - 24, 'before the toolbar and its margin');
+      near(sh.right, tools0.left - 4, 'before the toolbar and its margin');
       near(sh.top, (await box('#bar')).bottom, 'from the bar');
       near(sh.bottom, 800, 'to the bottom');
       near(before.width - main.width, 416, 'the pane made room');
@@ -943,7 +943,7 @@ for (const [name, type, run] of engines) {
       await tab.locator('#sheet').evaluate((el) => el.show());
       const r = await box('#sheet');
       near(r.right, (await box('#pane')).left - 16, 'under rtl it sits before the pane');
-      near(r.left, (await box('#tools')).right + 24, 'and after the toolbar');
+      near(r.left, (await box('#tools')).right + 4, 'and after the toolbar');
     } finally {
       await browser.close();
     }
@@ -1011,7 +1011,7 @@ for (const [name, type, run] of engines) {
       assert.ok((await box('#menu')).top >= 40 && (await box('#menu')).left >= 30, 'while its content clears the insets');
       near((await box('#rail')).left, 30, 'the rail clears the left inset');
       near((await box('#rail')).bottom, 780, 'and the bottom inset');
-      near((await box('#tools')).right, 1206, 'the toolbar clears the right inset and keeps its margin');
+      near((await box('#tools')).right, 1226, 'the toolbar clears the right inset and keeps its margin');
       near((await box('#pane')).bottom, 764, 'the floating pane clears the bottom inset and keeps its gap');
       const render = (o) => tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, scaffold(o));
       await render({ cls: 'tall-rail' });

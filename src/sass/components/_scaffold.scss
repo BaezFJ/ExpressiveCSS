@@ -265,16 +265,17 @@ $_rail-shown: "> #{$_rail}:not([hidden], :empty)";
   // safe: a toolbar taller than the region starts at its top rather than
   // pushing its first action out. No overflow scroll, which would clip the
   // .tooltip.left bubbles a trailing toolbar uses. A .fixed toolbar already
-  // insets itself, so a margin would double its offset.
+  // insets itself, so a margin would double its offset. The trailing rail
+  // hugs its toolbar with a small margin, as Material's scaffold draws it.
   > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed) {
     align-self: safe center;
-    margin-inline: var(--md-comp-toolbar-external-space, 24px);
+    margin-inline: 4px;
   }
 
   // From 600px up the pane floats as a rounded surface on a surface-container
   // shell, and a top app bar blends with the shell. Its scrolled color steps
   // up one tone so the fill still shows. 16px gaps, except beside a floating
-  // toolbar, whose own 24px margin is the gap, and beside a shown rail.
+  // toolbar, whose own 4px margin is the gap, and beside a shown rail.
   // Screen only: the rail doesn't print, so the gaps would print lopsided.
   @media screen {
     @include bp-up("medium") {
