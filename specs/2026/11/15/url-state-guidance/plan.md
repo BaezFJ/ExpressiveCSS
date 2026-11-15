@@ -41,4 +41,4 @@ Done when V4 passes or the R7 limit is reached and recorded.
 
 Covers R8. Checks V5.
 
-- [ ] `npm run verify`, `npm test --prefix mcp/expressivecss`.
+- [x] `npm run verify`, `npm test --prefix mcp/expressivecss`.
