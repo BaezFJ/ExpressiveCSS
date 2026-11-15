@@ -18,10 +18,10 @@ Covers R5, R6. Checks V3.
 
 Prerequisites: group 1, committed.
 
-- [ ] Write `scripts/finished-app-delete-undo.mjs` and try it on the two baseline apps (both should fail on the confirmation dialog).
-- [ ] Build `destructive-list` twice from HEAD, review both with the baseline trees, confirm, and run the script on each.
-- [ ] Name the script in `docs/agents/finished-app-evals.md`.
-- [ ] Record `docs/agents/evidence/finished-app/2026-11-15-phase-80/` and two rows.
+- [x] Write `scripts/finished-app-delete-undo.mjs` and try it on the two baseline apps (both should fail on the confirmation dialog).
+- [x] Build `destructive-list` twice from HEAD, review both with the baseline trees, confirm, and run the script on each.
+- [x] Name the script in `docs/agents/finished-app-evals.md`.
+- [x] Record `docs/agents/evidence/finished-app/2026-11-15-phase-80/` and two rows.
 
 Done when V3 passes or the R6 limit is reached and recorded.
 

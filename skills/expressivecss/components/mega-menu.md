@@ -9,7 +9,7 @@ Component ID: `mega-menu`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `b065354ccb5987a27bd7e7c70dbc6250392e0b4462e5bef6aa975963f8682278`
+Contract SHA-256: `bd1d279ae5a059bdc54d527b6ad47062cb4998da0a38996ba7382894ab697c9d`
 
 #### Selection and adaptation
 

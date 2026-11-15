@@ -28,11 +28,12 @@ async function deleteAndUndo(page) {
   if (before.length < 2) return { pass: false, reason: `found ${before.length} delete buttons` };
   const started = Date.now();
   await page.getByRole('button', { name: DELETE }).nth(1).click();
-  const dialog = await until(() => page.locator('dialog[open], [role=alertdialog]').first().isVisible(), 500);
-  if (dialog) return { pass: false, reason: 'a confirmation dialog opened' };
-  const removed = await until(async () => !(await rowTexts(page)).includes(before[1]), 500);
-  if (!removed) return { pass: false, reason: 'the row was still there 500ms after the press' };
+  const dialogOpen = () => page.locator('dialog[open], [role=alertdialog]').first().isVisible();
+  const gone = async () => !(await rowTexts(page)).includes(before[1]);
+  await until(async () => (await dialogOpen()) || gone(), 500);
   const removedMs = Date.now() - started;
+  if (await dialogOpen()) return { pass: false, reason: 'a confirmation dialog opened' };
+  if (!(await gone())) return { pass: false, reason: 'the row was still there 500ms after the press' };
   const undo = page.getByRole('button', { name: UNDO }).first();
   if (!(await until(() => undo.isVisible(), 2000))) return { pass: false, reason: 'no Undo action', removedMs };
   await undo.click();

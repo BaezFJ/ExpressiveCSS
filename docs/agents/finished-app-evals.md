@@ -126,6 +126,10 @@ Each run set has a directory `evidence/finished-app/<date>-<label>/` holding the
 
 The committed apps load `dist/` by a relative path, so they render only next to a built `dist/`. To render or re-review baseline apps later, check out the recorded commit in a new worktree, run `npm ci` and `npm run build`, and copy its `dist/`.
 
+### Delete and Undo check
+
+Every `destructive-list` build also gets `npm run eval:finished-app-undo -- <app-dir>...` (`scripts/finished-app-delete-undo.mjs`) in Chromium. It finds the delete and Undo controls by role and name, presses Delete on the second row, fails if a dialog opens or the row is still there after 500ms, presses Undo, and passes when the rows are back in their old order and stay so for 2 seconds with no page error. A second sequence deletes two rows in a row and records whether an Undo shows for the second. Record its JSON line per app in `findings.json`.
+
 ### Comparing with the baseline
 
 Each phase's prompt: 79 and 83 use `settings-form` (two of the three baseline loading counts are in `destructive-list`, so a loading change there shows only in a stage rerun); 80 uses `destructive-list`; 81 uses `filtered-dashboard`; 82 uses `settings-form`. Phases 84 to 86 have no prompt of their own, and the stage reruns at 82, 84 and 87 cover them.
@@ -146,6 +150,8 @@ Counts are countable findings per area. A failed run shows `failed` in every col
 | 2026-11-15 | baseline | filtered-dashboard | 2 | 0 | 0 | 3 | 0 | 3 |
 | 2026-11-15 | phase-79 | settings-form | 1 | 0 | 0 | 0 | 1 | 1 |
 | 2026-11-15 | phase-79 | settings-form | 2 | 0 | 0 | 0 | 0 | 0 |
+| 2026-11-15 | phase-80 | destructive-list | 1 | 0 | 0 | 0 | 0 | 0 |
+| 2026-11-15 | phase-80 | destructive-list | 2 | 0 | 1 | 0 | 1 | 2 |
 
 Baseline notes, from [the baseline records](evidence/finished-app/2026-11-15-baseline/findings.json):
 
@@ -156,3 +162,5 @@ Baseline notes, from [the baseline records](evidence/finished-app/2026-11-15-bas
 - `destructive-list` run 1's reviewer also reported that a delete could start twice. The source contradicts it, so it was dropped; `findings.json` keeps the reason.
 
 Phase 79 notes, from [its records](evidence/finished-app/2026-11-15-phase-79/findings.json): both `settings-form` rebuilds, with the buttons guide's App behavior section, keep a Save label that becomes "Saving…", show a loading indicator beside it after about 300ms for at least 500ms, guard the `submit` handler with a pending flag and `aria-disabled`, and clear the state in `finally`. Run 2 announces success and failure once; run 1 announces success with a snackbar but fills a `role="alert"` inside a hidden container on failure, which the guidance warns against. Loading is 0 in both runs. Run 1's one count is a phone `pattern` that the browser's `v` flag rejects, labelled `finished-app:submit-flow`.
+
+Phase 80 notes, from [its records](evidence/finished-app/2026-11-15-phase-80/findings.json): both `destructive-list` rebuilds remove a row at once (about 28ms), offer Undo, and put the row back in place, and the second delete shows its own Undo; the same check fails both baseline builds on their confirmation dialog. Run 2's destructive count is a `pagehide` commit that leaves the Undo live after a back/forward-cache restore, a gap the guidance has since closed.

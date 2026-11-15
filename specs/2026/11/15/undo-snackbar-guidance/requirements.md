@@ -58,3 +58,8 @@ The snackbar guide shows an `action: 'Undo'` example with `onAction: function() 
 - Comparison fairness: reviews keep the baseline trees; the browser check is the same script on both runs.
 - UI states: empty list after the last delete (R2), restored row focus (R1, R2).
 - `specs/checklist.md`: the project has none.
+
+## Decisions made while building
+
+- The Snackbar text also says to mark a removal committed after the `pagehide` commit, so a page restored from the back/forward cache can't undo it. Run 2's review found that gap; the runs predate the revision and weren't repeated, since the count isn't the gate.
+- The browser check is an npm script, `eval:finished-app-undo`, so fallow sees it as an entry and stage reruns find it.
