@@ -162,6 +162,114 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(existsSync(template));
   });
 
+  test('App behavior extraction ignores fenced examples and leaves other sections alone', async () => {
+    const { splitAppBehavior } = await import('../scripts/lib/markdown-sections.mjs');
+    const fence = '```';
+    const decoy = `Intro.\n\n${fence}md\n### App behavior\n# a comment\n---\n${fence}\n\n### App behavior\n\nReal text.\n\n${fence}sh\n# install\n---\n${fence}\n\nMore text.\n\n### Next\n\nAfter.`;
+    const split = splitAppBehavior(decoy, 2);
+    assert.equal(split.behavior, `#### App behavior\n\nReal text.\n\n${fence}sh\n# install\n---\n${fence}\n\nMore text.\n\n`);
+    assert.equal(split.rest, `Intro.\n\n${fence}md\n### App behavior\n# a comment\n---\n${fence}\n\n### Next\n\nAfter.`);
+    assert.deepEqual(splitAppBehavior('Text only.\n\n### Other\n\nMore.', 2), { rest: 'Text only.\n\n### Other\n\nMore.', behavior: '' });
+    assert.equal(splitAppBehavior('### App behavior\n\nFirst.\n\n---', 2).behavior, '#### App behavior\n\nFirst.\n\n');
+    assert.equal(splitAppBehavior('Sheet.\n\n#### App behavior\n\nNested.', 3).behavior, '#### App behavior\n\nNested.\n\n');
+    const emoji = splitAppBehavior(`${fence}html\n<button>💾 Save</button>\n${fence}\n\n### App behavior\n\nKeep 💾 the label.\n\n### Next`, 2);
+    assert.equal(emoji.behavior, '#### App behavior\n\nKeep 💾 the label.\n\n');
+    assert.equal(emoji.rest, `${fence}html\n<button>💾 Save</button>\n${fence}\n\n### Next`);
+    assert.deepEqual(splitAppBehavior(`${fence}html\n<button>💾 Save</button>\n${fence}\n\n### App behavior\n\nKeep the label.`, 2),
+      { rest: `${fence}html\n<button>💾 Save</button>\n${fence}\n`, behavior: '#### App behavior\n\nKeep the label.\n\n' });
+  });
+
+  const appBehaviorOf = (slug) => {
+    const guide = readFileSync(new URL(`components/${slug}.md`, skillDirectory), 'utf8');
+    const start = guide.indexOf('#### App behavior');
+    assert.ok(start > guide.indexOf('#### Syntax') && start < guide.indexOf('#### Rules'), `${slug} App behavior sits between Syntax and Rules`);
+    const also = guide.indexOf('#### Also documented');
+    if (also >= 0) assert.ok(also > start && !/App behavior/.test(guide.slice(also)), `${slug} Also documented follows App behavior and leaves it out`);
+    return { guide, behavior: guide.slice(start, guide.indexOf('\n#### ', start + 1)) };
+  };
+
+  test('the snackbar and lists guides carry the Undo App behavior for a removal people can get back', () => {
+    const behaviorOf = (slug) => {
+      const { guide, behavior } = appBehaviorOf(slug);
+      assert.doesNotMatch(guide.slice(guide.indexOf('#### Contract'), guide.indexOf('#### Syntax')), /App behavior|pagehide|event\.detail/);
+      return { guide, behavior };
+    };
+    const { guide: snackbarGuide, behavior: snackbar } = behaviorOf('snackbar');
+    assert.match(snackbarGuide, /#### Syntax\n\n```js\nnew Expressive\.Snackbar\(\{ text: 'Photo saved to album' \}\);/);
+    for (const phrase of ["action: 'Undo'", 'replace: true', 'onAction', 'completeCallback', 'pagehide', 'keepalive', 'displayLength', "can't be undone"]) {
+      assert.ok(snackbar.includes(phrase), `snackbar App behavior lacks ${phrase}`);
+    }
+    assert.ok(Buffer.byteLength(snackbar) <= 2048, `snackbar App behavior is ${Buffer.byteLength(snackbar)} bytes`);
+    const { guide: listsGuide, behavior: lists } = behaviorOf('lists');
+    assert.match(listsGuide, /#### Syntax\n\n```html\n<ul class="list">/);
+    for (const phrase of ['Undo', 'event.detail', 'focus', 'empty state']) {
+      assert.ok(lists.includes(phrase), `lists App behavior lacks ${phrase}`);
+    }
+    assert.ok(Buffer.byteLength(lists) <= 1024, `lists App behavior is ${Buffer.byteLength(lists)} bytes`);
+    const contracts = readFileSync(new URL('references/behavior-contracts.md', skillDirectory), 'utf8');
+    assert.doesNotMatch(contracts, /Delete draft\?/);
+    assert.match(contracts, /can't be undone/);
+  });
+
+  test('the text field and fieldset guides carry the submit flow App behavior', () => {
+    const { guide, behavior } = appBehaviorOf('text-fields');
+    for (const phrase of ['novalidate', 'validateField', 'aria-invalid', 'focus', 'required', 'autocomplete', 'spellcheck', 'inputmode', 'type="number"', '…', 'placeholder=" "', '`v` flag']) {
+      assert.ok(behavior.includes(phrase), `text field App behavior lacks ${phrase}`);
+    }
+    assert.ok(Buffer.byteLength(behavior) <= 2048, `text field App behavior is ${Buffer.byteLength(behavior)} bytes`);
+    const syntax = guide.slice(guide.indexOf('#### Syntax'), guide.indexOf('#### ', guide.indexOf('#### Syntax') + 1));
+    assert.match(syntax, /name="/);
+    assert.match(syntax, /autocomplete="/);
+    assert.match(appBehaviorOf('fieldsets').behavior, /App behavior in the text field guide/);
+    for (const input of syntax.match(/<input\b[^>]*>/g) ?? []) assert.match(input, /\bname="/, `${input} lacks name`);
+  });
+
+  test('the tabs and data table guides carry the URL state App behavior', () => {
+    const { behavior: tabs } = appBehaviorOf('tabs');
+    for (const phrase of ['replaceState', 'expressive:change', '.active', 'AutoInit()', 'read the whole URL', 'select(id)']) {
+      assert.ok(tabs.includes(phrase), `tabs App behavior lacks ${phrase}`);
+    }
+    const { behavior: table } = appBehaviorOf('data-table');
+    for (const phrase of ['replaceState', 'expressive:filter', 'expressive:sort', 'expressive:page', 'sync(wrapper)', 'showPage', 'read the whole URL', '.textContent']) {
+      assert.ok(table.includes(phrase), `data table App behavior lacks ${phrase}`);
+    }
+    for (const behavior of [tabs, table]) assert.ok(Buffer.byteLength(behavior) <= 2048, `App behavior is ${Buffer.byteLength(behavior)} bytes`);
+  });
+
+  test('the buttons guide carries the App behavior subsection for a command that waits on a request', () => {
+    const { guide, behavior } = appBehaviorOf('buttons');
+    for (const phrase of ['…', 'aria-busy="true"', 'before any `await`', 'finally', '300ms', '500ms', 'native form post']) {
+      assert.ok(behavior.includes(phrase), `App behavior lacks ${phrase}`);
+    }
+    assert.ok(Buffer.byteLength(behavior) <= 1536, `buttons App behavior is ${Buffer.byteLength(behavior)} bytes`);
+    assert.doesNotMatch(behavior, /^---$/m);
+    assert.doesNotMatch(guide.slice(guide.indexOf('#### Contract'), guide.indexOf('#### Syntax')), /App behavior|aria-disabled/);
+    assert.match(guide, /#### Syntax\n\n```html\n<button>Create<\/button>/);
+  });
+
+  test('the quality inspector labels finished-app findings and the orchestrator keeps the labels', () => {
+    const inspector = readFileSync(new URL('../skills/expressivecss-review/agents/quality-inspector.md', import.meta.url), 'utf8');
+    const review = readFileSync(new URL('../skills/expressivecss-review/SKILL.md', import.meta.url), 'utf8');
+    for (const area of ['loading', 'destructive', 'url-state', 'submit-flow']) {
+      assert.ok(inspector.includes(`\`finished-app:${area}\``), `the inspector lacks finished-app:${area}`);
+      assert.ok(review.includes(`\`finished-app:${area}\``), `the severity anchors lack finished-app:${area}`);
+    }
+    const start = inspector.indexOf('3. **States.**');
+    const end = inspector.indexOf('4. **WCAG 2.2.**');
+    assert.ok(start >= 0 && end > start, 'the states check moved');
+    const states = inspector.slice(start, end);
+    assert.doesNotMatch(states, /async actions with no loading indicator/, 'command buttons moved to the finished-app check');
+    assert.match(states, /control other than a command button/, 'the states check lost other async controls');
+    assert.match(states, /Command buttons that wait on a request belong to check 5/);
+    assert.ok(inspector.includes('5. **Finished-app behavior.**'), 'the inspector lacks check 5');
+    const scoring = review.slice(review.indexOf('## 5. Score'), review.indexOf('## 6. Write the report'));
+    assert.match(scoring, /- Major: a finished-app rubric failure/);
+    assert.match(scoring, /- Polish: the finished-app details/);
+    assert.match(scoring, /keeps both IDs/);
+    assert.match(review, /Keep the `finished-app:<area>` label/);
+    assert.match(review, /finished-app rubric applies on a `mismatch`/);
+  });
+
   test('is a portable root skill with a concise discovery trigger', () => {
     assert.ok(skill.startsWith('---\n'));
     assert.ok(bodyStart > 4, 'frontmatter is not closed');
@@ -1212,8 +1320,10 @@ describe('the ExpressiveCSS agent skill', () => {
     // (+315); the show more row at 49,168 bytes (+420); the cascader row at
     // 49,482 bytes (+314); the tree select row at 49,778 bytes (+296); the
     // DESIGN.md product-decision source at 50,075 bytes (+297); the status bar
-    // row at 50,469 bytes (+394).
-    assert.ok(bytes <= 50469, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
+    // row at 50,469 bytes (+394); the buttons App behavior subsection (loading
+    // feedback for a command that waits on a request) at 51,961 bytes (+1,492),
+    // after two reviews added the timer, row and size-token wording.
+    assert.ok(bytes <= 51961, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
     assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
   });
 

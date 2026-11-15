@@ -23,6 +23,7 @@ Import names from `@expressivecss/expressive`, or from `@expressivecss/expressiv
 | `Menu` | [Menu](../components/menu.md) | [Menu](https://www.expressivecss.com/menu.html.md) |
 | `Menubar` | [Menubar](../components/menubar.md) | [Menubar](https://www.expressivecss.com/menubar.html.md) |
 | `ScrollSpy` | [Scrollspy](../components/scrollspy.md) | [Scrollspy](https://www.expressivecss.com/scrollspy.html.md) |
+| `BusyButtons` | [Buttons](../components/buttons.md); [Loading state](./behavior-contracts.md#loading-state) | [Buttons](https://www.expressivecss.com/buttons.html.md) |
 | `ButtonGroup` | [Button groups](../components/button-groups.md) | [Button groups](https://www.expressivecss.com/button-groups.html.md) |
 | `FloatingActionButton` | [Floating action button](../components/fab.md) | [FAB](https://www.expressivecss.com/floating-action-button.html.md) |
 | `BackToTop` | [Back to top](../components/back-to-top.md) | [Back to top](https://www.expressivecss.com/back-to-top.html.md) |

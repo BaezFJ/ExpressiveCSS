@@ -52,6 +52,14 @@ $_bar: ":is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)";
 $_heading: ":is(h1, h2, h3, h4, h5, h6)";
 $_title: ":is(#{$_heading}, hgroup)";
 $_search: ".search-bar";
+// Bar heights, shared with the anchored-heading offset below, and the gap
+// the offset leaves between the bar and the heading.
+$_small-height: 64px;
+$_anchor-gap: 8px;
+$_medium-height: 112px;
+$_medium-subtitle-height: 136px;
+$_large-height: 120px;
+$_large-subtitle-height: 152px;
 
 header:has(> #{$_bar}) {
   --md-comp-top-app-bar-container-color: var(--md-sys-color-surface);
@@ -63,7 +71,7 @@ header:has(> #{$_bar}) {
   // the headline; trailing is everything after it.
   --md-comp-top-app-bar-leading-icon-color: inherit;
   --md-comp-top-app-bar-trailing-icon-color: inherit;
-  --md-comp-top-app-bar-container-height: #{rem(64px)};
+  --md-comp-top-app-bar-container-height: #{rem($_small-height)};
   --md-comp-top-app-bar-leading-icon-size: #{rem(24px)};
   --md-comp-top-app-bar-container-shape: 0;
 
@@ -370,7 +378,7 @@ header.large:has(> #{$_bar}) > #{$_bar} {
 }
 
 header.medium:has(> #{$_bar}) > #{$_bar} {
-  min-height: rem(112px);
+  min-height: rem($_medium-height);
   padding-bottom: 20px;
 
   > #{$_title} {
@@ -388,11 +396,11 @@ header.medium:has(> #{$_bar}) > #{$_bar} {
 }
 
 header.medium:has(> #{$_bar} > hgroup > p) > #{$_bar} {
-  min-height: rem(136px);
+  min-height: rem($_medium-subtitle-height);
 }
 
 header.large:has(> #{$_bar}) > #{$_bar} {
-  min-height: rem(120px);
+  min-height: rem($_large-height);
   padding-bottom: 20px;
 
   > #{$_title} {
@@ -410,7 +418,7 @@ header.large:has(> #{$_bar}) > #{$_bar} {
 }
 
 header.large:has(> #{$_bar} > hgroup > p) > #{$_bar} {
-  min-height: rem(152px);
+  min-height: rem($_large-subtitle-height);
   padding-bottom: 28px;
 }
 
@@ -429,7 +437,7 @@ header.large.collapsed:has(> #{$_bar}) > #{$_bar} {
   flex-wrap: nowrap;
   align-content: center;
   align-items: center;
-  min-height: rem(64px);
+  min-height: rem($_small-height);
   padding-top: 0;
   padding-bottom: 0;
 
@@ -480,6 +488,40 @@ header:has(> #{$_bar}) {
     animation-timeline: scroll(root);
     animation-range: 0 8px;
   }
+}
+
+// A fragment link scrolls its heading to the top of the window, under the
+// pinned bar, so headings with an id rest below it. Only a page-level bar
+// (body > header) counts: demo bars in articles, cards and dialogs leave
+// headings alone. Zero specificity leaves a page's own :root token or heading
+// scroll-margin, and .scrollspy, in charge. The offset is the bar's height
+// plus 8px; a collapsed flexible bar is the small one. :has() can't nest, so
+// each test names the bar as a child of the header.
+$_page-bar: ":root:has(> body > header > #{$_bar})";
+
+:where(#{$_page-bar}) {
+  --md-comp-top-app-bar-anchor-offset: #{rem($_small-height + $_anchor-gap)};
+}
+
+:where(:root:has(> body > header.medium:not(.collapsed) > #{$_bar})) {
+  --md-comp-top-app-bar-anchor-offset: #{rem($_medium-height + $_anchor-gap)};
+}
+
+:where(:root:has(> body > header.medium:not(.collapsed) > #{$_bar} > hgroup > p)) {
+  --md-comp-top-app-bar-anchor-offset: #{rem($_medium-subtitle-height + $_anchor-gap)};
+}
+
+:where(:root:has(> body > header.large:not(.collapsed) > #{$_bar})) {
+  --md-comp-top-app-bar-anchor-offset: #{rem($_large-height + $_anchor-gap)};
+}
+
+:where(:root:has(> body > header.large:not(.collapsed) > #{$_bar} > hgroup > p)) {
+  --md-comp-top-app-bar-anchor-offset: #{rem($_large-subtitle-height + $_anchor-gap)};
+}
+
+// Panes scroll themselves, below the bar, so their headings need no offset.
+:where(#{$_page-bar} #{$_heading}[id]:not(dialog *, :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane) *)) {
+  scroll-margin-block-start: var(--md-comp-top-app-bar-anchor-offset);
 }
 
 @keyframes top-app-bar-scroll {

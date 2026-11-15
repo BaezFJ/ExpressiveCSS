@@ -9,7 +9,7 @@ Component ID: `data-table`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `fc631c27872076c52527905d38102735aa053ea77719d46ba9c556d6f13ce127`
+Contract SHA-256: `c4d794186bddccc543cfaab4327f0c95e0a451f21c954f3c9d8338abf57cd782`
 
 #### Selection and adaptation
 
@@ -70,6 +70,38 @@ Add a labelled `input[type="search"][data-table-filter]` inside the wrapper for 
     </tbody>
   </table>
 </div>
+```
+
+#### App behavior
+
+Keep the filter text and page in the URL as query parameters, via `history.replaceState`. Write the query wherever the app applies it (`expressive:filter` for `data-table-filter`) and drop the page, as a new query returns to page 1; drop it on an uncanceled `expressive:sort` too. Write `page` (and `pageSize`, with a size select) on `expressive:page`. With a table per tab panel, drop both and cancel a pending filter write on a tab change. On load, in a `DOMContentLoaded` handler, read the whole URL first, then set the search input's `value` and any saved size on the size select's `value` and the wrapper's `data-page-size`, call `Expressive.DataTables.sync(wrapper)`, then `Expressive.DataTables.showPage(wrapper, page)` on the table in the selected panel. Browsers rate-limit `replaceState`, so write the query once typing pauses. Put URL values in `.value` or `.textContent`, never markup.
+
+```js
+document.addEventListener('DOMContentLoaded', () => {
+  const wrapper = document.getElementById('orders');
+  const params = new URLSearchParams(location.search);
+  wrapper.querySelector('[data-table-filter]').value = params.get('q') ?? '';
+  Expressive.DataTables.sync(wrapper);
+  Expressive.DataTables.showPage(wrapper, Number(params.get('page')) || 1);
+  const write = (changes) => {
+    const url = new URL(location.href);
+    for (const [key, value] of Object.entries(changes)) {
+      if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
+    }
+    history.replaceState(null, '', url);
+  };
+  let typing, query = params.get('q') ?? '';
+  wrapper.addEventListener('expressive:filter', (event) => {
+    clearTimeout(typing);
+    query = event.detail.query;
+    typing = setTimeout(() => write({ q: query, page: '' }), 300);
+  });
+  wrapper.addEventListener('expressive:page', (event) => {
+    clearTimeout(typing);
+    write({ q: query, page: event.detail.page });
+  });
+  wrapper.addEventListener('expressive:sort', (event) => { if (!event.defaultPrevented) write({ page: '' }); });
+});
 ```
 
 #### Also documented

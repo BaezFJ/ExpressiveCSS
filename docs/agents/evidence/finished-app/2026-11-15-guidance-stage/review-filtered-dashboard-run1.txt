@@ -1,0 +1,22 @@
+FINDINGS
+- none
+
+CHECKED
+- Lifecycle: the bundle loads at the end of `<body>` (index.html:108). The panels, tables and KPIs are built before `Expressive.AutoInit()` runs once in `DOMContentLoaded` (index.html:217). No manual `.init()`, no repeated AutoInit, no retired global `M`, and nothing is removed, so no `destroy()` is needed. `DataTables.sync`/`showPage` are documented public calls, and `showPage` fires no events (dist/types/behaviors/dataTables.d.ts:62).
+- Assets and fonts: one compiled stylesheet, no Google Fonts or Material Icons links, `.material-symbols` only (no `.material-icons`), and `dist/fonts/` sits next to `dist/css/`. The JS bundle is justified because the page uses Tabs and DataTables paging and sorting. No render-blocking script in `<head>`.
+- States: no custom CSS removes focus rings. Every filter result has an empty state (index.html:97–104, toggled at :249–252), and Clear filter puts focus back on the input (:275). Data is synchronous sample data, so no loading or error state applies. Page buttons are native `button type="button"` controls and their disabled state belongs to the framework. Paging hides rows with `data-table-page-hidden`, not `hidden`, so the result count at :231 counts all matches, not just the current page.
+- WCAG names and semantics from source: every icon is `aria-hidden`, the page buttons have `aria-label`, the scroll region is `role="region"` named by its caption, and the filter has a `<label>` plus a description linked with `aria-describedby`. The result count and page status use `role="status"` and `aria-live="polite"`. A skip link targets `main[tabindex=-1]`, and tabs carry `aria-current`. No sticky header or sheet can hide focus (2.4.11). The Tabs indicator stops under reduced motion (tabs.md options) and the page adds no motion of its own.
+- finished-app:url-state: passes. View, `q` and page are restored from `URLSearchParams` on load (:204–215, :261) and written with `history.replaceState` only (:226): on tab `expressive:change`, on debounced input, on `expressive:page`, and page reset on sort. The tab hash is removed (:225). Nothing calls `pushState`, so Back cannot leave the URL and the view out of step.
+- finished-app:loading: not applicable (no command runs a request in script).
+- finished-app:destructive: not applicable (no remove or discard actions).
+- finished-app:submit-flow: not applicable (a live filter, with no form or submit). The filter field already has `name`, `type="search"`, `autocomplete="off"`, `spellcheck="false"` and the floating-label `placeholder=" "`.
+- Note: before I noticed the no-commands rule, I ran one read-only `ls` of the target directory. No files were changed, and I did not rerun lint.
+
+BLOCKED
+- Text contrast (on-surface-variant text on the surface-container and surface tokens) and the visibility of focus rings on tabs, sort buttons, page buttons and the focusable table region: no browser route, so these are not measured and not marked passed.
+- Target size (2.5.8) of the Previous/Next icon buttons, header sort buttons and tab links: these need rendered measurement.
+- Whether Tabs cancels the default hash navigation when a tab is clicked: the source shows it reads `location.hash` only at start, but a pushed hash entry would need a browser to confirm. If it does push, Back would leave the URL and view out of step (there is no `popstate` listener).
+- Whether DataTables disables Previous/Next at the page bounds, and whether the two polite live regions (result count plus page status) announce twice on each keystroke: needs a browser and the accessibility tree.
+
+HANDOFFS
+- Structure: `header > nav[aria-label="Workspace"]` holds only an `<h2>` and no links (index.html:32–34). That is a navigation landmark with no navigation, and an h2 ahead of the page's h1.

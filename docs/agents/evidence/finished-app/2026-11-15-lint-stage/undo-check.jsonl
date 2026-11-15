@@ -1,0 +1,2 @@
+{"app":"lint-stage/destructive-list-run1","pass":true,"reason":"","removedMs":27,"focusInRow":true,"focusOnRestoredRow":true,"errors":[],"twoDeletes":{"undoShownForSecond":true,"rowsBefore":5,"rowsAfter":3}}
+{"app":"lint-stage/destructive-list-run2","pass":true,"reason":"","removedMs":36,"focusInRow":true,"focusOnRestoredRow":true,"errors":[],"twoDeletes":{"undoShownForSecond":true,"rowsBefore":5,"rowsAfter":3}}

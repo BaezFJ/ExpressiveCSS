@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- The lint, `rules_enforcer` and `quality_inspector` report three new
+  findings. `transition-all` (medium) flags a `transition` or
+  `transition-property` whose value names `all`, in `style` attributes,
+  `<style>` blocks and stylesheets passed to `expressivecss-lint`; list the
+  animated properties instead. `viewport-zoom-disabled` (high) flags a
+  viewport `<meta>` tag that sets `maximum-scale` to `no`, `yes` or a number
+  at or below 1, or `user-scalable` to anything Chromium reads as off, such as
+  `no`, `0`, `false` or `yes;`, because it stops pinch zoom; use
+  `width=device-width, initial-scale=1`. `paste-blocked` (high) flags an
+  inline `onpaste` attribute whose handler always cancels paste, with
+  `return false` or only `event.preventDefault()` calls, because it stops
+  people pasting a password or a code; remove the handler. A file that
+  passed before can now report these findings, so CI or a `--hook` setup
+  that runs the lint fails on them.
+
 ## 0.5.2 - 2026-11-14
 
 - Bundled guidance matches ExpressiveCSS 0.18.1, including `.status-bar`,

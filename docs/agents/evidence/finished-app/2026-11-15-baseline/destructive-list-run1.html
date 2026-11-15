@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en" theme="auto">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Manage the addresses saved to your account.">
+    <title>Saved addresses</title>
+    <link rel="stylesheet" href="dist/css/expressive.min.css">
+    <style>
+      .page-heading {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-block-end: 16px;
+      }
+      .page-heading h1 { margin: 0; }
+      .address-list > li[aria-busy="true"] { opacity: .6; }
+      .address-list > li > span:not(.material-symbols) { overflow-wrap: anywhere; }
+      .address-list > li > p { overflow-wrap: anywhere; }
+      .row-status { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; }
+      .add-form .field { margin-block-end: 8px; }
+      .form-error { color: var(--md-sys-color-error); margin: 0 0 8px; }
+      .form-error:empty { display: none; }
+      .save-button .loading-indicator {
+        --md-comp-loading-indicator-container-size: 20px;
+        --md-comp-loading-indicator-active-indicator-size: 18px;
+        --md-comp-loading-indicator-active-indicator-color: currentColor;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav aria-label="Account">
+        <h2>Account</h2>
+      </nav>
+    </header>
+
+    <main class="container py-5">
+      <section aria-labelledby="page-title">
+        <div class="page-heading">
+          <h1 id="page-title">Saved addresses</h1>
+          <button type="button" id="add-button">
+            <span class="material-symbols" aria-hidden="true">add</span><span>Add address</span>
+          </button>
+        </div>
+        <p id="address-count" class="mb-4">5 saved addresses</p>
+
+        <ul class="list address-list" id="address-list" aria-labelledby="page-title"></ul>
+
+        <div class="empty-state" id="empty-state" hidden>
+          <span class="material-symbols" aria-hidden="true">location_off</span>
+          <h2>No saved addresses</h2>
+          <p>Add an address to use it at checkout without typing it again.</p>
+          <div class="empty-state-actions">
+            <button type="button" id="empty-add-button" class="tonal">Add address</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <dialog id="add-dialog" aria-labelledby="add-title">
+      <h2 id="add-title">Add address</h2>
+      <div>
+        <form id="add-form" class="add-form" novalidate>
+          <p id="form-error" class="form-error" role="alert"></p>
+          <div class="field outlined">
+            <input id="addr-label" name="label" type="text" placeholder=" " required maxlength="40" autocomplete="off" aria-describedby="addr-label-help">
+            <label for="addr-label">Label</label>
+            <small id="addr-label-help" data-help="For example, Home or Work">For example, Home or Work</small>
+          </div>
+          <div class="field outlined">
+            <input id="addr-street" name="street" type="text" placeholder=" " required autocomplete="street-address" aria-describedby="addr-street-help">
+            <label for="addr-street">Street address</label>
+            <small id="addr-street-help" data-help="Include apartment or unit number"></small>
+          </div>
+          <div class="field outlined">
+            <input id="addr-city" name="city" type="text" placeholder=" " required autocomplete="address-level2" aria-describedby="addr-city-help">
+            <label for="addr-city">City</label>
+            <small id="addr-city-help" data-help=""></small>
+          </div>
+          <div class="field outlined">
+            <input id="addr-postal" name="postal" type="text" placeholder=" " required autocomplete="postal-code" aria-describedby="addr-postal-help">
+            <label for="addr-postal">Postal code</label>
+            <small id="addr-postal-help" data-help=""></small>
+          </div>
+        </form>
+      </div>
+      <form method="dialog">
+        <button type="submit" class="text" value="cancel" id="cancel-add">Cancel</button>
+        <button type="submit" form="add-form" class="save-button" id="save-button"><span>Save address</span></button>
+      </form>
+    </dialog>
+
+    <script src="dist/js/expressive.min.js"></script>
+    <script>
+      (() => {
+        // Stand-in for the network: waits 800 ms, then resolves.
+        function request(method, url, body) {
+          return new Promise((resolve) => {
+            setTimeout(() => resolve({ ok: true, status: method === 'POST' ? 201 : 204, method, url, body }), 800);
+          });
+        }
+
+        const addresses = [
+          { id: 'a1', label: 'Home', street: '1420 Maple Avenue, Apt 3B', city: 'Portland', postal: '97205' },
+          { id: 'a2', label: 'Work', street: '200 Harbor Street, Floor 12', city: 'Seattle', postal: '98101' },
+          { id: 'a3', label: "Parents' house", street: '87 Orchard Lane', city: 'Boise', postal: '83702' },
+          { id: 'a4', label: 'Gym locker pickup', street: '5100 Fremont Avenue North', city: 'Seattle', postal: '98103' },
+          { id: 'a5', label: 'Cabin', street: '12 Lakeview Road', city: 'Bend', postal: '97701' }
+        ];
+        let nextId = 6;
+
+        const list = document.getElementById('address-list');
+        const empty = document.getElementById('empty-state');
+        const count = document.getElementById('address-count');
+        const addButton = document.getElementById('add-button');
+        const dialog = document.getElementById('add-dialog');
+        const form = document.getElementById('add-form');
+        const formError = document.getElementById('form-error');
+        const saveButton = document.getElementById('save-button');
+        const cancelButton = document.getElementById('cancel-add');
+        let saving = false;
+
+        function icon(name) {
+          const s = document.createElement('span');
+          s.className = 'material-symbols';
+          s.setAttribute('aria-hidden', 'true');
+          s.textContent = name;
+          return s;
+        }
+
+        function deleteButton(addr) {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'icon-button';
+          b.dataset.action = 'delete';
+          b.setAttribute('aria-label', `Delete ${addr.label}`);
+          b.append(icon('delete'));
+          return b;
+        }
+
+        function renderRow(addr) {
+          const li = document.createElement('li');
+          li.dataset.id = addr.id;
+          const title = document.createElement('span');
+          title.textContent = addr.label;
+          const detail = document.createElement('p');
+          detail.textContent = `${addr.street}, ${addr.city} ${addr.postal}`;
+          li.append(icon(addr.label.toLowerCase() === 'work' ? 'work' : addr.label.toLowerCase() === 'home' ? 'home' : 'location_on'), title, detail, deleteButton(addr));
+          return li;
+        }
+
+        function updateSummary() {
+          const n = addresses.length;
+          count.textContent = n === 1 ? '1 saved address' : `${n} saved addresses`;
+          list.hidden = n === 0;
+          count.hidden = n === 0;
+          empty.hidden = n !== 0;
+        }
+
+        addresses.forEach((a) => list.append(renderRow(a)));
+        updateSummary();
+
+        // Delete
+        list.addEventListener('click', async (event) => {
+          const button = event.target.closest('button[data-action="delete"]');
+          if (!button) return;
+          const li = button.closest('li');
+          const addr = addresses.find((a) => a.id === li.dataset.id);
+          if (!addr || li.getAttribute('aria-busy') === 'true') return;
+
+          const ok = await Expressive.Dialogs.confirm({
+            headline: `Delete ${addr.label}?`,
+            text: `${addr.street}, ${addr.city} is removed from your saved addresses.`,
+            confirm: 'Delete'
+          });
+          if (!ok) return;
+          await deleteAddress(addr, li);
+        });
+
+        async function deleteAddress(addr, li) {
+          const button = li.querySelector('button[data-action="delete"]');
+          li.setAttribute('aria-busy', 'true');
+          const status = document.createElement('span');
+          status.className = 'row-status';
+          const spinner = document.createElement('span');
+          spinner.className = 'loading-indicator';
+          spinner.setAttribute('role', 'status');
+          spinner.setAttribute('aria-label', `Deleting ${addr.label}`);
+          status.append(spinner);
+          button.replaceWith(status);
+
+          try {
+            const res = await request('DELETE', `/api/addresses/${encodeURIComponent(addr.id)}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const rows = [...list.children];
+            const i = rows.indexOf(li);
+            const neighbour = rows[i + 1] || rows[i - 1];
+            addresses.splice(addresses.indexOf(addr), 1);
+            li.remove();
+            updateSummary();
+            const focusTarget = neighbour?.querySelector('button[data-action="delete"]') || (addresses.length ? addButton : document.getElementById('empty-add-button'));
+            focusTarget.focus();
+            new Expressive.Snackbar({ text: `${addr.label} deleted` });
+          } catch (err) {
+            li.removeAttribute('aria-busy');
+            const restored = deleteButton(addr);
+            status.replaceWith(restored);
+            restored.focus();
+            new Expressive.Snackbar({
+              text: `Couldn't delete ${addr.label}. Check your connection.`,
+              action: 'Retry',
+              onAction: () => deleteAddress(addr, li)
+            });
+          }
+        }
+
+        // Add
+        function openAdd() {
+          form.reset();
+          formError.textContent = '';
+          form.querySelectorAll('input').forEach(clearError);
+          dialog.showModal();
+          document.getElementById('addr-label').focus();
+        }
+        addButton.addEventListener('click', openAdd);
+        document.getElementById('empty-add-button').addEventListener('click', openAdd);
+
+        dialog.addEventListener('cancel', (e) => { if (saving) e.preventDefault(); });
+        cancelButton.addEventListener('click', (e) => { if (saving) e.preventDefault(); });
+
+        const messages = {
+          label: 'Enter a label, such as Home',
+          street: 'Enter a street address',
+          city: 'Enter a city',
+          postal: 'Enter a postal code'
+        };
+
+        function setError(input) {
+          const help = document.getElementById(input.getAttribute('aria-describedby'));
+          input.setAttribute('aria-invalid', 'true');
+          help.textContent = messages[input.name];
+        }
+        function clearError(input) {
+          const help = document.getElementById(input.getAttribute('aria-describedby'));
+          input.removeAttribute('aria-invalid');
+          help.textContent = help.dataset.help || '';
+        }
+        form.addEventListener('input', (e) => {
+          if (e.target.matches('[aria-invalid="true"]') && e.target.value.trim()) clearError(e.target);
+        });
+
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          if (saving) return;
+          formError.textContent = '';
+          const inputs = [...form.querySelectorAll('input')];
+          const invalid = inputs.filter((i) => !i.value.trim());
+          inputs.forEach((i) => (invalid.includes(i) ? setError(i) : clearError(i)));
+          if (invalid.length) { invalid[0].focus(); return; }
+
+          const data = Object.fromEntries(inputs.map((i) => [i.name, i.value.trim()]));
+          setSaving(true);
+          try {
+            const res = await request('POST', '/api/addresses', data);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const addr = { id: `a${nextId++}`, ...data };
+            addresses.push(addr);
+            const row = renderRow(addr);
+            list.append(row);
+            updateSummary();
+            setSaving(false);
+            dialog.close('saved');
+            row.querySelector('button').focus();
+            new Expressive.Snackbar({ text: `${addr.label} added` });
+          } catch (err) {
+            setSaving(false);
+            formError.textContent = "Couldn't save the address. Your entries are kept; try again.";
+          }
+        });
+
+        function setSaving(on) {
+          saving = on;
+          form.querySelectorAll('input').forEach((i) => (i.readOnly = on));
+          cancelButton.disabled = on;
+          saveButton.disabled = on;
+          saveButton.replaceChildren();
+          if (on) {
+            const spinner = document.createElement('span');
+            spinner.className = 'loading-indicator';
+            spinner.setAttribute('role', 'status');
+            spinner.setAttribute('aria-label', 'Saving address');
+            const label = document.createElement('span');
+            label.textContent = 'Saving…';
+            saveButton.append(spinner, label);
+          } else {
+            const label = document.createElement('span');
+            label.textContent = 'Save address';
+            saveButton.append(label);
+          }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => Expressive.AutoInit());
+      })();
+    </script>
+  </body>
+</html>

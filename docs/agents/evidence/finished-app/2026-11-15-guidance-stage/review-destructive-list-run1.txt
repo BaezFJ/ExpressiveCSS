@@ -1,0 +1,25 @@
+FINDINGS
+- none
+
+CHECKED
+- Lifecycle: no `AutoInit()` call, no `.init()` call and no `no-autoinit` needed. The page uses only explicit APIs (`Expressive.Snackbar`, `Expressive.Forms.validateField`) and the CSS tooltip. The script sits at the end of `<body>` after the markup it uses, and the retired global `M` is not used. Rows are built by script but contain no registry components, so they need no initialization and no `destroy()`.
+- Assets and fonts: the stylesheet loads from `dist/css/`, and `dist/fonts/` sits next to it with the Material Symbols, Roboto and Noto Sans files. The page has no Google Fonts link, no Material Icons stylesheet and no `.material-icons` markup. The JS bundle is needed for Snackbar and Forms, and the script is at the end of `<body>`, so it does not block rendering. Icons use only `.material-symbols` (outlined), the default face.
+- States: no custom CSS removes the focus ring. While saving, Cancel and Save carry `aria-disabled`, which is fine because neither does anything while saving. The list has an empty state (`#empty-state`, toggled in `updateSummary`). The data loads in sync, so the list needs no loading state. A failed delete request puts the row back and shows a Snackbar error (index.html:266-272). A failed save shows a Snackbar error and keeps the dialog open (index.html:383-385).
+- WCAG from source: the icon-only delete button is named "Delete {label} address" and its icons are `aria-hidden`. Every field has a `<label for>` and an `aria-describedby` that points to its help or error element. The dialog is native `showModal`, with Escape blocked only while saving. Focus returns to the opener or a fallback (index.html:327-330). Focus moves to the next or previous row's delete button when a row is removed, to the empty-state action when the list becomes empty, and to the row's delete button after Undo. The page adds no custom animation, so it needs no reduced-motion code of its own.
+- finished-app:loading: passes. Save keeps a label that names the action ("Saving…", ending in `…`), shows a `.loading-indicator` beside the button after about 300 ms, and the `saving` guard blocks a second submit (index.html:334, 348-358).
+- finished-app:destructive: passes. Delete takes effect at once and the Snackbar offers Undo with `onAction` and `replace: true`. Undo puts the row back before the row that followed it (`insertAddress(address, nextId)`, index.html:208-220). The `pending` guard stops Undo and commit from both running. The bundle's `_evict()` fires `completeCallback` when a newer Snackbar replaces this one (dist/js/expressive.js:3951-3957), so a delete cut short that way is still sent. On `pagehide` the delete is sent with `keepalive`. The click handler ignores the second click of a double click (`event.detail > 1`), so a double click does not also delete the row that moves up.
+- finished-app:submit-flow: passes. Save is never disabled before submit. The fields sit outside the `<form>` but are tied to it with `form="add-form"`, and the form has a submit button, so Enter submits. Errors sit under their own fields. A failed submit moves focus to the first invalid field (index.html:341-344). Nothing blocks paste. Autocomplete is set: `address-line1`, `address-level2`, `postal-code`, and `off` on the address nickname, which is not an input-purpose field. Every field has a `name`. `type="text"` suits alphanumeric postal codes. The postal field sets `spellcheck="false"`, and the placeholders are the floating label's `placeholder=" "`.
+- finished-app:url-state: not applicable, because the page has no tabs, filters, search or pages.
+
+BLOCKED
+- Contrast for text, icons and the delete icon-button boundary in light and dark (`theme="auto"`): no browser route, so not measured and not passed.
+- Delete icon-button target size (2.5.8, and Material's 48dp) and visible focus rings: rendered evidence needed.
+- 2.4.11 focus not obscured, for the snackbar over the list and rows near the bottom of the viewport: rendered evidence needed.
+- 1.4.13 for the CSS-only `.tooltip` inside each delete button: the tooltip has no Escape handler of its own, so whether it can be dismissed and hovered has to be tested in a browser. The source does not settle it.
+- Whether Undo visibly restores the row in place, and whether keyboard users can reach the Snackbar's Undo action before it times out: the source only shows the logic, not the runtime behavior.
+- Path where a delete fails while the following row is also gone: `insertAddress` then adds the row at the end of the list. The stand-in request always succeeds, so this path cannot be run.
+- Whether the `role="status"` indicator, shown with only an `aria-label`, gets announced: needs an assistive-technology check.
+
+HANDOFFS
+- Markup: the header's `<nav aria-label="Account">` holds only an `<h2>` and no links, and that `<h2>` comes before the page's `<h1>`.
+- Markup: the dialog's fields sit outside `<form id="add-form">` and are tied to it with `form=` attributes. It works, but it differs from the documented form and dialog structure.

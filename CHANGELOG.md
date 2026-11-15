@@ -7,15 +7,64 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `aria-busy="true"` on a button is a loading state: the button keeps its
+  label, reports busy and, after `--md-comp-button-busy-delay`, shows a spinner
+  beside the label, and the new `BusyButtons` behavior (started by the root
+  bundle; call `BusyButtons.Init()` with the modular entry) ignores every press
+  until the attribute is removed. The keypad's Enter no longer submits a form
+  whose default (first) submit button is busy. Migration: a button that already carries
+  `aria-busy="true"` now ignores clicks (a busy `a.button` doesn't follow its
+  link), and a shaped one shows the spinner.
+- `Expressive.DataTables.showPage(wrapper, page)` shows a local page of a
+  paged data table without firing events, for restoring a page from the URL
+  after a reload. It keeps the filter and sort, clamps past the end, returns
+  the page it shows and refuses a server-owned table.
+- The tabs and data table guides say how to keep the selected tab, filter
+  text and page in the URL with `history.replaceState`, and how to restore
+  them on load.
+- The text field guide says how a form submits: submit stays enabled, Enter
+  submits, `novalidate` with `Forms.validateField` shows every error beside
+  its field and focus moves to the first one; it also covers `name`,
+  `autocomplete`, keyboards, spellcheck, paste and placeholders. The text
+  field examples now set `name` and `autocomplete`.
 - `--md-sys-typescale-{role}-font` is the `font` shorthand for each of the 15
   type roles, built from the role's weight, size, line height and family
   tokens. Pair it with the role's `-letter-spacing` token, which the shorthand
   cannot hold.
+- The `expressivecss-review` quality inspector checks whether an app behaves
+  the way people expect: command buttons that keep their label and ignore a
+  second press while a request runs, Undo for destructive actions, the selected
+  tab, filter and page kept in the URL, and a form that lets people submit and
+  then shows each error at its field. Each finding carries a
+  `finished-app:<area>` label so runs can be compared.
+- The `expressivecss` skill's buttons guide has an App behavior section: while
+  a command's request runs, the button keeps its label (or says "Saving…"),
+  shows a loading indicator beside it after a short delay, ignores a second
+  press without losing focus, and announces the result once. Any component
+  section in `llm.md` can now carry an App behavior subsection one heading level
+  below the component's own, which the generated guide shows in full.
+- The snackbar and lists guides say how to remove something people can get
+  back: remove it at once, offer Undo with `replace: true`, commit when the
+  snackbar closes without Undo or the page hides, and keep a confirmation
+  dialog for actions that can't be undone. The `Dialogs.confirm()` example now
+  asks about such an action.
 - The navigation rail takes a `nav-rail` attribute on `<html>` or on one rail.
   `nav-rail="compact"` makes the collapsed rail 72dp wide and icon-only, with
   the new `--md-comp-nav-rail-compact-width` token. `nav-rail="hover"` expands a
   collapsed rail over the page while the mouse rests on it or keyboard focus is
   in it, without moving the page. A rail's own value replaces the root's, and `nav-rail=""` opts it out.
+
+### Changed
+
+- A heading with an `id` reached through a fragment link comes to rest below
+  a sticky top app bar that is a direct child of `<body>`, through
+  `scroll-margin-block-start` and the new root token
+  `--md-comp-top-app-bar-anchor-offset` (the bar's height plus 8px).
+  Migration: a page that already sets `scroll-padding-top` on `html` for its
+  bar now gets both offsets; remove its rule or set the token to `0`.
+- The buttons guide's App behavior now sets `aria-busy="true"` on the busy
+  button instead of `aria-disabled` with a pending flag, and holds the spinner
+  for about 500ms once it shows.
 
 ## [0.18.1] - 2026-11-15
 

@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en" theme="auto">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Update your display name and contact details.">
+    <title>Account settings</title>
+    <!-- Keep dist/fonts next to dist/css so the bundled fonts load. -->
+    <link rel="stylesheet" href="dist/css/expressive.min.css">
+    <style>
+      .settings { max-inline-size: 44rem; }
+      .settings fieldset { margin-block-end: 24px; }
+      .settings .form-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 16px;
+      }
+      .settings .saving-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--md-sys-color-on-surface-variant);
+      }
+      .settings .saving-status[hidden] { display: none; }
+      .settings button[aria-disabled="true"] { cursor: progress; }
+      #save-error { margin-block-end: 24px; }
+    </style>
+  </head>
+  <body>
+    <main class="container py-5">
+      <div class="settings">
+        <h1 class="headline-medium mb-2">Account settings</h1>
+        <p class="mb-4">Update how your name appears and how people can reach you. Changes apply when you save.</p>
+
+        <form id="account-form" action="/api/account" method="post" novalidate>
+          <fieldset>
+            <legend>Profile</legend>
+            <div class="row">
+              <div class="s12 m6">
+                <div class="field outlined">
+                  <input id="display-name" name="displayName" type="text" placeholder=" "
+                         autocomplete="nickname" required maxlength="60" value="Sam Rivera"
+                         aria-describedby="display-name-help">
+                  <label for="display-name">Display name</label>
+                  <small id="display-name-help" data-error=""><span>Shown on your profile and comments</span></small>
+                </div>
+              </div>
+              <div class="s12 m6">
+                <div class="field outlined">
+                  <input id="website" name="website" type="url" placeholder=" "
+                         autocomplete="url" inputmode="url" value="https://samrivera.dev"
+                         aria-describedby="website-help">
+                  <label for="website">Website</label>
+                  <small id="website-help" data-error=""><span>Optional. Include https://</span></small>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Contact</legend>
+            <div class="row">
+              <div class="s12 m6">
+                <div class="field outlined">
+                  <input id="email" name="email" type="email" placeholder=" "
+                         autocomplete="email" required value="sam@example.com"
+                         aria-describedby="email-help">
+                  <label for="email">Email</label>
+                  <small id="email-help" data-error=""><span>Used for sign-in and account notices</span></small>
+                </div>
+              </div>
+              <div class="s12 m6">
+                <div class="field outlined">
+                  <input id="phone" name="phone" type="tel" placeholder=" "
+                         autocomplete="tel" inputmode="tel" pattern="[0-9+\(\) .\-]{7,20}"
+                         value="+1 555 0134" aria-describedby="phone-help">
+                  <label for="phone">Phone</label>
+                  <small id="phone-help" data-error=""><span>Optional. Digits, spaces and + only</span></small>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Persistent failure message, placed next to the action it concerns. -->
+          <div id="save-error" class="alert critical" hidden>
+            <span class="material-symbols" aria-hidden="true">error</span>
+            <p id="save-error-text" role="alert"></p>
+          </div>
+
+          <div class="form-actions">
+            <span id="saving-status" class="saving-status" hidden>
+              <span class="loading-indicator" role="status" aria-label="Saving your changes"></span>
+              <span aria-hidden="true">Saving…</span>
+            </span>
+            <button id="save-button" class="filled" type="submit">
+              <span class="material-symbols" aria-hidden="true">check</span><span>Save</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <script src="dist/js/expressive.min.js"></script>
+    <script>
+      (function () {
+        'use strict';
+
+        // Stand-in for POST /api/account: there is no server.
+        function postAccount(url, body) {
+          return new Promise(function (resolve, reject) {
+            setTimeout(function () {
+              var email = String(body.get('email') || '').trim().toLowerCase();
+              if (email.endsWith('@example.invalid')) {
+                reject(new Error('The server rejected this email address.'));
+              } else {
+                resolve({ ok: true, status: 200 });
+              }
+            }, 1500);
+          });
+        }
+
+        var form = document.getElementById('account-form');
+        var saveButton = document.getElementById('save-button');
+        var savingStatus = document.getElementById('saving-status');
+        var errorBox = document.getElementById('save-error');
+        var errorText = document.getElementById('save-error-text');
+        var saving = false;
+
+        var messages = {
+          'display-name': { valueMissing: 'Enter a display name' },
+          email: { valueMissing: 'Enter an email address', typeMismatch: 'Enter an email like name@domain.com' },
+          website: { typeMismatch: 'Enter a full address that starts with https://' },
+          phone: { patternMismatch: 'Use 7 to 20 digits, spaces, +, ( ) or -' }
+        };
+
+        function setFieldError(input, message) {
+          var help = document.getElementById(input.getAttribute('aria-describedby'));
+          if (message) {
+            input.setAttribute('aria-invalid', 'true');
+            help.setAttribute('data-error', message);
+          } else {
+            input.removeAttribute('aria-invalid');
+            help.setAttribute('data-error', '');
+          }
+        }
+
+        function validate(input) {
+          var v = input.validity;
+          var m = messages[input.id] || {};
+          var msg = '';
+          if (!v.valid) {
+            msg = (v.valueMissing && m.valueMissing) || (v.typeMismatch && m.typeMismatch) ||
+                  (v.patternMismatch && m.patternMismatch) || input.validationMessage;
+          }
+          setFieldError(input, msg);
+          return !msg;
+        }
+
+        var inputs = Array.prototype.slice.call(form.querySelectorAll('input'));
+        inputs.forEach(function (input) {
+          input.addEventListener('blur', function () { if (input.value) validate(input); });
+          input.addEventListener('input', function () {
+            if (input.getAttribute('aria-invalid') === 'true') validate(input);
+          });
+        });
+
+        function setSaving(on) {
+          saving = on;
+          savingStatus.hidden = !on;
+          saveButton.setAttribute('aria-disabled', on ? 'true' : 'false');
+        }
+
+        form.addEventListener('submit', function (event) {
+          event.preventDefault();
+          if (saving) return;
+
+          // Clear feedback from the previous attempt so only the current one shows.
+          errorBox.hidden = true;
+          errorText.textContent = '';
+          Expressive.Snackbar.dismissAll();
+
+          var firstInvalid = null;
+          inputs.forEach(function (input) {
+            if (!validate(input) && !firstInvalid) firstInvalid = input;
+          });
+          if (firstInvalid) { firstInvalid.focus(); return; }
+
+          setSaving(true);
+
+          postAccount(form.action, new FormData(form))
+            .then(function () {
+              new Expressive.Snackbar({ text: 'Account settings saved', replace: true });
+            })
+            .catch(function (error) {
+              errorText.textContent = "Couldn't save your changes. " + error.message +
+                ' Check your email and press Save again.';
+              errorBox.hidden = false;
+            })
+            .finally(function () { setSaving(false); });
+        });
+      })();
+    </script>
+  </body>
+</html>

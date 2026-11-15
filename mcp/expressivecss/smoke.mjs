@@ -978,6 +978,40 @@ const transport = new StdioClientTransport({
   const cardContent = lint([cardContentMarkup]);
   assert.equal(cardContent.stdout.match(/legacy-card-content/gu)?.length, 1, cardContent.stdout);
   assert.match(cardContent.stdout, /card-content\.html:3:\d+ legacy-card-content/u);
+  // A transition on `all` is reported in a style attribute and in a style block, and listing the properties clears both.
+  const transitionMarkup = path.join(outsideDir, 'transition.html');
+  await writeFile(transitionMarkup, '<p style="transition: all 200ms">Hi</p>\n<style>.card { transition: all 200ms; }</style>\n');
+  const transition = lint([transitionMarkup]);
+  assert.equal(transition.status, 1, transition.stderr);
+  assert.deepEqual(transition.stdout.match(/transition\.html:\d+:\d+ transition-all/gu), ['transition.html:1:11 transition-all', 'transition.html:2:16 transition-all'], transition.stdout);
+  await writeFile(transitionMarkup, '<p style="transition: opacity 200ms, transform 200ms">Hi</p>\n<style>.card { transition: opacity 200ms, transform 200ms; }</style>\n');
+  const transitionListed = lint([transitionMarkup]);
+  assert.equal(transitionListed.status, 0, transitionListed.stdout);
+  // A viewport that stops zoom is reported once per tag at the tag, and the standard viewport passes.
+  const viewportMarkup = path.join(outsideDir, 'viewport.html');
+  const viewportLint = async (content) => {
+    await writeFile(viewportMarkup, `<head>\n  <meta name="viewport" content="${content}">\n</head>\n`);
+    return lint([viewportMarkup]);
+  };
+  const viewportBoth = await viewportLint('width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no');
+  assert.equal(viewportBoth.status, 1, viewportBoth.stderr);
+  assert.deepEqual(viewportBoth.stdout.match(/viewport\.html:\d+:\d+ viewport-zoom-disabled \[\w+\]/gu), ['viewport.html:2:3 viewport-zoom-disabled [high]'], viewportBoth.stdout);
+  for (const content of ['width=device-width, user-scalable=no', 'width=device-width, maximum-scale=1']) {
+    const single = await viewportLint(content);
+    assert.equal(single.status, 1, single.stderr);
+    assert.equal(single.stdout.match(/viewport-zoom-disabled/gu)?.length, 1, single.stdout);
+  }
+  const viewportStandard = await viewportLint('width=device-width, initial-scale=1');
+  assert.equal(viewportStandard.status, 0, viewportStandard.stdout);
+  // A paste handler that always cancels is reported once at the attribute, and one that doesn't cancel passes.
+  const pasteMarkup = path.join(outsideDir, 'paste.html');
+  await writeFile(pasteMarkup, '<label>Code\n  <input onpaste="return false">\n</label>\n');
+  const pasteBlocked = lint([pasteMarkup]);
+  assert.equal(pasteBlocked.status, 1, pasteBlocked.stderr);
+  assert.deepEqual(pasteBlocked.stdout.match(/paste\.html:\d+:\d+ [\w-]+ \[\w+\]/gu), ['paste.html:2:10 paste-blocked [high]'], pasteBlocked.stdout);
+  await writeFile(pasteMarkup, '<label>Code\n  <input onpaste="this.dataset.pasted = \'yes\'">\n</label>\n');
+  const pasteAllowed = lint([pasteMarkup]);
+  assert.equal(pasteAllowed.status, 0, pasteAllowed.stdout);
   // The rules for names 0.16.0 removed, one by one and in process: the lint CLI
   // rewrites className= to class= before inspecting, so it cannot test JSX.
   // Each rule lists markup it must flag and current markup that only shares a
@@ -1044,8 +1078,29 @@ const transport = new StdioClientTransport({
   };
   const legacyIds = authoringRules.map((rule) => rule.id).filter((id) => /^legacy-/.test(id) && !['legacy-btn-class', 'legacy-card-content', 'legacy-nav-wrapper', 'legacy-brand-logo', 'legacy-lever', 'legacy-filled-in', 'legacy-materialized-name', 'legacy-input-field', 'legacy-materialize-textarea'].includes(id));
   assert.deepEqual(Object.keys(legacyCases).sort(), [...legacyIds].sort(), 'every 0.16.0 legacy rule needs cases, and every case a rule');
+  // The regex rules without a `legacy-` prefix, held to the same flag and pass lists.
+  const ruleCases = {
+    'raw-color-in-component-style': {
+      flag: ['<p style="color: #fff">Hi</p>', '.chip { background-color:#1a73e8 }', '.card { border-top: #000 }'],
+      pass: ['<p style="color: var(--md-sys-color-on-surface)">Hi</p>', ':root { --md-ref-seed-color: #6750a4; }'],
+    },
+    'transition-all': {
+      flag: ['.a { transition: all 200ms }', '.a{transition:all .2s}', '.a { TRANSITION: ALL 1s }', '.a { transition: opacity .2s, all .3s }', '.a { transition-property: all }', "<div style={{ transition: 'all 0.2s' }}></div>", '<style>\n  .card { transition: all 200ms; }\n</style>', '{"transition": "all 1s"}', "{ 'transition-property': 'all' }"],
+      pass: ['.a { transition: opacity 200ms, transform 200ms }', '.a { transition-property: opacity }', '.a { transition: opacity .2s allow-discrete }', '.a { transition: none }', '.a { transition: var(--all) }', 'const s = { transition: theme.all };', '.a { --transition: all 1s }', '.a { -webkit-transition: all 1s }', '.a { transition-duration: 200ms; all: unset }', '<p style="transition: opacity 1s" data-x="all"></p>', 'const s = { transition: x, all: y };', 'const s = { transition: x, all : y };', '.a { transition: $all }', '.a { transition: @all }', 'x.transition: all 1s', '.a { transition: opacity 200ms /* all states */ }'],
+    },
+    'viewport-zoom-disabled': {
+      flag: [...['user-scalable=no', 'user-scalable = 0', 'user-scalable=false', 'user-scalable=0.5', 'maximum-scale=1', 'maximum-scale=1.0', 'maximum-scale=1.00', 'maximum-scale=0.5', 'maximum-scale=.5', 'maximum-scale=0', 'maximum-scale=no', 'maximum-scale=yes', 'user-scalable=yes; initial-scale=1', 'user-scalable=device-width;', 'user-scalable=device-height;', 'maximum-scale=false', 'maximum-scale=', 'maximum-scale=device-width;', 'user-scalable', 'user-scalable, initial-scale=1'].map((content) => `<meta name="viewport" content="width=device-width, ${content}">`), '<META NAME=VIEWPORT CONTENT="USER-SCALABLE=NO">', '<meta content="initial-scale=1, maximum-scale=1" name="viewport">', '<meta name="viewport" content="width=device-width; initial-scale=1; user-scalable=no">', "<meta name='viewport' content='user-scalable=no' />", '<meta\n  name="viewport"\n  content="width=device-width, initial-scale=1, maximum-scale=1" />'],
+      pass: [...['width=device-width, initial-scale=1', 'width=device-width, initial-scale=1.0', 'minimum-scale=1', 'maximum-scale=1.5', 'maximum-scale=1.01', 'maximum-scale=10', 'user-scalable=yes', 'user-scalable=yes, initial-scale=1', 'user-scalable=1', 'user-scalable = 1', 'user-scalable=device-width', 'user-scalable=device-height', 'user-scalable=-1', 'maximum-scale=2', 'maximum-scale=-1', 'maximum-scale=device-width', 'maximum-scale=+2', 'user-scalable=+1'].map((content) => `<meta name="viewport" content="${content}">`), '<meta name="description" content="user-scalable=no">', '<meta name="description" content="Use name=viewport and user-scalable=no">', '<meta name="viewport-x" content="user-scalable=no">', '<meta data-name="viewport" content="user-scalable=no">', '<meta name="viewport" data-content="user-scalable=no" content="width=device-width">', '<meta name="description" content="Avoid user-scalable=no"><meta name="viewport" content="width=device-width, initial-scale=1">'],
+    },
+    'paste-blocked': {
+      flag: [...['return false', 'return false;', 'event.preventDefault(); return false;', 'return false; log()', "alert('No pasting'); return false", 'event.preventDefault()\nreturn false', `${'a();'.repeat(8)}return false`, 'doThing(); return false', "alert('a'); return false", 'return false\n!x'].map((value) => `<input onpaste="${value}">`), "<input onpaste='event.preventDefault()'>", '<input ONPASTE="event.preventDefault(); return false;">', '<input onpaste=event.preventDefault()>', '<input onpaste=event.preventDefault();>', '<input onpaste = " return  false ">', '<form onpaste="return false">', '<input\n  type="password"\n  onpaste="return false">', '<input :disabled="n > 3" onpaste="return false">', `<input class="${'w-full '.repeat(150)}" onpaste="return false">`, '<a href=/s?q=x onpaste="return false">'],
+      pass: [...['handlePaste(event)', 'event.preventDefault(); insertPlain(event)', 'if (busy) return false', 'if (x) { return false }', "return confirm('Paste?')", 'return false || ok()', 'return falsey()', 'e.preventDefault()', 'Event.preventDefault()', 'RETURN FALSE', 'event.preventDefault() return false', "this.dataset.pasted = 'yes'", 'return\nfalse', 'do; return false', 'event.preventDefault(); event.preventDefault() x', `${'a();'.repeat(9)}return false`, 'return true; return false', 'run(() => {\nreturn false\n})', 'event.preventDefault() event.preventDefault()', 'throw 0; return false', 'break; return false', '// Disabled; return false;', '/* off; */ return false', "this.dataset.note = 'text;return false;';", 'return false\n|| true', 'return false\n  .valueOf()'].map((value) => `<input onpaste="${value}">`), 'el.onpaste = "return false"', '<input data-onpaste="return false">', '<input oncopy="return false">', '<input title=\'onpaste="return false"\'>', '<p>Never write onpaste="return false"</p>', '<input onpaste=event.preventDefault()x>', '<input onpaste=event.preventDefault()/>'],
+    },
+  };
+  const ruleIds = authoringRules.map((rule) => rule.id).filter((id) => !/^legacy-/.test(id));
+  assert.deepEqual(Object.keys(ruleCases).sort(), ruleIds.sort(), 'every regex rule without a legacy- prefix needs cases, and every case a rule');
   const idsFor = (snippet) => inspectAuthoringRules(snippet).map((issue) => issue.id);
-  for (const [id, { flag, pass }] of Object.entries(legacyCases)) {
+  for (const [id, { flag, pass }] of Object.entries({ ...legacyCases, ...ruleCases })) {
     for (const snippet of flag) assert.ok(idsFor(snippet).includes(id), `${id} misses ${JSON.stringify(snippet)}`);
     for (const snippet of pass) assert.ok(!idsFor(snippet).includes(id), `${id} flags ${JSON.stringify(snippet)}`);
   }
@@ -1064,8 +1119,16 @@ const transport = new StdioClientTransport({
     'class="' + fill('btn '),
     // A `.range` host with no `>` after it: an unbounded gap rescanned to the end from every host.
     fill('class="range '),
+    // Whitespace after the colon that the value gap could also take, a run of declarations that never reach `all`, a value with no end,
+    // and starts that all reach one `all` whose colon check scans a long whitespace run.
+    'transition:' + fill(' '), fill('transition:'), 'transition: opacity' + fill(' 1s,'), 'transition:'.repeat(45) + 'all' + fill(' ') + ':',
+    // Viewport tags: many starts, an unclosed tag that repeats `content=` past the name, and a long content value that never stops zoom.
+    fill('<meta '), '<meta name=viewport ' + fill('content='), '<meta name="viewport" content="' + fill('maximum-scale=1.5,'),
+    // Paste handlers: many names, values that never close or never reach `return false`, and a tag with too many attributes to reach the name.
+    fill('onpaste='), '<a' + fill(' onpaste'), '<a onpaste="' + fill(' '), '<a onpaste="' + fill(' \n'), '<a onpaste="' + fill('event.preventDefault();'),
+    '<a onpaste="' + fill('event.preventDefault()  '), '<a onpaste="' + fill('a;'), '<a onpaste=' + fill(' '),
   ];
-  for (const rule of authoringRules.filter((entry) => legacyIds.includes(entry.id) || entry.id === 'legacy-btn-class')) {
+  for (const rule of authoringRules.filter((entry) => legacyIds.includes(entry.id) || ['legacy-btn-class', 'transition-all', 'viewport-zoom-disabled', 'paste-blocked'].includes(entry.id))) {
     const regex = new RegExp(rule.pattern.source, rule.pattern.flags);
     for (const input of adversarial) {
       regex.lastIndex = 0;

@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" theme="auto">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Update your display name, email, phone and website.">
+    <title>Account settings</title>
+    <!-- Keep dist/fonts next to dist/css so the bundled fonts load. -->
+    <link rel="stylesheet" href="dist/css/expressive.min.css">
+    <style>
+      /* Reserve the indicator's width so Save does not move when it appears. */
+      .save-indicator-slot {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        inline-size: 40px;
+        block-size: 40px;
+      }
+      .save-indicator-slot .loading-indicator {
+        --md-comp-loading-indicator-container-size: 40px;
+        --md-comp-loading-indicator-active-indicator-size: 32px;
+      }
+    </style>
+  </head>
+  <body>
+    <a class="visually-hidden-focusable" href="#main-content">Skip to content</a>
+
+    <header>
+      <nav aria-label="Main">
+        <h2>Settings</h2>
+      </nav>
+    </header>
+
+    <main id="main-content" class="container py-5" tabindex="-1">
+      <div class="row">
+        <div class="s12 m10 offset-m1 l6 offset-l3">
+          <h1 class="headline-medium mb-2">Account</h1>
+          <p class="mb-4">Changes apply when you save.</p>
+
+          <form id="account-form" action="/api/account" method="post" novalidate>
+            <fieldset class="mb-4">
+              <legend>Profile</legend>
+
+              <div class="field">
+                <input id="display_name" name="display_name" class="validate" type="text"
+                       autocomplete="nickname" required maxlength="50" placeholder=" "
+                       value="Sam Rivera" aria-describedby="display_name_help">
+                <label for="display_name">Display name</label>
+                <small id="display_name_help" data-error="Enter a display name of up to 50 characters."><span>Shown to other people on your profile.</span></small>
+              </div>
+
+              <div class="field">
+                <input id="website" name="website" class="validate" type="url"
+                       autocomplete="url" spellcheck="false" placeholder=" "
+                       aria-describedby="website_help">
+                <label for="website">Website (optional)</label>
+                <small id="website_help" data-error="Enter a full web address that starts with https://, such as https://example.com."><span>Include https://, for example https://example.com.</span></small>
+              </div>
+            </fieldset>
+
+            <fieldset class="mb-4">
+              <legend>Contact</legend>
+
+              <div class="field">
+                <input id="email" name="email" class="validate" type="email"
+                       autocomplete="email" spellcheck="false" required placeholder=" "
+                       value="sam@example.com" aria-describedby="email_help">
+                <label for="email">Email</label>
+                <small id="email_help" data-error="Enter an email address, such as name@example.com."><span>Used to sign in and for account notices.</span></small>
+              </div>
+
+              <div class="field">
+                <input id="phone" name="phone" class="validate" type="tel"
+                       autocomplete="tel" placeholder=" " pattern="[0-9+\(\)\-. ]{7,20}"
+                       aria-describedby="phone_help">
+                <label for="phone">Phone (optional)</label>
+                <small id="phone_help" data-error="Enter a phone number using digits, spaces and + ( ) - only."><span>Include your country code if you're outside the US.</span></small>
+              </div>
+            </fieldset>
+
+            <div class="flex flex-wrap justify-end gap-2" style="align-items: center;">
+              <span class="save-indicator-slot">
+                <span id="save-indicator" class="loading-indicator" role="status" aria-label="Saving account settings" hidden></span>
+              </span>
+              <button id="save-button" class="medium" type="submit">
+                <span class="material-symbols" aria-hidden="true">check</span><span id="save-label">Save</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <script src="dist/js/expressive.min.js"></script>
+    <script>
+      // Stand-in for POST /api/account. There is no server: wait 1500 ms, then
+      // reject when the email ends in @example.invalid and resolve otherwise.
+      function postAccount(formData) {
+        const body = Object.fromEntries(formData);
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            const email = String(body.email || '').trim().toLowerCase();
+            if (email.endsWith('@example.invalid')) {
+              const error = new Error("Your changes weren't saved. This email address can't receive mail. Enter a different address, then save again.");
+              error.field = 'email';
+              error.status = 422;
+              reject(error);
+            } else {
+              resolve({ ok: true, status: 200, account: body });
+            }
+          }, 1500);
+        });
+      }
+
+      const form = document.getElementById('account-form');
+      const saveButton = document.getElementById('save-button');
+      const saveLabel = document.getElementById('save-label');
+      const indicator = document.getElementById('save-indicator');
+      const fields = [...form.querySelectorAll('.validate')];
+
+      // Remember each field's own error text so a server message can be undone.
+      const defaultErrors = new Map(fields.map((input) => {
+        const help = input.parentElement.querySelector(':scope > [data-error]');
+        return [input, help.getAttribute('data-error')];
+      }));
+
+      function clearServerError(input) {
+        if (input.dataset.serverError !== 'true') return;
+        delete input.dataset.serverError;
+        input.parentElement.querySelector(':scope > [data-error]')
+          .setAttribute('data-error', defaultErrors.get(input));
+        input.classList.remove('invalid');
+        input.removeAttribute('aria-invalid');
+      }
+
+      function showServerError(input, message) {
+        input.dataset.serverError = 'true';
+        input.parentElement.querySelector(':scope > [data-error]').setAttribute('data-error', message);
+        input.classList.add('invalid');
+        input.setAttribute('aria-invalid', 'true');
+        input.focus();
+      }
+
+      fields.forEach((input) => input.addEventListener('input', () => clearServerError(input)));
+
+      let pending = false;
+      const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (pending) return;
+
+        fields.forEach(clearServerError);
+        fields.forEach((input) => Expressive.Forms.validateField(input));
+        const firstInvalid = fields.find((input) => input.getAttribute('aria-invalid') === 'true');
+        if (firstInvalid) {
+          firstInvalid.focus();
+          return;
+        }
+
+        pending = true;
+        // A result from an earlier save must not sit beside this one's.
+        Expressive.Snackbar.dismissAll();
+        saveButton.setAttribute('aria-disabled', 'true');
+        saveLabel.textContent = 'Saving…';
+
+        let shownAt = 0;
+        const showTimer = setTimeout(() => {
+          indicator.hidden = false;
+          shownAt = performance.now();
+        }, 300);
+
+        try {
+          await postAccount(new FormData(form));
+          new Expressive.Snackbar({ text: 'Account settings saved', replace: true });
+        } catch (error) {
+          const input = error.field && form.elements.namedItem(error.field);
+          if (input) {
+            showServerError(input, error.message);
+          } else {
+            new Expressive.Snackbar({
+              text: "Couldn't save your account settings.",
+              action: 'Retry',
+              replace: true,
+              onAction: () => form.requestSubmit(saveButton),
+            });
+          }
+        } finally {
+          clearTimeout(showTimer);
+          if (shownAt) await wait(Math.max(0, 500 - (performance.now() - shownAt)));
+          indicator.hidden = true;
+          saveLabel.textContent = 'Save';
+          saveButton.removeAttribute('aria-disabled');
+          pending = false;
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -9,7 +9,7 @@ Component ID: `tabs`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `fc631c27872076c52527905d38102735aa053ea77719d46ba9c556d6f13ce127`
+Contract SHA-256: `c4d794186bddccc543cfaab4327f0c95e0a451f21c954f3c9d8338abf57cd782`
 
 #### Selection and adaptation
 
@@ -81,6 +81,28 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
 - `.select()`: Show the panel that belongs to the tab with this id. Panel IDs are matched literally, including numeric IDs and IDs containing dots, colons or brackets, in normal and swipeable modes.
 - `.updateTabIndicator()`: Recalculate the indicator position. Useful if the bar was hidden or resized.
 - `.destroy()`: Destroy the plugin instance and tear down its event handlers.
+
+#### App behavior
+
+Keep the selected tab in the URL, so a reload, a shared link and Back show the same view. Give each tab set its own query parameter, such as `?view=shipped`, and write it with `history.replaceState` from an `expressive:change` listener on the `.tabs` element; data tables and menus fire the same event name. On load, read the whole URL first, then move `.active` to the tab it names before `AutoInit()`. Tabs starts on `a.active` and fires nothing for it, so draw that tab's content yourself after init. Calling `select(id)` after init also works, but it runs your own listeners. A hash naming the panel needs no script, and Tabs prefers it over `.active`, but a shared link then scrolls to the panel and the hash holds only one tab set. Drop a hash that names one of its panels when you write, or it wins on reload. Don't push a history entry per change.
+
+```js
+const tabs = document.getElementById('order-tabs');
+const saved = new URLSearchParams(location.search).get('view');
+const link = saved && tabs.querySelector(`a[href="#${CSS.escape(saved)}"]`);
+if (link) {
+  tabs.querySelector('a.active')?.classList.remove('active');
+  link.classList.add('active');
+}
+Expressive.AutoInit();
+tabs.addEventListener('expressive:change', (event) => {
+  if (event.target !== tabs) return;
+  const url = new URL(location.href);
+  url.searchParams.set('view', event.detail.panel.id);
+  if ([...tabs.querySelectorAll('a')].some((a) => a.hash === url.hash)) url.hash = '';
+  history.replaceState(null, '', url);
+});
+```
 
 #### Also documented
 

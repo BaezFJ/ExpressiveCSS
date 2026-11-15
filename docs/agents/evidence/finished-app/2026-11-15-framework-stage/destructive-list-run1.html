@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en" theme="auto">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Manage the shipping addresses saved to your account.">
+    <title>Saved addresses</title>
+    <link rel="stylesheet" href="dist/css/expressive.min.css">
+    <style>
+      .page-actions {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .page-actions p { margin: 0; color: var(--md-sys-color-on-surface-variant); }
+      .address-list { max-width: 720px; }
+      .address-list > li > div > span { display: block; }
+      #form-error { color: var(--md-sys-color-error); }
+    </style>
+  </head>
+  <body>
+    <header>
+      <nav aria-label="Account">
+        <h1>Saved addresses</h1>
+      </nav>
+    </header>
+
+    <main class="container py-5">
+      <div class="address-list">
+        <div class="page-actions mb-4">
+          <p id="address-count">5 addresses</p>
+          <button type="button" id="add-button" class="filled">
+            <span class="material-symbols" aria-hidden="true">add</span><span>Add address</span>
+          </button>
+        </div>
+
+        <ul class="list" id="address-list" aria-labelledby="address-count"></ul>
+
+        <div class="empty-state" id="empty-state" hidden>
+          <span class="material-symbols" aria-hidden="true">location_off</span>
+          <h2>No saved addresses</h2>
+          <p>Add an address to check out faster next time.</p>
+          <div class="empty-state-actions">
+            <button type="button" id="empty-add-button" class="filled">Add address</button>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <dialog id="address-dialog" aria-labelledby="address-dialog-title">
+      <h2 id="address-dialog-title">Add address</h2>
+      <div>
+        <form id="address-form" novalidate>
+          <div class="field mb-2">
+            <input id="addr-label" name="label" type="text" class="validate" required placeholder=" " autocomplete="off" aria-describedby="addr-label-help">
+            <label for="addr-label">Label</label>
+            <small id="addr-label-help" data-error="Enter a label, such as Home or Work."><span>For example, Home or Work</span></small>
+          </div>
+          <div class="field mb-2">
+            <input id="addr-street" name="street" type="text" class="validate" required placeholder=" " autocomplete="street-address" aria-describedby="addr-street-help">
+            <label for="addr-street">Street address</label>
+            <small id="addr-street-help" data-error="Enter the street address."></small>
+          </div>
+          <div class="field mb-2">
+            <input id="addr-city" name="city" type="text" class="validate" required placeholder=" " autocomplete="address-level2" aria-describedby="addr-city-help">
+            <label for="addr-city">City</label>
+            <small id="addr-city-help" data-error="Enter the city."></small>
+          </div>
+          <div class="field mb-2">
+            <input id="addr-region" name="region" type="text" class="validate" required placeholder=" " autocomplete="address-level1" aria-describedby="addr-region-help">
+            <label for="addr-region">State or region</label>
+            <small id="addr-region-help" data-error="Enter the state or region."></small>
+          </div>
+          <div class="field">
+            <input id="addr-postal" name="postal" type="text" class="validate" required placeholder=" " autocomplete="postal-code" spellcheck="false" aria-describedby="addr-postal-help">
+            <label for="addr-postal">Postal code</label>
+            <small id="addr-postal-help" data-error="Enter the postal code."></small>
+          </div>
+          <p id="form-error" class="mt-2" role="alert" hidden></p>
+        </form>
+      </div>
+      <nav aria-label="Add address actions">
+        <button type="button" id="cancel-button">Cancel</button>
+        <button type="submit" form="address-form" id="save-button" class="filled"><span>Save</span></button>
+      </nav>
+    </dialog>
+
+    <script src="dist/js/expressive.min.js"></script>
+    <script>
+      (() => {
+        // Stand-in for the network: every request waits 800 ms and resolves.
+        const request = (method, url, body) => new Promise((resolve) => {
+          setTimeout(() => resolve({ ok: true, status: method === 'POST' ? 201 : 204, method, url, body }), 800);
+        });
+
+        let nextOrder = 0;
+        let nextId = 6;
+        const make = (id, label, street, city, region, postal) =>
+          ({ id: String(id), order: nextOrder++, label, street, city, region, postal });
+
+        const addresses = [
+          make(1, 'Home', '1428 Elm Street', 'Springfield', 'IL', '62704'),
+          make(2, 'Work', '500 Market Street, Suite 300', 'San Francisco', 'CA', '94105'),
+          make(3, 'Parents', '77 Harbor View Road', 'Portland', 'ME', '04101'),
+          make(4, 'Cabin', '12 Pine Ridge Lane', 'Bend', 'OR', '97701'),
+          make(5, 'Studio', '2210 Congress Avenue, Unit 4B', 'Austin', 'TX', '78704'),
+        ];
+
+        const list = document.getElementById('address-list');
+        const count = document.getElementById('address-count');
+        const empty = document.getElementById('empty-state');
+        const addButton = document.getElementById('add-button');
+        const emptyAddButton = document.getElementById('empty-add-button');
+        const dialog = document.getElementById('address-dialog');
+        const form = document.getElementById('address-form');
+        const save = document.getElementById('save-button');
+        const cancel = document.getElementById('cancel-button');
+        const formError = document.getElementById('form-error');
+
+        const iconFor = (label) => {
+          const l = label.toLowerCase();
+          if (l === 'home') return 'home';
+          if (l === 'work' || l === 'office') return 'work';
+          return 'location_on';
+        };
+
+        const deleteButtonOf = (id) => list.querySelector(`li[data-id="${CSS.escape(id)}"] > button`);
+
+        function render() {
+          addresses.sort((a, b) => a.order - b.order);
+          list.replaceChildren(...addresses.map((a) => {
+            const li = document.createElement('li');
+            li.dataset.id = a.id;
+
+            const icon = document.createElement('span');
+            icon.className = 'material-symbols';
+            icon.setAttribute('aria-hidden', 'true');
+            icon.textContent = iconFor(a.label);
+
+            const text = document.createElement('div');
+            const title = document.createElement('span');
+            title.textContent = a.label;
+            const detail = document.createElement('p');
+            detail.textContent = `${a.street}, ${a.city}, ${a.region} ${a.postal}`;
+            text.append(title, detail);
+
+            const del = document.createElement('button');
+            del.type = 'button';
+            del.setAttribute('aria-label', `Delete ${a.label} address`);
+            const delIcon = document.createElement('span');
+            delIcon.className = 'material-symbols';
+            delIcon.setAttribute('aria-hidden', 'true');
+            delIcon.textContent = 'delete';
+            del.append(delIcon);
+            del.addEventListener('click', (event) => {
+              if (event.detail > 1) return; // ignore the second click of a double click
+              remove(a.id);
+            });
+
+            li.append(icon, text, del);
+            return li;
+          }));
+
+          const n = addresses.length;
+          count.textContent = n === 1 ? '1 address' : `${n} addresses`;
+          const isEmpty = n === 0;
+          list.hidden = isEmpty;
+          empty.hidden = !isEmpty;
+          addButton.hidden = isEmpty;
+          count.hidden = isEmpty;
+        }
+
+        // Delete at once, offer Undo, and send DELETE when the snackbar goes away.
+        function remove(id) {
+          const index = addresses.findIndex((a) => a.id === id);
+          if (index < 0) return;
+          const item = addresses[index];
+
+          // Move focus before the row disappears: next row, else previous, else the empty state's action.
+          const nextItem = addresses[index + 1] || addresses[index - 1];
+          addresses.splice(index, 1);
+          render();
+          if (nextItem) deleteButtonOf(nextItem.id)?.focus();
+          else emptyAddButton.focus();
+
+          let pending = true;
+          const restore = () => {
+            addresses.push(item);
+            render();
+            deleteButtonOf(item.id)?.focus();
+          };
+          const commit = async () => {
+            if (!pending) return;
+            pending = false;
+            removeEventListener('pagehide', onPageHide);
+            try {
+              const res = await request('DELETE', `/api/addresses/${encodeURIComponent(item.id)}`);
+              if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            } catch {
+              restore();
+              new Expressive.Snackbar({ text: `Couldn't delete ${item.label}. It's back in your list.`, replace: true });
+            }
+          };
+          const bar = new Expressive.Snackbar({
+            text: `${item.label} address deleted`,
+            action: 'Undo',
+            replace: true,
+            onAction: () => {
+              if (!pending) return;
+              pending = false;
+              removeEventListener('pagehide', onPageHide);
+              restore();
+            },
+            completeCallback: commit,
+          });
+          function onPageHide() { commit(); bar.dismiss(); }
+          addEventListener('pagehide', onPageHide, { once: true });
+        }
+
+        function openDialog() {
+          form.reset();
+          formError.hidden = true;
+          form.querySelectorAll('.validate').forEach((f) => {
+            f.classList.remove('invalid');
+            f.removeAttribute('aria-invalid');
+          });
+          dialog.showModal();
+          document.getElementById('addr-label').focus();
+        }
+
+        addButton.addEventListener('click', openDialog);
+        emptyAddButton.addEventListener('click', openDialog);
+        cancel.addEventListener('click', () => dialog.close());
+        dialog.addEventListener('close', () => {
+          // The opener may be hidden now (the empty state's button after the first add).
+          if (!document.activeElement || document.activeElement === document.body || document.activeElement.closest('[hidden]')) {
+            (addButton.hidden ? emptyAddButton : addButton).focus();
+          }
+        });
+
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          if (save.getAttribute('aria-busy') === 'true') return;
+          form.checkValidity();
+          const fields = [...form.elements].filter((f) => f.willValidate && f.classList.contains('validate'));
+          fields.forEach((f) => Expressive.Forms.validateField(f));
+          const first = fields.find((f) => f.getAttribute('aria-invalid') === 'true');
+          if (first) return first.focus();
+
+          const data = Object.fromEntries(new FormData(form));
+          for (const key in data) data[key] = String(data[key]).trim();
+
+          formError.hidden = true;
+          save.setAttribute('aria-busy', 'true');
+          save.firstElementChild.textContent = 'Saving…';
+          cancel.disabled = true;
+          const started = performance.now();
+          let saved = null;
+          try {
+            const res = await request('POST', '/api/addresses', data);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            saved = make(nextId++, data.label, data.street, data.city, data.region, data.postal);
+          } catch {
+            formError.textContent = "Couldn't save this address. Check your connection and try again.";
+            formError.hidden = false;
+          } finally {
+            const shown = performance.now() - started - 300;
+            if (shown > 0 && shown < 500) await new Promise((done) => setTimeout(done, 500 - shown));
+            save.removeAttribute('aria-busy');
+            save.firstElementChild.textContent = 'Save';
+            cancel.disabled = false;
+          }
+
+          if (saved) {
+            addresses.push(saved);
+            render();
+            dialog.close();
+            new Expressive.Snackbar({ text: `${saved.label} address added`, replace: true });
+          }
+        });
+
+        render();
+        document.addEventListener('DOMContentLoaded', () => Expressive.AutoInit());
+      })();
+    </script>
+  </body>
+</html>

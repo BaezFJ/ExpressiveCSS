@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en" theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Team settings</title>
+  <link rel="stylesheet" href="../../../../../../dist/css/expressive.min.css">
+  <script src="../../../../../../dist/js/expressive.min.js" defer></script>
+</head>
+<body>
+  <main id="main" class="container py-4" style="max-width: 600px">
+    <h1>Team settings</h1>
+    <nav class="tabs" aria-label="Settings">
+      <a class="active" aria-current="page" href="#profile">Profile</a>
+      <a href="#members">Members</a>
+    </nav>
+
+    <section id="profile" aria-labelledby="profile-heading">
+      <h2 id="profile-heading">Profile</h2>
+      <form id="profile-form" action="/settings/profile" method="post">
+        <div class="field">
+          <input id="display-name" name="displayName" type="text" class="validate" autocomplete="name" required placeholder=" " aria-describedby="display-name-help">
+          <label for="display-name">Display name</label>
+          <small id="display-name-help" data-error="Enter a display name">Shown to your team</small>
+        </div>
+        <div class="field">
+          <input id="email" name="email" type="email" class="validate" autocomplete="email" spellcheck="false" required placeholder=" " aria-describedby="email-help">
+          <label for="email">Email</label>
+          <small id="email-help" data-error="Enter an email like name@example.com">Where we send notices</small>
+        </div>
+        <button type="submit" class="filled">Save</button>
+      </form>
+    </section>
+
+    <section id="members" aria-labelledby="members-heading">
+      <h2 id="members-heading" tabindex="-1">Members</h2>
+      <ul class="list" id="member-list">
+        <li>
+          <span>Ana Ruiz</span>
+          <button type="button" class="circle" data-remove aria-label="Remove Ana Ruiz"><span class="material-symbols" aria-hidden="true">delete</span></button>
+        </li>
+        <li>
+          <span>Ben Okafor</span>
+          <button type="button" class="circle" data-remove aria-label="Remove Ben Okafor"><span class="material-symbols" aria-hidden="true">delete</span></button>
+        </li>
+        <li>
+          <span>Chen Wei</span>
+          <button type="button" class="circle" data-remove aria-label="Remove Chen Wei"><span class="material-symbols" aria-hidden="true">delete</span></button>
+        </li>
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Expressive.AutoInit();
+      document.querySelector('.tabs').addEventListener('expressive:change', (event) => {
+        history.replaceState(null, '', '#' + event.detail.panel.id);
+      });
+
+      const list = document.getElementById('member-list');
+      Array.from(list.children).forEach((li, i) => { li.dataset.order = String(i); });
+      list.addEventListener('click', (event) => {
+        const button = event.target.closest('[data-remove]');
+        if (!button) return;
+        const row = button.closest('li');
+        const name = row.querySelector('span').textContent;
+        const neighbor = row.nextElementSibling ?? row.previousElementSibling;
+        (neighbor?.querySelector('[data-remove]') ?? document.getElementById('members-heading')).focus();
+        row.remove();
+        new Expressive.Snackbar({
+          text: name + ' removed',
+          action: 'Undo',
+          replace: true,
+          onAction: () => {
+            const next = Array.from(list.children).find((li) => Number(li.dataset.order) > Number(row.dataset.order));
+            list.insertBefore(row, next ?? null);
+            row.querySelector('[data-remove]').focus();
+          },
+        });
+      });
+    });
+  </script>
+</body>
+</html>

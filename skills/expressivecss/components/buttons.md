@@ -9,11 +9,13 @@ Component ID: `buttons`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `fc631c27872076c52527905d38102735aa053ea77719d46ba9c556d6f13ce127`
+Contract SHA-256: `c4d794186bddccc543cfaab4327f0c95e0a451f21c954f3c9d8338abf57cd782`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/buttons/overview)
+
+Public JavaScript exports: `BusyButtons`. See the [API index](../references/api-index.md).
 
 Example: Use radios for saved form values; buttons run commands.
 
@@ -60,6 +62,29 @@ Two independent axes dress it: a style (`filled`, `tonal`, `outlined`, `elevated
 </button>
 
 <a class="button" href="/docs">Docs</a>
+```
+
+#### Related contracts
+
+[Loading state](../references/behavior-contracts.md#loading-state)
+
+#### App behavior
+
+While a command's request runs, set `aria-busy="true"` on its button synchronously, before any `await`, and remove it in `finally` once the spinner has shown for about 500ms. That keeps the label and focus, shows progress after the 300ms delay and ignores repeat presses while `BusyButtons` runs, so the handler needs no pending flag. Screen readers may not announce busy, so also change the label to the verb's in-progress form ending in the `…` character, such as "Saving…", never "Loading" or "Please wait". Announce the result once, in a snackbar or a `role="status"` region present from load (visible or `.visually-hidden`, never `hidden`) whose text you change. A native form post that leaves the page needs none of this.
+
+```js
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  save.setAttribute('aria-busy', 'true');
+  save.firstElementChild.textContent = 'Saving…';
+  const started = performance.now();
+  try { await send(new FormData(form)); } finally {
+    const shown = performance.now() - started - 300; // the spinner's delay token
+    if (shown > 0) await new Promise((done) => setTimeout(done, 500 - shown));
+    save.removeAttribute('aria-busy');
+    save.firstElementChild.textContent = 'Save';
+  }
+});
 ```
 
 #### Also documented

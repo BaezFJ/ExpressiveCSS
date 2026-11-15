@@ -2528,6 +2528,33 @@ The `disabled` attribute on a `<button>`. A link cannot be disabled, so a link b
 <a class="button" aria-disabled="true">Link</a>
 ```
 
+### Loading state
+
+Set `aria-busy="true"` on a `<button>` or `.button` while its command runs. The button keeps its label and colors, reports busy to assistive technology, and a shaped common button shows a small spinner after its label, fading in after `--md-comp-button-busy-delay` (300ms) so a quick request doesn't flash it; the button grows by the spinner. Under reduced motion the spinner holds still, and a disabled button shows none. Circle, extended and icon buttons, FABs, buttons in toolbars, groups and other fixed slots, data table sort buttons, menu triggers and buttons with a `.shape-*` utility show no spinner. For those, keep a `.loading-indicator` beside the button, `hidden` while idle. `BusyButtons` ignores every press while the attribute is set: capture-phase click, Enter and Space listeners on the document cancel the press before handlers on the page's elements, so a mouse press, Enter, Space and a form's implicit submission do nothing. The root bundle starts it; with the modular entry, call `BusyButtons.Init()`. `requestSubmit()` sends no click, and buttons in closed shadow roots are out of reach. Remove the attribute to make the button work again.
+
+```html
+<button type="submit" aria-busy="true"><span>Saving…</span></button>
+```
+
+### App behavior
+
+While a command's request runs, set `aria-busy="true"` on its button synchronously, before any `await`, and remove it in `finally` once the spinner has shown for about 500ms. That keeps the label and focus, shows progress after the 300ms delay and ignores repeat presses while `BusyButtons` runs, so the handler needs no pending flag. Screen readers may not announce busy, so also change the label to the verb's in-progress form ending in the `…` character, such as "Saving…", never "Loading" or "Please wait". Announce the result once, in a snackbar or a `role="status"` region present from load (visible or `.visually-hidden`, never `hidden`) whose text you change. A native form post that leaves the page needs none of this.
+
+```js
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  save.setAttribute('aria-busy', 'true');
+  save.firstElementChild.textContent = 'Saving…';
+  const started = performance.now();
+  try { await send(new FormData(form)); } finally {
+    const shown = performance.now() - started - 300; // the spinner's delay token
+    if (shown > 0) await new Promise((done) => setTimeout(done, 500 - shown));
+    save.removeAttribute('aria-busy');
+    save.firstElementChild.textContent = 'Save';
+  }
+});
+```
+
 ---
 
 ## Icon buttons
@@ -3513,6 +3540,10 @@ Add `defer-render` to a long list so the browser skips layout and paint for rows
 
 The browser clips anything a deferred row draws outside its box. Focus rings inside a row are drawn inset for that reason, but a box shadow or a badge that hangs over the edge is cut off. Each row is also the containing block for absolutely and fixed positioned content; menus and tooltips open in the top layer and are not affected. Rows with `.swipe-actions` are never deferred, because their actions wait past the row's end. Tables are not supported, because browsers ignore `content-visibility` on table rows. When the rows are not in the DOM at all, such as a dataset too large to render as markup or one fetched a page at a time during scrolling, use a virtual list script; ExpressiveCSS does not ship one.
 
+### App behavior
+
+Delete a row at once and offer Undo in a snackbar, as the Snackbar App behavior describes. Ignore the second click of a double click (`event.detail > 1`), or the row that slides up gets deleted too. Before removing a row that holds focus, focus the next row's control, else the previous row's, else the empty state's action. At Undo time, find the row that followed the restored one by id, or put the item back into the data and re-render; don't trust an index or a node taken before other changes. Show the list's empty state when the last row goes, and hide it and update any count when Undo brings a row back.
+
 ---
 
 ## Message
@@ -4078,6 +4109,13 @@ Filtering and sorting run before paging. Details consume no page slots and stay 
 
 The first page is the default. An uncanceled filter input or a local sort returns to it. Canceling filter or sort applies no page reset. `Expressive.DataTables.sync(wrapper)` preserves the current page where possible, clamps it after row changes and emits no events. Call it after changing records or removing the size to restore paging-only hidden rows. Explicit local paging can slice server-filtered DOM records without rewriting the application's filter count; it derives totals from DOM records. Page and size controls request `expressive:page` before their local default; cancellation preserves the accepted view.
 
+`Expressive.DataTables.showPage(wrapper, page)` shows a local page without events, for example a page restored from the URL after a reload. Call it once the rows exist. It keeps the local filter and sort, clamps a page past the end, supersedes a page request still pending and returns the page it shows, which is 0 when no record is left to show. It returns false, changing nothing, for a server-owned table (one whose `setPage` state was accepted), a table without `data-page-size`, or a page that isn't a positive safe integer.
+
+```js
+const page = Number(new URLSearchParams(location.search).get('page')) || 1;
+Expressive.DataTables.showPage(document.getElementById('orders'), page);
+```
+
 Page buttons keep focus, including at the first or last page. The framework sets `aria-disabled="true"` at bounds and ignores unavailable activation; buttons stay in the Tab order. Paging never moves focus into a row and emits no filter, sort or selection event. The optional status shows localized numbers such as `1 / 3` in the wrapper's language, or `0 / 0` with no records. Authors supply its accessible name and surrounding language. No numbered controls or page-size selector is generated. Standalone pagination remains CSS-only.
 
 ### Server paging
@@ -4264,6 +4302,38 @@ The framework fires no event of its own. To keep the choice across visits, save 
 | `--md-comp-data-table-detail-container-color` | `surface-container-low` |
 | `--md-comp-data-table-checkbox-column-width` | cell padding + 18px; used by `sticky-column` |
 | `--md-comp-data-table-column-min-width` | 48px; the narrowest a resized column gets |
+
+### App behavior
+
+Keep the filter text and page in the URL as query parameters, via `history.replaceState`. Write the query wherever the app applies it (`expressive:filter` for `data-table-filter`) and drop the page, as a new query returns to page 1; drop it on an uncanceled `expressive:sort` too. Write `page` (and `pageSize`, with a size select) on `expressive:page`. With a table per tab panel, drop both and cancel a pending filter write on a tab change. On load, in a `DOMContentLoaded` handler, read the whole URL first, then set the search input's `value` and any saved size on the size select's `value` and the wrapper's `data-page-size`, call `Expressive.DataTables.sync(wrapper)`, then `Expressive.DataTables.showPage(wrapper, page)` on the table in the selected panel. Browsers rate-limit `replaceState`, so write the query once typing pauses. Put URL values in `.value` or `.textContent`, never markup.
+
+```js
+document.addEventListener('DOMContentLoaded', () => {
+  const wrapper = document.getElementById('orders');
+  const params = new URLSearchParams(location.search);
+  wrapper.querySelector('[data-table-filter]').value = params.get('q') ?? '';
+  Expressive.DataTables.sync(wrapper);
+  Expressive.DataTables.showPage(wrapper, Number(params.get('page')) || 1);
+  const write = (changes) => {
+    const url = new URL(location.href);
+    for (const [key, value] of Object.entries(changes)) {
+      if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
+    }
+    history.replaceState(null, '', url);
+  };
+  let typing, query = params.get('q') ?? '';
+  wrapper.addEventListener('expressive:filter', (event) => {
+    clearTimeout(typing);
+    query = event.detail.query;
+    typing = setTimeout(() => write({ q: query, page: '' }), 300);
+  });
+  wrapper.addEventListener('expressive:page', (event) => {
+    clearTimeout(typing);
+    write({ q: query, page: event.detail.page });
+  });
+  wrapper.addEventListener('expressive:sort', (event) => { if (!event.defaultPrevented) write({ page: '' }); });
+});
+```
 
 ---
 
@@ -4612,6 +4682,8 @@ A subtitle is an `<hgroup>` wrapping the heading and a `<p>`. There is no `subti
 
 Every top app bar stays pinned with `position: sticky` and `top: 0`. No helper class or wrapper is required. At rest the bar is `surface`, the same as the page. Once content scrolls under it, supporting browsers fill it with `surface-container` via `animation-timeline: scroll()` so it separates from the body. Without that API the bar stays at rest.
 
+A heading with an `id` that a fragment link scrolls to comes to rest below the bar instead of behind it, when the page's top app bar is a direct child of `<body>`. Its `scroll-margin-block-start` reads `--md-comp-top-app-bar-anchor-offset`, which is the bar's height plus 8px: 72px for a small or collapsed bar, 120px for `.medium` (144px with a subtitle) and 128px for `.large` (160px with a subtitle). Headings in a dialog or a pane and `.scrollspy` targets keep their own offsets, and bars inside an article, card or dialog move nothing. Set the token on `:root` for a taller bar, such as one with a larger `--md-comp-top-app-bar-container-height` a small bar whose destinations wrap to a second row, or a `.medium` or `.large` bar whose title wraps to two lines, or set it to `0` to turn the offset off.
+
 The documentation header on this site is a fixed small bar. A second fixed bar on this page would sit on top of it, so the live example is the site header itself.
 
 ```html
@@ -4646,6 +4718,7 @@ Component tokens you can set on the header (or on `:root`):
 | `--md-comp-top-app-bar-trailing-icon-color` | `inherit` (spec: `on-surface-variant`) |
 | `--md-comp-top-app-bar-container-height` | 64px |
 | `--md-comp-top-app-bar-leading-icon-size` | 24px |
+| `--md-comp-top-app-bar-anchor-offset` | 72px, more for flexible bars; set on `:root` |
 
 ### Menu
 
@@ -7041,12 +7114,14 @@ A tap or click on the scrim also closes a basic dialog. Both ends of the gesture
 
 ```js
 const ok = await Expressive.Dialogs.confirm({
-  headline: 'Delete draft?',
-  text: 'The draft and its attachments are removed.',
+  headline: 'Delete account?',
+  text: 'Your account and its data are removed for good.',
   confirm: 'Delete'
 });
-if (ok) deleteDraft();
+if (ok) deleteAccount();
 ```
+
+Ask only before an action that can't be undone. For a removal people can get back, remove it at once and offer Undo in a snackbar, as the Snackbar App behavior describes.
 
 `text` is the question and is required. `headline` is optional. With a headline, the dialog is named by it and described by the text; without one, the text names it. All four strings are set as text, so markup in them is shown, not parsed. If page code removes the open dialog, for example on a route change, the promise resolves `false`. Focus starts on Cancel, the less destructive action, and the browser returns it to the element that had focus before the call. Label the confirm button with the action it takes, such as "Delete" or "Discard", rather than the "OK" default.
 
@@ -7455,6 +7530,28 @@ Primary tabs stack the icon above the label (64dp). Add `horizontal` to put them
 </nav>
 ```
 
+### App behavior
+
+Keep the selected tab in the URL, so a reload, a shared link and Back show the same view. Give each tab set its own query parameter, such as `?view=shipped`, and write it with `history.replaceState` from an `expressive:change` listener on the `.tabs` element; data tables and menus fire the same event name. On load, read the whole URL first, then move `.active` to the tab it names before `AutoInit()`. Tabs starts on `a.active` and fires nothing for it, so draw that tab's content yourself after init. Calling `select(id)` after init also works, but it runs your own listeners. A hash naming the panel needs no script, and Tabs prefers it over `.active`, but a shared link then scrolls to the panel and the hash holds only one tab set. Drop a hash that names one of its panels when you write, or it wins on reload. Don't push a history entry per change.
+
+```js
+const tabs = document.getElementById('order-tabs');
+const saved = new URLSearchParams(location.search).get('view');
+const link = saved && tabs.querySelector(`a[href="#${CSS.escape(saved)}"]`);
+if (link) {
+  tabs.querySelector('a.active')?.classList.remove('active');
+  link.classList.add('active');
+}
+Expressive.AutoInit();
+tabs.addEventListener('expressive:change', (event) => {
+  if (event.target !== tabs) return;
+  const url = new URL(location.href);
+  url.searchParams.set('view', event.detail.panel.id);
+  if ([...tabs.querySelectorAll('a')].some((a) => a.hash === url.hash)) url.hash = '';
+  history.replaceState(null, '', url);
+});
+```
+
 ---
 
 ## Snackbar
@@ -7645,6 +7742,24 @@ Expressive.Snackbar.getInstance(snackbarElement)?.dismiss();
 
 ```js
 Expressive.Snackbar.dismissAll();
+```
+
+### App behavior
+
+For a removal people can get back, act at once instead of asking first. Remove the item, keep its data, and show a snackbar with `action: 'Undo'` and `replace: true`. Leave `displayLength` unset, so the person has as long as they need; Undo stays reachable with Tab or a notification-actions button. Keep one pending flag per removal, and have Undo and the commit each clear it first and do nothing once it is clear, so a removal is undone or committed exactly once. In `onAction`, put the item back where it was and focus its first control. Commit in `completeCallback`, which also runs when a newer snackbar replaces this one, and on `pagehide` with `fetch(url, { method: 'DELETE', keepalive: true })`. Dismiss the bar in the same `pagehide` listener, so a page restored from the back/forward cache can't offer, undo or resend the committed removal. If the commit fails, put the item back and say so. Give every other snackbar on the page `replace: true` as well, so none waits behind the Undo bar. Keep a confirmation dialog for actions that can't be undone, such as deleting an account.
+
+```js
+let pending = true;
+const commit = () => { if (pending) { pending = false; commitDelete(item); } };
+removeItem(item);
+const bar = new Expressive.Snackbar({
+  text: 'Address deleted',
+  action: 'Undo',
+  replace: true,
+  onAction: () => { if (pending) { pending = false; restoreItem(item); } },
+  completeCallback: commit
+});
+addEventListener('pagehide', () => { commit(); bar.dismiss(); }, { once: true });
 ```
 
 ---
@@ -8624,20 +8739,20 @@ Add `placeholder=" "` (one space) so the label floats with CSS only. A missing p
 
 ```html
 <div class="field">
-  <input id="first_name" type="text" placeholder=" " aria-describedby="first_name_help">
+  <input id="first_name" name="first_name" type="text" autocomplete="given-name" placeholder=" " aria-describedby="first_name_help">
   <label for="first_name">First name</label>
   <small id="first_name_help">Supporting text</small>
 </div>
 
 <div class="field outlined">
-  <input id="last_name" type="text" placeholder=" ">
+  <input id="last_name" name="last_name" type="text" autocomplete="family-name" placeholder=" ">
   <label for="last_name">Last name</label>
 </div>
 
 <div class="field">
   <span class="material-symbols prefix" aria-hidden="true">place</span>
   <span class="material-symbols suffix" aria-hidden="true">gps_fixed</span>
-  <input id="loc" type="text" placeholder=" ">
+  <input id="loc" name="location" type="text" placeholder=" ">
   <label for="loc">Location</label>
 </div>
 ```
@@ -8654,13 +8769,13 @@ Keep the `<label>` after the control, as in a floating field. The grid draws it 
 
 ```html
 <div class="field label-above">
-  <input id="work_email" type="email" placeholder="name@example.com" aria-describedby="work_email_help">
+  <input id="work_email" name="work_email" type="email" autocomplete="email" spellcheck="false" placeholder="name@example.com…" aria-describedby="work_email_help">
   <label for="work_email">Work email</label>
   <small id="work_email_help">We never share it</small>
 </div>
 
 <div class="field label-above outlined">
-  <input id="company" type="text">
+  <input id="company" name="company" type="text" autocomplete="organization">
   <label for="company">Company</label>
 </div>
 ```
@@ -8671,7 +8786,7 @@ Keep the `<label>` after the control, as in a floating field. The grid draws it 
 
 ```html
 <div class="field">
-  <input id="email" type="email" class="validate" placeholder=" " aria-describedby="email_help">
+  <input id="email" name="email" type="email" class="validate" autocomplete="email" spellcheck="false" placeholder=" " aria-describedby="email_help">
   <label for="email">Email</label>
   <small id="email_help" data-error="Enter a valid email">Supporting text</small>
 </div>
@@ -8802,6 +8917,22 @@ Character Counter is not in `AutoInit()`. It reads `maxlength` (not `data-length
 Expressive.CharacterCounter.init(
   document.querySelectorAll('#input_text_counter, #textarea_counter')
 );
+```
+
+### App behavior
+
+Leave submit enabled until submission starts, and put fields in a `<form>` whose first submit button saves, so Enter submits; give Cancel `type="button"`. Mark required fields `required` and give every field with a constraint `class="validate"`, because `novalidate` stops the browser checking the rest. Use `novalidate` and, on submit, call `Expressive.Forms.validateField(input)` on each `.validate` field, which sets `aria-invalid` and shows its `data-error` text beside it, then focus the first field with `aria-invalid="true"` (an enhanced select's visible control). Call `form.checkValidity()` first so enhanced selects mark themselves, and skip fields whose `willValidate` is false. Don't add an `.error-summary` to this form: it cancels the submit before this handler runs. A server error about one field goes into that field's `data-error` text, with `aria-invalid="true"` and focus on the field, and put the field's own message back when it changes. Give every field a `name`. Give a field for the person's own data the one `autocomplete` token for its purpose, and split a field that asks for several. Set `type` for the keyboard, never `type="number"` for phones, codes or card numbers, and `inputmode` where `type` doesn't bring the keyboard. Turn spellcheck off for codes, emails and usernames, allow paste, and check that a `pattern` compiles with the `v` flag the browser uses. Keep `placeholder=" "` for a floating label; put an example ending in `…` in a label-above placeholder or the supporting text.
+
+```js
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  form.checkValidity(); // marks enhanced selects
+  const fields = [...form.elements].filter((field) => field.willValidate && field.classList.contains('validate'));
+  fields.forEach((field) => Expressive.Forms.validateField(field));
+  const first = fields.find((field) => field.getAttribute('aria-invalid') === 'true');
+  if (first) return first.focus();
+  save(new FormData(form));
+});
 ```
 
 ---
@@ -9155,6 +9286,10 @@ The HTML `disabled` attribute on a fieldset disables every control inside it. Th
   <div class="field">…</div>
 </fieldset>
 ```
+
+### App behavior
+
+For how a form with these groups submits, shows its errors and moves focus, follow the App behavior in the text field guide (Text Inputs).
 
 ---
 

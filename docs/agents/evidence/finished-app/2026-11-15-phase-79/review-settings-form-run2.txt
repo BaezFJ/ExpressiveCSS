@@ -1,0 +1,24 @@
+FINDINGS
+- none
+
+CHECKED
+- Lifecycle: no Auto Init registry components are used, so nothing needs `AutoInit()` or `.init()`. Forms is a shared behavior that the root bundle installs on import (`dist/js/chunks/chunk-XX5GQI2T.mjs:234`). Snackbar uses its explicit `new Expressive.Snackbar` path (index.html:164). The classic script loads at the end of `<body>` after the markup (index.html:73-74), and the bundle exposes the global `Expressive` (IIFE header). Nothing uses the retired global `M`, no content is added dynamically, and nothing needs `destroy()`. Pass.
+- Assets and fonts: there is one stylesheet, `dist/css/expressive.min.css`, with `dist/fonts/` present next to `dist/css/`. No Google Fonts link, no Material Icons stylesheet and no `.material-icons` markup. Icons use `.material-symbols` with `aria-hidden="true"` (index.html:56, 62). The JS bundle is needed for `Forms.validateField` and Snackbar. No script sits in `<head>`. Pass.
+- States: the Save button uses `aria-disabled="true"` while pending. The framework CSS styles `[aria-disabled=true]` as disabled across hover, active and focus (expressive.css:2597-2598), and focus stays on the button. No custom CSS removes the focus ring. The loading indicator has `role="status"` and `aria-label="Saving"`. The page has no lists or tables, so no empty state is needed. Client-side errors and server errors (inline alert, per-field message, live status text) are all handled. Pass.
+- WCAG 2.2 from source: every input has a `label[for]`. Supporting text and error text are linked through `aria-describedby`, and `validateField` adds the `[data-error]` id. Errors show in the field's `<small>` through `content: attr(data-error)` (expressive.css:8160ff) and name their field. Groups use fieldset and legend. Decorative icons are hidden. The loading indicator stops animating under `prefers-reduced-motion` (expressive.css:12435-12440). All controls are native and keyboard reachable, and there is no sticky header that could hide focus. 1.3.5: `nickname`, `url`, `email` and `tel` autocomplete are present. Pass in source.
+- finished-app:loading: the label stays "Saving…" (with the … character) beside the check icon. The spinner appears after 300 ms and stays at least 500 ms. The `pending` guard plus `aria-disabled` stops a second press (index.html:140, 153-155). Pass.
+- finished-app:submit-flow: all fields sit inside a `<form>` with `type="submit"`, so Enter submits. The button is not disabled before submission starts. With `novalidate`, the script validates every field and focuses the first invalid one (index.html:146-151). A server error marks the email field and moves focus there (index.html:166-171). No field blocks paste. Every field has a `name`. Types and inputmode fit their keyboards (`url` with `inputmode="url"`, `email`, `tel`). Placeholders are the floating-label `" "`. No spellcheck applies to codes or usernames. Pass.
+- finished-app:destructive: not applicable, the page has no remove or discard action.
+- finished-app:url-state: not applicable, the page has no tabs, filters, search or pages.
+
+BLOCKED
+- Text contrast (4.5:1), UI boundary contrast (3:1) for the filled fields, the error color on supporting text and the aria-disabled button: no browser route, so these could not be measured.
+- Target size for the Save button (2.5.8, and Material's 48dp) and focus-visible ring appearance: no rendered evidence. The source shows a default button with no size overrides.
+- Focus not obscured (2.4.11), reflow and zoom: not rendered.
+- Spoken delivery: whether the `role="status"` indicator announces "Saving" when it is un-hidden, whether `#save-status` repeats an identical message on a second failed submit after being cleared in the same task, and whether the `::after` `attr(data-error)` text is exposed in the field's accessible description. These need an accessibility-tree check and assistive-technology verification.
+- Runtime console (duplicate init, missing targets) and the 1500 ms stub flow: the brief says not to run commands, and there is no browser.
+- No expressivecss-mcp server is connected, so `quality_inspector` static checks were not run.
+
+HANDOFFS
+- Component syntax: confirm `alert critical` with a bare `<p>` and an icon span is the documented Alert markup for an inline form error (index.html:55-58).
+- Component syntax: confirm the inline `--md-comp-loading-indicator-container-size: 40px` style on the uncontained indicator is a supported token override (index.html:64-65).

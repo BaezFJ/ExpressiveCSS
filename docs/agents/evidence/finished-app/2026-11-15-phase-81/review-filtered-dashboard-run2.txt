@@ -1,0 +1,23 @@
+FINDINGS
+- [critical] index.html:203-224 (`applyFilter`, the `[data-meta]` paragraph at line 80, the `[data-tab-label]` counts at line 216, and the `.empty-state` at lines 110-117) | source | 4.1.3 | Typing in "Filter by customer" changes the result count ("N of M … orders match"), the per-tab counts, and swaps the table for the "No … orders match" empty state. None of these sit in a live region, so screen reader users get no feedback while they type. The only live region is the page status `<output>` (line 101), and it announces "1 / N", which says nothing about how many rows match. | Put `role="status" aria-live="polite"` on the `[data-meta]` paragraph, or on a single visually hidden status outside the panels that holds the active panel's count and the no-match message. Keep it to one announcement per change, not one per panel.
+
+CHECKED
+- Lifecycle: the IIFE bundle loads at the end of `<body>`. The panels are cloned and appended before `Expressive.AutoInit()` runs once (line 252). Nothing calls a manual `.init()`, nothing uses the global `M`, and nothing is added or removed after init, so no `destroy()` is owed. `DataTables.sync`/`showPage` run after init.
+- Assets and fonts: one compiled stylesheet. `dist/fonts/` sits next to `dist/css/` and contains the Material Symbols outlined/rounded/sharp, Roboto and Noto Sans files. There are no Google Fonts links, no Material Icons stylesheet and no `.material-icons` markup. The JS bundle is justified because Tabs and DataTables need it, and it is not render-blocking in `<head>`.
+- States: there is no custom CSS that removes focus. No native control is disabled with a class. In the bundled `dist/js/chunks/chunk-QG5JEWBJ.mjs:338-343`, the table page buttons get `aria-disabled` at the ends, so focus stays on the control. Each panel has an empty state with a Clear filter action, which moves focus back to the input. Data is local and synchronous, so no loading or error state applies.
+- WCAG names, landmarks, labels and keyboard: the icon-only page buttons have `aria-label`. Decorative icons have `aria-hidden`. The search field has a `<label for>` and its help text is tied by `aria-describedby`. The scroll wrappers are `role="region"`, tabbable, and labelled by their captions. Each table pagination nav and page status has its own name. The tab links are native anchors. A skip link targets `main[tabindex=-1]`. The header is not sticky, so nothing obscures focus (2.4.11 is likely fine). Tab motion uses the component spring, which stops under reduced motion.
+- finished-app:url-state passes. View, filter text and page are written with `history.replaceState` and restored on load (lines 232-257). Tabs calls `preventDefault` on link clicks (`dist/js/expressive.js:15525`), so no history entries are pushed, and the page needs no popstate or hashchange handling. Filter and sort clear `page` to match the framework's reset to the first page.
+- finished-app:loading: not applicable, because no command runs a request in script.
+- finished-app:destructive: not applicable, because there is no remove or discard action.
+- finished-app:submit-flow: not applicable, because there is no form, only a live client-side filter with nothing to submit.
+
+BLOCKED
+- Contrast of the `on-surface-variant-text` meta and helper text, the page status `<output>` colour, and the aria-disabled page button styling. These need rendered measurement and there is no browser route.
+- Target size of the sort header buttons in `th` (Customer, Date, Total). The page buttons are set to 48px through `--md-comp-pagination-size`, and the tab links are 48dp by contract, but none of these is measured.
+- Focus-visible rendering on the tabbable scroll region, the sort buttons, the tab links and the aria-disabled page buttons. Not observed without a browser.
+- Whether keyboard arrow navigation in Tabs (`_followFocus`) fires `expressive:change`, so that arrow-key selection also writes `view` to the URL. The source suggests it does, but this was not exercised.
+- Spoken output of the sort state changes and the page status announcements.
+
+HANDOFFS
+- Page architect: `<nav aria-label="Store">` (index.html:41-43) holds only a heading and no links, so it is an empty navigation landmark. The site name is an `<h2>` placed before the page's `<h1>`, which puts the heading order out of sequence.
+- Component syntax: if a URL carries a hash that matches a tab id, Tabs gives it precedence over the `.active` the page sets from `?view=` (`dist/js/expressive.js:15753-15754`). Consider dropping or normalising the hash in `writeUrl` so `view` stays the single source of the selected tab.

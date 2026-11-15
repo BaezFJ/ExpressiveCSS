@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en" theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orders | Sample store</title>
+  <link rel="stylesheet" href="dist/css/expressive.min.css">
+  <style>
+    body { margin: 0; }
+    main { min-width: 0; }
+
+    /* Dashboard surfaces: tokens are set on the component element itself. */
+    .dashboard { padding: 16px; }
+    @media (width >= 600px) { .dashboard { padding: 24px; } }
+    .dashboard :is(article, .stats) {
+      --md-comp-filled-card-container-color: var(--md-sys-color-surface-container);
+      --md-comp-card-container-shape: 24px;
+      --md-comp-card-content-padding: 24px;
+      --md-comp-card-subhead-color: var(--md-sys-color-on-surface-variant);
+      --md-comp-stat-container-color: var(--md-sys-color-surface-container);
+      --md-comp-stat-shape: 24px;
+    }
+    .dashboard .tab-panel { padding-top: 16px; }
+    .dashboard .tab-panel .data-table { margin: 0; }
+
+    /* Filter row: search field beside the live match count. */
+    .order-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+    .order-filter .field { flex: 1 1 260px; max-width: 420px; margin: 0; }
+
+    /* Page controls sit under the rows, at the start edge of the scroll region. */
+    .data-table > .pagination {
+      position: sticky;
+      inset-inline-start: 0;
+      justify-content: flex-end;
+      padding: 8px 8px;
+      border-top: 1px solid var(--md-sys-color-outline-variant);
+    }
+    .data-table > .pagination output {
+      display: inline-flex;
+      align-items: center;
+      min-height: 48px;
+      padding: 0 12px;
+      font-variant-numeric: tabular-nums;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+  </style>
+</head>
+<body>
+  <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+  <header>
+    <nav aria-label="Workspace">
+      <h2>Sample store</h2>
+    </nav>
+  </header>
+
+  <main id="main" class="dashboard" tabindex="-1">
+    <div class="mb-4">
+      <h1 class="headline-medium my-0">Orders</h1>
+      <p class="body-medium on-surface-variant-text my-0">Sample data · 40 orders from the last 60 days</p>
+    </div>
+
+    <section aria-labelledby="kpi-title" class="mb-5">
+      <h2 id="kpi-title" class="visually-hidden">Orders by state</h2>
+      <dl class="stats my-0" id="order-stats"></dl>
+    </section>
+
+    <section aria-labelledby="orders-title">
+      <h2 id="orders-title" class="title-large mb-1 mt-0">Orders by state</h2>
+      <p class="body-medium on-surface-variant-text mt-0 mb-4">Totals in US dollars · 10 orders per page</p>
+
+      <div class="order-filter mb-4">
+        <div class="field outlined">
+          <span class="material-symbols prefix" aria-hidden="true">search</span>
+          <input id="customer-filter" name="customer" type="search" placeholder=" " autocomplete="off" spellcheck="false" aria-describedby="customer-filter-help">
+          <label for="customer-filter">Filter by customer</label>
+          <small id="customer-filter-help">Matches any part of the customer name</small>
+        </div>
+        <p class="body-medium on-surface-variant-text my-0">
+          <output id="match-count" role="status" aria-live="polite" aria-label="Matching orders">40 orders</output>
+        </p>
+      </div>
+
+      <nav class="tabs" id="order-tabs" aria-label="Order state">
+        <a class="active" aria-current="page" href="#open" data-state="Open">
+          <span class="material-symbols" aria-hidden="true">pending_actions<span class="badge"></span></span>
+          <span>Open</span>
+        </a>
+        <a href="#shipped" data-state="Shipped">
+          <span class="material-symbols" aria-hidden="true">local_shipping<span class="badge"></span></span>
+          <span>Shipped</span>
+        </a>
+        <a href="#returned" data-state="Returned">
+          <span class="material-symbols" aria-hidden="true">assignment_return<span class="badge"></span></span>
+          <span>Returned</span>
+        </a>
+      </nav>
+
+      <div id="open" class="tab-panel" data-state="Open"></div>
+      <div id="shipped" class="tab-panel" data-state="Shipped"></div>
+      <div id="returned" class="tab-panel" data-state="Returned"></div>
+    </section>
+  </main>
+
+  <template id="panel-template">
+    <div class="data-table dense" data-sort data-page-size="10" role="region" tabindex="0">
+      <table>
+        <caption class="visually-hidden"></caption>
+        <thead>
+          <tr>
+            <th scope="col"><button type="button" class="text-nowrap">Order</button></th>
+            <th scope="col"><button type="button">Customer</button></th>
+            <th scope="col" class="text-nowrap" aria-sort="descending"><button type="button">Date</button></th>
+            <th scope="col" class="numeric"><button type="button">Total</button></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <nav class="pagination nowrap">
+        <ol>
+          <li><button type="button" data-table-page="previous" aria-label="Previous page"><span class="material-symbols" aria-hidden="true">chevron_left</span></button></li>
+          <li><output data-table-page-status role="status" aria-live="polite" aria-label="Pages">1 / 1</output></li>
+          <li><button type="button" data-table-page="next" aria-label="Next page"><span class="material-symbols" aria-hidden="true">chevron_right</span></button></li>
+        </ol>
+      </nav>
+    </div>
+    <div class="empty-state" hidden>
+      <span class="material-symbols" aria-hidden="true">search_off</span>
+      <h3></h3>
+      <p>Try a different name, or clear the filter to see every order in this state.</p>
+      <div class="empty-state-actions">
+        <button type="button" class="outlined clear-filter">Clear filter</button>
+      </div>
+    </div>
+  </template>
+
+  <script src="dist/js/expressive.min.js"></script>
+  <script>
+    // ---- Sample data: 40 orders from a seeded generator, so every load matches. ----
+    const STATES = ['Open', 'Shipped', 'Returned'];
+    const CUSTOMERS = [
+      'Amara Okafor', 'Ben Whitaker', 'Chloé Martin', 'Diego Hernández', 'Elif Yılmaz',
+      'Farah Siddiqui', 'Gabriel Costa', 'Hana Kobayashi', 'Isaac Mensah', 'Julia Novak',
+      'Kai Andersen', 'Lena Fischer', 'Mateo Rossi', 'Nadia Petrov', 'Omar Haddad', 'Priya Nair'
+    ];
+    function seeded(seed) {
+      return () => {
+        seed = (seed + 0x6D2B79F5) | 0;
+        let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+    const random = seeded(20261115);
+    const today = Date.UTC(2026, 10, 15);
+    const DAY = 86400000;
+    const orders = Array.from({ length: 40 }, (_, i) => {
+      const roll = random();
+      return {
+        id: `ORD-${1001 + i}`,
+        customer: CUSTOMERS[Math.floor(random() * CUSTOMERS.length)],
+        date: new Date(today - Math.floor(random() * 60) * DAY),
+        total: Math.round((18 + random() * 880) * 100) / 100,
+        state: roll < 0.45 ? 'Open' : roll < 0.85 ? 'Shipped' : 'Returned'
+      };
+    });
+
+    const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+    const shortDate = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+    const count = new Intl.NumberFormat('en-US');
+    const plural = (n, word) => `${count.format(n)} ${word}${n === 1 ? '' : 's'}`;
+
+    // ---- Key figures ----
+    const stats = document.getElementById('order-stats');
+    const tile = (label, value, detail) => {
+      const div = document.createElement('div');
+      const dt = document.createElement('dt');
+      const dd = document.createElement('dd');
+      dt.textContent = label;
+      dd.textContent = value;
+      div.append(dt, dd);
+      if (detail) {
+        const note = document.createElement('dd');
+        note.className = 'stat-change';
+        note.textContent = detail;
+        div.append(note);
+      }
+      stats.append(div);
+    };
+    const sum = (list) => list.reduce((total, order) => total + order.total, 0);
+    tile('All orders', count.format(orders.length), `${money.format(sum(orders))} total`);
+    for (const state of STATES) {
+      const list = orders.filter((order) => order.state === state);
+      tile(`${state} orders`, count.format(list.length), `${money.format(sum(list))} total`);
+    }
+
+    // ---- Build one locally paged table per tab panel ----
+    const template = document.getElementById('panel-template');
+    const panels = [...document.querySelectorAll('.tab-panel')];
+    for (const panel of panels) {
+      const state = panel.dataset.state;
+      panel.append(template.content.cloneNode(true));
+      const wrapper = panel.querySelector('.data-table');
+      const caption = wrapper.querySelector('caption');
+      caption.id = `${panel.id}-caption`;
+      caption.textContent = `${state} orders`;
+      wrapper.setAttribute('aria-labelledby', caption.id);
+      wrapper.querySelector('.pagination').setAttribute('aria-label', `${state} orders pages`);
+      const body = wrapper.querySelector('tbody');
+      orders
+        .filter((order) => order.state === state)
+        .sort((a, b) => b.date - a.date)
+        .forEach((order) => {
+          const row = body.insertRow();
+          row.dataset.customer = order.customer.toLocaleLowerCase('en-US');
+          const id = document.createElement('th');
+          id.scope = 'row';
+          id.className = 'text-nowrap';
+          id.textContent = order.id;
+          row.append(id);
+          row.insertCell().textContent = order.customer;
+          const date = row.insertCell();
+          date.className = 'text-nowrap';
+          date.dataset.value = order.date.toISOString().slice(0, 10);
+          date.textContent = shortDate.format(order.date);
+          const total = row.insertCell();
+          total.className = 'numeric';
+          total.textContent = money.format(order.total);
+        });
+    }
+
+    // ---- Customer filter: hides non-matching rows in every panel, then re-pages. ----
+    const input = document.getElementById('customer-filter');
+    const matchCount = document.getElementById('match-count');
+    const tabs = document.getElementById('order-tabs');
+
+    function applyFilter() {
+      const query = input.value.trim().toLocaleLowerCase('en-US');
+      let total = 0;
+      for (const panel of panels) {
+        const wrapper = panel.querySelector('.data-table');
+        const rows = [...wrapper.querySelector('table').tBodies[0].rows];
+        let shown = 0;
+        for (const row of rows) {
+          const match = !query || row.dataset.customer.includes(query);
+          row.hidden = !match;
+          if (match) shown++;
+        }
+        total += shown;
+        const empty = panel.querySelector('.empty-state');
+        empty.hidden = shown > 0;
+        wrapper.hidden = shown === 0;
+        empty.querySelector('h3').textContent = `No ${panel.dataset.state.toLowerCase()} orders for “${input.value.trim()}”`;
+        Expressive.DataTables.sync(wrapper);
+        Expressive.DataTables.showPage(wrapper, 1);
+
+        const tab = tabs.querySelector(`a[href="#${panel.id}"]`);
+        tab.querySelector('.badge').textContent = count.format(shown);
+        tab.setAttribute('aria-label', `${panel.dataset.state}, ${plural(shown, 'order')}`);
+      }
+      matchCount.textContent = query
+        ? `${plural(total, 'order')} match “${input.value.trim()}”`
+        : plural(total, 'order');
+    }
+
+    function writeUrl(changes) {
+      const url = new URL(location.href);
+      for (const [key, value] of Object.entries(changes)) {
+        if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
+      }
+      if (panels.some((panel) => `#${panel.id}` === url.hash)) url.hash = '';
+      history.replaceState(null, '', url);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Restore tab and filter from the URL before initializing.
+      const params = new URLSearchParams(location.search);
+      const saved = params.get('view');
+      const link = saved && tabs.querySelector(`a[href="#${CSS.escape(saved)}"]`);
+      if (link) {
+        const current = tabs.querySelector('a.active');
+        current?.classList.remove('active');
+        current?.removeAttribute('aria-current');
+        link.classList.add('active');
+        link.setAttribute('aria-current', 'page');
+      }
+      input.value = params.get('q') ?? '';
+
+      Expressive.AutoInit();
+      applyFilter();
+
+      let typing;
+      input.addEventListener('input', () => {
+        applyFilter();
+        clearTimeout(typing);
+        typing = setTimeout(() => writeUrl({ q: input.value.trim() }), 300);
+      });
+
+      tabs.addEventListener('expressive:change', (event) => {
+        if (event.target !== tabs) return;
+        tabs.querySelectorAll('a').forEach((a) => {
+          if (a.hash === `#${event.detail.panel.id}`) a.setAttribute('aria-current', 'page');
+          else a.removeAttribute('aria-current');
+        });
+        writeUrl({ view: event.detail.panel.id });
+      });
+
+      document.querySelectorAll('.clear-filter').forEach((button) => {
+        button.addEventListener('click', () => {
+          input.value = '';
+          applyFilter();
+          clearTimeout(typing);
+          writeUrl({ q: '' });
+          input.focus();
+        });
+      });
+    });
+  </script>
+</body>
+</html>
