@@ -561,6 +561,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed a --md-sys-typescale-{role}-font shorthand token for each of the 15 roles, built from the role's longhand tokens: 91,770 gzip bytes (+325).
   // Reviewed .scaffold (window-height grid areas, child and region-class placement, the pane scroller and its scroll timeline, scrolling custom rail and trailing content, the rail's height override, the trailing toolbar's position, the app bar's private timeline property, print): 92,076 gzip bytes (+306).
   // Reviewed .scaffold.tall-rail (full-height rail and trailing areas, bar over the pane): 92,098 gzip bytes (+22).
-  // Reviewed the scaffold's medium rail overlay and its held rail column, released for a hidden rail: 92,205 gzip bytes (+107).
+  // Reviewed the scaffold's medium rail overlay, its held rail column (released for a hidden rail) and the snapping collapse: 92,225 gzip bytes (+127).
   assert.ok(sizes(css).gzip <= 92225, `CSS gzip: ${sizes(css).gzip}`);
 });
