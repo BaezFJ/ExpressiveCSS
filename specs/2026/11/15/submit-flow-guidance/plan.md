@@ -33,4 +33,4 @@ Done when V3 passes.
 
 Covers R7. Checks V4.
 
-- [ ] `npm run verify`, `npm test --prefix mcp/expressivecss`.
+- [x] `npm run verify`, `npm test --prefix mcp/expressivecss`.
