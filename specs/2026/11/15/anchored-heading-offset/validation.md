@@ -20,3 +20,5 @@ None.
 All agent-run checks pass, the milestone PR's required CI checks pass, and the repository's reviews are done.
 
 ## Review record
+
+- 2026-11-15, spec review by an independent read-only subagent (Plan agent). Five defects, all addressed: subtitle heights are medium 136 and large 152, keyed on `hgroup > p`; a collapsed flexible bar falls back to the small offset; the root rule is scoped to `body > header` so demos in articles, cards and dialogs don't count; values use `rem()` so a larger font keeps up; the docs name the wrapping small bar as a case to override. Also adopted: the token is `--md-comp-top-app-bar-anchor-offset` so the tokens test covers it; headings in dialogs are left out; the migration note covers an existing `scroll-padding-top`; the docs page is `navbar.astro`; V1 gains the large-with-subtitle, demo-only and dialog cases.
