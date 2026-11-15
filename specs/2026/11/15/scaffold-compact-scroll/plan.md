@@ -6,7 +6,7 @@ Build before every test run. Don't run two test suites at once.
 
 ## 1. Compact layout
 
-Covers R1 to R8b. Checks V1 to V6a.
+Covers R1 to R8b. Checks V1 to V6a, V4a.
 
 - [ ] Add compact browser tests to `tests/scaffold-browser.test.js` for V1 to V6a. Watch V1, V3 and V4 fail before the change.
 - [ ] `_scaffold.scss`: the compact grid, document scrolling, the navigation bar region (hidden from 600px), the hidden collapsed rail and `.scaffold-rail`, the `.modal` held column and the bar timeline from 600px only, and the header comment.

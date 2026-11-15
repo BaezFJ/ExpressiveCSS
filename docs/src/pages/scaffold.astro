@@ -224,13 +224,24 @@ const S = defineSections([
           <code>.hide-on-compact-only</code> on the rail: it would keep the
           rail from ever opening.
         </p>
+        <p>
+          When the scaffold is a direct child of <code>&lt;body&gt;</code>,
+          the document gets scroll padding below 600px, so keyboard focus and
+          links to anchors land clear of the two pinned bars. The padding fits
+          the small app bar and a navigation bar with one-line labels; set a
+          larger <code>scroll-padding-block</code> on <code>:root</code> for
+          taller bars.
+        </p>
 <Code code={`
 <div class="scaffold">
   <header>…</header>
   <nav class="navigation-rail" id="rail" aria-label="Primary">…</nav>
   <main id="main" tabindex="-1">…</main>
   <footer>
-    <nav class="navigation-bar" aria-label="Primary">…</nav>
+    <nav class="navigation-bar" aria-label="Primary">
+      <a href="/inbox" aria-current="page"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a>
+      <a href="/starred"><span class="material-symbols" aria-hidden="true">star</span>Starred</a>
+    </nav>
   </footer>
 </div>
 `} />

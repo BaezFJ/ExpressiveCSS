@@ -564,5 +564,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the scaffold's medium rail overlay, its held rail column (released for a hidden rail), the snapping collapse and the overlay flag the runtime reads: 92,242 gzip bytes (+144).
   // Reviewed the scaffold's compact layout (document scrolling, the pinned navigation bar region, the hidden rail): 92,350 gzip bytes (+108).
   // Reviewed the compact scaffold's pinned custom bar and unstretched trailing toolbar: 92,373 gzip bytes (+23).
-  assert.ok(sizes(css).gzip <= 92373, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed compact scroll padding that keeps focus clear of the pinned bars: 92,421 gzip bytes (+48).
+  assert.ok(sizes(css).gzip <= 92421, `CSS gzip: ${sizes(css).gzip}`);
 });

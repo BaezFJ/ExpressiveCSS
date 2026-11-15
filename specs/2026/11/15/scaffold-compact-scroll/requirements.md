@@ -55,6 +55,7 @@ From 600px up the navigation bar region is hidden, and nothing else changes.
 - **R3** A direct-child `nav.navigation-bar`, or a `<footer>` holding one, spans the window width and stays at the bottom edge while the window scrolls, above the content. From 600px up it is `display: none`.
 - **R4** Below 600px a collapsed rail, and a `.scaffold-rail`, are `display: none`, and none of the rail's destinations can take focus. Activating the app bar's `aria-controls` button expands the rail as a fixed overlay with a scrim. Escape collapses it and returns focus to the button, and a scrim tap collapses it.
 - **R5** In engines with scroll-driven animations, the app bar's scrolled fill follows the window's scroll below 600px (progress 0 at the top, 1 after scrolling).
+- **R5a** Below 600px, when the scaffold is a direct child of `<body>`, the document's `scroll-padding-block` keeps a control that keyboard focus reaches clear of the pinned app bar and navigation bar.
 - **R6** The trailing region follows the pane in flow below 600px and is reachable by scrolling. A vertical toolbar there keeps its own width at the inline end instead of stretching across the window.
 - **R7** A `.tall-rail` scaffold uses the same compact layout.
 - **R8** From 600px up the layout matches phases 88 to 91; their tests pass unchanged. At 599px the compact layout applies (the navigation bar shows, the rail is hidden); at 600px the medium layout does (the navigation bar is hidden, the rail holds its column). A `.modal` rail holds no column below 600px.

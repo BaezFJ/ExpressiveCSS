@@ -5134,7 +5134,7 @@ Put a `panes` layout inside `<main>`, or put the panes classes on `<main>` itsel
 </main>
 ```
 
-Below 600px the document scrolls instead, so a phone's address bar can collapse: the bar region (the app bar or `scaffold-bar`) stays pinned at the top, a `nav.navigation-bar` that is a direct child of the scaffold, or the only child of its direct-child `<footer>`, stays pinned at the bottom and shows only below 600px, and the rail and any `scaffold-rail` are hidden until the app bar's `aria-controls` menu button opens the rail as an overlay. The app bar needs that button. Don't put `hide-on-compact-only` on the rail, which would keep it from opening. Landscape phones wider than 600px get the medium layout. A panes layout in `<main>` grows with its content below 600px.
+Below 600px the document scrolls instead, so a phone's address bar can collapse: the bar region (the app bar or `scaffold-bar`) stays pinned at the top, a `nav.navigation-bar` that is a direct child of the scaffold, or the only child of its direct-child `<footer>`, stays pinned at the bottom and shows only below 600px, and the rail and any `scaffold-rail` are hidden until the app bar's `aria-controls` menu button opens the rail as an overlay. The app bar needs that button. Don't put `hide-on-compact-only` on the rail, which would keep it from opening. When the scaffold is a direct child of `<body>`, the document gets `scroll-padding-block` below 600px so keyboard focus and anchors land clear of both pinned bars; taller bars need a larger padding on `:root`. Landscape phones wider than 600px get the medium layout. A panes layout in `<main>` grows with its content below 600px.
 
 ```html
 <div class="scaffold">
@@ -5142,7 +5142,10 @@ Below 600px the document scrolls instead, so a phone's address bar can collapse:
   <nav class="navigation-rail" id="rail" aria-label="Primary">…</nav>
   <main id="main" tabindex="-1">…</main>
   <footer>
-    <nav class="navigation-bar" aria-label="Primary">…</nav>
+    <nav class="navigation-bar" aria-label="Primary">
+      <a href="/inbox" aria-current="page"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a>
+      <a href="/starred"><span class="material-symbols" aria-hidden="true">star</span>Starred</a>
+    </nav>
   </footer>
 </div>
 ```
