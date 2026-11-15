@@ -284,13 +284,13 @@
       "sources": [
         {
           "path": "src/sass/components/_scaffold.scss",
-          "sha256": "f3da896a77de96fff49b8eb7ebf6f61d0a653f3c0448347b5050c6651fa2cc88"
+          "sha256": "1f92a4dedab2df519c9a9b8fd721158361153b2c3e47eabd30270b0317f50be3"
         }
       ],
       "gaps": [
         {
           "kind": "verification",
-          "description": "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding, and the status bar's row and compact hiding, and the floating pane's colors, corners and gaps; spoken output and a mobile browser's collapsing address bar remain unverified.",
+          "description": "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding, and the status bar's row and compact hiding, and the floating pane's colors, corners and gaps, and the side sheet column; spoken output and a mobile browser's collapsing address bar remain unverified.",
           "nextStep": "Move through a scaffold page by landmarks with a screen reader, and scroll the pane in a phone browser whose address bar collapses."
         }
       ],

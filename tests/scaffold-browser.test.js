@@ -238,7 +238,7 @@ for (const [name, type, run] of engines) {
     try {
       const measure = () => Promise.all(['#rail', '#bar', '#pane', '#tools'].map(box));
       let [nav, bar, main, tb] = await measure();
-      assert.equal((await style('#s', 'gridTemplateAreas')).replace(/\s+/g, ' '), '"rail bar sheet trailing" "rail pane sheet trailing" "status status status status"');
+      assert.equal((await style('#s', 'gridTemplateAreas')).replace(/\s+/g, ' '), '"rail bar trailing" "rail pane trailing" "status status status"');
       assert.deepEqual([nav.left, nav.top], [0, 0], 'the rail starts at the top leading corner');
       near(nav.bottom, 800, 'the rail reaches the window bottom');
       near(bar.left, nav.right, 'the bar starts at the rail');
@@ -927,6 +927,32 @@ for (const [name, type, run] of engines) {
     }
   });
 
+  run(`${name}: the sheet column scrolls long content, stays above a fixed toolbar, and leaves no cell for stray children`, { timeout: 30000 }, async () => {
+    // Many lines: a flex item with only an explicit height would shrink to fit.
+    const long = sheet().replace('<p>Body</p>', `${'<p>Line</p>'.repeat(60)}<p id="end">End</p>`);
+    const { browser, tab, box, style } = await open(type, page(`<div id="host">${withSheet({}, long)}</div>`), { width: 1440 });
+    try {
+      await tab.locator('#sheet').evaluate((el) => el.show());
+      assert.ok(await tab.locator('#sheet').evaluate((el) => { el.scrollTop = el.scrollHeight; return el.scrollTop > 0; }), 'the sheet scrolls its content');
+      assert.ok((await box('#end')).bottom <= 801, 'down to its last content');
+      const fixed = tools().replace('class="toolbar vertical"', 'class="toolbar vertical fixed right"');
+      await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, withSheet({ trailing: fixed }));
+      await tab.locator('#sheet').evaluate((el) => el.show());
+      const t = await box('#t0');
+      assert.equal(await tab.evaluate(([x, y]) => document.elementFromPoint(x, y)?.closest('#sheet') ? 'sheet' : 'other', [t.left + t.width / 2, t.top + t.height / 2]), 'sheet', 'the sheet stays above a fixed toolbar, as its overlay did');
+      await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, scaffold({ main: pane + '<p id="stray" style="width:300px">Stray</p>' }));
+      const before = await box('#pane');
+      assert.ok(before.width > 900, 'with no sheet open, a stray child does not take a sheet cell next to the pane');
+      await tab.setViewportSize({ width: 1200, height: 800 });
+      await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, withSheet());
+      await tab.locator('#rail').evaluate((el) => el.classList.add('expanded'));
+      await tab.locator('#sheet').evaluate((el) => el.show());
+      assert.ok((await box('#pane')).width >= 300, `beside an expanded rail at 1200px the pane keeps a usable width: ${(await box('#pane')).width}`);
+    } finally {
+      await browser.close();
+    }
+  });
+
   run(`${name}: below 1200px, and modal, leading or hidden sheets, stay out of the column`, { timeout: 30000 }, async () => {
     const { browser, tab, box, style } = await open(type, page(`<div id="host">${withSheet()}</div>`), { width: 1000 });
     try {
@@ -946,8 +972,10 @@ for (const [name, type, run] of engines) {
         await tab.locator('#sheet').evaluate((el) => el.close());
       }
       await tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, withSheet({}, sheet('', ' hidden')));
+      const shown = await box('#pane');
       await tab.locator('#sheet').evaluate((el) => el.show());
       assert.equal(await style('#sheet', 'display'), 'none', 'a hidden sheet stays hidden');
+      assert.deepEqual(await box('#pane'), shown, 'and leaves the pane and its toolbar gap alone');
     } finally {
       await browser.close();
     }

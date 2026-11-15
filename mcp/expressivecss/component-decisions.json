@@ -444,7 +444,7 @@
           "documentedSupport": "A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay. A trailing vertical toolbar floats there as a centered row above the navigation bar. A status bar takes a full-width row along the bottom from 600px up. From 600px up the pane floats as a rounded surface on a surface-container shell. From 1200px up an open standard side sheet becomes a third column.",
           "webAdaptation": "CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.",
           "limitations": [
-            "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding, and the status bar's row and compact hiding, and the floating pane's colors, corners and gaps; spoken output and a mobile browser's collapsing address bar remain unverified."
+            "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding, and the status bar's row and compact hiding, and the floating pane's colors, corners and gaps, and the side sheet column; spoken output and a mobile browser's collapsing address bar remain unverified."
           ]
         },
         "relationship": "pattern",
@@ -473,13 +473,13 @@
         "sources": [
           {
             "path": "src/sass/components/_scaffold.scss",
-            "sha256": "f3da896a77de96fff49b8eb7ebf6f61d0a653f3c0448347b5050c6651fa2cc88"
+            "sha256": "1f92a4dedab2df519c9a9b8fd721158361153b2c3e47eabd30270b0317f50be3"
           }
         ],
         "gaps": [
           {
             "kind": "verification",
-            "description": "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding, and the status bar's row and compact hiding, and the floating pane's colors, corners and gaps; spoken output and a mobile browser's collapsing address bar remain unverified.",
+            "description": "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding, and the status bar's row and compact hiding, and the floating pane's colors, corners and gaps, and the side sheet column; spoken output and a mobile browser's collapsing address bar remain unverified.",
             "nextStep": "Move through a scaffold page by landmarks with a screen reader, and scroll the pane in a phone browser whose address bar collapses."
           }
         ],
