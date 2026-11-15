@@ -8,8 +8,8 @@ Covers R1, R2, R5, R7. Checks V1.
 
 Prerequisites: phase 77.
 
-- [ ] Write `docs/agents/finished-app-evals.md` with the three prompts, both commands, the directory layouts, both briefs, the time limit, the confirmation, severity and counting rules, the rebuild steps for later phases, and an empty results table.
-- [ ] Check the prompts and the build brief for the R1 word list.
+- [x] Write `docs/agents/finished-app-evals.md` with the three prompts, both commands, the directory layouts, both briefs, the time limit, the confirmation, severity and counting rules, the rebuild steps for later phases, and an empty results table.
+- [x] Check the prompts and the build brief for the R1 word list.
 
 Done when V1 passes.
 
@@ -19,7 +19,7 @@ Covers R3, R8. Checks V2.
 
 Prerequisites: group 1 and `npm run build` at a committed HEAD.
 
-- [ ] Commit group 1 so the recorded commit holds the briefs.
+- [x] Commit group 1 so the recorded commit holds the briefs.
 - [ ] For each prompt and run, make a scratch directory with a copy of `dist/` and of `skills/expressivecss` as `expressivecss/`, and run the build command there with `timeout 1800`, at most three at once.
 - [ ] After each build, check `git status` in the repository, hash the app files, and copy them unchanged into the evidence directory.
 
