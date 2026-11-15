@@ -32,9 +32,10 @@ const COMPACT = '(width < 600px)';
 // doesn't style a first-child .icon-button as the toggle, but it still toggles.
 const TOGGLE = ':scope > button:first-child:not(.button, [popovertarget])';
 
-// Rendered: checkVisibility also sees display:none from a stylesheet; jsdom lacks it.
-const shown = (el: Element) => el.checkVisibility?.() ?? !el.closest('[hidden]');
-const operable = (button: HTMLButtonElement) => !button.disabled && !button.closest('[inert]');
+// Rendered: checkVisibility also sees display:none and visibility:hidden from a stylesheet; jsdom lacks it.
+const shown = (el: Element) => el.checkVisibility?.({ visibilityProperty: true }) ?? !el.closest('[hidden]');
+// :disabled also covers a button inside a disabled <fieldset>.
+const operable = (button: HTMLButtonElement) => !button.matches(':disabled') && !button.closest('[inert]');
 /** The IDs a button's aria-controls lists; none once the attribute is removed. */
 const controlledIds = (button: Element) => (button.getAttribute('aria-controls') ?? '').split(/\s+/);
 /** A button focus can return to: still in the page, enabled, shown and not inert. */

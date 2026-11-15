@@ -372,20 +372,23 @@ describe('NavigationRail outside toggles', () => {
     }
   });
 
-  test('Escape skips an inert opener', () => {
-    document.body.innerHTML = `<button id="a1" aria-controls="rail">A1</button><div id="wrap"><button id="a2" aria-controls="rail">A2</button></div>
-      <nav class="navigation-rail modal" id="rail" aria-label="Main"><a href="#a">A</a></nav>`;
-    const rail = Expressive.NavigationRail.init(document.querySelector('#rail'));
-    try {
-      click(document.querySelector('#a2'));
-      document.querySelector('#wrap').setAttribute('inert', '');
-      document.querySelector('#rail a').focus();
-      escape();
-      assert.equal(document.activeElement, document.querySelector('#a1'));
-    } finally {
-      rail.destroy();
-    }
-  });
+  for (const [how, block] of [['an inert', (wrap) => wrap.setAttribute('inert', '')], ['a fieldset-disabled', (wrap) => { wrap.disabled = true; }]]) {
+    test(`Escape skips ${how} opener`, () => {
+      document.body.innerHTML = `<button id="a1" aria-controls="rail">A1</button><fieldset id="wrap"><button id="a2" aria-controls="rail">A2</button></fieldset>
+        <nav class="navigation-rail modal" id="rail" aria-label="Main"><a href="#a">A</a></nav>`;
+      const rail = Expressive.NavigationRail.init(document.querySelector('#rail'));
+      try {
+        click(document.querySelector('#a2'));
+        block(document.querySelector('#wrap'));
+        document.querySelector('#rail a').focus();
+        escape();
+        assert.equal(rail.isExpanded, false);
+        assert.equal(document.activeElement, document.querySelector('#a1'));
+      } finally {
+        rail.destroy();
+      }
+    });
+  }
 
   test('only a first-child button is the inside toggle', () => {
     document.body.innerHTML = `<nav class="navigation-rail" id="r1" aria-label="One"><a href="#a">A</a><a href="#b">B</a><button id="dest" type="button">Dest</button></nav>

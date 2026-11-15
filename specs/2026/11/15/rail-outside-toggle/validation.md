@@ -66,3 +66,7 @@ Commands: `npm run build`, then `node --test tests/navigation-rail.test.js tests
   - FYI: the decision row now states that a rail moved into a closed shadow root after starting keeps its document listener.
   - Kept: the root lookup that resembles `formEventScope()` stays inline, because that helper is named for forms.
 - 2026-11-15, Codex review gate on the uncommitted fixes ([P2]): `_controls` called `.split()` on a missing `aria-controls`, so Escape threw before `collapse()` once an opener lost the attribute. The new `controlledIds()` helper treats a missing attribute as no IDs. A regression test removes the opener's `aria-controls`, presses Escape, and checks the collapse and the fallback focus. On the old code it fails with `TypeError: Cannot read properties of null (reading 'split')`. JS budget 111,727 (+335).
+- 2026-11-15, local Codex review (`codex review --base 4ca1a4bd4`, saved as `codex-review-phase-90.txt` in the worktree's git dir, read to its last line). It also saw the `controlledIds()` fix land mid-run. Two [P2] findings, both confirmed and fixed:
+  - An opener a stylesheet hid with `visibility: hidden` still passed `checkVisibility()`. The check now passes `visibilityProperty: true`.
+  - An opener inside a disabled `<fieldset>` kept `disabled === false`. The check now uses `:disabled`.
+  New tests: a browser test for a `visibility: hidden` opener in all three engines, and a jsdom test for a fieldset-disabled opener. Both failed on the old code and pass now. The rail suites pass 39 of 39. JS budget 111,741 (+349).
