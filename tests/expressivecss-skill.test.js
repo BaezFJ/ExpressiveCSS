@@ -179,20 +179,27 @@ describe('the ExpressiveCSS agent skill', () => {
       { rest: `${fence}html\n<button>💾 Save</button>\n${fence}\n`, behavior: '#### App behavior\n\nKeep the label.\n\n' });
   });
 
+  const appBehaviorOf = (slug) => {
+    const guide = readFileSync(new URL(`components/${slug}.md`, skillDirectory), 'utf8');
+    const start = guide.indexOf('#### App behavior');
+    assert.ok(start > guide.indexOf('#### Syntax') && start < guide.indexOf('#### Rules'), `${slug} App behavior sits between Syntax and Rules`);
+    assert.doesNotMatch(guide.slice(guide.indexOf('#### Also documented')), /App behavior/);
+    return { guide, behavior: guide.slice(start, guide.indexOf('\n#### ', start + 1)) };
+  };
+
   test('the snackbar and lists guides carry the Undo App behavior for a removal people can get back', () => {
     const behaviorOf = (slug) => {
-      const guide = readFileSync(new URL(`components/${slug}.md`, skillDirectory), 'utf8');
-      const start = guide.indexOf('#### App behavior');
-      assert.ok(start > guide.indexOf('#### Syntax') && start < guide.indexOf('#### Rules'), `${slug} App behavior sits between Syntax and Rules`);
+      const { guide, behavior } = appBehaviorOf(slug);
       assert.doesNotMatch(guide.slice(guide.indexOf('#### Contract'), guide.indexOf('#### Syntax')), /App behavior|pagehide|event\.detail/);
-      return guide.slice(start, guide.indexOf('\n#### ', start + 1));
+      return { guide, behavior };
     };
-    const snackbar = behaviorOf('snackbar');
+    const { guide: snackbarGuide, behavior: snackbar } = behaviorOf('snackbar');
+    assert.match(snackbarGuide, /#### Syntax\n\n```js\nnew Expressive\.Snackbar\(\{ text: 'Photo saved to album' \}\);/);
     for (const phrase of ["action: 'Undo'", 'replace: true', 'onAction', 'completeCallback', 'pagehide', 'keepalive', 'displayLength', "can't be undone"]) {
       assert.ok(snackbar.includes(phrase), `snackbar App behavior lacks ${phrase}`);
     }
     assert.ok(Buffer.byteLength(snackbar) <= 2048, `snackbar App behavior is ${Buffer.byteLength(snackbar)} bytes`);
-    const lists = behaviorOf('lists');
+    const { behavior: lists } = behaviorOf('lists');
     for (const phrase of ['Undo', 'event.detail', 'focus', 'empty state']) {
       assert.ok(lists.includes(phrase), `lists App behavior lacks ${phrase}`);
     }
@@ -203,17 +210,13 @@ describe('the ExpressiveCSS agent skill', () => {
   });
 
   test('the buttons guide carries the App behavior subsection for a command that waits on a request', () => {
-    const guide = readFileSync(new URL('components/buttons.md', skillDirectory), 'utf8');
-    const start = guide.indexOf('#### App behavior');
-    assert.ok(start > guide.indexOf('#### Syntax') && start < guide.indexOf('#### Rules'), 'App behavior sits between Syntax and Rules');
-    const behavior = guide.slice(start, guide.indexOf('\n#### ', start + 1));
+    const { guide, behavior } = appBehaviorOf('buttons');
     for (const phrase of ['…', 'aria-disabled="true"', 'preventDefault()', 'finally', '300ms', '500ms', 'native form post']) {
       assert.ok(behavior.includes(phrase), `App behavior lacks ${phrase}`);
     }
     assert.doesNotMatch(behavior, /^---$/m);
     assert.doesNotMatch(guide.slice(guide.indexOf('#### Contract'), guide.indexOf('#### Syntax')), /App behavior|aria-disabled/);
     assert.match(guide, /#### Syntax\n\n```html\n<button>Create<\/button>/);
-    assert.doesNotMatch(guide.slice(guide.indexOf('#### Also documented')), /App behavior/);
   });
 
   test('the quality inspector labels finished-app findings and the orchestrator keeps the labels', () => {

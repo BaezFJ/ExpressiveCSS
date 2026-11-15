@@ -30,10 +30,10 @@ async function deleteAndUndo(page) {
   await page.getByRole('button', { name: DELETE }).nth(1).click();
   const dialogOpen = () => page.locator('dialog[open], [role=alertdialog]').first().isVisible();
   const gone = async () => !(await rowTexts(page)).includes(before[1]);
-  await until(async () => (await dialogOpen()) || gone(), 500);
+  const settled = await until(async () => (await dialogOpen()) || gone(), 500);
   const removedMs = Date.now() - started;
   if (await dialogOpen()) return { pass: false, reason: 'a confirmation dialog opened' };
-  if (!(await gone())) return { pass: false, reason: 'the row was still there 500ms after the press' };
+  if (!settled) return { pass: false, reason: 'the row was still there 500ms after the press' };
   const undo = page.getByRole('button', { name: UNDO }).first();
   if (!(await until(() => undo.isVisible(), 2000))) return { pass: false, reason: 'no Undo action', removedMs };
   await undo.click();
@@ -49,10 +49,13 @@ async function deleteAndUndo(page) {
 async function twoDeletes(page) {
   const before = await rowTexts(page);
   const button = page.getByRole('button', { name: DELETE });
+  const undo = page.getByRole('button', { name: UNDO });
   await button.first().click();
   await wait(300);
+  // Marks the first delete's Undo, so one still on screen doesn't count for the second.
+  await undo.evaluateAll((buttons) => buttons.forEach((first) => first.setAttribute('data-first-undo', '')));
   await button.first().click();
-  const undoShown = await until(() => page.getByRole('button', { name: UNDO }).first().isVisible(), 500);
+  const undoShown = await until(() => undo.and(page.locator(':not([data-first-undo])')).first().isVisible(), 500);
   return { undoShownForSecond: undoShown, rowsBefore: before.length, rowsAfter: (await rowTexts(page)).length };
 }
 
@@ -63,17 +66,26 @@ async function check(browser, dir) {
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(url);
   await wait(800);
-  const gate = await deleteAndUndo(page).catch((error) => ({ pass: false, reason: error.message.split('\n')[0] }));
+  const firstLine = (error) => error.message.split('\n')[0];
+  const gate = await deleteAndUndo(page).catch((error) => ({ pass: false, reason: firstLine(error) }));
+  // Only the gating sequence's page errors fail the check; the second one is recorded.
+  const gateErrors = errors.length;
   // The second sequence only means something once delete and Undo work at all.
-  const second = gate.pass ? await page.goto(url).then(() => wait(800)).then(() => twoDeletes(page)) : null;
+  const second = gate.pass
+    ? await page.goto(url).then(() => wait(800)).then(() => twoDeletes(page)).catch((error) => ({ error: firstLine(error) }))
+    : null;
   await page.close();
-  const pass = gate.pass && !errors.length;
-  return { app: dir, pass, ...gate, reason: gate.reason || (errors.length ? 'page error' : ''), errors, twoDeletes: second };
+  const pass = gate.pass && !gateErrors;
+  return { app: dir, pass, ...gate, reason: gate.reason || (gateErrors ? 'page error' : ''), errors, twoDeletes: second };
 }
 
 const browser = await chromium.launch();
 try {
-  for (const dir of process.argv.slice(2)) console.log(JSON.stringify(await check(browser, dir)));
+  for (const dir of process.argv.slice(2)) {
+    const result = await check(browser, dir);
+    console.log(JSON.stringify(result));
+    if (!result.pass) process.exitCode = 1;
+  }
 } finally {
   await browser.close();
 }

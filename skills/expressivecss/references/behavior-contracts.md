@@ -123,7 +123,7 @@ const ok = await Expressive.Dialogs.confirm({
 if (ok) deleteAccount();
 ```
 
-Ask only before an action that can't be undone. For a removal people can get back, remove it at once and offer Undo in a snackbar, as the Snackbar section describes.
+Ask only before an action that can't be undone. For a removal people can get back, remove it at once and offer Undo in a snackbar, as the Snackbar App behavior describes.
 
 `text` is the question and is required. `headline` is optional. With a headline, the dialog is named by it and described by the text; without one, the text names it. All four strings are set as text, so markup in them is shown, not parsed. If page code removes the open dialog, for example on a route change, the promise resolves `false`. Focus starts on Cancel, the less destructive action, and the browser returns it to the element that had focus before the call. Label the confirm button with the action it takes, such as "Delete" or "Discard", rather than the "OK" default.
 

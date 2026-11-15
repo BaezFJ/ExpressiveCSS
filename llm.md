@@ -3529,7 +3529,7 @@ The browser clips anything a deferred row draws outside its box. Focus rings ins
 
 ### App behavior
 
-Delete a row at once and offer Undo in a snackbar, as the Snackbar section describes. Ignore the second click of a double click (`event.detail > 1`), or the row that slides up gets deleted too. Before removing a row that holds focus, focus the next row's control, else the previous row's, else the empty state's action. At Undo time, find the row that followed the restored one by id, or put the item back into the data and re-render; don't trust an index or a node taken before other changes. Show the list's empty state when the last row goes, and hide it and update any count when Undo brings a row back.
+Delete a row at once and offer Undo in a snackbar, as the Snackbar App behavior describes. Ignore the second click of a double click (`event.detail > 1`), or the row that slides up gets deleted too. Before removing a row that holds focus, focus the next row's control, else the previous row's, else the empty state's action. At Undo time, find the row that followed the restored one by id, or put the item back into the data and re-render; don't trust an index or a node taken before other changes. Show the list's empty state when the last row goes, and hide it and update any count when Undo brings a row back.
 
 ---
 
@@ -7059,7 +7059,7 @@ const ok = await Expressive.Dialogs.confirm({
 if (ok) deleteAccount();
 ```
 
-Ask only before an action that can't be undone. For a removal people can get back, remove it at once and offer Undo in a snackbar, as the Snackbar section describes.
+Ask only before an action that can't be undone. For a removal people can get back, remove it at once and offer Undo in a snackbar, as the Snackbar App behavior describes.
 
 `text` is the question and is required. `headline` is optional. With a headline, the dialog is named by it and described by the text; without one, the text names it. All four strings are set as text, so markup in them is shown, not parsed. If page code removes the open dialog, for example on a route change, the promise resolves `false`. Focus starts on Cancel, the less destructive action, and the browser returns it to the element that had focus before the call. Label the confirm button with the action it takes, such as "Delete" or "Discard", rather than the "OK" default.
 
@@ -7662,17 +7662,19 @@ Expressive.Snackbar.dismissAll();
 
 ### App behavior
 
-For a removal people can get back, act at once instead of asking first. Remove the item, keep its data, and show a snackbar with `action: 'Undo'` and `replace: true`. Leave `displayLength` unset, so the person has as long as they need; Undo stays reachable with Tab or a notification-actions button. In `onAction`, set an undone flag first, then put the item back where it was and focus its first control. Commit the removal in `completeCallback` unless the flag is set; that callback also runs when a newer snackbar replaces this one. On `pagehide`, commit any removal still pending with `fetch(url, { method: 'DELETE', keepalive: true })` and mark it committed, so a page restored from the back/forward cache can't undo it. If the commit fails, put the item back and say so. Give every other snackbar on the page `replace: true` as well, so none waits behind the Undo bar. Keep a confirmation dialog for actions that can't be undone, such as deleting an account.
+For a removal people can get back, act at once instead of asking first. Remove the item, keep its data, and show a snackbar with `action: 'Undo'` and `replace: true`. Leave `displayLength` unset, so the person has as long as they need; Undo stays reachable with Tab or a notification-actions button. Keep one pending flag per removal, and have Undo and the commit each clear it first and do nothing once it is clear, so a removal is undone or committed exactly once. In `onAction`, put the item back where it was and focus its first control. Commit in `completeCallback`, which also runs when a newer snackbar replaces this one, and on `pagehide` with `fetch(url, { method: 'DELETE', keepalive: true })`. A page restored from the back/forward cache then can't undo the committed removal or send it again. If the commit fails, put the item back and say so. Give every other snackbar on the page `replace: true` as well, so none waits behind the Undo bar. Keep a confirmation dialog for actions that can't be undone, such as deleting an account.
 
 ```js
-let undone = false;
+let pending = true;
+const commit = () => { if (pending) { pending = false; commitDelete(item); } };
 removeItem(item);
+addEventListener('pagehide', commit, { once: true });
 new Expressive.Snackbar({
   text: 'Address deleted',
   action: 'Undo',
   replace: true,
-  onAction: () => { undone = true; restoreItem(item); },
-  completeCallback: () => { if (!undone) commitDelete(item); }
+  onAction: () => { if (pending) { pending = false; restoreItem(item); } },
+  completeCallback: commit
 });
 ```
 
