@@ -162,6 +162,20 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.ok(existsSync(template));
   });
 
+  test('the quality inspector labels finished-app findings and the orchestrator keeps the labels', () => {
+    const inspector = readFileSync(new URL('../skills/expressivecss-review/agents/quality-inspector.md', import.meta.url), 'utf8');
+    const review = readFileSync(new URL('../skills/expressivecss-review/SKILL.md', import.meta.url), 'utf8');
+    for (const area of ['loading', 'destructive', 'url-state', 'submit-flow']) {
+      assert.ok(inspector.includes(`\`finished-app:${area}\``), `the inspector lacks finished-app:${area}`);
+      assert.ok(review.includes(`\`finished-app:${area}\``), `the severity anchors lack finished-app:${area}`);
+    }
+    const states = inspector.slice(inspector.indexOf('3. **States.**'), inspector.indexOf('4. **WCAG 2.2.**'));
+    assert.ok(states.length > 0, 'the states check moved');
+    assert.doesNotMatch(states, /async actions/, 'async loading feedback belongs to the finished-app check');
+    assert.match(review, /Keep the `finished-app:<area>` label/);
+    assert.match(review, /finished-app rubric applies on a `mismatch`/);
+  });
+
   test('is a portable root skill with a concise discovery trigger', () => {
     assert.ok(skill.startsWith('---\n'));
     assert.ok(bodyStart > 4, 'frontmatter is not closed');

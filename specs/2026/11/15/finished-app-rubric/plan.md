@@ -22,11 +22,11 @@ Covers R1 to R10. Checks V1.
 
 Prerequisites: none.
 
-- [ ] Add the R10 test to `tests/expressivecss-skill.test.js` and watch it fail against the current files.
-- [ ] Add check 5, "Finished-app behavior", to `skills/expressivecss-review/agents/quality-inspector.md` with the four labelled areas and their proposed severities (R1 to R5), the counting rule (R6) and the evidence rule (R7). Update the opening line.
-- [ ] Remove the async-loading clause from check 3 (R9) and note the rubric label in the Return format.
-- [ ] Add the rubric anchors, the label-keeping rule, the mismatch rule and the lens line to `skills/expressivecss-review/SKILL.md` (R1, R8).
-- [ ] Run the test and see it pass.
+- [x] Add the R10 test to `tests/expressivecss-skill.test.js` and watch it fail against the current files.
+- [x] Add check 5, "Finished-app behavior", to `skills/expressivecss-review/agents/quality-inspector.md` with the four labelled areas and their proposed severities (R1 to R5), the counting rule (R6) and the evidence rule (R7). Update the opening line.
+- [x] Remove the async-loading clause from check 3 (R9) and note the rubric label in the Return format.
+- [x] Add the rubric anchors, the label-keeping rule, the mismatch rule and the lens line to `skills/expressivecss-review/SKILL.md` (R1, R8).
+- [x] Run the test and see it pass.
 
 Done when `node --test tests/expressivecss-skill.test.js` passes.
 
