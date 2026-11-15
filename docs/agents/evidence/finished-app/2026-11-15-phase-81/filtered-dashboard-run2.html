@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en" theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orders | Sample store</title>
+  <link rel="stylesheet" href="dist/css/expressive.min.css">
+  <style>
+    body { margin: 0; }
+    .dashboard { padding: 16px; max-width: 1200px; margin-inline: auto; }
+    @media (width >= 600px) { .dashboard { padding: 24px; } }
+
+    .order-search { max-width: 360px; flex: 1 1 260px; }
+
+    .tab-panel { padding-top: 16px; }
+    .panel-meta { margin: 0 0 8px; }
+
+    /* Footer row inside the table wrapper: page status between previous and next. */
+    .orders-table .pagination {
+      --md-comp-pagination-size: 48px;
+      --md-comp-pagination-shape: 48px;
+      justify-content: flex-end;
+      padding: 4px 8px;
+      border-top: 1px solid var(--md-sys-color-outline-variant);
+      font-size: 1rem;
+      position: sticky;
+      inset-inline-start: 0;
+    }
+    .orders-table .pagination output {
+      min-width: 4.5rem;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+      color: var(--md-sys-color-on-surface-variant);
+    }
+  </style>
+</head>
+<body>
+  <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+
+  <header>
+    <nav aria-label="Store">
+      <h2>Sample store</h2>
+    </nav>
+  </header>
+
+  <main id="main" class="dashboard" tabindex="-1">
+    <div class="flex flex-wrap align-end justify-between gap-4 mb-4">
+      <div class="min-w-0">
+        <h1 class="headline-medium my-0">Orders</h1>
+        <p class="body-medium on-surface-variant-text my-0">Sample data · 40 orders</p>
+      </div>
+      <div class="field outlined order-search my-0">
+        <span class="material-symbols prefix" aria-hidden="true">search</span>
+        <input id="customer-filter" type="search" placeholder=" " autocomplete="off" aria-describedby="customer-filter-help">
+        <label for="customer-filter">Filter by customer</label>
+        <small id="customer-filter-help">Matches any part of the customer name</small>
+      </div>
+    </div>
+
+    <nav class="tabs" id="order-tabs" aria-label="Order state">
+      <a class="active" aria-current="page" href="#open">
+        <span class="material-symbols" aria-hidden="true">pending_actions</span>
+        <span data-tab-label="Open">Open</span>
+      </a>
+      <a href="#shipped">
+        <span class="material-symbols" aria-hidden="true">local_shipping</span>
+        <span data-tab-label="Shipped">Shipped</span>
+      </a>
+      <a href="#returned">
+        <span class="material-symbols" aria-hidden="true">assignment_return</span>
+        <span data-tab-label="Returned">Returned</span>
+      </a>
+    </nav>
+
+    <div id="panels"></div>
+  </main>
+
+  <template id="panel-template">
+    <section class="tab-panel">
+      <p class="panel-meta body-medium on-surface-variant-text" data-meta></p>
+      <div class="data-table orders-table" data-sort data-page-size="10" tabindex="0" role="region">
+        <table>
+          <caption class="visually-hidden" data-caption></caption>
+          <thead>
+            <tr>
+              <th scope="col" class="text-nowrap">Order</th>
+              <th scope="col" aria-sort="ascending"><button type="button">Customer</button></th>
+              <th scope="col" class="text-nowrap"><button type="button">Date</button></th>
+              <th scope="col" class="numeric"><button type="button">Total</button></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <nav class="pagination" data-pages-nav>
+          <ol>
+            <li>
+              <button type="button" data-table-page="previous" aria-label="Previous page">
+                <span class="material-symbols" aria-hidden="true">chevron_left</span>
+              </button>
+            </li>
+            <li><output data-table-page-status role="status" aria-live="polite" aria-label="Page">1 / 1</output></li>
+            <li>
+              <button type="button" data-table-page="next" aria-label="Next page">
+                <span class="material-symbols" aria-hidden="true">chevron_right</span>
+              </button>
+            </li>
+          </ol>
+        </nav>
+      </div>
+      <div class="empty-state" data-empty hidden>
+        <span class="material-symbols" aria-hidden="true">search_off</span>
+        <h2 data-empty-title></h2>
+        <p data-empty-text></p>
+        <div class="empty-state-actions">
+          <button type="button" class="outlined" data-clear>Clear filter</button>
+        </div>
+      </div>
+    </section>
+  </template>
+
+  <script src="dist/js/expressive.min.js"></script>
+  <script>
+    (() => {
+      const STATES = ['Open', 'Shipped', 'Returned'];
+      const FIRST = ['Maya', 'Liam', 'Sofia', 'Noah', 'Aisha', 'Mateo', 'Hana', 'Owen', 'Priya', 'Lucas', 'Zoe', 'Diego', 'Amara', 'Elias', 'Nora', 'Kenji', 'Leila', 'Tomas', 'Ines', 'Ravi'];
+      const LAST = ['Patel', 'Nguyen', 'García', 'Okafor', 'Kim', 'Rossi', 'Schmidt', 'Haddad', 'Silva', 'Novak', 'Brennan', 'Tanaka'];
+
+      // Seeded generator so the sample data stays the same on every load.
+      let seed = 20261115;
+      const rand = () => (seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296;
+      const pick = (list) => list[Math.floor(rand() * list.length)];
+
+      const start = Date.UTC(2026, 8, 1); // Sep 1, 2026
+      const orders = Array.from({ length: 40 }, (_, i) => {
+        const date = new Date(start + Math.floor(rand() * 75) * 86400000);
+        const roll = rand();
+        return {
+          id: `ORD-${String(1001 + i)}`,
+          customer: `${pick(FIRST)} ${pick(LAST)}`,
+          date,
+          total: Math.round((15 + rand() * 485) * 100) / 100,
+          state: roll < 0.45 ? 'Open' : roll < 0.85 ? 'Shipped' : 'Returned',
+        };
+      });
+
+      const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+      const day = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+      const count = new Intl.NumberFormat('en-US');
+
+      const panelsHost = document.getElementById('panels');
+      const template = document.getElementById('panel-template');
+      const filterInput = document.getElementById('customer-filter');
+      const tabs = document.getElementById('order-tabs');
+      const panels = {};
+
+      for (const state of STATES) {
+        const id = state.toLowerCase();
+        const node = template.content.firstElementChild.cloneNode(true);
+        node.id = id;
+        const caption = node.querySelector('[data-caption]');
+        caption.id = `${id}-caption`;
+        caption.textContent = `${state} orders`;
+        const wrapper = node.querySelector('.data-table');
+        wrapper.id = `${id}-table`;
+        wrapper.setAttribute('aria-labelledby', caption.id);
+        node.querySelector('[data-pages-nav]').setAttribute('aria-label', `${state} orders pages`);
+        node.querySelector('[data-table-page-status]').setAttribute('aria-label', `${state} orders page`);
+
+        const body = wrapper.querySelector('tbody');
+        orders
+          .filter((order) => order.state === state)
+          .sort((a, b) => a.customer.localeCompare(b.customer))
+          .forEach((order) => {
+            const row = document.createElement('tr');
+            row.dataset.customer = order.customer.toLocaleLowerCase('en');
+            const idCell = document.createElement('th');
+            idCell.scope = 'row';
+            idCell.className = 'text-nowrap';
+            idCell.textContent = order.id;
+            const customer = document.createElement('td');
+            customer.textContent = order.customer;
+            const date = document.createElement('td');
+            date.className = 'text-nowrap';
+            date.dataset.value = order.date.toISOString().slice(0, 10);
+            date.textContent = day.format(order.date);
+            const total = document.createElement('td');
+            total.className = 'numeric';
+            total.textContent = money.format(order.total);
+            row.append(idCell, customer, date, total);
+            body.append(row);
+          });
+
+        node.querySelector('[data-clear]').addEventListener('click', () => {
+          filterInput.value = '';
+          applyFilter();
+          filterInput.focus();
+        });
+
+        panelsHost.append(node);
+        panels[id] = { state, node, wrapper, rows: Array.from(body.rows) };
+      }
+
+      function applyFilter({ resetPage = true } = {}) {
+        const query = filterInput.value.trim().toLocaleLowerCase('en');
+        for (const [id, panel] of Object.entries(panels)) {
+          let matches = 0;
+          for (const row of panel.rows) {
+            const show = !query || row.dataset.customer.includes(query);
+            row.hidden = !show;
+            if (show) matches++;
+          }
+          const total = panel.rows.length;
+          panel.node.querySelector('[data-meta]').textContent = query
+            ? `${count.format(matches)} of ${count.format(total)} ${panel.state.toLowerCase()} orders match “${filterInput.value.trim()}”`
+            : `${count.format(total)} ${panel.state.toLowerCase()} orders`;
+          tabs.querySelector(`a[href="#${id}"] [data-tab-label]`).textContent = `${panel.state} (${count.format(matches)})`;
+
+          const empty = panel.node.querySelector('[data-empty]');
+          empty.hidden = matches > 0;
+          panel.wrapper.hidden = matches === 0;
+          if (matches === 0) {
+            empty.querySelector('[data-empty-title]').textContent = `No ${panel.state.toLowerCase()} orders match`;
+            empty.querySelector('[data-empty-text]').textContent = `No customer name in ${panel.state.toLowerCase()} orders contains “${filterInput.value.trim()}”. Clear the filter to see all of them.`;
+          }
+
+          Expressive.DataTables.sync(panel.wrapper);
+          if (resetPage) Expressive.DataTables.showPage(panel.wrapper, 1);
+        }
+      }
+
+      // URL state: ?view=shipped&q=maya&page=2
+      const params = new URLSearchParams(location.search);
+      const writeUrl = (changes) => {
+        const url = new URL(location.href);
+        for (const [key, value] of Object.entries(changes)) {
+          if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
+        }
+        history.replaceState(null, '', url);
+      };
+
+      const savedView = params.get('view');
+      const savedLink = savedView && panels[savedView] && tabs.querySelector(`a[href="#${CSS.escape(savedView)}"]`);
+      if (savedLink) {
+        const current = tabs.querySelector('a.active');
+        current.classList.remove('active');
+        current.removeAttribute('aria-current');
+        savedLink.classList.add('active');
+        savedLink.setAttribute('aria-current', 'page');
+      }
+      filterInput.value = params.get('q') ?? '';
+
+      Expressive.AutoInit();
+
+      applyFilter();
+      const activeId = tabs.querySelector('a.active').getAttribute('href').slice(1);
+      const savedPage = Number(params.get('page'));
+      if (savedPage > 1) Expressive.DataTables.showPage(panels[activeId].wrapper, savedPage);
+
+      tabs.addEventListener('expressive:change', (event) => {
+        tabs.querySelectorAll('a').forEach((link) => {
+          const active = link.getAttribute('href') === `#${event.detail.panel.id}`;
+          if (active) link.setAttribute('aria-current', 'page'); else link.removeAttribute('aria-current');
+        });
+        writeUrl({ view: event.detail.panel.id, page: '' });
+      });
+
+      filterInput.addEventListener('input', () => {
+        applyFilter();
+        writeUrl({ q: filterInput.value.trim(), page: '' });
+      });
+
+      for (const panel of Object.values(panels)) {
+        panel.wrapper.addEventListener('expressive:page', (event) => writeUrl({ page: event.detail.page > 1 ? event.detail.page : '' }));
+        panel.wrapper.addEventListener('expressive:sort', (event) => { if (!event.defaultPrevented) writeUrl({ page: '' }); });
+      }
+    })();
+  </script>
+</body>
+</html>

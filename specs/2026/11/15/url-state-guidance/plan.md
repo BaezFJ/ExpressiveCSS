@@ -33,7 +33,7 @@ Covers R7. Checks V4.
 
 Prerequisites: groups 1 to 3, committed.
 
-- [ ] Build `filtered-dashboard` twice, review with the baseline trees, confirm, run the script, record the run set and rows, and name the script in `docs/agents/finished-app-evals.md`.
+- [x] Build `filtered-dashboard` twice, review with the baseline trees, confirm, run the script, record the run set and rows, and name the script in `docs/agents/finished-app-evals.md`.
 
 Done when V4 passes or the R7 limit is reached and recorded.
 
