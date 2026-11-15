@@ -55,3 +55,10 @@ Phase 92 hides a scaffold's navigation bar from 600px up, which would leave a sc
 - Other readers: the bundled skill copies (regenerated), the docs previews (iframes at a fixed height; the scaffold fills them), `scripts/verify-site.mjs` (the template pages stay present), the MCP guides that link templates, and the migration skill's `hide-on-*` notes (unchanged).
 - UI states: RTL (the scaffold's), reduced motion, no JavaScript (the scaffold lays out without it; the rail can't toggle, as before), compact (the overlay rail).
 - `specs/checklist.md` does not exist in this project.
+
+## Decisions made while building
+
+- **R7** (from the phase reviews) With a status bar shown below it, a navigation bar shown from 600px up pads 6px at the bottom instead of the bottom inset, which the status bar pads. Checked in V4, which now runs with the inset rewrite and fails with either padding rule removed.
+- **R8** (from the phase reviews) The expanded template sets its first state (rail `hidden` or `.expanded`, menu button `hidden`) in a script that runs before the first paint, then starts the rail after `AutoInit()`. When a window narrows below 840px with focus in the rail or on the menu button, focus moves to `main`. Checked in V2.
+- **R9** (from the phase reviews, revised after the Codex review) The list-detail template's panes follow the window width, the scaffold's default, so they switch at the same 840px as the Back button's `hide-on-expanded-and-up` helper. A container query on `main` would keep one pane at 840 to 871px, where the floating pane's margins make `main` narrower than 840px, while the helper had already hidden Back. Checked in V3 at 850px.
+- The docs say what counts as a shown rail: anything except a rail with the `hidden` attribute or an empty `.scaffold-rail`. A `hide-on-*` helper does not count, because CSS can't see it. The status bar guide allows a status bar under the navigation bar in a scaffold without a rail.

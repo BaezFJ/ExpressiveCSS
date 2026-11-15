@@ -83,6 +83,12 @@ for (const [name, engine, test] of engines) {
           await expect(selected).toBeFocused();
           await expect(page.locator('#detail')).toBeHidden();
           await selected.press('Enter');
+          // Just past 840px the pane region is narrower than the window, but
+          // the panes and the Back helper follow the same window breakpoint.
+          await page.setViewportSize({ width: 850, height: 812 });
+          await expect(page.locator('#items')).toBeVisible();
+          await expect(page.locator('#detail')).toBeVisible();
+          await expect(page.locator('#back')).toBeHidden();
           await page.setViewportSize({ width: 1440, height: 812 });
           await expect(page.locator('#items')).toBeVisible();
           await expect(page.locator('#detail')).toBeVisible();
