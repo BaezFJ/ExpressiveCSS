@@ -1061,7 +1061,7 @@ const transport = new StdioClientTransport({
     },
     'transition-all': {
       flag: ['.a { transition: all 200ms }', '.a{transition:all .2s}', '.a { TRANSITION: ALL 1s }', '.a { transition: opacity .2s, all .3s }', '.a { transition-property: all }', "<div style={{ transition: 'all 0.2s' }}></div>", '<style>\n  .card { transition: all 200ms; }\n</style>'],
-      pass: ['.a { transition: opacity 200ms, transform 200ms }', '.a { transition-property: opacity }', '.a { transition: opacity .2s allow-discrete }', '.a { transition: none }', '.a { transition: var(--all) }', 'const s = { transition: theme.all };', '.a { --transition: all 1s }', '.a { -webkit-transition: all 1s }', '.a { transition-duration: 200ms; all: unset }', '<p style="transition: opacity 1s" data-x="all"></p>', 'const s = { transition: x, all: y };'],
+      pass: ['.a { transition: opacity 200ms, transform 200ms }', '.a { transition-property: opacity }', '.a { transition: opacity .2s allow-discrete }', '.a { transition: none }', '.a { transition: var(--all) }', 'const s = { transition: theme.all };', '.a { --transition: all 1s }', '.a { -webkit-transition: all 1s }', '.a { transition-duration: 200ms; all: unset }', '<p style="transition: opacity 1s" data-x="all"></p>', 'const s = { transition: x, all: y };', 'const s = { transition: x, all : y };'],
     },
   };
   const ruleIds = authoringRules.map((rule) => rule.id).filter((id) => !/^legacy-/.test(id));
@@ -1086,8 +1086,9 @@ const transport = new StdioClientTransport({
     'class="' + fill('btn '),
     // A `.range` host with no `>` after it: an unbounded gap rescanned to the end from every host.
     fill('class="range '),
-    // Whitespace after the colon that the value gap could also take, a run of declarations that never reach `all`, and a value with no end.
-    'transition:' + fill(' '), fill('transition:'), 'transition: opacity' + fill(' 1s,'),
+    // Whitespace after the colon that the value gap could also take, a run of declarations that never reach `all`, a value with no end,
+    // and starts that all reach one `all` whose colon check scans a long whitespace run.
+    'transition:' + fill(' '), fill('transition:'), 'transition: opacity' + fill(' 1s,'), 'transition:'.repeat(45) + 'all' + fill(' ') + ':',
   ];
   for (const rule of authoringRules.filter((entry) => legacyIds.includes(entry.id) || ['legacy-btn-class', 'transition-all'].includes(entry.id))) {
     const regex = new RegExp(rule.pattern.source, rule.pattern.flags);

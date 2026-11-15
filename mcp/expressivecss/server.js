@@ -281,7 +281,7 @@ const LegacyPatternList = [
     severity: 'medium',
     description: 'A transition on `all` animates any property that changes, including layout and color properties. List the properties instead, for example `transition: opacity 200ms, transform 200ms`.',
     // The value gap starts on a non-space so it never shares whitespace with `\s*`, and stops at 500 characters so a run of declarations stays linear.
-    pattern: /(?<![-.\w])transition(?:-property)?\s*:\s*(?:["'`]\s*)?(?:[^\s;{}<>"'`][^;{}<>"'`]{0,499}?)??(?<![-.\w$])all(?![-.\w$:])/giu,
+    pattern: /(?<![-.\w])transition(?:-property)?\s*:\s*(?:["'`]\s*)?(?:[^\s;{}<>"'`][^;{}<>"'`]{0,499}?)??(?<![-.\w$])all(?![-.\w$]|\s*:)/giu,
   },
 ];
 
