@@ -284,13 +284,13 @@
       "sources": [
         {
           "path": "src/sass/components/_scaffold.scss",
-          "sha256": "2dbacd91f54aaf29f8eeea04a1ef8ce64d8d1e14d86e116d8b35c1a233ef4d82"
+          "sha256": "f88e87adf4e8aade081f6e8362c04b9093d9b363069e54bcc626f11cb7c26d66"
         }
       ],
       "gaps": [
         {
           "kind": "verification",
-          "description": "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary; spoken output and a mobile browser's collapsing address bar remain unverified.",
+          "description": "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding; spoken output and a mobile browser's collapsing address bar remain unverified.",
           "nextStep": "Move through a scaffold page by landmarks with a screen reader, and scroll the pane in a phone browser whose address bar collapses."
         }
       ],
@@ -341,6 +341,12 @@
           "file": "tests/scaffold-browser.test.js",
           "name": "chromium: below 600px the toolbar floats centered 16px above the navigation bar",
           "scope": "A centered row 16px above a 66px navigation bar at the top and mid-scroll, 16px above the window bottom without one, and clear of the bar at 200% text. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: the end of a compact page scrolls clear of the floating toolbar, and focus does too",
+          "scope": "The pane's last content and keyboard focus clear of the floating toolbar, with its matched block margins. Equivalent Firefox and WebKit cases run in the same suite.",
           "state": "not-recorded"
         },
         {

@@ -543,6 +543,8 @@ for (const [name, type, run] of engines) {
       assert.ok(rtl[0] > rtl[1] && rtl[1] > rtl[2], `under rtl they run right to left: ${rtl}`);
       await tab.evaluate(() => { document.documentElement.dir = 'ltr'; });
       await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ trailing: group, bottom: navbar }));
+      await tab.locator('#tgi').evaluate((el) => el.insertAdjacentHTML('beforeend', '<span class="max" id="mx"></span>'));
+      assert.ok((await box('#mx')).width < 1, 'a .max spacer takes no width of its own in the row');
       for (const id of ['#tg', '#tgi']) {
         assert.equal(await style(id, 'flexDirection'), 'row', `${id} is a row`);
         const b = await box(id);
@@ -570,11 +572,22 @@ for (const [name, type, run] of engines) {
       await tab.evaluate(() => window.scrollTo(0, 0));
       await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ bottom: navbar }));
       await tab.evaluate(() => { document.documentElement.style.fontSize = '32px'; window.scrollTo(0, 1000); });
-      assert.ok((await box('#tools')).bottom <= (await box('#nb')).top + 1, 'at 200% text it still clears the taller navigation bar');
+      const big = await box('#tools');
+      const bigBar = await box('#nb');
+      assert.ok(Math.abs(big.bottom - (bigBar.top - 16)) < 2, `at 200% text it stays 16px above the taller navigation bar: ${big.bottom} vs ${bigBar.top}`);
       await tab.evaluate(() => { document.documentElement.style.fontSize = ''; window.scrollTo(0, 0); });
       await tab.locator('#nb').evaluate((el) => { el.hidden = true; });
       await tab.evaluate(() => window.scrollTo(0, 1000));
       assert.ok(Math.abs((await box('#tools')).bottom - 784) < 2, 'a hidden navigation bar leaves the toolbar 16px above the bottom');
+      const bare = navbar.replace(/<\/?footer[^>]*>/g, '').replace('class="navigation-bar"', 'class="navigation-bar" id="nb"');
+      for (const [label, bottom, hidden] of [['a bare navigation bar child', bare, false], ['a hidden bar in a shown footer', navbar.replace('class="navigation-bar"', 'class="navigation-bar" hidden'), true]]) {
+        await tab.evaluate(() => window.scrollTo(0, 0));
+        await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ bottom }));
+        await tab.evaluate(() => window.scrollTo(0, 1000));
+        const tb = await box('#tools');
+        const expected = hidden ? 784 : (await box('#nb')).top - 16;
+        assert.ok(Math.abs(tb.bottom - expected) < 2, `${label}: ${tb.bottom} vs ${expected}`);
+      }
     } finally {
       await browser.close();
     }
@@ -587,6 +600,9 @@ for (const [name, type, run] of engines) {
     try {
       await tab.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
       assert.ok((await box('#last')).bottom <= (await box('#tools')).top + 1, 'the last content ends above the toolbar');
+      const endTools = await box('#tools');
+      assert.ok(endTools.top >= (await box('#pane')).bottom + 15, 'with its 16px top margin');
+      assert.ok(Math.abs(endTools.bottom - ((await box('#nb')).top - 16)) < 2, 'and its 16px bottom margin, where it also sticks');
     } finally {
       await browser.close();
     }
@@ -617,6 +633,9 @@ for (const [name, type, run] of engines) {
         const bubble = await box('#t0 .tooltip');
         assert.ok(bubble.bottom <= action.top + 1, `the ${side} bubble sits above the action: ${bubble.bottom} vs ${action.top}`);
         assert.ok(bubble.right > action.left && bubble.left < action.right, `and over it, not beside it (${side})`);
+        const shown = await tab.locator('#t0 .tooltip').evaluate((el) => [getComputedStyle(el).opacity, getComputedStyle(el).transform]);
+        assert.equal(shown[0], '1', `the ${side} bubble is shown`);
+        assert.match(shown[1], /^matrix\(1, 0, 0, 1,/, `at full scale (${side})`);
         await tab.mouse.move(0, 0);
       }
     } finally {

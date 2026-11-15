@@ -22,8 +22,9 @@
 // the bottom, so keep it to the actions that fit.
 //
 // Below 600px the document scrolls instead, so a phone's address bar can
-// collapse: the bar region and the navigation bar stay pinned, and the rail
-// is hidden until it opens as the compact overlay.
+// collapse: the bar region and the navigation bar stay pinned, a trailing
+// vertical toolbar floats as a centered row above the navigation bar, and the
+// rail is hidden until it opens as the compact overlay.
 //
 // Limits: AppBar's sentinel isn't a region, so .medium/.large bars stay
 // expanded. BackToTop follows the window, so it shows only below 600px. A
@@ -40,7 +41,10 @@ $_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar:only-child))";
 // The navigation bar's height from its anatomy: 6px top padding, 24px icon,
 // 4px gap, 10px indicator padding, its label's 1rem line, and a bottom padding
 // of 6px or the safe area, whichever is larger. A sibling can't read it in CSS.
+// An icon-only bar is 64px, so the gap above it comes out 2px larger.
 $_navbar-size: "44px + 1rem + max(6px, env(safe-area-inset-bottom, 0px))";
+// A shown navigation bar region, as a :has() argument list.
+$_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])";
 
 .scaffold {
   display: grid;
@@ -214,7 +218,7 @@ $_navbar-size: "44px + 1rem + max(6px, env(safe-area-inset-bottom, 0px))";
 
     // :has() can't nest, so the footer form of the navigation bar is spelled out.
     // The navigation bar already pads the safe area.
-    &:has(> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])) > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed) {
+    &:has(#{$_navbar-shown}) > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed) {
       inset-block-end: calc(#{$_navbar-size} + 16px);
       margin-block-end: 16px;
     }
@@ -248,6 +252,7 @@ $_navbar-size: "44px + 1rem + max(6px, env(safe-area-inset-bottom, 0px))";
       calc(var(--_scaffold-navbar-pad, env(safe-area-inset-bottom, 0px)) + var(--_scaffold-toolbar-pad, 0px));
   }
 
+  // :has() can't nest, so the shown-bar list is written out under body here.
   :root:has(> body > .scaffold > .navigation-bar:not([hidden]), > body > .scaffold > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])) {
     --_scaffold-navbar-pad: calc(#{$_navbar-size});
   }

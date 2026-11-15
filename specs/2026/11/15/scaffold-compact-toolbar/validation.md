@@ -46,3 +46,12 @@ Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, th
   - A `[hidden]` navigation bar or toolbar still shaped the offset and the padding. The reviewer left this open; I fixed it here. The scroll padding is now the sum of two private parts set only for a shown bar and a shown toolbar, and a test hides the bar. It failed with the exclusion removed (R6b).
   - A stale comment in the selector-scope test was corrected.
   CSS budget 92,686. The scaffold and tokens suites pass 97 of 97.
+- 2026-11-15, `code-review-and-quality` (five-axis review by an independent read-only subagent): no Critical findings. Fixed:
+  - Required: the 200% check passed even with the `1rem` dropped from the bar height. It now asserts the same 16px gap; with `1rem` removed it fails (718 vs 718).
+  - Optional: the bare `nav` child and a hidden bar inside a shown footer had no tests. Both are covered now.
+  - Optional: the end-of-page check couldn't see a missing bottom margin. It now asserts both 16px margins and fails with the bottom margin at 0.
+  - Optional: the `.max` spacer had no check. A test now checks it takes no width.
+  - Optional: the tooltip test read a hidden bubble's box. It now asserts opacity 1 and full scale, and fails with the full-scale rule removed.
+  - Optional: the size comment now notes the icon-only bar.
+  - Nits: the header comment names the floating toolbar; the shown-bar list is one Sass variable where `:has()` doesn't nest; the decision record lists the end-of-page check and names the compact toolbar in its gaps.
+  The scaffold suite passes 89 of 89.
