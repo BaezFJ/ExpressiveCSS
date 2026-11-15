@@ -28,7 +28,9 @@ for (const [engine, browserType, browserTest] of engines) {
       const tab = await browser.newPage();
       await tab.setContent(page(`<script>${js}</script>`));
       const save = tab.locator('#save');
-      assert.equal(Number(await save.evaluate((el) => getComputedStyle(el, '::after').opacity)), 0, 'the indicator waits for its delay');
+      // Read the delay, not the opacity: a slow page load can outrun 300ms under load.
+      const delays = await save.evaluate((el) => getComputedStyle(el, '::after').animationDelay);
+      assert.match(delays, /^0\.3s\b/u, 'the indicator waits for its delay');
       await tab.waitForFunction(() => getComputedStyle(document.getElementById('save'), '::after').opacity === '1');
       assert.equal(await tab.getByRole('button', { name: 'Saving…' }).count(), 1, 'the indicator adds nothing to the name');
       assert.equal(await save.evaluate((el) => getComputedStyle(el, '::after').content), '""');
