@@ -84,7 +84,7 @@ After each batch of builds, run `git status --short` in the repository to confir
 Run the lint from the baseline commit too, so its output, which the reviewer reads, doesn't change between run sets: create a worktree at the baseline commit (`git worktree add <baseline-worktree> <baseline-commit>`) and run `npm ci --prefix <baseline-worktree>/mcp/expressivecss` once. Then, inside the review directory, run the lint and keep its output:
 
 ```sh
-node <baseline-worktree>/mcp/expressivecss/lint.mjs index.html > lint.txt
+node <baseline-worktree>/mcp/expressivecss/lint.mjs index.html > lint.txt 2>&1
 timeout 1800 claude -p --safe-mode --strict-mcp-config --model claude-opus-5-5 \
   --no-session-persistence --output-format json --allowedTools Read Glob Grep \
   < review-brief.txt > review-result.json
