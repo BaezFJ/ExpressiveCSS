@@ -37,7 +37,9 @@ const HOVER_DELAY = 200;
  * toggles that class from the menu button, closes a compact overlay on
  * Escape or a scrim tap, and keeps aria-expanded in sync. A destination's
  * .navigation-rail-panel is a native popover; this class also opens it on
- * mouse hover.
+ * mouse hover. Under nav-rail="hover" it adds .peek while the mouse rests on
+ * the collapsed rail or keyboard focus is in it; that is a preview, so
+ * isExpanded stays false.
  */
 export class NavigationRail extends Component<NavigationRailOptions> {
   isExpanded: boolean;
@@ -45,6 +47,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
   private _mql: MediaQueryList;
   private _hoverPanel: HTMLElement | null = null;
   private _hoverTimer: ReturnType<typeof setTimeout> | undefined;
+  private _peekTimer: ReturnType<typeof setTimeout> | undefined;
 
   constructor(el: HTMLElement, options: Partial<NavigationRailOptions>) {
     super(el, options);
@@ -56,7 +59,10 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     const { signal } = this._events;
     this.el.addEventListener('click', this._onClick, { signal });
     this.el.addEventListener('pointerover', this._onPointerOver, { signal });
+    this.el.addEventListener('pointerenter', this._onPointerEnter, { signal });
     this.el.addEventListener('pointerleave', this._onPointerLeave, { signal });
+    this.el.addEventListener('focusin', this._onFocusIn, { signal });
+    this.el.addEventListener('focusout', this._onFocusOut, { signal });
     document.addEventListener('keydown', this._onKeyDown, { signal });
   }
 
@@ -68,6 +74,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
 
   destroy() {
     clearTimeout(this._hoverTimer);
+    this._unpeek();
     super.destroy();
   }
 
@@ -79,6 +86,8 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     if (!this._notify('open', this.options.onOpenStart, { current: () => !this.isExpanded })) return;
     this.isExpanded = true;
     this.el.classList.add('expanded');
+    // Expanding from a peek pins it.
+    this._unpeek();
     this._sync();
     this._notify('opened', this.options.onOpenEnd, { current: () => this.isExpanded });
   };
@@ -167,7 +176,56 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     if (e.pointerType !== 'mouse') return;
     clearTimeout(this._hoverTimer);
     this._hoverClose();
+    // Keyboard focus inside keeps a peek open.
+    if (!this.el.querySelector(':focus-visible')) this._unpeek();
   };
+
+  private _onPointerEnter = (e: PointerEvent) => {
+    if (e.pointerType !== 'mouse' || !this._canPeek()) return;
+    this._peekTimer = setTimeout(this._peek, HOVER_DELAY);
+  };
+
+  // Keyboard focus entering the rail peeks at once; focus from a mouse click
+  // leaves it to the hover. Focus moving within the rail, such as Escape
+  // returning it to the menu button, changes nothing.
+  private _onFocusIn = (e: FocusEvent) => {
+    if (this._crossesRail(e) && this._canPeek() && (e.target as Element).matches(':focus-visible')) this._peek();
+  };
+
+  // The mouse resting on the rail keeps a peek open.
+  private _onFocusOut = (e: FocusEvent) => {
+    if (this._crossesRail(e) && !this.el.matches(':hover')) this._unpeek();
+  };
+
+  // relatedTarget is the other side of the focus move.
+  private _crossesRail(e: FocusEvent) {
+    return !this.el.contains(e.relatedTarget as Node | null);
+  }
+
+  // nav-rail is read each time, so changing it needs no new instance.
+  private _canPeek() {
+    return !this.isExpanded && this._hoverExpands();
+  }
+
+  private _peek = () => {
+    this.el.classList.add('peek');
+  };
+
+  // As in the CSS: the rail's own nav-rail attribute, else an ancestor's, else its shadow host's.
+  private _hoverExpands() {
+    const source = this.el.closest('[nav-rail]') ?? this._switchHost();
+    return Boolean(source?.matches('[nav-rail~="hover"]'));
+  }
+
+  private _switchHost(): Element | null {
+    const { host } = this.el.getRootNode() as Partial<ShadowRoot>;
+    return host?.matches('[nav-rail]') ? host : null;
+  }
+
+  private _unpeek() {
+    clearTimeout(this._peekTimer);
+    this.el.classList.remove('peek');
+  }
 
   // Clicking a hover-opened panel's trigger keeps it open instead of toggling
   // it shut; either way the panel no longer follows the pointer.
@@ -224,6 +282,8 @@ export class NavigationRail extends Component<NavigationRailOptions> {
 
   private _onKeyDown = (e: KeyboardEvent) => {
     if (e.key !== 'Escape' || e.defaultPrevented || this._escapePanel(e)) return;
+    // Dismisses a hover peek without moving the pointer, once no panel took the key.
+    this._unpeek();
     if (this.isExpanded && this._isModal()) {
       const root = this.el.getRootNode() as Document | ShadowRoot;
       const restoreFocus = Utils.focusIsIn(this.el);

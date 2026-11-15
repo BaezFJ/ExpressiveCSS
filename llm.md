@@ -4815,6 +4815,13 @@ A destination can open a side panel of more links. Make it a `<button popovertar
 <nav class="navigation-rail expanded modal" aria-label="Main">…</nav>
 ```
 
+The `nav-rail` attribute takes two switches. `compact` makes the collapsed rail 72dp (`--md-comp-nav-rail-compact-width`) and icon-only; the labels stay in the accessibility tree. Its rows stay 44dp when it expands. `hover` expands a collapsed rail while the mouse rests on it or keyboard focus is in it, drawn over the page with the collapsed footprint kept, so nothing reflows. The mouse and focus leaving the rail, or Escape, collapse it, and the menu button pins it open. Touch uses the menu button. Set the attribute on `<html>` (or a shadow host) for every rail inside it, or on one rail for that rail; a rail's own value replaces the root's, so `nav-rail=""` opts one out. A hover expansion adds the `peek` class and leaves `isExpanded`, `aria-expanded` and the open and close events alone. Offset the page by `--md-comp-nav-rail-compact-width` instead of the collapsed width.
+
+```html
+<html nav-rail="compact hover">
+<nav class="navigation-rail" nav-rail="compact" aria-label="Main">…</nav>
+```
+
 ```html
 <button type="button" popovertarget="components-panel">
   <span class="material-symbols" aria-hidden="true">widgets</span>
@@ -4849,8 +4856,8 @@ Offset the rest of the page:
 
 `NavigationRail.init(el, options)` creates an instance; `getInstance(el)` retrieves it.
 `expand()`, `collapse()` and `toggle()` update the expanded class and ARIA state.
-`isExpanded` reports the current state. `destroy()` removes listeners and pending hover work,
-leaving the current class and ARIA state in place.
+`isExpanded` reports the current state. `destroy()` removes listeners, pending hover work and a
+hover `peek`, leaving the expanded class and ARIA state in place.
 
 | Option | Default | When it runs |
 | --- | --- | --- |

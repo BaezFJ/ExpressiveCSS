@@ -353,7 +353,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed shared form reset handling for pickers, Slider, FormSelect, RichTextEditor, ColorPicker, CharacterCounter, validation, ImageCompare and select-all, disabled month arrow icons, near-whole pie slices, distinct axis labels, reset handling that follows a form into a shadow root, and painting particles on resize: 111,636 gzip bytes (+126).
   // Reviewed shadow-root focus checks through focusIsIn, guarded Forms re-init, chart resize observers released on update(), a composed transfer event, Datepicker selects kept across years, one roving-focus sync per arrow key, memoized Timepicker ranges, flyout measurement per row entry and DataTables views without toggle scans: 111,677 gzip bytes (+41).
   // Reviewed shared core helpers for right-to-left checks, ID lists, the active descendant and resize handles, and shared chart marks: 111,422 gzip bytes (-255).
-  assert.ok(sizes(js).gzip <= 111422, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the navigation rail peek under nav-rail="hover" (mouse rest or keyboard focus entering the rail), read from the rail, an ancestor or its shadow host: 111,666 gzip bytes (+244).
+  assert.ok(sizes(js).gzip <= 111666, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -557,5 +558,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed --md-sys-state-focus-indicator-* tokens behind every 3px component focus ring (snackbar included), and the .focus-ring utility: 91,061 gzip bytes (+170).
   // Reviewed .status-bar (bar, items, end group and its compact fallback, vibrant bar, compact priority hiding, forced-colors edge, badge anchor), status bar items leaving the common button rules, and the page, pane and questionnaire footers stepping aside for it: 91,445 gzip bytes (+384).
   // Reviewed a --md-sys-typescale-{role}-font shorthand token for each of the 15 roles, built from the role's longhand tokens: 91,770 gzip bytes (+325).
-  assert.ok(sizes(css).gzip <= 91770, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed nav-rail="compact" (72dp icon-only rail) and nav-rail="hover" (the expanded layout as a .peek over the page, keeping the collapsed footprint and row heights from the live indicator token, raised only while it peeks and never over a modal rail, which rises at once), set on the root, a shadow host or one rail: 92,124 gzip bytes (+354).
+  assert.ok(sizes(css).gzip <= 92124, `CSS gzip: ${sizes(css).gzip}`);
 });
