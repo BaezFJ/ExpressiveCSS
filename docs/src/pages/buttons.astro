@@ -419,12 +419,12 @@ const S = defineSections([
     <p><button type="button" id="busy-demo"><span>Save</span></button></p>
     <Code code={`<button type="submit" aria-busy="true"><span>Saving…</span></button>`} />
   </Section>
-  <script>
+  <script is:inline>
     document.getElementById('busy-demo')?.addEventListener('click', (event) => {
-      const button = event.currentTarget as HTMLButtonElement;
+      const button = event.currentTarget;
       button.setAttribute('aria-busy', 'true');
-      button.firstElementChild!.textContent = 'Saving…';
-      setTimeout(() => { button.removeAttribute('aria-busy'); button.firstElementChild!.textContent = 'Save'; }, 2000);
+      button.firstElementChild.textContent = 'Saving…';
+      setTimeout(() => { button.removeAttribute('aria-busy'); button.firstElementChild.textContent = 'Save'; }, 2000);
     });
   </script>
 </DocsLayout>
