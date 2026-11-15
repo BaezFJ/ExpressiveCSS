@@ -24,6 +24,7 @@
     "getInstance",
     "dismissAll",
     "setPage",
+    "showPage",
     {
       "extends": "Component",
       "members": [

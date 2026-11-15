@@ -212,4 +212,23 @@ for (const [engine, browserType, browserTest] of engines) {
       await browser.close();
     }
   });
+
+  browserTest(`${engine}: showPage restores a page of a table in a hidden panel, kept when the panel opens`, async () => {
+    const browser = await leaseBrowser(browserType);
+    try {
+      const page = await browser.newPage();
+      await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body><div id="panel" hidden>${table}</div><script>${js}</script></body></html>`);
+      const shown = await page.evaluate(() => Expressive.DataTables.showPage(document.querySelector('.data-table'), 3));
+      assert.equal(shown, 3);
+      await page.evaluate(() => {
+        document.querySelector('#panel').hidden = false;
+        Expressive.DataTables.sync(document.querySelector('.data-table'));
+      });
+      await expect(page.locator('#r5')).toBeVisible();
+      await expect(page.locator('#r1')).toBeHidden();
+      await expect(page.getByRole('status', { name: 'Pages', exact: true })).toHaveText('3 / 4');
+    } finally {
+      await browser.close();
+    }
+  });
 }

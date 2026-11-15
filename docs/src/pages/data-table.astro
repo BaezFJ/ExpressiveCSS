@@ -396,6 +396,15 @@ Expressive.DataTables.setPage(wrapper, { page: 3, pageSize: 20, total: 87 });
 Expressive.DataTables.setPage(wrapper, null);
 `} />
     <p>
+      To show a local page again, for example from a <code>?page=</code>
+      value after a reload, call
+      <code>Expressive.DataTables.showPage(wrapper, page)</code> once the rows
+      exist. It keeps the local filter and sort, clamps a page past the end,
+      fires no event and returns the page it shows. It returns false for a
+      server-owned table, a table without <code>data-page-size</code> or a
+      page that isn't a positive safe integer.
+    </p>
+    <p>
       Each valid changed page or size requests a bubbling, composed, cancelable
       <code>expressive:page</code> with <code>{"{ page, pageSize }"}</code>.
       Requested pages are one-based and bounded by the known total. An empty

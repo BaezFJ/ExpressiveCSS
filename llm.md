@@ -4102,6 +4102,13 @@ Page buttons keep focus, including at the first or last page. The framework sets
 
 `Expressive.DataTables.setPage(wrapper, { page, pageSize, total })` accepts application page state and opts that wrapper into server ownership. Reuse the local paging markup. The wrapper must be a `.data-table` with a direct native table. Numeric safe integers are required: page and pageSize positive, total nonnegative. Missing fields, strings, fractions, infinities and unsafe integers return false without mutation. Valid state returns true, is copied without modifying the supplied object, clamps the page and reflects pageSize in the wrapper attribute. The setter silently synchronizes status, bounds, selection and columns.
 
+`Expressive.DataTables.showPage(wrapper, page)` shows a local page without events, for example a page restored from the URL after a reload. Call it once the rows exist. It keeps the local filter and sort, clamps a page past the end, supersedes a page request still pending and returns the page it shows. It returns false, changing nothing, for a server-owned table (one whose `setPage` state was accepted), a table without `data-page-size`, or a page that isn't a positive safe integer.
+
+```js
+const page = Number(new URLSearchParams(location.search).get('page')) || 1;
+Expressive.DataTables.showPage(document.getElementById('orders'), page);
+```
+
 ```js
 const wrapper = document.getElementById('orders');
 // Render response records and matching-count text before accepting state.

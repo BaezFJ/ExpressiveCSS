@@ -393,3 +393,50 @@ test('page status uses localized numbers in the wrapper language', () => {
   button('next').click();
   assert.equal(status(), '٢ / ٤');
 });
+
+test('showPage shows a local page quietly and later presses continue from it', () => {
+  const events = [];
+  wrapper().addEventListener('expressive:page', () => events.push('page'));
+  assert.equal(Expressive.DataTables.showPage(wrapper(), 3), 3);
+  assert.deepEqual(displayed(), ['r5', 'r6']);
+  assert.equal(status(), '3 / 4');
+  assert.deepEqual(events, []);
+  sync();
+  assert.deepEqual(displayed(), ['r5', 'r6']);
+  button('previous').click();
+  assert.deepEqual(displayed(), ['r3', 'r4']);
+  button('next').click();
+  button('next').click();
+  assert.deepEqual(displayed(), ['r7']);
+});
+
+test('showPage clamps past the end, keeps the filter and refuses what it cannot show', () => {
+  assert.equal(Expressive.DataTables.showPage(wrapper(), 99), 4);
+  assert.deepEqual(displayed(), ['r7']);
+  query('e');
+  assert.equal(Expressive.DataTables.showPage(wrapper(), 2), 2);
+  assert.ok(displayed().every((id) => /e/i.test(document.getElementById(id).textContent)));
+  for (const page of [0, -1, 1.5, '2', Number.MAX_SAFE_INTEGER + 1, NaN, null]) {
+    assert.equal(Expressive.DataTables.showPage(wrapper(), page), false, String(page));
+  }
+  assert.equal(Expressive.DataTables.showPage(document.body, 1), false);
+  wrapper().removeAttribute('data-page-size');
+  assert.equal(Expressive.DataTables.showPage(wrapper(), 1), false);
+});
+
+test('showPage refuses a server-owned table and keeps a canceled filter', () => {
+  wrapper().addEventListener('expressive:filter', (event) => event.preventDefault(), { once: true });
+  query('Cedar');
+  assert.equal(Expressive.DataTables.showPage(wrapper(), 2), 2);
+  assert.equal(status(), '2 / 4');
+  assert.equal(Expressive.DataTables.setPage(wrapper(), { page: 1, pageSize: 2, total: 7 }), true);
+  assert.equal(Expressive.DataTables.showPage(wrapper(), 3), false);
+  assert.equal(status(), '1 / 4');
+});
+
+test('showPage inside a page listener wins over the pending request', () => {
+  wrapper().addEventListener('expressive:page', () => Expressive.DataTables.showPage(wrapper(), 4), { once: true });
+  button('next').click();
+  assert.deepEqual(displayed(), ['r7']);
+  assert.equal(status(), '4 / 4');
+});

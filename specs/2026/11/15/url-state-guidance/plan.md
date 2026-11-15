@@ -6,8 +6,8 @@ Phase 81. Requirements: [requirements.md](requirements.md). Checks: [validation.
 
 Covers R1 to R3. Checks V1.
 
-- [ ] Add the R2 tests and watch them fail.
-- [ ] Add `showPage` to `src/ts/behaviors/dataTables.ts`, document it there, in `llm.md` and in `docs/src/pages/data-table.astro`, add it to `.fallowrc.json` `usedClassMembers`, add the browser case, and raise the gzip budget with a reviewed line.
+- [x] Add the R2 tests and watch them fail.
+- [x] Add `showPage` to `src/ts/behaviors/dataTables.ts`, document it there, in `llm.md` and in `docs/src/pages/data-table.astro`, add it to `.fallowrc.json` `usedClassMembers`, add the browser case, and raise the gzip budget with a reviewed line.
 
 Done when V1 passes.
 
