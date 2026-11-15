@@ -37,6 +37,20 @@ const S = defineSections([
           are weights, not CSS <code>font-style</code> keywords.
         </p>
         <p>
+          Each role also has a <code>font</code> shorthand token,
+          <code>--md-sys-typescale-{"{role}"}-font</code>, built from its weight,
+          size, line height and family. The shorthand cannot hold
+          letter-spacing, so set that token next to it. The shorthand resolves
+          on <code>:root</code>, so a longhand token you override on a subtree
+          does not reach it there.
+        </p>
+<Code code={`
+.order-total {
+  font: var(--md-sys-typescale-title-large-font);
+  letter-spacing: var(--md-sys-typescale-title-large-letter-spacing);
+}
+`} />
+        <p>
           M3's <code>--md-ref-typeface-brand</code> and
           <code>--md-ref-typeface-plain</code> tokens both default to Roboto.
           Large display, headline, and title-large roles use brand. Smaller

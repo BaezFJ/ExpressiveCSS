@@ -2002,6 +2002,17 @@ The type scale is the HTML. `<h1>`–`<h6>` are display and headline roles, `<p>
 
 Tokens follow the [M3 type system](https://m3.material.io/styles/typography/overview). Each role sets family, size, weight, line-height, and letter-spacing from `--md-sys-typescale-*`. They do not set `font-style` — the token named `-font-family-style` holds “Regular” / “Medium”, which are weights, not CSS `font-style` keywords.
 
+Each role also has a `font` shorthand token, `--md-sys-typescale-{role}-font`, built from its weight, size, line height and family. The shorthand cannot hold letter-spacing, so set that token next to it:
+
+```css
+.order-total {
+  font: var(--md-sys-typescale-title-large-font);
+  letter-spacing: var(--md-sys-typescale-title-large-letter-spacing);
+}
+```
+
+The shorthand resolves on `:root`, so a longhand token you override on a subtree does not reach it there. Override the longhands on `:root`, or set the longhand properties instead of `font`.
+
 M3's `--md-ref-typeface-brand` and `--md-ref-typeface-plain` tokens both default to Roboto. Large display, headline, and title-large roles use brand; smaller title, body, and label roles use plain. Noto Sans is the fallback for characters Roboto cannot cover. Roboto ships Latin, Latin Extended, Cyrillic, Cyrillic Extended, Greek, Greek Extended and Vietnamese, and Noto Sans adds Devanagari, each at 400, 500 and 700. Every subset is its own face with a `unicode-range`, so the browser downloads only the scripts and weights the page renders. Noto Sans Arabic, Noto Sans Hebrew and Noto Sans Thai come next in the fallback, each with only its script's `unicode-range`, so a page fetches one only when it shows that script. CJK text falls through to the system font the browser picks for the element's `lang`, so set `lang` on Japanese, Chinese and Korean text. For another script, load its family and add it to `--md-ref-typeface-fallback` before `sans-serif`. Override the reference tokens to use a different family.
 
 ### Semantic map
