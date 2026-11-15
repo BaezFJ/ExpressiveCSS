@@ -8,13 +8,13 @@ Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, th
 
 | ID | Covers | Setup | Action | Expected result | Fails if | Result |
 | --- | --- | --- | --- | --- | --- | --- |
-| V1 | R1, R2 | Full scaffold with a `<footer>` status bar at 1280 × 800, then with a `<div role="region">` one, then with `.tall-rail`; the first at 700 × 800. | Measure every region. | Status bar: left 0, width 1280, bottom 800, in both forms. Rail and pane bottoms equal its top, and the toolbar's center is midway between the app bar's bottom and its top. In the tall-rail layout the rail runs from 0 to its top and the toolbar's center is midway between 0 and its top. At 700px `main` starts at the collapsed rail width. Watch fail before the change. | The status bar is auto-placed, narrower than the scaffold, overlaps a region, or drops the held column. | Pending |
-| V2 | R3 | Full scaffold with a status bar and a navigation bar at 390 × 800. | Read the status bar's `display`. | `none`. Watch fail before the change. | The status bar shows with the navigation bar. | Pending |
-| V3 | R4 | The phase 88 to 93 scaffold tests. | Run them. | All pass. | The extra row moves a region when there is no status bar. | Pending |
-| V4a | R7 | Fixtures through the semantics rule runner. | Check a scaffold with one status bar, one with two visible, and one with a second `hidden`. | Two visible bars are flagged by `scaffold-one-child-per-region`; one, or one plus a hidden one, passes. Watch fail before the rule changes. | Two status bars pass. | Pending |
-| V4 | R5 | Full scaffold with a status bar at 1280 × 800, root font size 32px. | Measure the status bar and pane. | The status bar is at least 48px tall, its bottom is 800, and the pane's bottom equals its top. | Enlarged text clips the bar or the pane runs under it. | Pending |
-| V5 | R6 | After `npm run build:skill`. | Run `check:generated`, selective-builds and component-decisions; confirm the scaffold demo holds a `.status-bar`; grep "data-priority" in the scaffold docs page, "status-bar" in its `llm.md` Scaffold section, "scaffold" in the status bar docs page and its `llm.md` section, and a new changelog line. | Generated files current, budget and pin hold, records present. | A record is stale or missing, or the budget is exceeded. | Pending |
-| V6 | R1 to R6 | Clean build. | Run `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`. | All pass; a known flake passes on a lone rerun. | Any check fails on rerun. | Pending |
+| V1 | R1, R2 | Full scaffold with a `<footer>` status bar at 1280 × 800, then with a `<div role="region">` one, then with `.tall-rail`; the first at 700 × 800. | Measure every region. | Status bar: left 0, width 1280, bottom 800, in both forms. Rail and pane bottoms equal its top, and the toolbar's center is midway between the app bar's bottom and its top. In the tall-rail layout the rail runs from 0 to its top and the toolbar's center is midway between 0 and its top. At 700px `main` starts at the collapsed rail width. Watch fail before the change. | The status bar is auto-placed, narrower than the scaffold, overlaps a region, or drops the held column. | Pass (2026-11-15), all three engines, both forms, tall rail and 700px; seen failing before the change |
+| V2 | R3 | Full scaffold with a status bar and a navigation bar at 390 × 800. | Read the status bar's `display`. | `none`. Watch fail before the change. | The status bar shows with the navigation bar. | Pass (2026-11-15), all three engines; seen failing before the change |
+| V3 | R4 | The phase 88 to 93 scaffold tests. | Run them. | All pass. | The extra row moves a region when there is no status bar. | Pass (2026-11-15): earlier phases' tests pass, with the tall-rail areas string updated for the status row |
+| V4a | R7 | Fixtures through the semantics rule runner. | Check a scaffold with one status bar, one with two visible, and one with a second `hidden`. | Two visible bars are flagged by `scaffold-one-child-per-region`; one, or one plus a hidden one, passes. Watch fail before the rule changes. | Two status bars pass. | Pass (2026-11-15), with two-navigation-bar and hidden-bar fixtures; seen failing before the rule changed |
+| V4 | R5 | Full scaffold with a status bar at 1280 × 800, root font size 32px. | Measure the status bar and pane. | The status bar is at least 48px tall, its bottom is 800, and the pane's bottom equals its top. | Enlarged text clips the bar or the pane runs under it. | Pass (2026-11-15), all three engines; seen failing before the change |
+| V5 | R6 | After `npm run build:skill`. | Run `check:generated`, selective-builds and component-decisions; confirm the scaffold demo holds a `.status-bar`; grep "data-priority" in the scaffold docs page, "status-bar" in its `llm.md` Scaffold section, "scaffold" in the status bar docs page and its `llm.md` section, and a new changelog line. | Generated files current, budget and pin hold, records present. | A record is stale or missing, or the budget is exceeded. | Pass (2026-11-15): check:generated current, CSS 92,695 (+18), the demo holds a status bar region and every record names the status row |
+| V6 | R1 to R6 | Clean build. | Run `npm run verify`, `npm test --prefix mcp/expressivecss` and `npm run verify:packages`. | All pass; a known flake passes on a lone rerun. | Any check fails on rerun. | Pass (2026-11-15): verify ran 4,029 tests with 2 failures, the status bar scope test (now allowing `.scaffold > .status-bar`) and the WebKit swipe-actions flake, which passed alone; docs:build:astro, docs:verify, MCP smoke and verify:packages pass |
 
 ## Human checks
 
@@ -24,6 +24,10 @@ None. Placement is measured by the agent-run checks; the status bar's own screen
 
 - All agent-run checks pass, with V3 as the regression check.
 - The milestone pull request's required CI checks and reviews are done.
+
+## Decisions made while building
+
+- `tests/status-bar.test.js` requires every compiled selector naming the bar to start at `.status-bar`. The scaffold's placement rule starts at `.scaffold > .status-bar`, so the test now allows that one form.
 
 ## Review record
 
@@ -57,3 +61,4 @@ None. Placement is measured by the agent-run checks; the status bar's own screen
     - A docs line is rewrapped.
     - The `llm.md` status paragraph now follows the region rules.
   - FYI, no change: RTL and print aren't browser-tested; the spec leaves print out.
+- 2026-11-15, local Codex review (`codex review --base c4781e2bb`, saved as `codex-review-phase-94.txt` in the worktree's git dir, read to its last line): "No actionable defects found." Its sandbox blocked Chromium and WebKit. Nothing to fix or reject.
