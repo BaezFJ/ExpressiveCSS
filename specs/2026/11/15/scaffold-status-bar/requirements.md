@@ -39,14 +39,11 @@
 - **R4** Without a status bar, every region's box matches phases 88 to 93.
 - **R5** With the root font size at 32px, the status bar grows and the pane gets shorter, with the status bar still at the bottom edge.
 - **R6** These records change: `semantics.json` (R7), the scaffold docs page (a status bar in the demo, and the low-priority note) and `llm.md` section, the status bar docs page and `llm.md` section, the design reference `scaffold.md`, the decision record, `CHANGELOG.md`, the CSS budget, and `npm run build:skill` last.
+- **R7** In `semantics.json`, `scaffold-one-child-per-region` also flags two visible `.status-bar` children, and its message and the row note name the status bar region.
 
 ## Risks considered
 
 - Two at once, bad input, refusal: CSS only.
 - Other readers: the medium and compact rail overlays are `position: fixed` at full height, so they cover the status bar as they cover everything else; the status bar's safe-area padding stays (phase 97 handles the other regions); the page, pane and questionnaire footer rules already skip `footer.status-bar`; the scroll timeline and scroll padding are unaffected because the status bar isn't in the pane.
-- **R7** In `semantics.json`, `scaffold-one-child-per-region` also flags two visible `.status-bar` children, and its message and the row note name the status bar region.
-
-## Risks considered (continued)
-
 - UI states: enlarged text (R5), RTL (full width, nothing to mirror), no JavaScript (CSS only). Print isn't checked.
 - `specs/checklist.md` does not exist in this project.
