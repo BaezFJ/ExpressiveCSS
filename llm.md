@@ -4292,7 +4292,7 @@ The framework fires no event of its own. To keep the choice across visits, save 
 
 ### App behavior
 
-Keep the filter text and page in the URL as query parameters, via `history.replaceState`. Write the query wherever the app applies it (`expressive:filter` for `data-table-filter`) and drop the page then, since a new query returns to page 1; drop it on an uncanceled `expressive:sort` too. Write `page`, and `pageSize` when a size select exists, on `expressive:page`. With a table per tab panel, also drop both on a tab change. On load, in a `DOMContentLoaded` handler, read the whole URL first, then set the search input's `value` and any saved size on the size select's `value` and the wrapper's `data-page-size`, call `Expressive.DataTables.sync(wrapper)`, then `Expressive.DataTables.showPage(wrapper, page)` on the table in the selected panel. Browsers rate-limit `replaceState`, so write the query once typing pauses. Put URL values in `.value` or `.textContent`, never markup.
+Keep the filter text and page in the URL as query parameters, via `history.replaceState`. Write the query wherever the app applies it (`expressive:filter` for `data-table-filter`) and drop the page, as a new query returns to page 1; drop it on an uncanceled `expressive:sort` too. Write `page` (and `pageSize`, with a size select) on `expressive:page`. With a table per tab panel, drop both and cancel a pending filter write on a tab change. On load, in a `DOMContentLoaded` handler, read the whole URL first, then set the search input's `value` and any saved size on the size select's `value` and the wrapper's `data-page-size`, call `Expressive.DataTables.sync(wrapper)`, then `Expressive.DataTables.showPage(wrapper, page)` on the table in the selected panel. Browsers rate-limit `replaceState`, so write the query once typing pauses. Put URL values in `.value` or `.textContent`, never markup.
 
 ```js
 document.addEventListener('DOMContentLoaded', () => {
@@ -7509,7 +7509,7 @@ Primary tabs stack the icon above the label (64dp). Add `horizontal` to put them
 
 ### App behavior
 
-Keep the selected tab in the URL, so a reload, a shared link and Back show the same view. Give each tab set its own query parameter, such as `?view=shipped`, and write it with `history.replaceState` from an `expressive:change` listener on the `.tabs` element; data tables and menus fire the same event name. On load, read the whole URL first, then move `.active` to the tab it names before `AutoInit()`. Tabs starts on `a.active` and fires nothing for it, so draw that tab's content yourself after init. Calling `select(id)` after init also works, but it runs your own listeners. A hash naming the panel needs no script, and Tabs prefers it over `.active`, but a shared link then scrolls to the panel and the hash holds only one tab set. Don't push a history entry per change.
+Keep the selected tab in the URL, so a reload, a shared link and Back show the same view. Give each tab set its own query parameter, such as `?view=shipped`, and write it with `history.replaceState` from an `expressive:change` listener on the `.tabs` element; data tables and menus fire the same event name. On load, read the whole URL first, then move `.active` to the tab it names before `AutoInit()`. Tabs starts on `a.active` and fires nothing for it, so draw that tab's content yourself after init. Calling `select(id)` after init also works, but it runs your own listeners. A hash naming the panel needs no script, and Tabs prefers it over `.active`, but a shared link then scrolls to the panel and the hash holds only one tab set. Drop a hash that names one of its panels when you write, or it wins on reload. Don't push a history entry per change.
 
 ```js
 const tabs = document.getElementById('order-tabs');
@@ -7524,6 +7524,7 @@ tabs.addEventListener('expressive:change', (event) => {
   if (event.target !== tabs) return;
   const url = new URL(location.href);
   url.searchParams.set('view', event.detail.panel.id);
+  if ([...tabs.querySelectorAll('a')].some((a) => a.hash === url.hash)) url.hash = '';
   history.replaceState(null, '', url);
 });
 ```

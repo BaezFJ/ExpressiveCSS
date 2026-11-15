@@ -4,8 +4,9 @@ import { execFile } from 'node:child_process';
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { promisify } from 'node:util';
+import { chromium } from 'playwright';
 
 const run = promisify(execFile);
 const script = fileURLToPath(new URL('../scripts/finished-app-url-state.mjs', import.meta.url));
@@ -34,14 +35,20 @@ document.addEventListener('DOMContentLoaded', () => {
     for (const [key, value] of Object.entries(changes)) { if (value) url.searchParams.set(key, value); else url.searchParams.delete(key); }
     history.replaceState(null, '', url);
   };
-  tabs.addEventListener('expressive:change', (event) => write({ view: event.detail.panel.id, q: '', page: '' }));
+  let typing;
+  tabs.addEventListener('expressive:change', (event) => {
+    clearTimeout(typing);
+    write({ view: event.detail.panel.id, q: '', page: '' });
+    const url = new URL(location.href);
+    if ([...tabs.querySelectorAll('a')].some((a) => a.hash === url.hash)) { url.hash = ''; history.replaceState(null, '', url); }
+  });
   const panel = document.getElementById(saved || 'open');
   const wrapper = panel.querySelector('.data-table');
   wrapper.querySelector('[data-table-filter]').value = params.get('q') ?? '';
   Expressive.DataTables.sync(wrapper);
   Expressive.DataTables.showPage(wrapper, Number(params.get('page')) || 1);
   document.querySelectorAll('.data-table').forEach((each) => {
-    let typing, query = params.get('q') ?? '';
+    let query = params.get('q') ?? '';
     each.addEventListener('expressive:filter', (event) => { clearTimeout(typing); query = event.detail.query; typing = setTimeout(() => write({ q: query, page: '' }), 300); });
     each.addEventListener('expressive:page', (event) => { clearTimeout(typing); write({ q: query, page: event.detail.page }); });
   });
@@ -80,4 +87,25 @@ test('the URL state check fails a dashboard that keeps nothing in the URL', asyn
   assert.equal(line.pass, false);
   assert.equal(line.reason, 'the view after reload differs');
   assert.equal(code, 1);
+});
+
+test('the guidance pattern drops a panel hash and a pending filter write when the tab changes', async () => {
+  const dir = await mkdtemp(join(tmpdir(), 'finished-app-url-'));
+  const browser = await chromium.launch();
+  try {
+    await writeFile(join(dir, 'index.html'), app(keepUrl));
+    const page = await browser.newPage();
+    await page.goto(`${pathToFileURL(join(dir, 'index.html')).href}#open`);
+    await page.waitForLoadState('load');
+    await page.getByRole('searchbox', { name: 'Search open-orders' }).fill('a');
+    await page.getByRole('link', { name: 'Shipped' }).click();
+    await page.waitForTimeout(500);
+    const url = new URL(page.url());
+    assert.equal(url.searchParams.get('view'), 'shipped');
+    assert.equal(url.searchParams.get('q'), null);
+    assert.equal(url.hash, '');
+  } finally {
+    await browser.close();
+    await rm(dir, { recursive: true, force: true });
+  }
 });

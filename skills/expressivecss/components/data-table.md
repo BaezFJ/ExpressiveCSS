@@ -9,7 +9,7 @@ Component ID: `data-table`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `94ad8c1ab5e6f18b891da6d6b0937d3b65c3fc5a662528d3cf1b1573eb2dfec4`
+Contract SHA-256: `2801921b953bf83790a4a1c9bfbb8dbf5ec268444f22900c22b7345cceb672a2`
 
 #### Selection and adaptation
 
@@ -74,7 +74,7 @@ Add a labelled `input[type="search"][data-table-filter]` inside the wrapper for 
 
 #### App behavior
 
-Keep the filter text and page in the URL as query parameters, via `history.replaceState`. Write the query wherever the app applies it (`expressive:filter` for `data-table-filter`) and drop the page then, since a new query returns to page 1; drop it on an uncanceled `expressive:sort` too. Write `page`, and `pageSize` when a size select exists, on `expressive:page`. With a table per tab panel, also drop both on a tab change. On load, in a `DOMContentLoaded` handler, read the whole URL first, then set the search input's `value` and any saved size on the size select's `value` and the wrapper's `data-page-size`, call `Expressive.DataTables.sync(wrapper)`, then `Expressive.DataTables.showPage(wrapper, page)` on the table in the selected panel. Browsers rate-limit `replaceState`, so write the query once typing pauses. Put URL values in `.value` or `.textContent`, never markup.
+Keep the filter text and page in the URL as query parameters, via `history.replaceState`. Write the query wherever the app applies it (`expressive:filter` for `data-table-filter`) and drop the page, as a new query returns to page 1; drop it on an uncanceled `expressive:sort` too. Write `page` (and `pageSize`, with a size select) on `expressive:page`. With a table per tab panel, drop both and cancel a pending filter write on a tab change. On load, in a `DOMContentLoaded` handler, read the whole URL first, then set the search input's `value` and any saved size on the size select's `value` and the wrapper's `data-page-size`, call `Expressive.DataTables.sync(wrapper)`, then `Expressive.DataTables.showPage(wrapper, page)` on the table in the selected panel. Browsers rate-limit `replaceState`, so write the query once typing pauses. Put URL values in `.value` or `.textContent`, never markup.
 
 ```js
 document.addEventListener('DOMContentLoaded', () => {
