@@ -4,7 +4,7 @@ description: "Reviews ExpressiveCSS interfaces with five specialist lenses and a
 license: MIT
 metadata:
   author: BaezFJ
-  version: "0.1.2"
+  version: "0.2.0"
   tags: expressivecss, review, audit, subagents, material-design-3
 ---
 
