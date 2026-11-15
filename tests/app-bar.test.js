@@ -37,7 +37,7 @@ test('top app bars are pinned without a fixed class', () => {
   // the scrolled keyframe at rest, so the whole animation sits behind @supports.
   assert.match(
     css,
-    /@supports \(animation-timeline: scroll\(\)\)\s*\{\s*header:has\(> :is\(nav:not\(\.tabs, \.navigation-bar, \.navigation-rail\), \.bar\)\)\s*\{[^}]*animation: top-app-bar-scroll linear both;[^}]*animation-timeline:\s*scroll\(root\)/,
+    /@supports \(animation-timeline: scroll\(\)\)\s*\{\s*header:has\(> :is\(nav:not\(\.tabs, \.navigation-bar, \.navigation-rail\), \.bar\)\)\s*\{[^}]*animation: top-app-bar-scroll linear both;[^}]*animation-timeline:\s*var\(--_app-bar-timeline, scroll\(root\)\)/,
   );
   assert.doesNotMatch(css, /header\.fixed/);
 });
