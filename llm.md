@@ -4784,7 +4784,7 @@ Add `fixed` to stick the bar to the bottom of the viewport. Padding includes `sa
 
 Switch between UI views on mid-sized devices. A `nav.navigation-rail` holds 3–7 destinations plus an optional FAB. Put it in the same place on every screen.
 
-Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp, icon and label on one row, and an extended FAB. The menu button toggles that class (`AutoInit()` starts it). On compact windows an expanded rail is modal — a scrim, and Escape or a scrim tap collapses it. Add `modal` to keep that overlay at every breakpoint. Expanding and collapsing run on the default spatial spring (`--md-comp-nav-rail-motion` and `--md-comp-nav-rail-motion-duration`), so `motion="expressive"` lets the rail overshoot its width slightly before it settles.
+Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp, icon and label on one row, and an extended FAB. The menu button toggles that class (`AutoInit()` starts it). On compact windows an expanded rail is modal — a scrim, and Escape or a scrim tap collapses it. A rail that is a direct child of a `scaffold` is modal from 600px to 839px as well. Add `modal` to keep that overlay at every breakpoint. Expanding and collapsing run on the default spatial spring (`--md-comp-nav-rail-motion` and `--md-comp-nav-rail-motion-duration`), so `motion="expressive"` lets the rail overshoot its width slightly before it settles.
 
 Escape closes an open nested menu first. A second Escape collapses the modal rail and returns focus from inside it to the toggle that opened it, unless a close callback moves focus elsewhere.
 
@@ -5112,7 +5112,7 @@ Each region takes one direct child. For custom content use the region classes `s
 </div>
 ```
 
-The rail runs from the bar to the bottom of the window, and expanding it widens its column and narrows the pane. A vertical toolbar is centered in the trailing region, `--md-comp-toolbar-external-space` (24px) from the pane and the window edge. Under `dir="rtl"` the rail is on the right and the toolbar on the left.
+The rail runs from the bar to the bottom of the window. At 840px and wider, expanding it widens its column and narrows the pane. From 600px to 839px an expanded rail opens over the pane with a scrim and the pane keeps its width, as a `.modal` rail does at every width; the open rail covers the app bar's menu button, so it closes from the scrim, Escape or its own menu button, and Tab can still reach the pane under it. Set `--md-comp-nav-rail-collapsed-width` on the scaffold, not the rail, since the rail's column reads it there. A vertical toolbar is centered in the trailing region, `--md-comp-toolbar-external-space` (24px) from the pane and the window edge. Under `dir="rtl"` the rail is on the right and the toolbar on the left.
 
 Add `tall-rail` to run the rail from the top of the window to the bottom, with the app bar over the pane only and the trailing toolbar centered in the full height.
 

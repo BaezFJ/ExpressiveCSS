@@ -262,7 +262,7 @@
       "lastReviewedSupport": "implemented",
       "sourceReview": "source-reviewed",
       "reviewedOn": "2026-11-15",
-      "scope": "A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane.",
+      "scope": "A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim.",
       "adaptation": "CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.",
       "upstream": {
         "source": "https://m3.material.io/foundations/layout/scaffold/overview",
@@ -284,7 +284,7 @@
       "sources": [
         {
           "path": "src/sass/components/_scaffold.scss",
-          "sha256": "72917f10b92b21d411e61b55ee325bc85023161375bba5d96580f02e68ee2560"
+          "sha256": "44e5c9a2c2a1a11ecbdb999597332f18426cef687cb69ec38830844b89123b3d"
         }
       ],
       "gaps": [
@@ -311,6 +311,12 @@
           "file": "tests/scaffold-browser.test.js",
           "name": "chromium: a tall-rail scaffold runs the rail and toolbar the full height with the bar over the pane",
           "scope": "Grid areas, a full-height rail and centered toolbar, the bar over the pane only, 200% text, an expanded rail, empty regions and the pane-scroll fill. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: on medium windows a scaffold's expanded rail overlays the pane, and from 840px it narrows it",
+          "scope": "The rail pushing the pane at 1024px, an overlay with a scrim over the pane and app bar row at 700px in both layouts, a .modal rail at 1280px, and an unmoved pane. Equivalent Firefox and WebKit cases run in the same suite.",
           "state": "not-recorded"
         },
         {

@@ -9,7 +9,7 @@ Component ID: `scaffold`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `7fdda8cad55bc5694bc7ff25cb6fd5c31be537c35a685ed55b46b36a424c0a9e`
+Contract SHA-256: `d147efea197240c315df6cbda3473abf53b7c6b8fc074861a7284f41796d3a0e`
 
 #### Selection and adaptation
 
@@ -25,7 +25,7 @@ Upstream: requirements-prose-reviewed (2026-11-15); [evidence](https://m3.materi
 
 Requirements and boundaries: design reference layout-material-review. Compact, medium and safe-area adaptations arrive in later phases of the scaffold milestone. Full visual parity and spoken output unverified.
 
-Support (2026-11-15, `llm.md#scaffold`): A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane.
+Support (2026-11-15, `llm.md#scaffold`): A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim.
 
 Web adaptation: CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.
 

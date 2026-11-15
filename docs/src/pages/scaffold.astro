@@ -113,10 +113,21 @@ const S = defineSections([
         </p>
         <p>
           The rail fills its region from the bar down to the bottom of the
-          window and scrolls its own destinations when they don't fit.
-          Expanding it widens its column and narrows the pane. The vertical
-          toolbar is centered in its region, 24px from the pane and from the
-          window edge.
+          window and scrolls its own destinations when they don't fit. At
+          840px and wider, expanding it widens its column and narrows the
+          pane. The vertical toolbar is centered in its region, 24px from the
+          pane and from the window edge.
+        </p>
+        <p>
+          From 600px to 839px, an expanded rail opens over the pane with a
+          scrim instead, and the pane keeps its width. A <code>.modal</code>
+          rail does the same at every width. The open rail covers the app
+          bar's menu button, so it closes from the scrim, Escape or the rail's
+          own menu button. Tab can still move from the open rail to the pane
+          under it, as it can from the compact overlay. The rail's column
+          keeps <code>--md-comp-nav-rail-collapsed-width</code>, so set that
+          token on the scaffold, not on the rail. On a medium window the
+          demo's rail opens over this whole page, as it would in an app.
         </p>
 <Code code={`
 <div class="scaffold">

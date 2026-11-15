@@ -172,7 +172,9 @@ const S = defineSections([
           On compact windows, <code>expanded</code> already
           overlays the page with a scrim. Add <code>modal</code> if you
           want that overlay on tablets and desktops too. Image 2 in the
-          spec shows this case, a compact window expanding in place.
+          spec shows this case, a compact window expanding in place. A rail
+          that is a direct child of a <a href="scaffold.html">scaffold</a>
+          is modal from 600px to 839px as well.
         </p>
 <Code code={`
 <nav class="navigation-rail expanded modal" aria-label="Main">…</nav>

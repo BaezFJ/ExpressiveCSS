@@ -25,6 +25,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   keeps the button's `aria-expanded` in sync, also for a button added after it
   started, and Escape on a modal rail returns focus to the button that opened
   it.
+- In a `.scaffold`, an expanded navigation rail opens over the pane with a
+  scrim from 600px to 839px, and Escape or a scrim tap closes it. The rail's
+  column keeps its collapsed width there and for a `.modal` rail, so the pane
+  doesn't move as the rail opens and closes.
 
 ### Changed
 
