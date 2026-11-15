@@ -16,6 +16,7 @@ const body = `<form id="form" action="#sent">
 <script>
   window.counts = { click: 0, submit: 0 };
   document.getElementById('save').addEventListener('click', () => counts.click++);
+  document.getElementById('save').addEventListener('keydown', (event) => { if (event.key === 'Enter' || event.key === ' ') counts.key = (counts.key ?? 0) + 1; });
   document.getElementById('form').addEventListener('submit', (event) => { event.preventDefault(); counts.submit++; });
 </script>`;
 const page = (script) => `<!doctype html><html lang="en"><head><style>${css}</style></head><body>${body}${script}</body></html>`;

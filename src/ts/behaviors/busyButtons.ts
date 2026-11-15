@@ -16,10 +16,19 @@ export class BusyButtons {
   static Init() {
     if (typeof document === 'undefined') return;
     document.addEventListener('click', BusyButtons._onClick, true);
+    // Components that activate on keydown (Menu, ExpandingCard) skip the click.
+    document.addEventListener('keydown', BusyButtons._onKey, true);
+  }
+
+  private static _onKey(e: KeyboardEvent) {
+    if ((e.key === 'Enter' || e.key === ' ') && Utils.closestInPath(e, BUSY)) BusyButtons._stop(e);
   }
 
   private static _onClick(e: MouseEvent) {
-    if (!Utils.closestInPath(e, BUSY)) return;
+    if (Utils.closestInPath(e, BUSY)) BusyButtons._stop(e);
+  }
+
+  private static _stop(e: Event) {
     e.preventDefault();
     e.stopImmediatePropagation();
   }

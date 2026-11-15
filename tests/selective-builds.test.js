@@ -355,7 +355,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed shared core helpers for right-to-left checks, ID lists, the active descendant and resize handles, and shared chart marks: 111,422 gzip bytes (-255).
   // Reviewed DataTables.showPage, which restores a local page from the URL without events, with its validation split out for the complexity gate: 111,466 gzip bytes (+44).
   // Reviewed the BusyButtons press guard and the keypad's check of the form's default button: 111,601 gzip bytes (+135).
-  assert.ok(sizes(js).gzip <= 111601, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the BusyButtons keydown guard for components that activate on Enter or Space: 111,622 gzip bytes (+21).
+  assert.ok(sizes(js).gzip <= 111622, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -560,5 +561,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed .status-bar (bar, items, end group and its compact fallback, vibrant bar, compact priority hiding, forced-colors edge, badge anchor), status bar items leaving the common button rules, and the page, pane and questionnaire footers stepping aside for it: 91,445 gzip bytes (+384).
   // Reviewed a --md-sys-typescale-{role}-font shorthand token for each of the 15 roles, built from the role's longhand tokens: 91,770 gzip bytes (+325).
   // Reviewed the aria-busy button spinner on shaped buttons, with its reduced-motion rule and the data table and menu buttons left out: 92,147 gzip bytes (+377).
-  assert.ok(sizes(css).gzip <= 92147, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed leaving buttons with a .shape-* utility out of the busy spinner: 92,160 gzip bytes (+13).
+  assert.ok(sizes(css).gzip <= 92160, `CSS gzip: ${sizes(css).gzip}`);
 });
