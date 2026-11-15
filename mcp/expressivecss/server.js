@@ -292,7 +292,7 @@ const LegacyPatternList = [
     // device keyword, a negative number or a number above 1 as a cap of 1 or less; a key with no value reads as 0.
     // It splits values on spaces, `,` and `=` but not `;`, so `yes;` is off too. Attributes are stepped over whole, so text in another
     // attribute's value can't pass for the name, and every repeat is capped so an unclosed tag stays linear.
-    pattern: /<meta\b(?=(?:\s+[^\s"'<>=/]{1,100}(?:\s*=\s*(?:"[^"<>]{0,500}"|'[^'<>]{0,500}'|[^\s"'<>=]{1,500}))?){0,30}?\s+name\s*=\s*(?:"viewport"|'viewport'|viewport(?=[\s/>])))(?:\s+[^\s"'<>=/]{1,100}(?:\s*=\s*(?:"[^"<>]{0,500}"|'[^'<>]{0,500}'|[^\s"'<>=]{1,500}))?){0,30}?\s+content\s*=\s*(["'])(?:(?!\1)[^<>]){0,500}?(?<![-\w])(?:user-scalable\s*=\s*(?!\s|(?:yes|device-(?:width|height))(?=[\s,=]|\1)|[-+]?0*[1-9])|maximum-scale\s*=\s*(?!\s|device-(?:width|height)(?=[\s,=]|\1)|-|\+?(?:0*[1-9]\d+|0*[2-9]|0*1\.\d*[1-9]))|(?:user-scalable|maximum-scale)\s*(?=,|\1))/giu,
+    pattern: /<meta\b(?=(?:\s+[^\s"'<>=/]{1,100}(?:\s*=\s*(?:"[^"<>]{0,500}"|'[^'<>]{0,500}'|[^\s"'<>]{1,500}))?){0,30}?\s+name\s*=\s*(?:"viewport"|'viewport'|viewport(?=[\s/>])))(?:\s+[^\s"'<>=/]{1,100}(?:\s*=\s*(?:"[^"<>]{0,500}"|'[^'<>]{0,500}'|[^\s"'<>]{1,500}))?){0,30}?\s+content\s*=\s*(["'])(?:(?!\1)[^<>]){0,500}?(?<![-\w])(?:user-scalable\s*=\s*(?!\s|(?:yes|device-(?:width|height))(?=[\s,=]|\1)|[-+]?0*[1-9])|maximum-scale\s*=\s*(?!\s|device-(?:width|height)(?=[\s,=]|\1)|-|\+?(?:0*[1-9]\d+|0*[2-9]|0*1\.\d*[1-9]))|(?:user-scalable|maximum-scale)\s*(?=,|\1))/giu,
   },
   {
     id: 'paste-blocked',
@@ -301,7 +301,7 @@ const LegacyPatternList = [
     // The lookbehind steps over whole attributes back to the tag, so text in another attribute's value can't pass for the name; quoted values may hold `>`
     // (Vue `:disabled="n > 3"`) and run to 2,000 characters for long class lists. No `i` flag keeps the value case-sensitive.
     // Statements can't start with whitespace and every repeat is capped, so an unclosed value stays linear; `return` followed by a newline returns nothing.
-    pattern: /[oO][nN][pP][aA][sS][tT][eE](?<=<[A-Za-z][^\s"'<>=/]{0,100}(?:\s{1,100}[^\s"'<>=/]{1,100}(?:\s{0,100}=\s{0,100}(?:"[^"]{0,2000}"|'[^']{0,2000}'|[^\s"'<>=]{1,500}))?){0,30}\s{1,100}.{7})\s{0,100}=\s{0,100}(?:(["'])\s{0,100}(?:event\.preventDefault\(\)(?:[^\S\n]{0,100}[;\n]\s{0,100}event\.preventDefault\(\)){0,49}[^\S\n]{0,100}(?:[;\n]\s{0,100})?\1|(?:(?!(?:if|else|for|while|do|switch|try|with|return)(?![\w$]))(?!\1)[^\s;{}](?:(?!\1)[^;\n{}]){0,500}[;\n]\s{0,100}){0,8}return[ \t]{1,100}false[^\S\n]{0,100}(?:[;\n]|\1))|event\.preventDefault\(\);?(?=[\s>]))/gu,
+    pattern: /[oO][nN][pP][aA][sS][tT][eE](?<=<[A-Za-z][^\s"'<>=/]{0,100}(?:\s{1,100}[^\s"'<>=/]{1,100}(?:\s{0,100}=\s{0,100}(?:"[^"]{0,2000}"|'[^']{0,2000}'|[^\s"'<>]{1,500}))?){0,30}\s{1,100}.{7})\s{0,100}=\s{0,100}(?:(["'])\s{0,100}(?:event\.preventDefault\(\)(?:[^\S\n]{0,100}[;\n]\s{0,100}event\.preventDefault\(\)){0,49}[^\S\n]{0,100}(?:[;\n]\s{0,100})?\1|(?:(?!(?:if|else|for|while|do|switch|try|with|return|throw|break|continue)(?![\w$]))(?!\1)[^\s;{}](?:(?!\1)[^;\n{}]){0,500}[;\n]\s{0,100}){0,8}return[ \t]{1,100}false[^\S\n]{0,100}(?:[;\n]|\1))|event\.preventDefault\(\);?(?=[\s>]))/gu,
   },
 ];
 
