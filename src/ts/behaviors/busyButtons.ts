@@ -1,0 +1,25 @@
+import { Utils } from '../core/utils';
+
+const BUSY = 'button[aria-busy="true"], .button[aria-busy="true"]';
+
+/**
+ * Busy buttons. While the page sets `aria-busy="true"` on a `button` or
+ * `.button`, a click on it is cancelled in the capture phase, before any
+ * handler, so a mouse press, Enter, Space and a form's implicit submission do
+ * nothing until the page clears the attribute. Shaped buttons also show a
+ * progress indicator (`_buttons.scss`). `requestSubmit()` sends no click, and
+ * buttons in closed shadow roots are out of reach.
+ */
+export class BusyButtons {
+  // A second Init adds nothing: addEventListener ignores a listener it has.
+  static Init() {
+    if (typeof document === 'undefined') return;
+    document.addEventListener('click', BusyButtons._onClick, true);
+  }
+
+  private static _onClick(e: MouseEvent) {
+    if (!Utils.closestInPath(e, BUSY)) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  }
+}

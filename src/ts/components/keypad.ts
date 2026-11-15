@@ -1,6 +1,8 @@
 import { Component, BaseOptions } from '../core/component';
 import { Utils } from '../core/utils';
 
+const BUSY_SUBMIT = ':is(button, .button)[aria-busy="true"]:is([type="submit"], button:not([type]))';
+
 export interface KeypadOptions extends BaseOptions {
   /**
    * Called after every key press with the text typed ('7', 'A', ' ') or the
@@ -252,7 +254,8 @@ export class Keypad extends Component<KeypadOptions> {
 
   /** Enter submits an input's form and starts a new line in a textarea. */
   private _enter(field: Field) {
-    if (field instanceof HTMLInputElement) field.form?.requestSubmit();
+    // requestSubmit sends no click, so BusyButtons can't stop it: skip a busy submit here.
+    if (field instanceof HTMLInputElement && !field.form?.querySelector(BUSY_SUBMIT)) field.form?.requestSubmit();
     else this._edit(field, '\n', 'insertLineBreak');
   }
 

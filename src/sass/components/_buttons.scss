@@ -453,3 +453,40 @@ $_shaped: ":where(#{$_btn}):where(:not(#{$_fixed}))";
     color: HighlightText !important;
   }
 }
+
+// Busy. A shaped button whose page set aria-busy="true" shows a spinner after
+// its label; BusyButtons (behaviors/busyButtons.ts) ignores its presses. The
+// spinner fades in after the delay, so a quick request doesn't flash it, and a
+// border in currentColor stays visible in forced colors. Disabled wins.
+#{$_shaped}[aria-busy="true"]:not(#{$expressive-disabled}) {
+  cursor: progress;
+
+  &::after {
+    content: "";
+    flex: none;
+    inline-size: 1em;
+    block-size: 1em;
+    box-sizing: border-box;
+    border: 0.125em solid currentColor;
+    border-inline-end-color: transparent;
+    border-radius: 50%;
+    opacity: 0;
+    animation:
+      button-busy-show 1ms linear var(--md-comp-button-busy-delay, 300ms) forwards,
+      button-busy-spin 800ms linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &::after {
+      animation: button-busy-show 1ms linear var(--md-comp-button-busy-delay, 300ms) forwards;
+    }
+  }
+}
+
+@keyframes button-busy-show {
+  to { opacity: 1; }
+}
+
+@keyframes button-busy-spin {
+  to { rotate: 360deg; }
+}
