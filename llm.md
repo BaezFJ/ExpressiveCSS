@@ -5147,7 +5147,7 @@ Below 600px the document scrolls instead, so a phone's address bar can collapse:
 </div>
 ```
 
-Give `<main>` `tabindex="-1"` and a skip link so keyboard users can move into the pane and scroll it. A top app bar fills with `surface-container` once `<main>` has scrolled, in browsers that support `timeline-scope`; elsewhere, and when a panes layout scrolls inside `<main>`, it stays at rest. Printing drops the fixed height so the whole pane prints.
+Give `<main>` `tabindex="-1"` and a skip link so keyboard users can move into the pane and scroll it. From 600px up a top app bar fills with `surface-container` once `<main>` has scrolled, in browsers that support `timeline-scope`; elsewhere, and when a panes layout scrolls inside `<main>`, it stays at rest. Below 600px it fills from the document's scroll. Printing drops the fixed height so the whole pane prints.
 
 The scaffold adds no landmark: the `<header>` is the banner, the rail a navigation landmark and `<main>` the main landmark. Never write it as a landmark element or give it a landmark role, and never nest one scaffold in another. `hidden="until-found"` still takes part in layout, so it counts as a visible child.
 

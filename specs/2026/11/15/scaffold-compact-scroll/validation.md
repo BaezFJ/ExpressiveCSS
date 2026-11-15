@@ -54,3 +54,12 @@ Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, th
   - The header comment was rewrapped.
   - The navigation bar region matched a `<footer>` that also held other content, which then took page-footer padding and stuck to the bottom. The reviewer left this choice open; I settled it under delegation. The region is now a `<footer>` whose only child is the navigation bar, matching the page-footer rule's exemption. A footer with more content stays a page footer, with a test.
   CSS budget 92,373 (+131 over the phase base). The scaffold browser suite passes 71 of 71.
+- 2026-11-15, `code-review-and-quality` (five-axis review by an independent read-only subagent): no Critical findings. Fixed:
+  - Required: the 599px `.modal` check passed even with the held column leaking below 600px. It now also checks the pane's width; with the rule moved out of its media query it fails (96 vs 599).
+  - Optional: the docs and `llm.md` didn't say the bar fills from the document's scroll below 600px. Both now do.
+  - Optional: the decision record listed one compact browser check and no compact gap text. It now lists the hidden-rail and boundary checks and names the compact layout in its gaps.
+  - Nits:
+    - The header comment now separates the 600px-up and below-600px behavior and says the bar region pins.
+    - The held-column comment says it applies from 600px up.
+    - The design reference's skip-link advice moved to the 600px-up sentence.
+  - FYI, checked and needing no change: stacking, sticky bars, the sentinel, the boundary, RTL, print, empty regions and the demo box.

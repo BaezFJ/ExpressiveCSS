@@ -9,7 +9,7 @@ Component ID: `scaffold`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `bd8b70af0d4e2792d287515e12c5362889abd59e0bde47b6c8bd8e6fd1cf6284`
+Contract SHA-256: `b5179adab14e2a015cf8b2a4a4bef9edf057570762ca0bce7aa35ddea1247ad4`
 
 #### Selection and adaptation
 
@@ -29,7 +29,7 @@ Support (2026-11-15, `llm.md#scaffold`): A window-height grid that places a head
 
 Web adaptation: CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.
 
-Known boundary: Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser; spoken output and a mobile browser's collapsing address bar remain unverified.
+Known boundary: Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary; spoken output and a mobile browser's collapsing address bar remain unverified.
 
 Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#scaffold).
 

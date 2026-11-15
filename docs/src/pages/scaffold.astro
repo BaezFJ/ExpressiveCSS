@@ -202,11 +202,13 @@ const S = defineSections([
           scaffold that isn't a region would land in a free grid cell.
         </p>
         <p>
-          A top app bar fills with <code>surface-container</code> once the pane
-          has scrolled, in browsers that support <code>timeline-scope</code>.
-          Elsewhere it stays at rest. When a panes layout scrolls inside
+          From 600px up, a top app bar fills with
+          <code>surface-container</code> once the pane has scrolled, in
+          browsers that support <code>timeline-scope</code>. Elsewhere it
+          stays at rest. When a panes layout scrolls inside
           <code>&lt;main&gt;</code>, the bar stays at rest too, since
-          <code>&lt;main&gt;</code> itself doesn't scroll.
+          <code>&lt;main&gt;</code> itself doesn't scroll. Below 600px the bar
+          fills from the document's scroll, as it does outside a scaffold.
         </p>
         <p>
           Below 600px the document scrolls instead, so a phone's address bar

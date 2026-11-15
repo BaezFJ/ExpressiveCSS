@@ -14,13 +14,16 @@
 //
 // The bar spans the top, and the rail, pane and trailing regions share the row
 // below it. .tall-rail runs the rail and trailing region the full height and
-// puts the bar over the pane only. From 600px up the shell is as tall as the
-// window and only the pane scrolls. Below 600px the document scrolls instead,
-// so a phone's address bar can collapse: the app bar and the navigation bar
-// stay pinned, and the rail is hidden until it opens as the compact overlay.
-// An empty region takes no space. `clip` rather than `hidden` keeps focus and
-// find-in-page from scrolling the shell itself. A trailing toolbar taller than
-// its region is clipped at the bottom, so keep it to the actions that fit.
+// puts the bar over the pane only. An empty region takes no space.
+//
+// From 600px up the shell is as tall as the window and only the pane scrolls.
+// `clip` rather than `hidden` keeps focus and find-in-page from scrolling the
+// shell itself, and a trailing toolbar taller than its region is clipped at
+// the bottom, so keep it to the actions that fit.
+//
+// Below 600px the document scrolls instead, so a phone's address bar can
+// collapse: the bar region and the navigation bar stay pinned, and the rail
+// is hidden until it opens as the compact overlay.
 //
 // Limits: AppBar's sentinel isn't a region, so .medium/.large bars stay
 // expanded. BackToTop follows the window, so it shows only below 600px. A
@@ -45,8 +48,8 @@ $_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar:only-child))";
   block-size: 100dvh;
   overflow: clip;
 
-  // Wherever the rail can open as an overlay (medium windows, or a .modal
-  // rail), its column keeps the collapsed width, open or closed, so the pane
+  // From 600px up, wherever the rail can open as an overlay (medium windows,
+  // or a .modal rail), its column keeps the collapsed width, open or closed, so the pane
   // neither jumps when the rail leaves the grid nor follows it as it closes.
   // Set --md-comp-nav-rail-collapsed-width on the scaffold, not the rail. A
   // [hidden] rail is an empty region and takes no space.

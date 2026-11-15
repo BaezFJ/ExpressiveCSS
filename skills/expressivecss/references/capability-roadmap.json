@@ -284,13 +284,13 @@
       "sources": [
         {
           "path": "src/sass/components/_scaffold.scss",
-          "sha256": "c2a3b2ee48172607c6dc280f774faf53254a30697c5459e76cf814b3dc26b1c1"
+          "sha256": "55dc073f65136c7c532b47f2c55972ff1e763998d21540f2bd7a19e1a34c0c88"
         }
       ],
       "gaps": [
         {
           "kind": "verification",
-          "description": "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser; spoken output and a mobile browser's collapsing address bar remain unverified.",
+          "description": "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary; spoken output and a mobile browser's collapsing address bar remain unverified.",
           "nextStep": "Move through a scaffold page by landmarks with a screen reader, and scroll the pane in a phone browser whose address bar collapses."
         }
       ],
@@ -323,6 +323,18 @@
           "file": "tests/scaffold-browser.test.js",
           "name": "chromium: below 600px the scaffold scrolls the document with the app bar and navigation bar pinned",
           "scope": "Document scrolling at 390px, a pinned app bar, a pinned navigation bar in footer and bare forms. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: below 600px the collapsed rail is hidden and opens as an overlay from the app bar",
+          "scope": "A hidden rail out of the tab order, opened by the app bar's aria-controls button as a fixed overlay, closed by Escape with focus returned and by a scrim tap. Equivalent Firefox and WebKit cases run in the same suite.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scaffold-browser.test.js",
+          "name": "chromium: the compact layout ends at 599px and the medium layout starts at 600px",
+          "scope": "The navigation bar, the hidden rail and a .modal rail at 599px, and the held rail column at 600px. Equivalent Firefox and WebKit cases run in the same suite.",
           "state": "not-recorded"
         },
         {

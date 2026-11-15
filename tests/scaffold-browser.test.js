@@ -548,6 +548,7 @@ for (const [name, type, run] of engines) {
       near((await box('#pane')).left, 0, 'the pane starts at the edge');
       await tab.locator('#rail').evaluate((el) => el.classList.add('modal'));
       near((await box('#pane')).left, 0, 'a .modal rail holds no column at 599px');
+      near((await box('#pane')).width, (await box('#s')).width, 'and the pane spans the scaffold');
       await tab.locator('#rail').evaluate((el) => el.classList.remove('modal'));
       for (const width of [600, 1280]) {
         await tab.setViewportSize({ width, height: 800 });
