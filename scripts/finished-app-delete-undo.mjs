@@ -1,0 +1,78 @@
+// Drives delete and Undo in a finished-app `destructive-list` build, in Chromium.
+// Usage: node scripts/finished-app-delete-undo.mjs <app-dir>...
+// Each app dir holds the build's index.html next to a built dist/. Controls are found
+// by role and name, so the script works on any build. Prints one JSON line per app.
+import { chromium } from 'playwright';
+import { pathToFileURL } from 'node:url';
+import { resolve } from 'node:path';
+
+const DELETE = /^(delete|remove)\b/i;
+const UNDO = /^undo$/i;
+const ROW = 'li, [role=listitem], tr';
+const wait = (ms) => new Promise((done) => setTimeout(done, ms));
+
+const rowTexts = (page) => page.getByRole('button', { name: DELETE })
+  .evaluateAll((buttons, row) => buttons.map((button) => (button.closest(row) ?? button.parentElement).innerText.trim()), ROW);
+
+async function until(check, ms) {
+  const end = Date.now() + ms;
+  while (Date.now() < end) {
+    if (await check()) return true;
+    await wait(50);
+  }
+  return check();
+}
+
+async function deleteAndUndo(page) {
+  const before = await rowTexts(page);
+  if (before.length < 2) return { pass: false, reason: `found ${before.length} delete buttons` };
+  const started = Date.now();
+  await page.getByRole('button', { name: DELETE }).nth(1).click();
+  const dialog = await until(() => page.locator('dialog[open], [role=alertdialog]').first().isVisible(), 500);
+  if (dialog) return { pass: false, reason: 'a confirmation dialog opened' };
+  const removed = await until(async () => !(await rowTexts(page)).includes(before[1]), 500);
+  if (!removed) return { pass: false, reason: 'the row was still there 500ms after the press' };
+  const removedMs = Date.now() - started;
+  const undo = page.getByRole('button', { name: UNDO }).first();
+  if (!(await until(() => undo.isVisible(), 2000))) return { pass: false, reason: 'no Undo action', removedMs };
+  await undo.click();
+  const same = async () => JSON.stringify(await rowTexts(page)) === JSON.stringify(before);
+  const restored = await until(same, 3000);
+  await wait(2000);
+  const stillRestored = await same();
+  const focusInRow = await page.evaluate((row) => Boolean(document.activeElement?.closest(row)), ROW);
+  const reason = restored && stillRestored ? '' : 'the rows did not come back in their old order';
+  return { pass: !reason, reason, removedMs, focusInRow };
+}
+
+async function twoDeletes(page) {
+  const before = await rowTexts(page);
+  const button = page.getByRole('button', { name: DELETE });
+  await button.first().click();
+  await wait(300);
+  await button.first().click();
+  const undoShown = await until(() => page.getByRole('button', { name: UNDO }).first().isVisible(), 500);
+  return { undoShownForSecond: undoShown, rowsBefore: before.length, rowsAfter: (await rowTexts(page)).length };
+}
+
+async function check(browser, dir) {
+  const url = pathToFileURL(resolve(dir, 'index.html')).href;
+  const page = await browser.newPage();
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(error.message));
+  await page.goto(url);
+  await wait(800);
+  const gate = await deleteAndUndo(page).catch((error) => ({ pass: false, reason: error.message.split('\n')[0] }));
+  // The second sequence only means something once delete and Undo work at all.
+  const second = gate.pass ? await page.goto(url).then(() => wait(800)).then(() => twoDeletes(page)) : null;
+  await page.close();
+  const pass = gate.pass && !errors.length;
+  return { app: dir, pass, ...gate, reason: gate.reason || (errors.length ? 'page error' : ''), errors, twoDeletes: second };
+}
+
+const browser = await chromium.launch();
+try {
+  for (const dir of process.argv.slice(2)) console.log(JSON.stringify(await check(browser, dir)));
+} finally {
+  await browser.close();
+}
