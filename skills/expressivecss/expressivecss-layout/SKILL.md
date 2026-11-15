@@ -72,6 +72,9 @@ Read the [canonical layouts reference](./references/canonical-layouts.md) to cho
 | [Compact template](../assets/templates/layout-compact.html) | A single-pane app with a navigation bar |
 | [Navigation rail template](../assets/templates/layout-rail.html) | A single pane beside a collapsed rail from 600px and a navigation bar below 600px |
 | [Expanded rail template](../assets/templates/layout-expanded.html) | A single pane beside an expanded rail from 840px; a short script hides the rail below 840px so the navigation bar takes over |
+| [Trailing toolbar template](../assets/templates/layout-toolbar.html) | A pane with a vertical toolbar of actions for its content, which floats as a row below 600px |
+| [Status bar template](../assets/templates/layout-status.html) | A workspace with a status bar along the bottom from 600px up |
+| [Side sheet template](../assets/templates/layout-sheet.html) | A list whose details open in a standard side sheet, a column from 1200px up |
 | [List-detail template](../assets/templates/layout-list-detail.html) and [list-detail example](../assets/examples/list-detail.html) | Selecting an item from a list to see its detail |
 | [Panes guide](../components/panes.md) | List-detail, supporting pane and equal panes |
 | [Dashboard guide](../expressivecss-dashboard/SKILL.md) | Dashboards and reporting pages; start from its reference implementation |

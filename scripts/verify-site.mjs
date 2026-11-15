@@ -157,6 +157,9 @@ for (const asset of [
   '/layout-expanded.html',
   '/layout-list-detail.html',
   '/layout-dashboard.html',
+  '/layout-toolbar.html',
+  '/layout-status.html',
+  '/layout-sheet.html',
   '/CNAME',
 ]) {
   nonempty(asset, 'asset');

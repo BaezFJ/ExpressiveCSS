@@ -9,7 +9,7 @@ Component ID: `confetti`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `ea70571b24e79407cd13f1adf29bc241c2a3bf2c186beb45f9fe2b9d2bd51bfc`
+Contract SHA-256: `e313094b0c0716afb72150a50a38fdca2c7d4974463ad3128988250e8271b657`
 
 #### Selection and adaptation
 

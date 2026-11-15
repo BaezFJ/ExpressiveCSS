@@ -50,6 +50,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `env(safe-area-inset-*)` edges: the shell pads its sides, its top and bottom
   from 600px up, and the compact app bar and rail overlay pad their own,
   without doubling the navigation bar's and status bar's insets.
+- Three layout templates show the scaffold's other regions: a trailing
+  toolbar of page actions, a status bar along the bottom, and a standard
+  side sheet that opens a project's details as a column from 1200px up.
 
 ### Changed
 
