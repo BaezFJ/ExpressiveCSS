@@ -6,7 +6,7 @@ Build before every test run, since tests read `dist/`. New functions stay below 
 
 ## 1. Overlay and runtime
 
-Covers R1 to R6b. Checks V1 to V5b.
+Covers R1 to R6c. Checks V1 to V5c.
 
 - [ ] Add browser tests to `tests/scaffold-browser.test.js` for V1 to V5b. Watch V2 and V3 fail before the change.
 - [ ] `_navigation-rail.scss`: apply `_modal-rail` to a scaffold's expanded rail from 600px to 839px.
