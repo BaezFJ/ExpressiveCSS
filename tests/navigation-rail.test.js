@@ -16,9 +16,17 @@ const railHtml = `
 describe('Navigation rail CSS', () => {
   test('emits collapsed and expanded layouts', () => {
     assert.match(css, /\.navigation-rail\s*\{/);
-    assert.match(css, /\.navigation-rail\.expanded\s*\{/);
+    assert.match(css, /\.navigation-rail:is\(\.expanded, \.peek\)\s*\{/);
     assert.match(css, /--md-comp-nav-rail-collapsed-width:\s*96px/);
     assert.match(css, /--md-comp-nav-rail-expanded-width:\s*280px/);
+  });
+
+  test('nav-rail switches apply from the rail or, unless it sets its own, from an ancestor', () => {
+    assert.match(css, /--md-comp-nav-rail-compact-width:\s*72px/);
+    for (const value of ['compact', 'hover']) {
+      assert.ok(css.includes(`.navigation-rail[nav-rail~=${value}]`), value);
+      assert.ok(css.includes(`[nav-rail~=${value}] .navigation-rail:not([nav-rail])`), value);
+    }
   });
 
   test('selected destinations use a secondary-container pill', () => {
@@ -211,5 +219,88 @@ describe('NavigationRail', () => {
     } finally {
       instance.destroy();
     }
+  });
+
+  describe('nav-rail="hover"', () => {
+    const pointer = (el, type) => el.dispatchEvent(new window.PointerEvent(type, { pointerType: 'mouse' }));
+    const escape = () => document.dispatchEvent(new window.KeyboardEvent('keydown', {
+      key: 'Escape', bubbles: true, cancelable: true
+    }));
+
+    test('peeks while the mouse rests on a collapsed rail, without expanding it', t => {
+      t.mock.timers.enable({ apis: ['setTimeout'] });
+      document.documentElement.setAttribute('nav-rail', 'compact hover');
+      document.body.innerHTML = railHtml;
+      const el = document.querySelector('.navigation-rail');
+      const instance = Expressive.NavigationRail.init(el);
+      try {
+        pointer(el, 'pointerenter');
+        assert.equal(el.classList.contains('peek'), false, 'waits for the hover delay');
+        t.mock.timers.tick(200);
+        assert.equal(el.classList.contains('peek'), true);
+        assert.equal(instance.isExpanded, false);
+        assert.equal(el.getAttribute('aria-expanded'), 'false');
+        pointer(el, 'pointerleave');
+        assert.equal(el.classList.contains('peek'), false);
+
+        pointer(el, 'pointerenter');
+        pointer(el, 'pointerleave');
+        t.mock.timers.tick(200);
+        assert.equal(el.classList.contains('peek'), false, 'leaving cancels a pending peek');
+
+        pointer(el, 'pointerenter');
+        t.mock.timers.tick(200);
+        escape();
+        assert.equal(el.classList.contains('peek'), false, 'Escape dismisses the peek');
+
+        pointer(el, 'pointerenter');
+        t.mock.timers.tick(200);
+        instance.expand();
+        assert.deepEqual([...el.classList], ['navigation-rail', 'expanded'], 'expanding pins the peek');
+        pointer(el, 'pointerenter');
+        t.mock.timers.tick(200);
+        assert.equal(el.classList.contains('peek'), false, 'an expanded rail does not peek');
+      } finally {
+        instance.destroy();
+        document.documentElement.removeAttribute('nav-rail');
+      }
+    });
+
+    test('a shadow host can switch the rails in its shadow root', t => {
+      t.mock.timers.enable({ apis: ['setTimeout'] });
+      document.body.innerHTML = '<div nav-rail="hover"></div>';
+      const host = document.querySelector('div');
+      host.attachShadow({ mode: 'open' }).innerHTML = railHtml;
+      const el = host.shadowRoot.querySelector('.navigation-rail');
+      const instance = Expressive.NavigationRail.init(el);
+      try {
+        pointer(el, 'pointerenter');
+        t.mock.timers.tick(200);
+        assert.equal(el.classList.contains('peek'), true);
+      } finally {
+        instance.destroy();
+      }
+    });
+
+    test("a rail's own nav-rail value replaces the root's", t => {
+      t.mock.timers.enable({ apis: ['setTimeout'] });
+      document.documentElement.setAttribute('nav-rail', 'hover');
+      document.body.innerHTML = railHtml.replace('class="navigation-rail"', 'class="navigation-rail" nav-rail="compact"');
+      const el = document.querySelector('.navigation-rail');
+      const instance = Expressive.NavigationRail.init(el);
+      try {
+        pointer(el, 'pointerenter');
+        t.mock.timers.tick(200);
+        assert.equal(el.classList.contains('peek'), false);
+        el.setAttribute('nav-rail', 'hover');
+        pointer(el, 'pointerenter');
+        t.mock.timers.tick(200);
+        assert.equal(el.classList.contains('peek'), true, 'the attribute is read on each entry');
+      } finally {
+        instance.destroy();
+        document.documentElement.removeAttribute('nav-rail');
+      }
+      assert.equal(el.classList.contains('peek'), false, 'destroy() removes a peek');
+    });
   });
 });
