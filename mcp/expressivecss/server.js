@@ -290,8 +290,9 @@ const LegacyPatternList = [
     description: 'This viewport stops people from zooming, so they cannot enlarge text (WCAG 1.4.4 Resize Text). Use `width=device-width, initial-scale=1` and drop `maximum-scale` and `user-scalable`.',
     // Chromium reads any user-scalable value but yes, device-width, device-height or a number at least 1 away from 0 as off, and any maximum-scale but a
     // device keyword, a negative number or a number above 1 as a cap of 1 or less; a key with no value reads as 0.
-    // It splits values on spaces, `,` and `=` but not `;`, so `yes;` is off too. Gaps are capped so an unclosed tag stays linear.
-    pattern: /<meta\b(?=[^<>]{0,500}?(?<![-\w])name\s*=\s*["']?viewport(?![-\w]))[^<>]{0,500}?(?<![-\w])content\s*=\s*(["'])(?:(?!\1)[^<>]){0,500}?(?<![-\w])(?:user-scalable\s*=\s*(?!\s|(?:yes|device-(?:width|height))(?=[\s,=]|\1)|-?0*[1-9])|maximum-scale\s*=\s*(?!\s|device-(?:width|height)(?=[\s,=]|\1)|-|0*[1-9]\d+|0*[2-9]|0*1\.\d*[1-9])|(?:user-scalable|maximum-scale)\s*(?=,|\1))/giu,
+    // It splits values on spaces, `,` and `=` but not `;`, so `yes;` is off too. Attributes are stepped over whole, so text in another
+    // attribute's value can't pass for the name, and every repeat is capped so an unclosed tag stays linear.
+    pattern: /<meta\b(?=(?:\s+[^\s"'<>=/]{1,100}(?:\s*=\s*(?:"[^"<>]{0,500}"|'[^'<>]{0,500}'|[^\s"'<>=]{1,500}))?){0,30}?\s+name\s*=\s*(?:"viewport"|'viewport'|viewport(?=[\s/>])))(?:\s+[^\s"'<>=/]{1,100}(?:\s*=\s*(?:"[^"<>]{0,500}"|'[^'<>]{0,500}'|[^\s"'<>=]{1,500}))?){0,30}?\s+content\s*=\s*(["'])(?:(?!\1)[^<>]){0,500}?(?<![-\w])(?:user-scalable\s*=\s*(?!\s|(?:yes|device-(?:width|height))(?=[\s,=]|\1)|[-+]?0*[1-9])|maximum-scale\s*=\s*(?!\s|device-(?:width|height)(?=[\s,=]|\1)|-|\+?(?:0*[1-9]\d+|0*[2-9]|0*1\.\d*[1-9]))|(?:user-scalable|maximum-scale)\s*(?=,|\1))/giu,
   },
 ];
 
