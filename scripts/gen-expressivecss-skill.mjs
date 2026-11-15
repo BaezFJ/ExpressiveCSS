@@ -338,7 +338,19 @@ function renderMaterialMapping(component) {
   ].join('\n\n');
 }
 
-function renderGuide(component, page, section, rules, provenance) {
+// A component section's "App behavior" subsection guides app behavior tied to the
+// component (loading feedback, Undo, URL state, submit flow). It is cut out before the
+// other parts read the section, so its examples never become the Syntax, and rendered
+// in full. The lookahead stops at the next heading or the section's closing `---`.
+function splitAppBehavior(section, level) {
+  const match = new RegExp(`\\n#{${level + 1}} App behavior\\n([\\s\\S]*?)(?=\\n#{1,${level + 1}} |\\n---\\s*(?:\\n|$)|$)`, 'u').exec(section);
+  if (!match) return { rest: section, behavior: '' };
+  const body = match[1].trim().replace(/\[([^\]]+)\]\((?!https?:\/\/)[^)]+\)/gu, '$1');
+  return { rest: section.replace(match[0], ''), behavior: `#### App behavior\n\n${rebaseHeadings(body, 3 - level)}\n\n` };
+}
+
+function renderGuide(component, page, fullSection, rules, provenance) {
+  const { rest: section, behavior } = splitAppBehavior(fullSection, component.level);
   const title = component.title;
   const officialMarkdown = `https://www.expressivecss.com${page.route}.md`;
   const syntaxLanguage = component.syntaxLanguage ?? 'html';
@@ -382,7 +394,7 @@ function renderGuide(component, page, section, rules, provenance) {
     ? `#### Also documented\n\nThe ${component.heading} section of the [API reference](https://www.expressivecss.com/llm.md) also covers ${subsections.join(', ')}.\n\n`
     : '';
 
-  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nContract SHA-256: \`${provenance.hash}\`\n\n${renderSelection(component, page)}#### Material mapping\n\n${renderMaterialMapping(component)}\n\n#### Contract\n\n${contractSummary(section, page.description)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n${api}${relatedContracts}${alsoDocumented}#### Rules\n\n${ruleLines}\n${guideCheckSection ? `\n${guideCheckSection.trimEnd()}\n` : ''}`;
+  return `${GENERATED_MARKER}\n\n### ${title}\n${page.description}\n\nComponent ID: \`${component.slug}\`\n\n${links.join(' · ')}\n\nContract: ExpressiveCSS ${provenance.version}\n\nContract SHA-256: \`${provenance.hash}\`\n\n${renderSelection(component, page)}#### Material mapping\n\n${renderMaterialMapping(component)}\n\n#### Contract\n\n${contractSummary(section, page.description)}\n\n#### Syntax\n\n\`\`\`${syntaxLanguage}\n${example}\n\`\`\`\n\n${api}${relatedContracts}${behavior}${alsoDocumented}#### Rules\n\n${ruleLines}\n${guideCheckSection ? `\n${guideCheckSection.trimEnd()}\n` : ''}`;
 }
 
 async function generatedGuides(provenance) {

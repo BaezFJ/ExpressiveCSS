@@ -9,7 +9,7 @@ Component ID: `buttons`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `c39f72f9b9906d1a6e7db64f1eb4dacc54ae23f190824634ea2239e79caedeb4`
+Contract SHA-256: `2770398b3f39082049df74bd1f8bf52a14141e1edc24cae9f277e19d4f730252`
 
 #### Selection and adaptation
 
@@ -60,6 +60,20 @@ Two independent axes dress it: a style (`filled`, `tonal`, `outlined`, `elevated
 </button>
 
 <a class="button" href="/docs">Docs</a>
+```
+
+#### App behavior
+
+While a command's request runs, keep the button's label, or change it to the verb's in-progress form ending in the `…` character, such as "Saving…". Never swap it for a spinner alone, "Loading" or "Please wait". Put a `.loading-indicator` next to the button, beside the label rather than in its place, `hidden` while idle and keeping its `role="status"` and name; set `--md-comp-loading-indicator-container-size` so the row doesn't grow. Show it after about 300ms and keep it at least 500ms once shown, so a quick request doesn't flash it.
+
+Ignore a second press. Return early while a pending flag is set, and give the button `aria-disabled="true"`, which paints it disabled and stops pointer presses but keeps focus on it; `disabled` would drop focus. For a form, guard the `submit` handler and call `preventDefault()` before returning, since Enter in a field submits without a click. Clear the flag, `aria-disabled` and the indicator in `finally`, so a failed request leaves the button usable.
+
+Announce the result once, in a snackbar or in a `role="status"` region that is in the page from the start (visible or `.visually-hidden`, never `hidden`) and whose text you change. A native form post that leaves the page needs none of this.
+
+```html
+<button type="submit" aria-disabled="true"><span>Saving…</span></button>
+<span class="loading-indicator" role="status" aria-label="Saving"></span>
+<p class="visually-hidden" role="status"></p>
 ```
 
 #### Also documented

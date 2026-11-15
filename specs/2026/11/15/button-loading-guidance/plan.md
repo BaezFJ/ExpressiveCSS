@@ -8,8 +8,8 @@ Covers R1, R4. Checks V1, V2.
 
 Prerequisites: none.
 
-- [ ] Add the R4 test and watch it fail.
-- [ ] Render `### App behavior` in `renderGuide` (`scripts/gen-expressivecss-skill.mjs`) and add it to the headings that "Also documented" skips.
+- [x] Add the R4 test and watch it fail.
+- [x] Render `### App behavior` in `renderGuide` (`scripts/gen-expressivecss-skill.mjs`) and add it to the headings that "Also documented" skips.
 
 Done when `npm run build:skill` leaves every existing guide unchanged except the contract hash.
 
@@ -19,9 +19,9 @@ Covers R2, R3, R4. Checks V1, V3.
 
 Prerequisites: group 1.
 
-- [ ] Write the Buttons `### App behavior` subsection in `llm.md` after `### Disabled`.
-- [ ] Add the CHANGELOG entry, run `npm run build:skill`, raise the reading budget with a reviewed line.
-- [ ] Run the skill tests until they pass.
+- [x] Write the Buttons `### App behavior` subsection in `llm.md` after `### Disabled`.
+- [x] Add the CHANGELOG entry, run `npm run build:skill`, raise the reading budget with a reviewed line.
+- [x] Run the skill tests until they pass.
 
 Done when V1 and V3 pass.
 
