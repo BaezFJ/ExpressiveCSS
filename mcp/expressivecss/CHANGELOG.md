@@ -4,7 +4,7 @@
 
 ## 0.5.2 - 2026-11-14
 
-- Bundled guidance matches ExpressiveCSS 0.18.0, including `.status-bar`,
+- Bundled guidance matches ExpressiveCSS 0.18.1, including `.status-bar`,
   `.field.label-above` and the `.focus-ring` utility.
 - Update `jsdom` to 31.0.0, `hono` to 4.13.18 and `@hono/node-server` to 2.1.8.
 

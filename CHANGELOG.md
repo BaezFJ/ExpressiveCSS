@@ -5,6 +5,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.18.1] - 2026-11-15
+
+0.18.0 was tagged but never reached npm: release validation failed on a Firefox
+list row test that compared a measured 15.99998px gap with exactly 16px. 0.18.1
+ships the same framework as 0.18.0, and the test rounds its measurements to
+0.01px.
+
 ## [0.18.0] - 2026-11-14
 
 This release adds the status bar, labels drawn above text fields, focus ring
@@ -4286,7 +4293,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.18.0...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.18.1...HEAD
+[0.18.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.18.0...v0.18.1
 [0.18.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.17.0...v0.18.0
 [0.17.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.15.0...v0.16.0
