@@ -15,7 +15,7 @@ Done when V1 passes.
 
 Covers R5. Checks V2.
 
-- [ ] Write `scripts/finished-app-submit-empty.mjs`, its npm script and its browser test; run it on the four baseline and phase 79 `settings-form` apps.
+- [x] Write `scripts/finished-app-submit-empty.mjs`, its npm script and its browser test; run it on the four baseline and phase 79 `settings-form` apps.
 
 Done when V2 passes.
 
