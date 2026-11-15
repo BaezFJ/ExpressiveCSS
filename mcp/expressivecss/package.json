@@ -5,7 +5,8 @@
   "homepage": "https://www.expressivecss.com",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BaezFJ/ExpressiveCSS.git"
+    "url": "git+https://github.com/BaezFJ/ExpressiveCSS.git",
+    "directory": "mcp/expressivecss"
   },
   "license": "MIT",
   "type": "module",
@@ -35,6 +36,7 @@
     "scripts/bounded-file.mjs",
     "scripts/semantics-rules.mjs",
     "README.md",
+    "docs/",
     "mcp.json",
     ".claude-plugin/plugin.json",
     ".cursor-plugin/plugin.json",

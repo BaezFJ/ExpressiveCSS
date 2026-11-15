@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- The README is now a short overview. The details moved to pages in `docs/`,
+  which the package now ships.
 - The lint, `rules_enforcer` and `quality_inspector` report three new
   findings. `transition-all` (medium) flags a `transition` or
   `transition-property` whose value names `all`, in `style` attributes,
