@@ -9,7 +9,7 @@ Component ID: `back-to-top`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `c95df9b05f81ea6cb549bcaaa3c6f0dcc68935a3052f6e3c17264e96c9aa2cc2`
+Contract SHA-256: `94a3ea0bc9159612d11dd50e02ddc1acf2e20e595d4fc7222e3db1945aa36fb1`
 
 #### Selection and adaptation
 
