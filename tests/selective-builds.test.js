@@ -562,6 +562,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed a --md-sys-typescale-{role}-font shorthand token for each of the 15 roles, built from the role's longhand tokens: 91,770 gzip bytes (+325).
   // Reviewed the aria-busy button spinner on shaped buttons, with its reduced-motion rule and the data table and menu buttons left out: 92,147 gzip bytes (+377).
   // Reviewed leaving buttons with a .shape-* utility out of the busy spinner: 92,160 gzip bytes (+13).
-  // Reviewed anchored headings resting below a page-level sticky top app bar, with the offset token per bar size: 92,275 gzip bytes (+115).
-  assert.ok(sizes(css).gzip <= 92275, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed anchored headings resting below a page-level sticky top app bar, outside dialogs and panes, with the offset token per bar size: 92,310 gzip bytes (+150).
+  assert.ok(sizes(css).gzip <= 92310, `CSS gzip: ${sizes(css).gzip}`);
 });

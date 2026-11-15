@@ -52,6 +52,11 @@ $_bar: ":is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)";
 $_heading: ":is(h1, h2, h3, h4, h5, h6)";
 $_title: ":is(#{$_heading}, hgroup)";
 $_search: ".search-bar";
+// Flexible bar heights, shared with the anchored-heading offset below.
+$_medium-height: 112px;
+$_medium-subtitle-height: 136px;
+$_large-height: 120px;
+$_large-subtitle-height: 152px;
 
 header:has(> #{$_bar}) {
   --md-comp-top-app-bar-container-color: var(--md-sys-color-surface);
@@ -370,7 +375,7 @@ header.large:has(> #{$_bar}) > #{$_bar} {
 }
 
 header.medium:has(> #{$_bar}) > #{$_bar} {
-  min-height: rem(112px);
+  min-height: rem($_medium-height);
   padding-bottom: 20px;
 
   > #{$_title} {
@@ -388,11 +393,11 @@ header.medium:has(> #{$_bar}) > #{$_bar} {
 }
 
 header.medium:has(> #{$_bar} > hgroup > p) > #{$_bar} {
-  min-height: rem(136px);
+  min-height: rem($_medium-subtitle-height);
 }
 
 header.large:has(> #{$_bar}) > #{$_bar} {
-  min-height: rem(120px);
+  min-height: rem($_large-height);
   padding-bottom: 20px;
 
   > #{$_title} {
@@ -410,7 +415,7 @@ header.large:has(> #{$_bar}) > #{$_bar} {
 }
 
 header.large:has(> #{$_bar} > hgroup > p) > #{$_bar} {
-  min-height: rem(152px);
+  min-height: rem($_large-subtitle-height);
   padding-bottom: 28px;
 }
 
@@ -496,22 +501,23 @@ $_page-bar: ":root:has(> body > header > #{$_bar})";
 }
 
 :where(:root:has(> body > header.medium:not(.collapsed) > #{$_bar})) {
-  --md-comp-top-app-bar-anchor-offset: #{rem(120px)};
+  --md-comp-top-app-bar-anchor-offset: #{rem($_medium-height + 8px)};
 }
 
 :where(:root:has(> body > header.medium:not(.collapsed) > #{$_bar} > hgroup > p)) {
-  --md-comp-top-app-bar-anchor-offset: #{rem(144px)};
+  --md-comp-top-app-bar-anchor-offset: #{rem($_medium-subtitle-height + 8px)};
 }
 
 :where(:root:has(> body > header.large:not(.collapsed) > #{$_bar})) {
-  --md-comp-top-app-bar-anchor-offset: #{rem(128px)};
+  --md-comp-top-app-bar-anchor-offset: #{rem($_large-height + 8px)};
 }
 
 :where(:root:has(> body > header.large:not(.collapsed) > #{$_bar} > hgroup > p)) {
-  --md-comp-top-app-bar-anchor-offset: #{rem(160px)};
+  --md-comp-top-app-bar-anchor-offset: #{rem($_large-subtitle-height + 8px)};
 }
 
-:where(#{$_page-bar} #{$_heading}[id]:not(dialog *)) {
+// Panes scroll themselves, below the bar, so their headings need no offset.
+:where(#{$_page-bar} #{$_heading}[id]:not(dialog *, :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane) *)) {
   scroll-margin-block-start: var(--md-comp-top-app-bar-anchor-offset);
 }
 

@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { engines } from './browser.js';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 
@@ -12,7 +12,9 @@ ${header}
 </body></html>`;
 
 const small = '<header><nav class="bar"><h1>App</h1></nav></header>';
+const medium = '<header class="medium"><nav class="bar"><h1>App</h1></nav></header>';
 const largeSubtitle = '<header class="large"><nav class="bar"><hgroup><h1>App</h1><p>Subtitle</p></hgroup></nav></header>';
+const collapsedLarge = '<header class="large collapsed"><nav class="bar"><h1>App</h1></nav></header>';
 const demoOnly = '<article><header class="medium"><nav class="bar"><h1>Demo</h1></nav></header></article>';
 
 // Follow a fragment link the way a person does, then read where the heading
@@ -26,11 +28,11 @@ const follow = (p) => p.evaluate(() => {
 
 for (const [name, engine, test] of engines) {
   test(`${name}: a heading reached through a fragment link rests below a sticky top app bar`, { timeout: 30000 }, async () => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const p = await browser.newPage({ viewport: { width: 800, height: 600 }, reducedMotion: 'reduce' });
 
-      for (const [label, header] of [['small bar', small], ['large bar with a subtitle', largeSubtitle]]) {
+      for (const [label, header] of [['small bar', small], ['medium bar', medium], ['large bar with a subtitle', largeSubtitle], ['collapsed large bar', collapsedLarge]]) {
         await p.setContent(page(header));
         const { top, barBottom } = await follow(p);
         assert.ok(barBottom > 0, `${label}: the bar is on screen`);
@@ -49,11 +51,12 @@ for (const [name, engine, test] of engines) {
 
       await p.setContent(page(small, `<dialog><h2 id="in-dialog">Dialog</h2></dialog>
 <section class="scrollspy" id="spy"><p>Spy</p></section>
-<h2 id="spy-heading" class="scrollspy">Spy heading</h2>`));
-      const margins = await p.evaluate(() => Object.fromEntries(['in-dialog', 'spy', 'spy-heading']
+<h2 id="spy-heading" class="scrollspy">Spy heading</h2>
+<div class="pane"><section><h2 id="in-pane">Pane</h2></section></div>`));
+      const margins = await p.evaluate(() => Object.fromEntries(['in-dialog', 'spy', 'spy-heading', 'in-pane']
         .map((id) => [id, getComputedStyle(document.getElementById(id)).scrollMarginBlockStart])));
-      assert.deepEqual(margins, { 'in-dialog': '0px', spy: '200px', 'spy-heading': '200px' },
-        'dialog headings get no offset and scrollspy targets keep their own');
+      assert.deepEqual(margins, { 'in-dialog': '0px', spy: '200px', 'spy-heading': '200px', 'in-pane': '0px' },
+        'dialog and pane headings get no offset and scrollspy targets keep their own');
 
       // A page that sets the token to 0, as the migration note says, opts out.
       await p.setContent(page(small).replace('</style>', ':root { --md-comp-top-app-bar-anchor-offset: 0px; }</style>'));

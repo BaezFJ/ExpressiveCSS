@@ -7,12 +7,6 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- A heading with an `id` reached through a fragment link comes to rest below
-  a sticky top app bar that is a direct child of `<body>`, through
-  `scroll-margin-block-start` and the new root token
-  `--md-comp-top-app-bar-anchor-offset` (the bar's height plus 8px).
-  Migration: a page that already sets `scroll-padding-top` on `html` for its
-  bar now gets both offsets; remove its rule or set the token to `0`.
 - `aria-busy="true"` on a button is a loading state: the button keeps its
   label, reports busy and, after `--md-comp-button-busy-delay`, shows a spinner
   beside the label, and the new `BusyButtons` behavior (started by the root
@@ -57,6 +51,12 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- A heading with an `id` reached through a fragment link comes to rest below
+  a sticky top app bar that is a direct child of `<body>`, through
+  `scroll-margin-block-start` and the new root token
+  `--md-comp-top-app-bar-anchor-offset` (the bar's height plus 8px).
+  Migration: a page that already sets `scroll-padding-top` on `html` for its
+  bar now gets both offsets; remove its rule or set the token to `0`.
 - The buttons guide's App behavior now sets `aria-busy="true"` on the busy
   button instead of `aria-disabled` with a pending flag, and holds the spinner
   for about 500ms once it shows.
