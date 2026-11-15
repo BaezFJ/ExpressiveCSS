@@ -18,7 +18,7 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Navigation bar](#navigation-bar) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Navigation rail](#navigation-rail) | unassessed | needs-review | needs-rerun | 0 |
 | [Panes](#panes) | unassessed | needs-review | needs-rerun | 1 |
-| [Scaffold](#scaffold) | unassessed | needs-review | incomplete | 0 |
+| [Scaffold](#scaffold) | implemented | source-reviewed | incomplete | 0 |
 | [Footer](#footer) | unassessed | needs-review | needs-rerun | 0 |
 | [Tabs](#tabs) | unassessed | needs-review | needs-rerun | 1 |
 | [Breadcrumbs](#breadcrumbs) | unassessed | needs-review | needs-rerun | 0 |
@@ -193,9 +193,9 @@ Web adaptation: CSS viewport and container queries; the application chooses the 
 
 ## Scaffold
 
-**unassessed within the stated scope.** A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay. A trailing vertical toolbar floats there as a centered row above the navigation bar.
+**implemented within the stated scope.** A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay. A trailing vertical toolbar floats there as a centered row above the navigation bar. A status bar takes a full-width row along the bottom from 600px up.
 
-Source review: needs-review, 2026-11-15. [src/sass/components/_scaffold.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/9ca9e3cf2fd27644544cb717a5197f83f594092c/src/sass/components/_scaffold.scss).
+Source review: source-reviewed, 2026-11-15. [src/sass/components/_scaffold.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/9ca9e3cf2fd27644544cb717a5197f83f594092c/src/sass/components/_scaffold.scss).
 
 Google relationship: pattern. Upstream review: requirements-prose-reviewed (2026-11-15); [reviewed source](https://m3.material.io/foundations/layout/scaffold/overview).
 
@@ -212,6 +212,7 @@ Web adaptation: CSS grid areas on a div inside body; the children keep their own
 - not-recorded: [tests/scaffold-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/9ca9e3cf2fd27644544cb717a5197f83f594092c/tests/scaffold-browser.test.js): `chromium: the compact layout ends at 599px and the medium layout starts at 600px`. The navigation bar, the hidden rail and a .modal rail at 599px, and the held rail column at 600px. Equivalent Firefox and WebKit cases run in the same suite.
 - not-recorded: [tests/scaffold-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/9ca9e3cf2fd27644544cb717a5197f83f594092c/tests/scaffold-browser.test.js): `chromium: below 600px the toolbar floats centered 16px above the navigation bar`. A centered row 16px above a 74px navigation bar at the top and mid-scroll, 16px above the window bottom without one, and clear of the bar at 200% text. Equivalent Firefox and WebKit cases run in the same suite.
 - not-recorded: [tests/scaffold-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/9ca9e3cf2fd27644544cb717a5197f83f594092c/tests/scaffold-browser.test.js): `chromium: the end of a compact page scrolls clear of the floating toolbar, and focus does too`. The pane's last content and keyboard focus clear of the floating toolbar, with its matched block margins. Equivalent Firefox and WebKit cases run in the same suite.
+- not-recorded: [tests/scaffold-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/9ca9e3cf2fd27644544cb717a5197f83f594092c/tests/scaffold-browser.test.js): `chromium: a status bar spans the scaffold's full width along the bottom`. Footer and region forms at 1280px, the regions ending above it, the tall rail ending above it, and the held column at 700px. Equivalent Firefox and WebKit cases run in the same suite.
 - not-recorded: [tests/scaffold-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/9ca9e3cf2fd27644544cb717a5197f83f594092c/tests/scaffold-browser.test.js): `chromium: the scaffold adds no landmark and keeps banner, navigation and main in order`. Landmark order from the accessibility tree. No spoken-output assertion.
 
 <a id="footer"></a>

@@ -35,6 +35,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   the bottom and shows only below 600px, and the rail is hidden until the app
   bar's menu button opens it as an overlay. A trailing vertical toolbar turns
   into a centered row that floats 16px above the navigation bar.
+- A `.status-bar` child of a `.scaffold` takes a full-width row along the
+  bottom, under the rail, pane and toolbar, and hides below 600px.
 
 ### Changed
 

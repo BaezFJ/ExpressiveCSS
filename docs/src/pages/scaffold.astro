@@ -123,7 +123,11 @@ const S = defineSections([
           rail the pane meets the leading edge, and without a bar the rail and
           pane start at the top. A second child in the same region would
           overlap the first, so give the ones you aren't showing
-          <code>hidden</code>.
+          <code>hidden</code>. A status bar takes a row of its own under the
+          rail, pane and toolbar, even with a tall rail, and hides below
+          600px, where the navigation bar shows. Its low-priority items
+          (<code>data-priority="low"</code>) hide below 600px too, so in a
+          scaffold that hiding never shows.
         </p>
         <p>
           The rail fills its region from the bar down to the bottom of the

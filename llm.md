@@ -5101,6 +5101,8 @@ Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself
 </div>
 ```
 
+A direct-child `status-bar` takes a full-width row along the bottom, under the rail, pane and toolbar (also with `tall-rail`), and hides below 600px; its `data-priority="low"` hiding therefore never shows in a scaffold.
+
 Each region takes one direct child. For custom content use the region classes `scaffold-bar`, `scaffold-rail`, `scaffold-pane` and `scaffold-trailing`. A region with nothing in it takes no space. A second visible child in one region overlaps the first, so give the ones not shown `hidden`. Other direct children are not placed and fall into a free grid cell, so keep a skip link inside the `<header>`.
 
 ```html
@@ -8002,7 +8004,7 @@ The bar is not `role="toolbar"`, because every item is its own tab stop and arro
 
 `.end` on the first trailing item pushes it and every item after it to the end edge. `.vibrant` paints the bar primary-container, as on the toolbar, for a mode the user should notice. Color one item with the color helpers, such as `primary on-primary-text` or `error-container on-error-container-text`; the item's text still has to say what the color means. Below 600px, items with `data-priority="low"` are hidden, and when that hides the first `.end` item the next visible `.end` item starts the end group. Items that still do not fit wrap to a second row. A disabled item (`disabled`, `.disabled` or `aria-disabled="true"`) is drawn at 38% opacity.
 
-The bar is 24px tall in `body-small`, and it grows with enlarged text. Items are 24px targets, which meets WCAG 2.5.8 but not M3's 48dp; hide the bar on touch-first layouts that need larger targets. It sticks to the bottom of a scrolling page and pads for the bottom safe area. Do not show it at the same time as `nav.navigation-bar`.
+The bar is 24px tall in `body-small`, and it grows with enlarged text. Items are 24px targets, which meets WCAG 2.5.8 but not M3's 48dp; hide the bar on touch-first layouts that need larger targets. It sticks to the bottom of a scrolling page and pads for the bottom safe area. Do not show it at the same time as `nav.navigation-bar`. As a direct child of a `scaffold`, it takes a full-width row along the bottom and hides below 600px, where the scaffold shows its navigation bar.
 
 ```html
 <footer class="status-bar">
