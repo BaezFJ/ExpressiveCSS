@@ -9,11 +9,13 @@ Component ID: `buttons`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `0222e44481b7c5b6f47d44a4640460db3dfe4378a1aaab3c686728c6d0a926f2`
+Contract SHA-256: `11303804480c9e182d22cbe3c68826b3295390b7513d46bfa5bfb1baf5a653fa`
 
 #### Selection and adaptation
 
 Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/components/buttons/overview)
+
+Public JavaScript exports: `BusyButtons`. See the [API index](../references/api-index.md).
 
 Example: Use radios for saved form values; buttons run commands.
 
@@ -62,18 +64,24 @@ Two independent axes dress it: a style (`filled`, `tonal`, `outlined`, `elevated
 <a class="button" href="/docs">Docs</a>
 ```
 
+#### Related contracts
+
+[Loading state](../references/behavior-contracts.md#loading-state)
+
 #### App behavior
 
-While a command's request runs, keep the button's label, or change it to the verb's in-progress form ending in the `…` character, such as "Saving…". Never swap it for a spinner alone, "Loading" or "Please wait". Put a `.loading-indicator` beside the button, keeping its `role="status"` and name, `hidden` while idle so it doesn't animate; in an end-aligned row, reserve its width so the button doesn't move. Size it with both its size tokens, the active indicator no larger than the container. Show it after about 300ms and keep it at least 500ms once shown.
+While a command's request runs, set `aria-busy="true"` on its button synchronously, before any `await`, and remove it in `finally` once the spinner has shown for about 500ms. That keeps the label and focus, shows progress after the 300ms delay and ignores repeat presses, so the handler needs no pending flag. Screen readers may not announce busy, so also change the label to the verb's in-progress form ending in the `…` character, such as "Saving…", never "Loading" or "Please wait". Announce the result once, in a snackbar or a `role="status"` region present from load (visible or `.visually-hidden`, never `hidden`) whose text you change. A native form post that leaves the page needs none of this.
 
-Ignore a second press: return early while a pending flag is set, and give the button `aria-disabled="true"`, which stops pointer presses and keeps focus, where `disabled` drops it. For a form, guard the `submit` handler and call `preventDefault()` before returning, since Enter in a field submits without a click. In `finally`, cancel the indicator's timer and, once its 500ms are up, clear the flag, `aria-disabled` and the indicator, so a failed request leaves the button usable.
-
-Announce the result once, in a snackbar or a `role="status"` region present from load (visible or `.visually-hidden`, never `hidden`) whose text you change. A native form post that leaves the page needs none of this.
-
-```html
-<button type="submit" aria-disabled="true"><span>Saving…</span></button>
-<span class="loading-indicator" role="status" aria-label="Saving"></span>
-<p class="visually-hidden" role="status"></p>
+```js
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  save.setAttribute('aria-busy', 'true');
+  save.firstElementChild.textContent = 'Saving…';
+  try { await send(new FormData(form)); } finally {
+    save.removeAttribute('aria-busy');
+    save.firstElementChild.textContent = 'Save';
+  }
+});
 ```
 
 #### Also documented

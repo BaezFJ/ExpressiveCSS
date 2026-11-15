@@ -5,6 +5,7 @@
 Read only the section needed for the selected behavior. These contracts come from `llm.md`; reuse the resolved framework version and the Runtime guide's ownership rules. The root bundle starts shared document behaviors; the modular entry requires the explicit initialization shown below. ExpandingCard also has per-element instances to destroy.
 
 - [Copy](#copy-button)
+- [BusyButtons](#loading-state)
 - [Theme](#changing-the-theme)
 - [PaneResize](#resizing)
 - [ExpandingCard](#expanding-card)
@@ -28,6 +29,16 @@ Any button copies to the clipboard with `data-copy-for`, naming the id of a fiel
 ```
 
 ---
+
+## Loading state
+
+Export: `BusyButtons`.
+
+Set `aria-busy="true"` on a `<button>` or `.button` while its command runs. The button keeps its label and colors, reports busy to assistive technology, and a shaped common button shows a small spinner after its label, fading in after `--md-comp-button-busy-delay` (300ms) so a quick request doesn't flash it; the button grows by the spinner. Under reduced motion the spinner holds still, and a disabled button shows none. Circle, extended and icon buttons, FABs and buttons in toolbars, groups and other fixed slots show no spinner. `BusyButtons` ignores every press while the attribute is set: a capture-phase click listener cancels the click before any handler, so a mouse press, Enter, Space and a form's implicit submission do nothing. The root bundle starts it; with the modular entry, call `BusyButtons.Init()`. `requestSubmit()` sends no click, and buttons in closed shadow roots are out of reach. Remove the attribute to make the button work again.
+
+```html
+<button type="submit" aria-busy="true"><span>Saving…</span></button>
+```
 
 ## Changing the theme
 

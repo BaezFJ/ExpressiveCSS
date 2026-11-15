@@ -238,7 +238,7 @@ describe('the ExpressiveCSS agent skill', () => {
 
   test('the buttons guide carries the App behavior subsection for a command that waits on a request', () => {
     const { guide, behavior } = appBehaviorOf('buttons');
-    for (const phrase of ['…', 'aria-disabled="true"', 'preventDefault()', 'finally', '300ms', '500ms', 'native form post']) {
+    for (const phrase of ['…', 'aria-busy="true"', 'before any `await`', 'finally', '300ms', '500ms', 'native form post']) {
       assert.ok(behavior.includes(phrase), `App behavior lacks ${phrase}`);
     }
     assert.doesNotMatch(behavior, /^---$/m);

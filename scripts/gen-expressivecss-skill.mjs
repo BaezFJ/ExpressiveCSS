@@ -74,6 +74,7 @@ const TEMPLATES = ['starter', 'layout-compact', 'layout-rail', 'layout-expanded'
 // Secondary contracts omitted by each component's first example.
 const BEHAVIOR_CONTRACTS = [
   { name: 'Copy', heading: 'Copy button', level: 3 },
+  { name: 'BusyButtons', heading: 'Loading state', level: 3 },
   { name: 'Theme', heading: 'Changing the theme', level: 3 },
   { name: 'PaneResize', heading: 'Resizing', level: 3 },
   { name: 'ExpandingCard', heading: 'Expanding card', level: 3 },

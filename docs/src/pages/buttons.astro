@@ -17,6 +17,7 @@ const S = defineSections([
   { id: "sizes", label: "Sizes" },
   { id: "shape", label: "Shape and toggles" },
   { id: "disabled", label: "Disabled" },
+  { id: "loading", label: "Loading" },
 ]);
 ---
 <DocsLayout page="buttons" sections={S}>
@@ -409,4 +410,21 @@ const S = defineSections([
 <a class="button" aria-disabled="true">Link</a>
 `} />
   </Section>
+  <Section {...S.loading}>
+    <p>
+      Set <code>aria-busy="true"</code> on a button while its command runs. It keeps its label, reports busy and,
+      after a short delay, shows a spinner beside the label. <code>BusyButtons</code>, which the root bundle starts,
+      ignores every press until the attribute is removed. With the modular entry, call <code>BusyButtons.Init()</code>.
+    </p>
+    <p><button type="button" id="busy-demo"><span>Save</span></button></p>
+    <Code code={`<button type="submit" aria-busy="true"><span>Saving…</span></button>`} />
+  </Section>
+  <script>
+    document.getElementById('busy-demo')?.addEventListener('click', (event) => {
+      const button = event.currentTarget as HTMLButtonElement;
+      button.setAttribute('aria-busy', 'true');
+      button.firstElementChild!.textContent = 'Saving…';
+      setTimeout(() => { button.removeAttribute('aria-busy'); button.firstElementChild!.textContent = 'Save'; }, 2000);
+    });
+  </script>
 </DocsLayout>

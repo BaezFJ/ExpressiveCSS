@@ -2528,18 +2528,28 @@ The `disabled` attribute on a `<button>`. A link cannot be disabled, so a link b
 <a class="button" aria-disabled="true">Link</a>
 ```
 
-### App behavior
+### Loading state
 
-While a command's request runs, keep the button's label, or change it to the verb's in-progress form ending in the `…` character, such as "Saving…". Never swap it for a spinner alone, "Loading" or "Please wait". Put a `.loading-indicator` beside the button, keeping its `role="status"` and name, `hidden` while idle so it doesn't animate; in an end-aligned row, reserve its width so the button doesn't move. Size it with both its size tokens, the active indicator no larger than the container. Show it after about 300ms and keep it at least 500ms once shown.
-
-Ignore a second press: return early while a pending flag is set, and give the button `aria-disabled="true"`, which stops pointer presses and keeps focus, where `disabled` drops it. For a form, guard the `submit` handler and call `preventDefault()` before returning, since Enter in a field submits without a click. In `finally`, cancel the indicator's timer and, once its 500ms are up, clear the flag, `aria-disabled` and the indicator, so a failed request leaves the button usable.
-
-Announce the result once, in a snackbar or a `role="status"` region present from load (visible or `.visually-hidden`, never `hidden`) whose text you change. A native form post that leaves the page needs none of this.
+Set `aria-busy="true"` on a `<button>` or `.button` while its command runs. The button keeps its label and colors, reports busy to assistive technology, and a shaped common button shows a small spinner after its label, fading in after `--md-comp-button-busy-delay` (300ms) so a quick request doesn't flash it; the button grows by the spinner. Under reduced motion the spinner holds still, and a disabled button shows none. Circle, extended and icon buttons, FABs and buttons in toolbars, groups and other fixed slots show no spinner. `BusyButtons` ignores every press while the attribute is set: a capture-phase click listener cancels the click before any handler, so a mouse press, Enter, Space and a form's implicit submission do nothing. The root bundle starts it; with the modular entry, call `BusyButtons.Init()`. `requestSubmit()` sends no click, and buttons in closed shadow roots are out of reach. Remove the attribute to make the button work again.
 
 ```html
-<button type="submit" aria-disabled="true"><span>Saving…</span></button>
-<span class="loading-indicator" role="status" aria-label="Saving"></span>
-<p class="visually-hidden" role="status"></p>
+<button type="submit" aria-busy="true"><span>Saving…</span></button>
+```
+
+### App behavior
+
+While a command's request runs, set `aria-busy="true"` on its button synchronously, before any `await`, and remove it in `finally` once the spinner has shown for about 500ms. That keeps the label and focus, shows progress after the 300ms delay and ignores repeat presses, so the handler needs no pending flag. Screen readers may not announce busy, so also change the label to the verb's in-progress form ending in the `…` character, such as "Saving…", never "Loading" or "Please wait". Announce the result once, in a snackbar or a `role="status"` region present from load (visible or `.visually-hidden`, never `hidden`) whose text you change. A native form post that leaves the page needs none of this.
+
+```js
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  save.setAttribute('aria-busy', 'true');
+  save.firstElementChild.textContent = 'Saving…';
+  try { await send(new FormData(form)); } finally {
+    save.removeAttribute('aria-busy');
+    save.firstElementChild.textContent = 'Save';
+  }
+});
 ```
 
 ---

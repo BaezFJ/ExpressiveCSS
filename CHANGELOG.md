@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `aria-busy="true"` on a button is a loading state: the button keeps its
+  label, reports busy and, after `--md-comp-button-busy-delay`, shows a spinner
+  beside the label, and the new `BusyButtons` behavior (started by the root
+  bundle; call `BusyButtons.Init()` with the modular entry) ignores every press
+  until the attribute is removed. The keypad's Enter no longer submits a form
+  whose submit button is busy. Migration: a button that already carries
+  `aria-busy="true"` now ignores clicks, and a shaped one shows the spinner.
 - `Expressive.DataTables.showPage(wrapper, page)` shows a local page of a
   paged data table without firing events, for restoring a page from the URL
   after a reload. It keeps the filter and sort, clamps past the end, returns

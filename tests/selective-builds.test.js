@@ -354,7 +354,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed shadow-root focus checks through focusIsIn, guarded Forms re-init, chart resize observers released on update(), a composed transfer event, Datepicker selects kept across years, one roving-focus sync per arrow key, memoized Timepicker ranges, flyout measurement per row entry and DataTables views without toggle scans: 111,677 gzip bytes (+41).
   // Reviewed shared core helpers for right-to-left checks, ID lists, the active descendant and resize handles, and shared chart marks: 111,422 gzip bytes (-255).
   // Reviewed DataTables.showPage, which restores a local page from the URL without events, with its validation split out for the complexity gate: 111,466 gzip bytes (+44).
-  assert.ok(sizes(js).gzip <= 111466, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the BusyButtons press guard and the keypad's busy-submit check: 111,590 gzip bytes (+124).
+  assert.ok(sizes(js).gzip <= 111590, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -558,5 +559,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed --md-sys-state-focus-indicator-* tokens behind every 3px component focus ring (snackbar included), and the .focus-ring utility: 91,061 gzip bytes (+170).
   // Reviewed .status-bar (bar, items, end group and its compact fallback, vibrant bar, compact priority hiding, forced-colors edge, badge anchor), status bar items leaving the common button rules, and the page, pane and questionnaire footers stepping aside for it: 91,445 gzip bytes (+384).
   // Reviewed a --md-sys-typescale-{role}-font shorthand token for each of the 15 roles, built from the role's longhand tokens: 91,770 gzip bytes (+325).
-  assert.ok(sizes(css).gzip <= 91770, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the aria-busy button spinner on shaped buttons, with its reduced-motion rule: 92,104 gzip bytes (+334).
+  assert.ok(sizes(css).gzip <= 92104, `CSS gzip: ${sizes(css).gzip}`);
 });
