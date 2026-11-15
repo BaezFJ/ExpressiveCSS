@@ -31,8 +31,8 @@ Covers R5, R6. Checks V4.
 
 Prerequisites: group 2, committed.
 
-- [ ] Build `settings-form` twice from the committed HEAD under the procedure, review both with the baseline trees and lint, confirm, and record `docs/agents/evidence/finished-app/2026-11-15-phase-79/` and two rows.
-- [ ] If a run scores a loading finding, revise the guidance and repeat, as R6 allows.
+- [x] Build `settings-form` twice from the committed HEAD under the procedure, review both with the baseline trees and lint, confirm, and record `docs/agents/evidence/finished-app/2026-11-15-phase-79/` and two rows.
+- [x] If a run scores a loading finding, revise the guidance and repeat, as R6 allows.
 
 Done when V4 passes or the R6 limit is reached and recorded.
 

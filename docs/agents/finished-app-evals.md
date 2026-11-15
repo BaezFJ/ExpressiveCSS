@@ -144,6 +144,8 @@ Counts are countable findings per area. A failed run shows `failed` in every col
 | 2026-11-15 | baseline | destructive-list | 2 | 1 | 0 | 0 | 0 | 1 |
 | 2026-11-15 | baseline | filtered-dashboard | 1 | 0 | 0 | 3 | 0 | 3 |
 | 2026-11-15 | baseline | filtered-dashboard | 2 | 0 | 0 | 3 | 0 | 3 |
+| 2026-11-15 | phase-79 | settings-form | 1 | 0 | 0 | 0 | 1 | 1 |
+| 2026-11-15 | phase-79 | settings-form | 2 | 0 | 0 | 0 | 0 | 0 |
 
 Baseline notes, from [the baseline records](evidence/finished-app/2026-11-15-baseline/findings.json):
 
@@ -152,3 +154,5 @@ Baseline notes, from [the baseline records](evidence/finished-app/2026-11-15-bas
 - Neither `filtered-dashboard` build writes anything to the URL: tab, filter and page are each one finding in both runs.
 - Both `settings-form` builds kept the Save label, showed progress beside it and ignored a repeat press. Run 1's reviewer filed a missing announcement (WCAG 4.1.3) under `finished-app:loading`; it counts, because the counting rule counts every confirmed labelled finding at major or above. Run 2's reviewer reported the same gap without a label, so the 1 against 0 comes from labelling, and a later rerun can score a loading finding the button guidance doesn't cover.
 - `destructive-list` run 1's reviewer also reported that a delete could start twice. The source contradicts it, so it was dropped; `findings.json` keeps the reason.
+
+Phase 79 notes, from [its records](evidence/finished-app/2026-11-15-phase-79/findings.json): both `settings-form` rebuilds, with the buttons guide's App behavior section, keep a Save label that becomes "Saving…", show a loading indicator beside it after about 300ms for at least 500ms, guard the `submit` handler with a pending flag and `aria-disabled`, clear the state in `finally`, and announce the result once. Loading is 0 in both runs. Run 1's one count is a phone `pattern` that the browser's `v` flag rejects, labelled `finished-app:submit-flow`.

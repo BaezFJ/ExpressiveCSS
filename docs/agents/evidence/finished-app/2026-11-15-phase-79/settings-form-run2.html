@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en" theme="auto">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Edit your display name and contact details.">
+    <title>Account settings</title>
+    <!-- Keep dist/fonts next to dist/css so the bundled fonts load. -->
+    <link rel="stylesheet" href="dist/css/expressive.min.css">
+  </head>
+  <body>
+    <main class="container py-5">
+      <div class="row">
+        <div class="s12 l8 xl6">
+          <h1 class="headline-large mb-2">Account settings</h1>
+          <p class="mb-5">Changes apply when you save.</p>
+
+          <form id="account-form" action="/api/account" method="post" novalidate>
+            <fieldset class="mb-4">
+              <legend>Profile</legend>
+              <div class="field">
+                <input id="display_name" name="displayName" type="text" placeholder=" "
+                       class="validate" required maxlength="50" autocomplete="nickname"
+                       aria-describedby="display_name_help">
+                <label for="display_name">Display name</label>
+                <small id="display_name_help" data-error="Enter a display name."><span>Shown to other people. Up to 50 characters.</span></small>
+              </div>
+              <div class="field">
+                <input id="website" name="website" type="url" placeholder=" "
+                       class="validate" autocomplete="url" inputmode="url"
+                       aria-describedby="website_help">
+                <label for="website">Website (optional)</label>
+                <small id="website_help" data-error="Enter a full address that starts with https://"><span>A full address, such as https://example.com</span></small>
+              </div>
+            </fieldset>
+
+            <fieldset class="mb-4">
+              <legend>Contact</legend>
+              <div class="field">
+                <input id="email" name="email" type="email" placeholder=" "
+                       class="validate" required autocomplete="email"
+                       aria-describedby="email_help">
+                <label for="email">Email</label>
+                <small id="email_help" data-error="Enter an email address, such as name@example.com."><span>Used to sign in and for account notices.</span></small>
+              </div>
+              <div class="field">
+                <input id="phone" name="phone" type="tel" placeholder=" "
+                       class="validate" autocomplete="tel" pattern="[0-9+()\-.\s]{7,20}"
+                       aria-describedby="phone_help">
+                <label for="phone">Phone (optional)</label>
+                <small id="phone_help" data-error="Enter a phone number using digits, spaces, +, - or parentheses."><span>Include the country code if you're outside the US.</span></small>
+              </div>
+            </fieldset>
+
+            <div id="save-error" class="alert critical mb-4" hidden>
+              <span class="material-symbols" aria-hidden="true">error</span>
+              <p id="save-error-text"></p>
+            </div>
+
+            <div class="flex align-center gap-3">
+              <button id="save" type="submit">
+                <span class="material-symbols" aria-hidden="true">check</span><span id="save-label">Save</span>
+              </button>
+              <span id="save-spinner" class="loading-indicator" role="status" aria-label="Saving"
+                    style="--md-comp-loading-indicator-container-size: 40px" hidden></span>
+            </div>
+            <p id="save-status" class="visually-hidden" role="status"></p>
+          </form>
+        </div>
+      </div>
+    </main>
+
+    <script src="dist/js/expressive.min.js"></script>
+    <script>
+      // Stand-in for POST /api/account: there is no server.
+      function postAccount(formData) {
+        var body = Object.fromEntries(formData.entries());
+        return new Promise(function (resolve, reject) {
+          setTimeout(function () {
+            if (String(body.email || '').trim().toLowerCase().endsWith('@example.invalid')) {
+              var error = new Error("We couldn't save your changes. This email address can't receive mail. Use a different address and save again.");
+              error.field = 'email';
+              error.fieldMessage = "This address can't receive mail. Use a different email.";
+              reject(error);
+            } else {
+              resolve({ ok: true, account: body });
+            }
+          }, 1500);
+        });
+      }
+
+      (function () {
+        var form = document.getElementById('account-form');
+        var saveButton = document.getElementById('save');
+        var saveLabel = document.getElementById('save-label');
+        var spinner = document.getElementById('save-spinner');
+        var status = document.getElementById('save-status');
+        var errorBox = document.getElementById('save-error');
+        var errorText = document.getElementById('save-error-text');
+        var fields = Array.prototype.slice.call(form.querySelectorAll('input.validate'));
+        var pending = false;
+
+        // Keep each field's default error so a server message can be undone.
+        fields.forEach(function (input) {
+          var help = input.parentElement.querySelector(':scope > [data-error]');
+          help.dataset.defaultError = help.getAttribute('data-error');
+          input.addEventListener('input', function () {
+            if (help.dataset.serverError) {
+              delete help.dataset.serverError;
+              help.setAttribute('data-error', help.dataset.defaultError);
+              input.classList.remove('invalid');
+              input.removeAttribute('aria-invalid');
+            }
+          });
+        });
+
+        function validateAll() {
+          var firstInvalid = null;
+          fields.forEach(function (input) {
+            Expressive.Forms.validateField(input);
+            if (!firstInvalid && input.getAttribute('aria-invalid') === 'true') firstInvalid = input;
+          });
+          return firstInvalid;
+        }
+
+        function showFieldError(name, message) {
+          var input = form.elements[name];
+          if (!input) return;
+          var help = input.parentElement.querySelector(':scope > [data-error]');
+          help.setAttribute('data-error', message);
+          help.dataset.serverError = 'true';
+          input.classList.add('invalid');
+          input.setAttribute('aria-invalid', 'true');
+        }
+
+        function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+        form.addEventListener('submit', async function (event) {
+          event.preventDefault();
+          if (pending) return;
+
+          errorBox.hidden = true;
+          errorText.textContent = '';
+          status.textContent = '';
+
+          var firstInvalid = validateAll();
+          if (firstInvalid) {
+            firstInvalid.focus();
+            status.textContent = 'Fix the highlighted fields, then save again.';
+            return;
+          }
+
+          pending = true;
+          saveButton.setAttribute('aria-disabled', 'true');
+          saveLabel.textContent = 'Saving…';
+
+          // Show the indicator only if the wait passes 300 ms, then keep it at least 500 ms.
+          var shownAt = 0;
+          var showTimer = setTimeout(function () { spinner.hidden = false; shownAt = Date.now(); }, 300);
+
+          try {
+            await postAccount(new FormData(form));
+            Expressive.Snackbar.dismissAll();
+            new Expressive.Snackbar({ text: 'Account settings saved' });
+          } catch (error) {
+            if (error.field) showFieldError(error.field, error.fieldMessage || error.message);
+            errorText.textContent = error.message || "We couldn't save your changes. Check your connection and save again.";
+            errorBox.hidden = false;
+            status.textContent = errorText.textContent;
+            var target = error.field && form.elements[error.field];
+            if (target) target.focus();
+          } finally {
+            clearTimeout(showTimer);
+            if (shownAt) await wait(Math.max(0, 500 - (Date.now() - shownAt)));
+            spinner.hidden = true;
+            saveLabel.textContent = 'Save';
+            saveButton.removeAttribute('aria-disabled');
+            pending = false;
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
