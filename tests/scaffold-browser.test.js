@@ -16,8 +16,9 @@ const rail = (n = 4) => `<nav class="navigation-rail" id="rail" aria-label="Prim
 const tools = (n = 3) => `<div class="toolbar vertical" id="tools">${Array.from({ length: n }, (_, i) =>
   `<button type="button" id="t${i}" aria-label="Action ${i}">${icon('event')}</button>`).join('')}</div>`;
 const pane = '<main id="pane" tabindex="-1"><div style="height:3000px">Inbox</div></main>';
-const scaffold = ({ bar = header(), nav = rail(), main = pane, trailing = tools(), cls = '' } = {}) =>
-  `<div class="scaffold ${cls}" id="s">${bar}${nav}${main}${trailing}</div>`;
+const navbar = `<footer id="nb"><nav class="navigation-bar" aria-label="Destinations"><a href="#n1" aria-current="page">${icon('inbox')}Inbox</a><a href="#n2">${icon('send')}Sent</a></nav></footer>`;
+const scaffold = ({ bar = header(), nav = rail(), main = pane, trailing = tools(), cls = '', bottom = '' } = {}) =>
+  `<div class="scaffold ${cls}" id="s">${bar}${nav}${main}${trailing}${bottom}</div>`;
 
 const page = (body, { dir = 'ltr', root = '' } = {}) => `<!doctype html><html lang="en" dir="${dir}" style="${root}"><head><style>${css}</style>
 <style>/* No icon font loads here, so a glyph name renders as wide text. Clip it as the font would. */
@@ -38,7 +39,15 @@ test('every compiled scaffold selector starts at the scaffold or a region class'
   const preludes = [...css.matchAll(/([^{}]*scaffold[^{}]*)\{/g)].map((m) => m[1].trim());
   assert.ok(preludes.length > 5, 'the scaffold rules are in the bundle');
   for (const prelude of preludes) {
-    for (const selector of prelude.split(/,(?![^(]*\))/)) assert.match(selector.trim(), /^\.scaffold/, prelude);
+    // Split on top-level commas only; :is() and :has() nest their own lists.
+    let depth = 0;
+    const selectors = [''];
+    for (const ch of prelude) {
+      depth += ch === '(' ? 1 : ch === ')' ? -1 : 0;
+      if (ch === ',' && depth === 0) selectors.push('');
+      else selectors[selectors.length - 1] += ch;
+    }
+    for (const selector of selectors) assert.match(selector.trim(), /^\.scaffold/, prelude);
   }
 });
 
@@ -444,6 +453,127 @@ for (const [name, type, run] of engines) {
       assert.equal(await tab.locator('#rail').evaluate((el) => el.classList.contains('expanded')), false, 'Escape closes it');
     } finally {
       await tab.evaluate(() => window.r?.destroy()).catch(() => {});
+      await browser.close();
+    }
+  });
+
+  run(`${name}: below 600px the scaffold scrolls the document with the app bar and navigation bar pinned`, { timeout: 30000 }, async () => {
+    const { browser, tab, box, style } = await open(type, page(`<div id="host">${scaffold({ bar: header('', 'rail'), bottom: navbar })}</div>`), { width: 390 });
+    try {
+      assert.ok((await box('#s')).height > 800, 'the scaffold grows with its content');
+      assert.ok(await tab.locator('#pane').evaluate((el) => el.scrollHeight <= el.clientHeight + 1), 'main is not a scroller');
+      await tab.evaluate(() => window.scrollTo(0, 1000));
+      assert.equal(await tab.evaluate(() => window.scrollY), 1000, 'the window scrolls');
+      near((await box('#bar')).top, 0, 'the app bar stays pinned');
+      const nb = await box('#nb');
+      assert.deepEqual([nb.left, nb.width], [0, 390], 'the navigation bar spans the window');
+      near(nb.bottom, 800, 'and stays at the bottom');
+      assert.equal(await tab.evaluate(([x, y]) => document.elementFromPoint(x, y)?.closest('#nb')?.id, [195, nb.top + nb.height / 2]), 'nb', 'above the content');
+
+      await tab.evaluate(() => window.scrollTo(0, 0));
+      await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ bar: header('', 'rail'), bottom: navbar.replace(/<\/?footer[^>]*>/g, '').replace('class="navigation-bar"', 'class="navigation-bar" id="nb"') }));
+      await tab.evaluate(() => window.scrollTo(0, 1000));
+      near((await box('#nb')).bottom, 800, 'a bare navigation bar child is pinned too');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: below 600px the collapsed rail is hidden and opens as an overlay from the app bar`, { timeout: 30000 }, async () => {
+    const { browser, tab, style } = await open(type, page(scaffold({ bar: header('', 'rail'), bottom: navbar })), { width: 390 });
+    try {
+      await tab.evaluate(() => { window.r = Expressive.NavigationRail.init(document.querySelector('#rail')); });
+      assert.equal(await style('#rail', 'display'), 'none', 'the collapsed rail is hidden');
+      const focused = [];
+      for (let i = 0; i < 12; i += 1) {
+        await tab.keyboard.press('Tab');
+        focused.push(await tab.evaluate(() => document.activeElement?.id || ''));
+      }
+      assert.ok(!focused.some((id) => /^d\d/.test(id)), `no rail destination takes focus: ${focused}`);
+      await tab.locator('#menu').focus();
+      await tab.keyboard.press('Enter');
+      assert.equal(await style('#rail', 'position'), 'fixed', 'the app bar button opens the overlay');
+      await tab.locator('#d1').focus();
+      await tab.keyboard.press('Escape');
+      assert.equal(await style('#rail', 'display'), 'none', 'Escape closes it');
+      assert.equal(await tab.evaluate(() => document.activeElement?.id), 'menu', 'and focus returns to the button');
+      await tab.evaluate(() => window.r.expand());
+      await tab.mouse.click(370, 400);
+      assert.equal(await tab.evaluate(() => window.r.isExpanded), false, 'a scrim tap closes it');
+    } finally {
+      await tab.evaluate(() => window.r?.destroy()).catch(() => {});
+      await browser.close();
+    }
+  });
+
+  run(`${name}: the app bar fills from the document's scroll below 600px`, { timeout: 30000 }, async () => {
+    const { browser, tab } = await open(type, page(scaffold({ bottom: navbar })), { width: 390 });
+    try {
+      if (await tab.evaluate(() => CSS.supports('animation-timeline', 'scroll()'))) {
+        const progress = () => tab.locator('#bar').evaluate((el) => getComputedStyle(el).getPropertyValue('--md-comp-top-app-bar-scroll').trim());
+        assert.equal(await progress(), '0');
+        await tab.evaluate(() => window.scrollTo(0, 100));
+        await tab.waitForFunction(() => getComputedStyle(document.querySelector('#bar')).getPropertyValue('--md-comp-top-app-bar-scroll').trim() === '1', null, { timeout: 5000 });
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: the compact layout puts the toolbar after the pane, hides custom rails and covers the tall rail`, { timeout: 30000 }, async () => {
+    const custom = `<div class="scaffold" id="c"><header>Bar</header><div class="scaffold-rail" id="cr">Rail</div><main id="cp">Pane</main></div>`;
+    const { browser, tab, box, style } = await open(type, page(`<div id="host">${scaffold({ bottom: navbar })}</div>`), { width: 390 });
+    try {
+      const main = await box('#pane');
+      assert.ok((await box('#tools')).top >= main.bottom - 1, 'the toolbar follows the pane');
+      await tab.locator('#tools').scrollIntoViewIfNeeded();
+      assert.ok((await box('#tools')).bottom <= 801, 'and can be scrolled into view');
+      await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ cls: 'tall-rail', bottom: navbar }));
+      assert.equal(await style('#rail', 'display'), 'none', 'a tall rail hides too');
+      near((await box('#pane')).left, 0, 'and the pane starts at the edge');
+      await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, custom);
+      assert.equal(await style('#cr', 'display'), 'none', 'a .scaffold-rail hides below 600px');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: the compact layout ends at 599px and the medium layout starts at 600px`, { timeout: 30000 }, async () => {
+    const { browser, tab, box, style } = await open(type, page(`<div id="host">${scaffold({ bottom: navbar })}</div>`), { width: 599 });
+    try {
+      assert.notEqual(await style('#nb', 'display'), 'none', 'the navigation bar shows at 599px');
+      assert.equal(await style('#rail', 'display'), 'none', 'the rail hides at 599px');
+      near((await box('#pane')).left, 0, 'the pane starts at the edge');
+      await tab.locator('#rail').evaluate((el) => el.classList.add('modal'));
+      near((await box('#pane')).left, 0, 'a .modal rail holds no column at 599px');
+      await tab.locator('#rail').evaluate((el) => el.classList.remove('modal'));
+      for (const width of [600, 1280]) {
+        await tab.setViewportSize({ width, height: 800 });
+        assert.equal(await style('#nb', 'display'), 'none', `the navigation bar hides at ${width}px`);
+      }
+      await tab.setViewportSize({ width: 600, height: 800 });
+      near((await box('#pane')).left, 96, 'at 600px the rail holds its collapsed column');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: below 600px panes grow with their content and the AppBar sentinel moves nothing`, { timeout: 30000 }, async () => {
+    const main = `<main id="pane"><div class="panes list-detail"><div class="list-pane"><section id="lb"><div style="height:2000px">List</div></section></div><div class="detail-pane"><section>Detail</section></div></div></main>`;
+    const { browser, tab, box } = await open(type, page(`<div id="host">${scaffold({ main, bottom: navbar })}</div>`), { width: 390 });
+    try {
+      assert.ok(await tab.locator('#lb').evaluate((el) => el.scrollHeight <= el.clientHeight + 1), 'the list body does not scroll on its own');
+      assert.ok(await tab.evaluate(() => document.documentElement.scrollHeight > 800), 'the document scrolls instead');
+      await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ bar: header('medium'), bottom: navbar }));
+      const regions = ['#bar', '#pane', '#tools', '#nb'];
+      const before = await Promise.all(regions.map(box));
+      await tab.evaluate(() => { window.ab = Expressive.AppBar.init(document.querySelector('#bar')); });
+      try {
+        assert.deepEqual(await Promise.all(regions.map(box)), before, 'the sentinel moves no region');
+      } finally {
+        await tab.evaluate(() => window.ab.destroy());
+      }
+    } finally {
       await browser.close();
     }
   });
