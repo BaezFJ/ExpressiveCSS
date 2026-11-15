@@ -192,3 +192,14 @@ $_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar:only-child))";
     }
   }
 }
+
+// Below 600px the document scrolls under the pinned bar and navigation bar, so
+// focus and anchors scroll clear of both. Top: the small app bar's 4rem.
+// Bottom: the navigation bar's fixed parts (12px padding, 24px icon, 4px gap,
+// 10px indicator padding) plus its label's 1rem line, so it grows with the
+// text, and the safe area. A taller bar needs a larger padding from the page.
+@include bp-down("medium") {
+  :root:has(> body > .scaffold) {
+    scroll-padding-block: rem(64px) calc(50px + 1rem + env(safe-area-inset-bottom, 0px));
+  }
+}

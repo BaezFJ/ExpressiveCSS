@@ -40,7 +40,8 @@ test('every compiled scaffold selector starts at the scaffold or a region class'
   const preludes = [...css.matchAll(/([^{}]*scaffold[^{}]*)\{/g)].map((m) => m[1].trim());
   assert.ok(preludes.length > 5, 'the scaffold rules are in the bundle');
   for (const prelude of preludes) {
-    for (const selector of splitSelectorList(prelude)) assert.match(selector, /^\.scaffold/, prelude);
+    // The one root rule keys off a scaffold that is a direct child of <body>.
+    for (const selector of splitSelectorList(prelude)) assert.match(selector, /^(\.scaffold|:root:has\(> body > \.scaffold\))/, prelude);
   }
 });
 
@@ -500,6 +501,25 @@ for (const [name, type, run] of engines) {
       assert.equal(await tab.evaluate(() => window.r.isExpanded), false, 'a scrim tap closes it');
     } finally {
       await tab.evaluate(() => window.r?.destroy()).catch(() => {});
+      await browser.close();
+    }
+  });
+
+  run(`${name}: below 600px keyboard focus scrolls clear of the pinned bars`, { timeout: 30000 }, async () => {
+    const main = '<main id="pane"><div style="height:700px">Inbox</div><button type="button" id="low">Archive</button><div style="height:1200px"></div></main>';
+    // Size the navigation bar's icons as the icon font would, so the bar has its real 66px height.
+    const real = '<style>.navigation-bar .material-symbols{display:inline-block;width:24px;height:24px;line-height:24px}</style>';
+    const { browser, tab, box } = await open(type, page(real + scaffold({ bar: header('', 'rail'), main, bottom: navbar })), { width: 390 });
+    try {
+      assert.equal(Math.round((await box('#nb')).height), 66, 'the navigation bar has its real height');
+      await tab.locator('#menu').focus();
+      await tab.keyboard.press('Tab');
+      assert.equal(await tab.evaluate(() => document.activeElement?.id), 'low', 'Tab reaches the pane button');
+      const low = await box('#low');
+      const nbTop = (await box('#nb')).top;
+      assert.ok(low.bottom <= nbTop + 1, `the focused button is above the navigation bar: ${low.bottom} vs ${nbTop}`);
+      assert.ok(low.top >= (await box('#bar')).bottom - 1, 'and below the app bar');
+    } finally {
       await browser.close();
     }
   });
