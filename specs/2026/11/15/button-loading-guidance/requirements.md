@@ -46,10 +46,10 @@ The baseline `settings-form` builds already kept their label, showed progress an
 - **R1** The generator cuts a component section's App behavior subsection (one level below the component heading) out of the section before it builds the Contract, Syntax, API parts and "Also documented", and renders it in the guide as `#### App behavior`, in full, after the API parts and Related contracts and before "Also documented". It strips a trailing `---` and turns relative links into their text, as `contractSummary` does. A section without the subsection renders exactly as before.
 - **R2** `llm.md`'s Buttons section has `### App behavior` saying:
   - while a command's request runs, keep the label or change it to the verb's in-progress form ending in the `…` character, such as "Saving…", never a spinner alone, "Loading" or "Please wait";
-  - put a `.loading-indicator` beside the button as a sibling, `hidden` while idle, with its `role="status"` and name, and size it with its tokens so the row doesn't grow;
+  - put a `.loading-indicator` beside the button as a sibling, `hidden` while idle so it doesn't animate, with its `role="status"` and name; reserve its width in an end-aligned row; set both size tokens together, the active indicator no larger than the container;
   - show it after about 300ms and keep it at least 500ms once shown;
   - ignore a second press: return early while a pending flag is set, in the `submit` handler after `preventDefault()` for a form, and set `aria-disabled="true"`, which paints the button disabled and stops pointer presses while keeping focus, where `disabled` drops it;
-  - clear the flag, `aria-disabled` and the indicator in `finally`, so a failed request leaves the button usable;
+  - in `finally`, cancel the indicator's timer and, once its 500ms are up, clear the flag, `aria-disabled` and the indicator, so a failed request leaves the button usable;
   - announce the result once, in a Snackbar or a `role="status"` region present from load (visible or `.visually-hidden`, never `hidden`) whose text changes;
   - a native form post that leaves the page needs none of this.
   It has one HTML example that passes the enforced semantics rules, and the subsection stays under 1.5 KB.
@@ -69,3 +69,8 @@ The baseline `settings-form` builds already kept their label, showed progress an
 - Comparison fairness: reviews keep the baseline skill trees, so only the builders see the new guidance.
 - UI states: the guidance covers the in-progress, success and failure states of the command.
 - `specs/checklist.md`: the project has none.
+
+## Decisions made while building
+
+- The generator fails the build when an App behavior heading doesn't render in a guide, and accepts the subsection first under its component heading (decided after review). Phases 80 to 82 rely on that check.
+- Notes for later phases (from the five-axis review): quality inspector check 3 flags controls "disabled with a class"; `aria-disabled` is not a class, and both phase 79 reviewers passed it, but phase 82 or 83 should keep the two consistent. Neither run set records review seconds.

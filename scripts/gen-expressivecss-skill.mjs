@@ -345,11 +345,13 @@ function renderMaterialMapping(component) {
 // other parts read the section, so its examples never become the Syntax, and rendered
 // in full. The body takes fenced code blocks whole, so a `# comment` or `---` inside one
 // doesn't end it; the lookahead stops at the next heading or the section's closing `---`.
-function splitAppBehavior(section, level) {
+function splitAppBehavior(trimmed, level) {
+  // sectionFor trims the section, so a leading newline lets the subsection come first.
+  const section = `\n${trimmed}`;
   const match = new RegExp(`\\n#{${level + 1}} App behavior\\n((?:\`\`\`[\\s\\S]*?\`\`\`|[\\s\\S])*?)(?=\\n#{1,${level + 1}} |\\n---\\s*(?:\\n|$)|$)`, 'u').exec(section);
-  if (!match) return { rest: section, behavior: '' };
+  if (!match) return { rest: trimmed, behavior: '' };
   const body = mapProse(match[1].trim(), stripRelativeLinks);
-  return { rest: section.replace(match[0], ''), behavior: `#### App behavior\n\n${rebaseHeadings(body, 3 - level)}\n\n` };
+  return { rest: section.replace(match[0], '').slice(1), behavior: `#### App behavior\n\n${rebaseHeadings(body, 3 - level)}\n\n` };
 }
 
 function renderGuide(component, page, fullSection, rules, provenance) {

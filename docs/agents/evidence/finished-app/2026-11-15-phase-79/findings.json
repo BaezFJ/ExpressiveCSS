@@ -49,7 +49,7 @@
         "pending flag in the submit handler after preventDefault()": true,
         "aria-disabled=\"true\" instead of disabled": true,
         "pending state cleared in finally": true,
-        "result announced once (role=\"status\" region or Snackbar)": true
+        "result announced once (role=\"status\" region or Snackbar)": "partial: success uses a Snackbar; failure reveals a hidden container and fills a role=\"alert\" paragraph 50ms later (index.html:75-77, 161-165)"
       },
       "countable": [
         {
@@ -120,5 +120,5 @@
     "submit-flow": 1,
     "total": 1
   },
-  "r2Method": "Each element was found by a source search of the app (Saving…, loading-indicator, 300, 500, preventDefault, aria-disabled, finally, role=\"status\" or Snackbar) and no `disabled = true` on the button."
+  "r2Method": "Each element was found by a source search of the app (Saving…, loading-indicator, 300, 500, preventDefault, aria-disabled, finally) and no `disabled = true` on the button, then read in context. The announcement element ignores the loading indicator's own role=\"status\" and checks the success and failure paths for a Snackbar or a status region present from load."
 }

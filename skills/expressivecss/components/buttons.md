@@ -9,7 +9,7 @@ Component ID: `buttons`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `cd272703b5c35e92d7975a22ddf4da0d1713286daae650eef78a472064451761`
+Contract SHA-256: `313812fda67b160002ed2a944be5a91e92845a425a427f4dfb8f92e3fe74df2c`
 
 #### Selection and adaptation
 
@@ -64,11 +64,11 @@ Two independent axes dress it: a style (`filled`, `tonal`, `outlined`, `elevated
 
 #### App behavior
 
-While a command's request runs, keep the button's label, or change it to the verb's in-progress form ending in the `…` character, such as "Saving…". Never swap it for a spinner alone, "Loading" or "Please wait". Put a `.loading-indicator` beside the button, keeping its `role="status"` and name, with its space reserved while idle (`visibility: hidden`) and `--md-comp-loading-indicator-container-size` set so nothing moves. Show it after about 300ms and keep it at least 500ms once shown.
+While a command's request runs, keep the button's label, or change it to the verb's in-progress form ending in the `…` character, such as "Saving…". Never swap it for a spinner alone, "Loading" or "Please wait". Put a `.loading-indicator` beside the button, keeping its `role="status"` and name, `hidden` while idle so it doesn't animate; in an end-aligned row, reserve its width so the button doesn't move. Size it with both its size tokens, the active indicator no larger than the container. Show it after about 300ms and keep it at least 500ms once shown.
 
-Ignore a second press. Return early while a pending flag is set, and give the button `aria-disabled="true"`, which paints it disabled and stops pointer presses but keeps focus on it; `disabled` would drop focus. For a form, guard the `submit` handler and call `preventDefault()` before returning, since Enter in a field submits without a click. In `finally`, cancel the indicator's timer and, once its 500ms are up, clear the flag, `aria-disabled` and the indicator, so a failed request leaves the button usable.
+Ignore a second press: return early while a pending flag is set, and give the button `aria-disabled="true"`, which stops pointer presses and keeps focus, where `disabled` drops it. For a form, guard the `submit` handler and call `preventDefault()` before returning, since Enter in a field submits without a click. In `finally`, cancel the indicator's timer and, once its 500ms are up, clear the flag, `aria-disabled` and the indicator, so a failed request leaves the button usable.
 
-Announce the result once, in a snackbar or in a `role="status"` region that is in the page from the start (visible or `.visually-hidden`, never `hidden`) and whose text you change. A native form post that leaves the page needs none of this.
+Announce the result once, in a snackbar or a `role="status"` region present from load (visible or `.visually-hidden`, never `hidden`) whose text you change. A native form post that leaves the page needs none of this.
 
 ```html
 <button type="submit" aria-disabled="true"><span>Saving…</span></button>
