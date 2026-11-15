@@ -7662,20 +7662,20 @@ Expressive.Snackbar.dismissAll();
 
 ### App behavior
 
-For a removal people can get back, act at once instead of asking first. Remove the item, keep its data, and show a snackbar with `action: 'Undo'` and `replace: true`. Leave `displayLength` unset, so the person has as long as they need; Undo stays reachable with Tab or a notification-actions button. Keep one pending flag per removal, and have Undo and the commit each clear it first and do nothing once it is clear, so a removal is undone or committed exactly once. In `onAction`, put the item back where it was and focus its first control. Commit in `completeCallback`, which also runs when a newer snackbar replaces this one, and on `pagehide` with `fetch(url, { method: 'DELETE', keepalive: true })`. A page restored from the back/forward cache then can't undo the committed removal or send it again. If the commit fails, put the item back and say so. Give every other snackbar on the page `replace: true` as well, so none waits behind the Undo bar. Keep a confirmation dialog for actions that can't be undone, such as deleting an account.
+For a removal people can get back, act at once instead of asking first. Remove the item, keep its data, and show a snackbar with `action: 'Undo'` and `replace: true`. Leave `displayLength` unset, so the person has as long as they need; Undo stays reachable with Tab or a notification-actions button. Keep one pending flag per removal, and have Undo and the commit each clear it first and do nothing once it is clear, so a removal is undone or committed exactly once. In `onAction`, put the item back where it was and focus its first control. Commit in `completeCallback`, which also runs when a newer snackbar replaces this one, and on `pagehide` with `fetch(url, { method: 'DELETE', keepalive: true })`. Dismiss the bar in the same `pagehide` listener, so a page restored from the back/forward cache can't offer, undo or resend the committed removal. If the commit fails, put the item back and say so. Give every other snackbar on the page `replace: true` as well, so none waits behind the Undo bar. Keep a confirmation dialog for actions that can't be undone, such as deleting an account.
 
 ```js
 let pending = true;
 const commit = () => { if (pending) { pending = false; commitDelete(item); } };
 removeItem(item);
-addEventListener('pagehide', commit, { once: true });
-new Expressive.Snackbar({
+const bar = new Expressive.Snackbar({
   text: 'Address deleted',
   action: 'Undo',
   replace: true,
   onAction: () => { if (pending) { pending = false; restoreItem(item); } },
   completeCallback: commit
 });
+addEventListener('pagehide', () => { commit(); bar.dismiss(); }, { once: true });
 ```
 
 ---

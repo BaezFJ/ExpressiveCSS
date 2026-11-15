@@ -183,7 +183,8 @@ describe('the ExpressiveCSS agent skill', () => {
     const guide = readFileSync(new URL(`components/${slug}.md`, skillDirectory), 'utf8');
     const start = guide.indexOf('#### App behavior');
     assert.ok(start > guide.indexOf('#### Syntax') && start < guide.indexOf('#### Rules'), `${slug} App behavior sits between Syntax and Rules`);
-    assert.doesNotMatch(guide.slice(guide.indexOf('#### Also documented')), /App behavior/);
+    const also = guide.indexOf('#### Also documented');
+    if (also >= 0) assert.ok(also > start && !/App behavior/.test(guide.slice(also)), `${slug} Also documented follows App behavior and leaves it out`);
     return { guide, behavior: guide.slice(start, guide.indexOf('\n#### ', start + 1)) };
   };
 
@@ -199,7 +200,8 @@ describe('the ExpressiveCSS agent skill', () => {
       assert.ok(snackbar.includes(phrase), `snackbar App behavior lacks ${phrase}`);
     }
     assert.ok(Buffer.byteLength(snackbar) <= 2048, `snackbar App behavior is ${Buffer.byteLength(snackbar)} bytes`);
-    const { behavior: lists } = behaviorOf('lists');
+    const { guide: listsGuide, behavior: lists } = behaviorOf('lists');
+    assert.match(listsGuide, /#### Syntax\n\n```html\n<ul class="list">/);
     for (const phrase of ['Undo', 'event.detail', 'focus', 'empty state']) {
       assert.ok(lists.includes(phrase), `lists App behavior lacks ${phrase}`);
     }

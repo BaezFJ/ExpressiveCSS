@@ -9,7 +9,7 @@ Component ID: `input-mask`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `05542707f9e99abd0203141119c1471b7106d407e78b3d9d948a45923ddd02b5`
+Contract SHA-256: `f4ab848657b6d942478c40ceadd1e387768e653ace935a1eb117658a93d7f51d`
 
 #### Selection and adaptation
 

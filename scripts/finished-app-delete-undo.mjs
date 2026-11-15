@@ -11,8 +11,9 @@ const UNDO = /^undo$/i;
 const ROW = 'li, [role=listitem], tr';
 const wait = (ms) => new Promise((done) => setTimeout(done, ms));
 
-const rowTexts = (page) => page.getByRole('button', { name: DELETE })
-  .evaluateAll((buttons, row) => buttons.map((button) => (button.closest(row) ?? button.parentElement).innerText.trim()), ROW);
+// A row's key is its text, or the delete button's own name when no row element holds it.
+const rowTexts = (page) => page.getByRole('button', { name: DELETE }).evaluateAll((buttons, row) => buttons.map((button) =>
+  button.closest(row)?.innerText.trim() || button.getAttribute('aria-label') || button.innerText.trim()), ROW);
 
 async function until(check, ms) {
   const end = Date.now() + ms;
@@ -28,7 +29,7 @@ async function deleteAndUndo(page) {
   if (before.length < 2) return { pass: false, reason: `found ${before.length} delete buttons` };
   const started = Date.now();
   await page.getByRole('button', { name: DELETE }).nth(1).click();
-  const dialogOpen = () => page.locator('dialog[open], [role=alertdialog]').first().isVisible();
+  const dialogOpen = async () => (await page.locator('dialog[open], [role=dialog], [role=alertdialog]').filter({ visible: true }).count()) > 0;
   const gone = async () => !(await rowTexts(page)).includes(before[1]);
   const settled = await until(async () => (await dialogOpen()) || gone(), 500);
   const removedMs = Date.now() - started;
@@ -41,9 +42,9 @@ async function deleteAndUndo(page) {
   const restored = await until(same, 3000);
   await wait(2000);
   const stillRestored = await same();
-  const focusInRow = await page.evaluate((row) => Boolean(document.activeElement?.closest(row)), ROW);
+  const focus = await page.evaluate((row) => document.activeElement?.closest(row)?.innerText.trim() ?? null, ROW);
   const reason = restored && stillRestored ? '' : 'the rows did not come back in their old order';
-  return { pass: !reason, reason, removedMs, focusInRow };
+  return { pass: !reason, reason, removedMs, focusInRow: focus !== null, focusOnRestoredRow: focus === before[1] };
 }
 
 async function twoDeletes(page) {
@@ -59,14 +60,25 @@ async function twoDeletes(page) {
   return { undoShownForSecond: undoShown, rowsBefore: before.length, rowsAfter: (await rowTexts(page)).length };
 }
 
+const firstLine = (error) => error.message.split('\n')[0];
+
 async function check(browser, dir) {
   const url = pathToFileURL(resolve(dir, 'index.html')).href;
   const page = await browser.newPage();
+  try {
+    return await checkPage(page, url, dir);
+  } catch (error) {
+    return { app: dir, pass: false, reason: firstLine(error) };
+  } finally {
+    await page.close();
+  }
+}
+
+async function checkPage(page, url, dir) {
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto(url);
   await wait(800);
-  const firstLine = (error) => error.message.split('\n')[0];
   const gate = await deleteAndUndo(page).catch((error) => ({ pass: false, reason: firstLine(error) }));
   // Only the gating sequence's page errors fail the check; the second one is recorded.
   const gateErrors = errors.length;
@@ -74,11 +86,14 @@ async function check(browser, dir) {
   const second = gate.pass
     ? await page.goto(url).then(() => wait(800)).then(() => twoDeletes(page)).catch((error) => ({ error: firstLine(error) }))
     : null;
-  await page.close();
   const pass = gate.pass && !gateErrors;
   return { app: dir, pass, ...gate, reason: gate.reason || (gateErrors ? 'page error' : ''), errors, twoDeletes: second };
 }
 
+if (process.argv.length < 3) {
+  console.error('usage: node scripts/finished-app-delete-undo.mjs <app-dir>...');
+  process.exit(2);
+}
 const browser = await chromium.launch();
 try {
   for (const dir of process.argv.slice(2)) {

@@ -84,7 +84,21 @@
         "url-state": 0,
         "submit-flow": 0
       },
-      "total": 0
+      "total": 0,
+      "deleteUndoCheckFinal": {
+        "app": "phase-80/destructive-list-run1",
+        "pass": true,
+        "reason": "",
+        "removedMs": 23,
+        "focusInRow": true,
+        "focusOnRestoredRow": true,
+        "errors": [],
+        "twoDeletes": {
+          "undoShownForSecond": true,
+          "rowsBefore": 5,
+          "rowsAfter": 3
+        }
+      }
     },
     {
       "prompt": "destructive-list",
@@ -137,7 +151,21 @@
         "url-state": 0,
         "submit-flow": 1
       },
-      "total": 2
+      "total": 2,
+      "deleteUndoCheckFinal": {
+        "app": "phase-80/destructive-list-run2",
+        "pass": true,
+        "reason": "",
+        "removedMs": 37,
+        "focusInRow": true,
+        "focusOnRestoredRow": true,
+        "errors": [],
+        "twoDeletes": {
+          "undoShownForSecond": true,
+          "rowsBefore": 5,
+          "rowsAfter": 3
+        }
+      }
     }
   ],
   "totals": {
@@ -146,5 +174,6 @@
     "url-state": 0,
     "submit-flow": 1,
     "total": 2
-  }
+  },
+  "deleteUndoFinal": "undo-check-final.jsonl: the shipped scripts/finished-app-delete-undo.mjs on all four apps. Baseline runs 1 and 2 fail (\"a confirmation dialog opened\"); phase-80 runs 1 and 2 pass with focus on the restored row and an Undo shown for a second delete."
 }
