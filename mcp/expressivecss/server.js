@@ -298,9 +298,10 @@ const LegacyPatternList = [
     id: 'paste-blocked',
     severity: 'high',
     description: 'This `onpaste` handler always blocks paste, which stops people pasting from a password manager or pasting a code and can fail WCAG 3.3.8 Accessible Authentication. Remove the handler.',
-    // The lookbehind steps over whole attributes back to the tag, so text in another attribute's value can't pass for the name; no `i` flag keeps the value case-sensitive.
+    // The lookbehind steps over whole attributes back to the tag, so text in another attribute's value can't pass for the name; quoted values may hold `>`
+    // (Vue `:disabled="n > 3"`) and run to 2,000 characters for long class lists. No `i` flag keeps the value case-sensitive.
     // Statements can't start with whitespace and every repeat is capped, so an unclosed value stays linear; `return` followed by a newline returns nothing.
-    pattern: /[oO][nN][pP][aA][sS][tT][eE](?<=<[A-Za-z][^\s"'<>=/]{0,100}(?:\s{1,100}[^\s"'<>=/]{1,100}(?:\s{0,100}=\s{0,100}(?:"[^"<>]{0,500}"|'[^'<>]{0,500}'|[^\s"'<>=]{1,500}))?){0,30}\s{1,100}.{7})\s{0,100}=\s{0,100}(?:(["'])\s{0,100}(?:event\.preventDefault\(\)(?:[^\S\n]{0,100}[;\n]\s{0,100}event\.preventDefault\(\)){0,49}[^\S\n]{0,100}(?:[;\n]\s{0,100})?\1|(?:(?!(?:if|else|for|while|do|switch|try|with|return)(?![\w$]))(?!\1)[^\s;{}](?:(?!\1)[^;\n{}]){0,500}[;\n]\s{0,100}){0,8}return[ \t]{1,100}false[^\S\n]{0,100}(?:[;\n]|\1))|event\.preventDefault\(\);?(?=[\s>/]))/gu,
+    pattern: /[oO][nN][pP][aA][sS][tT][eE](?<=<[A-Za-z][^\s"'<>=/]{0,100}(?:\s{1,100}[^\s"'<>=/]{1,100}(?:\s{0,100}=\s{0,100}(?:"[^"]{0,2000}"|'[^']{0,2000}'|[^\s"'<>=]{1,500}))?){0,30}\s{1,100}.{7})\s{0,100}=\s{0,100}(?:(["'])\s{0,100}(?:event\.preventDefault\(\)(?:[^\S\n]{0,100}[;\n]\s{0,100}event\.preventDefault\(\)){0,49}[^\S\n]{0,100}(?:[;\n]\s{0,100})?\1|(?:(?!(?:if|else|for|while|do|switch|try|with|return)(?![\w$]))(?!\1)[^\s;{}](?:(?!\1)[^;\n{}]){0,500}[;\n]\s{0,100}){0,8}return[ \t]{1,100}false[^\S\n]{0,100}(?:[;\n]|\1))|event\.preventDefault\(\);?(?=[\s>]))/gu,
   },
 ];
 
