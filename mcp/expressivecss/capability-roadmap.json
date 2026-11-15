@@ -284,7 +284,7 @@
       "sources": [
         {
           "path": "src/sass/components/_scaffold.scss",
-          "sha256": "f88e87adf4e8aade081f6e8362c04b9093d9b363069e54bcc626f11cb7c26d66"
+          "sha256": "454c78eb003fc3f405cde60756eeb45f238f3c48b13b0c1f0c4f87f38a9e278a"
         }
       ],
       "gaps": [
@@ -340,7 +340,7 @@
         {
           "file": "tests/scaffold-browser.test.js",
           "name": "chromium: below 600px the toolbar floats centered 16px above the navigation bar",
-          "scope": "A centered row 16px above a 66px navigation bar at the top and mid-scroll, 16px above the window bottom without one, and clear of the bar at 200% text. Equivalent Firefox and WebKit cases run in the same suite.",
+          "scope": "A centered row 16px above a 74px navigation bar at the top and mid-scroll, 16px above the window bottom without one, and clear of the bar at 200% text. Equivalent Firefox and WebKit cases run in the same suite.",
           "state": "not-recorded"
         },
         {

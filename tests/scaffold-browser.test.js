@@ -507,11 +507,9 @@ for (const [name, type, run] of engines) {
 
   run(`${name}: below 600px keyboard focus scrolls clear of the pinned bars`, { timeout: 30000 }, async () => {
     const main = '<main id="pane"><div style="height:700px">Inbox</div><button type="button" id="low">Archive</button><div style="height:1200px"></div></main>';
-    // Size the navigation bar's icons as the icon font would, so the bar has its real 66px height.
-    const real = '<style>.navigation-bar .material-symbols{display:inline-block;width:24px;height:24px;line-height:24px}</style>';
-    const { browser, tab, box } = await open(type, page(real + scaffold({ bar: header('', 'rail'), main, bottom: navbar })), { width: 390 });
+    const { browser, tab, box } = await open(type, page(scaffold({ bar: header('', 'rail'), main, bottom: navbar })), { width: 390 });
     try {
-      assert.equal(Math.round((await box('#nb')).height), 66, 'the navigation bar has its real height');
+      assert.equal(Math.round((await box('#nb')).height), 74, 'the navigation bar has its real height: a 32px indicator around the icon');
       await tab.locator('#menu').focus();
       await tab.keyboard.press('Tab');
       assert.equal(await tab.evaluate(() => document.activeElement?.id), 'low', 'Tab reaches the pane button');
@@ -524,12 +522,10 @@ for (const [name, type, run] of engines) {
     }
   });
 
-  // The navigation bar's icons sized as the icon font would, for its real 66px height.
-  const realIcons = '<style>.navigation-bar .material-symbols{display:inline-block;width:24px;height:24px;line-height:24px}</style>';
 
   run(`${name}: below 600px the trailing toolbar turns horizontal, keeps its order and stacks under the bars`, { timeout: 30000 }, async () => {
     const group = `<div class="toolbar-group vertical" id="tg"><div class="toolbar vertical" id="tgi">${['a', 'b', 'c'].map((x) => `<button type="button" id="g${x}" aria-label="${x}">${icon('edit')}</button>`).join('')}</div><button type="button" class="extra circle" aria-label="Compose">${icon('add')}</button></div>`;
-    const { browser, tab, box, style } = await open(type, page(realIcons + `<div id="host">${scaffold({ bottom: navbar })}</div>`), { width: 390 });
+    const { browser, tab, box, style } = await open(type, page(`<div id="host">${scaffold({ bottom: navbar })}</div>`), { width: 390 });
     try {
       const xs = async () => Promise.all(['#t0', '#t1', '#t2'].map(async (id) => (await box(id)).left));
       assert.equal(await style('#tools', 'flexDirection'), 'row', 'the toolbar is a row');
@@ -556,7 +552,7 @@ for (const [name, type, run] of engines) {
   });
 
   run(`${name}: below 600px the toolbar floats centered 16px above the navigation bar`, { timeout: 30000 }, async () => {
-    const { browser, tab, box } = await open(type, page(realIcons + `<div id="host">${scaffold({ bottom: navbar })}</div>`), { width: 390 });
+    const { browser, tab, box } = await open(type, page(`<div id="host">${scaffold({ bottom: navbar })}</div>`), { width: 390 });
     try {
       for (const y of [0, 1000]) {
         await tab.evaluate((y) => window.scrollTo(0, y), y);
@@ -596,7 +592,7 @@ for (const [name, type, run] of engines) {
   run(`${name}: the end of a compact page scrolls clear of the floating toolbar, and focus does too`, { timeout: 30000 }, async () => {
     const ending = '<main id="pane"><div style="height:2000px">Inbox</div><p id="last">The end</p></main>';
     const focusing = '<main id="pane"><div style="height:640px">Inbox</div><button type="button" id="low">Archive</button><div style="height:1500px"></div></main>';
-    const { browser, tab, box } = await open(type, page(realIcons + `<div id="host">${scaffold({ bar: header('', 'rail'), main: ending, bottom: navbar })}</div>`), { width: 390 });
+    const { browser, tab, box } = await open(type, page(`<div id="host">${scaffold({ bar: header('', 'rail'), main: ending, bottom: navbar })}</div>`), { width: 390 });
     try {
       await tab.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
       assert.ok((await box('#last')).bottom <= (await box('#tools')).top + 1, 'the last content ends above the toolbar');
@@ -607,7 +603,7 @@ for (const [name, type, run] of engines) {
       await browser.close();
     }
     // The scroll padding keys off a scaffold that is a direct child of <body>.
-    const direct = await open(type, page(realIcons + scaffold({ bar: header('', 'rail'), main: focusing, bottom: navbar })), { width: 390 });
+    const direct = await open(type, page(scaffold({ bar: header('', 'rail'), main: focusing, bottom: navbar })), { width: 390 });
     try {
       await direct.tab.locator('#menu').focus();
       await direct.tab.keyboard.press('Tab');
@@ -623,7 +619,7 @@ for (const [name, type, run] of engines) {
   run(`${name}: below 600px a left or right tooltip on the floating toolbar shows above its action`, { timeout: 30000 }, async () => {
     // Right tooltips too: under rtl the trailing toolbar sits on the left.
     const tip = (side) => tools().replace(`id="t0" aria-label="Action 0">${icon('event')}</button>`, `id="t0" aria-label="Action 0">${icon('event')}<span class="tooltip ${side}" role="tooltip">Calendar</span></button>`);
-    const { browser, tab, box } = await open(type, page(realIcons + `<div id="host">${scaffold({ trailing: tip('left'), bottom: navbar })}</div>`), { width: 390 });
+    const { browser, tab, box } = await open(type, page(`<div id="host">${scaffold({ trailing: tip('left'), bottom: navbar })}</div>`), { width: 390 });
     try {
       for (const side of ['left', 'right']) {
         await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ trailing: tip(side), bottom: navbar }));

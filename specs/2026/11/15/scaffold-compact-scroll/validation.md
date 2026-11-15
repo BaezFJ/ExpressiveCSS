@@ -72,3 +72,4 @@ Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, th
   - The CSS budget hadn't been raised; it is now 92,421 (+179 over the phase base).
   - The compact example's `<footer><nav class="navigation-bar">…</nav></footer>` tripped `footer-nav-has-links`. The `llm.md` and docs examples now carry two links.
   - The known Chromium swipe-actions vertical-drag flake passed alone.
+- 2026-11-15, superseded in phase 93: the "real 66px bar" in the phase 92 Codex entry above was wrong. The navigation bar's icon container is its 32px indicator, so the bar is 74px, as the fixture measured. Phase 93 corrected `$_navbar-size` to `52px + 1rem + max(6px, safe area)`, and V4a now runs against the real bar.

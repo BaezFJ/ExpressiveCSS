@@ -38,11 +38,12 @@ $_rail: ":is(.navigation-rail, .scaffold-rail)";
 $_pane: ":is(main, .scaffold-pane)";
 $_trailing: ":is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing)";
 $_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar:only-child))";
-// The navigation bar's height from its anatomy: 6px top padding, 24px icon,
-// 4px gap, 10px indicator padding, its label's 1rem line, and a bottom padding
-// of 6px or the safe area, whichever is larger. A sibling can't read it in CSS.
-// An icon-only bar is 64px, so the gap above it comes out 2px larger.
-$_navbar-size: "44px + 1rem + max(6px, env(safe-area-inset-bottom, 0px))";
+// The navigation bar's height from its anatomy: 6px top padding, the 32px
+// indicator around the icon, a 4px gap, 10px of destination padding, its
+// label's 1rem line, and a bottom padding of 6px or the safe area, whichever
+// is larger: 74px at 16px text. A sibling can't read it in CSS. An icon-only
+// bar is shorter, so the gap above it comes out larger.
+$_navbar-size: "52px + 1rem + max(6px, env(safe-area-inset-bottom, 0px))";
 // A shown navigation bar region, as a :has() argument list.
 $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])";
 

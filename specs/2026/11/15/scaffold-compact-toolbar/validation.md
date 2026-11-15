@@ -4,7 +4,7 @@ Roadmap [phase 93](../../../../roadmap.md#phase-93-float-the-trailing-toolbar-on
 
 ## Agent-run checks
 
-Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, then `npm run verify`. A "compact scaffold" is phase 92's: an app bar, a rail, a 3000px `main`, a three-action vertical toolbar and a `<footer>` navigation bar, with the navigation bar's icons sized as the icon font would (a 66px bar).
+Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, then `npm run verify`. A "compact scaffold" is phase 92's: an app bar, a rail, a 3000px `main`, a three-action vertical toolbar and a `<footer>` navigation bar, with the navigation bar at its real 74px height (its 32px indicator around the icon).
 
 | ID | Covers | Setup | Action | Expected result | Fails if | Result |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -55,3 +55,7 @@ Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, th
   - Optional: the size comment now notes the icon-only bar.
   - Nits: the header comment names the floating toolbar; the shown-bar list is one Sass variable where `:has()` doesn't nest; the decision record lists the end-of-page check and names the compact toolbar in its gaps.
   The scaffold suite passes 89 of 89.
+- 2026-11-15, local Codex review (`codex review --base 217e909a9`, saved as `codex-review-phase-93.txt` in the worktree's git dir, read to its last line). One [P2] finding, confirmed and fixed:
+  - The navigation bar's icon container is its 32px indicator, not the 24px glyph, so the real bar is 74px. The `44px + 1rem + …` formula gave 66px, which left the toolbar 8px above the bar instead of 16px, and the phase 92 scroll padding 8px short.
+  - The test style that shrank the icons to 24px had hidden this. In phase 92 I had misread the fixture's 74px as an artifact of the missing icon font.
+  - The formula is now `52px + 1rem + max(6px, safe area)`, and the tests drop the override and measure the real 74px bar. With the old formula, the floating-toolbar test fails (718 vs 726).
