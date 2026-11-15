@@ -353,8 +353,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed shared form reset handling for pickers, Slider, FormSelect, RichTextEditor, ColorPicker, CharacterCounter, validation, ImageCompare and select-all, disabled month arrow icons, near-whole pie slices, distinct axis labels, reset handling that follows a form into a shadow root, and painting particles on resize: 111,636 gzip bytes (+126).
   // Reviewed shadow-root focus checks through focusIsIn, guarded Forms re-init, chart resize observers released on update(), a composed transfer event, Datepicker selects kept across years, one roving-focus sync per arrow key, memoized Timepicker ranges, flyout measurement per row entry and DataTables views without toggle scans: 111,677 gzip bytes (+41).
   // Reviewed shared core helpers for right-to-left checks, ID lists, the active descendant and resize handles, and shared chart marks: 111,422 gzip bytes (-255).
-  // Reviewed outside navigation rail toggles (aria-controls lookup, aria-expanded sync, opener focus return) and the first-child toggle lookup: 111,672 gzip bytes (+280 over the 111,392 base build).
-  assert.ok(sizes(js).gzip <= 111672, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed outside navigation rail toggles (aria-controls lookup, aria-expanded sync, opener focus return skipping hidden or inert toggles, a shadow-root listener, prevented clicks left alone) and the first-child toggle lookup: 111,737 gzip bytes (+345 over the 111,392 base build).
+  assert.ok(sizes(js).gzip <= 111737, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

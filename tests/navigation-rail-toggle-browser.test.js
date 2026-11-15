@@ -45,4 +45,20 @@ for (const [name, type, run] of engines) {
       await browser.close();
     }
   });
+
+  run(`${name}: Escape skips an opener hidden by a stylesheet`, { timeout: 30000 }, async () => {
+    const browser = await leaseBrowser(type);
+    const tab = await browser.newPage({ viewport: { width: 390, height: 800 }, reducedMotion: 'reduce' });
+    try {
+      await tab.setContent(page.replace('</header>', '<button type="button" id="spare" aria-controls="rail">Spare</button></header>'));
+      await tab.locator('#menu').click();
+      await tab.addStyleTag({ content: '#menu { display: none; }' });
+      await tab.locator('#inbox').focus();
+      await tab.keyboard.press('Escape');
+      assert.equal(await tab.evaluate(() => document.activeElement?.id), 'spare', 'focus goes to the next shown toggle');
+    } finally {
+      await tab.evaluate(() => window.rail?.destroy()).catch(() => {});
+      await browser.close();
+    }
+  });
 }

@@ -4788,20 +4788,6 @@ Collapsed is 96dp with the icon above the label. Add `expanded` for 220–360dp,
 
 Escape closes an open nested menu first. A second Escape collapses the modal rail and returns focus from inside it to the toggle that opened it, unless a close callback moves focus elsewhere.
 
-A `<button>` outside the rail, such as an app bar menu button, toggles it when its `aria-controls` names the rail's `id`. The rail keeps that button's `aria-expanded` in sync, finds a button added after it started, and returns focus to it on Escape when it opened the rail. A rail can also keep its own menu button, which has to be its first child; both stay in sync. A button controls one rail and must share the rail's document or shadow root.
-
-```html
-<header>
-  <div class="bar">
-    <button type="button" aria-label="Main menu" aria-controls="main-rail" aria-expanded="false">
-      <span class="material-symbols" aria-hidden="true">menu</span>
-    </button>
-    <h1>Mail</h1>
-  </div>
-</header>
-<nav class="navigation-rail" id="main-rail" aria-label="Main">…</nav>
-```
-
 A destination can open a side panel of more links. Make it a `<button popovertarget>` and put its `.navigation-rail-panel` popover right after it. The panel docks beside the rail at full height. A click toggles it; with a mouse, hovering the destination opens it and leaving the rail and panel closes it. A `<details>` in the panel is a dropdown group. Escape closes the panel before the rail and returns focus to its destination. A panel's destination is never the menu toggle, so a rail without one can start with it.
 
 ```html
@@ -4842,6 +4828,20 @@ A destination can open a side panel of more links. Make it a `<button popovertar
     <a href="/time-pickers">Time pickers</a>
   </details>
 </div>
+```
+
+A `<button>` outside the rail, such as an app bar menu button, toggles it when its `aria-controls` names the rail's `id`. The rail keeps that button's `aria-expanded` in sync, finds a button added after it started, and returns focus to it on Escape when it opened the rail. A rail can also keep its own menu button, which has to be its first child; both stay in sync. A button controls one rail and must share the rail's document or shadow root.
+
+```html
+<header>
+  <div class="bar">
+    <button type="button" aria-label="Main menu" aria-controls="main-rail" aria-expanded="false">
+      <span class="material-symbols" aria-hidden="true">menu</span>
+    </button>
+    <h1>Mail</h1>
+  </div>
+</header>
+<nav class="navigation-rail" id="main-rail" aria-label="Main">…</nav>
 ```
 
 Offset the rest of the page:
@@ -5077,7 +5077,7 @@ Set these on the container to resize a layout.
 
 Places an app shell's bar, navigation rail, pane and trailing toolbar, so a page needs no shell grid of its own.
 
-Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself: the browser moves the body's overflow to the viewport, and the shell stops clipping. Its direct children are placed by component: a `<header>` top app bar spans the top, and a `.navigation-rail`, `<main>` and a `.toolbar.vertical` (or `.toolbar-group.vertical`) share the row below it, from the leading edge to the trailing one. The scaffold is as tall as the window (`100dvh`) and only `<main>` scrolls; a rail with more destinations than fit scrolls them itself. The components keep their own look and behavior. The app bar's menu button toggles the rail when its `aria-controls` names the rail's `id`. CSS only; there is no JavaScript component and nothing to AutoInit.
+Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself: the browser moves the body's overflow to the viewport, and the shell stops clipping. Its direct children are placed by component: a `<header>` top app bar spans the top, and a `.navigation-rail`, `<main>` and a `.toolbar.vertical` (or `.toolbar-group.vertical`) share the row below it, from the leading edge to the trailing one. The scaffold is as tall as the window (`100dvh`) and only `<main>` scrolls; a rail with more destinations than fit scrolls them itself. The components keep their own look and behavior. The scaffold itself is CSS only; there is no scaffold JavaScript component. The app bar's menu button toggles the rail when its `aria-controls` names the rail's `id`, once `AutoInit()` has started the rail.
 
 ```html
 <div class="scaffold">

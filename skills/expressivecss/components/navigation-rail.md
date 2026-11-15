@@ -9,7 +9,7 @@ Component ID: `navigation-rail`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `3b194d7fc3cfa54ca5947804207d36acf372b9e4ac04d25dcf273c0c109cb0e3`
+Contract SHA-256: `7fdda8cad55bc5694bc7ff25cb6fd5c31be537c35a685ed55b46b36a424c0a9e`
 
 #### Selection and adaptation
 
@@ -47,15 +47,23 @@ Escape closes an open nested menu first. A second Escape collapses the modal rai
 #### Syntax
 
 ```html
-<header>
-  <div class="bar">
-    <button type="button" aria-label="Main menu" aria-controls="main-rail" aria-expanded="false">
-      <span class="material-symbols" aria-hidden="true">menu</span>
-    </button>
-    <h1>Mail</h1>
-  </div>
-</header>
-<nav class="navigation-rail" id="main-rail" aria-label="Main">…</nav>
+<nav class="navigation-rail" aria-label="Main">
+  <button type="button" aria-label="Menu">
+    <span class="material-symbols" aria-hidden="true">menu</span>
+  </button>
+  <a class="button" href="/compose">
+    <span class="material-symbols" aria-hidden="true">edit</span>
+    <span>Compose</span>
+  </a>
+  <a href="/" aria-current="page">
+    <span class="material-symbols" aria-hidden="true">star</span>
+    Label
+  </a>
+  <a href="/two" aria-label="Starred, 3 unread">
+    <span class="material-symbols" aria-hidden="true">star<span class="badge">3</span></span>
+    Label
+  </a>
+</nav>
 ```
 
 #### Also documented

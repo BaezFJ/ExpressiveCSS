@@ -28,12 +28,16 @@ const _defaults: NavigationRailOptions = {
 };
 
 const COMPACT = '(width < 600px)';
-// The menu toggle the CSS styles: a first-child button that isn't the FAB or a panel trigger.
+// The menu toggle: a first-child button that isn't the FAB or a panel trigger. The CSS
+// doesn't style a first-child .icon-button as the toggle, but it still toggles.
 const TOGGLE = ':scope > button:first-child:not(.button, [popovertarget])';
 
-/** A button focus can return to: still in the page, enabled and shown. */
+// Rendered: checkVisibility also sees display:none from a stylesheet; jsdom lacks it.
+const shown = (el: Element) => el.checkVisibility?.() ?? !el.closest('[hidden]');
+const operable = (button: HTMLButtonElement) => !button.disabled && !button.closest('[inert]');
+/** A button focus can return to: still in the page, enabled, shown and not inert. */
 const usable = (button: HTMLButtonElement | null): button is HTMLButtonElement =>
-  Boolean(button?.isConnected) && !button.disabled && !button.closest('[hidden]');
+  Boolean(button?.isConnected) && operable(button) && shown(button);
 // Delay before a hovered destination opens its panel, and before the panel
 // closes once the pointer leaves; it covers the trip across the rail's padding.
 const HOVER_DELAY = 200;
@@ -67,7 +71,10 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     this.el.addEventListener('pointerover', this._onPointerOver, { signal });
     this.el.addEventListener('pointerleave', this._onPointerLeave, { signal });
     document.addEventListener('keydown', this._onKeyDown, { signal });
-    document.addEventListener('click', this._onDocumentClick, { signal });
+    // A closed shadow root hides its buttons from a document listener.
+    // Only a ShadowRoot has a host; a Document or a detached subtree does not.
+    const root = this.el.getRootNode() as ShadowRoot;
+    (root.host ? root : document).addEventListener('click', this._onDocumentClick, { signal });
   }
 
   static get defaults(): NavigationRailOptions {
@@ -122,13 +129,15 @@ export class NavigationRail extends Component<NavigationRailOptions> {
   // Looked up on every use, so a button added after the rail started counts.
   // An ID reference can't cross a shadow boundary, so only the rail's own root.
   private _outsideToggles(): HTMLButtonElement[] {
-    const id = this.el.id;
-    if (!id) return [];
+    if (!this.el.id) return [];
     const root = this.el.getRootNode() as ParentNode;
-    return Array.from(root.querySelectorAll<HTMLButtonElement>('button[aria-controls]')).filter(
-      (button) => !this.el.contains(button) && button.getAttribute('aria-controls').split(/\s+/).includes(id)
-    );
+    return Array.from(root.querySelectorAll<HTMLButtonElement>('button[aria-controls]')).filter(this._controls);
   }
+
+  // A button in the rail's root, outside the rail, whose aria-controls lists its id.
+  private _controls = (button: HTMLButtonElement) =>
+    Boolean(this.el.id) && button.getRootNode() === this.el.getRootNode() && !this.el.contains(button) &&
+    button.getAttribute('aria-controls').split(/\s+/).includes(this.el.id);
 
   // Records the opener only when the rail really opened.
   private _toggleFrom(button: HTMLButtonElement) {
@@ -265,11 +274,11 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     return e.clientX < left || e.clientX > right;
   }
 
-  // A click on an outside toggle, or on its icon. Prevented, so a submit
-  // button in an app bar form doesn't submit.
+  // A click on an outside toggle, or on its icon, that page code didn't
+  // already handle. Prevented, so a submit button in an app bar form doesn't submit.
   private _onDocumentClick = (e: MouseEvent) => {
-    const button = Utils.closestInPath<HTMLButtonElement>(e, 'button[aria-controls]:enabled');
-    if (!button || !this._outsideToggles().includes(button)) return;
+    const button = e.defaultPrevented ? null : Utils.closestInPath<HTMLButtonElement>(e, 'button[aria-controls]:enabled');
+    if (!button || !this._controls(button)) return;
     e.preventDefault();
     this._toggleFrom(button);
   };
@@ -284,7 +293,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
   private _escapeRail() {
     const root = this.el.getRootNode() as Document | ShadowRoot;
     const before = Utils.focusIsIn(this.el) ? deepActiveElement(root) : null;
-    const target = this._returnTarget();
+    const target = before && this._returnTarget();
     this.collapse();
     if (!this.isExpanded) this._restoreFocus(root, before, target);
   }

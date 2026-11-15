@@ -328,6 +328,42 @@ describe('NavigationRail outside toggles', () => {
     }
   });
 
+  test('a closed shadow root connects too, and a click page code prevented is left alone', () => {
+    document.body.innerHTML = '<div id="host"></div><button id="out" aria-controls="rail">Menu</button><nav class="navigation-rail" id="rail" aria-label="Main"><a href="#a">A</a></nav>';
+    const shadow = document.querySelector('#host').attachShadow({ mode: 'closed' });
+    shadow.innerHTML = '<button id="sout" aria-controls="srail">Menu</button><nav class="navigation-rail" id="srail" aria-label="Shadow"><a href="#s">S</a></nav>';
+    const inner = Expressive.NavigationRail.init(shadow.querySelector('#srail'));
+    const rail = Expressive.NavigationRail.init(document.querySelector('#rail'));
+    const out = document.querySelector('#out');
+    const handled = (e) => e.preventDefault();
+    try {
+      click(shadow.querySelector('#sout'));
+      assert.equal(inner.isExpanded, true, 'a toggle in a closed shadow root works');
+      out.addEventListener('click', handled);
+      click(out);
+      assert.equal(rail.isExpanded, false, 'a click the page already handled does not toggle');
+    } finally {
+      out.removeEventListener('click', handled);
+      inner.destroy();
+      rail.destroy();
+    }
+  });
+
+  test('Escape skips an inert opener', () => {
+    document.body.innerHTML = `<button id="a1" aria-controls="rail">A1</button><div id="wrap"><button id="a2" aria-controls="rail">A2</button></div>
+      <nav class="navigation-rail modal" id="rail" aria-label="Main"><a href="#a">A</a></nav>`;
+    const rail = Expressive.NavigationRail.init(document.querySelector('#rail'));
+    try {
+      click(document.querySelector('#a2'));
+      document.querySelector('#wrap').setAttribute('inert', '');
+      document.querySelector('#rail a').focus();
+      escape();
+      assert.equal(document.activeElement, document.querySelector('#a1'));
+    } finally {
+      rail.destroy();
+    }
+  });
+
   test('only a first-child button is the inside toggle', () => {
     document.body.innerHTML = `<nav class="navigation-rail" id="r1" aria-label="One"><a href="#a">A</a><a href="#b">B</a><button id="dest" type="button">Dest</button></nav>
       <nav class="navigation-rail" id="r2" aria-label="Two"><button class="icon-button" id="ib">${icon}</button><a href="#c">C</a></nav>`;

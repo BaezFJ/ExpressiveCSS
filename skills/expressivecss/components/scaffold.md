@@ -9,7 +9,7 @@ Component ID: `scaffold`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `3b194d7fc3cfa54ca5947804207d36acf372b9e4ac04d25dcf273c0c109cb0e3`
+Contract SHA-256: `7fdda8cad55bc5694bc7ff25cb6fd5c31be537c35a685ed55b46b36a424c0a9e`
 
 #### Selection and adaptation
 
@@ -37,7 +37,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Places an app shell's bar, navigation rail, pane and trailing toolbar, so a page needs no shell grid of its own.
 
-Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself: the browser moves the body's overflow to the viewport, and the shell stops clipping. Its direct children are placed by component: a `<header>` top app bar spans the top, and a `.navigation-rail`, `<main>` and a `.toolbar.vertical` (or `.toolbar-group.vertical`) share the row below it, from the leading edge to the trailing one. The scaffold is as tall as the window (`100dvh`) and only `<main>` scrolls; a rail with more destinations than fit scrolls them itself. The components keep their own look and behavior. The app bar's menu button toggles the rail when its `aria-controls` names the rail's `id`. CSS only; there is no JavaScript component and nothing to AutoInit.
+Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself: the browser moves the body's overflow to the viewport, and the shell stops clipping. Its direct children are placed by component: a `<header>` top app bar spans the top, and a `.navigation-rail`, `<main>` and a `.toolbar.vertical` (or `.toolbar-group.vertical`) share the row below it, from the leading edge to the trailing one. The scaffold is as tall as the window (`100dvh`) and only `<main>` scrolls; a rail with more destinations than fit scrolls them itself. The components keep their own look and behavior. The scaffold itself is CSS only; there is no scaffold JavaScript component. The app bar's menu button toggles the rail when its `aria-controls` names the rail's `id`, once `AutoInit()` has started the rail.
 
 #### Syntax
 
