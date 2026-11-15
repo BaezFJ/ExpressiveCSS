@@ -19,4 +19,4 @@ Covers R6. Checks V2.
 
 Covers R7. Checks V3.
 
-- [ ] `npm run verify`, then `npm test --prefix mcp/expressivecss`, then `npm run verify:packages`, one at a time.
+- [x] `npm run verify`, then `npm test --prefix mcp/expressivecss`, then `npm run verify:packages`, one at a time.
