@@ -37,6 +37,10 @@ $_rail: ":is(.navigation-rail, .scaffold-rail)";
 $_pane: ":is(main, .scaffold-pane)";
 $_trailing: ":is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing)";
 $_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar:only-child))";
+// The navigation bar's height from its anatomy: 6px top padding, 24px icon,
+// 4px gap, 10px indicator padding, its label's 1rem line, and a bottom padding
+// of 6px or the safe area, whichever is larger. A sibling can't read it in CSS.
+$_navbar-size: "44px + 1rem + max(6px, env(safe-area-inset-bottom, 0px))";
 
 .scaffold {
   display: grid;
@@ -190,24 +194,29 @@ $_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar:only-child))";
       inset-block-end: calc(16px + env(safe-area-inset-bottom, 0px));
       z-index: var(--expressive-z-toolbar);
       justify-self: center;
-      margin: 16px 0;
+      // The bottom margin matches the sticky inset, so the shift never pulls
+      // the toolbar over the pane's last content.
+      margin: 16px 0 calc(16px + env(safe-area-inset-bottom, 0px));
 
-      // A left tooltip would cover the next action in a row; show it above,
-      // as a horizontal toolbar's tooltips do.
-      .tooltip.left {
+      // A side tooltip would cover the next action in a row; show it above,
+      // as a horizontal toolbar's tooltips do. Under rtl a trailing toolbar
+      // sits on the left and uses right tooltips.
+      .tooltip:is(.left, .right) {
         inset: 0 auto auto 50%;
         transform: translate(-50%, calc(-100% - var(--md-comp-tooltip-anchor-gap))) scale(0.96);
       }
 
-      :is(:hover, :focus-visible, :focus-within) > .tooltip.left,
-      .tooltip.left:hover {
+      :is(:hover, :focus-visible, :focus-within) > .tooltip:is(.left, .right),
+      .tooltip:is(.left, .right):hover {
         transform: translate(-50%, calc(-100% - var(--md-comp-tooltip-anchor-gap))) scale(1);
       }
     }
 
     // :has() can't nest, so the footer form of the navigation bar is spelled out.
-    &:has(> .navigation-bar, > footer > .navigation-bar:only-child) > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed) {
-      inset-block-end: calc(50px + 1rem + env(safe-area-inset-bottom, 0px) + 16px);
+    // The navigation bar already pads the safe area.
+    &:has(> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])) > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed) {
+      inset-block-end: calc(#{$_navbar-size} + 16px);
+      margin-block-end: 16px;
     }
 
     > .navigation-rail:not(.expanded),
@@ -229,16 +238,21 @@ $_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar:only-child))";
 
 // Below 600px the document scrolls under the pinned bar and navigation bar, so
 // focus and anchors scroll clear of both. Top: the small app bar's 4rem.
-// Bottom: the navigation bar's fixed parts (12px padding, 24px icon, 4px gap,
-// 10px indicator padding) plus its label's 1rem line, so it grows with the
-// text, and the safe area. A taller bar needs a larger padding from the page.
+// Bottom: the navigation bar's height, which grows with the text. A taller
+// bar needs a larger padding from the page.
 @include bp-down("medium") {
+  // The bottom padding adds up what is shown: the navigation bar (or just
+  // the safe area without one) and a floating toolbar's 64px plus its gap.
   :root:has(> body > .scaffold) {
-    scroll-padding-block: rem(64px) calc(50px + 1rem + env(safe-area-inset-bottom, 0px));
+    scroll-padding-block: rem(64px)
+      calc(var(--_scaffold-navbar-pad, env(safe-area-inset-bottom, 0px)) + var(--_scaffold-toolbar-pad, 0px));
   }
 
-  // A floating trailing toolbar covers its 64px and its 16px gap as well.
-  :root:has(> body > .scaffold > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed)) {
-    scroll-padding-block-end: calc(50px + 1rem + env(safe-area-inset-bottom, 0px) + 80px);
+  :root:has(> body > .scaffold > .navigation-bar:not([hidden]), > body > .scaffold > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])) {
+    --_scaffold-navbar-pad: calc(#{$_navbar-size});
+  }
+
+  :root:has(> body > .scaffold > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed, [hidden])) {
+    --_scaffold-toolbar-pad: 80px;
   }
 }

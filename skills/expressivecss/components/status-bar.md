@@ -9,7 +9,7 @@ Component ID: `status-bar`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `4260cbd9392492bbff362b7e41debf9ec997189d4f3a82ffeaed4609137d746e`
+Contract SHA-256: `6b7a45a9490e7b53d7874cd24e7e8271452c87dc49c076dae0c5877369068067`
 
 #### Selection and adaptation
 

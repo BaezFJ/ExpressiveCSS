@@ -39,3 +39,10 @@ Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, th
   - Phase 92's `justify-self: end` is now replaced, not added to.
   - V1's radius check couldn't fail. It now checks `flex-direction` and z-index.
   - `.scaffold-trailing`, the `.max` spacer, the top and short-page cases, enlarged text (V2 at 32px), landscape and the demo box's safe-area term are now stated in the requirements or exclusions.
+- 2026-11-15, `/code-review high --fix --max-findings all` on `217e909a9..HEAD`: eight findings, each checked against the source and all fixed:
+  - Without a navigation bar, the toolbar's resting margin left out the safe area that its sticky offset included, so the toolbar rose over the pane's end on a notched phone. The margin now adds the safe area, and with a bar the margin is back to 16px.
+  - The navigation bar's height counted its 6px bottom padding and the safe area on top of each other. It is now `44px + 1rem + max(6px, safe area)`, defined once as `$_navbar-size` and used by the offset and the scroll padding.
+  - `.tooltip.right` (the trailing side under RTL) still opened sideways. It now moves above too, and the test covers both.
+  - A `[hidden]` navigation bar or toolbar still shaped the offset and the padding. The reviewer left this open; I fixed it here. The scroll padding is now the sum of two private parts set only for a shown bar and a shown toolbar, and a test hides the bar. It failed with the exclusion removed (R6b).
+  - A stale comment in the selector-scope test was corrected.
+  CSS budget 92,686. The scaffold and tokens suites pass 97 of 97.

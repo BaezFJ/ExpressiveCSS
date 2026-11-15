@@ -38,7 +38,7 @@ Below 600px, in a `.scaffold`:
 | CSS overrides the `vertical` class below 600px; the markup carries no second class | Decided under delegation | The roadmap asks which. One markup that adapts follows the rest of the scaffold, and a second class could be left off or left on by mistake. The scaffold rule's (0,4,0) specificity beats the toolbar's (0,3,0) `.vertical` rule. |
 | The toolbar is `position: sticky` at the bottom in its own row, with 16px block margins, not `fixed` | Decided under delegation | The roadmap asks how the scaffold reserves room at the end of the page. A sticky element keeps its row in flow, so the page always ends with room for it, and it floats over the content only while its row is below the window. The margins put its resting place 16px above the navigation bar, the same spot it sticks to, so the shift never pulls it over the pane's last content. |
 | `.tooltip.left` on those actions is turned into the default top placement below 600px | Decided under delegation | A trailing vertical toolbar uses left tooltips, which would cover the neighboring action once the toolbar is a row. The override is scoped to the scaffold's compact toolbar, so the same markup keeps left tooltips from 600px up. |
-| The bottom offset is the navigation bar's height from its anatomy (50px plus 1rem plus the safe area, as phase 92's scroll padding uses) plus 16px, or 16px plus the safe area without a navigation bar | Decided under delegation | The navigation bar's height isn't available to a sibling in CSS, and phase 92 already sizes it this way. 16px is the floating toolbar's external space. |
+| The bottom offset is the navigation bar's height from its anatomy (`44px + 1rem + max(6px, safe area)`, defined once as `$_navbar-size` and shared with the scroll padding) plus 16px, or 16px plus the safe area without a shown navigation bar | Decided under delegation, corrected after code review | The navigation bar's height isn't available to a sibling in CSS, and phase 92 already sizes it this way. 16px is the floating toolbar's external space. |
 | The document's bottom scroll padding adds the toolbar's 64px plus its 16px gap when the scaffold has a vertical toolbar | Decided under delegation | Phase 92's Codex finding showed focus can land under a pinned bar; a floating toolbar covers the same strip. |
 
 ## Requirements
@@ -49,7 +49,8 @@ Below 600px, in a `.scaffold`:
 - **R4** Without a navigation bar, the toolbar's bottom is 16px above the window's bottom.
 - **R5** With a vertical toolbar, Tab to a pane control near the bottom leaves it clear of both the toolbar and the navigation bar.
 - **R6** Under `dir="rtl"` the actions run right to left in DOM order.
-- **R6a** Hovering an action that has a `.tooltip.left` shows the bubble above the action, not beside it.
+- **R6a** Hovering an action that has a `.tooltip.left` or `.tooltip.right` shows the bubble above the action, not beside it.
+- **R6b** A `[hidden]` navigation bar or toolbar counts as absent for the toolbar's offset and the scroll padding.
 - **R7** From 600px up, and for a `.fixed` toolbar at any width, the toolbar is unchanged; the earlier phases' tests pass.
 - **R8** These records change: the scaffold docs page and `llm.md` section, the design reference `scaffold.md`, the decision record, `CHANGELOG.md`, the CSS gzip budget, and `npm run build:skill` last.
 

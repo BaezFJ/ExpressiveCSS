@@ -40,7 +40,7 @@ test('every compiled scaffold selector starts at the scaffold or a region class'
   const preludes = [...css.matchAll(/([^{}]*scaffold[^{}]*)\{/g)].map((m) => m[1].trim());
   assert.ok(preludes.length > 5, 'the scaffold rules are in the bundle');
   for (const prelude of preludes) {
-    // The one root rule keys off a scaffold that is a direct child of <body>.
+    // The root rules key off a scaffold that is a direct child of <body>.
     for (const selector of splitSelectorList(prelude)) assert.match(selector, /^(\.scaffold|:root:has\(> body > \.scaffold[ )])/, prelude);
   }
 });
@@ -571,6 +571,10 @@ for (const [name, type, run] of engines) {
       await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ bottom: navbar }));
       await tab.evaluate(() => { document.documentElement.style.fontSize = '32px'; window.scrollTo(0, 1000); });
       assert.ok((await box('#tools')).bottom <= (await box('#nb')).top + 1, 'at 200% text it still clears the taller navigation bar');
+      await tab.evaluate(() => { document.documentElement.style.fontSize = ''; window.scrollTo(0, 0); });
+      await tab.locator('#nb').evaluate((el) => { el.hidden = true; });
+      await tab.evaluate(() => window.scrollTo(0, 1000));
+      assert.ok(Math.abs((await box('#tools')).bottom - 784) < 2, 'a hidden navigation bar leaves the toolbar 16px above the bottom');
     } finally {
       await browser.close();
     }
@@ -600,16 +604,21 @@ for (const [name, type, run] of engines) {
     }
   });
 
-  run(`${name}: below 600px a left tooltip on the floating toolbar shows above its action`, { timeout: 30000 }, async () => {
-    const tip = tools().replace(`id="t0" aria-label="Action 0">${icon('event')}</button>`, `id="t0" aria-label="Action 0">${icon('event')}<span class="tooltip left" role="tooltip">Calendar</span></button>`);
-    const { browser, tab, box } = await open(type, page(realIcons + scaffold({ trailing: tip, bottom: navbar })), { width: 390 });
+  run(`${name}: below 600px a left or right tooltip on the floating toolbar shows above its action`, { timeout: 30000 }, async () => {
+    // Right tooltips too: under rtl the trailing toolbar sits on the left.
+    const tip = (side) => tools().replace(`id="t0" aria-label="Action 0">${icon('event')}</button>`, `id="t0" aria-label="Action 0">${icon('event')}<span class="tooltip ${side}" role="tooltip">Calendar</span></button>`);
+    const { browser, tab, box } = await open(type, page(realIcons + `<div id="host">${scaffold({ trailing: tip('left'), bottom: navbar })}</div>`), { width: 390 });
     try {
-      await tab.locator('#t0').hover();
-      await tab.waitForTimeout(300);
-      const action = await box('#t0');
-      const bubble = await box('#t0 .tooltip');
-      assert.ok(bubble.bottom <= action.top + 1, `the bubble sits above the action: ${bubble.bottom} vs ${action.top}`);
-      assert.ok(bubble.right > action.left && bubble.left < action.right, 'and over it, not beside it');
+      for (const side of ['left', 'right']) {
+        await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ trailing: tip(side), bottom: navbar }));
+        await tab.locator('#t0').hover();
+        await tab.waitForTimeout(300);
+        const action = await box('#t0');
+        const bubble = await box('#t0 .tooltip');
+        assert.ok(bubble.bottom <= action.top + 1, `the ${side} bubble sits above the action: ${bubble.bottom} vs ${action.top}`);
+        assert.ok(bubble.right > action.left && bubble.left < action.right, `and over it, not beside it (${side})`);
+        await tab.mouse.move(0, 0);
+      }
     } finally {
       await browser.close();
     }
