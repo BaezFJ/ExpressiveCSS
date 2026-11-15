@@ -440,7 +440,7 @@
         "implementation": {
           "source": "llm.md#scaffold",
           "reviewedOn": "2026-11-15",
-          "documentedSupport": "A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay.",
+          "documentedSupport": "A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling. A tall-rail modifier runs the rail and trailing region the full height with the bar over the pane. From 600px to 839px an expanded rail opens over the pane with a scrim. Below 600px the document scrolls, with the app bar and a bottom navigation bar pinned and the rail hidden until it opens as an overlay. A trailing vertical toolbar floats there as a centered row above the navigation bar.",
           "webAdaptation": "CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.",
           "limitations": [
             "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary; spoken output and a mobile browser's collapsing address bar remain unverified."
@@ -472,7 +472,7 @@
         "sources": [
           {
             "path": "src/sass/components/_scaffold.scss",
-            "sha256": "40c7c78a52952dd4f6d519ef8e11bd6756164707a0c22e971b6df1763f2d4d67"
+            "sha256": "363408600c107a970c664078406cad08e2bdb9bf1ff69fcc757a49284fae188d"
           }
         ],
         "gaps": [
@@ -517,6 +517,11 @@
             "file": "tests/scaffold-browser.test.js",
             "name": "chromium: the compact layout ends at 599px and the medium layout starts at 600px",
             "scope": "The navigation bar, the hidden rail and a .modal rail at 599px, and the held rail column at 600px. Equivalent Firefox and WebKit cases run in the same suite."
+          },
+          {
+            "file": "tests/scaffold-browser.test.js",
+            "name": "chromium: below 600px the toolbar floats centered 16px above the navigation bar",
+            "scope": "A centered row 16px above a 66px navigation bar at the top and mid-scroll, 16px above the window bottom without one, and clear of the bar at 200% text. Equivalent Firefox and WebKit cases run in the same suite."
           },
           {
             "file": "tests/scaffold-browser.test.js",

@@ -232,6 +232,14 @@ const S = defineSections([
           larger <code>scroll-padding-block</code> on <code>:root</code> for
           taller bars.
         </p>
+        <p>
+          A vertical toolbar in the trailing region turns into a centered row
+          below 600px and floats 16px above the navigation bar, or above the
+          bottom edge when there is none. Its actions keep their order, and
+          left tooltips show above them. Its row stays at the end of the page,
+          so the last content scrolls clear of it, and the scroll padding
+          grows so focus clears it too. Keep it to a few actions on a phone.
+        </p>
 <Code code={`
 <div class="scaffold">
   <header>…</header>

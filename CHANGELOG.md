@@ -33,7 +33,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   phone's address bar can collapse. The bar region stays pinned, a
   `nav.navigation-bar` child (or a `<footer>` holding only one) is pinned at
   the bottom and shows only below 600px, and the rail is hidden until the app
-  bar's menu button opens it as an overlay.
+  bar's menu button opens it as an overlay. A trailing vertical toolbar turns
+  into a centered row that floats 16px above the navigation bar.
 
 ### Changed
 
