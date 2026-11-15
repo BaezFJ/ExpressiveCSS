@@ -10,9 +10,9 @@ Covers R2 to R5. Checks V2, V3.
 
 Prerequisites: none.
 
-- [ ] Write `fixtures/settings-a.html`: a settings page with link Tabs (Profile, Members) and no code that writes the URL, a profile form whose submit button stays `disabled` until both fields are valid, and a members list whose delete buttons remove the row with no Undo and no confirmation. Everything else meets the rubric: the form posts natively with `required` fields and inline `.validate` error text, fields carry `name`, `type`, `autocomplete` and `spellcheck="false"` on the email. No comment or name describes a defect.
-- [ ] Write `fixtures/settings-b.html`: the same page with the three defects fixed. Submit stays enabled, delete removes the row and shows a Snackbar with an Undo action that reinserts the row at its old index, and the page writes the tab with `history.replaceState` on `expressive:change`.
-- [ ] Run the lint on both fixtures from a temp directory (`node mcp/expressivecss/lint.mjs`) and keep the output for the briefings.
+- [x] Write `fixtures/settings-a.html`: a settings page with link Tabs (Profile, Members) and no code that writes the URL, a profile form whose submit button stays `disabled` until both fields are valid, and a members list whose delete buttons remove the row with no Undo and no confirmation. Everything else meets the rubric: the form posts natively with `required` fields and inline `.validate` error text, fields carry `name`, `type`, `autocomplete` and `spellcheck="false"` on the email. No comment or name describes a defect.
+- [x] Write `fixtures/settings-b.html`: the same page with the three defects fixed. Submit stays enabled, delete removes the row and shows a Snackbar with an Undo action that reinserts the row at its old index, and the page writes the tab with `history.replaceState` on `expressive:change`.
+- [x] Run the lint on both fixtures from a temp directory (`node mcp/expressivecss/lint.mjs`) and keep the output for the briefings.
 
 Done when both files exist and the lint output for each is saved.
 
