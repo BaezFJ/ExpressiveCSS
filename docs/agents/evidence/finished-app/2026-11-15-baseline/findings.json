@@ -58,7 +58,8 @@
         "url-state": 0,
         "submit-flow": 0
       },
-      "total": 1
+      "total": 1,
+      "loadCheck": "pass: Chromium found the dist/ stylesheet, the Expressive global and no console errors"
     },
     {
       "prompt": "settings-form",
@@ -97,7 +98,8 @@
         "url-state": 0,
         "submit-flow": 1
       },
-      "total": 1
+      "total": 1,
+      "loadCheck": "pass: Chromium found the dist/ stylesheet, the Expressive global and no console errors"
     },
     {
       "prompt": "destructive-list",
@@ -144,7 +146,8 @@
         "url-state": 0,
         "submit-flow": 0
       },
-      "total": 1
+      "total": 1,
+      "loadCheck": "pass: Chromium found the dist/ stylesheet, the Expressive global and no console errors"
     },
     {
       "prompt": "destructive-list",
@@ -188,7 +191,8 @@
         "url-state": 0,
         "submit-flow": 0
       },
-      "total": 1
+      "total": 1,
+      "loadCheck": "pass: Chromium found the dist/ stylesheet, the Expressive global and no console errors"
     },
     {
       "prompt": "filtered-dashboard",
@@ -233,7 +237,8 @@
         "url-state": 3,
         "submit-flow": 0
       },
-      "total": 3
+      "total": 3,
+      "loadCheck": "pass: Chromium found the dist/ stylesheet, the Expressive global and no console errors"
     },
     {
       "prompt": "filtered-dashboard",
@@ -278,7 +283,8 @@
         "url-state": 3,
         "submit-flow": 0
       },
-      "total": 3
+      "total": 3,
+      "loadCheck": "pass: Chromium found the dist/ stylesheet, the Expressive global and no console errors"
     }
   ],
   "totals": {
@@ -288,5 +294,7 @@
     "submit-flow": 1,
     "total": 10
   },
-  "lint": "mcp/expressivecss/lint.mjs at commit 16b6632ada2153e8b185c5c72387d3896d7ad794"
+  "lint": "mcp/expressivecss/lint.mjs run from the repository at 16b6632 (mcp/ is unchanged from 16b6632 to the run), equivalent to the baseline worktree the procedure now names",
+  "buildCommit": "16b6632ada2153e8b185c5c72387d3896d7ad794",
+  "reviewCommit": "16b6632ada2153e8b185c5c72387d3896d7ad794"
 }

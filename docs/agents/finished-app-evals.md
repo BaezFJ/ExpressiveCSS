@@ -34,6 +34,8 @@ Build an orders dashboard with ExpressiveCSS. Generate 40 sample orders, each wi
 
 ## Procedure
 
+The baseline commit is `16b6632ada2153e8b185c5c72387d3896d7ad794`, the `commit` field in [the baseline records](evidence/finished-app/2026-11-15-baseline/findings.json). Every later run set reviews and lints from that commit. Locations in `findings.json` cite `index.html`, which maps line for line to the committed `<prompt-id>-run<n>.html`.
+
 ### What each run can see
 
 Builds and reviews run as separate headless Claude Code processes in `--safe-mode`, which turns off CLAUDE.md files, user and project skills, plugins, hooks and MCP servers while keeping authentication and model selection. A subagent of an interactive session would inherit that session's hooks, skill copies and MCP servers instead.
@@ -48,9 +50,9 @@ A review directory holds:
 
 - `index.html` and any local file it references, copied from the build.
 - `dist/`: the same copy the build had.
-- `expressivecss/` and `expressivecss-review/`: copies of `skills/expressivecss` and `skills/expressivecss-review` from the baseline commit, exported with `git archive <baseline-commit> skills/expressivecss skills/expressivecss-review | tar -x --strip-components=1`. Every comparison reviews with these trees, so a change to the guides moves the builds and not the reviewer.
+- `expressivecss/` and `expressivecss-review/`: copies of `skills/expressivecss` and `skills/expressivecss-review` from the baseline commit, exported with `git -C <repo> archive <baseline-commit> skills/expressivecss skills/expressivecss-review | tar -x --strip-components=1 -C <review-dir>`. Every comparison reviews with these trees, so a change to the guides moves the builds and not the reviewer.
 - `lint.txt`, `review-brief.txt` and `review-result.json`, the review command's inputs and output.
-- Nothing else. The reviewer never sees the other apps, `findings.json` or this file.
+- The review's own `lint.txt`, `review-brief.txt` and `review-result.json`, and nothing else. The reviewer never sees the other apps, `findings.json` or this file. `--allowedTools` doesn't limit paths, so make each review directory with `mktemp -d` outside the repository and away from other run sets.
 
 Run at most three processes at once, each under `timeout 1800`.
 
@@ -75,7 +77,7 @@ Task:
 {{PROMPT}}
 ```
 
-After each build, run `git status --short` in the repository to confirm the build changed nothing there, take the sha256 of each app file, and copy the files unchanged into the evidence directory as `<prompt-id>-run<n>.html` (and `<prompt-id>-run<n>-<file>` for extra files).
+After each batch of builds, run `git status --short` in the repository to confirm the build changed nothing there, take the sha256 of each app file, and copy the files unchanged into the evidence directory as `<prompt-id>-run<n>.html` (and `<prompt-id>-run<n>-<file>` for extra files).
 
 ### Review command
 
@@ -90,7 +92,7 @@ timeout 1800 claude -p --safe-mode --strict-mcp-config --model claude-opus-5-5 \
 
 ### Reviewer brief
 
-Replace `{{VERSION}}` with the framework version in `dist/` and `{{LINT}}` with the contents of `lint.txt`.
+Replace `{{VERSION}}` with the `version` in `package.json` at the commit `dist/` was built from and `{{LINT}}` with the contents of `lint.txt`.
 
 ```text
 Read ./expressivecss-review/agents/quality-inspector.md first and follow it exactly. It is your brief. Return only the FINDINGS / CHECKED / BLOCKED / HANDOFFS block it specifies.
@@ -108,23 +110,25 @@ Read-only. Do not edit files and do not run commands.
 
 ### Failed runs
 
-A run fails when the build writes no `index.html`, the page doesn't load `dist/`, its script doesn't parse, the review returns no lens block, or the process passes its time limit. Rerun a failed run once and record both attempts. A second failure is recorded as a failed run. It is never dropped and never counted as zero findings.
+A run fails when the build writes no `index.html`, the page doesn't load `dist/` or its script doesn't parse (check both by loading the page in Chromium with Playwright and looking for the stylesheet, the `Expressive` global and console errors), the review returns no lens block, or the process passes its time limit. Rerun a failed run once and record both attempts. A second failure is recorded as a failed run. It is never dropped and never counted as zero findings.
 
 ### Confirming and counting
 
 The person running the comparison confirms each finding whose rule field holds a `finished-app:` label, and adds none of their own:
 
 1. A finding is confirmed when the location it cites exists in the app and shows the behavior it describes. It is dropped when the source contradicts it, and the reason is recorded.
-2. Its final severity follows the anchors in `skills/expressivecss-review/SKILL.md` section 5 of the baseline commit. A WCAG overlap takes the critical anchor and keeps both IDs.
+2. Its final severity follows the anchors in `skills/expressivecss-review/SKILL.md` section 5 of the baseline commit. When the same defect is also a certain WCAG A or AA failure, the critical anchor applies and both IDs are kept; an estimated WCAG failure stays major.
 3. A countable finding is a confirmed major or critical finding with a label, as SKILL.md section 6 defines it. Labelled polish findings are recorded and not counted.
 
 ### Records
 
-Each run set has a directory `evidence/finished-app/<date>-<label>/` holding the apps, `lint-<prompt-id>-run<n>.txt`, `review-<prompt-id>-run<n>.txt` (the lens block) and `findings.json`. `findings.json` records the Claude Code version, the models each run used, the commit `dist/` was built from with the sha256 of `dist/css/expressive.min.css` and `dist/js/expressive.min.js`, the tree hashes of both skills, the sha256 of both briefs, and per app the build-time file hashes, the countable findings, the dropped findings with reasons, the labelled polish findings and the per-area counts.
+Each run set has a directory `evidence/finished-app/<date>-<label>/` holding the apps, `lint-<prompt-id>-run<n>.txt`, `review-<prompt-id>-run<n>.txt` (the lens block) and `findings.json`. `findings.json` records the Claude Code version, the models each run used, the commit `dist/` was built from with the sha256 of `dist/css/expressive.min.css` and `dist/js/expressive.min.js`, the tree hashes of both skills, the sha256 of both briefs (of the template text inside the fenced block, without a final newline, as `awk -v N=4 '/^```text$/{n++; f=(n==N); next} /^```$/{f=0; next} f' docs/agents/finished-app-evals.md | head -c -1 | sha256sum` gives for the build brief; use `N=5` for the reviewer brief), the build commit and the review commit as separate fields, and per app the build-time file hashes, the build and review seconds, the load check, the countable findings, the dropped findings with reasons, the labelled polish findings and the per-area counts.
 
 The committed apps load `dist/` by a relative path, so they render only next to a built `dist/`. To render or re-review baseline apps later, check out the recorded commit in a new worktree, run `npm ci` and `npm run build`, and copy its `dist/`.
 
 ### Comparing with the baseline
+
+Each phase's prompt: 79 and 83 use `settings-form` (two of the three baseline loading counts are in `destructive-list`, so a loading change there shows only in a stage rerun); 80 uses `destructive-list`; 81 uses `filtered-dashboard`; 82 uses `settings-form`. Phases 84 to 86 have no prompt of their own, and the stage reruns at 82, 84 and 87 cover them.
 
 A guidance or framework phase rebuilds its own prompt twice with the current skill, reviews both builds with the baseline skill trees, and compares its area's count per run with the baseline rows. A phase that closes a stage rebuilds all three prompts twice. Each run set adds rows below.
 
@@ -144,7 +148,7 @@ Counts are countable findings per area. A failed run shows `failed` in every col
 Baseline notes, from [the baseline records](evidence/finished-app/2026-11-15-baseline/findings.json):
 
 - Both `destructive-list` builds put a confirmation dialog in front of delete. The rubric scores that as polish, so the destructive column is 0 while neither build offers Undo.
-- Both `destructive-list` builds swap the row's Delete button for a named spinner while the request runs. The run 1 reviewer flagged that under `finished-app:loading` and the run 2 reviewer passed it, so part of the 2 against 1 in the loading column comes from the reviewer, not the app.
+- Both `destructive-list` runs score 1 for loading, for different controls. Run 1's count is the Delete button swapped for a spinner while the request runs; run 2 does the same, and its reviewer passed it. Run 2's count is the Save address button, which changes to "Saving…" with no progress beside it; run 1 shows a loading indicator there.
 - Neither `filtered-dashboard` build writes anything to the URL: tab, filter and page are each one finding in both runs.
-- Both `settings-form` builds kept the Save label, showed progress beside it and ignored a repeat press. Run 1's reviewer filed a missing announcement under `finished-app:loading`; it counts, because the counting rule counts every confirmed labelled finding at major or above.
+- Both `settings-form` builds kept the Save label, showed progress beside it and ignored a repeat press. Run 1's reviewer filed a missing announcement (WCAG 4.1.3) under `finished-app:loading`; it counts, because the counting rule counts every confirmed labelled finding at major or above. Run 2's reviewer reported the same gap without a label, so the 1 against 0 comes from labelling, and a later rerun can score a loading finding the button guidance doesn't cover.
 - `destructive-list` run 1's reviewer also reported that a delete could start twice. The source contradicts it, so it was dropped; `findings.json` keeps the reason.
