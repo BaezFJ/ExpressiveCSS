@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en" theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orders | Storefront admin</title>
+  <link rel="stylesheet" href="dist/css/expressive.min.css">
+  <style>
+    body { margin: 0; }
+
+    /* Dashboard surfaces: component tokens are set on the component elements themselves. */
+    .dashboard { padding: 16px; max-width: 1200px; margin-inline: auto; }
+    @media (width >= 600px) { .dashboard { padding: 24px; } }
+    .dashboard :is(article, .stats) {
+      --md-comp-filled-card-container-color: var(--md-sys-color-surface-container);
+      --md-comp-card-container-shape: 24px;
+      --md-comp-card-content-padding: 24px;
+      --md-comp-card-subhead-color: var(--md-sys-color-on-surface-variant);
+      --md-comp-stat-container-color: var(--md-sys-color-surface-container);
+      --md-comp-stat-shape: 24px;
+    }
+    .orders-body { padding-top: 16px; }
+    .orders-panel > .data-table { margin: 0; }
+    .orders-panel > .data-table > .pagination { justify-content: flex-end; padding: 8px 12px; border-top: 1px solid var(--md-sys-color-outline-variant); }
+    .orders-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-bottom: 16px; }
+    .orders-toolbar > .field { flex: 1 1 280px; max-width: 420px; margin: 0; }
+  </style>
+</head>
+<body>
+  <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+  <header>
+    <nav aria-label="Workspace">
+      <h2>Storefront admin</h2>
+    </nav>
+  </header>
+
+  <main id="main" class="dashboard" tabindex="-1">
+    <div class="mb-4">
+      <h1 class="headline-medium my-0">Orders</h1>
+      <p class="body-medium on-surface-variant-text my-0">Sample data · Oct 1 – Nov 14, 2026</p>
+    </div>
+
+    <section aria-labelledby="kpi-title" class="mb-5">
+      <h2 id="kpi-title" class="visually-hidden">Key figures</h2>
+      <dl class="stats my-0" id="kpis"></dl>
+    </section>
+
+    <section aria-labelledby="orders-title">
+      <h2 id="orders-title" class="title-large mb-0">Orders by state</h2>
+      <p class="body-medium on-surface-variant-text mt-0 mb-2">Totals in US dollars · 10 orders per page</p>
+
+      <nav class="tabs" id="order-tabs" aria-label="Order state">
+        <a href="#open" class="active" aria-current="page"><span class="material-symbols" aria-hidden="true">pending_actions</span><span>Open</span></a>
+        <a href="#shipped"><span class="material-symbols" aria-hidden="true">local_shipping</span><span>Shipped</span></a>
+        <a href="#returned"><span class="material-symbols" aria-hidden="true">assignment_return</span><span>Returned</span></a>
+      </nav>
+
+      <div class="orders-body">
+        <div class="orders-toolbar">
+          <div class="field outlined">
+            <span class="material-symbols prefix" aria-hidden="true">search</span>
+            <input id="customer-filter" name="customer" type="search" placeholder=" " autocomplete="off" spellcheck="false" aria-describedby="customer-filter-help">
+            <label for="customer-filter">Filter by customer</label>
+            <small id="customer-filter-help">Matches any part of the customer name</small>
+          </div>
+          <output id="result-count" class="body-medium on-surface-variant-text" role="status" aria-live="polite" for="customer-filter"></output>
+        </div>
+
+        <div id="panels"></div>
+      </div>
+    </section>
+  </main>
+
+  <template id="panel-template">
+    <div class="orders-panel">
+      <div class="data-table" role="region" tabindex="0" data-sort data-page-size="10">
+        <table>
+          <caption class="visually-hidden"></caption>
+          <thead>
+            <tr>
+              <th scope="col"><button type="button">Order</button></th>
+              <th scope="col"><button type="button">Customer</button></th>
+              <th scope="col" class="text-nowrap" aria-sort="descending"><button type="button">Date</button></th>
+              <th scope="col" class="numeric"><button type="button">Total</button></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+        <nav class="pagination">
+          <ol>
+            <li><button type="button" data-table-page="previous" aria-label="Previous page"><span class="material-symbols" aria-hidden="true">chevron_left</span></button></li>
+            <li><span data-table-page-status role="status" aria-live="polite" aria-label="Pages"></span></li>
+            <li><button type="button" data-table-page="next" aria-label="Next page"><span class="material-symbols" aria-hidden="true">chevron_right</span></button></li>
+          </ol>
+        </nav>
+      </div>
+      <div class="empty-state" hidden>
+        <span class="material-symbols" aria-hidden="true">search_off</span>
+        <h3></h3>
+        <p></p>
+        <div class="empty-state-actions">
+          <button type="button" class="outlined" data-clear-filter>Clear filter</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script src="dist/js/expressive.min.js"></script>
+  <script>
+    // ---- Sample data: 40 deterministic orders ----
+    const STATES = [
+      { id: 'open', label: 'Open' },
+      { id: 'shipped', label: 'Shipped' },
+      { id: 'returned', label: 'Returned' },
+    ];
+    const CUSTOMERS = [
+      'Maya Patel', 'Liam Chen', 'Sofia Garcia', 'Noah Williams', 'Amara Okafor',
+      'Lucas Martin', 'Hana Suzuki', 'Elena Rossi', 'Omar Haddad', 'Grace Kim',
+      'Mateo Silva', 'Freya Larsen', 'Ivan Petrov', 'Zoe Thompson',
+    ];
+    let seed = 20261115;
+    const random = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+    const pick = (list) => list[Math.floor(random() * list.length)];
+
+    const START = Date.UTC(2026, 9, 1);
+    const DAY = 86400000;
+    const orders = Array.from({ length: 40 }, (_, i) => {
+      const r = random();
+      const state = r < 0.45 ? 'open' : r < 0.82 ? 'shipped' : 'returned';
+      return {
+        id: `ORD-${String(1001 + i)}`,
+        customer: pick(CUSTOMERS),
+        date: new Date(START + Math.floor((i / 40) * 44 + random()) * DAY),
+        total: Math.round((18 + random() * 620) * 100) / 100,
+        state,
+      };
+    });
+
+    const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+    const compact = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', notation: 'compact', maximumFractionDigits: 1 });
+    const day = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+    const iso = (date) => date.toISOString().slice(0, 10);
+
+    // ---- Key figures ----
+    const sum = (list) => list.reduce((acc, o) => acc + o.total, 0);
+    const byState = (state) => orders.filter((o) => o.state === state);
+    const returned = byState('returned');
+    const figures = [
+      ['Orders', String(orders.length), 'All states'],
+      ['Order value', compact.format(sum(orders)), `${money.format(sum(orders))} across all states`],
+      ['Open orders', String(byState('open').length), `${money.format(sum(byState('open')))} awaiting shipment`],
+      ['Return rate', `${(returned.length / orders.length * 100).toFixed(1)}%`, `${returned.length} of ${orders.length} orders`],
+    ];
+    const kpis = document.getElementById('kpis');
+    for (const [label, value, note] of figures) {
+      const tile = document.createElement('div');
+      const dt = document.createElement('dt'); dt.textContent = label;
+      const dd = document.createElement('dd'); dd.textContent = value;
+      const ddNote = document.createElement('dd'); ddNote.className = 'body-small on-surface-variant-text'; ddNote.textContent = note;
+      tile.append(dt, dd, ddNote);
+      kpis.append(tile);
+    }
+
+    // ---- One panel, table and pager per state ----
+    const panels = document.getElementById('panels');
+    const template = document.getElementById('panel-template');
+    const tables = {};
+    for (const state of STATES) {
+      const panel = template.content.firstElementChild.cloneNode(true);
+      panel.id = state.id;
+      const wrapper = panel.querySelector('.data-table');
+      const caption = wrapper.querySelector('caption');
+      caption.id = `${state.id}-caption`;
+      caption.textContent = `${state.label} orders`;
+      wrapper.setAttribute('aria-labelledby', caption.id);
+      wrapper.querySelector('.pagination').setAttribute('aria-label', `${state.label} orders pages`);
+      panel.querySelector('.empty-state h3').textContent = `No ${state.label.toLowerCase()} orders match`;
+
+      const body = wrapper.querySelector('tbody');
+      byState(state.id)
+        .sort((a, b) => b.date - a.date)
+        .forEach((order) => {
+          const row = body.insertRow();
+          row.dataset.customer = order.customer.toLocaleLowerCase('en-US');
+          const id = document.createElement('th');
+          id.scope = 'row';
+          id.className = 'text-nowrap';
+          id.textContent = order.id;
+          row.append(id);
+          const customer = row.insertCell(); customer.textContent = order.customer;
+          const date = row.insertCell(); date.className = 'text-nowrap'; date.dataset.value = iso(order.date); date.textContent = day.format(order.date);
+          const total = row.insertCell(); total.className = 'numeric'; total.textContent = money.format(order.total);
+        });
+
+      tables[state.id] = { panel, wrapper, label: state.label };
+      panels.append(panel);
+    }
+
+    // ---- Filtering, tabs and URL state ----
+    document.addEventListener('DOMContentLoaded', () => {
+      const tabsEl = document.getElementById('order-tabs');
+      const input = document.getElementById('customer-filter');
+      const count = document.getElementById('result-count');
+      const params = new URLSearchParams(location.search);
+
+      const savedView = params.get('view');
+      const savedLink = savedView && tabsEl.querySelector(`a[href="#${CSS.escape(savedView)}"]`);
+      if (savedLink) {
+        const current = tabsEl.querySelector('a.active');
+        current?.classList.remove('active');
+        current?.removeAttribute('aria-current');
+        savedLink.classList.add('active');
+        savedLink.setAttribute('aria-current', 'page');
+      }
+      input.value = params.get('q') ?? '';
+
+      Expressive.AutoInit();
+
+      const activeId = () => tabsEl.querySelector('a.active')?.hash.slice(1) ?? 'open';
+      const write = (changes) => {
+        const url = new URL(location.href);
+        for (const [key, value] of Object.entries(changes)) {
+          if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
+        }
+        if ([...tabsEl.querySelectorAll('a')].some((a) => a.hash === url.hash)) url.hash = '';
+        history.replaceState(null, '', url);
+      };
+
+      const describe = () => {
+        const { wrapper, label } = tables[activeId()];
+        const shown = wrapper.querySelectorAll('tbody > tr:not([hidden])').length;
+        const query = input.value.trim();
+        const noun = shown === 1 ? 'order' : 'orders';
+        count.textContent = query
+          ? `${shown} ${label.toLowerCase()} ${noun} for “${query}”`
+          : `${shown} ${label.toLowerCase()} ${noun}`;
+      };
+
+      const applyFilter = (page = 1) => {
+        const raw = input.value.trim();
+        const query = raw.toLocaleLowerCase('en-US');
+        for (const { panel, wrapper } of Object.values(tables)) {
+          let matches = 0;
+          wrapper.querySelectorAll('tbody > tr').forEach((row) => {
+            const match = !query || row.dataset.customer.includes(query);
+            row.hidden = !match;
+            if (match) matches++;
+          });
+          wrapper.hidden = matches === 0;
+          const empty = panel.querySelector('.empty-state');
+          empty.hidden = matches > 0;
+          empty.querySelector('p').textContent = `No customer name contains “${raw}”.`;
+          Expressive.DataTables.sync(wrapper);
+          if (matches) Expressive.DataTables.showPage(wrapper, 1);
+        }
+        const active = tables[activeId()].wrapper;
+        if (page > 1 && !active.hidden) Expressive.DataTables.showPage(active, page);
+        describe();
+      };
+
+      applyFilter(Number(params.get('page')) || 1);
+
+      let typing;
+      input.addEventListener('input', () => {
+        applyFilter();
+        clearTimeout(typing);
+        typing = setTimeout(() => write({ q: input.value.trim(), page: '' }), 300);
+      });
+
+      document.addEventListener('click', (event) => {
+        if (!event.target.closest('[data-clear-filter]')) return;
+        input.value = '';
+        applyFilter();
+        write({ q: '', page: '' });
+        input.focus();
+      });
+
+      tabsEl.addEventListener('expressive:change', (event) => {
+        if (event.target !== tabsEl) return;
+        clearTimeout(typing);
+        for (const { wrapper } of Object.values(tables)) {
+          if (!wrapper.hidden) Expressive.DataTables.showPage(wrapper, 1);
+        }
+        describe();
+        write({ view: event.detail.panel.id, q: input.value.trim(), page: '' });
+      });
+
+      for (const { wrapper } of Object.values(tables)) {
+        wrapper.addEventListener('expressive:page', (event) => {
+          write({ q: input.value.trim(), page: event.detail.page > 1 ? String(event.detail.page) : '' });
+        });
+        wrapper.addEventListener('expressive:sort', (event) => {
+          if (!event.defaultPrevented) write({ page: '' });
+        });
+      }
+    });
+  </script>
+</body>
+</html>

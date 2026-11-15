@@ -25,7 +25,7 @@ Covers R6. Checks V3.
 
 Prerequisites: groups 1 and 2, committed.
 
-- [ ] Build all three prompts twice, review with the baseline trees, confirm, run each prompt's script, record `2026-11-15-guidance-stage` and six rows, add the Submit check section to the evals doc.
+- [x] Build all three prompts twice, review with the baseline trees, confirm, run each prompt's script, record `2026-11-15-guidance-stage` and six rows, add the Submit check section to the evals doc.
 
 Done when V3 passes.
 

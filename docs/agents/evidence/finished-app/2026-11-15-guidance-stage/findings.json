@@ -1,0 +1,406 @@
+{
+  "label": "guidance-stage",
+  "date": "2026-11-15",
+  "claudeCode": "2.1.325",
+  "model": "claude-opus-5-5",
+  "commands": {
+    "build": "claude -p --safe-mode --strict-mcp-config --model claude-opus-5-5 --no-session-persistence --output-format json --permission-mode bypassPermissions",
+    "review": "claude -p --safe-mode --strict-mcp-config --model claude-opus-5-5 --no-session-persistence --output-format json --allowedTools Read Glob Grep"
+  },
+  "buildCommit": "8c5313123",
+  "reviewCommit": "16b6632ada2153e8b185c5c72387d3896d7ad794",
+  "lint": "mcp/expressivecss/lint.mjs from the repository; lint.mjs and server.js are unchanged from 16b6632",
+  "dist": {
+    "css/expressive.min.css": "b1ba049750e05269d1a1a8d3124fd78aa5fea1b741ff53376e7d9ccabce442ad",
+    "js/expressive.min.js": "befeb6010d6ebf21e5a2fa075d960d071594fd635ef477beb584590a6cf41e66"
+  },
+  "skillTrees": {
+    "build skills/expressivecss": "20e64c097ffcbc68a42fe447058493c0b3312cba",
+    "review skills/expressivecss": "a7de269b7bf10baa2fd2d08c90964c50ebf748e8",
+    "review skills/expressivecss-review": "6f8aa197c069c5f1546b9d2899ec596c8f50549b"
+  },
+  "briefs": {
+    "build": "2f096aa65b688ba640c93e2b30bfdaa5ff76a6597d1f2fbff9968384952a1be3",
+    "review": "1be3237aaf63f5f6df96f2300e385098b6fe114fe809f7735eca7692c9153e67"
+  },
+  "failedRuns": [],
+  "revisions": 0,
+  "notes": [
+    "destructive-list run 1 first failed the delete-and-Undo check: its restored row was back in place, but the check compared raw row text and a focus tooltip added \"Delete\" to the row. The script now ignores tooltip text (undo-check-fixed.jsonl); rerun on the baseline, phase 80 and stage apps, it gives the same results for the first four and passes stage run 1.",
+    "destructive-list run 2's submit-flow count (Cancel first, so Enter cancels) is inside this phase's guidance; the text gained a clause about the first submit button after this run set. The runs were not repeated, since the gate is the settings-form submit check.",
+    "filtered-dashboard run 2's URL-state count is a page listener that does not cancel a pending filter write, which the phase 81 snippet does; it is a note for the phase 84 stage."
+  ],
+  "apps": [
+    {
+      "prompt": "settings-form",
+      "run": 1,
+      "files": {
+        "settings-form-run1.html": "f213063b917ad72bf994794dbaa3f5a9ad6bcf8732d27dbf7c509d190ea53774"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 73,
+      "loadCheck": "pass",
+      "submitCheck": {
+        "app": "guidance-stage/settings-form-run1",
+        "pass": true,
+        "reason": "",
+        "fields": 4,
+        "firstInvalid": "display_name",
+        "focused": "display_name",
+        "onFirst": true,
+        "errors": []
+      },
+      "countable": [],
+      "dropped": [],
+      "polish": [],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 0,
+        "submit-flow": 0
+      },
+      "total": 0
+    },
+    {
+      "prompt": "settings-form",
+      "run": 2,
+      "files": {
+        "settings-form-run2.html": "fbd6721120e871bf5b75f04836a7ddd7474fedf4f217cba90eb7da0f91ea1d14"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 167,
+      "loadCheck": "pass",
+      "submitCheck": {
+        "app": "guidance-stage/settings-form-run2",
+        "pass": true,
+        "reason": "",
+        "fields": 4,
+        "firstInvalid": "display_name",
+        "focused": "display_name",
+        "onFirst": true,
+        "errors": []
+      },
+      "countable": [],
+      "dropped": [],
+      "polish": [],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 0,
+        "submit-flow": 0
+      },
+      "total": 0
+    },
+    {
+      "prompt": "destructive-list",
+      "run": 1,
+      "files": {
+        "destructive-list-run1.html": "8f6f74b2543011f4e2d6fa2d83b6e65c61355395a5d4080b166fb238bfbd9ccb"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 206,
+      "loadCheck": "pass",
+      "deleteUndoCheck": {
+        "app": "guidance-stage/destructive-list-run1",
+        "pass": false,
+        "reason": "the rows did not come back in their old order",
+        "removedMs": 29,
+        "focusInRow": true,
+        "focusOnRestoredRow": false,
+        "errors": [],
+        "twoDeletes": null
+      },
+      "deleteUndoCheckFixed": {
+        "app": "guidance-stage/destructive-list-run1",
+        "pass": true,
+        "reason": "",
+        "removedMs": 35,
+        "focusInRow": true,
+        "focusOnRestoredRow": true,
+        "errors": [],
+        "twoDeletes": {
+          "undoShownForSecond": true,
+          "rowsBefore": 5,
+          "rowsAfter": 3
+        }
+      },
+      "countable": [],
+      "dropped": [],
+      "polish": [],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 0,
+        "submit-flow": 0
+      },
+      "total": 0
+    },
+    {
+      "prompt": "destructive-list",
+      "run": 2,
+      "files": {
+        "destructive-list-run2.html": "d6b286e459d1907dc58efcd82120d9bc7d87b7909c05247797c5eecb10398993"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 183,
+      "loadCheck": "pass",
+      "deleteUndoCheck": {
+        "app": "guidance-stage/destructive-list-run2",
+        "pass": true,
+        "reason": "",
+        "removedMs": 34,
+        "focusInRow": true,
+        "focusOnRestoredRow": true,
+        "errors": [],
+        "twoDeletes": {
+          "undoShownForSecond": true,
+          "rowsBefore": 5,
+          "rowsAfter": 3
+        }
+      },
+      "deleteUndoCheckFixed": {
+        "app": "guidance-stage/destructive-list-run2",
+        "pass": true,
+        "reason": "",
+        "removedMs": 36,
+        "focusInRow": true,
+        "focusOnRestoredRow": true,
+        "errors": [],
+        "twoDeletes": {
+          "undoShownForSecond": true,
+          "rowsBefore": 5,
+          "rowsAfter": 3
+        }
+      },
+      "countable": [
+        {
+          "area": "submit-flow",
+          "severity": "major",
+          "location": "index.html:100-104 #address-form",
+          "description": "Cancel is the first submit button of the add form, so Enter in a field cancels instead of saving."
+        }
+      ],
+      "dropped": [],
+      "polish": [
+        {
+          "area": "destructive",
+          "location": "index.html:228-229",
+          "description": "A failed DELETE shows an error snackbar with replace: true, cutting short a later Undo bar."
+        }
+      ],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 0,
+        "submit-flow": 1
+      },
+      "total": 1
+    },
+    {
+      "prompt": "filtered-dashboard",
+      "run": 1,
+      "files": {
+        "filtered-dashboard-run1.html": "804746fffb2eda9119059a131d7eccbf3b1bea9c6af3f006ea0e50655cda0a94"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 197,
+      "loadCheck": "pass",
+      "urlStateCheck": {
+        "app": "guidance-stage/filtered-dashboard-run1",
+        "pass": true,
+        "reason": "",
+        "tabIndex": 1,
+        "filter": "a",
+        "url": "index.html?view=shipped&q=a&page=2",
+        "expected": {
+          "tab": "local_shippingShipped",
+          "search": "a",
+          "rows": [
+            "ORD-1001\tGrace Kim\tOct 1, 2026\t$336.96"
+          ],
+          "status": [
+            "2 / 2"
+          ]
+        },
+        "reloaded": {
+          "tab": "local_shippingShipped",
+          "search": "a",
+          "rows": [
+            "ORD-1001\tGrace Kim\tOct 1, 2026\t$336.96"
+          ],
+          "status": [
+            "2 / 2"
+          ]
+        },
+        "opened": {
+          "tab": "local_shippingShipped",
+          "search": "a",
+          "rows": [
+            "ORD-1001\tGrace Kim\tOct 1, 2026\t$336.96"
+          ],
+          "status": [
+            "2 / 2"
+          ]
+        },
+        "scrollY": 0,
+        "errors": []
+      },
+      "countable": [],
+      "dropped": [],
+      "polish": [],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 0,
+        "submit-flow": 0
+      },
+      "total": 0
+    },
+    {
+      "prompt": "filtered-dashboard",
+      "run": 2,
+      "files": {
+        "filtered-dashboard-run2.html": "d493da562b11726fa9d6321048af18cc70a612525863e75ad885a545292673ac"
+      },
+      "buildModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "reviewModels": [
+        "claude-haiku-5-5",
+        "claude-opus-5-5"
+      ],
+      "buildSeconds": 187,
+      "loadCheck": "pass",
+      "urlStateCheck": {
+        "app": "guidance-stage/filtered-dashboard-run2",
+        "pass": true,
+        "reason": "",
+        "tabIndex": 1,
+        "filter": "a",
+        "url": "index.html?view=shipped&q=a&page=2",
+        "expected": {
+          "tab": "local_shipping\n        Shipped",
+          "search": "a",
+          "rows": [
+            "ORD-1055\tIsaac Mensah\tOct 17, 2026\t$330.70",
+            "ORD-1054\tGabriel Moreau\tOct 16, 2026\t$438.02",
+            "ORD-1053\tMateo Rossi\tOct 15, 2026\t$455.73",
+            "ORD-1050\tIsaac Mensah\tOct 11, 2026\t$194.32",
+            "ORD-1049\tNadia Petrova\tOct 11, 2026\t$57.75",
+            "ORD-1048\tLena Fischer\tOct 9, 2026\t$163.74",
+            "ORD-1047\tFarah Haddad\tOct 7, 2026\t$559.04",
+            "ORD-1045\tIsaac Mensah\tOct 6, 2026\t$599.56",
+            "ORD-1042\tBruno Silva\tOct 2, 2026\t$197.51"
+          ],
+          "status": [
+            "2 / 2"
+          ]
+        },
+        "reloaded": {
+          "tab": "local_shipping\n        Shipped",
+          "search": "a",
+          "rows": [
+            "ORD-1055\tIsaac Mensah\tOct 17, 2026\t$330.70",
+            "ORD-1054\tGabriel Moreau\tOct 16, 2026\t$438.02",
+            "ORD-1053\tMateo Rossi\tOct 15, 2026\t$455.73",
+            "ORD-1050\tIsaac Mensah\tOct 11, 2026\t$194.32",
+            "ORD-1049\tNadia Petrova\tOct 11, 2026\t$57.75",
+            "ORD-1048\tLena Fischer\tOct 9, 2026\t$163.74",
+            "ORD-1047\tFarah Haddad\tOct 7, 2026\t$559.04",
+            "ORD-1045\tIsaac Mensah\tOct 6, 2026\t$599.56",
+            "ORD-1042\tBruno Silva\tOct 2, 2026\t$197.51"
+          ],
+          "status": [
+            "2 / 2"
+          ]
+        },
+        "opened": {
+          "tab": "local_shipping\n        Shipped",
+          "search": "a",
+          "rows": [
+            "ORD-1055\tIsaac Mensah\tOct 17, 2026\t$330.70",
+            "ORD-1054\tGabriel Moreau\tOct 16, 2026\t$438.02",
+            "ORD-1053\tMateo Rossi\tOct 15, 2026\t$455.73",
+            "ORD-1050\tIsaac Mensah\tOct 11, 2026\t$194.32",
+            "ORD-1049\tNadia Petrova\tOct 11, 2026\t$57.75",
+            "ORD-1048\tLena Fischer\tOct 9, 2026\t$163.74",
+            "ORD-1047\tFarah Haddad\tOct 7, 2026\t$559.04",
+            "ORD-1045\tIsaac Mensah\tOct 6, 2026\t$599.56",
+            "ORD-1042\tBruno Silva\tOct 2, 2026\t$197.51"
+          ],
+          "status": [
+            "2 / 2"
+          ]
+        },
+        "scrollY": 0,
+        "errors": []
+      },
+      "countable": [
+        {
+          "area": "url-state",
+          "severity": "major",
+          "location": "index.html:256-260, 269-272",
+          "description": "A filter URL write pending when the page changes still runs and clears the page, because the page listener does not cancel it."
+        }
+      ],
+      "dropped": [],
+      "polish": [
+        {
+          "area": "url-state",
+          "location": "index.html:250-254",
+          "description": "A clamped ?page= stays in the URL."
+        }
+      ],
+      "counts": {
+        "loading": 0,
+        "destructive": 0,
+        "url-state": 1,
+        "submit-flow": 0
+      },
+      "total": 1
+    }
+  ],
+  "totals": {
+    "loading": 0,
+    "destructive": 0,
+    "url-state": 1,
+    "submit-flow": 1,
+    "total": 2
+  }
+}

@@ -134,6 +134,10 @@ Every `destructive-list` build also gets `npm run eval:finished-app-undo -- <app
 
 Every `filtered-dashboard` build also gets `npm run eval:finished-app-url -- <app-dir>...` (`scripts/finished-app-url-state.mjs`) in Chromium. On a tab other than the first, it tries one-letter filters until a second page exists, goes to it, then compares the selected tab, the search value, the visible rows and the page status after a reload and in a fresh page with the same URL. It fails when it can't reach a tab, a search field or a second page, or when either view differs. Record its JSON line per app in `findings.json`.
 
+### Submit check
+
+Every `settings-form` build also gets `npm run eval:finished-app-submit -- <app-dir>...` (`scripts/finished-app-submit-empty.mjs`) in Chromium. In the first visible form with a submit button, it empties the text fields, fails if the submit is now disabled, clicks it, and passes when the page stayed put, the submit is still enabled and focus is on the first invalid field. It fails when no field becomes invalid. Record its JSON line per app in `findings.json`.
+
 ### Comparing with the baseline
 
 Each phase's prompt: 79 and 83 use `settings-form` (two of the three baseline loading counts are in `destructive-list`, so a loading change there shows only in a stage rerun); 80 uses `destructive-list`; 81 uses `filtered-dashboard`; 82 uses `settings-form`. Phases 84 to 86 have no prompt of their own, and the stage reruns at 82, 84 and 87 cover them.
@@ -158,6 +162,12 @@ Counts are countable findings per area. A failed run shows `failed` in every col
 | 2026-11-15 | phase-80 | destructive-list | 2 | 0 | 1 | 0 | 1 | 2 |
 | 2026-11-15 | phase-81 | filtered-dashboard | 1 | 0 | 0 | 0 | 0 | 0 |
 | 2026-11-15 | phase-81 | filtered-dashboard | 2 | 0 | 0 | 0 | 0 | 0 |
+| 2026-11-15 | guidance-stage | settings-form | 1 | 0 | 0 | 0 | 0 | 0 |
+| 2026-11-15 | guidance-stage | settings-form | 2 | 0 | 0 | 0 | 0 | 0 |
+| 2026-11-15 | guidance-stage | destructive-list | 1 | 0 | 0 | 0 | 0 | 0 |
+| 2026-11-15 | guidance-stage | destructive-list | 2 | 0 | 0 | 0 | 1 | 1 |
+| 2026-11-15 | guidance-stage | filtered-dashboard | 1 | 0 | 0 | 0 | 0 | 0 |
+| 2026-11-15 | guidance-stage | filtered-dashboard | 2 | 0 | 0 | 1 | 0 | 1 |
 
 Baseline notes, from [the baseline records](evidence/finished-app/2026-11-15-baseline/findings.json):
 
@@ -172,3 +182,5 @@ Phase 79 notes, from [its records](evidence/finished-app/2026-11-15-phase-79/fin
 Phase 80 notes, from [its records](evidence/finished-app/2026-11-15-phase-80/findings.json): both `destructive-list` rebuilds remove a row at once (about 28ms), offer Undo, and put the row back in place, and the second delete shows its own Undo; the same check fails both baseline builds on their confirmation dialog ([final check output](evidence/finished-app/2026-11-15-phase-80/undo-check-final.jsonl)). Run 2's destructive count is a `pagehide` commit that leaves the Undo live after a back/forward-cache restore; the guidance now says to commit and dismiss the bar in one `pagehide` listener.
 
 Phase 81 notes, from [its records](evidence/finished-app/2026-11-15-phase-81/findings.json): both `filtered-dashboard` rebuilds keep the tab, filter and page in the query string (`?view=shipped&q=a&page=2`) and restore all three after a reload and in a fresh page, with the page left at the top; URL state is 0 in both runs, down from 3 in each baseline run, and the same check fails both baseline dashboards ([baseline output](evidence/finished-app/2026-11-15-phase-81/url-check-baseline.jsonl)). Code review later revised the data table App behavior text; [the records](evidence/finished-app/2026-11-15-phase-81/findings.json) list what changed after these runs.
+
+Guidance stage notes, from [its records](evidence/finished-app/2026-11-15-guidance-stage/findings.json): with the button, snackbar, list, tab, data table and text field guidance, the six rebuilds total 2 countable findings against the baseline's 10. Both `settings-form` rebuilds pass the submit check, which the baseline and phase 79 apps also pass ([their results](evidence/finished-app/2026-11-15-guidance-stage/submit-check-baseline.jsonl)), both `destructive-list` rebuilds pass the delete-and-Undo check, and both `filtered-dashboard` rebuilds pass the URL check. The two counts are a dialog whose Cancel is its first submit button and a dashboard that lets a pending filter write clear the page.

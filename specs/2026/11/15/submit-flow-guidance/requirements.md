@@ -61,3 +61,9 @@ The text field guide (`## Text Inputs` in `llm.md`) covers markup, `.validate`, 
 
 - Framework: `.error-summary` could set `aria-invalid` and show each field's error text and focus the first invalid field, so an app using it meets the submit-flow rule. Not this milestone's scope; for the post-milestone roadmap.
 - `specs/checklist.md`: the project has none.
+
+## Decisions made while building
+
+- The submit check skips `<fieldset>` when it looks for the first invalid field, since a fieldset matches `:invalid` around an invalid field.
+- The delete-and-Undo check ignores `.tooltip` and `role="tooltip"` text in a row, since a focus tooltip changed the restored row's text in stage run 1.
+- The text field App behavior says the first submit button saves and Cancel takes `type="button"`, after `destructive-list` run 2's dialog cancelled on Enter. The stage runs predate the clause.

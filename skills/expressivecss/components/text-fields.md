@@ -9,7 +9,7 @@ Component ID: `text-fields`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `888d6ada7343d6e115014016504dfd048ad2229e8738f088a4a636fc57f5a1c7`
+Contract SHA-256: `302d760d2bf0b63eff8d619238e8d5b3d82f9f7d87a36eb0590142a2d53bc1d7`
 
 #### Selection and adaptation
 
@@ -65,7 +65,7 @@ Tokens follow the [M3 text field spec](https://m3.material.io/components/text-fi
 
 #### App behavior
 
-Leave submit enabled until submission starts, and put fields in a `<form>` with a submit button so Enter submits. Mark required fields `required`. Use `novalidate` and, on submit, call `Expressive.Forms.validateField(input)` on each `.validate` field, which sets `aria-invalid` and shows its `data-error` text beside it, then focus the first field with `aria-invalid="true"`. A server error about one field goes into that field's `data-error` text, with `aria-invalid="true"` and focus on the field. Give every field a `name`. Give a field for the person's own data the one `autocomplete` token for its purpose, and split a field that asks for several. Set `type` for the keyboard, never `type="number"` for phones, codes or card numbers, and `inputmode` where `type` doesn't bring the keyboard. Turn spellcheck off for codes, emails and usernames, allow paste, and check that a `pattern` compiles with the `v` flag the browser uses. Keep `placeholder=" "` for a floating label; put an example ending in `…` in a label-above placeholder or the supporting text.
+Leave submit enabled until submission starts, and put fields in a `<form>` whose first submit button saves, so Enter submits; give Cancel `type="button"`. Mark required fields `required`. Use `novalidate` and, on submit, call `Expressive.Forms.validateField(input)` on each `.validate` field, which sets `aria-invalid` and shows its `data-error` text beside it, then focus the first field with `aria-invalid="true"`. A server error about one field goes into that field's `data-error` text, with `aria-invalid="true"` and focus on the field. Give every field a `name`. Give a field for the person's own data the one `autocomplete` token for its purpose, and split a field that asks for several. Set `type` for the keyboard, never `type="number"` for phones, codes or card numbers, and `inputmode` where `type` doesn't bring the keyboard. Turn spellcheck off for codes, emails and usernames, allow paste, and check that a `pattern` compiles with the `v` flag the browser uses. Keep `placeholder=" "` for a floating label; put an example ending in `…` in a label-above placeholder or the supporting text.
 
 ```js
 form.addEventListener('submit', (event) => {

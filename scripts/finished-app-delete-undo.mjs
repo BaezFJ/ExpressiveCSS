@@ -11,9 +11,15 @@ const UNDO = /^undo$/i;
 const ROW = 'li, [role=listitem], tr';
 const wait = (ms) => new Promise((done) => setTimeout(done, ms));
 
-// A row's key is its text, or the delete button's own name when no row element holds it.
-const rowTexts = (page) => page.getByRole('button', { name: DELETE }).evaluateAll((buttons, row) => buttons.map((button) =>
-  button.closest(row)?.innerText.trim() || button.getAttribute('aria-label') || button.innerText.trim()), ROW);
+// A row's key is its text without tooltips (which appear on focus), or the delete
+// button's own name when no row element holds it.
+const rowTexts = (page) => page.getByRole('button', { name: DELETE }).evaluateAll((buttons, row) => buttons.map((button) => {
+  const holder = button.closest(row);
+  if (!holder) return button.getAttribute('aria-label') || button.innerText.trim();
+  const copy = holder.cloneNode(true);
+  copy.querySelectorAll('.tooltip, [role="tooltip"]').forEach((tip) => tip.remove());
+  return copy.textContent.replace(/\s+/g, ' ').trim();
+}), ROW);
 
 async function until(check, ms) {
   const end = Date.now() + ms;
@@ -42,7 +48,13 @@ async function deleteAndUndo(page) {
   const restored = await until(same, 3000);
   await wait(2000);
   const stillRestored = await same();
-  const focus = await page.evaluate((row) => document.activeElement?.closest(row)?.innerText.trim() ?? null, ROW);
+  const focus = await page.evaluate((row) => {
+    const holder = document.activeElement?.closest(row);
+    if (!holder) return null;
+    const copy = holder.cloneNode(true);
+    copy.querySelectorAll('.tooltip, [role="tooltip"]').forEach((tip) => tip.remove());
+    return copy.textContent.replace(/\s+/g, ' ').trim();
+  }, ROW);
   const reason = restored && stillRestored ? '' : 'the rows did not come back in their old order';
   return { pass: !reason, reason, removedMs, focusInRow: focus !== null, focusOnRestoredRow: focus === before[1] };
 }
