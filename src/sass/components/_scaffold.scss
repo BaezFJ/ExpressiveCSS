@@ -171,9 +171,43 @@ $_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar:only-child))";
       overflow: visible;
     }
 
-    // The single column would stretch a vertical toolbar across the window.
+    // The trailing toolbar floats as a centered row 16px above the navigation
+    // bar (or the window's bottom edge). Its row stays in flow, and its block
+    // margins put its resting place where it sticks, so the end of the page
+    // scrolls clear of it. The navigation bar's height is its anatomy, as in
+    // the scroll padding below.
+    > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed),
+    > .toolbar-group.vertical:not(.fixed) > .toolbar.vertical {
+      flex-direction: row;
+
+      > .max {
+        width: auto;
+      }
+    }
+
     > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed) {
-      justify-self: end;
+      position: sticky;
+      inset-block-end: calc(16px + env(safe-area-inset-bottom, 0px));
+      z-index: var(--expressive-z-toolbar);
+      justify-self: center;
+      margin: 16px 0;
+
+      // A left tooltip would cover the next action in a row; show it above,
+      // as a horizontal toolbar's tooltips do.
+      .tooltip.left {
+        inset: 0 auto auto 50%;
+        transform: translate(-50%, calc(-100% - var(--md-comp-tooltip-anchor-gap))) scale(0.96);
+      }
+
+      :is(:hover, :focus-visible, :focus-within) > .tooltip.left,
+      .tooltip.left:hover {
+        transform: translate(-50%, calc(-100% - var(--md-comp-tooltip-anchor-gap))) scale(1);
+      }
+    }
+
+    // :has() can't nest, so the footer form of the navigation bar is spelled out.
+    &:has(> .navigation-bar, > footer > .navigation-bar:only-child) > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed) {
+      inset-block-end: calc(50px + 1rem + env(safe-area-inset-bottom, 0px) + 16px);
     }
 
     > .navigation-rail:not(.expanded),
@@ -201,5 +235,10 @@ $_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar:only-child))";
 @include bp-down("medium") {
   :root:has(> body > .scaffold) {
     scroll-padding-block: rem(64px) calc(50px + 1rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  // A floating trailing toolbar covers its 64px and its 16px gap as well.
+  :root:has(> body > .scaffold > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed)) {
+    scroll-padding-block-end: calc(50px + 1rem + env(safe-area-inset-bottom, 0px) + 80px);
   }
 }

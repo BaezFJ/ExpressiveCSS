@@ -41,7 +41,7 @@ test('every compiled scaffold selector starts at the scaffold or a region class'
   assert.ok(preludes.length > 5, 'the scaffold rules are in the bundle');
   for (const prelude of preludes) {
     // The one root rule keys off a scaffold that is a direct child of <body>.
-    for (const selector of splitSelectorList(prelude)) assert.match(selector, /^(\.scaffold|:root:has\(> body > \.scaffold\))/, prelude);
+    for (const selector of splitSelectorList(prelude)) assert.match(selector, /^(\.scaffold|:root:has\(> body > \.scaffold[ )])/, prelude);
   }
 });
 
@@ -524,6 +524,107 @@ for (const [name, type, run] of engines) {
     }
   });
 
+  // The navigation bar's icons sized as the icon font would, for its real 66px height.
+  const realIcons = '<style>.navigation-bar .material-symbols{display:inline-block;width:24px;height:24px;line-height:24px}</style>';
+
+  run(`${name}: below 600px the trailing toolbar turns horizontal, keeps its order and stacks under the bars`, { timeout: 30000 }, async () => {
+    const group = `<div class="toolbar-group vertical" id="tg"><div class="toolbar vertical" id="tgi">${['a', 'b', 'c'].map((x) => `<button type="button" id="g${x}" aria-label="${x}">${icon('edit')}</button>`).join('')}</div><button type="button" class="extra circle" aria-label="Compose">${icon('add')}</button></div>`;
+    const { browser, tab, box, style } = await open(type, page(realIcons + `<div id="host">${scaffold({ bottom: navbar })}</div>`), { width: 390 });
+    try {
+      const xs = async () => Promise.all(['#t0', '#t1', '#t2'].map(async (id) => (await box(id)).left));
+      assert.equal(await style('#tools', 'flexDirection'), 'row', 'the toolbar is a row');
+      assert.equal(await style('#tools', 'zIndex'), '996', 'at the toolbar tier');
+      const tb = await box('#tools');
+      assert.ok(tb.width > tb.height, 'wider than tall');
+      const ltr = await xs();
+      assert.ok(ltr[0] < ltr[1] && ltr[1] < ltr[2], `actions run left to right: ${ltr}`);
+      await tab.evaluate(() => { document.documentElement.dir = 'rtl'; });
+      const rtl = await xs();
+      assert.ok(rtl[0] > rtl[1] && rtl[1] > rtl[2], `under rtl they run right to left: ${rtl}`);
+      await tab.evaluate(() => { document.documentElement.dir = 'ltr'; });
+      await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ trailing: group, bottom: navbar }));
+      for (const id of ['#tg', '#tgi']) {
+        assert.equal(await style(id, 'flexDirection'), 'row', `${id} is a row`);
+        const b = await box(id);
+        assert.ok(b.width > b.height, `${id} is wider than tall`);
+      }
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: below 600px the toolbar floats centered 16px above the navigation bar`, { timeout: 30000 }, async () => {
+    const { browser, tab, box } = await open(type, page(realIcons + `<div id="host">${scaffold({ bottom: navbar })}</div>`), { width: 390 });
+    try {
+      for (const y of [0, 1000]) {
+        await tab.evaluate((y) => window.scrollTo(0, y), y);
+        const tb = await box('#tools');
+        const nb = await box('#nb');
+        near((tb.left + tb.right) / 2, 195, `centered at scroll ${y}`);
+        assert.ok(Math.abs(tb.bottom - (nb.top - 16)) < 2, `16px above the navigation bar at scroll ${y}: ${tb.bottom} vs ${nb.top}`);
+      }
+      await tab.evaluate(() => window.scrollTo(0, 0));
+      await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold());
+      await tab.evaluate(() => window.scrollTo(0, 1000));
+      assert.ok(Math.abs((await box('#tools')).bottom - 784) < 2, 'without a navigation bar, 16px above the window bottom');
+      await tab.evaluate(() => window.scrollTo(0, 0));
+      await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ bottom: navbar }));
+      await tab.evaluate(() => { document.documentElement.style.fontSize = '32px'; window.scrollTo(0, 1000); });
+      assert.ok((await box('#tools')).bottom <= (await box('#nb')).top + 1, 'at 200% text it still clears the taller navigation bar');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: the end of a compact page scrolls clear of the floating toolbar, and focus does too`, { timeout: 30000 }, async () => {
+    const ending = '<main id="pane"><div style="height:2000px">Inbox</div><p id="last">The end</p></main>';
+    const focusing = '<main id="pane"><div style="height:640px">Inbox</div><button type="button" id="low">Archive</button><div style="height:1500px"></div></main>';
+    const { browser, tab, box } = await open(type, page(realIcons + `<div id="host">${scaffold({ bar: header('', 'rail'), main: ending, bottom: navbar })}</div>`), { width: 390 });
+    try {
+      await tab.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+      assert.ok((await box('#last')).bottom <= (await box('#tools')).top + 1, 'the last content ends above the toolbar');
+    } finally {
+      await browser.close();
+    }
+    // The scroll padding keys off a scaffold that is a direct child of <body>.
+    const direct = await open(type, page(realIcons + scaffold({ bar: header('', 'rail'), main: focusing, bottom: navbar })), { width: 390 });
+    try {
+      await direct.tab.locator('#menu').focus();
+      await direct.tab.keyboard.press('Tab');
+      assert.equal(await direct.tab.evaluate(() => document.activeElement?.id), 'low');
+      const low = await direct.box('#low');
+      const tb = await direct.box('#tools');
+      assert.ok(low.bottom <= tb.top + 1, `the focused button clears the toolbar: ${low.bottom} vs ${tb.top}`);
+    } finally {
+      await direct.browser.close();
+    }
+  });
+
+  run(`${name}: below 600px a left tooltip on the floating toolbar shows above its action`, { timeout: 30000 }, async () => {
+    const tip = tools().replace(`id="t0" aria-label="Action 0">${icon('event')}</button>`, `id="t0" aria-label="Action 0">${icon('event')}<span class="tooltip left" role="tooltip">Calendar</span></button>`);
+    const { browser, tab, box } = await open(type, page(realIcons + scaffold({ trailing: tip, bottom: navbar })), { width: 390 });
+    try {
+      await tab.locator('#t0').hover();
+      await tab.waitForTimeout(300);
+      const action = await box('#t0');
+      const bubble = await box('#t0 .tooltip');
+      assert.ok(bubble.bottom <= action.top + 1, `the bubble sits above the action: ${bubble.bottom} vs ${action.top}`);
+      assert.ok(bubble.right > action.left && bubble.left < action.right, 'and over it, not beside it');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: a fixed vertical toolbar keeps its own layout below 600px`, { timeout: 30000 }, async () => {
+    const fixed = tools().replace('class="toolbar vertical"', 'class="toolbar vertical fixed"');
+    const { browser, style } = await open(type, page(scaffold({ trailing: fixed, bottom: navbar })), { width: 390 });
+    try {
+      assert.equal(await style('#tools', 'flexDirection'), 'column');
+    } finally {
+      await browser.close();
+    }
+  });
+
   run(`${name}: the app bar fills from the document's scroll below 600px`, { timeout: 30000 }, async () => {
     const { browser, tab } = await open(type, page(scaffold({ bottom: navbar })), { width: 390 });
     try {
@@ -542,9 +643,10 @@ for (const [name, type, run] of engines) {
     const custom = `<div class="scaffold" id="c"><header>Bar</header><div class="scaffold-rail" id="cr">Rail</div><main id="cp">Pane</main></div>`;
     const { browser, tab, box, style } = await open(type, page(`<div id="host">${scaffold({ bottom: navbar })}</div>`), { width: 390 });
     try {
+      await tab.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
       const main = await box('#pane');
-      assert.ok((await box('#tools')).top >= main.bottom - 1, 'the toolbar follows the pane');
-      assert.ok((await box('#tools')).width < 100, 'without stretching across the window');
+      assert.ok((await box('#tools')).top >= main.bottom - 1, 'at the end of the page the toolbar sits after the pane');
+      assert.ok((await box('#tools')).width < 300, 'without stretching across the window');
       await tab.locator('#tools').scrollIntoViewIfNeeded();
       assert.ok((await box('#tools')).bottom <= 801, 'and can be scrolled into view');
       await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold({ cls: 'tall-rail', bottom: navbar }));
