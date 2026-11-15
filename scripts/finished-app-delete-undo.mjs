@@ -87,7 +87,8 @@ async function checkPage(page, url, dir) {
     ? await page.goto(url).then(() => wait(800)).then(() => twoDeletes(page)).catch((error) => ({ error: firstLine(error) }))
     : null;
   const pass = gate.pass && !gateErrors;
-  return { app: dir, pass, ...gate, reason: gate.reason || (gateErrors ? 'page error' : ''), errors, twoDeletes: second };
+  // gate goes first, so its own pass can't overwrite the one that counts page errors.
+  return { app: dir, ...gate, pass, reason: gate.reason || (gateErrors ? 'page error' : ''), errors, twoDeletes: second };
 }
 
 if (process.argv.length < 3) {
