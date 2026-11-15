@@ -27,7 +27,8 @@
   "failedRuns": [],
   "revisions": 0,
   "notes": [
-    "Neither reviewer reported a finished-app finding. Neither flagged showPage as undocumented; run 2 names it only under CHECKED."
+    "Neither reviewer reported a finished-app finding. Neither flagged showPage as undocumented; run 2 names it only under CHECKED.",
+    "After this run set, code review revised the data table App behavior text: the snippet runs in a DOMContentLoaded handler, the filter URL write waits for typing to pause and keeps the latest query for a page write, a saved page size is restored before sync, and q and page are dropped on a tab change. Both rebuilds ran their own filter inputs rather than data-table-filter, so that path has no rebuild evidence. The runs were not repeated, since the gate (R7) is the URL check, which both pass."
   ],
   "apps": [
     {

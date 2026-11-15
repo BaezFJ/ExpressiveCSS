@@ -41,8 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
   Expressive.DataTables.sync(wrapper);
   Expressive.DataTables.showPage(wrapper, Number(params.get('page')) || 1);
   document.querySelectorAll('.data-table').forEach((each) => {
-    each.addEventListener('expressive:filter', (event) => write({ q: event.detail.query, page: '' }));
-    each.addEventListener('expressive:page', (event) => write({ page: event.detail.page }));
+    let typing, query = params.get('q') ?? '';
+    each.addEventListener('expressive:filter', (event) => { clearTimeout(typing); query = event.detail.query; typing = setTimeout(() => write({ q: query, page: '' }), 300); });
+    each.addEventListener('expressive:page', (event) => { clearTimeout(typing); write({ q: query, page: event.detail.page }); });
   });
 });`;
 

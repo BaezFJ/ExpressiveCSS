@@ -4096,18 +4096,18 @@ Filtering and sorting run before paging. Details consume no page slots and stay 
 
 The first page is the default. An uncanceled filter input or a local sort returns to it. Canceling filter or sort applies no page reset. `Expressive.DataTables.sync(wrapper)` preserves the current page where possible, clamps it after row changes and emits no events. Call it after changing records or removing the size to restore paging-only hidden rows. Explicit local paging can slice server-filtered DOM records without rewriting the application's filter count; it derives totals from DOM records. Page and size controls request `expressive:page` before their local default; cancellation preserves the accepted view.
 
-Page buttons keep focus, including at the first or last page. The framework sets `aria-disabled="true"` at bounds and ignores unavailable activation; buttons stay in the Tab order. Paging never moves focus into a row and emits no filter, sort or selection event. The optional status shows localized numbers such as `1 / 3` in the wrapper's language, or `0 / 0` with no records. Authors supply its accessible name and surrounding language. No numbered controls or page-size selector is generated. Standalone pagination remains CSS-only.
-
-### Server paging
-
-`Expressive.DataTables.setPage(wrapper, { page, pageSize, total })` accepts application page state and opts that wrapper into server ownership. Reuse the local paging markup. The wrapper must be a `.data-table` with a direct native table. Numeric safe integers are required: page and pageSize positive, total nonnegative. Missing fields, strings, fractions, infinities and unsafe integers return false without mutation. Valid state returns true, is copied without modifying the supplied object, clamps the page and reflects pageSize in the wrapper attribute. The setter silently synchronizes status, bounds, selection and columns.
-
 `Expressive.DataTables.showPage(wrapper, page)` shows a local page without events, for example a page restored from the URL after a reload. Call it once the rows exist. It keeps the local filter and sort, clamps a page past the end, supersedes a page request still pending and returns the page it shows, which is 0 when no record is left to show. It returns false, changing nothing, for a server-owned table (one whose `setPage` state was accepted), a table without `data-page-size`, or a page that isn't a positive safe integer.
 
 ```js
 const page = Number(new URLSearchParams(location.search).get('page')) || 1;
 Expressive.DataTables.showPage(document.getElementById('orders'), page);
 ```
+
+Page buttons keep focus, including at the first or last page. The framework sets `aria-disabled="true"` at bounds and ignores unavailable activation; buttons stay in the Tab order. Paging never moves focus into a row and emits no filter, sort or selection event. The optional status shows localized numbers such as `1 / 3` in the wrapper's language, or `0 / 0` with no records. Authors supply its accessible name and surrounding language. No numbered controls or page-size selector is generated. Standalone pagination remains CSS-only.
+
+### Server paging
+
+`Expressive.DataTables.setPage(wrapper, { page, pageSize, total })` accepts application page state and opts that wrapper into server ownership. Reuse the local paging markup. The wrapper must be a `.data-table` with a direct native table. Numeric safe integers are required: page and pageSize positive, total nonnegative. Missing fields, strings, fractions, infinities and unsafe integers return false without mutation. Valid state returns true, is copied without modifying the supplied object, clamps the page and reflects pageSize in the wrapper attribute. The setter silently synchronizes status, bounds, selection and columns.
 
 ```js
 const wrapper = document.getElementById('orders');
@@ -4292,7 +4292,7 @@ The framework fires no event of its own. To keep the choice across visits, save 
 
 ### App behavior
 
-Keep the filter text and page in the URL as query parameters, written with `history.replaceState`. Write the query wherever the app applies it (`expressive:filter` with `{ query }` for a `data-table-filter` input) and drop the page then, since a new query returns to page 1; drop it on an uncanceled `expressive:sort` too. Write `page`, and `pageSize` when a size select exists, on `expressive:page`. With a table in each tab panel, drop `q` and `page` when the tab changes too. On load, in a `DOMContentLoaded` handler, read the whole URL first, then set the search input's `value` and any saved size on the size select's `value` and the wrapper's `data-page-size`, call `Expressive.DataTables.sync(wrapper)`, then `Expressive.DataTables.showPage(wrapper, page)` on the table in the selected panel. Browsers limit how often `replaceState` runs, so write the query after typing pauses. Put URL values into `.value` or `.textContent`, never into markup.
+Keep the filter text and page in the URL as query parameters, via `history.replaceState`. Write the query wherever the app applies it (`expressive:filter` for `data-table-filter`) and drop the page then, since a new query returns to page 1; drop it on an uncanceled `expressive:sort` too. Write `page`, and `pageSize` when a size select exists, on `expressive:page`. With a table per tab panel, also drop both on a tab change. On load, in a `DOMContentLoaded` handler, read the whole URL first, then set the search input's `value` and any saved size on the size select's `value` and the wrapper's `data-page-size`, call `Expressive.DataTables.sync(wrapper)`, then `Expressive.DataTables.showPage(wrapper, page)` on the table in the selected panel. Browsers rate-limit `replaceState`, so write the query once typing pauses. Put URL values in `.value` or `.textContent`, never markup.
 
 ```js
 document.addEventListener('DOMContentLoaded', () => {
@@ -4308,12 +4308,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     history.replaceState(null, '', url);
   };
-  let typing;
+  let typing, query = params.get('q') ?? '';
   wrapper.addEventListener('expressive:filter', (event) => {
     clearTimeout(typing);
-    typing = setTimeout(() => write({ q: event.detail.query, page: '' }), 300);
+    query = event.detail.query;
+    typing = setTimeout(() => write({ q: query, page: '' }), 300);
   });
-  wrapper.addEventListener('expressive:page', (event) => write({ page: event.detail.page }));
+  wrapper.addEventListener('expressive:page', (event) => {
+    clearTimeout(typing);
+    write({ q: query, page: event.detail.page });
+  });
   wrapper.addEventListener('expressive:sort', (event) => { if (!event.defaultPrevented) write({ page: '' }); });
 });
 ```
@@ -7505,7 +7509,7 @@ Primary tabs stack the icon above the label (64dp). Add `horizontal` to put them
 
 ### App behavior
 
-Keep the selected tab in the URL, so a reload, a shared link and Back show the same view. Give each tab set its own query parameter, such as `?view=shipped`, and write it with `history.replaceState` from an `expressive:change` listener on the `.tabs` element; data tables and menus fire the same event name. On load, read the whole URL first, then move `.active` to the tab it names before `AutoInit()`. Tabs starts on `a.active` and fires nothing for it, so draw that tab's content yourself after init. Calling `select(id)` after init also works, but it runs your own listeners. A hash naming the panel needs no script, but a shared link then scrolls to the panel and the hash holds only one tab set. Don't push a history entry per change.
+Keep the selected tab in the URL, so a reload, a shared link and Back show the same view. Give each tab set its own query parameter, such as `?view=shipped`, and write it with `history.replaceState` from an `expressive:change` listener on the `.tabs` element; data tables and menus fire the same event name. On load, read the whole URL first, then move `.active` to the tab it names before `AutoInit()`. Tabs starts on `a.active` and fires nothing for it, so draw that tab's content yourself after init. Calling `select(id)` after init also works, but it runs your own listeners. A hash naming the panel needs no script, and Tabs prefers it over `.active`, but a shared link then scrolls to the panel and the hash holds only one tab set. Don't push a history entry per change.
 
 ```js
 const tabs = document.getElementById('order-tabs');
@@ -7517,6 +7521,7 @@ if (link) {
 }
 Expressive.AutoInit();
 tabs.addEventListener('expressive:change', (event) => {
+  if (event.target !== tabs) return;
   const url = new URL(location.href);
   url.searchParams.set('view', event.detail.panel.id);
   history.replaceState(null, '', url);

@@ -39,6 +39,7 @@ async function reachSecondPage(page) {
   if (!(await search.count())) return { reason: 'no visible search field' };
   for (const letter of LETTERS) {
     await search.fill(letter);
+    // Longer than the 300ms typing pause the data table guide waits before writing the URL.
     await wait(400);
     const next = await enabledNext(page);
     if (!next) continue;

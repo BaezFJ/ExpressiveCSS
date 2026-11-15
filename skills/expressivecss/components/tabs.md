@@ -9,7 +9,7 @@ Component ID: `tabs`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `5e49fdf46081625a7c99e8f55f00f39dfb5ac1e1ac25ecef32a4864392ff3666`
+Contract SHA-256: `94ad8c1ab5e6f18b891da6d6b0937d3b65c3fc5a662528d3cf1b1573eb2dfec4`
 
 #### Selection and adaptation
 
@@ -84,7 +84,7 @@ Tokens follow the [M3 tabs spec](https://m3.material.io/components/tabs/specs). 
 
 #### App behavior
 
-Keep the selected tab in the URL, so a reload, a shared link and Back show the same view. Give each tab set its own query parameter, such as `?view=shipped`, and write it with `history.replaceState` from an `expressive:change` listener on the `.tabs` element; data tables and menus fire the same event name. On load, read the whole URL first, then move `.active` to the tab it names before `AutoInit()`. Tabs starts on `a.active` and fires nothing for it, so draw that tab's content yourself after init. Calling `select(id)` after init also works, but it runs your own listeners. A hash naming the panel needs no script, but a shared link then scrolls to the panel and the hash holds only one tab set. Don't push a history entry per change.
+Keep the selected tab in the URL, so a reload, a shared link and Back show the same view. Give each tab set its own query parameter, such as `?view=shipped`, and write it with `history.replaceState` from an `expressive:change` listener on the `.tabs` element; data tables and menus fire the same event name. On load, read the whole URL first, then move `.active` to the tab it names before `AutoInit()`. Tabs starts on `a.active` and fires nothing for it, so draw that tab's content yourself after init. Calling `select(id)` after init also works, but it runs your own listeners. A hash naming the panel needs no script, and Tabs prefers it over `.active`, but a shared link then scrolls to the panel and the hash holds only one tab set. Don't push a history entry per change.
 
 ```js
 const tabs = document.getElementById('order-tabs');
@@ -96,6 +96,7 @@ if (link) {
 }
 Expressive.AutoInit();
 tabs.addEventListener('expressive:change', (event) => {
+  if (event.target !== tabs) return;
   const url = new URL(location.href);
   url.searchParams.set('view', event.detail.panel.id);
   history.replaceState(null, '', url);
