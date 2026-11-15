@@ -23,7 +23,7 @@ Done when V2 passes.
 
 Covers R6. Checks V3.
 
-- [ ] Write `scripts/finished-app-url-state.mjs`, its npm script and its browser test with two fixtures; run it on both baseline dashboards (both should fail).
+- [x] Write `scripts/finished-app-url-state.mjs`, its npm script and its browser test with two fixtures; run it on both baseline dashboards (both should fail).
 
 Done when V3 passes.
 
