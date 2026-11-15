@@ -288,8 +288,9 @@ const LegacyPatternList = [
     id: 'viewport-zoom-disabled',
     severity: 'high',
     description: 'This viewport stops people from zooming, so they cannot enlarge text (WCAG 1.4.4 Resize Text). Use `width=device-width, initial-scale=1` and drop `maximum-scale` and `user-scalable`.',
-    // Chromium reads any user-scalable value but yes, device-width, device-height or a number at least 1 away from 0 as off; gaps are capped so an unclosed tag stays linear.
-    pattern: /<meta\b(?=[^<>]{0,500}?(?<![-\w])name\s*=\s*["']?viewport(?![-\w]))[^<>]{0,500}?(?<![-\w])content\s*=\s*(["'])(?:(?!\1)[^<>]){0,500}?(?<![-\w])(?:user-scalable\s*=\s*(?!\s|yes(?![-\w.])|device-(?:width|height)(?![-\w])|-?0*[1-9])|maximum-scale\s*=\s*(?:0*1(?:\.0*)?|0*\.\d+|0+\.?)(?![\d.]))/giu,
+    // Chromium reads any user-scalable value but yes, device-width, device-height or a number at least 1 away from 0 as off, and maximum-scale=no or yes as 0 or 1.
+    // It splits values on spaces, `,` and `=` but not `;`, so `yes;` is off too. Gaps are capped so an unclosed tag stays linear.
+    pattern: /<meta\b(?=[^<>]{0,500}?(?<![-\w])name\s*=\s*["']?viewport(?![-\w]))[^<>]{0,500}?(?<![-\w])content\s*=\s*(["'])(?:(?!\1)[^<>]){0,500}?(?<![-\w])(?:user-scalable\s*=\s*(?!\s|(?:yes|device-(?:width|height))(?=[\s,=]|\1)|-?0*[1-9])|maximum-scale\s*=\s*(?:no|yes|0*1(?:\.0*)?|0*\.\d+|0+\.?)(?![\d.]))/giu,
   },
 ];
 
