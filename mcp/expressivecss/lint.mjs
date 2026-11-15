@@ -2,8 +2,8 @@
 /**
  * Command-line front end for the static checks `rules_enforcer` runs: the
  * bundled semantics rules, the legacy and retired-markup patterns, raw colors
- * in component declarations, a transition on the `all` keyword, and the
- * initialization and teardown checks.
+ * in component declarations, a transition on the `all` keyword, a viewport
+ * that stops zoom, and the initialization and teardown checks.
  *
  *   expressivecss-lint <file>...     Report findings; exit 1 when any.
  *   expressivecss-lint --hook        Read a Claude Code PostToolUse payload on

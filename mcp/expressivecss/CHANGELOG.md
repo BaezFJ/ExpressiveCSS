@@ -2,12 +2,17 @@
 
 ## Unreleased
 
-- The lint, `rules_enforcer` and `quality_inspector` report `transition-all`
-  (medium) for a `transition` or `transition-property` whose value names
-  `all`, in `style` attributes, `<style>` blocks and stylesheets passed to
-  `expressivecss-lint`. List the animated properties instead. A file that
-  passed before can now report this finding, so CI or a `--hook` setup that
-  runs the lint fails on it.
+- The lint, `rules_enforcer` and `quality_inspector` report two new
+  findings. `transition-all` (medium) flags a `transition` or
+  `transition-property` whose value names `all`, in `style` attributes,
+  `<style>` blocks and stylesheets passed to `expressivecss-lint`; list the
+  animated properties instead. `viewport-zoom-disabled` (high) flags a
+  viewport `<meta>` tag that sets `maximum-scale` at or below 1 or
+  `user-scalable` to anything Chromium reads as off, such as `no`, `0` or
+  `false`, because it stops pinch zoom; use
+  `width=device-width, initial-scale=1`. A file that passed before can now
+  report these findings, so CI or a `--hook` setup that runs the lint fails
+  on them.
 
 ## 0.5.2 - 2026-11-14
 
