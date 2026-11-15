@@ -477,7 +477,8 @@ header:has(> #{$_bar}) {
 
   @supports (animation-timeline: scroll()) {
     animation: top-app-bar-scroll linear both;
-    animation-timeline: scroll(root);
+    // A scaffold points this at its pane's scroll timeline.
+    animation-timeline: var(--md-comp-top-app-bar-timeline, scroll(root));
     animation-range: 0 8px;
   }
 }

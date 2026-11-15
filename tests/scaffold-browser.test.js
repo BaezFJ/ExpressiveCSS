@@ -97,9 +97,14 @@ for (const [name, type, run] of engines) {
       assert.deepEqual([cr.left, cr.top, cr.width], [0, 50, 100], 'the rail class leads the second row');
       assert.deepEqual([cp.left, cp.right, cp.top, cp.bottom], [100, 1220, 50, 800], 'the pane class fills the middle');
       assert.deepEqual([ct.right, ct.top, ct.bottom], [1280, 50, 800], 'the trailing class fills its region');
+      await tab.locator('#cr').evaluate((el) => { el.innerHTML = '<div style="height:2000px">Long</div>'; });
+      assert.ok(await tab.locator('#cr').evaluate((el) => { el.scrollTop = 300; return el.scrollTop > 0; }), 'custom rail content scrolls');
 
       await render(scaffold({ trailing: group }));
       near(1280 - (await box('#tg')).right, 24, 'a toolbar group takes the trailing region');
+
+      await render(scaffold({ trailing: tools().replace('toolbar vertical', 'toolbar vertical fixed right') }));
+      near(1280 - (await box('#tools')).right, 24, 'a fixed toolbar keeps its own inset and gets no scaffold margin');
 
       await render(scaffold({ bar: header('medium') }));
       const before = await Promise.all(['#bar', '#rail', '#pane', '#tools'].map(box));
@@ -161,7 +166,7 @@ for (const [name, type, run] of engines) {
         for (const id of ['#b1', '#b2']) {
           assert.ok(await tab.locator(id).evaluate((el) => { el.scrollTop = 300; return el.scrollTop > 0; }), `${id} scrolls`);
         }
-        assert.equal(await tab.locator('#pane').evaluate((el) => el.scrollTop), 0, 'the pane region itself does not scroll');
+        assert.ok(await tab.locator('#pane').evaluate((el) => el.scrollHeight <= el.clientHeight + 1), 'the pane region itself does not overflow');
         assert.equal(await tab.evaluate(() => window.scrollY), 0, 'nor does the window');
       } finally {
         await browser.close();

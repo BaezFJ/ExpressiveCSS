@@ -32,7 +32,9 @@ test('a full scaffold, one with a second hidden main, and one of region classes 
 for (const [name, html, id] of [
   ['a main scaffold', shell('<div>Pane</div>', 'main'), 'scaffold-is-not-a-landmark'],
   ['a scaffold with a role', shell('<main>Pane</main>', 'div', ' role="application"'), 'scaffold-is-not-a-landmark'],
+  ['a search scaffold', shell('<main>Pane</main>', 'search'), 'scaffold-is-not-a-landmark'],
   ['two visible mains', shell('<main>One</main><main>Two</main>'), 'scaffold-one-child-per-region'],
+  ['a main beside an until-found main', shell('<main>One</main><main hidden="until-found">Two</main>'), 'scaffold-one-child-per-region'],
   ['main beside a region-class pane', shell('<main>One</main><div class="scaffold-pane">Two</div>'), 'scaffold-one-child-per-region'],
   ['two headers', shell(`${bar}${bar}<main>Pane</main>`), 'scaffold-one-child-per-region'],
   ['two rails', shell(`${rail}${rail}<main>Pane</main>`), 'scaffold-one-child-per-region'],

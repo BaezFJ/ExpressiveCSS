@@ -24,7 +24,7 @@ The design skill's [scaffold reference](../../../../../skills/expressivecss/expr
 
 A CSS-only component:
 
-- `.scaffold`, a grid as tall as the window. Its first row is the bar region across the full width; its second row holds the rail, pane and trailing regions.
+- `.scaffold` on a `<div>` inside `<body>`, a grid as tall as the window. Its first row is the bar region across the full width; its second row holds the rail, pane and trailing regions.
 - Direct children placed by component: a `header` in the bar region, a `.navigation-rail` in the rail region, `main` in the pane region, and a `.toolbar.vertical` or `.toolbar-group.vertical` in the trailing region.
 - Region classes for custom content that isn't one of those components: `.scaffold-bar`, `.scaffold-rail`, `.scaffold-pane` and `.scaffold-trailing`.
 - Only the pane region scrolls. The rail scrolls its own destinations when they don't fit.
@@ -63,18 +63,18 @@ These belong to later phases of the milestone, or stay out:
 
 - **R1** `.scaffold` is a grid whose areas are `bar` across the first row and `rail`, `pane` and `trailing` across the second. Columns are `auto minmax(0, 1fr) auto` and rows `auto minmax(0, 1fr)`. It is `block-size: 100dvh` and `overflow: clip`, so at 1280px the document does not scroll.
 - **R2** Direct children take regions by component: `header` and `.scaffold-bar` take `bar`, `.navigation-rail` and `.scaffold-rail` take `rail`, `main` and `.scaffold-pane` take `pane`, and `.toolbar.vertical`, `.toolbar-group.vertical` and `.scaffold-trailing` take `trailing`. An empty region takes no space: without a rail or toolbar the pane meets that edge, and without a bar the second row starts at the top. The zero-size sentinel `AppBar` inserts after a flexible bar moves no region.
-- **R3** The pane region is the scroll container: `overflow: auto`, `min-block-size: 0` and `min-inline-size: 0`. Scrolling a long pane leaves the bar, rail and toolbar where they were.
+- **R3** The pane region is the scroll container (`overflow: auto`, whose automatic minimum size is 0). Scrolling a long pane leaves the bar, rail and toolbar where they were. Custom `.scaffold-rail` and `.scaffold-trailing` content scrolls when it doesn't fit.
 - **R4** A `.navigation-rail` in a scaffold runs from the bar's bottom edge to the window's bottom edge, and scrolls its own destinations when they don't fit. At 1280px, `.expanded` widens the rail column and narrows the pane by the same amount, with no overlap.
 - **R5** A vertical toolbar or toolbar group in a scaffold is centered vertically in the trailing region and sits `--md-comp-toolbar-external-space` (24px when not set) from the window edge and from the pane. When it is taller than the region, its first action stays inside the region.
 - **R6** A `.panes` layout inside the scaffold's `main`, and a `main.panes`, is as tall as the pane region, and each pane scrolls on its own.
 - **R7** Under `dir="rtl"` the rail sits at the right edge and the toolbar at the left.
-- **R8** In engines that support `timeline-scope`, a top app bar in a scaffold takes its scrolled fill from the pane area's scroll: at rest when the pane is at the top, `surface-container` once it has scrolled 8px. Chromium supports it, so the check must run there.
+- **R8** In engines that support `timeline-scope`, a top app bar in a scaffold takes its scrolled fill from the pane area's scroll, through a `--md-comp-top-app-bar-timeline` property the app bar reads (falling back to `scroll(root)`): at rest when the pane is at the top, `surface-container` once it has scrolled 8px. Chromium supports it, so the check must run there.
 - **R9** Text enlarged to 200% grows the bar through its existing `rem()` sizes, the pane still scrolls, and the rail's destinations can still be scrolled into view.
 - **R10** In print, the scaffold and its pane area drop their fixed height and overflow, so the whole pane prints. The rail already hides in print.
 - **R11** Every selector this phase adds starts at `.scaffold` or a region class. Outside a scaffold, a navigation rail is still at least `100dvh` tall, a top app bar keeps its `scroll(root)` timeline, and a vertical toolbar keeps no margin.
 - **R12** A `scaffold` row in `semantics.json` is `enforced`, with these `fragmentSafe` `forbid` rules:
   - The scaffold is not a landmark: neither a landmark element (`main`, `nav`, `header`, `footer`, `aside`, `section`) nor a landmark, `region`, `document` or `application` role. Listing the roles instead of `[role]` keeps the rule from blocking the composite roles, which the semantics test would make the row account for.
-  - It holds at most one visible child per region. Two visible bar, rail, pane or trailing children (`:not([hidden])`) would overlap in one area.
+  - It holds at most one visible child per region. Two visible bar, rail, pane or trailing children would overlap in one area. `hidden="until-found"` still takes part in layout, so it counts as visible.
   - Scaffolds don't nest: `.scaffold .scaffold`.
 - **R13** The docs page `docs/src/pages/scaffold.astro` is listed in `docs/src/data/nav.ts` after Panes. It shows the four regions, the region classes, `.panes` inside `main`, RTL, scrolling, the app bar fill, `tabindex="-1"` on `main` with a skip link, and the excluded limits (flexible bar, back-to-top, rail panel, container queries). Its bounded live demo keeps the docs page to one `main` landmark.
 - **R14** These records change:

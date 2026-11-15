@@ -52,3 +52,18 @@ A "full scaffold" below is a `.scaffold` holding a top app bar (`header > .bar` 
 ## Review record
 
 - 2026-11-15, spec review by an independent read-only subagent (Plan agent) against the source. Nine findings, each checked against the source and all confirmed: the app bar override needed a named (0,2,1) selector and a stated scroller; print had to free `main` as well; `AppBar` and `BackToTop` read the window scroll; a scrolling toolbar would clip `.tooltip.left` bubbles, and the rail panel covers the bar; `.panes` follows the viewport, not the pane; V17 expected a toolbar landmark that doesn't exist; two children in one region were unstated; `overflow: hidden` still lets focus scroll the shell, and keyboard scrolling of the pane was unstated; and smaller claim and check gaps (template count, "prefer document scrolling", `fragmentSafe`, compiled-selector scope, rail at enlarged text, changelog, a skip branch that couldn't fail). Fixed in all three documents: R2, R5, R8 to R16, the exclusions, the decisions table and V1 to V19. The flexible-bar collapse, back-to-top, rail panel and pane container queries are excluded with the reason and a docs note.
+
+- 2026-11-15, `/code-review high --fix --max-findings all` on `017408139..HEAD`: 13 findings, each checked against the source. Fixed, with a test where behavior changed:
+  - A `.toolbar.vertical.fixed` child got the margin on top of its own 24px inset. The margin rule now skips `.fixed`, and a browser assertion covers it.
+  - The docs page's unlayered `animation: none` on embedded app bars stopped the demo bar's fill. `docs/static/docs.css` reverts it for a scaffold's bar.
+  - The demo pane had `tabindex="-1"` and nothing focusable. It is now a named, focusable region.
+  - The demo's `.outlined` class drew nothing. It is now an inline border.
+  - The landmark rule missed `search` and `form`. Added, with a fixture.
+  - The panes test compared the region with itself and never tried to scroll it. It now checks that the region has no overflow.
+  - The smoke message claimed every slug. It now says the first 100.
+  - `body.scaffold` moves the body's overflow to the viewport, so the shell stops clipping. The docs, `llm.md`, the semantics note and the partial now say to use a `<div>` inside `<body>`.
+  - The one-child-per-region rule skipped `hidden="until-found"`, which still takes part in layout. It now counts as visible, with a fixture.
+  - The app bar override copied a looser app bar selector and relied on a specificity gap. `_navbar.scss` now reads `--md-comp-top-app-bar-timeline` with a `scroll(root)` fallback, and the scaffold sets that property. Its capability pin was already stale at the base, so it is not re-pinned.
+  - Custom `.scaffold-rail` content was clipped. Custom rail and trailing content now scrolls, with an assertion.
+  - The pane's `min-inline-size: 0` and `min-block-size: 0` did nothing, since a scroll container's automatic minimum is already 0. Removed, and R3 now says so.
+  Kept on purpose: a trailing toolbar taller than its region is clipped at the bottom. Scrolling it would clip the `.tooltip.left` bubbles a trailing toolbar uses (the spec decision). The docs, `llm.md` and the partial now state the limit, and phase 93 moves the toolbar on compact windows. Rechecked: both scaffold suites, semantics, component decisions, skill, selective builds (92,071, +301) and docs coverage pass.

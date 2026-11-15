@@ -242,6 +242,11 @@ main:focus {
   animation: none;
 }
 
+/* A scaffold demo's bar fills from its own pane's scroll, not the page's. */
+.docs-page-content .scaffold > header:has(> :is(nav, .bar)) {
+  animation: revert-layer;
+}
+
 .docs-page-content .docs-section-title {
   max-width: 28ch;
   margin-bottom: 1rem;

@@ -5063,10 +5063,10 @@ Set these on the container to resize a layout.
 
 Places an app shell's bar, navigation rail, pane and trailing toolbar, so a page needs no shell grid of its own.
 
-Put `.scaffold` on a `<div>` or on `<body>`. Its direct children are placed by component: a `<header>` top app bar spans the top, and a `.navigation-rail`, `<main>` and a `.toolbar.vertical` (or `.toolbar-group.vertical`) share the row below it, from the leading edge to the trailing one. The scaffold is as tall as the window (`100dvh`) and only `<main>` scrolls; a rail with more destinations than fit scrolls them itself. The components keep their own look and behavior. CSS only; there is no JavaScript component and nothing to AutoInit.
+Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself: the browser moves the body's overflow to the viewport, and the shell stops clipping. Its direct children are placed by component: a `<header>` top app bar spans the top, and a `.navigation-rail`, `<main>` and a `.toolbar.vertical` (or `.toolbar-group.vertical`) share the row below it, from the leading edge to the trailing one. The scaffold is as tall as the window (`100dvh`) and only `<main>` scrolls; a rail with more destinations than fit scrolls them itself. The components keep their own look and behavior. CSS only; there is no JavaScript component and nothing to AutoInit.
 
 ```html
-<body class="scaffold">
+<div class="scaffold">
   <header>
     <a class="visually-hidden-focusable" href="#main">Skip to content</a>
     <div class="bar">
@@ -5084,7 +5084,7 @@ Put `.scaffold` on a `<div>` or on `<body>`. Its direct children are placed by c
   <div class="toolbar vertical">
     <button type="button" aria-label="Calendar"><span class="material-symbols" aria-hidden="true">calendar_month</span></button>
   </div>
-</body>
+</div>
 ```
 
 Each region takes one direct child. For custom content use the region classes `scaffold-bar`, `scaffold-rail`, `scaffold-pane` and `scaffold-trailing`. A region with nothing in it takes no space. A second visible child in one region overlaps the first, so give the ones not shown `hidden`. Other direct children are not placed and fall into a free grid cell, so keep a skip link inside the `<header>`.
@@ -5111,9 +5111,9 @@ Put a `panes` layout inside `<main>`, or put the panes classes on `<main>` itsel
 
 Give `<main>` `tabindex="-1"` and a skip link so keyboard users can move into the pane and scroll it. A top app bar fills with `surface-container` once `<main>` has scrolled, in browsers that support `timeline-scope`; elsewhere, and when a panes layout scrolls inside `<main>`, it stays at rest. Printing drops the fixed height so the whole pane prints.
 
-The scaffold adds no landmark: the `<header>` is the banner, the rail a navigation landmark and `<main>` the main landmark. Never write it as a landmark element or give it a landmark role, and never nest one scaffold in another.
+The scaffold adds no landmark: the `<header>` is the banner, the rail a navigation landmark and `<main>` the main landmark. Never write it as a landmark element or give it a landmark role, and never nest one scaffold in another. `hidden="until-found"` still takes part in layout, so it counts as a visible child.
 
-Limits: `.medium` and `.large` app bars and `back-to-top` follow the window's scroll, so in a scaffold the bar stays expanded and the link never appears. A rail's side panel spans the window height and opens over the bar.
+Limits: `.medium` and `.large` app bars and `back-to-top` follow the window's scroll, so in a scaffold the bar stays expanded and the link never appears. A rail's side panel spans the window height and opens over the bar. A trailing toolbar taller than its region is clipped at the bottom, so keep it to the actions that fit. Custom `scaffold-rail` and `scaffold-trailing` content scrolls when it doesn't fit.
 
 ---
 

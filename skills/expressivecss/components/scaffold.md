@@ -9,7 +9,7 @@ Component ID: `scaffold`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `aafc693542894bc0d7012fd01a32fe4fc36bdd4236fa52335461c065fca18565`
+Contract SHA-256: `d3881e061d34664e0ed676226cd436e40993dce2a8ceeed2b1aa3964f75b72a0`
 
 #### Selection and adaptation
 
@@ -37,12 +37,12 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Places an app shell's bar, navigation rail, pane and trailing toolbar, so a page needs no shell grid of its own.
 
-Put `.scaffold` on a `<div>` or on `<body>`. Its direct children are placed by component: a `<header>` top app bar spans the top, and a `.navigation-rail`, `<main>` and a `.toolbar.vertical` (or `.toolbar-group.vertical`) share the row below it, from the leading edge to the trailing one. The scaffold is as tall as the window (`100dvh`) and only `<main>` scrolls; a rail with more destinations than fit scrolls them itself. The components keep their own look and behavior. CSS only; there is no JavaScript component and nothing to AutoInit.
+Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself: the browser moves the body's overflow to the viewport, and the shell stops clipping. Its direct children are placed by component: a `<header>` top app bar spans the top, and a `.navigation-rail`, `<main>` and a `.toolbar.vertical` (or `.toolbar-group.vertical`) share the row below it, from the leading edge to the trailing one. The scaffold is as tall as the window (`100dvh`) and only `<main>` scrolls; a rail with more destinations than fit scrolls them itself. The components keep their own look and behavior. CSS only; there is no JavaScript component and nothing to AutoInit.
 
 #### Syntax
 
 ```html
-<body class="scaffold">
+<div class="scaffold">
   <header>
     <a class="visually-hidden-focusable" href="#main">Skip to content</a>
     <div class="bar">
@@ -60,13 +60,13 @@ Put `.scaffold` on a `<div>` or on `<body>`. Its direct children are placed by c
   <div class="toolbar vertical">
     <button type="button" aria-label="Calendar"><span class="material-symbols" aria-hidden="true">calendar_month</span></button>
   </div>
-</body>
+</div>
 ```
 
 #### Rules
 
-- `scaffold-is-not-a-landmark`: Write the scaffold as a <div> or put the class on <body>. Its header, navigation rail and main are the landmarks; a role on the scaffold would wrap them in another one.
-- `scaffold-one-child-per-region`: Each scaffold region holds one visible child: one header or .scaffold-bar, one navigation rail or .scaffold-rail, one main or .scaffold-pane, and one vertical toolbar or .scaffold-trailing. A second one lands in the same grid area and overlaps the first. Add hidden to the ones not shown.
+- `scaffold-is-not-a-landmark`: Write the scaffold as a <div> inside <body>. Its header, navigation rail and main are the landmarks; a role on the scaffold would wrap them in another one.
+- `scaffold-one-child-per-region`: Each scaffold region holds one visible child: one header or .scaffold-bar, one navigation rail or .scaffold-rail, one main or .scaffold-pane, and one vertical toolbar or .scaffold-trailing. A second one lands in the same grid area and overlaps the first. Add hidden to the ones not shown; hidden="until-found" still takes part in layout, so it counts as shown.
 - `scaffold-does-not-nest`: A scaffold is as tall as the window and holds the page's one main, so it can't sit inside another. Use panes or the grid inside the scaffold's main.
 
 #### Guide checks

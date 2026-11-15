@@ -738,7 +738,7 @@ async function verifyComponentResources(catalogueToolPayload, consumerRoots) {
   const noArgument = { completion: { values: [], hasMore: false } };
   const assertCompletion = async (peer) => {
     for (const template of [guideTemplate, sectionTemplate]) {
-      assert.deepEqual(await complete(peer, template, 'slug', ''), completed(slugs), `${template} lists every canonical slug`);
+      assert.deepEqual(await complete(peer, template, 'slug', ''), completed(slugs), `${template} lists the first 100 canonical slugs`);
       assert.deepEqual(await complete(peer, template, 'slug', 'ca'), completed(['calendar', 'cards', 'carousel', 'cascader']));
       assert.deepEqual(await complete(peer, template, 'slug', 'CA'), completed(['calendar', 'cards', 'carousel', 'cascader']), 'slug prefixes ignore case');
       assert.deepEqual(await complete(peer, template, 'slug', 's'), completed(slugs.filter((slug) => slug.startsWith('s'))));

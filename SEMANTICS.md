@@ -1185,16 +1185,16 @@ Added with the sankey chart component. The <table> is the chart's text alternati
 
 ### scaffold
 
-Added with the scaffold. A layout container that places an app bar, navigation rail, main and trailing vertical toolbar it holds as direct children. The landmarks belong to those children, so the scaffold is a plain <div> or the <body>.
+Added with the scaffold. A layout container that places an app bar, navigation rail, main and trailing vertical toolbar it holds as direct children. The landmarks belong to those children, so the scaffold is a plain <div>.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
-| `scaffold-is-not-a-landmark` | forbid | `.scaffold:is(main, nav, header, footer, aside, section, [role="application"], [role="banner"], [role="complementary"], [role="contentinfo"], [role="document"], [role="main"], [role="navigation"], [role="region"])` | must not match |
-| `scaffold-one-child-per-region` | forbid | `.scaffold > :is(header, .scaffold-bar):not([hidden]) ~ :is(header, .scaffold-bar):not([hidden]), .scaffold > :is(.navigation-rail, .scaffold-rail):not([hidden]) ~ :is(.navigation-rail, .scaffold-rail):not([hidden]), .scaffold > :is(main, .scaffold-pane):not([hidden]) ~ :is(main, .scaffold-pane):not([hidden]), .scaffold > :is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing):not([hidden]) ~ :is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing):not([hidden])` | must not match |
+| `scaffold-is-not-a-landmark` | forbid | `.scaffold:is(main, nav, header, footer, aside, section, search, form, [role="application"], [role="banner"], [role="complementary"], [role="contentinfo"], [role="document"], [role="form"], [role="main"], [role="navigation"], [role="region"], [role="search"])` | must not match |
+| `scaffold-one-child-per-region` | forbid | `.scaffold > :is(header, .scaffold-bar):not([hidden]:not([hidden="until-found" i])) ~ :is(header, .scaffold-bar):not([hidden]:not([hidden="until-found" i])), .scaffold > :is(.navigation-rail, .scaffold-rail):not([hidden]:not([hidden="until-found" i])) ~ :is(.navigation-rail, .scaffold-rail):not([hidden]:not([hidden="until-found" i])), .scaffold > :is(main, .scaffold-pane):not([hidden]:not([hidden="until-found" i])) ~ :is(main, .scaffold-pane):not([hidden]:not([hidden="until-found" i])), .scaffold > :is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing):not([hidden]:not([hidden="until-found" i])) ~ :is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing):not([hidden]:not([hidden="until-found" i]))` | must not match |
 | `scaffold-does-not-nest` | forbid | `.scaffold .scaffold` | must not match |
 
-- **scaffold-is-not-a-landmark** - Write the scaffold as a <div> or put the class on <body>. Its header, navigation rail and main are the landmarks; a role on the scaffold would wrap them in another one.
-- **scaffold-one-child-per-region** - Each scaffold region holds one visible child: one header or .scaffold-bar, one navigation rail or .scaffold-rail, one main or .scaffold-pane, and one vertical toolbar or .scaffold-trailing. A second one lands in the same grid area and overlaps the first. Add hidden to the ones not shown.
+- **scaffold-is-not-a-landmark** - Write the scaffold as a <div> inside <body>. Its header, navigation rail and main are the landmarks; a role on the scaffold would wrap them in another one.
+- **scaffold-one-child-per-region** - Each scaffold region holds one visible child: one header or .scaffold-bar, one navigation rail or .scaffold-rail, one main or .scaffold-pane, and one vertical toolbar or .scaffold-trailing. A second one lands in the same grid area and overlaps the first. Add hidden to the ones not shown; hidden="until-found" still takes part in layout, so it counts as shown.
 - **scaffold-does-not-nest** - A scaffold is as tall as the window and holds the page's one main, so it can't sit inside another. Use panes or the grid inside the scaffold's main.
 
 ### scatter-chart

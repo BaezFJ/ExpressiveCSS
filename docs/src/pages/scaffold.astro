@@ -22,8 +22,10 @@ const S = defineSections([
           own look and behavior; the scaffold only decides where each one goes.
         </p>
         <p>
-          Put <code>.scaffold</code> on a <code>&lt;div&gt;</code> or on
-          <code>&lt;body&gt;</code>. Its direct children are placed by what
+          Put <code>.scaffold</code> on a <code>&lt;div&gt;</code> that is a
+          child of <code>&lt;body&gt;</code>. Not on <code>&lt;body&gt;</code>
+          itself: the browser moves the body's overflow to the window, and the
+          shell stops clipping. Its direct children are placed by what
           they are: the top app bar <code>&lt;header&gt;</code> spans the top,
           and the <a href="navigation-rail.html">navigation rail</a>,
           <code>&lt;main&gt;</code> and a vertical
@@ -33,7 +35,7 @@ const S = defineSections([
           CSS only.
         </p>
         <div data-markdown-ignore>
-          <div class="scaffold outlined" style="block-size: 26rem">
+          <div class="scaffold" style="block-size: 26rem; border: 1px solid var(--md-sys-color-outline-variant)">
             <header>
               <div class="bar">
                 <button type="button" aria-label="Main menu">
@@ -47,9 +49,9 @@ const S = defineSections([
               <a href="#regions"><span class="material-symbols" aria-hidden="true">star</span>Starred</a>
               <a href="#scrolling"><span class="material-symbols" aria-hidden="true">send</span>Sent</a>
             </nav>
-            <div class="scaffold-pane" tabindex="-1">
+            <div class="scaffold-pane" tabindex="0" role="region" aria-labelledby="scaffold-demo-inbox">
               <div class="p-4">
-                <h3>Inbox</h3>
+                <h3 id="scaffold-demo-inbox">Inbox</h3>
                 <p>The pane scrolls on its own. The bar, rail and toolbar stay where they are.</p>
                 <p style="block-size: 40rem">Keep scrolling.</p>
                 <p>End of the inbox.</p>
@@ -68,7 +70,7 @@ const S = defineSections([
           <code>&lt;main&gt;</code>. In an app, write it like this:
         </p>
 <Code code={`
-<body class="scaffold">
+<div class="scaffold">
   <header>
     <a class="visually-hidden-focusable" href="#main">Skip to content</a>
     <div class="bar">
@@ -86,7 +88,7 @@ const S = defineSections([
   <div class="toolbar vertical">
     <button type="button" aria-label="Calendar"><span class="material-symbols" aria-hidden="true">calendar_month</span></button>
   </div>
-</body>
+</div>
 `} />
   </Section>
   <Section {...S.regions}>
@@ -190,6 +192,12 @@ const S = defineSections([
             over the bar.
           </li>
           <li>
+            A trailing toolbar taller than its region is cut off at the
+            bottom, so keep it to the actions that fit. Custom
+            <code>.scaffold-rail</code> and <code>.scaffold-trailing</code>
+            content scrolls instead.
+          </li>
+          <li>
             Other children aren't placed. They fill whatever grid cell is free.
           </li>
         </ul>
@@ -199,8 +207,7 @@ const S = defineSections([
           The scaffold adds no landmark. Its <code>&lt;header&gt;</code> is the
           page's banner, the navigation rail is a navigation landmark, and
           <code>&lt;main&gt;</code> is the main landmark, in that order. Write
-          the scaffold as a <code>&lt;div&gt;</code> or on
-          <code>&lt;body&gt;</code>, never as a landmark element or with a
+          the scaffold as a <code>&lt;div&gt;</code>, never as a landmark element or with a
           landmark role. A page has one scaffold; use panes or the grid inside
           <code>&lt;main&gt;</code> for more columns.
         </p>
