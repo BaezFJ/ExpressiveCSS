@@ -37,6 +37,10 @@
 
 // Expanded rail as an overlay with a scrim.
 @mixin _modal-rail {
+  // Tells the runtime this rail is an overlay, whatever breakpoints or
+  // classes put it there, so Escape and the scrim close it.
+  --_nav-rail-modal: 1;
+
   position: fixed;
   inset-block: 0;
   inset-inline: 0 auto;
@@ -88,6 +92,9 @@
   // from its docked edge, so an overshoot only widens it for a moment.
   --md-comp-nav-rail-motion: var(--md-sys-motion-spring-default-spatial);
   --md-comp-nav-rail-motion-duration: var(--md-sys-motion-spring-default-spatial-duration);
+
+  // 1 while the rail is drawn as an overlay (see _modal-rail).
+  --_nav-rail-modal: 0;
 
   box-sizing: border-box;
   display: flex;

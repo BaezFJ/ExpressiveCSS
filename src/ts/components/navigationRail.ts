@@ -27,11 +27,8 @@ const _defaults: NavigationRailOptions = {
   onCloseEnd: null
 };
 
-// The medium and expanded breakpoints in abstracts/_breakpoints.scss; keep them in step.
+// Only for a page without the stylesheet; with it, the CSS flag below decides.
 const COMPACT = '(width < 600px)';
-// Where _navigation-rail.scss also overlays a scaffold's direct-child rail.
-const MEDIUM = '(600px <= width < 840px)';
-const matches = (query: string) => window.matchMedia(query).matches;
 // The menu toggle: a first-child button that isn't the FAB or a panel trigger. The CSS
 // doesn't style a first-child .icon-button as the toggle, but it still toggles.
 const TOGGLE = ':scope > button:first-child:not(.button, [popovertarget])';
@@ -158,12 +155,14 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     return [this._opener, this._toggle, ...this._outsideToggles()].find((button) => usable(button) && names(button)) ?? null;
   }
 
-  // Mirrors the CSS routes to an overlay: .modal, a compact window, or a
-  // scaffold's rail on a medium window. Not the computed position, which an
-  // author's own docked position: fixed rail would also match. A fresh query,
-  // since WebKit updates a kept MediaQueryList only on the next frame.
+  // The stylesheet sets --_nav-rail-modal to 1 wherever it draws the rail as
+  // an overlay (.modal, a compact window, a scaffold's medium window), with the
+  // author's own breakpoints. Not the computed position, which an author's own
+  // docked position: fixed rail would also match. Without the stylesheet,
+  // .modal and the default compact width stand in.
   private _isModal() {
-    return this.el.matches('.modal') || matches(COMPACT) || (matches(MEDIUM) && this.el.matches('.scaffold > *'));
+    const flag = getComputedStyle(this.el).getPropertyValue('--_nav-rail-modal').trim();
+    return flag ? flag === '1' : this.el.matches('.modal') || window.matchMedia(COMPACT).matches;
   }
 
   private _sync() {

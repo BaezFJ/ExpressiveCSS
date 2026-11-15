@@ -3,6 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { compileString } from 'sass';
 import { engines, leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
@@ -423,6 +424,24 @@ for (const [name, type, run] of engines) {
       await tab.locator('#d1').focus();
       await tab.keyboard.press('Escape');
       assert.equal(await expanded(), true, 'back at 900px Escape leaves the pushing rail open');
+    } finally {
+      await tab.evaluate(() => window.r?.destroy()).catch(() => {});
+      await browser.close();
+    }
+  });
+
+  run(`${name}: with a custom expanded breakpoint, Escape still closes the overlay the CSS draws`, { timeout: 60000 }, async () => {
+    const custom = compileString('@use "custom" with ($breakpoints: ("medium": 600px, "expanded": 1000px, "large": 1200px, "extra-large": 1600px), $expressive-include-fonts: false);',
+      { loadPaths: [new URL('../src/sass', import.meta.url).pathname], logger: { warn() {} } }).css;
+    const browser = await leaseBrowser(type);
+    const tab = await browser.newPage({ viewport: { width: 900, height: 800 }, reducedMotion: 'reduce' });
+    try {
+      await tab.setContent(page(scaffold()).replace(css, () => custom));
+      await tab.evaluate(() => { window.r = Expressive.NavigationRail.init(document.querySelector('#rail')); window.r.expand(); });
+      assert.equal(await tab.locator('#rail').evaluate((el) => getComputedStyle(el).position), 'fixed', 'the custom build overlays at 900px');
+      await tab.locator('#d1').focus();
+      await tab.keyboard.press('Escape');
+      assert.equal(await tab.locator('#rail').evaluate((el) => el.classList.contains('expanded')), false, 'Escape closes it');
     } finally {
       await tab.evaluate(() => window.r?.destroy()).catch(() => {});
       await browser.close();
