@@ -28,14 +28,17 @@ const _defaults: NavigationRailOptions = {
 };
 
 const COMPACT = '(width < 600px)';
+// The menu toggle the CSS styles: a first-child button that isn't the FAB or a panel trigger.
+const TOGGLE = ':scope > button:first-child:not(.button, [popovertarget])';
 // Delay before a hovered destination opens its panel, and before the panel
 // closes once the pointer leaves; it covers the trip across the rail's padding.
 const HOVER_DELAY = 200;
 
 /**
  * Navigation rail. Layout is CSS (collapsed / .expanded). This class
- * toggles that class from the menu button, closes a compact overlay on
- * Escape or a scrim tap, and keeps aria-expanded in sync. A destination's
+ * toggles that class from the menu button, or from any button outside the
+ * rail whose aria-controls names it, closes a compact overlay on Escape or a
+ * scrim tap, and keeps aria-expanded in sync on every toggle. A destination's
  * .navigation-rail-panel is a native popover; this class also opens it on
  * mouse hover.
  */
@@ -45,6 +48,8 @@ export class NavigationRail extends Component<NavigationRailOptions> {
   private _mql: MediaQueryList;
   private _hoverPanel: HTMLElement | null = null;
   private _hoverTimer: ReturnType<typeof setTimeout> | undefined;
+  // The toggle that last opened the rail, for Escape to return focus to.
+  private _opener: HTMLButtonElement | null = null;
 
   constructor(el: HTMLElement, options: Partial<NavigationRailOptions>) {
     super(el, options);
@@ -58,6 +63,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     this.el.addEventListener('pointerover', this._onPointerOver, { signal });
     this.el.addEventListener('pointerleave', this._onPointerLeave, { signal });
     document.addEventListener('keydown', this._onKeyDown, { signal });
+    document.addEventListener('click', this._onDocumentClick, { signal });
   }
 
   static get defaults(): NavigationRailOptions {
@@ -76,6 +82,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
    */
   expand = () => {
     if (this.isExpanded) return;
+    this._opener = null;
     if (!this._notify('open', this.options.onOpenStart, { current: () => !this.isExpanded })) return;
     this.isExpanded = true;
     this.el.classList.add('expanded');
@@ -104,8 +111,36 @@ export class NavigationRail extends Component<NavigationRailOptions> {
   };
 
   private _findToggle(): HTMLButtonElement | null {
-    const first = this.el.querySelector(':scope > button:not(.button, [popovertarget])');
+    const first = this.el.querySelector(TOGGLE);
     return first instanceof HTMLButtonElement ? first : null;
+  }
+
+  // Looked up on every use, so a button added after the rail started counts.
+  // An ID reference can't cross a shadow boundary, so only the rail's own root.
+  private _outsideToggles(): HTMLButtonElement[] {
+    const id = this.el.id;
+    if (!id) return [];
+    const root = this.el.getRootNode() as ParentNode;
+    return Array.from(root.querySelectorAll<HTMLButtonElement>('button[aria-controls]')).filter(
+      (button) => !this.el.contains(button) && button.getAttribute('aria-controls').split(/\s+/).includes(id)
+    );
+  }
+
+  // Records the opener only when the rail really opened.
+  private _toggleFrom(button: HTMLButtonElement) {
+    if (this.isExpanded) return this.collapse();
+    this.expand();
+    if (this.isExpanded) this._opener = button;
+  }
+
+  // Where Escape sends focus: the opener, else the inside toggle, else the
+  // first outside toggle, skipping any that are gone, disabled or hidden.
+  private _returnTarget(): HTMLButtonElement | null {
+    const outside = this._outsideToggles();
+    const usable = (button: HTMLButtonElement | null) =>
+      button?.isConnected && !button.disabled && !button.closest('[hidden]') &&
+      (button === this._toggle || outside.includes(button));
+    return [this._opener, this._toggle, ...outside].find(usable) ?? null;
   }
 
   private _isCompact() {
@@ -117,8 +152,8 @@ export class NavigationRail extends Component<NavigationRailOptions> {
   }
 
   private _sync() {
-    this.el.setAttribute('aria-expanded', this.isExpanded ? 'true' : 'false');
-    this._toggle?.setAttribute('aria-expanded', this.isExpanded ? 'true' : 'false');
+    const value = this.isExpanded ? 'true' : 'false';
+    for (const el of [this.el, this._toggle, ...this._outsideToggles()]) el?.setAttribute('aria-expanded', value);
   }
 
   /** The side panel of the enabled destination around `target`, if any. */
@@ -184,7 +219,7 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     const target = e.target;
     if (!(target instanceof Node) || this._pinPanel(e)) return;
     if (this._toggle?.contains(target)) {
-      this.toggle();
+      this._toggleFrom(this._toggle);
       e.preventDefault();
       return;
     }
@@ -222,15 +257,25 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     return e.clientX < left || e.clientX > right;
   }
 
+  // A click on an outside toggle, or on its icon. Prevented, so a submit
+  // button in an app bar form doesn't submit.
+  private _onDocumentClick = (e: MouseEvent) => {
+    const button = Utils.closestInPath<HTMLButtonElement>(e, 'button[aria-controls]:enabled');
+    if (!button || !this._outsideToggles().includes(button)) return;
+    e.preventDefault();
+    this._toggleFrom(button);
+  };
+
   private _onKeyDown = (e: KeyboardEvent) => {
     if (e.key !== 'Escape' || e.defaultPrevented || this._escapePanel(e)) return;
     if (this.isExpanded && this._isModal()) {
       const root = this.el.getRootNode() as Document | ShadowRoot;
       const restoreFocus = Utils.focusIsIn(this.el);
       const focused = deepActiveElement(root);
+      const target = this._returnTarget();
       this.collapse();
       if (!this.isExpanded && restoreFocus && deepActiveElement(root) === focused) {
-        this._toggle?.focus();
+        target?.focus();
       }
     }
   };
