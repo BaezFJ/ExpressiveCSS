@@ -354,8 +354,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed shadow-root focus checks through focusIsIn, guarded Forms re-init, chart resize observers released on update(), a composed transfer event, Datepicker selects kept across years, one roving-focus sync per arrow key, memoized Timepicker ranges, flyout measurement per row entry and DataTables views without toggle scans: 111,677 gzip bytes (+41).
   // Reviewed shared core helpers for right-to-left checks, ID lists, the active descendant and resize handles, and shared chart marks: 111,422 gzip bytes (-255).
   // Reviewed outside navigation rail toggles and the first-child toggle lookup: 111,741 gzip bytes (+349).
-  // Reviewed a scaffold's direct-child rail counting as modal on medium windows: 111,786 gzip bytes (+45).
-  assert.ok(sizes(js).gzip <= 111786, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed a scaffold's direct-child rail counting as modal on medium windows, with fresh media queries: 111,761 gzip bytes (+20).
+  assert.ok(sizes(js).gzip <= 111761, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
