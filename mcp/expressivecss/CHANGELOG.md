@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- The lint, `rules_enforcer` and `quality_inspector` report `transition-all`
+  (medium) for a `transition` or `transition-property` whose value names
+  `all`, in `style` attributes, `<style>` blocks and stylesheets passed to
+  `expressivecss-lint`. List the animated properties instead. A file that
+  passed before can now report this finding, so CI or a `--hook` setup that
+  runs the lint fails on it.
+
 ## 0.5.2 - 2026-11-14
 
 - Bundled guidance matches ExpressiveCSS 0.18.1, including `.status-bar`,
