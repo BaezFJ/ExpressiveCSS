@@ -2232,7 +2232,7 @@
       },
       "scaffold": {
         "status": "enforced",
-        "note": "Added with the scaffold. A layout container that places an app bar, navigation rail, main and trailing vertical toolbar it holds as direct children. The landmarks belong to those children, so the scaffold is a plain <div>.",
+        "note": "Added with the scaffold. A layout container that places an app bar, navigation rail, main, trailing vertical toolbar, compact navigation bar and status bar it holds as direct children. The landmarks belong to those children, so the scaffold is a plain <div>.",
         "rules": [
           {
             "id": "scaffold-is-not-a-landmark",
@@ -2244,9 +2244,9 @@
           {
             "id": "scaffold-one-child-per-region",
             "kind": "forbid",
-            "selector": ".scaffold > :is(header, .scaffold-bar):not([hidden]:not([hidden=\"until-found\" i])) ~ :is(header, .scaffold-bar):not([hidden]:not([hidden=\"until-found\" i])), .scaffold > :is(.navigation-rail, .scaffold-rail):not([hidden]:not([hidden=\"until-found\" i])) ~ :is(.navigation-rail, .scaffold-rail):not([hidden]:not([hidden=\"until-found\" i])), .scaffold > :is(main, .scaffold-pane):not([hidden]:not([hidden=\"until-found\" i])) ~ :is(main, .scaffold-pane):not([hidden]:not([hidden=\"until-found\" i])), .scaffold > :is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing):not([hidden]:not([hidden=\"until-found\" i])) ~ :is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing):not([hidden]:not([hidden=\"until-found\" i]))",
+            "selector": ".scaffold > :is(header, .scaffold-bar):not([hidden]:not([hidden=\"until-found\" i])) ~ :is(header, .scaffold-bar):not([hidden]:not([hidden=\"until-found\" i])), .scaffold > :is(.navigation-rail, .scaffold-rail):not([hidden]:not([hidden=\"until-found\" i])) ~ :is(.navigation-rail, .scaffold-rail):not([hidden]:not([hidden=\"until-found\" i])), .scaffold > :is(main, .scaffold-pane):not([hidden]:not([hidden=\"until-found\" i])) ~ :is(main, .scaffold-pane):not([hidden]:not([hidden=\"until-found\" i])), .scaffold > :is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing):not([hidden]:not([hidden=\"until-found\" i])) ~ :is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing):not([hidden]:not([hidden=\"until-found\" i])), .scaffold > .status-bar:not([hidden]:not([hidden=\"until-found\" i])) ~ .status-bar:not([hidden]:not([hidden=\"until-found\" i]))",
             "fragmentSafe": true,
-            "message": "Each scaffold region holds one visible child: one header or .scaffold-bar, one navigation rail or .scaffold-rail, one main or .scaffold-pane, and one vertical toolbar or .scaffold-trailing. A second one lands in the same grid area and overlaps the first. Add hidden to the ones not shown; hidden=\"until-found\" still takes part in layout, so it counts as shown."
+            "message": "Each scaffold region holds one visible child: one header or .scaffold-bar, one navigation rail or .scaffold-rail, one main or .scaffold-pane, one vertical toolbar or .scaffold-trailing, and one .status-bar. A second one lands in the same grid area and overlaps the first. Add hidden to the ones not shown; hidden=\"until-found\" still takes part in layout, so it counts as shown."
           },
           {
             "id": "scaffold-does-not-nest",

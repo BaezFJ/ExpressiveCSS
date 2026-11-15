@@ -9,7 +9,7 @@ Component ID: `scaffold`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `84da5303d864566f9acddb0a5e9e92da14a8c5d404e58093c545e8e8c4db65aa`
+Contract SHA-256: `e11c2d7a45bf0b677a111732081f836a0830147f0045f338a5269a0d7b25dc6f`
 
 #### Selection and adaptation
 
@@ -66,7 +66,7 @@ Put `.scaffold` on a `<div>` that is a child of `<body>`. Not on `<body>` itself
 #### Rules
 
 - `scaffold-is-not-a-landmark`: Write the scaffold as a <div> inside <body>. Its header, navigation rail and main are the landmarks; a role on the scaffold would wrap them in another one.
-- `scaffold-one-child-per-region`: Each scaffold region holds one visible child: one header or .scaffold-bar, one navigation rail or .scaffold-rail, one main or .scaffold-pane, and one vertical toolbar or .scaffold-trailing. A second one lands in the same grid area and overlaps the first. Add hidden to the ones not shown; hidden="until-found" still takes part in layout, so it counts as shown.
+- `scaffold-one-child-per-region`: Each scaffold region holds one visible child: one header or .scaffold-bar, one navigation rail or .scaffold-rail, one main or .scaffold-pane, one vertical toolbar or .scaffold-trailing, and one .status-bar. A second one lands in the same grid area and overlaps the first. Add hidden to the ones not shown; hidden="until-found" still takes part in layout, so it counts as shown.
 - `scaffold-does-not-nest`: A scaffold is as tall as the window and holds the page's one main, so it can't sit inside another. Use panes or the grid inside the scaffold's main.
 
 #### Guide checks

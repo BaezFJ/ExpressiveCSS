@@ -68,6 +68,10 @@ const S = defineSections([
               <button type="button" aria-label="Notes"><span class="material-symbols" aria-hidden="true">sticky_note_2</span></button>
               <button type="button" aria-label="Tasks"><span class="material-symbols" aria-hidden="true">task_alt</span></button>
             </div>
+            <footer class="status-bar">
+              <span>Inbox synced</span>
+              <button type="button" class="end" aria-label="Notifications"><span class="material-symbols" aria-hidden="true">notifications</span></button>
+            </footer>
             <nav class="navigation-bar" aria-label="Scaffold demo destinations">
               <a href="#anatomy" aria-current="page"><span class="material-symbols" aria-hidden="true">inbox</span>Inbox</a>
               <a href="#regions"><span class="material-symbols" aria-hidden="true">star</span>Starred</a>
@@ -111,6 +115,7 @@ const S = defineSections([
           <li>Rail: a <code>.navigation-rail</code>, or <code>.scaffold-rail</code>.</li>
           <li>Pane: <code>&lt;main&gt;</code>, or <code>.scaffold-pane</code>.</li>
           <li>Trailing: a <code>.toolbar.vertical</code> or <code>.toolbar-group.vertical</code>, or <code>.scaffold-trailing</code>.</li>
+          <li>Status: a <a href="status-bar.html"><code>.status-bar</code></a>, across the full width along the bottom, from 600px up.</li>
         </ul>
         <p>
           Use the region classes for custom content that isn't one of those
