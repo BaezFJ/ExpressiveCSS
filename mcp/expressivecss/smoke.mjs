@@ -1060,8 +1060,8 @@ const transport = new StdioClientTransport({
       pass: ['<p style="color: var(--md-sys-color-on-surface)">Hi</p>', ':root { --md-ref-seed-color: #6750a4; }'],
     },
     'transition-all': {
-      flag: ['.a { transition: all 200ms }', '.a{transition:all .2s}', '.a { TRANSITION: ALL 1s }', '.a { transition: opacity .2s, all .3s }', '.a { transition-property: all }', "<div style={{ transition: 'all 0.2s' }}></div>", '<style>\n  .card { transition: all 200ms; }\n</style>'],
-      pass: ['.a { transition: opacity 200ms, transform 200ms }', '.a { transition-property: opacity }', '.a { transition: opacity .2s allow-discrete }', '.a { transition: none }', '.a { transition: var(--all) }', 'const s = { transition: theme.all };', '.a { --transition: all 1s }', '.a { -webkit-transition: all 1s }', '.a { transition-duration: 200ms; all: unset }', '<p style="transition: opacity 1s" data-x="all"></p>', 'const s = { transition: x, all: y };', 'const s = { transition: x, all : y };'],
+      flag: ['.a { transition: all 200ms }', '.a{transition:all .2s}', '.a { TRANSITION: ALL 1s }', '.a { transition: opacity .2s, all .3s }', '.a { transition-property: all }', "<div style={{ transition: 'all 0.2s' }}></div>", '<style>\n  .card { transition: all 200ms; }\n</style>', '{"transition": "all 1s"}', "{ 'transition-property': 'all' }"],
+      pass: ['.a { transition: opacity 200ms, transform 200ms }', '.a { transition-property: opacity }', '.a { transition: opacity .2s allow-discrete }', '.a { transition: none }', '.a { transition: var(--all) }', 'const s = { transition: theme.all };', '.a { --transition: all 1s }', '.a { -webkit-transition: all 1s }', '.a { transition-duration: 200ms; all: unset }', '<p style="transition: opacity 1s" data-x="all"></p>', 'const s = { transition: x, all: y };', 'const s = { transition: x, all : y };', '.a { transition: $all }', '.a { transition: @all }', 'x.transition: all 1s'],
     },
   };
   const ruleIds = authoringRules.map((rule) => rule.id).filter((id) => !/^legacy-/.test(id));
