@@ -54,6 +54,8 @@ $_navbar-size: "52px + 1rem + max(6px, env(safe-area-inset-bottom, 0px))";
 $_floating-pane: "#{$_pane}:not(:is(.panes, .pane-layout, .list-detail, .supporting-pane-layout), :has(> :is(.panes, .pane-layout):is(.separated, .floating)))";
 // An open standard side sheet that takes the sheet column.
 $_sheet-open: "dialog.side-sheet[open]:not(:modal, .start, [hidden])";
+// The top app bar's own anatomy, as _navbar.scss matches it.
+$_app-bar: ":is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)";
 // A shown navigation bar region, as a :has() argument list.
 $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])";
 
@@ -103,18 +105,31 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
 
     // The app bar reaches into the top inset strip, and in the default layout
     // the side strips too, so its scrolled fill has no seam at the edges.
-    > header:has(> nav, > .bar) {
+    > header:has(> #{$_app-bar}) {
       margin-top: calc(-1 * env(safe-area-inset-top, 0px));
       padding-top: env(safe-area-inset-top, 0px);
     }
 
     // width: auto, not the bar's 100%, so the margins stretch it.
-    &:not(.tall-rail) > header:has(> nav, > .bar) {
+    &:not(.tall-rail) > header:has(> #{$_app-bar}) {
       width: auto;
       margin-right: calc(-1 * env(safe-area-inset-right, 0px));
       margin-left: calc(-1 * env(safe-area-inset-left, 0px));
       padding-right: env(safe-area-inset-right, 0px);
       padding-left: env(safe-area-inset-left, 0px);
+    }
+
+    // A tall-rail bar meets a side edge only where that region is empty.
+    &.tall-rail:not(:has(> #{$_rail}:not([hidden]))) > header:has(> #{$_app-bar}) {
+      width: auto;
+      margin-left: calc(-1 * env(safe-area-inset-left, 0px));
+      padding-left: env(safe-area-inset-left, 0px);
+    }
+
+    &.tall-rail:not(:has(> #{$_trailing}:not([hidden]))) > header:has(> #{$_app-bar}) {
+      width: auto;
+      margin-right: calc(-1 * env(safe-area-inset-right, 0px));
+      padding-right: env(safe-area-inset-right, 0px);
     }
   }
 
@@ -228,7 +243,7 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
     @include bp-up("medium") {
       background-color: var(--md-sys-color-surface-container);
 
-      > header:has(> nav, > .bar) {
+      > header:has(> #{$_app-bar}) {
         --md-comp-top-app-bar-container-color: var(--md-sys-color-surface-container);
         --md-comp-top-app-bar-scrolled-container-color: var(--md-sys-color-surface-container-high);
       }
@@ -358,7 +373,7 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
     // The document scrolls here, so the app bar pads its own top inset inside
     // its background; padding above it would scroll away. A custom
     // .scaffold-bar keeps its own padding and pads the inset itself.
-    > header:has(> nav, > .bar) {
+    > header:has(> #{$_app-bar}) {
       padding-top: env(safe-area-inset-top, 0px);
     }
 
@@ -395,8 +410,9 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
       inset-block-end: calc(16px + env(safe-area-inset-bottom, 0px));
       z-index: var(--expressive-z-toolbar);
       justify-self: center;
-      // The bottom margin matches the sticky inset, so the shift never pulls
-      // the toolbar over the pane's last content.
+      // The block margins put its resting place where it sticks (the shell's
+      // bottom padding supplies the safe area without a navigation bar), so
+      // the shift never pulls the toolbar over the pane's last content.
       margin: 16px 0;
 
       // A side tooltip would cover the next action in a row; show it above,

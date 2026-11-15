@@ -1020,6 +1020,9 @@ for (const [name, type, run] of engines) {
       near((await box('#pane')).top, 56, 'without a bar the pane clears the top inset and keeps its gap');
       await render({ nav: '<div class="scaffold-rail" id="cr" style="width:80px">Rail</div>' });
       near((await box('#cr')).left, 30, 'a custom rail clears the left inset');
+      await render({ cls: 'tall-rail', nav: '', trailing: '' });
+      const tallBar = await box('#bar');
+      assert.deepEqual([Math.round(tallBar.left), Math.round(tallBar.right)], [0, 1280], 'a tall-rail bar with empty side regions reaches into the side strips');
       await render({ bottom: '<footer class="status-bar" id="sb"><span>Ready</span></footer>' });
       assert.equal(await style('#sb', 'paddingBottom'), '20px', 'the status bar pads the bottom inset once');
       near((await box('#sb')).bottom, 800, 'and reaches the bottom edge');
@@ -1033,7 +1036,8 @@ for (const [name, type, run] of engines) {
     const { browser, tab, box, style } = await open(type, withInsets(`<div id="host">${scaffold({ bar: header('', 'rail'), bottom: navbar })}</div>`), { width: 390 });
     try {
       await tab.evaluate(() => window.scrollTo(0, 1000));
-      assert.ok((await box('#menu')).top >= 40, `the pinned bar's button clears the notch: ${(await box('#menu')).top}`);
+      near((await box('#menu')).top, 48, 'the pinned bar pads the top inset once, inside its background');
+      assert.deepEqual(await Promise.all(['paddingTop', 'paddingBottom'].map((p) => style('#s', p))), ['0px', '0px'], 'the shell adds no inset with a bar and a navigation bar');
       assert.equal(await style('#nb nav', 'paddingBottom'), '20px', 'the navigation bar pads the bottom inset once');
       const tb = await box('#tools');
       assert.ok(Math.abs(tb.bottom - ((await box('#nb')).top - 16)) < 2, 'the toolbar floats 16px above it');

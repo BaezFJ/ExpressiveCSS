@@ -53,3 +53,10 @@ Commands: `npm run build`, then `node --test tests/scaffold-browser.test.js`, th
     - The app bar's scrolled fill left a seam against the inset strips. From 600px up the bar reaches into the top strip, and into the side strips in the default layout, with a test that its background spans 0–1280 while its content clears the insets.
   - Skipped, outside the phase: moving the insets into the rail's own `_modal-rail` would change rails outside a scaffold. The mixin's comment names the hard-coded values.
   - CSS budget 93,350. The scaffold suite passes 124 of 124.
+- 2026-11-15, `code-review-and-quality` (five-axis review by an independent read-only subagent): no Critical findings. Fixed:
+  - Required: nothing tested the compact "once". The test now asserts the shell's top and bottom padding are 0px with a bar and a navigation bar, and that the bar's button sits at 48px (40px inset plus 8px). With the no-bar guard removed it fails.
+  - Optional: the docs now tell a `<header>` that isn't an app bar to pad its own inset, as a custom bar does.
+  - Optional: the scaffold now uses the app bar's exact selector (`header:has(> :is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar))`), so a header holding only tabs gets no app bar treatment.
+  - Nits: the toolbar margin comment now explains the shell's bottom padding; a tall-rail bar with empty side regions reaches into the side strips, with a test.
+  - FYI, no change: the copied rail padding is commented; browsers without `:dir()` fall back to the old overlay.
+  - CSS budget 93,409. The scaffold suite passes 124 of 124.
