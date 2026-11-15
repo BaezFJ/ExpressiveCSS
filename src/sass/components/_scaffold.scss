@@ -83,9 +83,10 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
   grid-template-areas:
     "bar bar bar"
     "rail pane trailing"
+    "navbar navbar navbar"
     "status status status";
   grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-rows: auto minmax(0, 1fr) auto;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
   block-size: 100dvh;
   // Safe areas (viewport-fit=cover): the side insets at every width, so every
   // region clears a landscape notch. Physical, as the insets are.
@@ -196,6 +197,7 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
     grid-template-areas:
       "rail bar trailing"
       "rail pane trailing"
+      "navbar navbar navbar"
       "status status status";
   }
 
@@ -232,9 +234,17 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
     position: sticky;
     inset-block-end: 0;
     z-index: var(--expressive-z-app-bar);
+  }
 
-    @include bp-up("medium") {
+  // From 600px up a shown rail takes over from the navigation bar. Without
+  // one the bar stays, in its own row, and pads the bottom inset itself.
+  @include bp-up("medium") {
+    &:has(> #{$_rail}:not([hidden], :empty)) > #{$_navbar} {
       display: none;
+    }
+
+    &:has(#{$_navbar-shown}):not(:has(> #{$_rail}:not([hidden], :empty))) {
+      padding-bottom: 0;
     }
   }
 
@@ -310,6 +320,7 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
       grid-template-areas:
         "bar bar bar bar"
         "rail pane sheet trailing"
+        "navbar navbar navbar navbar"
         "status status status status";
       grid-template-columns: auto minmax(0, 1fr) auto auto;
     }
@@ -318,6 +329,7 @@ $_navbar-shown: "> .navigation-bar:not([hidden]), > footer:not([hidden]) > .navi
       grid-template-areas:
         "rail bar sheet trailing"
         "rail pane sheet trailing"
+        "navbar navbar navbar navbar"
         "status status status status";
     }
 

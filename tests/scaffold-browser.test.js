@@ -249,7 +249,7 @@ for (const [name, type, run] of engines) {
     try {
       const measure = () => Promise.all(['#rail', '#bar', '#pane', '#tools'].map(box));
       let [nav, bar, main, tb] = await measure();
-      assert.equal((await style('#s', 'gridTemplateAreas')).replace(/\s+/g, ' '), '"rail bar trailing" "rail pane trailing" "status status status"');
+      assert.equal((await style('#s', 'gridTemplateAreas')).replace(/\s+/g, ' '), '"rail bar trailing" "rail pane trailing" "navbar navbar navbar" "status status status"');
       assert.deepEqual([nav.left, nav.top], [0, 0], 'the rail starts at the top leading corner');
       near(nav.bottom, 800, 'the rail reaches the window bottom');
       near(bar.left, nav.right, 'the bar starts at the rail');
@@ -1075,6 +1075,33 @@ for (const [name, type, run] of engines) {
       await tab.locator('#rail').evaluate((el) => el.classList.add('modal'));
       await tab.setViewportSize({ width: 1280, height: 800 });
       assert.deepEqual(await Promise.all(['paddingTop', 'paddingRight'].map((p) => style('#rail', p))), ['60px', '66px'], 'a modal rail overlay clears them at any width');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: from 600px up a scaffold without a rail keeps its navigation bar`, { timeout: 30000 }, async () => {
+    const bare = navbar.replace(/<\/?footer[^>]*>/g, '').replace('class="navigation-bar"', 'class="navigation-bar" id="nb"');
+    const status = '<footer class="status-bar" id="sb"><span>Ready</span></footer>';
+    const { browser, tab, box, style } = await open(type, page(`<div id="host">${scaffold({ nav: '', bottom: navbar })}</div>`), { width: 700 });
+    try {
+      const render = (o) => tab.locator('#host').evaluate((el, h) => { el.innerHTML = h; }, scaffold(o));
+      for (const width of [700, 1280]) {
+        await tab.setViewportSize({ width, height: 800 });
+        for (const [label, o] of [['default', { nav: '', bottom: navbar }], ['tall rail', { nav: '', cls: 'tall-rail', bottom: navbar }], ['bare bar', { nav: '', bottom: bare }]]) {
+          await render(o);
+          assert.notEqual(await style('#nb', 'display'), 'none', `${label} at ${width}px: the navigation bar shows without a rail`);
+          const nb = await box('#nb');
+          near(nb.left, 0, `${label} at ${width}px: it spans the scaffold`);
+          near(nb.right, width, `${label} at ${width}px: to the trailing edge`);
+          near(nb.bottom, 800, `${label} at ${width}px: at the bottom`);
+          assert.equal(await style('#s', 'paddingBottom'), '0px', `${label} at ${width}px: the shell adds no bottom inset`);
+        }
+        await render({ nav: '', bottom: navbar + status });
+        near((await box('#nb')).bottom, (await box('#sb')).top, `at ${width}px it sits above a status bar`);
+        await render({ bottom: navbar });
+        assert.equal(await style('#nb', 'display'), 'none', `at ${width}px a shown rail still hides it`);
+      }
     } finally {
       await browser.close();
     }
