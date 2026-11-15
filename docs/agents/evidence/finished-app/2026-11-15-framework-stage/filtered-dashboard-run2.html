@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en" theme="auto">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orders | Sample store</title>
+  <link rel="stylesheet" href="dist/css/expressive.min.css">
+  <style>
+    body { margin: 0; }
+    .dashboard { padding: 16px; max-width: 1200px; margin-inline: auto; }
+    @media (width >= 600px) { .dashboard { padding: 24px; } }
+    .dashboard :is(article, .stats) {
+      --md-comp-filled-card-container-color: var(--md-sys-color-surface-container);
+      --md-comp-card-container-shape: 24px;
+      --md-comp-card-content-padding: 24px;
+      --md-comp-card-subhead-color: var(--md-sys-color-on-surface-variant);
+      --md-comp-stat-container-color: var(--md-sys-color-surface-container);
+      --md-comp-stat-shape: 24px;
+    }
+    .order-panel { margin: 0; }
+    .order-panel .data-table { margin: 16px 0 0; }
+    .order-panel .pagination { justify-content: flex-end; padding: 8px 12px; border-top: 1px solid var(--md-sys-color-outline-variant); }
+    .order-panel .pagination output { padding-inline: 12px; font-variant-numeric: tabular-nums; }
+    .search-field { max-width: 360px; }
+  </style>
+</head>
+<body>
+  <a class="visually-hidden-focusable" href="#main">Skip to content</a>
+  <main id="main" class="dashboard" tabindex="-1">
+    <div class="mb-4">
+      <h1 class="headline-medium my-0">Orders</h1>
+      <p id="data-range" class="body-medium on-surface-variant-text my-0">Sample data · 40 orders</p>
+    </div>
+
+    <section aria-labelledby="kpi-title" class="mb-5">
+      <h2 id="kpi-title" class="visually-hidden">Orders by state</h2>
+      <dl class="stats my-0">
+        <div><dt>Open</dt><dd id="stat-open">–</dd><dd id="stat-open-value" class="stat-change">–</dd></div>
+        <div><dt>Shipped</dt><dd id="stat-shipped">–</dd><dd id="stat-shipped-value" class="stat-change">–</dd></div>
+        <div><dt>Returned</dt><dd id="stat-returned">–</dd><dd id="stat-returned-value" class="stat-change">–</dd></div>
+        <div><dt>All orders</dt><dd id="stat-all">–</dd><dd id="stat-all-value" class="stat-change">–</dd></div>
+      </dl>
+    </section>
+
+    <section class="order-list" aria-labelledby="list-title">
+      <h2 id="list-title" class="title-large mt-0 mb-1">Order list</h2>
+      <p class="body-medium on-surface-variant-text mt-0 mb-4">Totals in US dollars · 10 orders per page</p>
+
+      <div class="mb-2">
+        <div class="field outlined search-field my-0">
+          <span class="material-symbols prefix" aria-hidden="true">search</span>
+          <input id="customer-filter" name="customer" type="search" autocomplete="off" spellcheck="false" placeholder=" " aria-describedby="customer-filter-help">
+          <label for="customer-filter">Filter by customer</label>
+          <small id="customer-filter-help"><output id="match-count" role="status" aria-live="polite" aria-label="Matching orders">40 orders</output></small>
+        </div>
+      </div>
+
+      <nav class="tabs" id="order-tabs" aria-label="Order state">
+        <a class="active" aria-current="page" href="#open" data-state="Open"><span>Open</span></a>
+        <a href="#shipped" data-state="Shipped"><span>Shipped</span></a>
+        <a href="#returned" data-state="Returned"><span>Returned</span></a>
+      </nav>
+
+      <div id="open" class="order-panel" data-state="Open"></div>
+      <div id="shipped" class="order-panel" data-state="Shipped"></div>
+      <div id="returned" class="order-panel" data-state="Returned"></div>
+    </section>
+  </main>
+
+  <template id="panel-template">
+    <div class="data-table" data-sort data-page-size="10" role="region" tabindex="0">
+      <table>
+        <caption class="visually-hidden"></caption>
+        <thead>
+          <tr>
+            <th scope="col"><button type="button">Order</button></th>
+            <th scope="col"><button type="button">Customer</button></th>
+            <th scope="col" class="text-nowrap" aria-sort="descending"><button type="button">Date</button></th>
+            <th scope="col" class="numeric"><button type="button">Total</button></th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <nav class="pagination" aria-label="">
+        <ol>
+          <li><button type="button" data-table-page="previous" aria-label="Previous page"><span class="material-symbols" aria-hidden="true">chevron_left</span></button></li>
+          <li><output data-table-page-status role="status" aria-live="polite" aria-label="Pages">1 / 1</output></li>
+          <li><button type="button" data-table-page="next" aria-label="Next page"><span class="material-symbols" aria-hidden="true">chevron_right</span></button></li>
+        </ol>
+      </nav>
+    </div>
+    <p class="empty body-medium on-surface-variant-text mt-4 mb-0" hidden>
+      <span class="empty-text"></span>
+      <button type="button" class="text clear-filter">Clear filter</button>
+    </p>
+  </template>
+
+  <script src="dist/js/expressive.min.js"></script>
+  <script>
+    // ---- Sample data: 40 deterministic orders ----
+    const STATES = ['Open', 'Shipped', 'Returned'];
+    const CUSTOMERS = ['Maya Patel', 'Liam Chen', 'Sofia García', 'Noah Williams', 'Amara Okafor', 'Ethan Brooks',
+      'Hana Suzuki', 'Lucas Martin', 'Zara Ahmed', 'Oliver Nguyen', 'Isabel Rossi', 'Kwame Mensah',
+      'Chloe Dubois', 'Mateo Fernández', 'Priya Sharma', 'Jonas Becker'];
+    let seed = 20261115;
+    const rand = () => (seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296;
+    const start = Date.UTC(2026, 8, 1);
+    const orders = Array.from({ length: 40 }, (_, i) => {
+      const r = rand();
+      return {
+        id: `ORD-${String(1001 + i)}`,
+        customer: CUSTOMERS[Math.floor(rand() * CUSTOMERS.length)],
+        date: new Date(start + Math.floor(i * 1.85 + rand()) * 86400000),
+        total: Math.round((18 + rand() * 480) * 100) / 100,
+        state: r < 0.45 ? 'Open' : r < 0.82 ? 'Shipped' : 'Returned',
+      };
+    });
+
+    const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+    const day = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+    const count = new Intl.NumberFormat('en-US');
+
+    const short = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' });
+    document.getElementById('data-range').textContent =
+      `Sample data · 40 orders, ${short.format(orders[0].date)} – ${day.format(orders.at(-1).date)}`;
+
+    // ---- Key figures ----
+    const sum = (list) => list.reduce((s, o) => s + o.total, 0);
+    for (const state of [...STATES, 'All']) {
+      const list = state === 'All' ? orders : orders.filter((o) => o.state === state);
+      const key = state.toLowerCase();
+      document.getElementById(`stat-${key}`).textContent = count.format(list.length);
+      document.getElementById(`stat-${key}-value`).textContent = `${money.format(sum(list))} in orders`;
+    }
+
+    // ---- Build one table per tab panel ----
+    const template = document.getElementById('panel-template');
+    const panels = [...document.querySelectorAll('.order-panel')];
+    for (const panel of panels) {
+      const state = panel.dataset.state;
+      panel.append(template.content.cloneNode(true));
+      const wrapper = panel.querySelector('.data-table');
+      const caption = wrapper.querySelector('caption');
+      caption.id = `${panel.id}-caption`;
+      caption.textContent = `${state} orders`;
+      wrapper.setAttribute('aria-labelledby', caption.id);
+      wrapper.querySelector('.pagination').setAttribute('aria-label', `${state} orders pages`);
+      const body = wrapper.querySelector('tbody');
+      orders.filter((o) => o.state === state)
+        .sort((a, b) => b.date - a.date)
+        .forEach((o) => {
+          const tr = document.createElement('tr');
+          const id = document.createElement('th');
+          id.scope = 'row';
+          id.textContent = o.id;
+          const customer = document.createElement('td');
+          customer.className = 'customer';
+          customer.textContent = o.customer;
+          const date = document.createElement('td');
+          date.className = 'text-nowrap';
+          date.dataset.value = o.date.toISOString().slice(0, 10);
+          date.textContent = day.format(o.date);
+          const total = document.createElement('td');
+          total.className = 'numeric';
+          total.textContent = money.format(o.total);
+          tr.append(id, customer, date, total);
+          body.append(tr);
+        });
+    }
+
+    // ---- Customer filter: hides non-matching rows in every panel, then repages ----
+    const filter = document.getElementById('customer-filter');
+    const tabs = document.getElementById('order-tabs');
+    const matchCount = document.getElementById('match-count');
+
+    function applyFilter(page = 1) {
+      const query = filter.value.trim().toLocaleLowerCase('en-US');
+      let total = 0;
+      for (const panel of panels) {
+        const wrapper = panel.querySelector('.data-table');
+        let shown = 0;
+        for (const row of wrapper.querySelectorAll('tbody > tr')) {
+          const match = !query || row.querySelector('.customer').textContent.toLocaleLowerCase('en-US').includes(query);
+          row.hidden = !match;
+          if (match) shown++;
+        }
+        total += shown;
+        const state = panel.dataset.state;
+        const tab = tabs.querySelector(`a[data-state="${state}"]`);
+        tab.querySelector('span').textContent = `${state} (${count.format(shown)})`;
+        const empty = panel.querySelector('.empty');
+        empty.hidden = shown > 0;
+        wrapper.hidden = shown === 0;
+        panel.querySelector('.empty-text').textContent = `No ${state.toLowerCase()} orders match “${filter.value.trim()}”.`;
+        Expressive.DataTables.sync(wrapper);
+        if (shown) Expressive.DataTables.showPage(wrapper, panel.classList.contains('is-current') ? page : 1);
+      }
+      matchCount.textContent = query
+        ? `${count.format(total)} of 40 orders match`
+        : '40 orders';
+    }
+
+    // ---- URL state: ?view=, ?q=, ?page= ----
+    const params = new URLSearchParams(location.search);
+    const writeUrl = (changes) => {
+      const url = new URL(location.href);
+      for (const [key, value] of Object.entries(changes)) {
+        if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
+      }
+      if ([...tabs.querySelectorAll('a')].some((a) => a.hash === url.hash)) url.hash = '';
+      history.replaceState(null, '', url);
+    };
+
+    const savedView = params.get('view');
+    const savedLink = savedView && tabs.querySelector(`a[href="#${CSS.escape(savedView)}"]`);
+    if (savedLink) {
+      const current = tabs.querySelector('a.active');
+      current.classList.remove('active');
+      current.removeAttribute('aria-current');
+      savedLink.classList.add('active');
+      savedLink.setAttribute('aria-current', 'page');
+    }
+    const markCurrent = (id) => panels.forEach((p) => p.classList.toggle('is-current', p.id === id));
+    markCurrent(tabs.querySelector('a.active').hash.slice(1));
+    filter.value = params.get('q') ?? '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      Expressive.AutoInit();
+      applyFilter(Number(params.get('page')) || 1);
+
+      tabs.addEventListener('expressive:change', (event) => {
+        if (event.target !== tabs) return;
+        markCurrent(event.detail.panel.id);
+        Expressive.DataTables.showPage(event.detail.panel.querySelector('.data-table'), 1);
+        writeUrl({ view: event.detail.panel.id, page: '' });
+      });
+
+      let typing;
+      filter.addEventListener('input', () => {
+        applyFilter(1);
+        clearTimeout(typing);
+        typing = setTimeout(() => writeUrl({ q: filter.value.trim(), page: '' }), 300);
+      });
+
+      for (const panel of panels) {
+        const wrapper = panel.querySelector('.data-table');
+        wrapper.addEventListener('expressive:page', (event) => {
+          writeUrl({ page: event.detail.page > 1 ? String(event.detail.page) : '' });
+        });
+        wrapper.addEventListener('expressive:sort', (event) => {
+          if (!event.defaultPrevented) writeUrl({ page: '' });
+        });
+        panel.querySelector('.clear-filter').addEventListener('click', () => {
+          filter.value = '';
+          applyFilter(1);
+          writeUrl({ q: '', page: '' });
+          filter.focus();
+        });
+      }
+    });
+  </script>
+</body>
+</html>

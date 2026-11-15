@@ -1,0 +1,2 @@
+{"app":"framework-stage/settings-form-run1","pass":true,"fields":4,"firstInvalid":"display_name","focused":"display_name","onFirst":true,"disabledAfter":false,"reason":"","errors":[]}
+{"app":"framework-stage/settings-form-run2","pass":true,"fields":4,"firstInvalid":"display_name","focused":"display_name","onFirst":true,"disabledAfter":false,"reason":"","errors":[]}

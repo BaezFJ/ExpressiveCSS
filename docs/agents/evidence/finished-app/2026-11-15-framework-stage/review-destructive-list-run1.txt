@@ -1,0 +1,27 @@
+FINDINGS
+- [major] index.html:236 and index.html:258 (`#address-dialog` during Save) | source | - (check 3: request state) | While a save is running, Cancel is disabled but Escape still closes the modal dialog, because nothing handles the dialog's `cancel` event. The POST keeps going. If it fails, the error is written to `#form-error` inside the closed dialog, so the person never sees it and the address they typed is lost without a word. If it succeeds, an address appears that the person had tried to cancel. | While `save` has `aria-busy="true"`, call `preventDefault()` on the dialog's `cancel` event. Or let the dismissal through, but abort the request, or show a failure Snackbar when the dialog is already closed.
+
+CHECKED
+- Lifecycle: the bundle loads at the end of `<body>` after the markup. The inline script renders the rows first, then calls `Expressive.AutoInit()` once on DOMContentLoaded. No manual `.init()`, no retired global `M`. The generated rows hold no registry components, so they need no init or destroy. Snackbar and Forms are used through their explicit shared paths.
+- Assets and fonts: one stylesheet, `dist/css/expressive.min.css`, with `dist/fonts/` next to `dist/css/` (the Material Symbols, Roboto and Noto Sans files are present). No Google Fonts or Material Icons link, no `.material-icons` markup. The JavaScript bundle is justified because the page uses Snackbar and Forms. The bundle script is not in `<head>`.
+- States: no custom CSS removes the focus ring. No native control is disabled with a class (Cancel uses the `disabled` property). The list has an empty state (`#empty-state`) with its own action. Data is in memory with no initial fetch, so no loading state is needed. A failed DELETE puts the row back and shows a Snackbar.
+- WCAG names and labels: icon-only delete buttons have `aria-label="Delete {label} address"`. Every decorative symbol has `aria-hidden`. Every field has a `<label for>` and `aria-describedby`. `Forms.validateField` adds the `[data-error]` text to aria-describedby and sets `aria-invalid` (confirmed in dist/js/expressive.js:3473-3503). `#form-error` uses `role="alert"`.
+- WCAG keyboard and focus: on delete, focus moves to the next row, else the previous row, else the empty state's button. Undo puts focus back on the restored row. When the dialog closes and its opener is hidden, focus goes to whichever Add button is visible. A failed submit focuses the first invalid field. Clicks after the first in a double click are ignored (`event.detail > 1`), and keyboard activation still works because its `detail` is 0.
+- Reduced motion (source): the framework's busy spinner keeps its fade-in but stops spinning under `prefers-reduced-motion`.
+- finished-app:loading: passes. Save keeps a label that names the action and changes it to "Saving…". `aria-busy` turns on the framework's `::after` spinner (dist/css/expressive.css:2703; `dialog > nav` is not in the excluded selectors). A second press is ignored through the `aria-busy` guard. The busy state stays up for at least 500 ms.
+- finished-app:destructive: passes. Delete takes effect at once and offers a Snackbar Undo through `onAction`, with `replace: true`. Restoring sorts by the stored `order`, so the row returns to its original place. The DELETE request goes out only when the snackbar goes away or the page hides.
+- finished-app:submit-flow: passes. The fields are inside `<form>`, and the external Save button with `type="submit" form="address-form"` lets Enter submit. Save is not disabled ahead of time. Errors sit in each field's `<small>`. Focus moves to the first invalid field. Nothing blocks paste. Autocomplete tokens are `street-address`, `address-level2`, `address-level1` and `postal-code`. `label` is an address nickname, not an input purpose, so `off` is fine. Every field has a `name`. A text-type postal code fits alphanumeric codes. `spellcheck="false"` is set on the postal code.
+- finished-app:url-state: not applicable (no tabs, filters, search or pages).
+
+BLOCKED
+- Contrast (body text, `#form-error` in `--md-sys-color-error` on the dialog surface, on-surface-variant count text, Snackbar): no browser route, so these are not measured.
+- Focus visibility and focus not obscured (2.4.11), for example a Snackbar covering a focused bottom row: needs rendering.
+- Target size (2.5.8) of the unclassed icon-only delete buttons in `.list` rows: they probably get the generic button min-size, but that is not measured.
+- Whether a Snackbar shown with `replace: true` and an action takes focus away from the row button that `remove()` just focused. The guide only says queued snackbars capture focus, and the source does not settle this.
+- Whether the `role="alert"` text in `#form-error`, filled in before `hidden` is removed, is announced reliably. Live-region speech needs assistive-technology testing.
+- The DELETE sent from `pagehide` goes to a stub. With a real `fetch`, it needs `keepalive` (or `sendBeacon`) to survive unload, and the source cannot show that.
+- Keyboard operation of the Snackbar's Undo and close controls in a real browser.
+
+HANDOFFS
+- Component syntax: `<nav aria-label="Account">` (index.html:25) wraps only an `<h1>` and has no links. `<nav aria-label="Add address actions">` (index.html:84) is a button row. Accessibility rule 3 says not to use `<nav>` for button rows.
+- Component syntax: the delete buttons in the rows (index.html:149) have no icon-button or circle class. Confirm the documented trailing-action markup for `.list`.

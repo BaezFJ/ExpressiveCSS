@@ -1,0 +1,2 @@
+{"app":"framework-stage/destructive-list-run1","pass":true,"reason":"","removedMs":34,"focusInRow":true,"focusOnRestoredRow":true,"errors":[],"twoDeletes":{"undoShownForSecond":true,"rowsBefore":5,"rowsAfter":3}}
+{"app":"framework-stage/destructive-list-run2","pass":true,"reason":"","removedMs":31,"focusInRow":true,"focusOnRestoredRow":true,"errors":[],"twoDeletes":{"undoShownForSecond":true,"rowsBefore":5,"rowsAfter":3}}
