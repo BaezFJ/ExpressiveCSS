@@ -17,14 +17,16 @@ const snapshot = (page) => page.evaluate((tabs) => {
   const visible = (selector) => [...document.querySelectorAll(selector)].filter(shown);
   return {
     tab: [...document.querySelectorAll(tabs)].find((link) => link.classList.contains('active'))?.textContent.trim() ?? null,
-    search: visible('input[type="search"]')[0]?.value ?? null,
+    search: (visible('[data-table-filter]')[0] ?? visible('input[type="search"]')[0])?.value ?? null,
     rows: visible('tbody tr').map((row) => row.innerText.trim()),
     status: visible('[data-table-page-status]').map((output) => output.textContent.trim()),
   };
 }, TABS);
 
 async function enabledNext(page) {
-  const next = page.getByRole('button', { name: /^next\b/i }).filter({ visible: true }).first();
+  // A table's own Next control first, then any visible button named Next.
+  const own = page.locator('[data-table-page="next"]').filter({ visible: true }).first();
+  const next = (await own.count()) ? own : page.getByRole('button', { name: /^next\b/i }).filter({ visible: true }).first();
   if (!(await next.count())) return null;
   const enabled = await next.evaluate((button) => !button.disabled && button.getAttribute('aria-disabled') !== 'true');
   return enabled ? next : null;
@@ -32,7 +34,8 @@ async function enabledNext(page) {
 
 // Types one-letter filters until a second page exists, then goes to it.
 async function reachSecondPage(page) {
-  const search = page.locator('input[type="search"]').filter({ visible: true }).first();
+  const own = page.locator('[data-table-filter]').filter({ visible: true }).first();
+  const search = (await own.count()) ? own : page.locator('input[type="search"]').filter({ visible: true }).first();
   if (!(await search.count())) return { reason: 'no visible search field' };
   for (const letter of LETTERS) {
     await search.fill(letter);
@@ -77,6 +80,7 @@ async function checkPage(browser, page, url, dir) {
   await wait(800);
   const reloaded = await snapshot(page);
   const fresh = await browser.newPage();
+  fresh.on('pageerror', (error) => errors.push(error.message));
   try {
     await fresh.goto(saved);
     await wait(800);

@@ -4,10 +4,11 @@ import { execFile } from 'node:child_process';
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 
 const run = promisify(execFile);
-const script = new URL('../scripts/finished-app-url-state.mjs', import.meta.url).pathname;
+const script = fileURLToPath(new URL('../scripts/finished-app-url-state.mjs', import.meta.url));
 const dist = (path) => new URL(`../dist/${path}`, import.meta.url).href;
 
 const table = (id, names) => `<div class="data-table" id="${id}" data-page-size="3">

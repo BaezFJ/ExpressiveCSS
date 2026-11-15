@@ -4102,7 +4102,7 @@ Page buttons keep focus, including at the first or last page. The framework sets
 
 `Expressive.DataTables.setPage(wrapper, { page, pageSize, total })` accepts application page state and opts that wrapper into server ownership. Reuse the local paging markup. The wrapper must be a `.data-table` with a direct native table. Numeric safe integers are required: page and pageSize positive, total nonnegative. Missing fields, strings, fractions, infinities and unsafe integers return false without mutation. Valid state returns true, is copied without modifying the supplied object, clamps the page and reflects pageSize in the wrapper attribute. The setter silently synchronizes status, bounds, selection and columns.
 
-`Expressive.DataTables.showPage(wrapper, page)` shows a local page without events, for example a page restored from the URL after a reload. Call it once the rows exist. It keeps the local filter and sort, clamps a page past the end, supersedes a page request still pending and returns the page it shows. It returns false, changing nothing, for a server-owned table (one whose `setPage` state was accepted), a table without `data-page-size`, or a page that isn't a positive safe integer.
+`Expressive.DataTables.showPage(wrapper, page)` shows a local page without events, for example a page restored from the URL after a reload. Call it once the rows exist. It keeps the local filter and sort, clamps a page past the end, supersedes a page request still pending and returns the page it shows, which is 0 when no record is left to show. It returns false, changing nothing, for a server-owned table (one whose `setPage` state was accepted), a table without `data-page-size`, or a page that isn't a positive safe integer.
 
 ```js
 const page = Number(new URLSearchParams(location.search).get('page')) || 1;
@@ -4292,24 +4292,30 @@ The framework fires no event of its own. To keep the choice across visits, save 
 
 ### App behavior
 
-Keep the filter text and page in the URL as query parameters, written with `history.replaceState`. Write the query wherever the app applies it (`expressive:filter` with `{ query }` for a `data-table-filter` input) and drop the page then, since a new query returns to page 1; drop it on an uncanceled `expressive:sort` too. Write `page`, and `pageSize` when a size select exists, on `expressive:page`. On load, in a `DOMContentLoaded` handler, read the whole URL first, then set the search input's `value`, call `Expressive.DataTables.sync(wrapper)`, then `Expressive.DataTables.showPage(wrapper, page)` on the table in the selected panel. Put URL values into `.value` or `.textContent`, never into markup.
+Keep the filter text and page in the URL as query parameters, written with `history.replaceState`. Write the query wherever the app applies it (`expressive:filter` with `{ query }` for a `data-table-filter` input) and drop the page then, since a new query returns to page 1; drop it on an uncanceled `expressive:sort` too. Write `page`, and `pageSize` when a size select exists, on `expressive:page`. With a table in each tab panel, drop `q` and `page` when the tab changes too. On load, in a `DOMContentLoaded` handler, read the whole URL first, then set the search input's `value` and any saved size on the size select's `value` and the wrapper's `data-page-size`, call `Expressive.DataTables.sync(wrapper)`, then `Expressive.DataTables.showPage(wrapper, page)` on the table in the selected panel. Browsers limit how often `replaceState` runs, so write the query after typing pauses. Put URL values into `.value` or `.textContent`, never into markup.
 
 ```js
-const wrapper = document.getElementById('orders');
-const params = new URLSearchParams(location.search);
-wrapper.querySelector('[data-table-filter]').value = params.get('q') ?? '';
-Expressive.DataTables.sync(wrapper);
-Expressive.DataTables.showPage(wrapper, Number(params.get('page')) || 1);
-const write = (changes) => {
-  const url = new URL(location.href);
-  for (const [key, value] of Object.entries(changes)) {
-    if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
-  }
-  history.replaceState(null, '', url);
-};
-wrapper.addEventListener('expressive:filter', (event) => write({ q: event.detail.query, page: '' }));
-wrapper.addEventListener('expressive:page', (event) => write({ page: event.detail.page }));
-wrapper.addEventListener('expressive:sort', (event) => { if (!event.defaultPrevented) write({ page: '' }); });
+document.addEventListener('DOMContentLoaded', () => {
+  const wrapper = document.getElementById('orders');
+  const params = new URLSearchParams(location.search);
+  wrapper.querySelector('[data-table-filter]').value = params.get('q') ?? '';
+  Expressive.DataTables.sync(wrapper);
+  Expressive.DataTables.showPage(wrapper, Number(params.get('page')) || 1);
+  const write = (changes) => {
+    const url = new URL(location.href);
+    for (const [key, value] of Object.entries(changes)) {
+      if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
+    }
+    history.replaceState(null, '', url);
+  };
+  let typing;
+  wrapper.addEventListener('expressive:filter', (event) => {
+    clearTimeout(typing);
+    typing = setTimeout(() => write({ q: event.detail.query, page: '' }), 300);
+  });
+  wrapper.addEventListener('expressive:page', (event) => write({ page: event.detail.page }));
+  wrapper.addEventListener('expressive:sort', (event) => { if (!event.defaultPrevented) write({ page: '' }); });
+});
 ```
 
 ---

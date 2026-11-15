@@ -9,7 +9,7 @@ Component ID: `data-table`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `cecd7155dedfcb133c145dd2a3b61fa60bf9fb90902ffa21f5f9b6302aa363e5`
+Contract SHA-256: `5e49fdf46081625a7c99e8f55f00f39dfb5ac1e1ac25ecef32a4864392ff3666`
 
 #### Selection and adaptation
 
@@ -74,24 +74,30 @@ Add a labelled `input[type="search"][data-table-filter]` inside the wrapper for 
 
 #### App behavior
 
-Keep the filter text and page in the URL as query parameters, written with `history.replaceState`. Write the query wherever the app applies it (`expressive:filter` with `{ query }` for a `data-table-filter` input) and drop the page then, since a new query returns to page 1; drop it on an uncanceled `expressive:sort` too. Write `page`, and `pageSize` when a size select exists, on `expressive:page`. On load, in a `DOMContentLoaded` handler, read the whole URL first, then set the search input's `value`, call `Expressive.DataTables.sync(wrapper)`, then `Expressive.DataTables.showPage(wrapper, page)` on the table in the selected panel. Put URL values into `.value` or `.textContent`, never into markup.
+Keep the filter text and page in the URL as query parameters, written with `history.replaceState`. Write the query wherever the app applies it (`expressive:filter` with `{ query }` for a `data-table-filter` input) and drop the page then, since a new query returns to page 1; drop it on an uncanceled `expressive:sort` too. Write `page`, and `pageSize` when a size select exists, on `expressive:page`. With a table in each tab panel, drop `q` and `page` when the tab changes too. On load, in a `DOMContentLoaded` handler, read the whole URL first, then set the search input's `value` and any saved size on the size select's `value` and the wrapper's `data-page-size`, call `Expressive.DataTables.sync(wrapper)`, then `Expressive.DataTables.showPage(wrapper, page)` on the table in the selected panel. Browsers limit how often `replaceState` runs, so write the query after typing pauses. Put URL values into `.value` or `.textContent`, never into markup.
 
 ```js
-const wrapper = document.getElementById('orders');
-const params = new URLSearchParams(location.search);
-wrapper.querySelector('[data-table-filter]').value = params.get('q') ?? '';
-Expressive.DataTables.sync(wrapper);
-Expressive.DataTables.showPage(wrapper, Number(params.get('page')) || 1);
-const write = (changes) => {
-  const url = new URL(location.href);
-  for (const [key, value] of Object.entries(changes)) {
-    if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
-  }
-  history.replaceState(null, '', url);
-};
-wrapper.addEventListener('expressive:filter', (event) => write({ q: event.detail.query, page: '' }));
-wrapper.addEventListener('expressive:page', (event) => write({ page: event.detail.page }));
-wrapper.addEventListener('expressive:sort', (event) => { if (!event.defaultPrevented) write({ page: '' }); });
+document.addEventListener('DOMContentLoaded', () => {
+  const wrapper = document.getElementById('orders');
+  const params = new URLSearchParams(location.search);
+  wrapper.querySelector('[data-table-filter]').value = params.get('q') ?? '';
+  Expressive.DataTables.sync(wrapper);
+  Expressive.DataTables.showPage(wrapper, Number(params.get('page')) || 1);
+  const write = (changes) => {
+    const url = new URL(location.href);
+    for (const [key, value] of Object.entries(changes)) {
+      if (value) url.searchParams.set(key, value); else url.searchParams.delete(key);
+    }
+    history.replaceState(null, '', url);
+  };
+  let typing;
+  wrapper.addEventListener('expressive:filter', (event) => {
+    clearTimeout(typing);
+    typing = setTimeout(() => write({ q: event.detail.query, page: '' }), 300);
+  });
+  wrapper.addEventListener('expressive:page', (event) => write({ page: event.detail.page }));
+  wrapper.addEventListener('expressive:sort', (event) => { if (!event.defaultPrevented) write({ page: '' }); });
+});
 ```
 
 #### Also documented

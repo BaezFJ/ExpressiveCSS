@@ -195,5 +195,6 @@
     "url-state": 0,
     "submit-flow": 0,
     "total": 0
-  }
+  },
+  "urlStateFinal": "url-check-final.jsonl: the shipped script (after review: table-scoped search and Next, fresh-page error listener) on all four apps; both baseline dashboards fail and both rebuilds pass, as before."
 }

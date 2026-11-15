@@ -416,6 +416,9 @@ test('showPage clamps past the end, keeps the filter and refuses what it cannot 
   query('e');
   assert.equal(Expressive.DataTables.showPage(wrapper(), 2), 2);
   assert.ok(displayed().every((id) => /e/i.test(document.getElementById(id).textContent)));
+  query('zzz');
+  assert.equal(Expressive.DataTables.showPage(wrapper(), 2), 0);
+  query('e');
   for (const page of [0, -1, 1.5, '2', Number.MAX_SAFE_INTEGER + 1, NaN, null]) {
     assert.equal(Expressive.DataTables.showPage(wrapper(), page), false, String(page));
   }
