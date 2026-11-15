@@ -14,6 +14,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - The tabs and data table guides say how to keep the selected tab, filter
   text and page in the URL with `history.replaceState`, and how to restore
   them on load.
+- The text field guide says how a form submits: submit stays enabled, Enter
+  submits, `novalidate` with `Forms.validateField` shows every error beside
+  its field and focus moves to the first one; it also covers `name`,
+  `autocomplete`, keyboards, spellcheck, paste and placeholders. The text
+  field examples now set `name` and `autocomplete`.
 - `--md-sys-typescale-{role}-font` is the `font` shorthand for each of the 15
   type roles, built from the role's weight, size, line height and family
   tokens. Pair it with the role's `-letter-spacing` token, which the shorthand

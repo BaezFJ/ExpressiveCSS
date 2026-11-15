@@ -9,7 +9,7 @@ Component ID: `text-fields`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `2801921b953bf83790a4a1c9bfbb8dbf5ec268444f22900c22b7345cceb672a2`
+Contract SHA-256: `d94d454b303d7988797c11b7a39b0d93d37ecfd34b7a3a4a325c10af0b3db05f`
 
 #### Selection and adaptation
 
@@ -45,7 +45,7 @@ Tokens follow the [M3 text field spec](https://m3.material.io/components/text-fi
 
 ```html
 <div class="field">
-  <input id="first_name" type="text" placeholder=" " aria-describedby="first_name_help">
+  <input id="first_name" name="first_name" type="text" autocomplete="given-name" placeholder=" " aria-describedby="first_name_help">
   <label for="first_name">First name</label>
   <small id="first_name_help">Supporting text</small>
 </div>
@@ -61,6 +61,21 @@ Tokens follow the [M3 text field spec](https://m3.material.io/components/text-fi
   <input id="loc" type="text" placeholder=" ">
   <label for="loc">Location</label>
 </div>
+```
+
+#### App behavior
+
+Leave submit enabled until submission starts, and put fields in a `<form>` with a submit button so Enter submits. Mark required fields `required`. Use `novalidate` and, on submit, call `Expressive.Forms.validateField(input)` on each `.validate` field, which sets `aria-invalid` and shows its `data-error` text beside it, then focus the first field with `aria-invalid="true"`. A server error about one field goes into that field's `data-error` text, with `aria-invalid="true"` and focus on the field. Give every field a `name`. Give a field for the person's own data the one `autocomplete` token for its purpose, and split a field that asks for several. Set `type` for the keyboard, never `type="number"` for phones, codes or card numbers, and `inputmode` where `type` doesn't bring the keyboard. Turn spellcheck off for codes, emails and usernames, allow paste, and check that a `pattern` compiles with the `v` flag the browser uses. Keep `placeholder=" "` for a floating label; put an example ending in `…` in a label-above placeholder or the supporting text.
+
+```js
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const fields = [...form.querySelectorAll('.validate')];
+  fields.forEach((field) => Expressive.Forms.validateField(field));
+  const first = fields.find((field) => field.getAttribute('aria-invalid') === 'true');
+  if (first) return first.focus();
+  save(new FormData(form));
+});
 ```
 
 #### Also documented

@@ -51,7 +51,7 @@ const S = defineSections([
 
         <form class="row">
           <div class="s12 m6 field">
-            <input id="first_name" type="text" placeholder=" " maxlength="20" aria-describedby="first_name-help">
+            <input id="first_name" name="first_name" type="text" autocomplete="given-name" placeholder=" " maxlength="20" aria-describedby="first_name-help">
             <label for="first_name">First name</label>
             <small id="first_name-help">Supporting text</small>
           </div>
@@ -83,7 +83,7 @@ const S = defineSections([
         </form>
 <Code code={`
 <div class="field">
-  <input id="first_name" type="text" placeholder=" " aria-describedby="first_name_help">
+  <input id="first_name" name="first_name" type="text" autocomplete="given-name" placeholder=" " aria-describedby="first_name_help">
   <label for="first_name">First name</label>
   <small id="first_name_help">Supporting text</small>
 </div>
@@ -120,7 +120,7 @@ const S = defineSections([
         </p>
         <form class="row">
           <div class="s12 m6 field label-above">
-            <input id="work_email" type="email" placeholder="name@example.com" aria-describedby="work_email-help">
+            <input id="work_email" name="work_email" type="email" autocomplete="email" spellcheck="false" placeholder="name@example.com…" aria-describedby="work_email-help">
             <label for="work_email">Work email</label>
             <small id="work_email-help">We never share it</small>
           </div>
@@ -131,7 +131,7 @@ const S = defineSections([
         </form>
 <Code code={`
 <div class="field label-above">
-  <input id="work_email" type="email" placeholder="name@example.com" aria-describedby="work_email_help">
+  <input id="work_email" name="work_email" type="email" autocomplete="email" spellcheck="false" placeholder="name@example.com…" aria-describedby="work_email_help">
   <label for="work_email">Work email</label>
   <small id="work_email_help">We never share it</small>
 </div>
@@ -168,7 +168,7 @@ const S = defineSections([
         </p>
         <form class="row">
           <div class="s12 m6 field">
-            <input id="email" type="email" class="validate" placeholder=" " aria-describedby="email-help">
+            <input id="email" name="email" type="email" class="validate" autocomplete="email" spellcheck="false" placeholder=" " aria-describedby="email-help">
             <label for="email">Email</label>
             <small id="email-help" data-error="Enter a valid email">Supporting text</small>
           </div>
@@ -179,7 +179,7 @@ const S = defineSections([
         </form>
 <Code code={`
 <div class="field">
-  <input id="email" type="email" class="validate" placeholder=" " aria-describedby="email_help">
+  <input id="email" name="email" type="email" class="validate" autocomplete="email" spellcheck="false" placeholder=" " aria-describedby="email_help">
   <label for="email">Email</label>
   <small id="email_help" data-error="Enter a valid email">Supporting text</small>
 </div>

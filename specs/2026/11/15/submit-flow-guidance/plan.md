@@ -6,8 +6,8 @@ Phase 82. Requirements: [requirements.md](requirements.md). Checks: [validation.
 
 Covers R1 to R4, R7. Checks V1.
 
-- [ ] Add the R4 test and watch it fail.
-- [ ] Write the Text Inputs and Fieldsets `### App behavior` subsections, fix the three examples in `llm.md` and `docs/src/pages/text-inputs.astro`, add the CHANGELOG entry, run `npm run build:skill`.
+- [x] Add the R4 test and watch it fail.
+- [x] Write the Text Inputs and Fieldsets `### App behavior` subsections, fix the three examples in `llm.md` and `docs/src/pages/text-inputs.astro`, add the CHANGELOG entry, run `npm run build:skill`.
 
 Done when V1 passes.
 

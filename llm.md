@@ -8716,7 +8716,7 @@ Add `placeholder=" "` (one space) so the label floats with CSS only. A missing p
 
 ```html
 <div class="field">
-  <input id="first_name" type="text" placeholder=" " aria-describedby="first_name_help">
+  <input id="first_name" name="first_name" type="text" autocomplete="given-name" placeholder=" " aria-describedby="first_name_help">
   <label for="first_name">First name</label>
   <small id="first_name_help">Supporting text</small>
 </div>
@@ -8746,7 +8746,7 @@ Keep the `<label>` after the control, as in a floating field. The grid draws it 
 
 ```html
 <div class="field label-above">
-  <input id="work_email" type="email" placeholder="name@example.com" aria-describedby="work_email_help">
+  <input id="work_email" name="work_email" type="email" autocomplete="email" spellcheck="false" placeholder="name@example.com…" aria-describedby="work_email_help">
   <label for="work_email">Work email</label>
   <small id="work_email_help">We never share it</small>
 </div>
@@ -8763,7 +8763,7 @@ Keep the `<label>` after the control, as in a floating field. The grid draws it 
 
 ```html
 <div class="field">
-  <input id="email" type="email" class="validate" placeholder=" " aria-describedby="email_help">
+  <input id="email" name="email" type="email" class="validate" autocomplete="email" spellcheck="false" placeholder=" " aria-describedby="email_help">
   <label for="email">Email</label>
   <small id="email_help" data-error="Enter a valid email">Supporting text</small>
 </div>
@@ -8894,6 +8894,21 @@ Character Counter is not in `AutoInit()`. It reads `maxlength` (not `data-length
 Expressive.CharacterCounter.init(
   document.querySelectorAll('#input_text_counter, #textarea_counter')
 );
+```
+
+### App behavior
+
+Leave submit enabled until submission starts, and put fields in a `<form>` with a submit button so Enter submits. Mark required fields `required`. Use `novalidate` and, on submit, call `Expressive.Forms.validateField(input)` on each `.validate` field, which sets `aria-invalid` and shows its `data-error` text beside it, then focus the first field with `aria-invalid="true"`. A server error about one field goes into that field's `data-error` text, with `aria-invalid="true"` and focus on the field. Give every field a `name`. Give a field for the person's own data the one `autocomplete` token for its purpose, and split a field that asks for several. Set `type` for the keyboard, never `type="number"` for phones, codes or card numbers, and `inputmode` where `type` doesn't bring the keyboard. Turn spellcheck off for codes, emails and usernames, allow paste, and check that a `pattern` compiles with the `v` flag the browser uses. Keep `placeholder=" "` for a floating label; put an example ending in `…` in a label-above placeholder or the supporting text.
+
+```js
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const fields = [...form.querySelectorAll('.validate')];
+  fields.forEach((field) => Expressive.Forms.validateField(field));
+  const first = fields.find((field) => field.getAttribute('aria-invalid') === 'true');
+  if (first) return first.focus();
+  save(new FormData(form));
+});
 ```
 
 ---
@@ -9247,6 +9262,10 @@ The HTML `disabled` attribute on a fieldset disables every control inside it. Th
   <div class="field">…</div>
 </fieldset>
 ```
+
+### App behavior
+
+For how a form with these groups submits, shows its errors and moves focus, follow the Text Inputs App behavior.
 
 ---
 

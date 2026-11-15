@@ -211,6 +211,18 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(contracts, /can't be undone/);
   });
 
+  test('the text field and fieldset guides carry the submit flow App behavior', () => {
+    const { guide, behavior } = appBehaviorOf('text-fields');
+    for (const phrase of ['novalidate', 'validateField', 'aria-invalid', 'focus', 'required', 'autocomplete', 'spellcheck', 'inputmode', 'type="number"', '…', 'placeholder=" "', '`v` flag']) {
+      assert.ok(behavior.includes(phrase), `text field App behavior lacks ${phrase}`);
+    }
+    assert.ok(Buffer.byteLength(behavior) <= 2048, `text field App behavior is ${Buffer.byteLength(behavior)} bytes`);
+    const syntax = guide.slice(guide.indexOf('#### Syntax'), guide.indexOf('#### ', guide.indexOf('#### Syntax') + 1));
+    assert.match(syntax, /name="/);
+    assert.match(syntax, /autocomplete="/);
+    assert.match(appBehaviorOf('fieldsets').behavior, /Text Inputs App behavior/);
+  });
+
   test('the tabs and data table guides carry the URL state App behavior', () => {
     const { behavior: tabs } = appBehaviorOf('tabs');
     for (const phrase of ['replaceState', 'expressive:change', '.active', 'AutoInit()', 'read the whole URL', 'select(id)']) {
