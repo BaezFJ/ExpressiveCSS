@@ -558,5 +558,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed .status-bar (bar, items, end group and its compact fallback, vibrant bar, compact priority hiding, forced-colors edge, badge anchor), status bar items leaving the common button rules, and the page, pane and questionnaire footers stepping aside for it: 91,445 gzip bytes (+384).
   // Reviewed a --md-sys-typescale-{role}-font shorthand token for each of the 15 roles, built from the role's longhand tokens: 91,770 gzip bytes (+325).
   // Reviewed .scaffold (window-height grid areas, child and region-class placement, the pane scroller and its scroll timeline, scrolling custom rail and trailing content, the rail's height override, the trailing toolbar's position, the app bar's private timeline property, print): 92,076 gzip bytes (+306).
-  assert.ok(sizes(css).gzip <= 92076, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed .scaffold.tall-rail (full-height rail and trailing areas, bar over the pane): 92,098 gzip bytes (+22).
+  assert.ok(sizes(css).gzip <= 92098, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -9,7 +9,7 @@ Component ID: `loading-overlay`
 
 Contract: ExpressiveCSS 0.18.1
 
-Contract SHA-256: `71dfbb5294ed01d92df86ab625d5d1edec5556e74411a0e5ba8f4f37c6720829`
+Contract SHA-256: `7027c1a2a1ff72f9cf6cb3881652189ee86de44120b8c8631632f593ba6dda65`
 
 #### Selection and adaptation
 

@@ -441,7 +441,7 @@
         "implementation": {
           "source": "llm.md#scaffold",
           "reviewedOn": "2026-11-15",
-          "documentedSupport": "A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling.",
+          "documentedSupport": "A window-height grid that places a header app bar across the top and a navigation rail, main and vertical toolbar below it, with region classes for custom content and only the pane scrolling, and a tall-rail modifier that runs the rail and trailing region the full height with the bar over the pane.",
           "webAdaptation": "CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.",
           "limitations": [
             "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser; spoken output and a mobile browser's collapsing address bar remain unverified."
@@ -473,7 +473,7 @@
         "sources": [
           {
             "path": "src/sass/components/_scaffold.scss",
-            "sha256": "27178e857ae135ad47758c89611811d5d0a5a6a593b1b1ad34c4800299715659"
+            "sha256": "963e812138b121a3d1b20c15effb389121831a3c93aec7e32675a2d8e031625d"
           }
         ],
         "gaps": [
@@ -493,6 +493,11 @@
             "file": "tests/scaffold-browser.test.js",
             "name": "chromium: scaffold rail fills its region, scrolls, and widens the pane's column when expanded",
             "scope": "The rail from the bar to the window bottom, scrolling destinations, and an expanded rail that narrows the pane without overlap. Equivalent Firefox and WebKit cases run in the same suite."
+          },
+          {
+            "file": "tests/scaffold-browser.test.js",
+            "name": "chromium: a tall-rail scaffold runs the rail and toolbar the full height with the bar over the pane",
+            "scope": "Grid areas, a full-height rail and centered toolbar, the bar over the pane only, 200% text, an expanded rail, empty regions and the pane-scroll fill. Equivalent Firefox and WebKit cases run in the same suite."
           },
           {
             "file": "tests/scaffold-browser.test.js",

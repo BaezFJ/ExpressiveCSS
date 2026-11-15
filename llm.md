@@ -5100,6 +5100,17 @@ Each region takes one direct child. For custom content use the region classes `s
 
 The rail runs from the bar to the bottom of the window, and expanding it widens its column and narrows the pane. A vertical toolbar is centered in the trailing region, `--md-comp-toolbar-external-space` (24px) from the pane and the window edge. Under `dir="rtl"` the rail is on the right and the toolbar on the left.
 
+Add `tall-rail` to run the rail from the top of the window to the bottom, with the app bar over the pane only and the trailing toolbar centered in the full height.
+
+```html
+<div class="scaffold tall-rail">
+  <header>…</header>
+  <nav class="navigation-rail" aria-label="Primary">…</nav>
+  <main id="main" tabindex="-1">…</main>
+  <div class="toolbar vertical">…</div>
+</div>
+```
+
 Put a `panes` layout inside `<main>`, or put the panes classes on `<main>` itself; the panes fill the pane region and each scrolls on its own. Panes follow the window width, not the narrower pane region. Setting `container-type: inline-size` on `<main>` makes them follow the region, but also makes `<main>` the containing block for fixed descendants such as a FAB.
 
 ```html

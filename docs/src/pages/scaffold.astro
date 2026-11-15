@@ -7,6 +7,7 @@ import { defineSections } from "../lib/sections";
 const S = defineSections([
   { id: "anatomy", label: "Anatomy", heading: false },
   { id: "regions", label: "Regions" },
+  { id: "tall-rail", label: "Tall rail" },
   { id: "panes", label: "Panes inside the scaffold" },
   { id: "scrolling", label: "Scrolling" },
   { id: "direction", label: "Right-to-left" },
@@ -120,6 +121,23 @@ const S = defineSections([
   <div class="scaffold-rail">…</div>
   <div class="scaffold-pane">…</div>
   <div class="scaffold-trailing">…</div>
+</div>
+`} />
+  </Section>
+  <Section {...S["tall-rail"]}>
+        <p>
+          Add <code>.tall-rail</code> to run the rail from the top of the window
+          to the bottom. The app bar then sits over the pane only, starting at
+          the rail's edge, and the trailing toolbar is centered in the full
+          window height. Expanding the rail pushes the bar and the pane
+          together.
+        </p>
+<Code code={`
+<div class="scaffold tall-rail">
+  <header>…</header>
+  <nav class="navigation-rail" aria-label="Primary">…</nav>
+  <main id="main" tabindex="-1">…</main>
+  <div class="toolbar vertical">…</div>
 </div>
 `} />
   </Section>

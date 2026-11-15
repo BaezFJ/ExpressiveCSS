@@ -18,6 +18,8 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `.scaffold-pane` and `.scaffold-trailing` place custom content. The shell is
   as tall as the window and only `<main>` scrolls, and a top app bar fills from
   the pane's scroll where the browser supports `timeline-scope`. CSS only.
+  `.scaffold.tall-rail` runs the rail and the trailing region from the top of
+  the window to the bottom, with the app bar over the pane only.
 
 ## [0.18.1] - 2026-11-15
 
