@@ -274,6 +274,14 @@
     }
   }
 
+  // A scaffold makes the expanded rail an overlay on medium windows as well,
+  // and holds its column at the collapsed width (see _scaffold.scss).
+  @include bp-between("medium", "expanded") {
+    .scaffold > &.expanded:not(.modal) {
+      @include _modal-rail;
+    }
+  }
+
   // Navigation does nothing on paper.
   @include print-hidden;
 }

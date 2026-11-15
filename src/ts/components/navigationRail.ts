@@ -160,8 +160,10 @@ export class NavigationRail extends Component<NavigationRailOptions> {
     return this._mql.matches;
   }
 
+  // A rail drawn as an overlay is modal, however the CSS got there: .modal,
+  // a compact window, or a scaffold on a medium window.
   private _isModal() {
-    return this.el.classList.contains('modal') || this._isCompact();
+    return this.el.classList.contains('modal') || this._isCompact() || getComputedStyle(this.el).position === 'fixed';
   }
 
   private _sync() {

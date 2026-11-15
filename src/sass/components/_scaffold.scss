@@ -41,6 +41,20 @@ $_trailing: ":is(.toolbar.vertical, .toolbar-group.vertical, .scaffold-trailing)
   block-size: 100dvh;
   overflow: clip;
 
+  // Wherever the rail can open as an overlay (medium windows, or a .modal
+  // rail), its column keeps the collapsed width, open or closed, so the pane
+  // neither jumps when the rail leaves the grid nor follows it as it closes.
+  // Set --md-comp-nav-rail-collapsed-width on the scaffold, not the rail.
+  &:has(> .navigation-rail.modal) {
+    grid-template-columns: var(--md-comp-nav-rail-collapsed-width) minmax(0, 1fr) auto;
+  }
+
+  @include bp-between("medium", "expanded") {
+    &:has(> .navigation-rail) {
+      grid-template-columns: var(--md-comp-nav-rail-collapsed-width) minmax(0, 1fr) auto;
+    }
+  }
+
   // The rail and trailing region run the full height and the bar sits over
   // the pane only, as in the rail layout template.
   &.tall-rail {

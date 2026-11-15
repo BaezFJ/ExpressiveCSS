@@ -9,7 +9,7 @@ const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url),
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 
 const icon = (name) => `<span class="material-symbols" aria-hidden="true">${name}</span>`;
-const header = (cls = '') => `<header id="bar" class="${cls}"><div class="bar"><button type="button" aria-label="Menu">${icon('menu')}</button><h1>Mail</h1></div></header>`;
+const header = (cls = '', controls = '') => `<header id="bar" class="${cls}"><div class="bar"><button type="button" id="menu" aria-label="Menu"${controls ? ` aria-controls="${controls}"` : ''}>${icon('menu')}</button><h1>Mail</h1></div></header>`;
 const rail = (n = 4) => `<nav class="navigation-rail" id="rail" aria-label="Primary">${Array.from({ length: n }, (_, i) =>
   `<a href="#d${i}" id="d${i}"${i ? '' : ' aria-current="page"'}>${icon('inbox')}Item ${i}</a>`).join('')}</nav>`;
 const tools = (n = 3) => `<div class="toolbar vertical" id="tools">${Array.from({ length: n }, (_, i) =>
@@ -287,6 +287,122 @@ for (const [name, type, run] of engines) {
       near(tb.left, 24, 'the toolbar is 24px from the left edge');
       near((tb.top + tb.bottom) / 2, 400, 'the toolbar is centered in the full height');
     } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: on medium windows a scaffold's expanded rail overlays the pane, and from 840px it narrows it`, { timeout: 30000 }, async () => {
+    const { browser, tab, box, style } = await open(type, page(`<div id="host"></div>`), { width: 1024 });
+    try {
+      const render = async (options) => {
+        await tab.locator('#host').evaluate((el, html) => { el.innerHTML = html; }, scaffold(options));
+      };
+      const expand = () => tab.locator('#rail').evaluate((el) => el.classList.add('expanded'));
+
+      await render();
+      const narrow = await box('#rail');
+      const left = (await box('#pane')).left;
+      await expand();
+      near((await box('#pane')).left - left, (await box('#rail')).width - narrow.width, 'at 1024px the pane narrows by the width the rail gained');
+      assert.notEqual(await style('#rail', 'position'), 'fixed', 'and the rail stays in the grid');
+
+      await tab.setViewportSize({ width: 700, height: 800 });
+      for (const cls of ['', 'tall-rail']) {
+        await render({ cls });
+        const before = await box('#pane');
+        await expand();
+        assert.equal(await style('#rail', 'position'), 'fixed', `${cls || 'default'}: the rail is an overlay at 700px`);
+        assert.deepEqual(await box('#pane'), before, `${cls || 'default'}: the pane keeps its box`);
+        const hits = await tab.evaluate(() => [[650, 400], [690, 20]].map(([x, y]) => document.elementFromPoint(x, y)?.id));
+        assert.deepEqual(hits, ['rail', 'rail'], `${cls || 'default'}: the scrim covers the pane and the app bar row`);
+      }
+
+      await tab.setViewportSize({ width: 1280, height: 800 });
+      await render({ nav: rail().replace('class="navigation-rail"', 'class="navigation-rail modal"') });
+      const wide = await box('#pane');
+      await expand();
+      assert.equal(await style('#rail', 'position'), 'fixed', 'a .modal rail is an overlay at 1280px');
+      assert.deepEqual(await box('#pane'), wide, 'and the pane keeps its box');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: Escape and the scrim close a scaffold's medium overlay, and focus returns to the app bar button`, { timeout: 30000 }, async () => {
+    const { browser, tab } = await open(type, page(scaffold({ bar: header('', 'rail') })), { width: 700 });
+    try {
+      await tab.evaluate(() => { window.r = Expressive.NavigationRail.init(document.querySelector('#rail')); });
+      const expanded = () => tab.locator('#rail').evaluate((el) => el.classList.contains('expanded'));
+      await tab.locator('#menu').click();
+      assert.equal(await expanded(), true, 'the app bar button opens the rail');
+      await tab.locator('#d1').focus();
+      await tab.keyboard.press('Escape');
+      assert.equal(await expanded(), false, 'Escape closes the medium overlay');
+      assert.equal(await tab.evaluate(() => document.activeElement?.id), 'menu', 'focus returns to the app bar button');
+      for (const [x, y] of [[650, 400], [690, 20]]) {
+        await tab.evaluate(() => window.r.expand());
+        await tab.mouse.click(x, y);
+        assert.equal(await expanded(), false, `a scrim click at ${x},${y} closes it`);
+      }
+    } finally {
+      await tab.evaluate(() => window.r?.destroy()).catch(() => {});
+      await browser.close();
+    }
+  });
+
+  run(`${name}: the medium overlay stays inside the scaffold, mirrors under rtl, and leaves the compact overlay alone`, { timeout: 30000 }, async () => {
+    const outside = `<nav class="navigation-rail expanded" id="lone" aria-label="Lone"><a href="#x">${icon('home')}X</a></nav>`;
+    const { browser, tab, box, style } = await open(type, page(`${outside}<div id="host">${scaffold()}</div>`), { width: 700 });
+    try {
+      assert.notEqual(await style('#lone', 'position'), 'fixed', 'a rail outside a scaffold is not an overlay at 700px');
+      await tab.setViewportSize({ width: 500, height: 800 });
+      await tab.locator('#rail').evaluate((el) => el.classList.add('expanded'));
+      assert.equal(await style('#rail', 'position'), 'fixed', 'the compact overlay is unchanged at 500px');
+      await tab.evaluate(() => { document.documentElement.dir = 'rtl'; document.querySelector('#rail').classList.remove('expanded'); });
+      await tab.setViewportSize({ width: 700, height: 800 });
+      const before = await box('#pane');
+      await tab.locator('#rail').evaluate((el) => el.classList.add('expanded'));
+      near((await box('#rail')).right, 700, 'under rtl the overlay sits at the right edge');
+      assert.deepEqual(await box('#pane'), before, 'and the pane keeps its box');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: collapsing the medium overlay with motion on leaves the pane in place`, { timeout: 30000 }, async () => {
+    const { browser, tab, box } = await open(type, page(scaffold()), { width: 700, reducedMotion: 'no-preference' });
+    try {
+      const before = await box('#pane');
+      await tab.locator('#rail').evaluate((el) => el.classList.add('expanded'));
+      await tab.waitForTimeout(600);
+      assert.deepEqual(await box('#pane'), before, 'open');
+      await tab.locator('#rail').evaluate((el) => el.classList.remove('expanded'));
+      assert.deepEqual(await box('#pane'), before, 'as the collapse starts');
+      await tab.waitForTimeout(600);
+      assert.deepEqual(await box('#pane'), before, 'after the collapse');
+    } finally {
+      await browser.close();
+    }
+  });
+
+  run(`${name}: resizing across 840px switches the expanded rail between pushing and overlaying`, { timeout: 30000 }, async () => {
+    const { browser, tab, style } = await open(type, page(scaffold()), { width: 900 });
+    try {
+      await tab.evaluate(() => { window.r = Expressive.NavigationRail.init(document.querySelector('#rail')); window.r.expand(); });
+      const expanded = () => tab.locator('#rail').evaluate((el) => el.classList.contains('expanded'));
+      assert.notEqual(await style('#rail', 'position'), 'fixed', 'at 900px the rail pushes the pane');
+      await tab.setViewportSize({ width: 700, height: 800 });
+      assert.equal(await style('#rail', 'position'), 'fixed', 'at 700px it overlays');
+      await tab.locator('#d1').focus();
+      await tab.keyboard.press('Escape');
+      assert.equal(await expanded(), false, 'Escape closes the overlay');
+      await tab.evaluate(() => window.r.expand());
+      await tab.setViewportSize({ width: 900, height: 800 });
+      await tab.locator('#d1').focus();
+      await tab.keyboard.press('Escape');
+      assert.equal(await expanded(), true, 'back at 900px Escape leaves the pushing rail open');
+    } finally {
+      await tab.evaluate(() => window.r?.destroy()).catch(() => {});
       await browser.close();
     }
   });
