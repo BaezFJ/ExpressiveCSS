@@ -7,8 +7,8 @@ const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'u
 const frames = page => page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 const near = (a, b, label = '') => assert.ok(Math.abs(a - b) <= 1, `${label}: ${a}, expected ${b}`);
 const box = '<div id="box" class="scroll-area custom" style="height:300px;width:240px"><div id="content" style="height:900px;width:720px"></div></div>';
-async function setup(page, html = box, extra = '', dir = 'ltr', root = false) {
-  await page.setContent(`<!doctype html><html dir="${dir}" class="${root ? 'scroll-area custom' : ''}"><head><style>${css}\nbody{margin:0}${extra}</style></head><body>${html}</body></html>`);
+async function setup(page, html = box, extra = '', dir = 'ltr', root = false, sheet = css) {
+  await page.setContent(`<!doctype html><html dir="${dir}" class="${root ? 'scroll-area custom' : ''}"><head><style>${sheet}\nbody{margin:0}${extra}</style></head><body>${html}</body></html>`);
   await page.evaluate(() => scrollTo(0, 0));
   await page.addScriptTag({content:js});
 }
@@ -27,11 +27,50 @@ function corner(g, width, dir, page = false) {
   return {left:dir==='rtl'?end:end-width,right:dir==='rtl'?end+width:end,top:bottom-width,bottom};
 }
 const intersects = (a,b) => a.left < b.right-.5 && a.right > b.left+.5 && a.top < b.bottom-.5 && a.bottom > b.top+.5;
+const nav = (classes='') => `<nav class="navigation-bar ${classes}"><a href="#"><span class="material-symbols">home</span>Home</a><a href="#"><span class="material-symbols">search</span>Search</a></nav>`;
+const status = '<footer class="status-bar"><button>Ready</button></footer>';
+const toolbar = (classes='') => `<div class="toolbar ${classes}"><button>Action</button></div>`;
+const group = `<div class="toolbar-group vertical">${toolbar('vertical')}<button class="button extra circle">Add</button></div>`;
+const controls = [
+  {name:'btt',html:'<a class="back-to-top button extra circle" href="#">Top</a>',targets:'.back-to-top'},
+  {name:'fab',html:'<div class="fab-menu"><button class="button extra circle">Add</button><ul><li><button>Draft</button></li></ul></div>',targets:'.fab-menu button'},
+  {name:'status',html:`<main style="height:2000px"></main>${status}`,targets:'.status-bar > button',edge:'.status-bar',scroll:true},
+  {name:'nav',html:`<main style="height:2000px"></main>${nav('fixed')}`,targets:'.navigation-bar > a',edge:'.navigation-bar',scroll:true},
+  {name:'nav-horizontal',html:`<main style="height:2000px"></main>${nav('fixed horizontal')}`,targets:'.navigation-bar > a',edge:'.navigation-bar',scroll:true},
+  {name:'footer-nav',html:`<footer style="height:2000px;display:flex;align-items:flex-end">${nav('fixed')}</footer>`,targets:'.navigation-bar > a',edge:'.navigation-bar',scroll:true},
+  {name:'footer-horizontal',html:`<footer style="height:2000px;display:flex;align-items:flex-end">${nav('fixed horizontal')}</footer>`,targets:'.navigation-bar > a',edge:'.navigation-bar',scroll:true},
+  {name:'docked',html:toolbar('docked fixed'),targets:'.toolbar > button',edge:'.toolbar'},
+  {name:'floating',html:toolbar('fixed'),targets:'.toolbar > button',floating:true},
+  {name:'top-docked',html:toolbar('docked fixed top'),targets:'.toolbar > button',unchanged:true},
+  {name:'top-floating',html:toolbar('fixed top'),targets:'.toolbar > button',unchanged:true},
+  {name:'vertical',html:toolbar('vertical fixed'),targets:'.toolbar > button',unchanged:true},
+  {name:'scaffold-status',html:`<div class="scaffold"><main>Pane</main>${status}</div>`,targets:'.status-bar > button',edge:'.status-bar'},
+  {name:'scaffold-nav',html:`<div class="scaffold"><main>Pane</main>${nav()}</div>`,targets:'.navigation-bar > a',edge:'.navigation-bar'},
+  {name:'scaffold-both',html:`<div class="scaffold"><main>Pane</main>${nav()}${status}</div>`,targets:'.status-bar > button,.navigation-bar > a',edge:'.status-bar'},
+  {name:'scaffold-footer-nav',html:`<div class="scaffold"><main>Pane</main><footer>${nav()}</footer></div>`,targets:'.navigation-bar > a',edge:'.navigation-bar'},
+  {name:'compact-footer-nav',html:`<div class="scaffold"><main style="height:2000px">Pane</main><footer>${nav()}</footer></div>`,targets:'.navigation-bar > a',edge:'.navigation-bar',width:390,scroll:true},
+  {name:'compact-toolbar',html:`<div class="scaffold"><main style="height:2000px">Pane</main>${toolbar('vertical')}</div>`,targets:'.toolbar > button',width:390,scroll:true},
+  {name:'compact-group',html:`<div class="scaffold"><main style="height:2000px">Pane</main>${group}</div>`,targets:'.toolbar > button,.toolbar-group > .extra',width:390,scroll:true},
+  {name:'compact-group-nav',html:`<div class="scaffold"><main style="height:2000px">Pane</main>${group}${nav()}</div>`,targets:'.toolbar > button,.toolbar-group > .extra,.navigation-bar > a',width:390,scroll:true},
+];
+async function setupControls(page, fixture, size=12, dir='ltr', extra='', safeArea=0) {
+  await page.setViewportSize({width:fixture.width || 600,height:500});
+  await setup(page,fixture.html+'<div id="content" style="position:absolute;top:0;width:1800px;height:1500px;pointer-events:none"></div>',`:root{--scroll-area-bar-size:${size}px}.material-symbols{overflow:hidden}.fab-menu *{transition:none!important}${extra}`,dir,true,css.replace(/env\(safe-area-inset-bottom,\s*0px\)/g,`${safeArea}px`));
+  await page.evaluate(()=>{const el=document.querySelector('.fab-menu');if(el){window.fab=Expressive.FloatingActionButton.init(el);fab.open();}});
+  if(fixture.scroll)await page.evaluate(()=>scrollTo(0,800));await frames(page);
+}
+const controlGeometry = (page,fixture) => page.evaluate(selector=>[...document.querySelectorAll(selector)].map(el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,height:r.height,gap:innerHeight-r.bottom};}),fixture.targets);
+async function pressControls(page, fixture) {
+  await page.evaluate(selector=>{window.targetClicks=0;for(const el of document.querySelectorAll(selector))el.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();targetClicks++;},{capture:true});},fixture.targets);
+  const targets=await controlGeometry(page,fixture);
+  for(const target of targets)await page.mouse.click((target.left+target.right)/2,target.bottom-1);
+  assert.equal(await page.evaluate(()=>targetClicks),targets.length,fixture.name);
+}
 for (const [engine,type,browserTest] of engines) {
   async function run(body, options={}) {
     const browser=await leaseBrowser(type),page=await browser.newPage({viewport:{width:600,height:500},...options});const errors=[];
     page.on('pageerror',e=>errors.push(e.message));
-    try {await body(page);assert.deepEqual(errors,[]);} finally {await page.mouse.up().catch(()=>{});await page.evaluate(()=>{window.areas?.forEach(a=>a.destroy());window.shadowArea?.destroy();}).catch(()=>{});await destroy(page).catch(()=>{});await browser.close();}
+    try {await body(page);assert.deepEqual(errors,[]);} finally {await page.mouse.up().catch(()=>{});await page.evaluate(()=>{window.areas?.forEach(a=>a.destroy());window.shadowArea?.destroy();window.fab?.destroy();}).catch(()=>{});await destroy(page).catch(()=>{});await browser.close();}
   }
   for (const dir of ['ltr', 'rtl']) for (const path of ['native', 'listener', 'reduced']) {
     browserTest(`horizontal V2 page geometry ${dir} ${path} (${engine})`, () => run(async page => {
@@ -205,5 +244,46 @@ for (const [engine,type,browserTest] of engines) {
     const sh=await page.evaluate(()=>{const r=shadow.parentElement.querySelector('.horizontal').getBoundingClientRect();return {x:r.left,y:r.top};});await page.mouse.move(sh.x+38,sh.y+6);await page.mouse.down();await page.mouse.move(sh.x+114,sh.y+6,{steps:4});await page.mouse.up();await frames(page);near(await page.evaluate(()=>shadow.scrollLeft),240);
     h=(await geometry(page)).bars[1];await page.mouse.move(h.thumb.left+10,h.bar.top+6);await page.mouse.down();await destroy(page);await page.mouse.move(h.thumb.left+110,h.bar.top+6);await page.mouse.up();near(await page.evaluate(()=>box.scrollLeft),240);assert.equal(await page.locator('#box + .scroll-area-bar').count(),0);await page.evaluate(()=>box.scrollLeft=0);await init(page);await frames(page);h=(await geometry(page)).bars[1];await page.mouse.move(h.bar.left+38,h.bar.top+6);await page.mouse.down();await page.mouse.move(h.bar.left+114,h.bar.top+6,{steps:4});await page.mouse.up();await frames(page);near(await page.evaluate(()=>box.scrollLeft),240);
   }));
+  for(const fixture of controls)for(const size of [12,14,30])for(const dir of ['ltr','rtl'])browserTest(`horizontal V14 ${fixture.name} ${size}px ${dir} (${engine})`,()=>run(async page=>{
+    await setupControls(page,fixture,size,dir,dir==='rtl'?':root{font-size:20px}':'',size===14?20:0);const baseline=await controlGeometry(page,fixture);await init(page,true);await frames(page);const active=await controlGeometry(page,fixture),clearance=Math.max(size,size/2+12);
+    active.forEach((target,i)=>{near(target.height,baseline[i].height,'target height');if(fixture.unchanged)near(target.bottom,baseline[i].bottom,'excluded variant');else assert.ok(target.gap>=clearance-.5,`${fixture.name} target gap ${target.gap} < ${clearance}`);});
+    if(fixture.floating)near(active[0].gap,Math.max(24,clearance),'floating action gap');
+    await pressControls(page,fixture);
+    if(fixture.edge){const edge=await page.locator(fixture.edge).boundingBox();near(edge.y+edge.height,500,'row background reaches viewport');}
+    await page.evaluate(()=>{content.style.width='100px';area.refresh();});await frames(page);assert.deepEqual(await controlGeometry(page,fixture),active);await page.evaluate(()=>{content.style.width='1800px';area.refresh();});await frames(page);assert.deepEqual(await controlGeometry(page,fixture),active);
+    await destroy(page);await frames(page);assert.deepEqual(await controlGeometry(page,fixture),baseline);
+  }));
+  browserTest(`horizontal V14 scaffold rows, padding and companion groups agree (${engine})`,()=>run(async page=>{
+    for(const name of ['scaffold-status','scaffold-nav','scaffold-both','compact-toolbar','compact-group','compact-group-nav']) {
+      const fixture=controls.find(f=>f.name===name);await setupControls(page,fixture,30);await init(page,true);await frames(page);
+      const sizes=await page.evaluate(()=>{const shell=document.querySelector('.scaffold'),nav=document.querySelector('.navigation-bar'),status=document.querySelector('.status-bar'),tools=document.querySelector('.toolbar-group,.toolbar');return {shell:getComputedStyle(shell).paddingBottom,nav:nav?.getBoundingClientRect().height,navBottom:nav?.getBoundingClientRect().bottom,navPadding:nav&&getComputedStyle(nav).paddingBottom,status:status?.getBoundingClientRect().height,statusTop:status?.getBoundingClientRect().top,padding:parseFloat(getComputedStyle(document.documentElement).scrollPaddingBottom),tools:tools?.getBoundingClientRect().height,inset:tools&&parseFloat(getComputedStyle(tools).insetBlockEnd)};});
+      if(name==='scaffold-both'){near(sizes.status,54);near(sizes.navBottom,sizes.statusTop);assert.equal(sizes.navPadding,'6px');assert.equal(sizes.shell,'0px');}
+      if(name==='scaffold-nav')assert.equal(sizes.shell,'0px');
+      if(name.startsWith('compact'))near(sizes.padding,sizes.tools+sizes.inset,'scroll padding follows rows');
+      await destroy(page);
+    }
+    await page.setViewportSize({width:600,height:500});
+    await setup(page,'<div class="scaffold"><main>Pane</main></div><div style="position:absolute;top:0;height:1500px;width:1800px;pointer-events:none"></div>','', 'ltr',true);await init(page,true);await frames(page);assert.equal(await page.locator('.scaffold').evaluate(el=>getComputedStyle(el).paddingBottom),'18px');
+  }));
+  browserTest(`horizontal V14 inherited shadow clearance and author offset fallbacks (${engine})`,()=>run(async page=>{
+    await setup(page,'<div id="host"></div><div style="height:1500px;width:1800px"></div>',':root{--scroll-area-bar-size:14px}','ltr',true);
+    await page.evaluate(css=>{window.controlRoot=host.attachShadow({mode:'closed'});const sheet=new CSSStyleSheet();sheet.replaceSync(css);controlRoot.adoptedStyleSheets=[sheet];controlRoot.innerHTML='<a class="back-to-top button extra circle" href="#">Top</a><div class="fab-menu"><button class="button extra circle">Add</button></div>';},css);
+    const insets=()=>page.evaluate(()=>[...controlRoot.querySelectorAll('.back-to-top,.fab-menu')].map(el=>{const s=getComputedStyle(el);return [s.insetInlineEnd,s.bottom];}));
+    assert.deepEqual(await insets(),[['16px','16px'],['16px','16px']]);
+    for(const value of ['0','-4px','40px']){await page.evaluate(value=>{controlRoot.querySelector('.back-to-top').style.setProperty('--md-comp-back-to-top-offset',value);controlRoot.querySelector('.fab-menu').style.setProperty('--md-comp-fab-menu-offset',value);},value);const expected=value==='0'?'0px':value;assert.deepEqual(await insets(),[[expected,expected],[expected,expected]]);}
+    await page.evaluate(()=>{controlRoot.querySelector('.back-to-top').style.removeProperty('--md-comp-back-to-top-offset');controlRoot.querySelector('.fab-menu').style.removeProperty('--md-comp-fab-menu-offset');});await init(page,true);await frames(page);assert.deepEqual(await insets(),[['19px','19px'],['19px','19px']]);
+    await page.evaluate(()=>{controlRoot.querySelector('.back-to-top').style.setProperty('--md-comp-back-to-top-offset','40px');controlRoot.querySelector('.fab-menu').style.setProperty('--md-comp-fab-menu-offset','40px');});assert.deepEqual(await insets(),[['40px','40px'],['40px','40px']]);
+  }));
+  for(const mode of ['container','print',...(engine==='webkit'?[]:['forced'])])browserTest(`horizontal V14 ${mode} preserves existing control layout (${engine})`,()=>run(async page=>{
+    for(const fixture of controls) {
+      await setupControls(page,fixture);
+      const media={print:{media:'print'},forced:{forcedColors:'active'},container:{media:'screen'}};await page.emulateMedia(media[mode]);await frames(page);const baseline=await controlGeometry(page,fixture);
+      if(mode==='container'){await page.evaluate(html=>{const host=document.createElement('div');host.innerHTML=html;document.body.append(host);window.area=Expressive.ScrollArea.init(document.querySelector('#box'));},box);}else await init(page,true);
+      await frames(page);assert.deepEqual(await controlGeometry(page,fixture),baseline,fixture.name);await destroy(page);await page.evaluate(()=>window.fab?.destroy());await page.emulateMedia({media:'screen',forcedColors:'none'});
+    }
+  }));
+  if(engine==='chromium')browserTest('horizontal V14 coarse pointer preserves fixed-control offsets',()=>run(async page=>{
+    for(const fixture of controls){await setupControls(page,fixture);const baseline=await controlGeometry(page,fixture);await init(page,true);await frames(page);assert.deepEqual(await controlGeometry(page,fixture),baseline);await destroy(page);await page.evaluate(()=>window.fab?.destroy());}
+  },{hasTouch:true,isMobile:true}));
 
 }

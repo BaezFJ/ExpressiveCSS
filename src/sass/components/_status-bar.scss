@@ -48,7 +48,7 @@ $_bar: ".status-bar";
   align-items: stretch;
   min-block-size: var(--md-comp-status-bar-container-height);
   margin: 0;
-  padding: 0 0 env(safe-area-inset-bottom, 0px);
+  padding: 0 0 max(env(safe-area-inset-bottom, 0px), var(--scroll-area-bar-clearance, 0px));
   background-color: var(--md-comp-status-bar-container-color);
   color: var(--md-comp-status-bar-color);
   @include typescale("body-small");

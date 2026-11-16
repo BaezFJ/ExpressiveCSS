@@ -51,7 +51,7 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
   // Without page clearance this is invalid, so the inset keeps the author's offset.
   --_page-bar-inset: max(var(--md-comp-fab-menu-offset), var(--scroll-area-bar-clearance));
   inset-inline-end: var(--_page-bar-inset, var(--md-comp-fab-menu-offset));
-  bottom: var(--md-comp-fab-menu-offset);
+  bottom: var(--_page-bar-inset, var(--md-comp-fab-menu-offset));
   z-index: var(--md-comp-fab-menu-z);
   margin: 0;
 

@@ -102,6 +102,7 @@
   }
 
   &.fixed {
+    padding-bottom: max(6px, env(safe-area-inset-bottom, 0px), var(--scroll-area-bar-clearance, 0px));
     position: sticky;
     bottom: 0;
     z-index: var(--expressive-z-app-bar);

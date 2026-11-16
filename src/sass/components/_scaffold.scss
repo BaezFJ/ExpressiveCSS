@@ -47,7 +47,7 @@ $_navbar: ":is(.navigation-bar, footer:has(> .navigation-bar:only-child))";
 // label's 1rem line, and a bottom padding of 6px or the safe area, whichever
 // is larger: 74px at 16px text. A sibling can't read it in CSS. An icon-only
 // bar is shorter, so the gap above it comes out larger.
-$_navbar-size: "52px + 1rem + max(6px, env(safe-area-inset-bottom, 0px))";
+$_navbar-size: "52px + 1rem + max(6px, env(safe-area-inset-bottom, 0px), var(--scroll-area-bar-clearance, 0px))";
 // The pane area that floats as a surface: not a panes container itself (it
 // keeps its own margins), and not holding separated or floating panes (they
 // are already cards).
@@ -101,7 +101,7 @@ $_rail-shown: "> #{$_rail}:not([hidden], :empty)";
   // region that meets them. A shown status bar pads the bottom itself.
   @include bp-up("medium") {
     padding-top: env(safe-area-inset-top, 0px);
-    padding-bottom: env(safe-area-inset-bottom, 0px);
+    padding-bottom: max(env(safe-area-inset-bottom, 0px), var(--scroll-area-bar-clearance, 0px));
 
     &:has(> .status-bar:not([hidden])) {
       padding-bottom: 0;
@@ -247,6 +247,11 @@ $_rail-shown: "> #{$_rail}:not([hidden], :empty)";
     position: sticky;
     inset-block-end: 0;
     z-index: var(--expressive-z-app-bar);
+  }
+
+  > .navigation-bar,
+  > footer > .navigation-bar:only-child {
+    padding-bottom: max(6px, env(safe-area-inset-bottom, 0px), var(--scroll-area-bar-clearance, 0px));
   }
 
   // From 600px up a shown rail takes over from the navigation bar. Without
@@ -474,13 +479,14 @@ $_rail-shown: "> #{$_rail}:not([hidden], :empty)";
 
     > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed) {
       position: sticky;
-      inset-block-end: calc(16px + env(safe-area-inset-bottom, 0px));
+      inset-block-end: max(calc(16px + env(safe-area-inset-bottom, 0px)), calc(var(--scroll-area-bar-clearance, 0px) - 8px));
       z-index: var(--expressive-z-toolbar);
       justify-self: center;
       // The block margins put its resting place where it sticks (the shell's
       // bottom padding supplies the safe area without a navigation bar), so
       // the shift never pulls the toolbar over the pane's last content.
       margin: 16px 0;
+      margin-block-end: max(16px, calc(var(--scroll-area-bar-clearance, 0px) - 8px - env(safe-area-inset-bottom, 0px)));
 
       // A side tooltip would cover the next action in a row; show it above,
       // as a horizontal toolbar's tooltips do. Under rtl a trailing toolbar
@@ -494,6 +500,12 @@ $_rail-shown: "> #{$_rail}:not([hidden], :empty)";
       .tooltip:is(.left, .right):hover {
         transform: translate(-50%, calc(-100% - var(--md-comp-tooltip-anchor-gap))) scale(1);
       }
+    }
+
+    // Clear the whole companion group; its FAB has less padding than the bar.
+    > .toolbar-group.vertical:not(.fixed) {
+      inset-block-end: max(calc(16px + env(safe-area-inset-bottom, 0px)), var(--scroll-area-bar-clearance, 0px));
+      margin-block-end: max(16px, calc(var(--scroll-area-bar-clearance, 0px) - env(safe-area-inset-bottom, 0px)));
     }
 
     // :has() can't nest, so the footer form of the navigation bar is spelled out.
@@ -534,7 +546,7 @@ $_rail-shown: "> #{$_rail}:not([hidden], :empty)";
   // Plain declarations, not custom properties on :root, which a shadow-only
   // load would leave undefined.
   :root:has(> body > .scaffold) {
-    scroll-padding-block: calc(#{rem(64px)} + env(safe-area-inset-top, 0px)) env(safe-area-inset-bottom, 0px);
+    scroll-padding-block: calc(#{rem(64px)} + env(safe-area-inset-top, 0px)) max(env(safe-area-inset-bottom, 0px), var(--scroll-area-bar-clearance, 0px));
   }
 
   // :has() can't nest, so the shown-bar list is written out under body here.
@@ -543,7 +555,11 @@ $_rail-shown: "> #{$_rail}:not([hidden], :empty)";
   }
 
   :root:has(> body > .scaffold > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed, [hidden])) {
-    scroll-padding-block-end: calc(env(safe-area-inset-bottom, 0px) + 80px);
+    scroll-padding-block-end: max(calc(env(safe-area-inset-bottom, 0px) + 80px), calc(var(--scroll-area-bar-clearance, 0px) + 56px));
+  }
+
+  :root:has(> body > .scaffold > .toolbar-group.vertical:not(.fixed, [hidden])) {
+    scroll-padding-block-end: max(calc(env(safe-area-inset-bottom, 0px) + 80px), calc(var(--scroll-area-bar-clearance, 0px) + 64px));
   }
 
   :root:has(> body > .scaffold > .navigation-bar:not([hidden]), > body > .scaffold > footer:not([hidden]) > .navigation-bar:only-child:not([hidden])):has(> body > .scaffold > :is(.toolbar.vertical, .toolbar-group.vertical):not(.fixed, [hidden])) {
