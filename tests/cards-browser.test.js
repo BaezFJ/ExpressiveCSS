@@ -172,3 +172,32 @@ browserTest('closing a reveal inside a shadow root returns focus to its trigger'
     await browser.close();
   }
 });
+
+browserTest('card media with width and height attributes keeps its aspect ratio', async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage({ viewport: { width: 900, height: 900 } });
+    const src = `data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="4" height="3"/>')}`;
+    const img = `<img src="${src}" width="960" height="720" alt="">`;
+    await page.setContent(`
+      <style>${css} article { width: 320px; }</style>
+      <article id="direct">${img}<h3>Direct</h3></article>
+      <article id="figure"><figure>${img}</figure><h3>Figure</h3></article>
+      <article id="picture"><picture>${img}</picture><h3>Picture</h3></article>
+      <article id="action"><a class="primary-action" href="#a">${img}<h3>Action</h3></a></article>
+      <article id="small" class="small">${img}<h3>Small</h3></article>
+    `);
+    await page.waitForFunction(() => [...document.images].every((image) => image.complete));
+    const heights = await page.evaluate(() => Object.fromEntries(
+      [...document.querySelectorAll('article')].map((card) => [card.id, card.querySelector('img').getBoundingClientRect().height])
+    ));
+
+    for (const id of ['direct', 'figure', 'picture', 'action']) {
+      assert.equal(heights[id], 240, `${id} image height`);
+    }
+    // The size helper still gives media the top 60% of its fixed 300px height.
+    assert.equal(heights.small, 180, 'small image height');
+  } finally {
+    await browser.close();
+  }
+});

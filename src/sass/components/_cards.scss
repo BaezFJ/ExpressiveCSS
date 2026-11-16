@@ -288,6 +288,8 @@ article > .primary-action > picture img,
 article > .primary-action > figure img {
   display: block;
   width: 100%;
+  // A height attribute would otherwise fix the height while width stretches.
+  height: auto;
   object-fit: cover;
   border-radius: var(--md-comp-card-media-shape);
 }

@@ -5,6 +5,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Card media with `width` and `height` attributes keeps its aspect ratio. The
+  media rule stretched the image to the card's width but left the attribute's
+  height in place, so `<img width="960" height="720">` in a 320px card drew
+  720px tall. Fixed-height size helpers and horizontal cards still fill their
+  media box.
+
 ## [0.19.0] - 2026-11-15
 
 This release adds `.scaffold` for app shells, busy buttons with

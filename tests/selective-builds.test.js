@@ -594,5 +594,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the trailing toolbar's 4px margin, read from no token: 93,517 gzip bytes (-12).
   // Reviewed the sheet column as a detached sheet (corners and gaps like the pane): 93,553 gzip bytes (+36).
   // Reviewed the scaffold milestone merged with master's busy spinner, anchored headings and compact and hover rail, with the scaffold holding a compact rail's 72px column: 94,450 gzip bytes.
-  assert.ok(sizes(css).gzip <= 94450, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed card media keeping its aspect ratio when the image has width and height attributes: 94,452 gzip bytes (+2).
+  assert.ok(sizes(css).gzip <= 94452, `CSS gzip: ${sizes(css).gzip}`);
 });
