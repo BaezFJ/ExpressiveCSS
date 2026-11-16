@@ -21,7 +21,7 @@ export class ScrollArea extends Component<BaseOptions> {
   private _modalObserver?: MutationObserver;
   private _childrenObserver?: MutationObserver;
   private _frame?: number;
-  private _drag?: { pointerId: number; clientY: number; scrollTop: number; ratio: number };
+  private _drag?: { bar: HTMLDivElement; axis: Axis; pointerId: number; pointer: number; scroll: number; ratio: number };
   private _dragObserver?: MutationObserver;
   private _dragEvents?: AbortController;
 
@@ -176,16 +176,28 @@ export class ScrollArea extends Component<BaseOptions> {
   private _press(e: PointerEvent): void {
     if (this._drag) return;
     e.preventDefault();
-    const { length, travel, range, offset, scrollTop } = this._metrics();
-    const y = e.clientY - this._bar!.getBoundingClientRect().top;
-    if (y >= offset && y <= offset + length) this._startDrag(e, scrollTop, range, travel);
-    else this._scrollTarget.scrollBy({ top: Math.sign(y - offset) * this.el.clientHeight });
+    const bar = e.currentTarget as HTMLDivElement;
+    const axis = this._axis(bar);
+    const metrics = this._metrics(axis);
+    const offset = this._thumbOffset(axis, metrics);
+    const at = e[axis.pointer] - bar.getBoundingClientRect()[axis.edge];
+    if (at >= offset && at <= offset + metrics.length) this._startDrag(e, bar, axis, metrics);
+    else this._scrollTarget.scrollBy({ [axis.position]: Math.sign(at - offset) * this.el[axis.client] });
   }
 
-  private _startDrag(e: PointerEvent, scrollTop: number, range: number, travel: number): void {
-    if (travel === 0) return;
-    this._drag = { pointerId: e.pointerId, clientY: e.clientY, scrollTop, ratio: range / travel };
-    this._bar!.setPointerCapture(e.pointerId);
+  private _axis(bar: HTMLDivElement): Axis {
+    return axes[Number(bar === this._horizontal)];
+  }
+
+  private _thumbOffset(axis: Axis, metrics: ReturnType<ScrollArea['_geometry']>): number {
+    if (axis === axes[1] && this._window.getComputedStyle(this.el).direction === 'rtl') return metrics.travel - metrics.offset;
+    return metrics.offset;
+  }
+
+  private _startDrag(e: PointerEvent, bar: HTMLDivElement, axis: Axis, metrics: ReturnType<ScrollArea['_geometry']>): void {
+    if (metrics.travel === 0) return;
+    this._drag = { bar, axis, pointerId: e.pointerId, pointer: e[axis.pointer], scroll: metrics.scrollTop, ratio: metrics.range / metrics.travel };
+    bar.setPointerCapture(e.pointerId);
     // Chromium withholds captured moves while a modal makes the bar inert.
     this._dragObserver ??= new this._window.MutationObserver(this._endHiddenDrag);
     const options = { attributes: true, attributeOldValue: true, subtree: true, attributeFilter: ['class', 'open', 'hidden', 'inert', 'style'] };
@@ -204,11 +216,11 @@ export class ScrollArea extends Component<BaseOptions> {
   };
 
   private _dragBlocked(): boolean {
-    return !this._bar!.getClientRects().length || !this._containerHasHeight() || this._inertContainer();
+    return !this._drag?.bar.getClientRects().length || !this._containerHasHeight() || this._inertContainer();
   }
 
   private _containerHasHeight(): boolean {
-    return !this._wrapper || this.el.clientHeight > 0;
+    return !this._wrapper || this.el[this._drag!.axis.client] > 0;
   }
 
   private _inertContainer(): boolean {
@@ -233,8 +245,8 @@ export class ScrollArea extends Component<BaseOptions> {
   private _handlePointerMove = (e: PointerEvent): void => {
     if (e.pointerId !== this._drag?.pointerId) return;
     if (this._dragBlocked()) { this._endDrag(); return; }
-    const { clientY, scrollTop, ratio } = this._drag;
-    this._scrollTarget.scrollTo({ top: scrollTop + (e.clientY - clientY) * ratio, behavior: 'instant' });
+    const { axis, pointer, scroll, ratio } = this._drag;
+    this._scrollTarget.scrollTo({ [axis.position]: scroll + (e[axis.pointer] - pointer) * ratio, behavior: 'instant' });
   }
 
   private _handlePointerEnd = (e: PointerEvent): void => {
@@ -247,7 +259,7 @@ export class ScrollArea extends Component<BaseOptions> {
     this._dragObserver?.disconnect();
     this._dragEvents?.abort();
     this._dragEvents = undefined;
-    if (drag && this._bar?.hasPointerCapture(drag.pointerId)) this._bar.releasePointerCapture(drag.pointerId);
+    if (drag?.bar.hasPointerCapture(drag.pointerId)) drag.bar.releasePointerCapture(drag.pointerId);
   }
 
   private get _corner(): number {
@@ -354,9 +366,13 @@ export class ScrollArea extends Component<BaseOptions> {
     return range === 0 || ['hidden', 'clip'].includes(overflow);
   }
 
+  private _endBarDrag(bar: HTMLDivElement): void {
+    if (bar === this._drag?.bar) this._endDrag();
+  }
+
   private _writeBar(bar: HTMLDivElement, metrics: ReturnType<ScrollArea['_geometry']>, hidden: boolean, sign: number): void {
     if (bar.hidden !== hidden) bar.hidden = hidden;
-    if (hidden && this._drag) this._endDrag();
+    if (hidden) this._endBarDrag(bar);
     bar.style.setProperty('--scroll-area-thumb-length', `${metrics.length}px`);
     bar.style.setProperty('--scroll-area-thumb-travel', `${metrics.travel * sign}px`);
     bar.style.setProperty('--scroll-area-thumb-offset', `${metrics.offset * sign}px`);

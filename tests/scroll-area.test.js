@@ -594,3 +594,53 @@ test('horizontal V7 both axes are read in the gutter-free candidate state', () =
     } finally { area.destroy(); }
   }
 });
+
+function horizontalFixture(height = 300) {
+  document.body.innerHTML = '<div class="scroll-area custom"></div>';
+  const el = document.body.firstElementChild;
+  Object.defineProperties(el, { clientHeight: { value:300 }, scrollHeight:{ value:height }, clientWidth:{ value:240 }, scrollWidth:{ value:720 } });
+  const moves=[],pages=[]; el.scrollTo=value=>moves.push(value); el.scrollBy=value=>pages.push(value);
+  const area=Expressive.ScrollArea.init(el), bars=[...el.parentElement.querySelectorAll('.scroll-area-bar')];
+  bars[0].style.inlineSize='12px'; area.refresh(); moves.length=0;
+  for(const bar of bars) {bar.getClientRects=()=>[{}];bar.setPointerCapture=()=>{};bar.hasPointerCapture=()=>false;bar.getBoundingClientRect=()=>({left:80,top:0});}
+  return {el,area,bars,moves,pages};
+}
+
+test('horizontal V11 drag and track press write only the inline axis', () => {
+  const {area,bars,moves,pages}=horizontalFixture();const bar=bars[1];
+  try {
+    pointer(bar,'pointerdown',{clientX:120});pointer(bar,'pointermove',{clientX:200});pointer(bar,'pointerup');pointer(bar,'pointermove',{clientX:250});
+    assert.deepEqual(moves,[{left:240,behavior:'instant'}]);pointer(bar,'pointerdown',{clientX:280});
+    for(const values of [{button:2},{ctrlKey:true},{isPrimary:false}])pointer(bar,'pointerdown',{clientX:280,...values});
+    assert.deepEqual(pages,[{left:240}]);
+  } finally {area.destroy();}
+});
+test('horizontal V11 one drag owns both bars and keeps the pressed ratio', () => {
+  const {area,bars,moves,pages}=horizontalFixture(900);const [vertical,horizontal]=bars;
+  let captures=0;horizontal.setPointerCapture=()=>captures++;
+  try {
+    assert.deepEqual(bars.map(bar=>bar.style.getPropertyValue('--scroll-area-thumb-length')),['96px','76px']);
+    pointer(vertical,'pointerdown',{clientY:48});pointer(horizontal,'pointerdown',{clientX:200});pointer(vertical,'pointermove',{clientY:144});
+    assert.equal(captures,0);assert.deepEqual(pages,[]);assert.deepEqual(moves,[{top:300,behavior:'instant'}]);
+    pointer(vertical,'pointerup');pointer(horizontal,'pointerdown',{clientX:118});pointer(horizontal,'pointermove',{clientX:194});
+    assert.deepEqual(moves.at(-1),{left:240,behavior:'instant'});
+  } finally {area.destroy();}
+});
+test('horizontal V13 wheel forwards the original deltas and page bars stay native', () => {
+  const {el,area,bars,pages}=horizontalFixture(900);const wheel=(bar,values)=>{const e=new window.WheelEvent('wheel',{cancelable:true,...values});bar.dispatchEvent(e);return e.defaultPrevented;};
+  try {
+    assert.equal(wheel(bars[1],{deltaX:50}),true);assert.equal(wheel(bars[1],{deltaY:120}),true);
+    assert.deepEqual(pages,[{left:50,top:0,behavior:'instant'},{left:0,top:120,behavior:'instant'}]);
+    assert.equal(wheel(bars[1],{deltaX:50,ctrlKey:true}),false);el.scrollLeft=480;assert.equal(wheel(bars[1],{deltaX:50}),false);assert.equal(pages.length,2);
+    const page=Expressive.ScrollArea.init(document.documentElement);
+    try {for(const bar of document.documentElement.querySelectorAll(':scope > .scroll-area-bar'))assert.equal(wheel(bar,{deltaX:50}),false);}finally{page.destroy();}
+  } finally {area.destroy();}
+});
+test('horizontal V15 iframe container drags its own inline axis', () => {
+  const dom=new JSDOM('<iframe></iframe>',{runScripts:'outside-only'}),win=dom.window.document.querySelector('iframe').contentWindow;
+  win.eval(readFileSync(new URL('../dist/js/expressive.js',import.meta.url),'utf8'));win.ResizeObserver=window.ResizeObserver;win.matchMedia=window.matchMedia;
+  win.document.body.innerHTML='<div class="scroll-area custom"></div>';const el=win.document.body.firstElementChild;
+  Object.defineProperties(el,{clientHeight:{value:300},scrollHeight:{value:300},clientWidth:{value:240},scrollWidth:{value:720}});
+  const calls=[];el.scrollTo=value=>calls.push(value);win.scrollTo=()=>assert.fail('parent window must not scroll');const area=win.Expressive.ScrollArea.init(el);calls.length=0;
+  try {const bar=el.parentElement.querySelector('.horizontal');bar.getClientRects=()=>[{}];bar.setPointerCapture=()=>{};bar.hasPointerCapture=()=>false;pointer(bar,'pointerdown',{clientX:40});pointer(bar,'pointermove',{clientX:120});assert.equal(calls.length,1);assert.equal(calls[0].left,240);assert.equal(calls[0].top,undefined);assert.equal(calls[0].behavior,'instant');}finally{area.destroy();dom.window.close();}
+});
