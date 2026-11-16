@@ -314,6 +314,32 @@ for (const [engine, type, browserTest] of engines) {
     await page.locator('#box').evaluate(el=>{el.style.scrollBehavior='smooth';el.scrollTo({top:0,behavior:'instant'});});await frames(page);
     await page.mouse.move(x,y+50);await page.mouse.down();await page.mouse.move(x,y+150,{steps:4});await frames(page);near(await page.locator('#box').evaluate(el=>el.scrollTop),300);await page.mouse.up();
   }));
+  browserTest(`V9 bar gestures leave ancestor links and click handlers inactive (${engine})`, () => run(async page => {
+    await setup(page, `<a id="link" href="#target"><section>${box}</section></a><p id="target">Target</p>`);
+    await page.evaluate(() => {
+      window.clicks = 0;
+      link.addEventListener('click', () => window.clicks++);
+      link.addEventListener('contextmenu', e => window.contextCancelled = e.defaultPrevented);
+    });
+    await init(page);
+    await frames(page);
+    const g = await geometry(page), x = g.bar.left + 6, y = g.bar.top;
+    await page.mouse.click(x, y + 250);
+    near(await page.evaluate(() => box.scrollTop), 300);
+    assert.deepEqual(await page.evaluate(() => [location.hash, clicks]), ['', 0]);
+    await page.evaluate(() => box.scrollTo({top:0, behavior:'instant'}));
+    await frames(page);
+    await page.mouse.move(x, y + 50);
+    await page.mouse.down();
+    await page.mouse.move(x, y + 150, {steps:3});
+    await page.mouse.up();
+    near(await page.evaluate(() => box.scrollTop), 300);
+    assert.deepEqual(await page.evaluate(() => [location.hash, clicks]), ['', 0]);
+    await page.mouse.click(x, y + 250, {button:'right'});
+    assert.equal(await page.evaluate(() => contextCancelled), false);
+    await page.mouse.click(g.box.left + 20, y + 20);
+    assert.deepEqual(await page.evaluate(() => [location.hash, clicks]), ['#target', 1]);
+  }));
   browserTest(`V11 wheel over bar scrolls container then chains (${engine})`, () => run(async page => {
     await setup(page);await init(page);await frames(page);const g=await geometry(page);
     await page.mouse.move(g.bar.left+6,g.bar.top+150);await page.mouse.wheel(0,120);
@@ -496,6 +522,60 @@ for (const [engine, type, browserTest] of engines) {
       near(await page.evaluate(() => shadowArea.el.scrollTop), 150, `${state} ends the drag`);
       await page.mouse.up();
     }
+  }));
+
+  browserTest(`V12 a modal in the already-focused open shadow root ends capture (${engine})`, () => run(async page => {
+    await setup(page, fixture + '<div id="mount"></div>');
+    await page.evaluate(() => {
+      const outer = mount.attachShadow({mode:'open'});
+      outer.innerHTML = '<div></div>';
+      window.focusRoot = outer.firstElementChild.attachShadow({mode:'open'});
+      focusRoot.innerHTML = '<input><dialog><input autofocus></dialog>';
+      focusRoot.querySelector('input').focus({preventScroll:true});
+    });
+    await init(page);
+    await frames(page);
+    const g = await geometry(page), x = g.bar.left + 6, y = g.bar.top;
+    await page.mouse.move(x, y + 50);
+    await page.mouse.down();
+    await page.mouse.move(x, y + 100, {steps:3});
+    near(await page.evaluate(() => box.scrollTop), 150);
+    await page.evaluate(() => focusRoot.querySelector('dialog').showModal());
+    await frames(page);
+    await page.evaluate(() => focusRoot.querySelector('dialog').close());
+    await page.mouse.move(x, y + 200, {steps:3});
+    near(await page.evaluate(() => box.scrollTop), 150);
+    await page.mouse.up();
+  }));
+
+  browserTest(`V12 closed modal owner can destroy and reinitialize around opening (${engine})`, () => run(async page => {
+    await setup(page, fixture + '<div id="mount"></div>');
+    await page.evaluate(() => {
+      window.focusRoot = mount.attachShadow({mode:'closed'});
+      focusRoot.innerHTML = '<input><dialog><input autofocus></dialog>';
+      focusRoot.querySelector('input').focus({preventScroll:true});
+    });
+    await init(page);
+    await frames(page);
+    const g = await geometry(page), x = g.bar.left + 6, y = g.bar.top;
+    await page.mouse.move(x, y + 50);
+    await page.mouse.down();
+    await page.mouse.move(x, y + 100, {steps:3});
+    near(await page.evaluate(() => box.scrollTop), 150);
+    await page.evaluate(() => { area.destroy(); focusRoot.querySelector('dialog').showModal(); });
+    await page.mouse.move(x, y + 150, {steps:3});
+    near(await page.evaluate(() => box.scrollTop), 150);
+    await page.evaluate(() => focusRoot.querySelector('dialog').close());
+    await init(page);
+    await page.mouse.move(x, y + 200, {steps:3});
+    near(await page.evaluate(() => box.scrollTop), 150);
+    await page.mouse.up();
+    await frames(page);
+    await page.mouse.move(x, y + 100);
+    await page.mouse.down();
+    await page.mouse.move(x, y + 150, {steps:3});
+    await page.mouse.up();
+    near(await page.evaluate(() => box.scrollTop), 300);
   }));
 
   browserTest(`V12 a modal in another closed shadow root ends capture (${engine})`, () => run(async page => {

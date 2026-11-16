@@ -34,6 +34,11 @@ export class ScrollArea extends Component<BaseOptions> {
     this._bar.append(thumb);
     this._placeBar();
     if (!this._bar) return;
+    this._bar.addEventListener('click', e => {
+      if (e.button !== 0 || e.ctrlKey) return;
+      e.preventDefault();
+      e.stopPropagation();
+    }, { signal: this._events.signal });
     this._bar.addEventListener('pointerdown', this._handlePointerDown, { signal: this._events.signal });
     this._bar.addEventListener('pointermove', this._handlePointerMove, { signal: this._events.signal });
     for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
@@ -163,11 +168,12 @@ export class ScrollArea extends Component<BaseOptions> {
     // Chromium withholds captured moves while a modal makes the bar inert.
     this._dragObserver ??= new this._window.MutationObserver(this._endHiddenDrag);
     const options = { attributes: true, attributeOldValue: true, subtree: true, attributeFilter: ['class', 'open', 'hidden', 'inert', 'style'] };
-    const roots = new Set(this._composedAncestors().map(el => el.getRootNode()));
+    const focused = deepActiveElement(this.el.ownerDocument);
+    const roots = new Set([...this._composedAncestors(), ...this._composedAncestors(focused)].map(el => el.getRootNode()));
     this._dragEvents = controllerFor(this.el);
     for (const root of roots) {
       this._dragObserver.observe(root, options);
-      // A modal in another closed root changes focus without exposing its mutations.
+      // Focus transitions can expose modals in otherwise inaccessible roots.
       root.addEventListener('focusin', () => this._endDrag(), { capture: true, signal: this._dragEvents.signal });
     }
   }
@@ -188,9 +194,8 @@ export class ScrollArea extends Component<BaseOptions> {
     return this._composedAncestors().some(el => el.hasAttribute('inert'));
   }
 
-  private _composedAncestors(): Element[] {
+  private _composedAncestors(el: Element | null | undefined = this.el): Element[] {
     const ancestors: Element[] = [];
-    let el: Element | undefined = this.el;
     while (el) {
       ancestors.push(el);
       el = el.assignedSlot ?? el.parentElement ?? (el.getRootNode() as ShadowRoot).host;

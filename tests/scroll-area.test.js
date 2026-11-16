@@ -421,6 +421,30 @@ test('V10 container gesture uses bar-relative coordinates and its own scroll tar
   } finally {area.destroy();window.scrollTo=original.to;window.scrollBy=original.by;}
 });
 
+test('V9 bar cancels primary clicks while other buttons and content keep native behavior', () => {
+  document.body.innerHTML = '<section><div class="scroll-area custom"><span>Content</span></div></section>';
+  const parent = document.body.firstElementChild, el = parent.firstElementChild;
+  const area = Expressive.ScrollArea.init(el);
+  const bar = el.nextElementSibling;
+  let clicks = 0;
+  parent.addEventListener('click', () => clicks++);
+  const click = (target, values = {}) => {
+    const e = new window.MouseEvent('click', {bubbles:true, cancelable:true, ...values});
+    target.dispatchEvent(e);
+    return e.defaultPrevented;
+  };
+  try {
+    assert.equal(click(bar), true);
+    assert.equal(click(bar.firstElementChild), true);
+    assert.equal(clicks, 0);
+    assert.equal(click(bar, {button:2}), false);
+    assert.equal(click(bar, {ctrlKey:true}), false);
+    assert.equal(click(el.firstElementChild), false);
+    assert.equal(clicks, 3);
+  } finally { area.destroy(); }
+  assert.equal(click(bar), false);
+});
+
 test('V11 container wheel scales modes and preserves chaining, horizontal scroll and zoom', () => {
   document.body.innerHTML='<div class="scroll-area custom"></div>';const el=document.body.firstElementChild;containerMetrics(el);
   const calls=[];el.scrollBy=o=>calls.push(o);const area=Expressive.ScrollArea.init(el);const bar=el.nextElementSibling;

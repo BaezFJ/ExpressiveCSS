@@ -9,7 +9,7 @@ Component ID: `org-chart`
 
 Contract: ExpressiveCSS 0.19.0
 
-Contract SHA-256: `294938758d2d8682c567079614fce5e12f0d6a4537d400eaf2ad58f8c17ae9e6`
+Contract SHA-256: `2325848634f1209d9341ca662fc367caa8dff6e19c820869b6369f68b86525b7`
 
 #### Selection and adaptation
 
