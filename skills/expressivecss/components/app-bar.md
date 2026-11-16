@@ -9,7 +9,7 @@ Component ID: `app-bar`
 
 Contract: ExpressiveCSS 0.19.0
 
-Contract SHA-256: `9164fc5152902c41ec54287adfe3301d8b0b24b0851b214ddcb8450a142e78e8`
+Contract SHA-256: `429bfbe3d4620bf834945953a30753deb347188d70326ef806a61c832312e3db`
 
 #### Selection and adaptation
 
@@ -41,11 +41,11 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-A page-level app bar keeps its trailing action clear of the custom page scrollbar through `--scroll-area-bar-clearance`, giving 18px trailing padding with the default bar. Nested app bars keep 4px.
-
 The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. Top app bars stay pinned to the top by default, without a helper class. The heading is the headline; wrap it in `<hgroup>` with a `<p>` for a subtitle. Icon-only links and buttons are the leading and trailing actions. A `<menu>` (or `<ul>`) holds text destinations. A `<search class="search-bar">` in the nav is the search app bar. There is no `navbar`, `nav-wrapper`, or `brand-logo` class.
 
 Small is 64dp at `title-large`. `medium` is the Expressive medium-flexible bar: 112dp / `headline-medium`, 136dp with a subtitle. `large` is large-flexible: 120dp / `display-small`, 152dp with a subtitle. `AppBar` (started by `AutoInit()`) collapses those two on scroll and opens the related search view when the search field is selected. Icons are 24dp in a 48dp target and inherit the header color so a fill + `on-*` pair stays readable.
+
+Navigation rails and tabs are separate components. Do not nest either one in the header. A page-level app bar keeps its trailing action clear of the custom page scrollbar through `--scroll-area-bar-clearance`, giving 18px trailing padding with the default bar. Nested app bars keep 4px.
 
 #### Syntax
 

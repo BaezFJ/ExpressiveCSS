@@ -4360,11 +4360,9 @@ Use a standalone FAB for the primary action or a FAB menu for related labelled a
 
 ### FAB menu
 
-The menu keeps clear of the custom page scrollbar through `--scroll-area-bar-clearance`. Its inline-end inset becomes 18px with the default bar, preserving a larger `--md-comp-fab-menu-offset`. Use a length with a unit beside that bar.
-
 `fab-menu` is the FAB that expands into a list of labelled actions. The trigger is an ordinary FAB; the actions are a `<ul>` (or `<menu>`) of pills, each an icon and a label at 56dp on a full corner. Click the FAB to expand; click it again, click outside, or press Escape to collapse.
 
-Expanded is the framework's state, not the author's: the constructor stamps `aria-expanded` on the trigger and `open()` / `close()` move it along with the `active` class. Do not write either into the markup.
+Expanded is the framework's state, not the author's: the constructor stamps `aria-expanded` on the trigger and `open()` / `close()` move it along with the `active` class. Do not write either into the markup. The menu keeps clear of the custom page scrollbar through `--scroll-area-bar-clearance`. Its inline-end inset becomes 18px with the default bar, preserving a larger `--md-comp-fab-menu-offset`. Use a length with a unit beside that bar.
 
 ```html
 <div class="fab-menu">
@@ -4460,11 +4458,9 @@ Replace `.fab` and `.fixed-action-btn` wrappers with `.fab-menu` and labelled ac
 
 ## Back to top
 
-The link keeps clear of the custom page scrollbar through `--scroll-area-bar-clearance`. Its inline-end inset becomes 18px with the default bar, preserving a larger `--md-comp-back-to-top-offset`. Use a length with a unit beside that bar.
-
 A link that appears once a long page has scrolled down, and returns to the top with focus on the main content.
 
-Write an `<a class="back-to-top">` whose `href` names the page's main content, give it an `aria-label`, and add the FAB classes `button circle extra` for its look. `AutoInit()` starts every `.back-to-top`. The link sits in the bottom inline-end corner, `position: fixed`, and stays hidden until the window has scrolled past `threshold`, one viewport height by default. It hides again above it, unless it has focus: a focused link stays until focus leaves, so pressing Home on it does not drop focus to the body. Without the script the link is always visible and jumps to its target, as any in-page link does. Until the script starts it is also visible at the top of the page, so call `AutoInit()` before the first paint, from a script at the end of the body, to keep it from showing there.
+Write an `<a class="back-to-top">` whose `href` names the page's main content, give it an `aria-label`, and add the FAB classes `button circle extra` for its look. `AutoInit()` starts every `.back-to-top`. The link sits in the bottom inline-end corner, `position: fixed`, and stays hidden until the window has scrolled past `threshold`, one viewport height by default. It hides again above it, unless it has focus: a focused link stays until focus leaves, so pressing Home on it does not drop focus to the body. Without the script the link is always visible and jumps to its target, as any in-page link does. Until the script starts it is also visible at the top of the page, so call `AutoInit()` before the first paint, from a script at the end of the body, to keep it from showing there. The link keeps clear of the custom page scrollbar through `--scroll-area-bar-clearance`. Its inline-end inset becomes 18px with the default bar, preserving a larger `--md-comp-back-to-top-offset`. Use a length with a unit beside that bar.
 
 ```html
 <main id="main">…</main>
@@ -4598,15 +4594,13 @@ The same size classes apply to Material Symbols.
 
 ## Navbar
 
-A page-level app bar keeps its trailing action clear of the custom page scrollbar through `--scroll-area-bar-clearance`, giving 18px trailing padding with the default bar. Nested app bars keep 4px.
-
 Material Design 3 top app bars, from the HTML.
 
 The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. Top app bars stay pinned to the top by default, without a helper class. The heading is the headline; wrap it in `<hgroup>` with a `<p>` for a subtitle. Icon-only links and buttons are the leading and trailing actions. A `<menu>` (or `<ul>`) holds text destinations. A `<search class="search-bar">` in the nav is the search app bar. There is no `navbar`, `nav-wrapper`, or `brand-logo` class.
 
 Small is 64dp at `title-large`. `medium` is the Expressive medium-flexible bar: 112dp / `headline-medium`, 136dp with a subtitle. `large` is large-flexible: 120dp / `display-small`, 152dp with a subtitle. `AppBar` (started by `AutoInit()`) collapses those two on scroll and opens the related search view when the search field is selected. Icons are 24dp in a 48dp target and inherit the header color so a fill + `on-*` pair stays readable.
 
-Navigation rails and tabs are separate components. Do not nest either one in the header.
+Navigation rails and tabs are separate components. Do not nest either one in the header. A page-level app bar keeps its trailing action clear of the custom page scrollbar through `--scroll-area-bar-clearance`, giving 18px trailing padding with the default bar. Nested app bars keep 4px.
 
 ### Small
 

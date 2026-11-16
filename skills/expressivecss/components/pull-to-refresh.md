@@ -9,7 +9,7 @@ Component ID: `pull-to-refresh`
 
 Contract: ExpressiveCSS 0.19.0
 
-Contract SHA-256: `9164fc5152902c41ec54287adfe3301d8b0b24b0851b214ddcb8450a142e78e8`
+Contract SHA-256: `429bfbe3d4620bf834945953a30753deb347188d70326ef806a61c832312e3db`
 
 #### Selection and adaptation
 

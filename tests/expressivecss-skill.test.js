@@ -367,6 +367,9 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(appBar, /display-small/);
     assert.match(appBar, /hgroup/);
     assert.match(appBar, /collaps/);
+    assert.match(appBar, /Navigation rails and tabs are separate components\. Do not nest either one in the header\./);
+    assert.match(guide('fab.md'), /Expanded is the framework's state[\s\S]*aria-expanded[\s\S]*Do not write either into the markup\./);
+    assert.match(guide('back-to-top.md'), /A link that appears once a long page has scrolled down, and returns to the top with focus on the main content\./);
   });
 
   test('keeps the generated Cards guide load-bearing contract complete', () => {
