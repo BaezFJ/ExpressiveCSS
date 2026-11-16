@@ -30,6 +30,9 @@ export class ScrollArea extends Component<BaseOptions> {
     for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
       this._bar.addEventListener(type, this._handlePointerEnd, { signal: this._events.signal });
     }
+    this._window.matchMedia('screen and (forced-colors: none) and (not (pointer: coarse))').addEventListener(
+      'change', () => this._endDrag(), { signal: this._events.signal },
+    );
     this._observer = new this._window.ResizeObserver(this._queueMeasure);
     this._observer.observe(el);
     this._window.addEventListener('resize', this._queueMeasure, { signal: this._events.signal });

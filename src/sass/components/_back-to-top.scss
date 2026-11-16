@@ -15,8 +15,10 @@
 
   position: fixed;
   inset-inline-end: var(--md-comp-back-to-top-offset);
-  html.scroll-area.custom:has(> .scroll-area-bar) & {
-    inset-inline-end: max(var(--md-comp-back-to-top-offset), var(--scroll-area-bar-clearance, 0px));
+  @media screen and (forced-colors: none) and (not (pointer: coarse)) {
+    html.scroll-area.custom:has(> .scroll-area-bar) & {
+      inset-inline-end: max(var(--md-comp-back-to-top-offset), var(--scroll-area-bar-clearance, 0px));
+    }
   }
   bottom: var(--md-comp-back-to-top-offset);
   z-index: var(--md-comp-back-to-top-z);

@@ -53,6 +53,7 @@ test('ScrollArea uses the iframe document', () => {
   frame.contentWindow.eval(readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8'));
   const root = frame.contentDocument.documentElement;
   frame.contentWindow.ResizeObserver = window.ResizeObserver;
+  frame.contentWindow.matchMedia = window.matchMedia;
   root.className = 'scroll-area custom';
   Object.defineProperty(root, 'clientHeight', { get: () => 300 });
   Object.defineProperty(root, 'scrollHeight', { get: () => 900 });

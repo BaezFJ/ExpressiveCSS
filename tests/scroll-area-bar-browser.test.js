@@ -52,8 +52,27 @@ const clearance = page => page.evaluate(() => [
   getComputedStyle(document.querySelector('.fab-menu')).insetInlineEnd,
 ]);
 
+async function nativeClearance(page) {
+  assert.deepEqual(await clearance(page), ['4px', '16px', '16px']);
+  try {
+    for (const offset of ['0', '-20px', '40px']) {
+      await page.evaluate(offset => {
+        document.querySelector('#back').style.setProperty('--md-comp-back-to-top-offset', offset);
+        document.querySelector('.fab-menu').style.setProperty('--md-comp-fab-menu-offset', offset);
+      }, offset);
+      const expected = offset === '0' ? '0px' : offset;
+      assert.deepEqual(await clearance(page), ['4px', expected, expected]);
+    }
+  } finally {
+    await page.evaluate(() => {
+      document.querySelector('#back').style.removeProperty('--md-comp-back-to-top-offset');
+      document.querySelector('.fab-menu').style.removeProperty('--md-comp-fab-menu-offset');
+    });
+  }
+}
+
 test('custom native-bar rules and accessibility media are present in the bundle', () => {
-  const hiding = css.match(/@media screen and \(forced-colors: none\) and \(not \(pointer: coarse\)\) \{([\s\S]*?)\n\}/);
+  const hiding = css.match(/@media screen and \(forced-colors: none\) and \(not \(pointer: coarse\)\) \{(\s*html\.scroll-area\.custom:has\(> \.scroll-area-bar\) \{[\s\S]*?)\n  \}/);
   assert.ok(hiding, 'native hiding is limited to modes that show the custom bar');
   const rules = parseRules(hiding[1]);
   const barRule = parseRules(css).find(r => r.selectors.includes('html.scroll-area.custom > .scroll-area-bar') && /position:\s*fixed/.test(r.body));
@@ -74,10 +93,10 @@ for (const [engine, browserType, browserTest] of engines) {
     const browser = await leaseBrowser(browserType);
     const page = await browser.newPage({ viewport: { width: 400, height: 300 } });
     try {
-      await clearanceFixture(page); await init(page);
+      await clearanceFixture(page); await nativeClearance(page); await init(page);
       for (const media of [...(engine === 'webkit' ? [] : [{ forcedColors: 'active' }]), { media: 'print' }]) {
         await page.emulateMedia(media);
-        assert.deepEqual(await clearance(page), ['4px', '16px', '16px']);
+        await nativeClearance(page);
         await page.emulateMedia({ media: 'screen', forcedColors: 'none' });
       }
       for (const remove of ['custom', 'destroy']) {
@@ -85,7 +104,7 @@ for (const [engine, browserType, browserTest] of engines) {
           if (remove === 'custom') document.documentElement.classList.remove('custom');
           else window.area.destroy();
         }, remove);
-        assert.deepEqual(await clearance(page), ['4px', '16px', '16px']);
+        await nativeClearance(page);
         await page.mouse.click(394, 250);
         assert.equal(await page.evaluate(() => window.clicks.edge), remove === 'custom' ? 1 : 2);
         await page.evaluate(() => document.documentElement.classList.add('custom'));
@@ -96,7 +115,7 @@ for (const [engine, browserType, browserTest] of engines) {
         try {
           await clearanceFixture(mobile); await init(mobile);
           assert.equal(await mobile.evaluate(() => matchMedia('(pointer: coarse)').matches), true);
-          assert.deepEqual(await clearance(mobile), ['4px', '16px', '16px']);
+          await nativeClearance(mobile);
         } finally { await mobile.evaluate(() => window.fab?.destroy()); await destroy(mobile); await context.close(); }
       }
     } finally { await page.evaluate(() => window.fab?.destroy()); await destroy(page); await browser.close(); }
@@ -214,6 +233,27 @@ for (const [engine, browserType, browserTest] of engines) {
         }, mode);
         await frames(page); await page.mouse.move(394, 250); await frames(page);
         near(await page.evaluate(() => scrollY), hiddenTop, 'restoring bar does not resume drag');
+        await page.mouse.up(); await destroy(page);
+      }
+    } finally { await page.mouse.up(); await destroy(page); await browser.close(); }
+  });
+
+  browserTest(`native media transitions end a drag without a hidden pointer move (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    const page = await browser.newPage({ viewport: { width: 400, height: 300 } });
+    try {
+      for (const media of [...(engine === 'webkit' ? [] : [{ forcedColors: 'active' }]), { media: 'print' }]) {
+        await page.goto('about:blank'); await setup(page); await init(page);
+        await page.locator('.scroll-area-bar').evaluate(bar => bar.addEventListener('pointerdown', e => window.pointer = e.pointerId));
+        await page.mouse.move(394, 50); await page.mouse.down(); await page.mouse.move(394, 100); await frames(page);
+        near(await page.evaluate(() => scrollY), 150, 'initial drag');
+        await page.emulateMedia(media); await frames(page);
+        assert.equal((await geometry(page)).display, 'none');
+        assert.equal(await page.locator('.scroll-area-bar').evaluate(bar => bar.hasPointerCapture(window.pointer)), false);
+        const top = await page.evaluate(() => scrollY);
+        await page.emulateMedia({ media: 'screen', forcedColors: 'none' }); await frames(page);
+        await page.mouse.move(394, 150); await frames(page);
+        near(await page.evaluate(() => scrollY), top, 'restoring screen media does not resume drag');
         await page.mouse.up(); await destroy(page);
       }
     } finally { await page.mouse.up(); await destroy(page); await browser.close(); }

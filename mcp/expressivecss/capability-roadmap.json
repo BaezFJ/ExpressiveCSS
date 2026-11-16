@@ -1413,7 +1413,7 @@
       "sources": [
         {
           "path": "src/sass/components/_back-to-top.scss",
-          "sha256": "bb74d3f0fd7ef6530c8a46e1827fb5f3942057d559181aa85042a3ccd617eabd"
+          "sha256": "1007085381e6b5c23f558ea279746fb738fdec6d846a6cee0bdfcf1eb70ae844"
         },
         {
           "path": "src/ts/components/backToTop.ts",

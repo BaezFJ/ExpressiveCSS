@@ -9,7 +9,7 @@ Component ID: `treemap-chart`
 
 Contract: ExpressiveCSS 0.19.0
 
-Contract SHA-256: `429bfbe3d4620bf834945953a30753deb347188d70326ef806a61c832312e3db`
+Contract SHA-256: `308bd4b68cfe11caa858f1c413dc083b1d6605802e1633ca81e243956d8e758b`
 
 #### Selection and adaptation
 

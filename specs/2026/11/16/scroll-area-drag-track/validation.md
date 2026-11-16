@@ -90,3 +90,41 @@ The implementation and generated-guidance revision tested below is `506dc3c45`. 
 - One package invocation started before the preceding MCP invocation had settled. That package run was stopped with SIGTERM, exit 143, and contributes no passing evidence. Its log is `/tmp/phase100-packages-interrupted.log`; the overlapping MCP log is `/tmp/phase100-mcp-overlap.log`. The final MCP and package commands above ran sequentially and passed.
 - The scoped visual report covers scroll-area, navbar, back-to-top and floating-action-button at compact, expanded, large and large-dark. The report and screenshots stay untracked. No human visual review, native browser-chrome check, physical pen/touch check or physical outside-window check is claimed. V14 through V16 remain pending, and the maintainer's visual review is still required before merge.
 - The incremental-implementation skill's referenced `definition-of-done.md` is unavailable in the installed skill roots. The repository's CONTRIBUTING.md checks and the reviewed phase validation supplied the final local gate. No shared-vault note was written by this implementation worker; the milestone owner maintains that record.
+
+## Independent implementation review
+
+2026-11-16. A fresh reviewer inspected the phase100 diff from `df7ba6d3bf2462af045404742213c70045ff3146` through `f89029ad4`, including untracked files. The user authorized this independent review as the replacement for the unavailable built-in review command. The reviewer did not author the implementation and used no helpers. Phase99 remained the accepted baseline.
+
+Three findings were fixed:
+
+1. The fixed-control `max()` declarations also applied while native scrollbars were active. With an instance under forced colors, a unitless `0` became an invalid inset and `-20px` was clamped to `0px`. Both owning component rules now use the same screen, forced-color and pointer conditions as the clearance property. Browser regressions check default, unitless-zero, negative and larger offsets before initialization, under native media, after class removal and after destruction. Chromium also checks its coarse-pointer context.
+2. A drag could resume after forced colors hid and restored the bar without a hidden pointer move. A Chromium probe moved from `scrollY` 150 to 300 after restoration. A signal-owned media-query listener now ends the drag whenever the bar's media conditions change. The regression hides and restores the bar without sending a hidden move, under forced colors in Chromium and Firefox and under print in all three engines. The iframe jsdom fixture supplies its missing `matchMedia` API.
+3. The scaffold exception checked only the first matching clearance rule. A later rule with the same selectors bypassed the ownership assertion without a declaration check. Every matching rule must now contain exactly the accepted selector pair and the sole clearance padding declaration.
+
+Three alternatives were rejected after source inspection:
+
+1. Reusing the general app-bar declaration would also move nested article and dialog bars. No existing rule limits itself to both page and scaffold bars, so the owning selector pair and its narrow test exception remain.
+2. Adding a shadow-host clearance token has no corresponding runtime page bar. The exception remains restricted to the exact document selector, derived clearance value and native-bar declaration. Other token/value/selector mutations still fail the shadow assertions.
+3. Restoring a 16px active-bar inset would reduce the required spacing. The [W3C explanation of criterion 2.5.8](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum#user-agent-control) explicitly applies spacing to author-sized scrollbars. The default 12px bar retains 18px clearance, including hidden, unscrollable and modal states under active media.
+
+The graph's ScrollArea trace reported no callers and was not treated as exhaustive. All relied-on Sass gaps and excluded test/docs paths were checked directly. The review also checked primary-pointer filtering, capture endings, zero-travel geometry, anchored ratios, one-page track presses, focus/selection/context menu/wheel behavior, RTL, own-realm iframes, observer teardown, semantics and generated core guidance. No public options, events or methods were added.
+
+The new regressions failed against the pre-fix build, two failures in `/tmp/phase100-review-red.log`, then passed in each engine. The eight ScrollArea unit tests also passed. The rebuilt artifacts measure 113,349 JavaScript gzip bytes and 94,999 CSS gzip bytes with the budget test's source-map removal, increases of 487 and 220 bytes against the clean phase base. The back-to-top source pin is now `1007085381e6b5c23f558ea279746fb738fdec6d846a6cee0bdfcf1eb70ae844`; the other previously stale pins and source revision remain unchanged. Generated metadata came from `npm run build:skill`.
+
+The first review contributor run finished with 4,175 tests, 4,171 passed, one failed and three existing Firefox WebGL2 skips, in `/tmp/phase100-review-verify.log`. The failed static CSS check selected the first matching media block, which now belongs to a fixed control. Its matcher now requires the exact root scrollbar selector and stops at that media block's closing brace. The focused static check passed in `/tmp/phase100-review-static.log`. Every browser behavior case passed in the first full run, including the new media transitions. The failure was source-related and was fixed rather than dismissed.
+
+### Finished review checks
+
+| Command | Result | Log |
+| --- | --- | --- |
+| `npm run build` | Passed before the focused checks. | `/tmp/phase100-review-build.log` |
+| `node --test tests/scroll-area.test.js` | 8 passed, 0 failed. | `/tmp/phase100-review-unit.log` |
+| `EXPRESSIVECSS_TEST_BROWSER=<engine> node --test --test-name-pattern='clearance defers\|native media transitions' tests/scroll-area-bar-browser.test.js` | 2 passed per engine, 0 failed, Chromium, Firefox and WebKit. | `/tmp/phase100-review-green-chromium.log`, `/tmp/phase100-review-green-firefox.log`, `/tmp/phase100-review-green-webkit.log` |
+| `node --test --test-name-pattern='custom native-bar rules' tests/scroll-area-bar-browser.test.js` | 1 passed, 0 failed. | `/tmp/phase100-review-static.log` |
+| `npm run build:skill` | 101 component guides regenerated from source. | `/tmp/phase100-review-generated.log` |
+| `npm run verify` | Passed. Build, both typechecks, generated files and documentation checks passed. 4,175 tests, 4,172 passed, 0 failed, 3 existing Firefox WebGL2 skips. All three engines passed the page-bar behavior suite. Docs verified 145 pages, 11 aliases and 124 Markdown counterparts. | `/tmp/phase100-review-verify-final.log` |
+| `npm test --prefix mcp/expressivecss` | Passed, 8 tools, catalogue and component resources, completion, response budgets and recovery. | `/tmp/phase100-review-mcp.log` |
+| `npm run verify:packages` | Passed, isolated `@expressivecss/expressive@0.19.0` and `@expressivecss/mcp-server@0.6.0`, including MCP smoke checks. It ran after the preceding MCP command finished. | `/tmp/phase100-review-packages.log` |
+| `git diff --check` | Passed. | No whitespace errors. |
+
+No new visual or physical-device check is claimed by this review. V14 through V16, Firefox's outside-window portion and the maintainer's visual review remain pending.

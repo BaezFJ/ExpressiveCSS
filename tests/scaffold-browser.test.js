@@ -41,9 +41,12 @@ test('every compiled scaffold selector starts at the scaffold or a region class'
   assert.ok(preludes.length > 5, 'the scaffold rules are in the bundle');
   const bar = ':is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)';
   const pageBarSelectors = [`:root > body > header > ${bar}`, `:root > body > .scaffold > header > ${bar}`];
-  const clearance = parseRules(css).find(rule => rule.selectors.includes(pageBarSelectors[1]));
-  assert.deepEqual(clearance.selectors, pageBarSelectors);
-  assert.equal(clearance.body.trim(), 'padding-inline-end: var(--scroll-area-bar-clearance, 4px);');
+  const clearances = parseRules(css).filter(rule => rule.selectors.includes(pageBarSelectors[1]));
+  assert.ok(clearances.length, 'the page/scaffold clearance rule is in the bundle');
+  for (const clearance of clearances) {
+    assert.deepEqual(clearance.selectors, pageBarSelectors);
+    assert.equal(clearance.body.trim(), 'padding-inline-end: var(--scroll-area-bar-clearance, 4px);');
+  }
   for (const prelude of preludes) {
     // The app bar owns this one shared page/scaffold clearance declaration.
     if (splitSelectorList(prelude).join('\n') === pageBarSelectors.join('\n')) continue;

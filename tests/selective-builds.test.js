@@ -363,7 +363,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the scaffold milestone merged with master's busy buttons, data table pages and compact and hover rail: 112,245 gzip bytes.
   // Reviewed the page-only ScrollArea component, AutoInit claim, measurements, fallback listener and temporary modal observer against 644c91760: 112,862 gzip bytes (+617).
   // Reviewed Phase 100 thumb dragging, single-step track paging and edge clearance against df7ba6d3b: 113,294 gzip bytes (+432).
-  assert.ok(sizes(js).gzip <= 113294, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Phase 100 media-change drag teardown against f89029ad4: 113,349 gzip bytes (+55; +487 against df7ba6d3b).
+  assert.ok(sizes(js).gzip <= 113349, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -598,5 +599,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the scaffold milestone merged with master's busy spinner, anchored headings and compact and hover rail, with the scaffold holding a compact rail's 72px column: 94,450 gzip bytes.
   // Reviewed the custom page bar, scroll timeline, stacking token, modal scroll lock and system-mode fallbacks against 644c91760: 94,779 gzip bytes (+329).
   // Reviewed Phase 100 thumb dragging, single-step track paging and edge clearance against df7ba6d3b: 94,944 gzip bytes (+165).
-  assert.ok(sizes(css).gzip <= 94944, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed Phase 100 native-mode author offsets against f89029ad4: 94,999 gzip bytes (+55; +220 against df7ba6d3b).
+  assert.ok(sizes(css).gzip <= 94999, `CSS gzip: ${sizes(css).gzip}`);
 });
