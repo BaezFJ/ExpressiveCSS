@@ -343,7 +343,8 @@ $_vibrant: "#{$_toolbar}.vibrant";
 
 #{$_toolbar}.fixed:not(.docked, .vertical, .top) {
   // Missing clearance leaves unitless and negative author offsets untouched.
-  --_page-bar-inset: max(var(--md-comp-toolbar-external-space), calc(var(--scroll-area-bar-clearance) - 8px));
+  --_scroll-area-toolbar-offset: var(--md-comp-toolbar-external-space);
+  --_page-bar-inset: max(var(--_scroll-area-toolbar-offset), calc(var(--scroll-area-bar-clearance) - 8px));
   bottom: var(--_page-bar-inset, var(--md-comp-toolbar-external-space));
 }
 

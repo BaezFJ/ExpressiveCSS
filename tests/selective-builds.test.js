@@ -370,7 +370,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed Phase 101 primary-click containment and observation of already-focused open roots: 114,721 gzip bytes (+49; +1,372 against clean 0b0493f2840dcc11ba8b670a5d995b9d146fc79a).
   // Reviewed Phase 101 stable gutter measurements, reentrant wrapping and local fallback thumb colors: 114,759 gzip bytes (+38; +1,410 against clean 0b0493f2840dcc11ba8b670a5d995b9d146fc79a).
   // Reviewed Phase 102 two-axis metrics, shared pointer ownership and lifecycle against clean 7edf419453bb9b631611f3af40904e7ee83944da: 115,329 gzip bytes (+570).
-  assert.ok(sizes(js).gzip <= 115329, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Phase 102 root dir observation after independent review: 115,344 gzip bytes (+15; +585 against clean 7edf419453bb9b631611f3af40904e7ee83944da).
+  assert.ok(sizes(js).gzip <= 115344, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -611,5 +612,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed master's card media fix on the Phase 100 styles: 94,930 gzip bytes (+3 against 40ab4fb74).
   // Reviewed Phase 101 anchored container bars, native fallbacks and wrapper-gated clipping against clean 0b0493f2840dcc11ba8b670a5d995b9d146fc79a: 95,120 gzip bytes (+190).
   // Reviewed Phase 102 horizontal tracks, corner and bottom control/row clearance against clean 7edf419453bb9b631611f3af40904e7ee83944da: 95,525 gzip bytes (+405).
-  assert.ok(sizes(css).gzip <= 95525, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed Phase 102 private typed toolbar offset after independent review: 95,607 gzip bytes (+82; +487 against clean 7edf419453bb9b631611f3af40904e7ee83944da).
+  assert.ok(sizes(css).gzip <= 95607, `CSS gzip: ${sizes(css).gzip}`);
 });

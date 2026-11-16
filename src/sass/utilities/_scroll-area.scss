@@ -2,6 +2,13 @@
   display: contents !important;
 }
 
+// Page clearance compares toolbar lengths after normalizing unitless zero.
+@property --_scroll-area-toolbar-offset {
+  syntax: "<length-percentage>";
+  inherits: false;
+  initial-value: 0px;
+}
+
 // Keep scrolling native; use the current theme for scrollbar colors.
 .scroll-area {
   overflow: auto;
@@ -89,7 +96,6 @@ html.scroll-area.custom:not(:has(dialog:modal)):has(> .scroll-area-bar:not(.hori
   margin-block: calc((var(--scroll-area-bar-size, 12px) - 8px) / 2);
   margin-inline: 0;
   transform: translateX(var(--scroll-area-thumb-offset, 0px));
-
 }
 
 .scroll-area-bar.horizontal:dir(rtl) > .scroll-area-thumb {

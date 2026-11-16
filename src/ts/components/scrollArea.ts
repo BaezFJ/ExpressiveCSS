@@ -304,7 +304,12 @@ export class ScrollArea extends Component<BaseOptions> {
   refresh(): void {
     if (!this._bar) return;
     if (this._wrapper) this._observeChildren();
-    else { this._observeBody(); this._observeModal(); }
+    else {
+      this._observeBody(); this._observeModal();
+      // Direction changes can reset scrollLeft without a scroll or resize event.
+      this._childrenObserver ??= new this._window.MutationObserver(this._queueMeasure);
+      this._childrenObserver.observe(this.el, { attributes: true, attributeFilter: ['dir'] });
+    }
     this._measure();
   }
 

@@ -1,9 +1,13 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
+import { compileString } from 'sass';
 import { engines, leaseBrowser } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
+const selectedCss = (components, utilities) => compileString(`@use "custom" with ($components: (${components}), $utilities: (${utilities}), $expressive-include-fonts: false);`, {loadPaths:['src/sass']}).css;
+const utilityCss = selectedCss('', '"scroll-area",');
+const toolbarCss = selectedCss('"toolbar",', '');
 const frames = page => page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 const near = (a, b, label = '') => assert.ok(Math.abs(a - b) <= 1, `${label}: ${a}, expected ${b}`);
 const box = '<div id="box" class="scroll-area custom" style="height:300px;width:240px"><div id="content" style="height:900px;width:720px"></div></div>';
@@ -92,6 +96,25 @@ for (const [engine,type,browserTest] of engines) {
       await init(page, true); await frames(page); g = await geometry(page); near(g.bars[1].thumb[end], g.bars[1].bar[end], 'initial offset');
     }));
   }
+  for (const listener of [false, true]) browserTest(`horizontal V2 page direction changes keep the thumb on its track listener=${listener} (${engine})`, () => run(async page => {
+    await setup(page, '<div style="height:1500px;width:1800px"></div>', listener ? '.scroll-area-thumb{animation:none!important}' : '', 'ltr', true);
+    if (listener) await page.evaluate(() => { const supports = CSS.supports.bind(CSS); CSS.supports = (...args) => args[0].includes('animation-timeline') ? false : supports(...args); });
+    await init(page, true); await frames(page);
+    for (const dir of ['rtl', 'ltr']) {
+      await page.evaluate(dir => document.documentElement.dir = dir, dir); await frames(page);
+      for (const progress of [0, .5, 1]) {
+        await page.evaluate(({dir,progress}) => scrollTo((dir === 'rtl' ? -1 : 1) * 1200 * progress, 0), {dir,progress}); await frames(page);
+        const h = (await geometry(page)).bars[1];
+        near(h.thumb.left - h.bar.left, (dir === 'rtl' ? 1 - progress : progress) * 392, `${dir} progress ${progress}`);
+      }
+    }
+    const idle = await page.evaluate(async () => {
+      let calls = 0; const refresh = area.refresh; area.refresh = function () { calls++; return refresh.call(this); };
+      try { for (let i = 0; i < 12; i++) await new Promise(resolve => requestAnimationFrame(resolve)); return calls; }
+      finally { area.refresh = refresh; }
+    });
+    assert.equal(idle, 0, 'direction observation stays idle after measurement');
+  }));
   for (const variant of ['plain', 'border', 'rtl', 'ancestor', 'tokens', 'scrolled']) {
     browserTest(`horizontal V3 container geometry ${variant} (${engine})`, () => run(async page => {
       await setup(page, box.replace('height:900px', 'height:100px'));
@@ -281,6 +304,28 @@ for (const [engine,type,browserTest] of engines) {
       if(mode==='container'){await page.evaluate(html=>{const host=document.createElement('div');host.innerHTML=html;document.body.append(host);window.area=Expressive.ScrollArea.init(document.querySelector('#box'));},box);}else await init(page,true);
       await frames(page);assert.deepEqual(await controlGeometry(page,fixture),baseline,fixture.name);await destroy(page);await page.evaluate(()=>window.fab?.destroy());await page.emulateMedia({media:'screen',forcedColors:'none'});
     }
+  }));
+  for (const selective of [false, true]) browserTest(`horizontal V14 toolbar zero offset survives active clearance selective=${selective} (${engine})`, () => run(async page => {
+    await setup(page, '<div id="host"></div><div style="height:1500px;width:1800px"></div>', ':root{--scroll-area-bar-size:30px}', 'ltr', true, selective ? utilityCss : css);
+    await page.evaluate(sheet => {
+      const root = host.attachShadow({mode:'closed'}), style = new CSSStyleSheet(); style.replaceSync(sheet); root.adoptedStyleSheets = [style];
+      root.innerHTML = '<div class="toolbar fixed"><button>Action</button></div>'; window.tools = root.firstElementChild;
+    }, selective ? toolbarCss : css);
+    const inset = () => page.evaluate(() => getComputedStyle(tools).bottom);
+    const target = () => page.evaluate(() => { const r = tools.firstElementChild.getBoundingClientRect(); return {height:r.height,gap:innerHeight-r.bottom}; });
+    const height = (await target()).height;
+    for (const value of ['0', '-4px', '40px']) {
+      await page.evaluate(value => tools.style.setProperty('--md-comp-toolbar-external-space', value), value);
+      assert.equal(await inset(), value === '0' ? '0px' : value);
+    }
+    await init(page, true); await frames(page);
+    for (const value of ['0', '-4px', '40px']) {
+      await page.evaluate(value => tools.style.setProperty('--md-comp-toolbar-external-space', value), value);
+      assert.equal(await inset(), value === '40px' ? '40px' : '22px');
+      assert.deepEqual(await target(), {height,gap:value === '40px' ? 48 : 30});
+    }
+    await page.evaluate(() => tools.style.setProperty('--md-comp-toolbar-external-space', '0'));
+    await destroy(page); assert.equal(await inset(), '0px');
   }));
   if(engine==='chromium')browserTest('horizontal V14 coarse pointer preserves fixed-control offsets',()=>run(async page=>{
     for(const fixture of controls){await setupControls(page,fixture);const baseline=await controlGeometry(page,fixture);await init(page,true);await frames(page);assert.deepEqual(await controlGeometry(page,fixture),baseline);await destroy(page);await page.evaluate(()=>window.fab?.destroy());}
