@@ -13,6 +13,23 @@ async function setup(page, height = 900, extra = '') {
 const init = page => page.evaluate(() => { window.area = Expressive.ScrollArea.init(document.documentElement); });
 const frames = page => page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 const destroy = page => page.evaluate(() => window.area?.destroy());
+async function nativeInputs(page) {
+  const inputs = [
+    { minimum: 0, run: async () => { await page.mouse.move(200, 150); await page.mouse.wheel(0, 400); } },
+    { minimum: 0, run: async () => { await page.locator('#fragment').focus(); await page.keyboard.press('PageDown'); } },
+    { minimum: 1000, run: async () => { await page.locator('#fragment').click(); } },
+  ];
+  for (const { minimum, run } of inputs) {
+    // A fresh document keeps an earlier native scroll animation out of the next check.
+    await page.goto('about:blank');
+    await setup(page, 2000, '<a id="fragment" href="#end">End</a><div id="end" style="position:absolute;top:1800px">End target</div>');
+    await init(page);
+    try {
+      await run();
+      await page.waitForFunction(minimum => scrollY > minimum, minimum);
+    } finally { await destroy(page); }
+  }
+}
 const near = (actual, expected, label) => assert.ok(Math.abs(actual - expected) <= 1, `${label}: ${actual}, expected ${expected}`);
 const geometry = page => page.locator('.scroll-area-bar').evaluate(bar => {
   const track = bar.getBoundingClientRect();
@@ -168,14 +185,9 @@ for (const [engine, browserType, browserTest] of engines) {
       if (engine !== 'firefox') assert.equal(await width(), 'none');
       assert.equal(await page.locator('.scroll-area-bar').evaluate(el => el.getBoundingClientRect().width), 14);
       assert.equal(await page.locator('.scroll-area-thumb').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(12, 34, 56)');
-      await page.mouse.move(200, 150); await page.mouse.wheel(0, 400);
-      await page.waitForFunction(() => scrollY > 0);
-      await page.evaluate(() => { scrollTo(0, 0); document.body.focus(); });
-      await page.keyboard.press('PageDown'); await page.waitForFunction(() => scrollY > 0);
-      await page.evaluate(() => { scrollTo(0, 0); document.querySelector('#fragment').click(); });
-      await page.waitForFunction(() => scrollY > 1000);
       await destroy(page);
       if (engine !== 'firefox') assert.equal(await width(), 'thin');
+      await nativeInputs(page);
     } finally { await destroy(page); await browser.close(); }
   });
 }

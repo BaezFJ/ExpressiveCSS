@@ -271,13 +271,7 @@ function stopElement(name: keyof Registry, el: Element) {
   }
 }
 
-/**
- * The elements under `root` that component `name` claims, plus `root` itself
- * when `self` is set. `:is()` so that `:not(.no-autoinit)` applies to the
- * whole selector: a bare `${selector}:not(...)` binds the negation to the last
- * alternative only, which would break the opt-out for any comma-separated
- * entry (Cards is the first).
- */
+/** A body-scoped pass claims its document element for ScrollArea only. */
 function pageClaim(name: keyof Registry, root: ParentNode): Element[] {
   if (name !== 'ScrollArea') return [];
   const doc = (root as Node).ownerDocument;
@@ -285,6 +279,10 @@ function pageClaim(name: keyof Registry, root: ParentNode): Element[] {
   return [doc.documentElement];
 }
 
+/**
+ * The elements under `root` that component `name` claims, plus `root` itself
+ * when `self` is set. `:is()` applies the opt-out to every selector alternative.
+ */
 function claimed(name: keyof Registry, root: ParentNode, self = false): Element[] {
   const { selector, filter = () => true } = entry(name);
   const query = `:is(${selector}):not(.no-autoinit)`;
