@@ -13,20 +13,92 @@ async function setup(page, height = 900, extra = '') {
 const init = page => page.evaluate(() => { window.area = Expressive.ScrollArea.init(document.documentElement); });
 const frames = page => page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 const destroy = page => page.evaluate(() => window.area?.destroy());
+const near = (actual, expected, label) => assert.ok(Math.abs(actual - expected) <= 1, `${label}: ${actual}, expected ${expected}`);
+const geometry = page => page.locator('.scroll-area-bar').evaluate(bar => {
+  const track = bar.getBoundingClientRect();
+  const thumb = bar.firstElementChild.getBoundingClientRect();
+  return { length: thumb.height, offset: thumb.top - track.top, bottom: thumb.bottom, end: track.bottom, hidden: bar.hidden, display: getComputedStyle(bar).display };
+});
 
 test('custom native-bar rules and accessibility media are present in the bundle', () => {
-  const rules = parseRules(css);
+  const hiding = css.match(/@media screen and \(forced-colors: none\) and \(not \(pointer: coarse\)\) \{([\s\S]*?)\n\}/);
+  assert.ok(hiding, 'native hiding is limited to modes that show the custom bar');
+  const rules = parseRules(hiding[1]);
   assert.ok(rules.some(r => r.selectors.includes('html.scroll-area.custom:has(> .scroll-area-bar)') && /scrollbar-width:\s*none/.test(r.body)));
   assert.ok(rules.some(r => r.selectors.includes('html.scroll-area.custom:has(> .scroll-area-bar)::-webkit-scrollbar') && /display:\s*none/.test(r.body)));
   for (const query of ['forced-colors: active', 'pointer: coarse']) {
     const media = mediaRules(css, query);
     assert.ok(media.some(r => r.selectors.includes('html.scroll-area.custom > .scroll-area-bar') && /display:\s*none/.test(r.body)), query);
-    assert.ok(media.some(r => r.selectors.includes('html.scroll-area.custom:has(> .scroll-area-bar)') && /scrollbar-width:\s*(auto|thin)/.test(r.body)), query);
+    assert.equal(media.some(r => r.selectors.some(s => s.includes('::-webkit-scrollbar'))), false, `${query} leaves the system scrollbar unstyled`);
   }
   assert.match(css, /@media print\s*\{\s*html\.scroll-area\.custom > \.scroll-area-bar\s*\{\s*display: none/);
 });
 
 for (const [engine, browserType, browserTest] of engines) {
+  browserTest(`page thumb fallback follows native scroll without timelines (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    const page = await browser.newPage({ viewport: { width: 400, height: 300 }, reducedMotion: 'reduce' });
+    try {
+      await setup(page);
+      await page.addStyleTag({ content: '.scroll-area-thumb { animation: none !important; }' });
+      await page.evaluate(() => { CSS.supports = () => false; scrollTo(0, 300); });
+      await init(page); await frames(page);
+      near((await geometry(page)).offset, 100, 'fallback starts at current scroll position');
+      await page.evaluate(() => scrollTo(0, 600)); await frames(page);
+      const box = await geometry(page);
+      near(box.offset, 200, 'fallback scroll offset'); near(box.bottom, box.end, 'fallback track end');
+    } finally { await destroy(page); await browser.close(); }
+  });
+
+  browserTest(`page thumb tracks geometry, growth, locks and reduced motion (${engine})`, async t => {
+    const browser = await leaseBrowser(browserType);
+    const page = await browser.newPage({ viewport: { width: 400, height: 300 } });
+    try {
+      await setup(page); await init(page); await frames(page);
+      const timeline = await page.evaluate(() => CSS.supports('animation-timeline: scroll()'));
+      t.diagnostic(`animation-timeline supported: ${timeline}`);
+      if (timeline) assert.notEqual(await page.locator('.scroll-area-thumb').evaluate(el => getComputedStyle(el).animationTimeline), 'auto');
+      for (const top of [0, 300, 600]) {
+        await page.evaluate(top => scrollTo(0, top), top); await frames(page);
+        const box = await geometry(page);
+        near(box.length, 100, '900px document thumb length');
+        near(box.offset, top / 3, '900px document thumb offset');
+        if (top === 600) near(box.bottom, box.end, 'thumb reaches track end');
+      }
+      await destroy(page);
+      await page.evaluate(() => scrollTo(0, 300)); await init(page); await frames(page);
+      near((await geometry(page)).offset, 100, 'init at a scrolled position');
+      await page.evaluate(() => document.querySelector('#content').style.height = '60000px'); await frames(page);
+      near((await geometry(page)).length, 48, 'minimum thumb length');
+      await page.evaluate(() => scrollTo(0, 60000)); await frames(page);
+      const long = await geometry(page); near(long.bottom, long.end, 'long document end');
+      await page.evaluate(() => { document.querySelector('#content').style.height = '900px'; scrollTo(0, 0); }); await frames(page);
+      await page.evaluate(() => { const extra = document.createElement('div'); extra.id = 'growth'; extra.style.height = '900px'; document.body.append(extra); }); await frames(page);
+      near((await geometry(page)).length, 50, 'content growth');
+      await page.setViewportSize({ width: 400, height: 150 }); await frames(page);
+      near((await geometry(page)).length, 48, 'window resize');
+      await page.setViewportSize({ width: 400, height: 300 }); await frames(page);
+      near((await geometry(page)).length, 50, 'window restore');
+      await page.evaluate(() => { const dialog = document.createElement('dialog'); document.body.append(dialog); dialog.showModal(); });
+      assert.equal((await geometry(page)).display, 'none');
+      await page.evaluate(() => document.querySelector('dialog').close());
+      assert.notEqual((await geometry(page)).display, 'none');
+      await page.evaluate(() => { document.querySelector('#growth').remove(); document.querySelector('#content').style.height = '300px'; }); await frames(page);
+      assert.equal((await geometry(page)).hidden, true);
+      await page.evaluate(() => document.querySelector('#content').style.height = '900px'); await frames(page);
+      assert.equal((await geometry(page)).hidden, false);
+      await page.evaluate(() => { document.documentElement.style.overflow = 'hidden'; window.area.refresh(); });
+      assert.equal((await geometry(page)).hidden, true);
+      await page.evaluate(() => { document.documentElement.style.overflow = ''; window.area.refresh(); });
+      assert.equal((await geometry(page)).hidden, false);
+      await page.evaluate(() => { document.documentElement.style.height = '100%'; document.body.style.height = '100%'; document.querySelector('#content').style.height = '1800px'; window.area.refresh(); }); await frames(page);
+      near((await geometry(page)).length, 50, 'refresh in a fixed-height layout');
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.evaluate(() => scrollTo(0, 1800)); await frames(page);
+      const reduced = await geometry(page); near(reduced.bottom, reduced.end, 'reduced motion still tracks');
+    } finally { await destroy(page); await browser.close(); }
+  });
+
   browserTest(`page bar defers to system modes and clears fixed controls (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);
     const page = await browser.newPage({ viewport: { width: 400, height: 300 } });

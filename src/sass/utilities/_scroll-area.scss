@@ -29,11 +29,25 @@ html.scroll-area.custom > .scroll-area-bar {
   transform: translateY(var(--scroll-area-thumb-offset, 0px));
 }
 
-html.scroll-area.custom:has(> .scroll-area-bar) {
-  scrollbar-width: none;
+@supports (animation-timeline: scroll()) {
+  .scroll-area-thumb {
+    animation: scroll-area-position linear both;
+    animation-timeline: scroll(root block);
+  }
 
-  &::-webkit-scrollbar {
-    display: none;
+  @keyframes scroll-area-position {
+    from { transform: translateY(0); }
+    to { transform: translateY(var(--scroll-area-thumb-travel, 0px)); }
+  }
+}
+
+@media screen and (forced-colors: none) and (not (pointer: coarse)) {
+  html.scroll-area.custom:has(> .scroll-area-bar) {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 
@@ -68,28 +82,12 @@ html.scroll-area.custom:has(dialog:modal) > .scroll-area-bar {
     scrollbar-color: auto;
   }
 
-  html.scroll-area.custom:has(> .scroll-area-bar) {
-    scrollbar-width: auto;
-
-    &::-webkit-scrollbar {
-      display: block;
-    }
-  }
-
   html.scroll-area.custom > .scroll-area-bar {
     display: none;
   }
 }
 
 @media (pointer: coarse) {
-  html.scroll-area.custom:has(> .scroll-area-bar) {
-    scrollbar-width: thin;
-
-    &::-webkit-scrollbar {
-      display: block;
-    }
-  }
-
   html.scroll-area.custom > .scroll-area-bar {
     display: none;
   }
