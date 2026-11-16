@@ -9,7 +9,7 @@ Component ID: `fab`
 
 Contract: ExpressiveCSS 0.19.0
 
-Contract SHA-256: `337e1362b1d1e113dbb878e0c88f66b2b461678f0457aaa5c79bffbf9b496052`
+Contract SHA-256: `9164fc5152902c41ec54287adfe3301d8b0b24b0851b214ddcb8450a142e78e8`
 
 #### Selection and adaptation
 
@@ -49,9 +49,9 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 Use a standalone FAB for the primary action or a FAB menu for related labelled actions.
 
-`fab-menu` is the FAB that expands into a list of labelled actions. The trigger is an ordinary FAB; the actions are a `<ul>` (or `<menu>`) of pills, each an icon and a label at 56dp on a full corner. Click the FAB to expand; click it again, click outside, or press Escape to collapse.
+The menu keeps clear of the custom page scrollbar through `--scroll-area-bar-clearance`. Its inline-end inset becomes 18px with the default bar, preserving a larger `--md-comp-fab-menu-offset`. Use a length with a unit beside that bar.
 
-Expanded is the framework's state, not the author's: the constructor stamps `aria-expanded` on the trigger and `open()` / `close()` move it along with the `active` class. Do not write either into the markup.
+`fab-menu` is the FAB that expands into a list of labelled actions. The trigger is an ordinary FAB; the actions are a `<ul>` (or `<menu>`) of pills, each an icon and a label at 56dp on a full corner. Click the FAB to expand; click it again, click outside, or press Escape to collapse.
 
 #### Syntax
 

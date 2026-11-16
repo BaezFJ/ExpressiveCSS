@@ -62,8 +62,12 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
     <p>Opt in with <code>&lt;html class="scroll-area custom"&gt;</code> and initialize
       <code>ScrollArea</code>. This page-only modifier draws a vertical bar at the
       inline-end edge. Containers keep the native bar. The generated bar is hidden
-      from assistive technology and ignores pointer input. Wheel, keyboard, touch
+      from assistive technology and takes pointer input. Wheel, keyboard, touch
       and fragment scrolling remain native.</p>
+    <p>Drag the thumb to move through the page. Press the track above or below it
+      to scroll one viewport in that direction. Holding the press does not repeat.
+      A press keeps focus and the selection. Dragging stays instant even on a page
+      with smooth scrolling; a track press follows the page's scroll behavior.</p>
     <button type="button" id="page-bar-demo" aria-pressed="false">Show custom page bar</button>
     <Code code={`<html lang="en" class="scroll-area custom">`} />
     <Code code={`// Call after the body exists, or use Expressive.AutoInit().
@@ -83,11 +87,18 @@ area.destroy(); // Remove the drawn bar and restore the native one.`} />
       bar remains. Forced colors and a coarse primary pointer use the native bar.
       Print hides the drawn bar. A modal dialog hides it while open. On systems with
       classic scrollbars, hiding the native bar widens the page once at initialization.</p>
-    <p>The 12px bar leaves 4px between it and the default 16px inset of
-      <code>.back-to-top</code> and <code>.fab-menu</code>. For a fixed control closer
-      to the edge, add <code>var(--scroll-area-bar-size, 12px)</code> to its inline-end
-      inset. A wider custom bar may also need a larger inset. It overlays edge content,
-      so choose a thumb color with enough contrast against that content.</p>
+    <p>The default 16px inset of <code>.back-to-top</code> and <code>.fab-menu</code>
+      becomes 18px beside the custom bar. The page-level app bar's trailing padding
+      also becomes 18px, leaving 6px between each control and the 12px bar.
+      <code>--scroll-area-bar-clearance</code> grows with wider bars and preserves
+      larger author offsets. It stays set while the instance exists, including
+      during a modal lock or when the page cannot scroll, to avoid shifting controls.</p>
+    <p>For your own edge control, use
+      <code>inset-inline-end: max(16px, var(--scroll-area-bar-clearance, 0px))</code>.
+      Set <code>--scroll-area-bar-size</code> and <code>dir</code> on <code>&lt;html&gt;</code>.
+      Give <code>--md-comp-back-to-top-offset</code> and <code>--md-comp-fab-menu-offset</code>
+      a length with a unit beside the custom bar. The bar takes presses over edge
+      content, so keep interactive content clear and choose a contrasting thumb color.</p>
   </Section>
   <Section {...S.styling}>
     <p>Set these properties on the scroll container or an ancestor.</p>
@@ -97,6 +108,7 @@ area.destroy(); // Remove the drawn bar and restore the native one.`} />
         <tr><td><code>--scroll-area-thumb-color</code></td><td><code>var(--md-sys-color-on-surface-variant)</code></td></tr>
         <tr><td><code>--scroll-area-track-color</code></td><td><code>transparent</code></td></tr>
         <tr><td><code>--scroll-area-bar-size</code></td><td><code>12px</code>, custom page bar only</td></tr>
+        <tr><td><code>--scroll-area-bar-clearance</code></td><td><code>18px</code> with the default custom bar, grows with its width</td></tr>
         <tr><td><code>--expressive-z-scroll-area</code></td><td><code>999</code>, above app bars and below non-modal sheets</td></tr>
       </tbody>
     </table>

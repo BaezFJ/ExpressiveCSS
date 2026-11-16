@@ -2135,7 +2135,7 @@
         "sources": [
           {
             "path": "src/sass/components/_back-to-top.scss",
-            "sha256": "b665bda0c34dab312b363689d108ea8517d39ba89630d29330c0288d294919e0"
+            "sha256": "bb74d3f0fd7ef6530c8a46e1827fb5f3942057d559181aa85042a3ccd617eabd"
           },
           {
             "path": "src/ts/components/backToTop.ts",

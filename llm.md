@@ -1419,7 +1419,7 @@ Give a generic scroll region `tabindex="0"` and an accessible name so keyboard u
 
 Add `.scroll-area` to `<html>` to style the page's own scrollbar. The viewport keeps native scrolling, and the thumb color follows the theme.
 
-For a custom vertical page bar, opt in with `<html class="scroll-area custom">` and call `Expressive.AutoInit()` after the DOM is ready. `AutoInit(document.body, options)` also starts it on the matching `<html>`; `.no-autoinit` opts out. No other component starts on `<html>`. The modifier is page-only: containers keep the native bar. `ScrollArea` has no options or events. The framework generates the decorative bar, thumb and `aria-hidden`; do not author them. The bar ignores pointer input, and wheel, keyboard, touch and fragment scrolling remain native.
+For a custom vertical page bar, opt in with `<html class="scroll-area custom">` and call `Expressive.AutoInit()` after the DOM is ready. `AutoInit(document.body, options)` also starts it on the matching `<html>`; `.no-autoinit` opts out. No other component starts on `<html>`. The modifier is page-only: containers keep the native bar. `ScrollArea` has no options or events. The framework generates the bar, thumb and `aria-hidden`; do not author them. Drag the thumb to scroll, or press the track above or below it to scroll one viewport toward the press. Holding a track press does not repeat. Presses preserve focus and the selection. A drag stays instant under smooth scrolling; a track step follows the page's scroll behavior. Wheel, keyboard, touch and fragment scrolling remain native.
 
 ```js
 // Use this instead of AutoInit for an explicitly managed page bar.
@@ -1430,7 +1430,7 @@ area.destroy();
 
 The thumb's length follows the viewport-to-document ratio with a 48px minimum. Its position uses a root scroll timeline where supported and a passive, frame-coalesced scroll listener elsewhere. Reduced motion still follows the scroll position. Element size changes and window resizes update measurements automatically. Call `refresh()` after content overflows a fixed-height body, after changing your own scroll lock, or after adding a body to an instance started before it existed. `destroy()` removes the bar and its observers and listeners. Reinitializing replaces the earlier instance.
 
-The custom bar uses `--scroll-area-bar-size`, default `12px`, and `--expressive-z-scroll-area`, default `999`, above app bars and below non-modal sheets. It follows the inline-end edge in RTL. Default `.back-to-top` and `.fab-menu` controls have a 16px inset, leaving 4px of clearance. Add `var(--scroll-area-bar-size, 12px)` to the inline-end inset of a fixed control closer to the edge, or increase its inset when widening the bar. The bar overlays edge content, so check the thumb's contrast against that content.
+The custom bar uses `--scroll-area-bar-size`, default `12px`, and `--expressive-z-scroll-area`, default `999`, above app bars and below non-modal sheets. Set the size and `dir` on `<html>`; the bar follows its inline-end edge. The default 16px inset of `.back-to-top` and `.fab-menu` becomes 18px beside the bar, and a page-level app bar's trailing padding becomes 18px. `--scroll-area-bar-clearance` is `max(var(--scroll-area-bar-size, 12px), calc(var(--scroll-area-bar-size, 12px) / 2 + 12px))`, leaving 6px clear of the default bar. It stays set while the runtime bar exists under active screen media, including a modal lock or an unscrollable page. It is absent without the instance or `.custom`, under forced colors, with a coarse primary pointer and in print. Larger author offsets stay. Use lengths with units for `--md-comp-back-to-top-offset` and `--md-comp-fab-menu-offset` beside the custom bar. For your own edge control, use `inset-inline-end: max(16px, var(--scroll-area-bar-clearance, 0px))`. The bar takes presses over edge content, so keep controls clear and check thumb contrast.
 
 Without initialization or after removing `.custom`, the themed native bar stays. Forced colors and a coarse primary pointer also use the native bar; print and an open modal dialog hide the drawn bar. On systems with classic scrollbars, hiding the native bar widens the page once at initialization.
 
@@ -4360,6 +4360,8 @@ Use a standalone FAB for the primary action or a FAB menu for related labelled a
 
 ### FAB menu
 
+The menu keeps clear of the custom page scrollbar through `--scroll-area-bar-clearance`. Its inline-end inset becomes 18px with the default bar, preserving a larger `--md-comp-fab-menu-offset`. Use a length with a unit beside that bar.
+
 `fab-menu` is the FAB that expands into a list of labelled actions. The trigger is an ordinary FAB; the actions are a `<ul>` (or `<menu>`) of pills, each an icon and a label at 56dp on a full corner. Click the FAB to expand; click it again, click outside, or press Escape to collapse.
 
 Expanded is the framework's state, not the author's: the constructor stamps `aria-expanded` on the trigger and `open()` / `close()` move it along with the `active` class. Do not write either into the markup.
@@ -4457,6 +4459,8 @@ Replace `.fab` and `.fixed-action-btn` wrappers with `.fab-menu` and labelled ac
 ---
 
 ## Back to top
+
+The link keeps clear of the custom page scrollbar through `--scroll-area-bar-clearance`. Its inline-end inset becomes 18px with the default bar, preserving a larger `--md-comp-back-to-top-offset`. Use a length with a unit beside that bar.
 
 A link that appears once a long page has scrolled down, and returns to the top with focus on the main content.
 
@@ -4593,6 +4597,8 @@ The same size classes apply to Material Symbols.
 ---
 
 ## Navbar
+
+A page-level app bar keeps its trailing action clear of the custom page scrollbar through `--scroll-area-bar-clearance`, giving 18px trailing padding with the default bar. Nested app bars keep 4px.
 
 Material Design 3 top app bars, from the HTML.
 

@@ -12,6 +12,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   drive its position where supported and a passive listener handles other engines.
   `refresh()` updates layouts whose content overflows a fixed-height body. Forced colors
   and coarse pointers keep the native bar. The plain `.scroll-area` utility is unchanged.
+  Drag the thumb or press the track to scroll one viewport without hold-repeat.
+  Presses preserve focus and selection. Page app bars, back-to-top links and FAB menus
+  keep clear through `--scroll-area-bar-clearance`, 18px with the default bar.
 
 ## [0.19.0] - 2026-11-15
 

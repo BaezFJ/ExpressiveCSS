@@ -1,6 +1,6 @@
 import { Component, BaseOptions } from '../core/component';
 
-/** A decorative vertical scrollbar for the page. Scrolling stays native. */
+/** A vertical page scrollbar with thumb dragging and single-step track paging. */
 export class ScrollArea extends Component<BaseOptions> {
   static key = 'Expressive_ScrollArea';
   private _bar?: HTMLDivElement;
