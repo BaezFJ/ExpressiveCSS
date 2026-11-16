@@ -87,10 +87,10 @@ Completion check: V18 and V19 pass.
 
 Outcome: the repository's required local checks pass on the phase's last commit. Prerequisites: group 6. Covers R23. Checks V20.
 
-- [ ] `npm run verify`, with a long timeout.
-- [ ] `npm test --prefix mcp/expressivecss`, after `npm ci --prefix mcp/expressivecss`, then `npm run verify:packages`, one after the other.
-- [ ] `VISUAL_BASE=<start commit> npm run test:visual -- --grep 'scroll-area'`. Its screenshot differences are advisory, and the report goes to the maintainer for V23.
-- [ ] Rerun alone any failing test the phase doesn't touch before treating it as a failure, then run the verify steps the failure skipped.
-- [ ] Record each result in [validation.md](validation.md) from the run's last line. Leave V21 through V24 pending with what each needs.
+- [x] `npm run verify`, with a long timeout.
+- [x] `npm test --prefix mcp/expressivecss`, after `npm ci --prefix mcp/expressivecss`, then `npm run verify:packages`, one after the other.
+- [x] `VISUAL_BASE=<start commit> npm run test:visual -- --grep 'scroll-area'`. Its screenshot differences are advisory, and the report goes to the maintainer for V23.
+- [x] Rerun alone any failing test the phase doesn't touch before treating it as a failure, then run the verify steps the failure skipped.
+- [x] Record each result in [validation.md](validation.md) from the run's last line. Leave V21 through V24 pending with what each needs.
 
 Completion check: `npm run verify`, the MCP tests and `npm run verify:packages` pass, or each failure is in a test the phase doesn't touch and passes alone.
