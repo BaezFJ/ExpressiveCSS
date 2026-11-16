@@ -171,6 +171,10 @@ default one.
 element's used `color-scheme`, so an unpaired `:root[theme='dark']` means a
 shadow tree cannot be pinned to a theme the way a page can.
 
+The document's runtime `--scroll-area-bar-clearance` measurement has no shadow-host
+counterpart. Its exact page-bar selector and property are an explicit exception in
+`tests/shadow-dom.test.js`; component and theme tokens still need both anchors.
+
 `:host` matches nothing in a document, so pairing an anchor cannot change a
 normal load. It is not weightless, though: bare `:host` matches `:root` at
 (0,1,0), but `:host(<compound>)` adds its argument's weight on top, so

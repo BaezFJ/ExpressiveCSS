@@ -266,7 +266,6 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.equal(await page.locator('.scroll-area-bar').evaluate(el => el.hasPointerCapture(window.pointer)), true);
       let outsideSupported = true;
       for (const [y, top] of [[500, 600], [-200, 0]]) {
-        const before = await page.evaluate(() => scrollY);
         await page.mouse.move(-40, y); await frames(page);
         const actual = await page.evaluate(() => scrollY);
         const delivered = await page.evaluate(() => window.lastMove);
@@ -274,7 +273,6 @@ for (const [engine, browserType, browserTest] of engines) {
           outsideSupported = false;
           t.diagnostic(`automation requested (-40, ${y}) but delivered (${delivered.join(', ')}); V14 remains pending`);
         }
-        else if (actual === before && actual !== top) t.diagnostic(`automation withheld outside-viewport move to (-40, ${y}); V14 remains pending`);
         else near(actual, top, 'outside-viewport capture');
       }
       await page.mouse.up(); await frames(page);
@@ -426,7 +424,7 @@ for (const [engine, browserType, browserTest] of engines) {
     try {
       await setup(page, 2000, '<main id="main">Top</main><a class="back-to-top button circle extra" href="#main" aria-label="Back to top">Top</a><div class="fab-menu"><button type="button">Create</button><ul><li><button type="button">Draft</button></li></ul></div>');
       await init(page);
-      await page.evaluate(() => { window.backArea = Expressive.BackToTop.init(document.querySelector('.back-to-top')); scrollTo(0, 1000); });
+      await page.evaluate(() => { window.back = Expressive.BackToTop.init(document.querySelector('.back-to-top')); scrollTo(0, 1000); });
       await page.waitForFunction(() => !document.querySelector('.back-to-top').hasAttribute('inert'));
       for (const dir of ['ltr', 'rtl']) {
         await page.evaluate(dir => document.documentElement.dir = dir, dir);
@@ -458,7 +456,7 @@ for (const [engine, browserType, browserTest] of engines) {
         } finally { await destroy(mobile); await touch.close(); }
       }
     } finally {
-      await page.evaluate(() => window.backArea?.destroy());
+      await page.evaluate(() => window.back?.destroy());
       await destroy(page); await browser.close();
     }
   });

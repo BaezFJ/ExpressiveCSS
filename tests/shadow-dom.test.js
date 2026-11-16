@@ -81,12 +81,27 @@ function hostTwin({ arg, rest }) {
 // cannot be pinned to a theme the way a page can.
 const DECLARES_TOKEN = /(^|[\s;{])(--[A-Za-z0-9_-]+|color-scheme)\s*:/;
 
+function documentOnlyClearance(selector, body) {
+  if (selector !== 'html.scroll-area.custom:has(> .scroll-area-bar)') return false;
+  // This measurement belongs only to the document's runtime page bar.
+  assert.equal(body.trim().replace(/\s+/g, ' '), '--scroll-area-bar-clearance: max(var(--scroll-area-bar-size, 12px), calc(var(--scroll-area-bar-size, 12px) / 2 + 12px)); scrollbar-width: none;');
+  return true;
+}
+
 describe('Shadow-only loading', () => {
+  test('the page-only clearance exception cannot hide another token, value or selector', () => {
+    const rule = rules.find(rule => rule.body.includes('--scroll-area-bar-clearance:'));
+    assert.throws(() => documentOnlyClearance(rule.selectors[0], `${rule.body} --other: 1;`));
+    assert.throws(() => documentOnlyClearance(rule.selectors[0], rule.body.replace('/ 2 + 12px', '/ 2 + 4px')));
+    assert.equal(documentOnlyClearance(':root', rule.body), false);
+  });
+
   test('every root-anchored rule that declares a token carries its :host twin', () => {
     const missing = [];
     for (const { selectors, body } of rules) {
       if (!DECLARES_TOKEN.test(body)) continue;
       for (const selector of selectors) {
+        if (documentOnlyClearance(selector, body)) continue;
         const anchor = rootAnchor(selector);
         if (!anchor) continue;
         const twin = hostTwin(anchor);

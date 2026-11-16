@@ -5,7 +5,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { compileString } from 'sass';
 import { engines, leaseBrowser } from './browser.js';
-import { splitSelectorList } from './css.js';
+import { parseRules, splitSelectorList } from './css.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -39,7 +39,14 @@ const near = (a, b, msg) => assert.ok(Math.abs(a - b) < 1, `${msg}: ${a} vs ${b}
 test('every compiled scaffold selector starts at the scaffold or a region class', () => {
   const preludes = [...css.matchAll(/([^{}]*scaffold[^{}]*)\{/g)].map((m) => m[1].trim());
   assert.ok(preludes.length > 5, 'the scaffold rules are in the bundle');
+  const bar = ':is(nav:not(.tabs, .navigation-bar, .navigation-rail), .bar)';
+  const pageBarSelectors = [`:root > body > header > ${bar}`, `:root > body > .scaffold > header > ${bar}`];
+  const clearance = parseRules(css).find(rule => rule.selectors.includes(pageBarSelectors[1]));
+  assert.deepEqual(clearance.selectors, pageBarSelectors);
+  assert.equal(clearance.body.trim(), 'padding-inline-end: var(--scroll-area-bar-clearance, 4px);');
   for (const prelude of preludes) {
+    // The app bar owns this one shared page/scaffold clearance declaration.
+    if (splitSelectorList(prelude).join('\n') === pageBarSelectors.join('\n')) continue;
     // The root rules key off a scaffold that is a direct child of <body>, and
     // a shadow host's nav-rail switch reaches a scaffold inside it.
     for (const selector of splitSelectorList(prelude)) assert.match(selector, /^(\.scaffold|:root:has\(> body > \.scaffold[ )]|:host\(\[nav-rail~="?compact"?\]\) \.scaffold)/, prelude);
