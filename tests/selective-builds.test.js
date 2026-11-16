@@ -368,7 +368,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed Phase 101 focus restoration, author anchor edits and composed drag ownership: 114,581 gzip bytes (+93; +1,232 against clean 0b0493f2840dcc11ba8b670a5d995b9d146fc79a).
   // Reviewed Phase 101 container color context with frame-coalesced theme synchronization: 114,672 gzip bytes (+91; +1,323 against clean 0b0493f2840dcc11ba8b670a5d995b9d146fc79a).
   // Reviewed Phase 101 primary-click containment and observation of already-focused open roots: 114,721 gzip bytes (+49; +1,372 against clean 0b0493f2840dcc11ba8b670a5d995b9d146fc79a).
-  assert.ok(sizes(js).gzip <= 114721, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Phase 101 stable gutter measurements, reentrant wrapping and local fallback thumb colors: 114,759 gzip bytes (+38; +1,410 against clean 0b0493f2840dcc11ba8b670a5d995b9d146fc79a).
+  assert.ok(sizes(js).gzip <= 114759, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

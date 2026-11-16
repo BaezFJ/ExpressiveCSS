@@ -384,3 +384,38 @@ The declaration comparison first attempted to use an unavailable TypeScript comp
 | large-dark | 1,440 × 4,403 | 1,440 × 7,206 | 3,928,357 |
 
 V21 through V24 remain Pending. No CI, native OS scrollbar, physical-device, screen-reader or human visual approval is claimed. The inaccessible closed-descendant focus limitation and the separate unobservable closed-root modal limitation remain documented platform boundaries.
+
+## Local CLI review and corrections
+
+2026-11-16. The independent local CLI review started from clean `b95963b12fe8514dc1ce16d6f3b07993fcb33a28` and completed with exit 0. It reviewed the full phase diff, including the accepted upstream integration. The exact command ran in a PTY and its log was read through the final comments:
+
+```sh
+PHASE_BASE=40ab4fb74044d1b9a45ba10494c5a9fc8d8668b1
+codex review --base "$PHASE_BASE" > "$(git rev-parse --git-dir)/codex-review-phase-101.txt" 2>&1
+```
+
+The completed verdict reported three P2 findings requiring corrections. All three were confirmed against the source, callers and R6, R11, R12 and R17; none was rejected. The complete review log is `/home/javier/Repos/ExpressiveCSS/.git/worktrees/t3-8cf9a6a8-68778784d7994af6/codex-review-phase-101.txt`. Its focused Node file passed. Its attempted Chromium launch failed in the CLI sandbox with `sandbox_host_linux.cc:41` and `Operation not permitted`. That attempt supplies no browser result. Optional remote MCP authentication diagnostics did not prevent the source review from completing. The workspace checks below ran separately after the CLI exited.
+
+| Finding | Confirmed correction and evidence |
+| --- | --- |
+| Native gutter visibility oscillated. | Under classic scrollbars, content could fit only after hiding the native gutters. Measuring once in each previous visibility state alternated `hidden` forever. Container style preparation now clears the generated bar's hidden flag before reading metrics, then commits the final flag in the same task. Content that fits in that state retains native bars before paint. The page path and actual displayed thumb, drag and track metrics stay unchanged. R11 and all three reader records state the resulting behavior. The controlled regression failed before the fix, `/tmp/p101-cli-unit-red.log`, and now covers both horizontal-gutter height and vertical-gutter text reflow. |
+| A custom-element move could destroy the instance during `_wrap()`. | The DOM move synchronously invokes custom-element reactions. `_wrap()` now stops when teardown removed its bar. Style-presence bookkeeping runs before the move, preserving an original empty style attribute too. The first lifecycle test threw the reported exception, `/tmp/p101-cli-unit-red.log`. An expanded check then exposed the empty-attribute loss, `/tmp/p101-cli-empty-style-red.log`. The final regression covers destruction, replacement, absent and empty styles, and author anchors with declaration priority. Both old and replacement instances clean up in `finally`. |
+| The default thumb lost a local theme token. | The sibling bar now also copies the container's `--md-sys-color-on-surface-variant`, through the existing property-copy loop and attribute/media observation. The all-engine regression first failed on a local red override in Chromium, Firefox and WebKit, `/tmp/p101-cli-color-red.log`. It now checks a local override, `currentColor`, `[vibrant]`, a root theme change and removing the local context. Explicit scroll-area overrides retain their existing behavior. |
+
+### Native gutter and observer checks
+
+The workspace native probe removed Chromium's `--hide-scrollbars` default and disabled overlay-scrollbar flags. Chromium exposed real 10px horizontal and vertical gutters. With a 300px border box, 3px borders, 10px padding and wide 268px content, the original implementation alternated between `clientHeight` 284 and 294 and between hidden and visible on all 12 sampled frames, `/tmp/p101-cli-native-gutters-before.log`. This is a reproduced native failure, separate from the controlled jsdom metric model.
+
+The corrected source retained `hidden: true`, the native horizontal gutter and `clientHeight: 284` for all 12 frames. The accepted-source probe then checked fit, overflow and fit-again for both `scrollbar-gutter: auto` and `stable both-edges`. It observed zero idle refresh calls, immediate native-bar restoration on fit, and a displayed bar with actual `clientHeight: 294` on overflow. Evidence is `/tmp/p101-cli-native-gutters-accepted.log`; the probe script is `.cache/p101-cli-native-gutters.mjs`. The intermediate before/after probe logs remain at `/tmp/p101-cli-native-gutters-before.log`, `/tmp/p101-cli-native-gutters-after.log` and `/tmp/p101-cli-native-gutters-final.log`.
+
+Firefox and WebKit exposed zero native gutters in that probe. Their fit/overflow/fit and idle checks passed, but those results do not establish classic native-gutter behavior in either engine. Firefox retained its already-recorded computed `scrollbar-width` quirk. No OS appearance check is claimed. The permanent browser regression checks border and padding geometry, author gutter styles, immediate final visibility and idle measurements in all three engines.
+
+### Accepted source and focused verification
+
+The initial source arrangement passed all 170 affected runtime tests, `/tmp/p101-cli-runtime.log`, and the six new all-engine color and idle checks, `/tmp/p101-cli-browser-green.log`. Its complexity check found `_measure` at 5, `/tmp/p101-cli-complexity.json`. Moving the candidate-state write into the existing container-style method and reading metrics afterward removed that branch from `_measure`, without adding a helper. The accepted complexity result has zero findings, 49 functions and maximum 4, `/tmp/p101-cli-complexity-final.json`. Missing architecture-boundary and rule-pack configuration is diagnostic context, not a verified architecture result.
+
+After that final source adjustment, `npm run build` completed and the eight focused lifecycle, controlled-metric, all-engine color and idle-transition tests passed, zero failures and zero skips, `/tmp/p101-cli-accepted-build.log` and `/tmp/p101-cli-accepted-focused.log`. The native probe above also ran on that accepted arrangement. The earlier build logs remain at `/tmp/p101-cli-red-build.log`, `/tmp/p101-cli-green-build.log` and `/tmp/p101-cli-final-build.log`; the initial two focused green tests are `/tmp/p101-cli-unit-green.log`.
+
+Canonical repository-helper gzip measurement is JavaScript 114,759 bytes, +38 against the CLI review start and +1,410 against clean implementation start, and CSS 95,120 bytes, unchanged by these corrections. The budget line records those exact values. `npm run build:skill` regenerated the committed contract hashes, `/tmp/p101-cli-generated-final.log`. All 101 skill guide bodies and the MCP guide bodies match the review start after ignoring only contract hashes. The accepted upstream card source/test and seven compatibility test files are byte-identical to the review start. These comparisons and sizes passed in `/tmp/p101-cli-final-comparisons.log`; `git diff --check` passed.
+
+Tier 2 graph verification used search, call traces and exact snippets for ScrollArea and its shared focus/controller helpers. A stale generation was refreshed in fast mode to `2026-11-16T16:33:37Z`. Coverage checks included every relied-on source, test, reader and generated path, with no remaining result pages. Tests and docs excluded by fast mode were read directly; `_scroll-area.scss` partial ranges 65 and 78 were also read directly. Later changed source and reader records were checked from their exact bytes. These checks do not claim graph completeness.

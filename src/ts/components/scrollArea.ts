@@ -117,9 +117,10 @@ export class ScrollArea extends Component<BaseOptions> {
     this._wrapper = this.el.ownerDocument.createElement('div');
     this._wrapper.className = 'scroll-area-wrapper';
     if (this.el.hasAttribute('slot')) this._wrapper.setAttribute('slot', this.el.getAttribute('slot')!);
+    this._hadStyle = this.el.hasAttribute('style');
     this.el.before(this._wrapper);
     this._wrapper.append(this.el, this._bar!);
-    this._hadStyle = this.el.hasAttribute('style');
+    if (!this._bar) return;
     this._anchor = `--scroll-area-${Utils.guid()}`;
     this._anchorValue = this.el.style.getPropertyValue('anchor-name');
     this._anchorPriority = this.el.style.getPropertyPriority('anchor-name');
@@ -286,12 +287,14 @@ export class ScrollArea extends Component<BaseOptions> {
     for (const side of ['block-start', 'block-end', 'inline-end']) {
       this._copyProperty(`--scroll-area-border-${side}`, style.getPropertyValue(`border-${side}-width`));
     }
-    for (const name of ['--scroll-area-bar-size', '--scroll-area-thumb-color', '--scroll-area-track-color']) {
+    for (const name of ['--scroll-area-bar-size', '--scroll-area-thumb-color', '--scroll-area-track-color', '--md-sys-color-on-surface-variant']) {
       this._copyProperty(name, style.getPropertyValue(name));
     }
   }
 
   private _containerHidden(style: CSSStyleDeclaration): boolean {
+    // Measure without native gutters, then restore them before paint if content fits.
+    this._bar!.hidden = false;
     this._copyContainerStyle(style);
     return style.visibility !== 'visible' || this.el.parentNode !== this._wrapper;
   }
@@ -321,9 +324,9 @@ export class ScrollArea extends Component<BaseOptions> {
   }
 
   private _measure(): void {
-    const { range, length, travel, offset } = this._metrics;
     const style = this._window.getComputedStyle(this.el);
     const hidden = this._wrapper ? this._containerHidden(style) : false;
+    const { range, length, travel, offset } = this._metrics;
     this._bar!.hidden = this._unscrollable(range, style) || hidden;
     if (this._bar!.hidden) this._endDrag();
     this._bar!.style.setProperty('--scroll-area-thumb-length', `${length}px`);

@@ -374,6 +374,61 @@ test('V13 container preserves author anchor edits made while it lives', () => {
   }
 });
 
+test('V13 a custom element can destroy or replace its instance during wrapping', () => {
+  window.customElements.define('scroll-area-lifecycle', class extends window.HTMLElement {
+    disconnectedCallback() {
+      const action = this.onDisconnect;
+      this.onDisconnect = undefined;
+      action?.();
+    }
+  });
+  for (const replace of [false, true]) for (const style of ['', ' style=""', ' style="anchor-name: --mine !important; color: red"']) {
+    document.body.innerHTML = `<i></i><scroll-area-lifecycle class="scroll-area custom"${style}></scroll-area-lifecycle><i></i>`;
+    const el = document.body.children[1], nodes = [...document.body.childNodes];
+    const hadStyle = el.hasAttribute('style'), cssText = el.style.cssText;
+    let first, replacement;
+    el.onDisconnect = () => {
+      Expressive.ScrollArea.getInstance(el)?.destroy();
+      if (replace) replacement = Expressive.ScrollArea.init(el);
+    };
+    try {
+      assert.doesNotThrow(() => { first = Expressive.ScrollArea.init(el); });
+      assert.equal(Expressive.ScrollArea.getInstance(el), replacement);
+      assert.equal(document.querySelectorAll('.scroll-area-wrapper').length, replace ? 1 : 0);
+      if (replace) assert.ok(el.style.getPropertyValue('anchor-name').includes(el.nextElementSibling.style.getPropertyValue('position-anchor')));
+      else assert.equal(el.hasAttribute('style'), hadStyle);
+    } finally {
+      Expressive.ScrollArea.getInstance(el)?.destroy();
+      first?.destroy();
+    }
+    assert.deepEqual([...document.body.childNodes], nodes);
+    assert.equal(el.hasAttribute('style'), hadStyle);
+    assert.equal(el.style.cssText, cssText);
+  }
+});
+
+test('V7 container visibility settles when classic gutters change the content size', () => {
+  document.body.innerHTML = '<div class="scroll-area custom" style="overflow:auto;border:3px solid;padding:10px"><div></div></div>';
+  const el = document.body.firstElementChild;
+  let contentHeight = 295;
+  let wraps = false;
+  Object.defineProperties(el, {
+    clientHeight: { get() { return this.nextElementSibling?.hidden ? 290 : 300; } },
+    scrollHeight: { get() { return Math.max(contentHeight + (wraps && this.nextElementSibling?.hidden ? 20 : 0), this.clientHeight); } },
+  });
+  const area = Expressive.ScrollArea.init(el);
+  try {
+    for (const [height, hidden, reflow] of [[295, true, false], [900, false, false], [290, true, true], [900, false, true], [0, true, false]]) {
+      contentHeight = height;
+      wraps = reflow;
+      for (let i = 0; i < 6; i++) {
+        area.refresh();
+        assert.equal(el.nextElementSibling.hidden, hidden, `content height ${height}, measurement ${i}`);
+      }
+    }
+  } finally { area.destroy(); }
+});
+
 test('V5 container observes children and coalesces one passive scroll listener', () => {
   document.body.innerHTML='<div class="scroll-area custom"><div></div></div>';
   const el=document.body.firstElementChild;

@@ -179,12 +179,63 @@ for (const [engine, type, browserTest] of engines) {
     await frames(page);
     assert.deepEqual(await colors(), ['rgb(0, 0, 255)', 'rgb(0, 0, 255)', true]);
   }));
+  browserTest(`V4 container default thumb follows local theme tokens (${engine})`, () => run(async page => {
+    await setup(page);
+    await page.evaluate(() => box.style.setProperty('--md-sys-color-on-surface-variant', 'red'));
+    await init(page);
+    await frames(page);
+    const thumb = () => page.evaluate(() => getComputedStyle(box.nextElementSibling.firstElementChild).backgroundColor);
+    assert.equal(await thumb(), 'rgb(255, 0, 0)');
+    await page.evaluate(() => box.style.setProperty('--md-sys-color-on-surface-variant', 'currentColor'));
+    await frames(page);
+    assert.equal(await thumb(), await page.evaluate(() => getComputedStyle(box).color));
+    await page.evaluate(() => {
+      box.style.removeProperty('--md-sys-color-on-surface-variant');
+      box.setAttribute('vibrant', '');
+    });
+    await frames(page);
+    const expected = () => page.evaluate(() => {
+      const probe = document.createElement('span');
+      probe.style.backgroundColor = 'var(--md-sys-color-on-surface-variant)';
+      box.append(probe);
+      try { return getComputedStyle(probe).backgroundColor; }
+      finally { probe.remove(); }
+    });
+    assert.equal(await thumb(), await expected());
+    await page.evaluate(() => document.documentElement.setAttribute('theme', 'dark'));
+    await frames(page);
+    assert.equal(await thumb(), await expected());
+    await page.evaluate(() => box.removeAttribute('vibrant'));
+    await frames(page);
+    assert.equal(await thumb(), await expected());
+  }));
   browserTest(`V5 container thumb follows only its own scroll (${engine})`, () => run(async page => {
     await setup(page); await init(page); await frames(page);
     await page.evaluate(() => scrollTo(0,200)); await frames(page);
     let g = await geometry(page); near(g.thumb.top-g.bar.top,0);
     await page.evaluate(() => box.scrollTop = 300); await frames(page);
     g = await geometry(page); near(g.thumb.top-g.bar.top,100);
+  }));
+  browserTest(`V7 fit and overflow transitions settle without idle measurements (${engine})`, () => run(async page => {
+    for (const gutter of ['auto', 'stable both-edges']) {
+      await setup(page, fixture, `#box{border:3px solid;padding:10px;scrollbar-gutter:${gutter}}#content{inline-size:900px}`);
+      await init(page);
+      for (const height of [268, 900, 268]) {
+        await page.evaluate(height => content.style.blockSize = `${height}px`, height);
+        await frames(page);
+        await page.waitForTimeout(100);
+        assert.equal((await geometry(page)).hidden, height === 268);
+        const idle = await page.evaluate(() => new Promise(resolve => {
+          const refresh = area.refresh;
+          let calls = 0;
+          area.refresh = function() { calls++; return refresh.call(this); };
+          setTimeout(() => { area.refresh = refresh; resolve(calls); }, 100);
+        }));
+        assert.equal(idle, 0, `${gutter}, content height ${height}`);
+        assert.equal(await page.evaluate(() => { area.refresh(); return box.nextElementSibling.hidden; }), height === 268);
+      }
+      await destroy(page);
+    }
   }));
   browserTest(`V6 anchors follow layout and unpositioned ancestor scrolling (${engine})`, () => run(async page => {
     await setup(page, `<div id="scroller" style="height:400px;overflow:auto">${fixture}<div style="height:1200px"></div></div>`);
