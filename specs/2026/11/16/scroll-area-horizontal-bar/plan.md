@@ -18,12 +18,12 @@ Five statements in the requirements rest on engine behavior that no check has ru
 
 Outcome: every instance that draws a bar owns a vertical and a horizontal bar, and `destroy()` removes both. Prerequisites: none. Covers R1, R2, R18. Checks V1.
 
-- [ ] Add the jsdom structure and lifecycle cases (V1) and watch them fail. Change the locators R21 names in `tests/scroll-area.test.js` from `lastElementChild` and a count of one to `.scroll-area-bar:not(.horizontal)` and a count of two. Change the `.scroll-area-bar` locators and `querySelector` calls in the two existing browser files to the same selector. Leave every other assertion as it is.
-- [ ] In `src/ts/components/scrollArea.ts`, build the second bar with the function that builds the first, with the class `scroll-area-bar horizontal`. Append it after the vertical bar on the page path and in `_wrap()`.
-- [ ] Register the click, pointer and, for a container, wheel listeners on both bars with one loop over the two elements, on `this._events.signal`.
-- [ ] Give the container's horizontal bar the instance's `position-anchor`.
-- [ ] Remove both bars in `destroy()`, and keep the early return in `_wrap()` for an instance that a custom element destroyed during the move. Keep `_saveState()` around the move, so phase 101's R5 holds with three nodes in the wrapper.
-- [ ] Keep each function below complexity 5. A two-entry table of axis names, such as the client, scroll and offset property names and the pointer coordinate, keeps the axis out of the branches.
+- [x] Add the jsdom structure and lifecycle cases (V1) and watch them fail. Change the locators R21 names in `tests/scroll-area.test.js` from `lastElementChild` and a count of one to `.scroll-area-bar:not(.horizontal)` and a count of two. Change the `.scroll-area-bar` locators and `querySelector` calls in the two existing browser files to the same selector. Leave every other assertion as it is.
+- [x] In `src/ts/components/scrollArea.ts`, build the second bar with the function that builds the first, with the class `scroll-area-bar horizontal`. Append it after the vertical bar on the page path and in `_wrap()`.
+- [x] Register the click, pointer and, for a container, wheel listeners on both bars with one loop over the two elements, on `this._events.signal`.
+- [x] Give the container's horizontal bar the instance's `position-anchor`.
+- [x] Remove both bars in `destroy()`, and keep the early return in `_wrap()` for an instance that a custom element destroyed during the move. Keep `_saveState()` around the move, so phase 101's R5 holds with three nodes in the wrapper.
+- [x] Keep each function below complexity 5. A two-entry table of axis names, such as the client, scroll and offset property names and the pointer coordinate, keeps the axis out of the branches.
 
 Completion check: V1 passes, and the existing jsdom cases pass with the changed locators.
 
@@ -31,17 +31,17 @@ Completion check: V1 passes, and the existing jsdom cases pass with the changed 
 
 Outcome: under the drawn bar's media conditions, each displayed bar has the right box and thumb on the page and on a container, in `ltr` and `rtl`, and neither enters the corner. Prerequisites: group 1. Covers R3, R4, R5, R6, R7, R8. Checks V2, V3, V4, V5.
 
-- [ ] Probe the root's inline scroll timeline in each engine that supports scroll timelines: on a page that overflows sideways under `dir="rtl"`, animate a test element from `translateX(0)` to `translateX(-100px)` on `scroll(root inline)`, scroll to the end, and read its transform and the document's `scrollLeft` at the start and at the end. Record the result.
-- [ ] Probe `anchor(self-start)` on a bar with `dir="rtl"` beside an `ltr` parent in each engine, and record the result.
-- [ ] Probe the computed `inline-size` of the vertical bar in each engine while it has `hidden`, with `--scroll-area-bar-size` at `14px` and at `1rem`, and record the result. If an engine doesn't return pixels there, read the width with a bar unhidden on both paths, and record that under "Decisions made while building".
-- [ ] Add the browser cases (V2, V3, V4, V5) and watch V2, V3 and V4 fail.
-- [ ] In `src/sass/utilities/_scroll-area.scss`, after the page bar's rule and without repeating `position: fixed`, add the page's horizontal rule: block-start inset `auto`, which undoes the base rule's `inset-block: 0`, block-end inset 0, inline insets 0, `block-size: var(--scroll-area-bar-size, 12px)` and an automatic inline size. No horizontal rule declares `display`. After the container bar's rule, add the container's horizontal rule: the block-end inset from `anchor(bottom)` plus the block-end border offset, the inline insets from `anchor(self-start)` and `anchor(self-end)` plus their border offsets, the bar's block size, and an explicit inline size from `anchor-size(width, 0px)` so that a missing anchor collapses the bar as it does the vertical one.
-- [ ] Add the corner rules: while the other bar of the same parent lacks `hidden`, the vertical bar's block-end inset and the horizontal bar's inline-end inset each grow by `var(--scroll-area-bar-size, 12px)`, and the container bars' explicit sizes shrink by the same length. On the page the rules also require that no modal dialog is open.
-- [ ] Style the horizontal thumb: 8px tall, centered in the bar, `inline-size` from the thumb length property, a `max-inline-size` of 100% for a container, and a transform on the x axis. Under `@supports (animation-timeline: scroll())`, give the page's horizontal thumb its own keyframes on `scroll(root inline)`.
-- [ ] Copy `--scroll-area-border-inline-start` with the other border offsets, and apply `_copyContainerStyle` to both bars.
-- [ ] Turn `_metrics` into a per-axis read: client size, scroll size, scroll offset and the corner. The corner is the vertical bar's computed `inline-size` when neither bar has `hidden`, and 0 otherwise. The track is the client size minus the corner and never less than 0, and the thumb's length is the smaller of the track and the larger of 48 and the proportional length.
-- [ ] Write each bar's length, travel and offset properties. For the horizontal bar, sign the offset and the travel by the computed `direction`, read from the container, or from `<html>` for the page.
-- [ ] Leave `_listenForScroll` as it is: the container's listener and the page's fallback listener already fire for both axes.
+- [x] Probe the root's inline scroll timeline in each engine that supports scroll timelines: on a page that overflows sideways under `dir="rtl"`, animate a test element from `translateX(0)` to `translateX(-100px)` on `scroll(root inline)`, scroll to the end, and read its transform and the document's `scrollLeft` at the start and at the end. Record the result.
+- [x] Probe `anchor(self-start)` on a bar with `dir="rtl"` beside an `ltr` parent in each engine, and record the result.
+- [x] Probe the computed `inline-size` of the vertical bar in each engine while it has `hidden`, with `--scroll-area-bar-size` at `14px` and at `1rem`, and record the result. If an engine doesn't return pixels there, read the width with a bar unhidden on both paths, and record that under "Decisions made while building".
+- [x] Add the browser cases (V2, V3, V4, V5) and watch V2, V3 and V4 fail.
+- [x] In `src/sass/utilities/_scroll-area.scss`, after the page bar's rule and without repeating `position: fixed`, add the page's horizontal rule: block-start inset `auto`, which undoes the base rule's `inset-block: 0`, block-end inset 0, inline insets 0, `block-size: var(--scroll-area-bar-size, 12px)` and an automatic inline size. No horizontal rule declares `display`. After the container bar's rule, add the container's horizontal rule: the block-end inset from `anchor(bottom)` plus the block-end border offset, the inline insets from `anchor(self-start)` and `anchor(self-end)` plus their border offsets, the bar's block size, and an explicit inline size from `anchor-size(width, 0px)` so that a missing anchor collapses the bar as it does the vertical one.
+- [x] Add the corner rules: while the other bar of the same parent lacks `hidden`, the vertical bar's block-end inset and the horizontal bar's inline-end inset each grow by `var(--scroll-area-bar-size, 12px)`, and the container bars' explicit sizes shrink by the same length. On the page the rules also require that no modal dialog is open.
+- [x] Style the horizontal thumb: 8px tall, centered in the bar, `inline-size` from the thumb length property, a `max-inline-size` of 100% for a container, and a transform on the x axis. Under `@supports (animation-timeline: scroll())`, give the page's horizontal thumb its own keyframes on `scroll(root inline)`.
+- [x] Copy `--scroll-area-border-inline-start` with the other border offsets, and apply `_copyContainerStyle` to both bars.
+- [x] Turn `_metrics` into a per-axis read: client size, scroll size, scroll offset and the corner. The corner is the vertical bar's computed `inline-size` when neither bar has `hidden`, and 0 otherwise. The track is the client size minus the corner and never less than 0, and the thumb's length is the smaller of the track and the larger of 48 and the proportional length.
+- [x] Write each bar's length, travel and offset properties. For the horizontal bar, sign the offset and the travel by the computed `direction`, read from the container, or from `<html>` for the page.
+- [x] Leave `_listenForScroll` as it is: the container's listener and the page's fallback listener already fire for both axes.
 
 Completion check: V2 through V5 pass in Chromium, Firefox and WebKit, and the roadmap's check holds: a container that overflows both ways shows both bars with neither thumb in the corner square, and under `dir="rtl"` the horizontal thumb starts at the right end of its track.
 
@@ -49,13 +49,13 @@ Completion check: V2 through V5 pass in Chromium, Firefox and WebKit, and the ro
 
 Outcome: each bar hides by its own axis, a container's native bars hide while either drawn bar shows, and the measurement stays stable with classic scrollbars. Prerequisites: group 2. Covers R9, R10, R11, R12, R13. Checks V6, V7, V8, V9.
 
-- [ ] Add the jsdom two-axis gutter cases of V7 and the browser cases (V6, V7, V8, V9). Watch V6 and the jsdom arm of V7 fail. For the jsdom arm, see it fail with the horizontal bar left out of the candidate state.
-- [ ] In `_containerHidden`, clear `hidden` on one bar before any read when both bars have it, and keep that step ahead of the metric reads in `_measure`.
-- [ ] Commit both `hidden` attributes after the reads, writing each only when its value changes: the vertical one from the block range and `overflow-y`, the horizontal one from the inline range and `overflow-x`, and both from the container's visibility and parent. End a drag only when its own bar is hidden.
-- [ ] Change the container's native-bar rule to match while any following sibling bar lacks `hidden`, and the display rule to match both bars. Leave the page rule `html.scroll-area.custom:has(> .scroll-area-bar)` and its body alone.
-- [ ] Update the phase 101 browser case for the sideways-only container and the bundle test's container selector, as R21 names.
-- [ ] Repeat phase 101's Chromium classic-scrollbar probe with two axes: launch without `--hide-scrollbars` and with overlay scrollbars disabled, confirm real gutters, and sample 12 frames in each state of V7, with its border, `overflow: scroll` and `scrollbar-gutter` arms. Record the log paths.
-- [ ] Probe whether Firefox with the preference `ui.useOverlayScrollbars` set to 0, or WebKit with any launch option, shows native gutters under Playwright. If one does, run V7's native arm there and mark V22 as covered by it in validation.md. If neither does, record that and leave V22 pending.
+- [x] Add the jsdom two-axis gutter cases of V7 and the browser cases (V6, V7, V8, V9). Watch V6 and the jsdom arm of V7 fail. For the jsdom arm, see it fail with the horizontal bar left out of the candidate state.
+- [x] In `_containerHidden`, clear `hidden` on one bar before any read when both bars have it, and keep that step ahead of the metric reads in `_measure`.
+- [x] Commit both `hidden` attributes after the reads, writing each only when its value changes: the vertical one from the block range and `overflow-y`, the horizontal one from the inline range and `overflow-x`, and both from the container's visibility and parent. End a drag only when its own bar is hidden.
+- [x] Change the container's native-bar rule to match while any following sibling bar lacks `hidden`, and the display rule to match both bars. Leave the page rule `html.scroll-area.custom:has(> .scroll-area-bar)` and its body alone.
+- [x] Update the phase 101 browser case for the sideways-only container and the bundle test's container selector, as R21 names.
+- [x] Repeat phase 101's Chromium classic-scrollbar probe with two axes: launch without `--hide-scrollbars` and with overlay scrollbars disabled, confirm real gutters, and sample 12 frames in each state of V7, with its border, `overflow: scroll` and `scrollbar-gutter` arms. Record the log paths.
+- [x] Probe whether Firefox with the preference `ui.useOverlayScrollbars` set to 0, or WebKit with any launch option, shows native gutters under Playwright. If one does, run V7's native arm there and mark V22 as covered by it in validation.md. If neither does, record that and leave V22 pending.
 
 Completion check: V6 through V9 pass in all three engines, and the Chromium native probe shows no alternation and no idle measurement.
 
@@ -63,11 +63,11 @@ Completion check: V6 through V9 pass in all three engines, and the Chromium nati
 
 Outcome: the horizontal bar drags, pages and, on a container, takes the wheel, and an instance runs one drag at a time. Prerequisites: groups 2 and 3. Covers R14, R15, R16, R18. Checks V10, V11, V12, V13, V15.
 
-- [ ] Add the jsdom cases (V11, and the jsdom arms of V13 and V15) and the browser cases (V10, V12, V13, V15), and watch V10, V11 and V12 fail.
-- [ ] Record the pressed bar and its axis in the drag. In `_press`, read the pointer coordinate and the bar's edge for that axis, and call `scrollBy` with `top` or `left` and the matching client size.
-- [ ] In the move handler, call `scrollTo` with only the dragged axis's key and `behavior: 'instant'`.
-- [ ] Make `_dragBlocked` and the capture calls use the dragged bar.
-- [ ] Confirm that `_handleWheel` and `_canWheel` need no change for the horizontal bar, and that neither page bar has a `wheel` listener.
+- [x] Add the jsdom cases (V11, and the jsdom arms of V13 and V15) and the browser cases (V10, V12, V13, V15), and watch V10, V11 and V12 fail.
+- [x] Record the pressed bar and its axis in the drag. In `_press`, read the pointer coordinate and the bar's edge for that axis, and call `scrollBy` with `top` or `left` and the matching client size.
+- [x] In the move handler, call `scrollTo` with only the dragged axis's key and `behavior: 'instant'`.
+- [x] Make `_dragBlocked` and the capture calls use the dragged bar.
+- [x] Confirm that `_handleWheel` and `_canWheel` need no change for the horizontal bar, and that neither page bar has a `wheel` listener.
 
 Completion check: V10 through V13 and V15 pass in all three engines.
 
@@ -75,11 +75,11 @@ Completion check: V10 through V13 and V15 pass in all three engines.
 
 Outcome: framework block-end targets clear the horizontal page bar without shrinking, and scaffold rows and scroll padding agree. Prerequisites: group 2. Covers R17. Checks V14.
 
-- [ ] Add V14's isolated fixtures and watch the unpadded edge targets fail. Include 12px, 14px and 30px bars, both directions and the existing native/shadow paths.
-- [ ] Make `_back-to-top.scss` and `_fab-menu.scss` read their existing `--_page-bar-inset` for `bottom`, retaining their offset fallback.
-- [ ] Update `_status-bar.scss`, `_navigation-bar.scss` and `_toolbar.scss` in their owning variants. Use inherited clearance, preserve target heights and edge backgrounds, and leave already-clear floating actions in place. Keep unset-property and negative-offset behavior.
-- [ ] Update `_scaffold.scss` row sizes, root scroll padding and compact trailing groups together. Preserve status-present navigation padding and bottom-row zeroing; include companion FABs and the medium-width shell with neither bottom row.
-- [ ] Run the named compatibility cases, tokens and scaffold checks. Change an existing expectation only under R21's explicit page-instance or source-shape rule, with the failure and reason recorded.
+- [x] Add V14's isolated fixtures and watch the unpadded edge targets fail. Include 12px, 14px and 30px bars, both directions and the existing native/shadow paths.
+- [x] Make `_back-to-top.scss` and `_fab-menu.scss` read their existing `--_page-bar-inset` for `bottom`, retaining their offset fallback.
+- [x] Update `_status-bar.scss`, `_navigation-bar.scss` and `_toolbar.scss` in their owning variants. Use inherited clearance, preserve target heights and edge backgrounds, and leave already-clear floating actions in place. Keep unset-property and negative-offset behavior.
+- [x] Update `_scaffold.scss` row sizes, root scroll padding and compact trailing groups together. Preserve status-present navigation padding and bottom-row zeroing; include companion FABs and the medium-width shell with neither bottom row.
+- [x] Run the named compatibility cases, tokens and scaffold checks. Change an existing expectation only under R21's explicit page-instance or source-shape rule, with the failure and reason recorded.
 
 Completion check: V14 passes in all three engines, actual targets receive bottom-row presses, and the compatibility checks pass.
 
@@ -87,14 +87,14 @@ Completion check: V14 passes in all three engines, actual targets receive bottom
 
 Outcome: every reader in R19 and R20 agrees with the code. Prerequisites: groups 1 to 5. Covers R19, R20. Checks V16.
 
-- [ ] Update `docs/src/pages/scroll-area.astro`: the two-axis example, the page and container prose, items 7 and 11 of the container limits, the block-end clearance guidance and the styling table row.
-- [ ] Update the scroll area section and the stacking row of `llm.md`, and `skills/expressivecss/expressivecss-usage/references/helpers.md`, with the same facts.
-- [ ] Update the owning BTT/FAB, status-bar, navigation-bar, toolbar and scaffold documentation and relevant `llm.md` sections with actual R17 variants. Append clearance guidance after core usage and semantics; verify the generated core nesting and expanded-state rules remain.
-- [ ] Reword the `semantics.json` note and run `npm run build:semantics`.
-- [ ] Reword the class comment in `scrollArea.ts` and extend the Unreleased `ScrollArea` entry in `CHANGELOG.md`.
-- [ ] Measure the JS and CSS gzip sizes against a clean build of the start commit and add reviewed budget lines to `tests/selective-builds.test.js`.
-- [ ] For the seven Sass owners R19 names, re-pin in `docs/src/data/component-decisions.json` only a pin that equals its file's hash at the start commit. Leave `sourceRevision`.
-- [ ] Run `npm run build:skill` last, then diff the generated guides.
+- [x] Update `docs/src/pages/scroll-area.astro`: the two-axis example, the page and container prose, items 7 and 11 of the container limits, the block-end clearance guidance and the styling table row.
+- [x] Update the scroll area section and the stacking row of `llm.md`, and `skills/expressivecss/expressivecss-usage/references/helpers.md`, with the same facts.
+- [x] Update the owning BTT/FAB, status-bar, navigation-bar, toolbar and scaffold documentation and relevant `llm.md` sections with actual R17 variants. Append clearance guidance after core usage and semantics; verify the generated core nesting and expanded-state rules remain.
+- [x] Reword the `semantics.json` note and run `npm run build:semantics`.
+- [x] Reword the class comment in `scrollArea.ts` and extend the Unreleased `ScrollArea` entry in `CHANGELOG.md`.
+- [x] Measure the JS and CSS gzip sizes against a clean build of the start commit and add reviewed budget lines to `tests/selective-builds.test.js`.
+- [x] For the seven Sass owners R19 names, re-pin in `docs/src/data/component-decisions.json` only a pin that equals its file's hash at the start commit. Leave `sourceRevision`.
+- [x] Run `npm run build:skill` last, then diff the generated guides.
 
 Completion check: V16 passes.
 
@@ -102,10 +102,12 @@ Completion check: V16 passes.
 
 Outcome: the repository's required local checks pass on the phase's last commit. Prerequisites: group 6. Covers R21. Checks V17.
 
-- [ ] `npm run verify`, with a long timeout.
-- [ ] `npm test --prefix mcp/expressivecss`, after `npm ci --prefix mcp/expressivecss`, then `npm run verify:packages`, one after the other.
-- [ ] `VISUAL_BASE=<start commit> npm run test:visual -- --grep 'scroll-area'`. Its screenshot differences are advisory, and the report goes to the maintainer for V20.
-- [ ] Rerun alone any failing test the phase doesn't touch before treating it as a failure, then run the verify steps the failure skipped.
-- [ ] Record each result in [validation.md](validation.md) from the run's last line. Leave V18 through V22 pending with what each needs.
+- [x] `npm run verify`, with a long timeout.
+- [x] `npm test --prefix mcp/expressivecss`, after `npm ci --prefix mcp/expressivecss`, then `npm run verify:packages`, one after the other.
+- [x] `VISUAL_BASE=<start commit> npm run test:visual -- --grep 'scroll-area'`. Its screenshot differences are advisory, and the report goes to the maintainer for V20.
+- [x] Rerun alone any failing test the phase doesn't touch before treating it as a failure, then run the verify steps the failure skipped.
+- [x] Record each result in [validation.md](validation.md) from the run's last line. Leave V18 through V22 pending with what each needs.
 
 Completion check: `npm run verify`, the MCP tests and `npm run verify:packages` pass, or each failure is in a test the phase doesn't touch and passes alone.
+
+Agent work completed. The final command results and advisory visual differences are recorded in [validation.md](validation.md); human checks V18 through V22 remain Pending.
