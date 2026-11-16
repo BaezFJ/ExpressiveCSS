@@ -307,6 +307,14 @@ Give a generic scrolling region keyboard focus and an accessible name when no fo
 
 `--scroll-area-thumb-color` defaults to `var(--md-sys-color-on-surface-variant)` and `--scroll-area-track-color` to `transparent`. Forced colors restore system colors and scrollbar width. Older WebKit engines use an 8px fallback; the operating system can affect rendering. Selective Sass builds need `"scroll-area"` in `$utilities`.
 
+For a custom vertical page bar, opt in with `<html class="scroll-area custom">` and initialize `ScrollArea`. This page-only modifier is the exception to the plain utility's no-initialization rule. `AutoInit()` and `AutoInit(document.body, options)` start it on the matching `<html>` unless `.no-autoinit` opts out. A direct `Expressive.ScrollArea.init(document.documentElement)` returns the instance. It has no options or events. The framework generates the decorative bar and its `aria-hidden` state. Containers keep their native bar.
+
+The thumb follows the viewport-to-document ratio with a 48px minimum. Its position uses a root scroll timeline where supported and a passive listener elsewhere, including under reduced motion. `refresh()` updates measurements after content overflows a fixed-height body, after a custom scroll lock changes, or after a body arrives if initialization preceded it. Element size changes and window resizes update automatically. `destroy()` removes the bar and its observers and listeners; reinitializing replaces the earlier instance.
+
+`--scroll-area-bar-size` defaults to `12px`. `--expressive-z-scroll-area` defaults to `999`, above app bars and below non-modal sheets. The bar follows the inline-end edge in RTL and ignores pointer input. Default `.back-to-top` and `.fab-menu` controls have a 16px inset, leaving 4px of clearance. Add `var(--scroll-area-bar-size, 12px)` to a closer fixed control's inline-end inset, and increase its inset when widening the bar. Check the thumb color against content beneath the overlay.
+
+Without initialization or after removing `.custom`, the themed native bar stays. Forced colors and a coarse primary pointer keep the native bar. Print and an open modal dialog hide the drawn bar. On systems with classic scrollbars, hiding the native bar widens the page once at initialization. Wheel, keyboard, touch and fragment scrolling remain native.
+
 For custom positioned content, use the [stacking token reference](https://www.expressivecss.com/tokens.html.md); a shadow's elevation does not set its `z-index`.
 
 ## Review checklist

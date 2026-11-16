@@ -71,6 +71,7 @@ Elevation shadows and `z-index` are separate. The [design tokens guide](https://
 | `--expressive-z-toolbar` | `996` |
 | `--expressive-z-app-bar` | `997` |
 | `--expressive-z-modal-rail` | `998` |
+| `--expressive-z-scroll-area` | `999`, custom vertical page scrollbar |
 | `--expressive-z-sheet` | `1100` |
 | `--expressive-z-lightbox` | `1200`, retained for consumers; Lightbox now uses the top layer |
 | `--expressive-z-tooltip` | `2000` |

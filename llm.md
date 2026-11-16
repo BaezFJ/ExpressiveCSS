@@ -370,6 +370,7 @@ function unmount() {
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
+| `ScrollArea` | `.scroll-area.custom`, page only |
 | `BackToTop` | `.back-to-top` |
 | `FormSelect` | `select` without `data-tree` |
 | `TreeSelect` | `select[data-tree]` |
@@ -1418,6 +1419,22 @@ Give a generic scroll region `tabindex="0"` and an accessible name so keyboard u
 
 Add `.scroll-area` to `<html>` to style the page's own scrollbar. The viewport keeps native scrolling, and the thumb color follows the theme.
 
+For a custom vertical page bar, opt in with `<html class="scroll-area custom">` and call `Expressive.AutoInit()` after the DOM is ready. `AutoInit(document.body, options)` also starts it on the matching `<html>`; `.no-autoinit` opts out. No other component starts on `<html>`. The modifier is page-only: containers keep the native bar. `ScrollArea` has no options or events. The framework generates the decorative bar, thumb and `aria-hidden`; do not author them. The bar ignores pointer input, and wheel, keyboard, touch and fragment scrolling remain native.
+
+```js
+// Use this instead of AutoInit for an explicitly managed page bar.
+const area = Expressive.ScrollArea.init(document.documentElement);
+area.refresh();
+area.destroy();
+```
+
+The thumb's length follows the viewport-to-document ratio with a 48px minimum. Its position uses a root scroll timeline where supported and a passive, frame-coalesced scroll listener elsewhere. Reduced motion still follows the scroll position. Element size changes and window resizes update measurements automatically. Call `refresh()` after content overflows a fixed-height body, after changing your own scroll lock, or after adding a body to an instance started before it existed. `destroy()` removes the bar and its observers and listeners. Reinitializing replaces the earlier instance.
+
+The custom bar uses `--scroll-area-bar-size`, default `12px`, and `--expressive-z-scroll-area`, default `999`, above app bars and below non-modal sheets. It follows the inline-end edge in RTL. Default `.back-to-top` and `.fab-menu` controls have a 16px inset, leaving 4px of clearance. Add `var(--scroll-area-bar-size, 12px)` to the inline-end inset of a fixed control closer to the edge, or increase its inset when widening the bar. The bar overlays edge content, so check the thumb's contrast against that content.
+
+Without initialization or after removing `.custom`, the themed native bar stays. Forced colors and a coarse primary pointer also use the native bar; print and an open modal dialog hide the drawn bar. On systems with classic scrollbars, hiding the native bar widens the page once at initialization.
+
+
 Override `--scroll-area-thumb-color` and `--scroll-area-track-color` on the container or an ancestor. Defaults are `var(--md-sys-color-on-surface-variant)` and `transparent`. Choose colors with enough contrast against the track and container. Native scrollbar shape, exact width, and automatic hiding depend on the browser and operating system. Older WebKit engines use rounded 8px scrollbars. Forced-colors mode restores system colors and the default width. Selective Sass builds can load `"scroll-area"` through `$utilities`.
 
 ### Shapes
@@ -1816,6 +1833,7 @@ A shadow does not decide what sits on top. Surfaces that float over the page tak
 | `--expressive-z-toolbar` | 996 | A fixed toolbar. |
 | `--expressive-z-app-bar` | 997 | A pinned top app bar and a fixed navigation bar. |
 | `--expressive-z-modal-rail` | 998 | An expanded navigation rail over the page. |
+| `--expressive-z-scroll-area` | 999 | The custom vertical page scrollbar. |
 | `--expressive-z-sheet` | 1100 | A bottom or side sheet opened without `showModal()`. |
 | `--expressive-z-lightbox` | 1200 | Nothing. An open lightbox is in the top layer. |
 | `--expressive-z-tooltip` | 2000 | Tooltips. |
@@ -6769,6 +6787,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
+| `ScrollArea` | `.scroll-area.custom`, page only |
 | `BackToTop` | `.back-to-top` |
 | `FormSelect` | `select` without `data-tree` |
 | `TreeSelect` | `select[data-tree]` |

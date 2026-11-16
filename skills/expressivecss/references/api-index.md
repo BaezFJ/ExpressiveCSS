@@ -16,6 +16,7 @@ Import names from `@expressivecss/expressive`, or from `@expressivecss/expressiv
 | `Copy` | [Copy button](./behavior-contracts.md#copy-button) | [Copy to clipboard](https://www.expressivecss.com/copy.html.md) |
 | `AutoInit` | [Runtime](../expressivecss-runtime/SKILL.md) | [Auto Init](https://www.expressivecss.com/auto-init.html.md) |
 | `Theme` | [Changing the theme](./behavior-contracts.md#changing-the-theme) | [Themes](https://www.expressivecss.com/themes.html.md) |
+| `ScrollArea` | [Runtime](../expressivecss-runtime/SKILL.md) | [Scroll area](https://www.expressivecss.com/scroll-area.html.md) |
 | `AppBar` | [App bar](../components/app-bar.md) | [App bar](https://www.expressivecss.com/navbar.html.md) |
 | `NavigationRail` | [Navigation rail](../components/navigation-rail.md) | [Navigation rail](https://www.expressivecss.com/navigation-rail.html.md) |
 | `PaneResize` | [Panes](../components/panes.md); [Resizing](./behavior-contracts.md#resizing) | [Panes](https://www.expressivecss.com/panes.html.md) |

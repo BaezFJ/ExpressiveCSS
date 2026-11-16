@@ -58,6 +58,36 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
     <p>Add the class to <code>&lt;html&gt;</code> to style the page's own scrollbar.
       The viewport keeps native scrolling, and the thumb color follows the theme.</p>
     <Code code={`<html lang="en" class="scroll-area">`} />
+    <h3>Custom page bar</h3>
+    <p>Opt in with <code>&lt;html class="scroll-area custom"&gt;</code> and initialize
+      <code>ScrollArea</code>. This page-only modifier draws a vertical bar at the
+      inline-end edge. Containers keep the native bar. The generated bar is hidden
+      from assistive technology and ignores pointer input. Wheel, keyboard, touch
+      and fragment scrolling remain native.</p>
+    <button type="button" id="page-bar-demo" aria-pressed="false">Show custom page bar</button>
+    <Code code={`<html lang="en" class="scroll-area custom">`} />
+    <Code code={`// Call after the body exists, or use Expressive.AutoInit().
+const area = Expressive.ScrollArea.init(document.documentElement);
+area.refresh(); // After content overflows a fixed-height body or a custom scroll lock changes.
+area.destroy(); // Remove the drawn bar and restore the native one.`} />
+    <p><code>ScrollArea</code> has no options or events. <code>AutoInit()</code> and
+      <code>AutoInit(document.body, options)</code> claim the matching
+      <code>&lt;html&gt;</code> unless it has <code>.no-autoinit</code>.
+      Calling <code>init()</code> twice replaces the earlier instance.</p>
+    <p>The thumb follows the document's height with a 48px minimum. A scroll timeline
+      drives its position where supported; a passive scroll listener does so elsewhere.
+      Reduced motion keeps the position accurate. Size changes update automatically;
+      call <code>refresh()</code> when content overflows a fixed-height body, after
+      changing your own scroll lock, or after adding a body to an instance started before it existed.</p>
+    <p>Without JavaScript, or after removing <code>.custom</code>, the themed native
+      bar remains. Forced colors and a coarse primary pointer use the native bar.
+      Print hides the drawn bar. A modal dialog hides it while open. On systems with
+      classic scrollbars, hiding the native bar widens the page once at initialization.</p>
+    <p>The 12px bar leaves 4px between it and the default 16px inset of
+      <code>.back-to-top</code> and <code>.fab-menu</code>. For a fixed control closer
+      to the edge, add <code>var(--scroll-area-bar-size, 12px)</code> to its inline-end
+      inset. A wider custom bar may also need a larger inset. It overlays edge content,
+      so choose a thumb color with enough contrast against that content.</p>
   </Section>
   <Section {...S.styling}>
     <p>Set these properties on the scroll container or an ancestor.</p>
@@ -66,6 +96,8 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
       <tbody>
         <tr><td><code>--scroll-area-thumb-color</code></td><td><code>var(--md-sys-color-on-surface-variant)</code></td></tr>
         <tr><td><code>--scroll-area-track-color</code></td><td><code>transparent</code></td></tr>
+        <tr><td><code>--scroll-area-bar-size</code></td><td><code>12px</code>, custom page bar only</td></tr>
+        <tr><td><code>--expressive-z-scroll-area</code></td><td><code>999</code>, above app bars and below non-modal sheets</td></tr>
       </tbody>
     </table>
     <Code code={`.release-tags {
@@ -80,6 +112,22 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
     <p>For a selective Sass build, include <code>"scroll-area"</code> in <code>$utilities</code>.</p>
   </Section>
 </DocsLayout>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', function () {
+    const button = document.getElementById('page-bar-demo');
+    button.addEventListener('click', function () {
+      const root = document.documentElement;
+      const active = button.getAttribute('aria-pressed') !== 'true';
+      root.classList.toggle('scroll-area', active);
+      root.classList.toggle('custom', active);
+      if (active) Expressive.ScrollArea.init(root);
+      else Expressive.ScrollArea.getInstance(root)?.destroy();
+      button.setAttribute('aria-pressed', String(active));
+      button.textContent = active ? 'Hide custom page bar' : 'Show custom page bar';
+    });
+  });
+</script>
 
 <style>
   .tags-demo {

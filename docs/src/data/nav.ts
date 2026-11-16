@@ -184,11 +184,12 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "scroll-area",
+        exports: ["ScrollArea"],
         styles: ["utilities/scroll-area"],
         label: "Scroll area",
         route: "/scroll-area.html",
         description:
-          "Style native scrollbars across browsers without replacing native scrolling.",
+          "Theme native scrollbars or draw a custom page bar while keeping native scrolling.",
       },
       {
         id: "shapes",

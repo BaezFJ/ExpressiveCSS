@@ -597,9 +597,12 @@ describe('the ExpressiveCSS agent skill', () => {
 
   test('covers scroll areas, decorative shapes, glass, Sass and stacking references', () => {
     const helpers = readFileSync(helpersReferenceUrl, 'utf8');
-    for (const name of ['.scroll-area', '--scroll-area-thumb-color', '--scroll-area-track-color']) {
+    for (const name of ['.scroll-area', '--scroll-area-thumb-color', '--scroll-area-track-color', '--scroll-area-bar-size', '--expressive-z-scroll-area']) {
       assert.ok(helpers.includes(name));
       assert.ok(compiledCss.includes(name));
+    }
+    for (const phrase of ['ScrollArea', 'refresh()', 'page-only', '16px inset', 'classic scrollbars']) {
+      assert.ok(helpers.includes(phrase), `scroll area helper omits ${phrase}`);
     }
     const shape = readFileSync(foundationReferenceUrls.shape, 'utf8');
     const shapes = readFileSync(new URL('../src/sass/utilities/_shapes.scss', import.meta.url), 'utf8');
