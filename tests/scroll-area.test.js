@@ -357,3 +357,30 @@ test('V13 container restores exact nodes, inline declarations and ownership', ()
     } finally { second.destroy(); first.destroy(); }
   }
 });
+
+test('V5 container observes children and coalesces one passive scroll listener', () => {
+  document.body.innerHTML='<div class="scroll-area custom"><div></div></div>';
+  const el=document.body.firstElementChild;
+  Object.defineProperties(el,{clientHeight:{value:300},scrollHeight:{value:900}});
+  const original={ CSS:window.CSS, RO:window.ResizeObserver, raf:window.requestAnimationFrame, cancel:window.cancelAnimationFrame, add:window.addEventListener, elAdd:el.addEventListener };
+  const observed=new Set(), frames=new Map(), listeners=[];
+  let id=0, windowScrolls=0;
+  window.CSS={supports:()=>true};
+  window.ResizeObserver=class{observe(el){observed.add(el);}disconnect(){observed.clear();}};
+  window.requestAnimationFrame=fn=>{frames.set(++id,fn);return id;};
+  window.cancelAnimationFrame=id=>frames.delete(id);
+  window.addEventListener=function(type,...rest){if(type==='scroll')windowScrolls++;return original.add.call(this,type,...rest);};
+  el.addEventListener=function(type,fn,options){if(type==='scroll')listeners.push(options);return original.elAdd.call(this,type,fn,options);};
+  let area, page;
+  try {
+    area=Expressive.ScrollArea.init(el);page=Expressive.ScrollArea.init(document.documentElement);
+    assert.equal(listeners.length,1);assert.equal(listeners[0].passive,true);assert.equal(windowScrolls,0);
+    assert.ok(observed.has(el.firstElementChild));assert.ok(observed.has(el));
+    el.scrollTop=300;el.dispatchEvent(new window.Event('scroll'));el.dispatchEvent(new window.Event('scroll'));
+    assert.equal(frames.size,1);const fn=[...frames.values()][0];frames.clear();fn();
+    assert.equal(el.nextElementSibling.style.getPropertyValue('--scroll-area-thumb-offset'),'100px');
+  } finally {
+    area?.destroy();page?.destroy();window.CSS=original.CSS;window.ResizeObserver=original.RO;
+    window.requestAnimationFrame=original.raf;window.cancelAnimationFrame=original.cancel;window.addEventListener=original.add;el.addEventListener=original.elAdd;
+  }
+});

@@ -24,6 +24,16 @@ html.scroll-area.custom > .scroll-area-bar {
   background-color: var(--scroll-area-track-color, transparent);
 }
 
+.scroll-area-wrapper > .scroll-area.custom + .scroll-area-bar {
+  position: absolute;
+  inset-block-start: calc(anchor(top) + var(--scroll-area-border-block-start, 0px));
+  inset-block-end: calc(anchor(bottom) + var(--scroll-area-border-block-end, 0px));
+  inset-inline-end: calc(anchor(self-end) + var(--scroll-area-border-inline-end, 0px));
+  inline-size: var(--scroll-area-bar-size, 12px);
+  touch-action: none;
+  background-color: var(--scroll-area-track-color, transparent);
+}
+
 .scroll-area-thumb {
   inline-size: 8px;
   block-size: var(--scroll-area-thumb-length, 48px);
@@ -34,7 +44,7 @@ html.scroll-area.custom > .scroll-area-bar {
 }
 
 @supports (animation-timeline: scroll()) {
-  .scroll-area-thumb {
+  html.scroll-area.custom > .scroll-area-bar > .scroll-area-thumb {
     animation: scroll-area-position linear both;
     animation-timeline: scroll(root block);
   }
@@ -46,6 +56,10 @@ html.scroll-area.custom > .scroll-area-bar {
 }
 
 @media screen and (forced-colors: none) and (not (pointer: coarse)) {
+  .scroll-area-wrapper > .scroll-area.custom + .scroll-area-bar:not([hidden]) {
+    display: block;
+  }
+
   html.scroll-area.custom:has(> .scroll-area-bar) {
     --scroll-area-bar-clearance: max(var(--scroll-area-bar-size, 12px), calc(var(--scroll-area-bar-size, 12px) / 2 + 12px));
     scrollbar-width: none;

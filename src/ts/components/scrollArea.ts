@@ -10,6 +10,7 @@ export class ScrollArea extends Component<BaseOptions> {
   private _hadStyle = false;
   private _observer?: ResizeObserver;
   private _modalObserver?: MutationObserver;
+  private _childrenObserver?: MutationObserver;
   private _frame?: number;
   private _drag?: { pointerId: number; clientY: number; scrollTop: number; ratio: number };
   private _dragObserver?: MutationObserver;
@@ -143,6 +144,10 @@ export class ScrollArea extends Component<BaseOptions> {
   };
 
   private _listenForScroll(): void {
+    if (this._wrapper) {
+      this.el.addEventListener('scroll', this._queueMeasure, { passive: true, signal: this._events.signal });
+      return;
+    }
     if (this._window.CSS?.supports('animation-timeline: scroll()')) return;
     this._window.addEventListener('scroll', this._queueMeasure, {
       passive: true,
@@ -161,9 +166,38 @@ export class ScrollArea extends Component<BaseOptions> {
   /** Remeasure after content overflows a fixed-height body or a custom scroll lock changes. */
   refresh(): void {
     if (!this._bar) return;
-    this._observeBody();
-    this._observeModal();
+    if (this._wrapper) this._observeChildren();
+    else { this._observeBody(); this._observeModal(); }
     this._measure();
+  }
+
+  private _observeChildren(): void {
+    this._observer!.disconnect();
+    this._observer!.observe(this.el);
+    for (const child of this.el.children) this._observer!.observe(child);
+    this._childrenObserver ??= new this._window.MutationObserver(this._queueMeasure);
+    this._childrenObserver.observe(this.el, { childList: true });
+  }
+
+  private _copyContainerStyle(style: CSSStyleDeclaration): void {
+    this._bar!.dir = style.direction;
+    this._copyProperty('z-index', style.zIndex === 'auto' ? '' : style.zIndex);
+    for (const side of ['block-start', 'block-end', 'inline-end']) {
+      this._copyProperty(`--scroll-area-border-${side}`, style.getPropertyValue(`border-${side}-width`));
+    }
+    for (const name of ['--scroll-area-bar-size', '--scroll-area-thumb-color', '--scroll-area-track-color']) {
+      this._copyProperty(name, style.getPropertyValue(name));
+    }
+  }
+
+  private _containerHidden(style: CSSStyleDeclaration): boolean {
+    this._copyContainerStyle(style);
+    return style.visibility !== 'visible' || this.el.parentNode !== this._wrapper;
+  }
+
+  private _copyProperty(name: string, value: string): void {
+    if (value) this._bar!.style.setProperty(name, value);
+    else this._bar!.style.removeProperty(name);
   }
 
   private _observeBody(): void {
@@ -181,10 +215,15 @@ export class ScrollArea extends Component<BaseOptions> {
     });
   }
 
+  private _unscrollable(range: number, style: CSSStyleDeclaration): boolean {
+    return range === 0 || ['hidden', 'clip'].includes(style.overflowY);
+  }
+
   private _measure(): void {
     const { range, length, travel, offset } = this._metrics;
-    const overflow = this._window.getComputedStyle(this.el).overflowY;
-    this._bar!.hidden = range === 0 || ['hidden', 'clip'].includes(overflow);
+    const style = this._window.getComputedStyle(this.el);
+    const hidden = this._wrapper ? this._containerHidden(style) : false;
+    this._bar!.hidden = this._unscrollable(range, style) || hidden;
     if (this._bar!.hidden) this._endDrag();
     this._bar!.style.setProperty('--scroll-area-thumb-length', `${length}px`);
     this._bar!.style.setProperty('--scroll-area-thumb-travel', `${travel}px`);
@@ -197,6 +236,7 @@ export class ScrollArea extends Component<BaseOptions> {
     this._frame = undefined;
     this._observer?.disconnect();
     this._modalObserver?.disconnect();
+    this._childrenObserver?.disconnect();
     this._bar?.remove();
     this._bar = undefined;
     this._unwrap();
