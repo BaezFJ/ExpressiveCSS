@@ -25,6 +25,7 @@ export class ScrollArea extends Component<BaseOptions> {
     this._observer = new this._window.ResizeObserver(this._queueMeasure);
     this._observer.observe(el);
     this._window.addEventListener('resize', this._queueMeasure, { signal: this._events.signal });
+    doc.addEventListener('close', this._queueMeasure, { capture: true, signal: this._events.signal });
     this._listenForScroll();
     this.refresh();
   }

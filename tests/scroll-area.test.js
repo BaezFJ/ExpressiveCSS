@@ -126,6 +126,7 @@ for (const timeline of [false, true]) {
       assert.equal(frames.size, 0);
       assert.equal(observers[0].targets.length, 0);
       window.dispatchEvent(new window.Event('scroll'));
+      document.dispatchEvent(new window.Event('close'));
       assert.equal(frames.size, 0);
     } finally {
       instance.destroy();

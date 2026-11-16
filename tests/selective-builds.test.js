@@ -361,8 +361,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed outside navigation rail toggles and the first-child toggle lookup: 111,741 gzip bytes (+349).
   // Reviewed the rail reading its overlay state from the stylesheet: 111,750 gzip bytes (+9).
   // Reviewed the scaffold milestone merged with master's busy buttons, data table pages and compact and hover rail: 112,245 gzip bytes.
-  // Reviewed the page-only ScrollArea component, AutoInit claim, measurements and fallback listener against 644c91760: 112,772 gzip bytes (+527).
-  assert.ok(sizes(js).gzip <= 112772, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the page-only ScrollArea component, AutoInit claim, measurements, fallback listener and modal-close refresh against 644c91760: 112,792 gzip bytes (+547).
+  assert.ok(sizes(js).gzip <= 112792, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -595,6 +595,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the trailing toolbar's 4px margin, read from no token: 93,517 gzip bytes (-12).
   // Reviewed the sheet column as a detached sheet (corners and gaps like the pane): 93,553 gzip bytes (+36).
   // Reviewed the scaffold milestone merged with master's busy spinner, anchored headings and compact and hover rail, with the scaffold holding a compact rail's 72px column: 94,450 gzip bytes.
-  // Reviewed the custom page bar, scroll timeline, stacking token and system-mode fallbacks against 644c91760: 94,773 gzip bytes (+323).
-  assert.ok(sizes(css).gzip <= 94773, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed the custom page bar, scroll timeline, stacking token, modal scroll lock and system-mode fallbacks against 644c91760: 94,779 gzip bytes (+329).
+  assert.ok(sizes(css).gzip <= 94779, `CSS gzip: ${sizes(css).gzip}`);
 });

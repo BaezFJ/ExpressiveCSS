@@ -98,7 +98,11 @@ for (const [engine, browserType, browserTest] of engines) {
       near((await geometry(page)).length, 50, 'window restore');
       await page.evaluate(() => { const dialog = document.createElement('dialog'); document.body.append(dialog); dialog.showModal(); });
       assert.equal((await geometry(page)).display, 'none');
+      await page.evaluate(() => window.area.refresh());
+      assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).overflowY), 'hidden');
+      assert.equal((await geometry(page)).hidden, true);
       await page.evaluate(() => document.querySelector('dialog').close());
+      await frames(page);
       assert.notEqual((await geometry(page)).display, 'none');
       await page.evaluate(() => { document.querySelector('#growth').remove(); document.querySelector('#content').style.height = '300px'; }); await frames(page);
       assert.equal((await geometry(page)).hidden, true);
@@ -175,6 +179,7 @@ for (const [engine, browserType, browserTest] of engines) {
         assert.equal(box.x, dir === 'ltr' ? 388 : 0);
         assert.equal(await page.locator('.scroll-area-thumb').evaluate(el => el.getBoundingClientRect().width), 8);
         assert.equal(await page.locator('.scroll-area-bar').evaluate(el => getComputedStyle(el).position), 'fixed');
+        await page.evaluate(() => { window.clicked = false; });
         await page.mouse.click(box.x + 6, 150);
         assert.equal(await page.evaluate(() => window.clicked), true);
       }

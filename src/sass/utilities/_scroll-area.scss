@@ -56,6 +56,11 @@ html.scroll-area.custom:has(dialog:modal) > .scroll-area-bar {
   display: none;
 }
 
+// Preserve the framework's modal scroll lock across the utilities layer.
+html.scroll-area.custom:has(dialog:modal) {
+  overflow: hidden;
+}
+
 // Older WebKit engines do not implement the standard scrollbar properties.
 @supports not (scrollbar-color: red blue) {
   @media (forced-colors: none) {
