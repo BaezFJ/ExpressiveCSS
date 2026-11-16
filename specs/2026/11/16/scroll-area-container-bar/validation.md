@@ -95,7 +95,7 @@ These runs validate the upstream integration and completed phases 99 and 100. Th
 
 Group 1, 2026-11-16. `npm run build` passed. `node --test tests/scroll-area.test.js` passed 10 tests. The container browser file passed six tests across Chromium, Firefox and WebKit. Before implementation V1 and V13 both failed because no wrapper existed, V2 failed because no wrapper existed, and V3 passed. Removing only `!important` from the compiled wrapper declaration made V2 fail against the author rule. The exact saved CSS bytes were restored in `finally`. Logs are `/tmp/p101-g1-{red-node,red-browser,author-red,green-node,green-browser}.log`.
 
-Group 2. V4, V5 and V7 each failed before geometry/tracking was added. `npm run build` and `npm run typecheck` passed. The combined jsdom/container-browser run passed 29 tests, including V4 through V7 in all three engines, `/tmp/p101-g2-green.log`. In the frame immediately after `display: none`, all engines returned `[0, 0]` for bar and thumb rect heights, before the queued measurement. No additional anchor-visibility rule was needed. `anchor(end)` placed RTL bars beyond the right edge in all three engines; `anchor(self-end)` places them inside the left border. The dialog's entry scale changes its rect during its transition, so V7 reads the computed proportional thumb length there, while still checking the hidden state and resize observation.
+Group 2. V4, V5 and V7 each failed before geometry/tracking was added. `npm run build` and `npm run typecheck` passed. The combined jsdom/container-browser run passed 29 tests, including V4 through V7 in all three engines, `/tmp/p101-g2-green.log`. The initial `display: none` reads returned `[0, 0]`, but the later idle regression proved those reads were masked by a ResizeObserver reset loop. The final next-frame evidence below supersedes that result. `anchor(end)` placed RTL bars beyond the right edge in all three engines; `anchor(self-end)` places them inside the left border. The dialog's entry scale changes its rect during its transition, so V7 reads the computed proportional thumb length there, while still checking the hidden state and resize observation.
 
 Group 3. V8 failed before native hiding was added. V16 failed for the scaffold, dialog and pane bodies, which each computed `position: static` before initialization at the start commit. Each now computes `relative` only while it contains a wrapper. The author-scroller control already computed `relative`. All four clipping fixtures passed all three engines after the changes. A pane must be inside its documented `.panes` layout so its body has a flex height; the first standalone fixture did not scroll and was corrected.
 
@@ -106,3 +106,94 @@ Group 4. V9 and browser V11 failed before the pointer/wheel change. V10 and V11 
 V9's first all-engine run failed after the native right-click blurred the selected input. The unchanged page test checks primary-gesture focus and selection before the right-click. V9 now follows that contract and separately asserts no scrolling and an uncancelled context menu after the right-click. No pointer filtering or native right-click behavior changed.
 
 Group 5. The existing registry needed no change. The combined AutoInit, watcher, container-browser and jsdom run passed all 217 tests, `/tmp/p101-g5.log`, including the unmodified `tests/autoinit.test.js` and `tests/autoinit-watch-browser.test.js`. Real MutationObserver checks waited two macrotask turns after each mutation and confirmed identity after the wrapper's own mutation records arrived. The removed parent retained no wrapper; a watched `destroy()` restarted a matching container once, while removing `custom` first kept it destroyed.
+
+Group 6. The clean archive of implementation-start `0b0493f2840dcc11ba8b670a5d995b9d146fc79a` was installed with its lockfile and built in `/tmp/p101-baseline-hr2mksr8`. Its JS/CSS gzip sizes are 113,349/94,930 bytes. The final container build measures 114,488/95,120 bytes, changes of +1,139/+190 using the budget test's source-map removal and CSS `trimEnd()`. The first focused documentation run failed only at the old JS budget, `/tmp/p101-g6-focused.log`; the reviewed lines now record these measured sizes. The next focused run passed 142 tests before the final anchor/semantics refinements, `/tmp/p101-g6-green.log`. The clean baseline's public ScrollArea declaration members equal the candidate's after removing private declarations and comments. No public member was added.
+
+Only the scaffold pin matched its owner at implementation start and was refreshed. The dialog, panes and scroll-area pins were already stale and remain unchanged. `sourceRevision` remains unchanged. Generated component-guide content differs only in contract hashes; the app-bar rail/tab guidance, FAB ownership lead and Back-to-top lead remain intact. The semantics data changes only its scroll-area entry.
+
+The final V13 regression initially failed for author `anchor-name: none !important`, which disappeared during cleanup, `/tmp/p101-anchor-red.log`. The fix retains the declaration and priority. All 15 jsdom tests then passed, `/tmp/p101-g6-anchor-node.log`.
+
+### Structural selector audit
+
+The audit searched child combinators in `src/sass` and checked the compiled selectors and their declarations. The table names the affected child, not every child of the parent. Generic universal rules apply to every direct child; edge and sibling rules keep their positional conditions. Negative fixtures are static HTML and never initialize components. Positive fixtures include `.row > .s6`, an ordinary `article > div`, a middle container in `.prose`, and `dialog > div > div` with the structural body intact.
+
+| Owner in `src/sass` | Affected child relationship |
+| --- | --- |
+| `components/_scaffold.scss:225` | `.scaffold > :is(main, .scaffold-pane)` |
+| `components/_panes.scss:71` | `.panes > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane)` |
+| `components/_panes.scss:71` | `.pane-layout > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane)` |
+| `components/_panes.scss:71` | `.list-detail > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane)` |
+| `components/_panes.scss:71` | `.supporting-pane-layout > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane)` |
+| `components/_panes.scss:262` | `.pane > :is(section:not(.pane-header, .pane-footer), main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer), .list)` |
+| `components/_panes.scss:262` | `.list-pane > :is(section:not(.pane-header, .pane-footer), main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer), .list)` |
+| `components/_panes.scss:262` | `.primary-pane > :is(section:not(.pane-header, .pane-footer), main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer), .list)` |
+| `components/_panes.scss:262` | `.detail-pane > :is(section:not(.pane-header, .pane-footer), main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer), .list)` |
+| `components/_panes.scss:262` | `.supporting-pane > :is(section:not(.pane-header, .pane-footer), main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer), .list)` |
+| `components/_dialog.scss:134` | `dialog > :is(p, div)` |
+| `components/_accordion.scss:104` | `.accordion > details > :not(summary)` |
+| `utilities/_defer-render.scss:9` | `.defer-render > :not(:has(> .swipe-actions))` |
+| `base/_prose.scss:14` | `.prose > :is(:first-child, :last-child)` |
+| `components/_message-scroller.scss:40` | `.message-scroller-viewport > * + *` |
+| `components/forms/_fieldset.scss:61` | `fieldset > :not(legend) + *` |
+| `components/_alert.scss:54` | `.alert > *` |
+| `components/_tabs.scss:220` | `.tabs-content > *` |
+| `components/forms/_input-fields.scss:364` | `.field.label-above > *` |
+| `components/_message.scss:144` | `.message-bubble > *` |
+| `components/_kpi.scss:40` | `.kpi > *` |
+| `components/_marquee.scss:71` | `.marquee-content > *` |
+| `components/_pie-chart.scss:197` | `.pie-chart-total > *` |
+| `components/_radial-chart.scss:207` | `.radial-chart-total > *` |
+| `components/_mixed-chart.scss:42` | `.mixed-chart-marks > *` |
+| `abstracts/_mixins.scss:829` | `.bar-chart > *` |
+| `abstracts/_mixins.scss:829` | `.funnel-chart > *` |
+| `components/_message.scss:56` | `.message > :not(.message-avatar, .message-header, .message-footer)` |
+| `components/_stat.scss:28` | `.stats > div` |
+| `components/_timepicker.scss:83` | `.timepicker-display-digital-clock:has(.timepicker-input-seconds) > *` |
+| `components/_keypad.scss:136` | `.keyboard > :not([hidden])` |
+| `components/_mega-menu.scss:93` | `.mega-menu-panel > section` |
+| `components/_mega-menu.scss:96` | `.mega-menu-panel > section > :is(h2, h3, h4)` |
+| `components/_empty-state.scss:58` | `.empty-state > :is(h1, h2, h3, h4, h5, h6, p)` |
+| `components/_popover.scss:83` | `.popover > :is(h1, h2, h3, h4, h5, h6, p)` |
+| `components/_tooltip.scss:156` | `.tooltip.rich > :is(h1, h2, h3, h4, h5, h6, p, nav, form)` |
+| `components/_snackbar.scss:120` | `.snackbar > :is(p, span)` |
+| `components/_cards.scss:229` | `article > p` |
+| `components/_cards.scss:230` | `article > :is(header, .primary-action) > p` |
+| `components/_cards.scss:388` | `.card-collection.staggered > article` |
+| `components/_cards.scss:388` | `.card-collection.mosaic > article` |
+| `components/_tour.scss:50` | `.tour > section > :is(h1, h2, h3, h4, h5, h6, p)` |
+| `components/_list.scss:133` | `.list > li > :is(div:not(.meta, .swipe-actions), p)` |
+| `components/_list.scss:332` | `.sortable > li > :not(.drag-handle, .sortable-actions, p):nth-child(2):nth-last-child(2)` |
+| `components/_timeline.scss:72` | `.timeline > li > p` |
+| `components/_tree.scss:42` | `.tree li > :is(a, span)` |
+| `components/_bar-chart.scss:83` | `.bar-chart-bars > div` |
+| `components/_bar-chart.scss:83` | `.bar-chart-bars > div > span` |
+| `components/_bar-chart.scss:83` | `.bar-chart-values > div` |
+| `components/_bar-chart.scss:83` | `.bar-chart-values > div > span` |
+| `components/_column-chart.scss:45` | `.column-chart-columns > div` |
+| `components/_column-chart.scss:45` | `.column-chart-columns > div > span` |
+| `components/_mixed-chart.scss:59` | `.mixed-chart-columns > div` |
+| `components/_mixed-chart.scss:59` | `.mixed-chart-columns > div > span` |
+| `components/_funnel-chart.scss:33` | `.funnel-chart-stages > div` |
+| `components/_funnel-chart.scss:33` | `.funnel-chart-stages > div > span` |
+| `components/forms/_input-fields.scss:159` | `.field > :is(input, textarea)` |
+| `components/_button-groups.scss:130` | `.button-group > :is(button, a.button)` |
+| `components/_navigation-bar.scss:52` | `.navigation-bar > :is(a, button)` |
+| `components/_toolbar.scss:93` | `.toolbar > :is(a, button):not(.extra, .icon-button)` |
+| `components/_tabs.scss:53` | `.tabs > a` |
+| `components/_pagination.scss:40` | `.pagination > :is(ul, ol)` |
+| `components/_data-table.scss:74` | `.data-table > table` |
+
+Graph coverage is best effort. The recorded generation is `2026-11-16T11:54:06Z` in fast mode. Checks covered every file used for structural evidence. Sass parse gaps were read directly, including owner and mixin selectors; test files and the docs/scripts subtrees are excluded, so those checks used direct source and literal searches. Changed source metadata is stale relative to that generation. The class-level zero-call trace is not a completeness claim; the constructor trace and direct source establish its measurement/listener callers.
+
+
+### Final geometry and interaction corrections
+
+- The idle V5 regression failed with four measurements increasing to eight over four unchanged frames, `/tmp/p101-idle-red.log`. Disconnecting ResizeObserver only for child-list changes stopped that loop. The initial next-frame zero-box results were masked by the loop and are superseded. With idle measurement fixed, V7 exposed `[48,48]` in all three engines, `/tmp/p101-final-focused-runtime.log`, before the queued measurement.
+- The suggested `position-visibility: anchors-valid` probe was rejected as the remedy. Chromium reports that spelling unsupported and leaves a hittable thumb. Firefox accepts it but also left the thumb hittable in this probe. WebKit excluded the thumb from hit testing while retaining rects. No such declaration ships.
+- The shipped rule explicitly sizes the track from `anchor-size(height, 0px)` minus the block borders and caps its thumb at 100% of that height. A missing anchor now gives `[0,0]` and no hit in Chromium, Firefox and WebKit. V4 geometry, V5 idle, V6 and V7 then passed 15 checks, `/tmp/p101-anchor-visibility-green.log`.
+- The held-rAF V12 regression failed at 600px after the hidden container returned, where the drag should have stayed ended at 150px, `/tmp/p101-capture-hidden-red.log`. Style observation and the container-height guard now cancel it before measurement. The drag observer also watches its shadow root. V12 checks class changes, an inert shadow host and a second modal; the second-modal regression initially failed at 450px, `/tmp/p101-shadow-modal-red.log`. Checking every open modal fixed it. The 13 focused layout/idle/capture checks passed in all engines, `/tmp/p101-final-interactions.log`.
+- The R15 horizontal-axis regression failed at the RTL start edge, `/tmp/p101-rtl-red.log`. Forwarding now normalizes RTL's negative `scrollLeft` range before deciding whether to cancel the wheel. The 80-test runtime run passed before the final shadow/modal arm, `/tmp/p101-g6-final-runtime.log`. The final complete run below covers every arm together.
+
+Closed-shadow V3 uses the root's active element and separately checks document focus on the host. It covers focus inside the container and on the container itself, 150px/20px scroll offsets, smooth-scroll suppression during each move, and both init and destroy. The six final shadow-focus/style-refresh cases passed across the engines, `/tmp/p101-final-shadow-focus.log`. The style refresh cases also remove direction, border, z-index and property overrides and change an existing direct text node.
+
+The last group-6 focused run passed all 142 documentation, semantics, skill, budget and decision tests, `/tmp/p101-g6-last-focused.log`, after the final runtime, selector and budget changes. The generated guides were compared with the clean start commit after removing only their contract-hash lines; all 101 bodies match, including their contract summaries. The MCP guide bodies match on the same comparison. All eleven reader limits and both AutoInit tables were checked. `git diff --check` passed. No physical-device, native OS chrome, visual-review or screen-reader approval is implied by these checks.

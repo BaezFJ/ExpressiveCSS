@@ -2626,13 +2626,19 @@
     },
     "scroll-area": {
       "status": "enforced",
-      "note": "The plain utility uses a native scrollbar. ScrollArea on html.scroll-area.custom generates the pointer-operated bar and its aria-hidden state; authors do not write either element. Containers keep their native scrollbar.",
+      "note": "The plain utility uses a native scrollbar. ScrollArea on html.scroll-area.custom or a supported container generates the pointer-operated bar, thumb and aria-hidden state. Container instances also generate a display: contents scroll-area-wrapper; authors do not write these elements.",
       "rules": [
         {
           "id": "scroll-area-bar-is-not-authored",
           "kind": "forbid",
-          "selector": ".scroll-area-bar, .scroll-area-thumb",
-          "message": "ScrollArea generates the bar, thumb and aria-hidden state. Author only html.scroll-area.custom and initialize it."
+          "selector": ".scroll-area-wrapper, .scroll-area-bar, .scroll-area-thumb",
+          "message": "ScrollArea generates the wrapper, bar, thumb and aria-hidden state. Author .scroll-area.custom on html or a supported container and initialize it."
+        },
+        {
+          "id": "scroll-area-container-parent-supports-wrapper",
+          "kind": "forbid",
+          "selector": ".scroll-area.custom:is(body, dialog, [popover]), :is(ul, ol, menu, dl, table, thead, tbody, tfoot, tr, p, span, a, button, label, summary) > .scroll-area.custom, :is(.scaffold > :is(main, .scaffold-pane), .panes > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane), .pane-layout > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane), .list-detail > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane), .supporting-pane-layout > :is(.pane, .list-pane, .primary-pane, .detail-pane, .supporting-pane), .pane > :is(section:not(.pane-header, .pane-footer), main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer), .list), .list-pane > :is(section:not(.pane-header, .pane-footer), main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer), .list), .primary-pane > :is(section:not(.pane-header, .pane-footer), main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer), .list), .detail-pane > :is(section:not(.pane-header, .pane-footer), main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer), .list), .supporting-pane > :is(section:not(.pane-header, .pane-footer), main, .pane-content, .pane-body, div:not(.pane-header, .pane-footer), .list), dialog > :is(p, div), .accordion > details > :not(summary), .defer-render > :not(:has(> .swipe-actions)), .prose > :is(:first-child, :last-child), .message-scroller-viewport > * + *, fieldset > :not(legend) + *, .alert > *, .tabs-content > *, .field.label-above > *, .message-bubble > *, .kpi > *, .marquee-content > *, .pie-chart-total > *, .radial-chart-total > *, .mixed-chart-marks > *, .bar-chart > *, .funnel-chart > *, .message > :not(.message-avatar, .message-header, .message-footer), .stats > div, .timepicker-display-digital-clock:has(.timepicker-input-seconds) > *, .keyboard > :not([hidden]), .mega-menu-panel > section, .mega-menu-panel > section > :is(h2, h3, h4), .empty-state > :is(h1, h2, h3, h4, h5, h6, p), .popover > :is(h1, h2, h3, h4, h5, h6, p), .tooltip.rich > :is(h1, h2, h3, h4, h5, h6, p, nav, form), .snackbar > :is(p, span), article > p, article > :is(header, .primary-action) > p, .card-collection.staggered > article, .card-collection.mosaic > article, .tour > section > :is(h1, h2, h3, h4, h5, h6, p), .list > li > :is(div:not(.meta, .swipe-actions), p), .sortable > li > :not(.drag-handle, .sortable-actions, p):nth-child(2):nth-last-child(2), .timeline > li > p, .tree li > :is(a, span), .bar-chart-bars > div, .bar-chart-bars > div > span, .bar-chart-values > div, .bar-chart-values > div > span, .column-chart-columns > div, .column-chart-columns > div > span, .mixed-chart-columns > div, .mixed-chart-columns > div > span, .funnel-chart-stages > div, .funnel-chart-stages > div > span, .field > :is(input, textarea), .button-group > :is(button, a.button), .navigation-bar > :is(a, button), .toolbar > :is(a, button):not(.extra, .icon-button), .tabs > a, .pagination > :is(ul, ol), .data-table > table).scroll-area.custom",
+          "message": "A custom scroll-area wrapper breaks this parent or top-layer element. Put .scroll-area.custom on an element inside a supported body or container instead."
         }
       ]
     }

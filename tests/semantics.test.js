@@ -899,3 +899,78 @@ describe('documented markup', () => {
     assert.deepEqual(failures, [], `\n${failures.join('\n\n')}\n`);
   });
 });
+
+
+
+test('V18 custom scroll containers reject only wrapper-incompatible structures without initialization', () => {
+  const rules=rulesOf(data).filter(rule=>rule.id.startsWith('scroll-area-'));
+  const broken=html=>violations(html,rules,data.compositeRoles).map(({rule})=>rule.id);
+  const invalid=[
+    "<div class=\"scaffold\"><main class=\"scroll-area custom\"></main></div>",
+    "<div class=\"panes\"><section class=\"pane scroll-area custom\"></section></div>",
+    "<div class=\"pane-layout\"><section class=\"pane scroll-area custom\"></section></div>",
+    "<div class=\"list-detail\"><section class=\"pane scroll-area custom\"></section></div>",
+    "<div class=\"supporting-pane-layout\"><section class=\"pane scroll-area custom\"></section></div>",
+    "<div class=\"pane\"><section class=\"scroll-area custom\"></section></div>",
+    "<div class=\"list-pane\"><section class=\"scroll-area custom\"></section></div>",
+    "<div class=\"primary-pane\"><section class=\"scroll-area custom\"></section></div>",
+    "<div class=\"detail-pane\"><section class=\"scroll-area custom\"></section></div>",
+    "<div class=\"supporting-pane\"><section class=\"scroll-area custom\"></section></div>",
+    "<dialog aria-label=\"Tags\"><div class=\"scroll-area custom\"></div></dialog>",
+    "<div class=\"accordion\"><details><summary>Tags</summary><div class=\"scroll-area custom\"></div></details></div>",
+    "<div class=\"defer-render\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"prose\"><div class=\"scroll-area custom\"></div><div>After</div></div>",
+    "<div class=\"message-scroller-viewport\"><div>Before</div><div class=\"scroll-area custom\"></div></div>",
+    "<fieldset><legend>Tags</legend><div>Before</div><div class=\"scroll-area custom\"></div></fieldset>",
+    "<div class=\"alert\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"tabs-content\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"field label-above\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"message-bubble\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"kpi\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"marquee-content\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"pie-chart-total\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"radial-chart-total\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"mixed-chart-marks\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"bar-chart\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"funnel-chart\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"message\"><div class=\"scroll-area custom\"></div></div>",
+    "<dl class=\"stats\"><div class=\"scroll-area custom\"><dt>Tags</dt><dd>12</dd></div></dl>",
+    "<div class=\"timepicker-display-digital-clock\"><span class=\"timepicker-input-seconds\"></span><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"keyboard\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"mega-menu-panel\"><section class=\"scroll-area custom\"></section></div>",
+    "<div class=\"mega-menu-panel\"><section><h2 class=\"scroll-area custom\">Tags</h2></section></div>",
+    "<div class=\"empty-state\"><p class=\"scroll-area custom\">Tags</p></div>",
+    "<div class=\"popover\"><p class=\"scroll-area custom\">Tags</p></div>",
+    "<div class=\"tooltip rich\"><p class=\"scroll-area custom\">Tags</p></div>",
+    "<div class=\"snackbar\"><p class=\"scroll-area custom\">Tags</p></div>",
+    "<article><p class=\"scroll-area custom\">Tags</p></article>",
+    "<article><header><p class=\"scroll-area custom\">Tags</p></header></article>",
+    "<div class=\"card-collection staggered\"><article class=\"scroll-area custom\"></article></div>",
+    "<div class=\"card-collection mosaic\"><article class=\"scroll-area custom\"></article></div>",
+    "<div class=\"tour\"><section><p class=\"scroll-area custom\">Tags</p></section></div>",
+    "<ul class=\"list\"><li><div class=\"scroll-area custom\"></div></li></ul>",
+    "<ul class=\"sortable\"><li><span></span><div class=\"scroll-area custom\"></div><span></span></li></ul>",
+    "<ol class=\"timeline\"><li><p class=\"scroll-area custom\">Tags</p></li></ol>",
+    "<ul class=\"tree\"><li><span class=\"scroll-area custom\">Tags</span></li></ul>",
+    "<div class=\"bar-chart-bars\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"bar-chart-bars\"><div><span class=\"scroll-area custom\">Tags</span></div></div>",
+    "<div class=\"bar-chart-values\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"bar-chart-values\"><div><span class=\"scroll-area custom\">Tags</span></div></div>",
+    "<div class=\"column-chart-columns\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"column-chart-columns\"><div><span class=\"scroll-area custom\">Tags</span></div></div>",
+    "<div class=\"mixed-chart-columns\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"mixed-chart-columns\"><div><span class=\"scroll-area custom\">Tags</span></div></div>",
+    "<div class=\"funnel-chart-stages\"><div class=\"scroll-area custom\"></div></div>",
+    "<div class=\"funnel-chart-stages\"><div><span class=\"scroll-area custom\">Tags</span></div></div>",
+    "<div class=\"field\"><textarea class=\"scroll-area custom\"></textarea></div>",
+    "<div class=\"button-group\"><button class=\"scroll-area custom\"></button></div>",
+    "<div class=\"navigation-bar\"><button class=\"scroll-area custom\"></button></div>",
+    "<div class=\"toolbar\"><button class=\"scroll-area custom\"></button></div>",
+    "<nav class=\"tabs\" aria-label=\"Tags\"><a href=\"#tags\" class=\"scroll-area custom\">Tags</a></nav>",
+    "<div class=\"pagination\"><ul class=\"scroll-area custom\"></ul></div>",
+    "<div class=\"data-table\"><table class=\"scroll-area custom\"></table></div>"
+  ];
+  for(const html of invalid)assert.ok(broken(html).length,html);
+  for(const html of ['<div class="scroll-area-wrapper"></div>','<body class="scroll-area custom"></body>','<dialog class="scroll-area custom"></dialog>','<div popover class="scroll-area custom"></div>','<ul><li class="scroll-area custom"></li></ul>','<table><tbody><tr class="scroll-area custom"></tr></tbody></table>','<p><span class="scroll-area custom"></span></p>'])assert.ok(broken(html).length,html);
+  for(const html of ['<div><div class="scroll-area custom"></div></div>','<ul class="scroll-area custom"></ul>','<dialog><div><div class="scroll-area custom"></div></div></dialog>','<div class="row"><div class="s6 scroll-area custom"></div></div>','<article><div class="scroll-area custom"></div></article>','<div class="prose"><div>Before</div><div class="scroll-area custom"></div><div>After</div></div>'])assert.deepEqual(broken(html),[],html);
+});

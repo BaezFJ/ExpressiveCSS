@@ -44,7 +44,7 @@ for (const [engine, type, browserTest] of engines) {
       await destroy(page).catch(() => {}); await browser.close();
     }
   }
-  browserTest(`V2 wrapper keeps layout across media (${engine})`, () => run(async page => {
+  for (const coarse of (engine === 'chromium' ? [false,true] : [false])) browserTest(`V2 wrapper keeps layout across media (${engine}, coarse=${coarse})`, () => run(async page => {
     const layouts = [
       ['display:block', 'margin:16px auto;max-inline-size:12rem'],
       ['display:flex;flex-direction:column;height:400px', 'flex:1;min-block-size:0'],
@@ -64,8 +64,7 @@ for (const [engine, type, browserTest] of engines) {
         before.flat().forEach((n,i) => assert.ok(Math.abs(n-restored.flat()[i]) <= .5));
       }
     }
-  }));
-  browserTest(`V3 preserves scroll, focus and accessible region (${engine})`, () => run(async page => {
+  }, coarse ? {hasTouch:true,isMobile:true} : {}));  browserTest(`V3 preserves scroll, focus and accessible region (${engine})`, () => run(async page => {
     await setup(page, fixture.replace('class="scroll-area custom"', 'class="scroll-area custom" tabindex="0" role="region" aria-label="Tags"').replace('id="content" style="block-size:900px"', 'id="content" style="block-size:900px;inline-size:600px"').replace('</div></div><p', '<button id="focus">Focus</button></div></div><p'), '#box{scroll-behavior:smooth}');
     for (const focus of ['#focus','#box']) {
       await page.evaluate(focus => { const el = document.querySelector('#box'); document.querySelector(focus).focus({preventScroll:true}); el.scrollTo({top:150,left:20,behavior:'instant'}); }, focus);
@@ -289,6 +288,58 @@ for (const [engine, type, browserTest] of engines) {
     await page.evaluate(()=>window.first=Expressive.ScrollArea.getInstance(box));await frames(page);
     assert.equal(await page.evaluate(()=>first===Expressive.ScrollArea.getInstance(box)),true);assert.equal(await page.locator('.scroll-area-wrapper').count(),1);
     const g=await geometry(page);near(g.bar.height,300);near(g.bar.right,g.box.right);
+  }));
+
+  browserTest(`V5 idle container stops measuring (${engine})`, () => run(async page => {
+    await setup(page);await page.evaluate(()=>{window.measures=0;const original=getComputedStyle;window.getComputedStyle=function(el,...args){if(el===box)window.measures++;return original.call(this,el,...args);};});
+    await init(page);await frames(page);await frames(page);const before=await page.evaluate(()=>measures);
+    await frames(page);await frames(page);assert.equal(await page.evaluate(()=>measures),before,'unchanged container must not rearm ResizeObserver every frame');
+  }));
+
+  browserTest(`V12 hidden anchor ends capture before the queued measurement (${engine})`, () => run(async page => {
+    await setup(page);await init(page);await frames(page);await frames(page);const g=await geometry(page),x=g.bar.left+6,y=g.bar.top;
+    await page.mouse.move(x,y+50);await page.mouse.down();await page.mouse.move(x,y+100,{steps:3});await frames(page);near(await page.locator('#box').evaluate(el=>el.scrollTop),150);
+    await page.evaluate(()=>{window.savedRAF=requestAnimationFrame;window.requestAnimationFrame=()=>999;box.style.display='none';});
+    await page.mouse.move(x,y+200,{steps:3});
+    await page.evaluate(()=>box.style.display='');await page.mouse.move(x,y+250,{steps:3});
+    near(await page.locator('#box').evaluate(el=>el.scrollTop),150,'hidden anchor must end rather than resume its captured drag');
+    await page.evaluate(()=>window.requestAnimationFrame=window.savedRAF);await page.mouse.up();
+  }));
+
+  browserTest(`V12 shadow container cancels for class, inert host and a second modal (${engine})`, () => run(async page => {
+    await setup(page,'<dialog id="inside"><section><div id="mount"></div></section></dialog><dialog id="outside">Outside</dialog>','dialog{transition:none}');
+    await page.evaluate(css=>{window.shadow=mount.attachShadow({mode:'closed'});const sheet=new CSSStyleSheet();sheet.replaceSync(css);shadow.adoptedStyleSheets=[sheet];shadow.innerHTML='<div class="scroll-area custom" style="height:300px;width:240px"><div style="height:900px"></div></div>';inside.showModal();window.shadowArea=Expressive.ScrollArea.init(shadow.firstElementChild);},css);
+    for(const state of ['custom','inert','modal']) {
+      await page.evaluate(()=>{const el=shadowArea.el;el.scrollTo({top:0,behavior:'instant'});shadowArea.refresh();});await frames(page);
+      const r=await page.evaluate(()=>{const r=shadowArea.el.nextElementSibling.getBoundingClientRect();return{x:r.x,y:r.y};});
+      await page.mouse.move(r.x+6,r.y+50);await page.mouse.down();await page.mouse.move(r.x+6,r.y+100,{steps:3});await frames(page);near(await page.evaluate(()=>shadowArea.el.scrollTop),150);
+      await page.evaluate(state=>{if(state==='custom')shadowArea.el.classList.remove('custom');if(state==='inert')mount.inert=true;if(state==='modal')outside.showModal();},state);await frames(page);
+      await page.evaluate(state=>{if(state==='custom')shadowArea.el.classList.add('custom');if(state==='inert')mount.inert=false;if(state==='modal')outside.close();},state);await frames(page);
+      await page.mouse.move(r.x+6,r.y+200,{steps:3});await frames(page);near(await page.evaluate(()=>shadowArea.el.scrollTop),150);await page.mouse.up();
+    }
+  }));
+
+  browserTest(`V7 refresh removes stale container styles and measures direct text changes (${engine})`, () => run(async page => {
+    await setup(page);await init(page);
+    await page.evaluate(()=>{box.style.cssText+=';direction:rtl;border:3px solid;position:relative;z-index:2;--scroll-area-bar-size:14px;--scroll-area-thumb-color:rgb(255,0,0);--scroll-area-track-color:rgb(0,255,0)';area.refresh();});await frames(page);
+    let g=await geometry(page);near(g.bar.width,14);near(g.bar.left,g.box.left+3);assert.equal(g.z,'2');assert.equal(g.color,'rgb(255, 0, 0)');
+    await page.evaluate(()=>{for(const name of ['direction','border','position','z-index','--scroll-area-bar-size','--scroll-area-thumb-color','--scroll-area-track-color'])box.style.removeProperty(name);area.refresh();});await frames(page);
+    g=await geometry(page);near(g.bar.width,12);near(g.bar.right,g.box.right);assert.equal(g.z,'auto');
+    assert.deepEqual(await page.locator('#box + .scroll-area-bar').evaluate(bar=>['z-index','--scroll-area-bar-size','--scroll-area-thumb-color','--scroll-area-track-color'].map(name=>bar.style.getPropertyValue(name))),['','','','']);
+    const expected=await page.evaluate(()=>{box.style.whiteSpace='pre';box.replaceChildren(document.createTextNode('Tag'));area.refresh();box.firstChild.data+='\nTag'.repeat(100);area.refresh();return Math.min(box.clientHeight,Math.max(48,box.clientHeight**2/box.scrollHeight));});await frames(page);near((await geometry(page)).thumb.height,expected);
+  }));
+
+  browserTest(`V3 closed shadow root restores focused content and container state (${engine})`, () => run(async page => {
+    await setup(page,'<div id="mount"></div>');
+    await page.evaluate(css=>{window.shadow=mount.attachShadow({mode:'closed'});const sheet=new CSSStyleSheet();sheet.replaceSync(css);shadow.adoptedStyleSheets=[sheet];shadow.innerHTML='<div class="scroll-area custom" tabindex="0" role="region" aria-label="Tags" style="height:300px;width:240px;scroll-behavior:smooth"><div style="height:900px;width:600px"><button>Focus</button></div></div>';window.shadowBox=shadow.firstElementChild;},css);
+    for(const contentFocus of [true,false]) {
+      await page.evaluate(contentFocus=>{window.focused=contentFocus?shadowBox.querySelector('button'):shadowBox;focused.focus({preventScroll:true});shadowBox.scrollTo({top:150,left:20,behavior:'instant'});},contentFocus);
+      for(const change of ['init','destroy']) {
+        await page.evaluate(change=>{if(change==='init')window.shadowArea=Expressive.ScrollArea.init(shadowBox);else shadowArea.destroy();},change);await frames(page);
+        assert.deepEqual(await page.evaluate(()=>[shadowBox.scrollTop,shadowBox.scrollLeft,shadow.activeElement===focused,document.activeElement===mount,shadowBox.getAttribute('role'),shadowBox.getAttribute('aria-label')]),[150,20,true,true,'region','Tags']);
+        await page.waitForTimeout(300);assert.deepEqual(await page.evaluate(()=>[shadowBox.scrollTop,shadowBox.scrollLeft,shadow.activeElement===focused]),[150,20,true]);
+      }
+    }
   }));
 
 }

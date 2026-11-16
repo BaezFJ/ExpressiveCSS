@@ -364,7 +364,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the page-only ScrollArea component, AutoInit claim, measurements, fallback listener and temporary modal observer against 644c91760: 112,862 gzip bytes (+617).
   // Reviewed Phase 100 thumb dragging, single-step track paging and edge clearance against df7ba6d3b: 113,294 gzip bytes (+432).
   // Reviewed Phase 100 media-change drag teardown against f89029ad4: 113,349 gzip bytes (+55; +487 against df7ba6d3b).
-  assert.ok(sizes(js).gzip <= 113349, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Phase 101 container wrapping, anchor metrics, observers and gestures against clean 0b0493f2840dcc11ba8b670a5d995b9d146fc79a: 114,488 gzip bytes (+1,139).
+  assert.ok(sizes(js).gzip <= 114488, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -603,5 +604,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed Phase 100 native-mode author offsets against f89029ad4: 94,999 gzip bytes (+55; +220 against df7ba6d3b).
   // Reviewed Phase 100 shadow-safe inherited insets against 69adf61b6: 94,927 gzip bytes (-72; +148 against df7ba6d3b).
   // Reviewed master's card media fix on the Phase 100 styles: 94,930 gzip bytes (+3 against 40ab4fb74).
-  assert.ok(sizes(css).gzip <= 94930, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed Phase 101 anchored container bars, native fallbacks and wrapper-gated clipping against clean 0b0493f2840dcc11ba8b670a5d995b9d146fc79a: 95,120 gzip bytes (+190).
+  assert.ok(sizes(css).gzip <= 95120, `CSS gzip: ${sizes(css).gzip}`);
 });

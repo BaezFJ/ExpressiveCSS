@@ -8,6 +8,7 @@ const S = defineSections([
   { id: "usage", label: "Usage" },
   { id: "horizontal", label: "Horizontal scrolling" },
   { id: "page", label: "Page scrollbar" },
+  { id: "container", label: "Custom container bar" },
   { id: "styling", label: "Custom styling" },
 ]);
 const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}`);
@@ -60,8 +61,8 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
     <Code code={`<html lang="en" class="scroll-area">`} />
     <h3>Custom page bar</h3>
     <p>Opt in with <code>&lt;html class="scroll-area custom"&gt;</code> and initialize
-      <code>ScrollArea</code>. This page-only modifier draws a vertical bar at the
-      inline-end edge. Containers keep the native bar. The generated bar is hidden
+      <code>ScrollArea</code>. This modifier draws a vertical bar at the
+      inline-end edge. The generated bar is hidden
       from assistive technology and takes pointer input. Wheel, keyboard, touch
       and fragment scrolling remain native.</p>
     <p>Drag the thumb to move through the page. Press the track above or below it
@@ -106,6 +107,35 @@ area.destroy(); // Remove the drawn bar and restore the native one.`} />
       <code>padding-inline-end: var(--scroll-area-bar-clearance, 4px)</code>
       to its bar element in that root's stylesheet.</p>
   </Section>
+  <Section {...S.container}>
+    <div id="container-bar-demo" class="scroll-area custom" style="block-size: 300px; inline-size: 240px" tabindex="0" role="region" aria-label="Custom scroll area example">
+      <div style="block-size: 900px; padding: 16px 18px 16px 16px">Scroll this 900px content with a proportional thumb.</div>
+    </div>
+    <Code code={`<div class="scroll-area custom" style="block-size: 300px; inline-size: 240px"
+  tabindex="0" role="region" aria-label="Release tags">
+  <div style="block-size: 900px">Release tags</div>
+</div>`} />
+    <Code code={`const area = Expressive.ScrollArea.init(document.querySelector('.scroll-area.custom'));
+area.refresh();
+area.destroy();`} />
+    <p>For a custom container bar, add <code>.scroll-area.custom</code> to a bounded container and initialize it with <code>Expressive.ScrollArea.init(el)</code> or <code>AutoInit()</code>. A generated <code>.scroll-area-wrapper</code> with <code>display: contents !important</code> holds the container and its bar. Do not author that wrapper, bar or thumb. <code>destroy()</code> removes the bar and returns the container to its parent. Keep the region's authored role, name and keyboard focusability.</p>
+    <p>A 300px-tall container with 900px of content has a 100px thumb. Dragging moves only that container; a track press scrolls one container height, once. Primary presses preserve focus and selection. The container's thumb uses a passive, frame-coalesced scroll listener in every engine. Its element children and container size are observed; direct child additions and removals also trigger a measurement. <code>refresh()</code> remeasures after direct text-node changes or style changes that resize nothing. Each measurement reads the container's computed direction, borders, <code>z-index</code>, visibility, <code>--scroll-area-bar-size</code>, <code>--scroll-area-thumb-color</code> and <code>--scroll-area-track-color</code>. Ancestor values inherit; removing a container override restores them. The bar follows the container's inline-end padding edge, inside its border, with the container's stacking value. It hides when vertical scrolling is unavailable or the container is not visible or rendered. A closed dialog is measured again when it opens.</p>
+    <p>The native bar returns without an instance or <code>.custom</code>, under forced colors, with a coarse primary pointer, in print, or when the vertical drawn bar is hidden. Container bars set no page clearance. A container inside a modal dialog works; opening a modal outside it, adding <code>inert</code>, removing <code>.custom</code>, or changing the bar's media conditions ends a drag until the next press. Multiple, nested, iframe and shadow-root instances keep separate targets and anchor names.</p>
+    <p>Container limits:</p>
+    <ol>
+      <li>The generated <code>.scroll-area-wrapper</code> has no box and replaces the container among its parent's children. Child and sibling selectors, <code>:first-child</code>, <code>:nth-child</code>, <code>::slotted()</code> and scripts reading its parent see the wrapper. Put a container inside a scaffold pane, dialog body or pane body, rather than on that body. The semantics checker forbids other parents whose content model or direct-child styling cannot accept the wrapper.</li>
+      <li><code>init</code> and <code>destroy()</code> move the container. An iframe inside reloads, animations restart, media stops, custom elements disconnect and reconnect, open dialogs or popovers inside close, nested scrollers may reset and text selections may collapse. Calling <code>AutoInit()</code> again moves each container twice. Under <code>watch: true</code>, destroying a still-matching container starts it again; remove <code>.custom</code> or add <code>.no-autoinit</code> first to keep it destroyed.</li>
+      <li>A rendering library that owns the parent must call <code>destroy()</code> before moving or removing the container.</li>
+      <li>A scrolling ancestor clips the bar only if it, or an intervening ancestor, has a <code>position</code>. Use <code>position: relative</code> on an author's scroller. The scaffold's pane, dialog body and pane body provide it while they hold a wrapper.</li>
+      <li>Positive <code>z-index</code> content can cover the bar. Add <code>isolation: isolate</code> on the container when its content must stack below it.</li>
+      <li>Put <code>opacity</code>, <code>filter</code>, <code>transform</code> and animations on a parent so they also affect the sibling bar. Call <code>refresh()</code> after changing container <code>visibility</code>, <code>dir</code>, <code>z-index</code> or scroll-area properties without resizing it.</li>
+      <li>The default bar covers the last 12px. Controls at that edge need 18px of inline-end padding to stay clear.</li>
+      <li>A wheel over the bar forwards pixel deltas, uses 40px per line or one container height per page, and scrolls instantly without smooth wheel animation. It chains at the end even with <code>overscroll-behavior: contain</code>. Ctrl-wheel remains native zoom.</li>
+      <li>An engine without anchor positioning keeps the native bar.</li>
+      <li>A <code>position: fixed</code> container is unsupported. The bar follows a sticky container during parent scrolling.</li>
+      <li>While the vertical bar is drawn, the horizontal native bar is hidden too. A sideways-only scroller keeps its native bar; wheel, keys and touch still scroll sideways.</li>
+    </ol>
+  </Section>
   <Section {...S.styling}>
     <p>Set these properties on the scroll container or an ancestor.</p>
     <table>
@@ -113,7 +143,7 @@ area.destroy(); // Remove the drawn bar and restore the native one.`} />
       <tbody>
         <tr><td><code>--scroll-area-thumb-color</code></td><td><code>var(--md-sys-color-on-surface-variant)</code></td></tr>
         <tr><td><code>--scroll-area-track-color</code></td><td><code>transparent</code></td></tr>
-        <tr><td><code>--scroll-area-bar-size</code></td><td><code>12px</code>, custom page bar only</td></tr>
+        <tr><td><code>--scroll-area-bar-size</code></td><td><code>12px</code>, custom drawn bars</td></tr>
         <tr><td><code>--scroll-area-bar-clearance</code></td><td><code>18px</code> with the default custom bar, grows with its width</td></tr>
         <tr><td><code>--expressive-z-scroll-area</code></td><td><code>999</code>, above app bars and below non-modal sheets</td></tr>
       </tbody>

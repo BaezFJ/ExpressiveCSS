@@ -608,7 +608,7 @@ describe('the ExpressiveCSS agent skill', () => {
       assert.ok(helpers.includes(name));
       assert.ok(compiledCss.includes(name));
     }
-    for (const phrase of ['ScrollArea', 'refresh()', 'page-only', '16px inset', 'classic scrollbars']) {
+    for (const phrase of ['ScrollArea', 'refresh()', 'scroll-area-wrapper', '16px inset', 'classic scrollbars']) {
       assert.ok(helpers.includes(phrase), `scroll area helper omits ${phrase}`);
     }
     const shape = readFileSync(foundationReferenceUrls.shape, 'utf8');

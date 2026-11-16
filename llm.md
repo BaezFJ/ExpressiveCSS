@@ -370,7 +370,7 @@ function unmount() {
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
-| `ScrollArea` | `.scroll-area.custom`, page only |
+| `ScrollArea` | `.scroll-area.custom`, page and containers |
 | `BackToTop` | `.back-to-top` |
 | `FormSelect` | `select` without `data-tree` |
 | `TreeSelect` | `select[data-tree]` |
@@ -1419,7 +1419,7 @@ Give a generic scroll region `tabindex="0"` and an accessible name so keyboard u
 
 Add `.scroll-area` to `<html>` to style the page's own scrollbar. The viewport keeps native scrolling, and the thumb color follows the theme.
 
-For a custom vertical page bar, opt in with `<html class="scroll-area custom">` and call `Expressive.AutoInit()` after the DOM is ready. `AutoInit(document.body, options)` also starts it on the matching `<html>`; `.no-autoinit` opts out. No other component starts on `<html>`. The modifier is page-only: containers keep the native bar. `ScrollArea` has no options or events. The framework generates the bar, thumb and `aria-hidden`; do not author them. Drag the thumb to scroll, or press the track above or below it to scroll one viewport toward the press. Holding a track press does not repeat. Presses preserve focus and the selection. A drag stays instant under smooth scrolling; a track step follows the page's scroll behavior. Wheel, keyboard, touch and fragment scrolling remain native.
+For a custom vertical page bar, opt in with `<html class="scroll-area custom">` and call `Expressive.AutoInit()` after the DOM is ready. `AutoInit(document.body, options)` also starts it on the matching `<html>`; `.no-autoinit` opts out. No other component starts on `<html>`. `ScrollArea` has no options or events. The framework generates the bar, thumb and `aria-hidden`; do not author them. Drag the thumb to scroll, or press the track above or below it to scroll one viewport toward the press. Holding a track press does not repeat. Presses preserve focus and the selection. A drag stays instant under smooth scrolling; a track step follows the page's scroll behavior. Wheel, keyboard, touch and fragment scrolling remain native.
 
 ```js
 // Use this instead of AutoInit for an explicitly managed page bar.
@@ -1433,6 +1433,26 @@ The thumb's length follows the viewport-to-document ratio with a 48px minimum. I
 The custom bar uses `--scroll-area-bar-size`, default `12px`, and `--expressive-z-scroll-area`, default `999`, above app bars and below non-modal sheets. Set the size and `dir` on `<html>`; the bar follows its inline-end edge. The default 16px inset of `.back-to-top` and `.fab-menu` becomes 18px beside the bar, and a page-level app bar's trailing padding becomes 18px. `--scroll-area-bar-clearance` is `max(var(--scroll-area-bar-size, 12px), calc(var(--scroll-area-bar-size, 12px) / 2 + 12px))`, leaving 6px clear of the default bar. It stays set while the runtime bar exists under active screen media, including a modal lock or an unscrollable page. It is absent without the instance or `.custom`, under forced colors, with a coarse primary pointer and in print. Larger author offsets stay. Use lengths with units for `--md-comp-back-to-top-offset` and `--md-comp-fab-menu-offset` beside the custom bar. For your own edge control, use `inset-inline-end: max(16px, var(--scroll-area-bar-clearance, 0px))`. The fixed controls also read the inherited clearance inside shadow roots. Automatic app-bar padding applies only to document-level headers; a viewport-wide shadow app bar needs its own `padding-inline-end: var(--scroll-area-bar-clearance, 4px)` rule. The bar takes presses over edge content, so keep controls clear and check thumb contrast.
 
 Without initialization or after removing `.custom`, the themed native bar stays. Forced colors and a coarse primary pointer also use the native bar; print and an open modal dialog hide the drawn bar. On systems with classic scrollbars, hiding the native bar widens the page once at initialization.
+
+For a custom container bar, add `.scroll-area.custom` to a bounded container and initialize it with `Expressive.ScrollArea.init(el)` or `AutoInit()`. A generated `.scroll-area-wrapper` with `display: contents !important` holds the container and its bar. Do not author that wrapper, bar or thumb. `destroy()` removes the bar and returns the container to its parent. Keep the region's authored role, name and keyboard focusability.
+
+A 300px-tall container with 900px of content has a 100px thumb. Dragging moves only that container; a track press scrolls one container height, once. Primary presses preserve focus and selection. The container's thumb uses a passive, frame-coalesced scroll listener in every engine. Its element children and container size are observed; direct child additions and removals also trigger a measurement. `refresh()` remeasures after direct text-node changes or style changes that resize nothing. Each measurement reads the container's computed direction, borders, `z-index`, visibility, `--scroll-area-bar-size`, `--scroll-area-thumb-color` and `--scroll-area-track-color`. Ancestor values inherit; removing a container override restores them. The bar follows the container's inline-end padding edge, inside its border, with the container's stacking value. It hides when vertical scrolling is unavailable or the container is not visible or rendered. A closed dialog is measured again when it opens.
+
+The native bar returns without an instance or `.custom`, under forced colors, with a coarse primary pointer, in print, or when the vertical drawn bar is hidden. Container bars set no page clearance. A container inside a modal dialog works; opening a modal outside it, adding `inert`, removing `.custom`, or changing the bar's media conditions ends a drag until the next press. Multiple, nested, iframe and shadow-root instances keep separate targets and anchor names.
+
+Container limits:
+
+1. The generated `.scroll-area-wrapper` has no box and replaces the container among its parent's children. Child and sibling selectors, `:first-child`, `:nth-child`, `::slotted()` and scripts reading its parent see the wrapper. Put a container inside a scaffold pane, dialog body or pane body, rather than on that body. The semantics checker forbids other parents whose content model or direct-child styling cannot accept the wrapper.
+2. `init` and `destroy()` move the container. An iframe inside reloads, animations restart, media stops, custom elements disconnect and reconnect, open dialogs or popovers inside close, nested scrollers may reset and text selections may collapse. Calling `AutoInit()` again moves each container twice. Under `watch: true`, destroying a still-matching container starts it again; remove `.custom` or add `.no-autoinit` first to keep it destroyed.
+3. A rendering library that owns the parent must call `destroy()` before moving or removing the container.
+4. A scrolling ancestor clips the bar only if it, or an intervening ancestor, has a `position`. Use `position: relative` on an author's scroller. The scaffold's pane, dialog body and pane body provide it while they hold a wrapper.
+5. Positive `z-index` content can cover the bar. Add `isolation: isolate` on the container when its content must stack below it.
+6. Put `opacity`, `filter`, `transform` and animations on a parent so they also affect the sibling bar. Call `refresh()` after changing container `visibility`, `dir`, `z-index` or scroll-area properties without resizing it.
+7. The default bar covers the last 12px. Controls at that edge need 18px of inline-end padding to stay clear.
+8. A wheel over the bar forwards pixel deltas, uses 40px per line or one container height per page, and scrolls instantly without smooth wheel animation. It chains at the end even with `overscroll-behavior: contain`. Ctrl-wheel remains native zoom.
+9. An engine without anchor positioning keeps the native bar.
+10. A `position: fixed` container is unsupported. The bar follows a sticky container during parent scrolling.
+11. While the vertical bar is drawn, the horizontal native bar is hidden too. A sideways-only scroller keeps its native bar; wheel, keys and touch still scroll sideways.
 
 Override `--scroll-area-thumb-color` and `--scroll-area-track-color` on the container or an ancestor. Defaults are `var(--md-sys-color-on-surface-variant)` and `transparent`. Choose colors with enough contrast against the track and container. Native scrollbar shape, exact width, and automatic hiding depend on the browser and operating system. Older WebKit engines use rounded 8px scrollbars. Forced-colors mode restores system colors and the default width. Selective Sass builds can load `"scroll-area"` through `$utilities`.
 
@@ -6786,7 +6806,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollSpy` | `.scrollspy` |
-| `ScrollArea` | `.scroll-area.custom`, page only |
+| `ScrollArea` | `.scroll-area.custom`, page and containers |
 | `BackToTop` | `.back-to-top` |
 | `FormSelect` | `select` without `data-tree` |
 | `TreeSelect` | `select[data-tree]` |

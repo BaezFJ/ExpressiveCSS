@@ -1,12 +1,14 @@
 import { Component, BaseOptions } from '../core/component';
 import { Utils } from '../core/utils';
 
-/** A vertical page scrollbar with thumb dragging and single-step track paging. */
+/** A vertical scrollbar with thumb dragging and single-step track paging. */
 export class ScrollArea extends Component<BaseOptions> {
   static key = 'Expressive_ScrollArea';
   private _bar?: HTMLDivElement;
   private _wrapper?: HTMLDivElement;
   private _anchor?: string;
+  private _anchorValue = '';
+  private _anchorPriority = '';
   private _hadStyle = false;
   private _observer?: ResizeObserver;
   private _modalObserver?: MutationObserver;
@@ -68,7 +70,9 @@ export class ScrollArea extends Component<BaseOptions> {
     if (Math.abs(e.deltaY) >= Math.abs(e.deltaX)) {
       return this._hasTravel(e.deltaY, this.el.scrollTop, this.el.scrollHeight - this.el.clientHeight);
     }
-    return this._hasTravel(e.deltaX, this.el.scrollLeft, this.el.scrollWidth - this.el.clientWidth);
+    const range = this.el.scrollWidth - this.el.clientWidth;
+    const offset = this.el.scrollLeft + (this._bar!.dir === 'rtl' ? range : 0);
+    return this._hasTravel(e.deltaX, offset, range);
   }
 
   private _hasTravel(delta: number, offset: number, range: number): boolean {
@@ -104,9 +108,22 @@ export class ScrollArea extends Component<BaseOptions> {
     this._wrapper.append(this.el, this._bar!);
     this._hadStyle = this.el.hasAttribute('style');
     this._anchor = `--scroll-area-${Utils.guid()}`;
+    this._anchorValue = this.el.style.getPropertyValue('anchor-name');
+    this._anchorPriority = this.el.style.getPropertyPriority('anchor-name');
     Utils.setAnchorName(this.el, this._anchor, true);
+    this.el.style.setProperty('anchor-name', this.el.style.getPropertyValue('anchor-name'), this._anchorPriority);
     this._bar!.style.setProperty('position-anchor', this._anchor);
     restore();
+  }
+
+  private _removeAnchor(): void {
+    if (this._anchorValue === 'none' && this.el.style.getPropertyValue('anchor-name') === this._anchor) {
+      this.el.style.setProperty('anchor-name', 'none', this._anchorPriority);
+      return;
+    }
+    Utils.setAnchorName(this.el, this._anchor!, false);
+    const value = this.el.style.getPropertyValue('anchor-name');
+    if (value) this.el.style.setProperty('anchor-name', value, this._anchorPriority);
   }
 
   private _unwrap(): void {
@@ -114,7 +131,7 @@ export class ScrollArea extends Component<BaseOptions> {
     const restore = this._saveState();
     this._wrapper.replaceWith(...this._wrapper.childNodes);
     this._wrapper = undefined;
-    Utils.setAnchorName(this.el, this._anchor!, false);
+    this._removeAnchor();
     if (!this._hadStyle && !this.el.style.cssText) this.el.removeAttribute('style');
     restore();
   }
@@ -139,9 +156,10 @@ export class ScrollArea extends Component<BaseOptions> {
     this._bar!.setPointerCapture(e.pointerId);
     // Chromium withholds captured moves while a modal makes the bar inert.
     this._dragObserver ??= new this._window.MutationObserver(this._endHiddenDrag);
-    this._dragObserver.observe(this.el.ownerDocument.documentElement, {
-      attributes: true, subtree: true, attributeFilter: ['class', 'open', 'hidden', 'inert'],
-    });
+    const options = { attributes: true, subtree: true, attributeFilter: ['class', 'open', 'hidden', 'inert', 'style'] };
+    this._dragObserver.observe(this.el.ownerDocument.documentElement, options);
+    const root = this.el.getRootNode();
+    if (root !== this.el.ownerDocument) this._dragObserver.observe(root, options);
   }
 
   private _endHiddenDrag = (): void => {
@@ -149,13 +167,24 @@ export class ScrollArea extends Component<BaseOptions> {
   };
 
   private _dragBlocked(): boolean {
-    return !this._bar!.getClientRects().length || !!this._bar!.closest('[inert]') || this._outsideModal();
+    return !this._bar!.getClientRects().length || !this._containerHasHeight() || this._inertContainer() || this._outsideModal();
+  }
+
+  private _containerHasHeight(): boolean {
+    return !this._wrapper || this.el.clientHeight > 0;
+  }
+
+  private _inertContainer(): boolean {
+    const root = this.el.getRootNode() as ShadowRoot;
+    return !!(this.el.closest('[inert]') || root.host?.closest('[inert]'));
   }
 
   private _outsideModal(): boolean {
+    const doc = this.el.ownerDocument;
     const root = this.el.getRootNode() as Document | ShadowRoot;
-    const modal = root.querySelector('dialog:modal') || this.el.ownerDocument.querySelector('dialog:modal');
-    return !!modal && !modal.contains(this.el);
+    const modals = [...doc.querySelectorAll('dialog:modal')];
+    if (root !== doc) modals.push(...root.querySelectorAll('dialog:modal'));
+    return modals.some(modal => !modal.contains(this.el) && !modal.contains((root as ShadowRoot).host));
   }
 
   private _handlePointerMove = (e: PointerEvent): void => {
@@ -205,7 +234,7 @@ export class ScrollArea extends Component<BaseOptions> {
     });
   };
 
-  /** Remeasure after content overflows a fixed-height body or a custom scroll lock changes. */
+  /** Remeasure content and style changes that do not resize the scroll area. */
   refresh(): void {
     if (!this._bar) return;
     if (this._wrapper) this._observeChildren();
@@ -214,10 +243,12 @@ export class ScrollArea extends Component<BaseOptions> {
   }
 
   private _observeChildren(): void {
-    this._observer!.disconnect();
     this._observer!.observe(this.el);
     for (const child of this.el.children) this._observer!.observe(child);
-    this._childrenObserver ??= new this._window.MutationObserver(this._queueMeasure);
+    this._childrenObserver ??= new this._window.MutationObserver(() => {
+      this._observer!.disconnect();
+      this._queueMeasure();
+    });
     this._childrenObserver.observe(this.el, { childList: true });
   }
 

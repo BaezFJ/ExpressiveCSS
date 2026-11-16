@@ -329,14 +329,14 @@ test('V1 container structure and slot keep author attributes', () => {
 });
 
 test('V13 container restores exact nodes, inline declarations and ownership', () => {
-  for (const style of ['', ' style="anchor-name: --mine; color: red"']) {
+  for (const style of ['', ' style="anchor-name: --mine; color: red"', ' style="anchor-name: none !important; color: red"', ' style="anchor-name: --mine !important; color: red"']) {
     document.body.innerHTML = `<i></i>text<div class="scroll-area custom"${style}></div><i></i>`;
     const el = document.body.querySelector('div');
     const nodes = [...document.body.childNodes], cssText = el.style.cssText;
     const area = Expressive.ScrollArea.init(el);
     try {
       assert.equal(el.parentElement.className, 'scroll-area-wrapper');
-      if (style) assert.match(el.style.getPropertyValue('anchor-name'), /^--mine, --/);
+      if (style.includes('--mine')) assert.match(el.style.getPropertyValue('anchor-name'), /^--mine, --/);
     } finally { area.destroy(); }
     assert.deepEqual([...document.body.childNodes], nodes);
     assert.equal(el.parentElement, document.body);
@@ -452,4 +452,14 @@ test('V14 AutoInit watcher retains wrapped instances and restores removed markup
   } finally {
     stop?.();for(const el of document.querySelectorAll('.scroll-area'))Expressive.ScrollArea.getInstance(el)?.destroy();
   }
+});
+
+test('V11 RTL wheel forwarding follows the negative scrollLeft range', () => {
+  document.body.innerHTML='<div class="scroll-area custom" style="direction:rtl"></div>';const el=document.body.firstElementChild;containerMetrics(el);
+  const calls=[];el.scrollBy=o=>calls.push(o);const area=Expressive.ScrollArea.init(el);
+  const wheel=deltaX=>{const e=new window.WheelEvent('wheel',{cancelable:true,deltaX});el.nextElementSibling.dispatchEvent(e);return e.defaultPrevented;};
+  try {
+    assert.equal(wheel(50),false);assert.equal(wheel(-50),true);el.scrollLeft=-260;assert.equal(wheel(-50),false);assert.equal(wheel(50),true);
+    assert.deepEqual(calls,[{top:0,left:-50,behavior:'instant'},{top:0,left:50,behavior:'instant'}]);
+  } finally {area.destroy();}
 });

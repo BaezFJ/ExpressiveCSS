@@ -72,14 +72,14 @@ Completion check: V14 passes.
 
 Outcome: every reader in R21 and R22 agrees with the code. Prerequisites: groups 1 to 5. Covers R21, R22. Checks V18, V19.
 
-- [ ] Audit the child-combinator rules in `src/sass` for parents whose rule sets a generic child's size, placement, overflow or padding. Start from `_dialog.scss:135`, `_scaffold.scss:225`, `_panes.scss:71` and `:262`, `_accordion.scss:104`, `_defer-render.scss:9`, `_prose.scss:14`, `_message-scroller.scss:40` and `forms/_fieldset.scss:61`, and list the parents found in validation.md.
-- [ ] Write the new forbid rule's selector from that list and from R21's HTML parents. Update the note and the existing rule in `semantics.json`, then run `npm run build:semantics`.
-- [ ] Update `docs/src/pages/scroll-area.astro`, the scroll area section and both AutoInit tables of `llm.md`, `docs/src/pages/auto-init.astro` and `skills/expressivecss/expressivecss-usage/references/helpers.md` with the contract and the eleven limits of R22. Put container prose after the page paragraphs.
-- [ ] Change the phrase list at `tests/expressivecss-skill.test.js:611` from `page-only` to `scroll-area-wrapper`.
-- [ ] Reword the class comment in `scrollArea.ts` and extend the Unreleased `ScrollArea` entry in `CHANGELOG.md`.
-- [ ] Measure the JS and CSS gzip sizes against a clean build of the start commit and add reviewed budget lines to `tests/selective-builds.test.js`.
-- [ ] Leave the `_scroll-area.scss` pin in `docs/src/data/component-decisions.json`. For `_scaffold.scss`, `_dialog.scss` and `_panes.scss`, re-pin only a pin that equals its file's hash at the start commit. Leave `sourceRevision`.
-- [ ] Run `npm run build:skill` last, then diff the generated guides.
+- [x] Audit the child-combinator rules in `src/sass` for parents whose rule sets a generic child's size, placement, overflow or padding. Start from `_dialog.scss:135`, `_scaffold.scss:225`, `_panes.scss:71` and `:262`, `_accordion.scss:104`, `_defer-render.scss:9`, `_prose.scss:14`, `_message-scroller.scss:40` and `forms/_fieldset.scss:61`, and list the parents found in validation.md.
+- [x] Write the new forbid rule's selector from that list and from R21's HTML parents. Update the note and the existing rule in `semantics.json`, then run `npm run build:semantics`.
+- [x] Update `docs/src/pages/scroll-area.astro`, the scroll area section and both AutoInit tables of `llm.md`, `docs/src/pages/auto-init.astro` and `skills/expressivecss/expressivecss-usage/references/helpers.md` with the contract and the eleven limits of R22. Put container prose after the page paragraphs.
+- [x] Change the phrase list at `tests/expressivecss-skill.test.js:611` from `page-only` to `scroll-area-wrapper`.
+- [x] Reword the class comment in `scrollArea.ts` and extend the Unreleased `ScrollArea` entry in `CHANGELOG.md`.
+- [x] Measure the JS and CSS gzip sizes against a clean build of the start commit and add reviewed budget lines to `tests/selective-builds.test.js`.
+- [x] Leave the `_scroll-area.scss` pin in `docs/src/data/component-decisions.json`. For `_scaffold.scss`, `_dialog.scss` and `_panes.scss`, re-pin only a pin that equals its file's hash at the start commit. Leave `sourceRevision`.
+- [x] Run `npm run build:skill` last, then diff the generated guides.
 
 Completion check: V18 and V19 pass.
 

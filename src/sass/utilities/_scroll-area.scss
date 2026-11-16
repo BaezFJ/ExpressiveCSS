@@ -29,9 +29,15 @@ html.scroll-area.custom > .scroll-area-bar {
   inset-block-start: calc(anchor(top) + var(--scroll-area-border-block-start, 0px));
   inset-block-end: calc(anchor(bottom) + var(--scroll-area-border-block-end, 0px));
   inset-inline-end: calc(anchor(self-end) + var(--scroll-area-border-inline-end, 0px));
+  // A missing anchor collapses both boxes before the queued measurement.
+  block-size: calc(anchor-size(height, 0px) - var(--scroll-area-border-block-start, 0px) - var(--scroll-area-border-block-end, 0px));
   inline-size: var(--scroll-area-bar-size, 12px);
   touch-action: none;
   background-color: var(--scroll-area-track-color, transparent);
+}
+
+.scroll-area-wrapper > .scroll-area.custom + .scroll-area-bar > .scroll-area-thumb {
+  max-block-size: 100%;
 }
 
 .scroll-area-thumb {
