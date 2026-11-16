@@ -46,6 +46,7 @@
     "hover-card",
     "input-mask",
     "landmarks",
+    "scroll-area",
     "tree-select"
   ],
   "notComponents": {
@@ -2622,6 +2623,18 @@
       "kind": "foundation",
       "note": "Swept 0.8.0. A foundation, not a component: motion applied through classes to whatever element already exists, with no markup of its own.",
       "rules": []
+    },
+    "scroll-area": {
+      "status": "enforced",
+      "note": "The plain utility uses a native scrollbar. ScrollArea on html.scroll-area.custom generates the decorative bar and its aria-hidden state; authors do not write either element. Containers keep their native scrollbar.",
+      "rules": [
+        {
+          "id": "scroll-area-bar-is-not-authored",
+          "kind": "forbid",
+          "selector": ".scroll-area-bar, .scroll-area-thumb",
+          "message": "ScrollArea generates the bar, thumb and aria-hidden state. Author only html.scroll-area.custom and initialize it."
+        }
+      ]
     }
   },
   "fragmentSafe": "Set on a rule that fires on a wrong thing being PRESENT. Only these run against m3-guidelines.md, whose markup is prose fragments: a fragment can be wrong about what it contains, but omitting something is what a fragment is for. Note this is not the same as kind=forbid - `fieldset:not(:has(> legend))` forbids, but what it detects is an omission."

@@ -86,6 +86,7 @@ export const AUTO_INIT_COMPONENTS = {
     selector: ".message-scroller",
   },
   PullToRefresh: { component: Components.PullToRefresh, selector: ".pull-to-refresh" },
+  ScrollArea: { component: Components.ScrollArea, selector: ".scroll-area.custom" },
   LoadingOverlay: { component: Components.LoadingOverlay, selector: ".loading-overlay" },
   SwipeActions: { component: Components.SwipeActions, selector: ".list.swipeable" },
   // Only the input types with a caret: setSelectionRange() throws on the rest.
@@ -277,11 +278,19 @@ function stopElement(name: keyof Registry, el: Element) {
  * alternative only, which would break the opt-out for any comma-separated
  * entry (Cards is the first).
  */
+function pageClaim(name: keyof Registry, root: ParentNode): Element[] {
+  if (name !== 'ScrollArea') return [];
+  const doc = (root as Node).ownerDocument;
+  if (root !== doc?.body) return [];
+  return [doc.documentElement];
+}
+
 function claimed(name: keyof Registry, root: ParentNode, self = false): Element[] {
   const { selector, filter = () => true } = entry(name);
   const query = `:is(${selector}):not(.no-autoinit)`;
   const own = self && (root as Element).matches(query) ? [root as Element] : [];
-  return [...own, ...root.querySelectorAll(query)].filter(filter);
+  const html = pageClaim(name, root).filter((el) => el.matches(query));
+  return [...html, ...own, ...root.querySelectorAll(query)].filter(filter);
 }
 
 /** Starts the components an added element and its descendants claim, leaving existing instances alone. */

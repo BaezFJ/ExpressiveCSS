@@ -25,9 +25,9 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**110 of 110 rows enforced; 0 remaining.**
+**111 of 111 rows enforced; 0 remaining.**
 
-105 of those rows are components - a part of the framework an author writes markup for.
+106 of those rows are components - a part of the framework an author writes markup for.
 The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
@@ -45,7 +45,7 @@ the same rule-linking applies, so neither can be recorded without enforcement.
 
 The composite roles that can be withheld or rejected: `combobox`, `grid`, `listbox`, `menu`, `menubar`, `radiogroup`, `tablist`, `toolbar`, `tree`, `treegrid`.
 
-**2 of 105 components declare conformance debt.**
+**2 of 106 components declare conformance debt.**
 
 That is a count of *declarations*, not of debt. The suite pairs a declaration with a
 rule and a role-blocking rule with a declaration, so neither can exist alone - but a
@@ -1218,6 +1218,16 @@ The wash a modal surface paints behind itself, added in 1.x (#37). A foundation,
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 
+
+### scroll-area
+
+The plain utility uses a native scrollbar. ScrollArea on html.scroll-area.custom generates the decorative bar and its aria-hidden state; authors do not write either element. Containers keep their native scrollbar.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `scroll-area-bar-is-not-authored` | forbid | `.scroll-area-bar, .scroll-area-thumb` | must not match |
+
+- **scroll-area-bar-is-not-authored** - ScrollArea generates the bar, thumb and aria-hidden state. Author only html.scroll-area.custom and initialize it.
 
 ### scrollspy
 

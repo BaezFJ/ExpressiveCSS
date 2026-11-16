@@ -7,6 +7,11 @@
 
 export const AUTO_INIT_FIXTURES = [
   {
+    name: "ScrollArea",
+    selector: ".scroll-area.custom",
+    html: `<div class="scroll-area custom"></div>`,
+  },
+  {
     name: "AppBar",
     selector: "header.medium",
     html: `<header class="medium"><nav aria-label="Main"><h2>Title</h2></nav></header>`,

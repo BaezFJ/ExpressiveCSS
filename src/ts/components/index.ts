@@ -48,6 +48,7 @@ export { MapView } from "./mapView";
 export { Lightbox } from "./lightbox";
 export { Slider } from "./slider";
 export { ScrollSpy } from "./scrollspy";
+export { ScrollArea } from "./scrollArea";
 export { BackToTop } from "./backToTop";
 export { FormSelect } from "./select";
 export { TreeSelect } from "./treeSelect";
