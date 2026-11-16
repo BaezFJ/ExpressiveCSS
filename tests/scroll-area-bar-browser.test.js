@@ -55,6 +55,34 @@ test('custom native-bar rules and accessibility media are present in the bundle'
 });
 
 for (const [engine, browserType, browserTest] of engines) {
+  browserTest(`track press pages once, clamps and respects smooth scrolling (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    const page = await browser.newPage({ viewport: { width: 400, height: 300 } });
+    try {
+      await setup(page, 2000); await init(page);
+      for (const top of [300, 600]) {
+        await page.mouse.click(394, 250); await frames(page);
+        near(await page.evaluate(() => scrollY), top, 'track pages one viewport');
+      }
+      await page.mouse.move(389, 100); await page.mouse.down(); await page.mouse.move(389, 150); await page.mouse.up(); await frames(page);
+      assert.ok(Math.abs(await page.evaluate(() => scrollY) - (600 + 50 * 1700 / 252)) <= 7, 'strip beside thumb drags');
+      await page.evaluate(() => scrollTo(0, 600)); await frames(page);
+      await page.mouse.move(394, 250); await page.mouse.down(); await page.waitForTimeout(1500); await page.mouse.up(); await frames(page);
+      near(await page.evaluate(() => scrollY), 900, 'held press pages once');
+      for (const [start, y, top] of [[900, 10, 600], [100, 2, 0], [1600, 295, 1700]]) {
+        await page.evaluate(top => scrollTo(0, top), start); await frames(page);
+        await page.mouse.click(394, y); await frames(page);
+        near(await page.evaluate(() => scrollY), top, 'track direction and clamp');
+      }
+      near((await geometry(page)).bottom, (await geometry(page)).end, 'track step reaches end');
+      await page.evaluate(() => scrollTo(0, 0)); await destroy(page);
+      await page.addStyleTag({ content: 'html { scroll-behavior: smooth; }' }); await init(page);
+      await page.mouse.click(394, 250);
+      await page.waitForFunction(() => Math.abs(scrollY - 300) <= 1); await page.waitForTimeout(100);
+      near(await page.evaluate(() => scrollY), 300, 'track follows smooth CSS');
+    } finally { await page.mouse.up(); await destroy(page); await browser.close(); }
+  });
+
   browserTest(`hidden or inert bar ends a drag permanently (${engine})`, async t => {
     const browser = await leaseBrowser(browserType);
     const page = await browser.newPage({ viewport: { width: 400, height: 300 } });
@@ -172,6 +200,8 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' })); await init(page);
       await page.mouse.move(394, 50); await page.mouse.down(); await page.mouse.move(394, 150); await page.mouse.up(); await frames(page);
       near(await page.evaluate(() => scrollY), 300, 'replacement drags');
+      await page.mouse.click(394, 250);
+      await page.waitForFunction(() => Math.abs(scrollY - 600) <= 1);
       assert.deepEqual(errors, []);
     } finally { await page.mouse.up(); await destroy(page); await browser.close(); }
   });

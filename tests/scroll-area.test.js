@@ -265,3 +265,31 @@ test('ScrollArea anchors capture and drag metrics until every ending', () => {
     delete root.clientHeight; delete root.scrollHeight; root.scrollTop = 0;
   }
 });
+
+test('ScrollArea track press pages once without capture or repeat', t => {
+  const root = document.documentElement;
+  Object.defineProperty(root, 'clientHeight', { configurable: true, value: 300 });
+  Object.defineProperty(root, 'scrollHeight', { configurable: true, value: 900 });
+  root.scrollTop = 300;
+  const oldBy = window.scrollBy;
+  const calls = [];
+  window.scrollBy = options => calls.push(options);
+  t.mock.timers.enable({ apis: ['setTimeout', 'setInterval'] });
+  const area = Expressive.ScrollArea.init(root);
+  const bar = root.lastElementChild;
+  bar.setPointerCapture = () => {};
+  bar.hasPointerCapture = () => false;
+  try {
+    pointer(bar, 'pointerdown', { clientY: 250 });
+    t.mock.timers.tick(2000);
+    pointer(bar, 'pointermove', { clientY: 280 }); pointer(bar, 'pointerup');
+    assert.deepEqual(calls, [{ top: 300 }]);
+    pointer(bar, 'pointerdown', { clientY: 20 }); pointer(bar, 'pointerup');
+    assert.deepEqual(calls, [{ top: 300 }, { top: -300 }]);
+    pointer(bar.firstElementChild, 'pointerdown', { clientY: 150 });
+    assert.equal(calls.length, 2);
+  } finally {
+    area.destroy(); t.mock.timers.reset(); window.scrollBy = oldBy;
+    delete root.clientHeight; delete root.scrollHeight; root.scrollTop = 0;
+  }
+});

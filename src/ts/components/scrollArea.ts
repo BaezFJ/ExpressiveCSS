@@ -47,6 +47,7 @@ export class ScrollArea extends Component<BaseOptions> {
     e.preventDefault();
     const { length, travel, range, offset, scrollTop } = this._metrics;
     if (e.clientY >= offset && e.clientY <= offset + length) this._startDrag(e, scrollTop, range, travel);
+    else this._window.scrollBy({ top: Math.sign(e.clientY - offset) * this.el.clientHeight });
   }
 
   private _startDrag(e: PointerEvent, scrollTop: number, range: number, travel: number): void {
