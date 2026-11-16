@@ -26,6 +26,7 @@ Later phases build on these:
 - **Forms:** `.validate` fields set `aria-invalid` and are described by their error text. `data-mask` formats typed and pasted text to a pattern. `data-currency` shows an amount in the page's locale and currency after blur, and the form submits the plain number.
 - **Choosing values:** a `.transfer-list` moves checkbox rows between an available and a chosen list and submits the chosen ones in order. A `select[data-tree]` opens an ARIA tree and submits one leaf, and a `.field.cascader` picks a path through nested options in columns and submits every level.
 - **Buttons:** `aria-busy="true"` keeps a button's label, reports busy and shows a delayed spinner, and `BusyButtons` ignores presses until it clears.
+- **App shells:** a `.scaffold` places an app's bar, rail, pane, trailing toolbar, side sheet and status bar, and rearranges them on compact and medium windows.
 - **App bars:** a heading reached through a fragment link rests below a page-level sticky top app bar, through `--md-comp-top-app-bar-anchor-offset`.
 - **Dialogs:** `Dialogs.confirm()` asks a yes-or-no question and returns a promise that resolves to the answer.
 - **Page helpers:** `.defer-render` skips layout and paint for a long list's off-screen rows. A `.loading-overlay` with `aria-busy="true"` blocks input under a scrim. A `hover-card-trigger` link shows its card after a delay, `.back-to-top` appears past a scroll threshold and returns to the top, and `.show-more` expands clamped text from a button that hides while the text fits.
@@ -40,7 +41,7 @@ Later phases build on these:
 
 ## Up next
 
-1. [Milestone: scaffold app shells](#milestone-scaffold-app-shells)
+1. [Milestone: custom scrollbars](#milestone-custom-scrollbars)
 
 ## Milestone: MCP authoring guidance
 
@@ -422,93 +423,115 @@ Completed 2026-11-15. See [spec](2026/11/15/lint-paste-blocking/).
 
 ## Milestone: scaffold app shells
 
-A `.scaffold` container places an app's bars, rails, panes and trailing controls, so pages stop hand-writing a shell grid. Each region holds a component the framework already ships, and the scaffold only positions it. The default layout follows Gmail on the web: the app bar spans the top and holds the rail's menu button, and the rail, pane and trailing toolbar sit below it. The shell fills the window and only the pane scrolls. The decisions come from a design discussion on 2026-11-15.
-
 ### Phase 88: lay out the scaffold's default regions
 
-No dependencies. A `.scaffold` places its direct children by component: a `header` app bar across the top, a `.navigation-rail` at the leading edge, `main` as the pane area, and a vertical `.toolbar` at the trailing edge. The shell is as tall as the window, and only the pane area scrolls. Region classes place custom content that isn't one of those components. The component ships with its docs page, `llm.md` section, semantics entry and skill guide, and the design skill's [scaffold reference](../skills/expressivecss/expressivecss-design/references/scaffold.md) maps each region to it.
-
-Completion check: at 1280px, a scaffold with all four regions shows the app bar above the rail, pane and toolbar. Scrolling a long pane leaves the bar, rail and toolbar in place, and under `dir="rtl"` the rail and toolbar swap sides.
-
-Open for spec: the region class names, whether `.panes` can be the pane area directly or sits inside `main`, and how the rail's own `100dvh` height and fixed positioning give way inside the grid.
+Completed 2026-11-15. See [spec](2026/11/15/scaffold-default-regions/).
 
 ### Phase 89: run the rail the full height
 
-Depends on phase 88. A modifier on `.scaffold` runs the rail from the top of the window to the bottom, and the app bar sits over the pane area only, as the current layout templates do.
-
-Completion check: with the modifier, the rail starts at the top edge and the app bar starts at the rail's inline end. Without it, the layout matches phase 88.
-
-Open for spec: the modifier's name.
+Completed 2026-11-15. See [spec](2026/11/15/scaffold-tall-rail/).
 
 ### Phase 90: toggle the rail from outside it
 
-No dependencies. A button outside a `.navigation-rail` that names the rail in `aria-controls` expands and collapses it and keeps its own `aria-expanded` in sync. When Escape closes a modal rail, focus returns to that button. A rail without an outside button keeps using its first-child toggle.
-
-Completion check: clicking an app bar button whose `aria-controls` holds the rail's id expands the rail and sets `aria-expanded="true"` on the button. Pressing Escape inside the modal rail then collapses it and focuses the button.
-
-Open for spec: whether a rail can have an outside toggle and its own first-child toggle at once, and how AutoInit's `watch` mode connects a button added after the rail started.
+Completed 2026-11-15. See [spec](2026/11/15/rail-outside-toggle/).
 
 ### Phase 91: overlay the expanded rail on medium windows
 
-Depends on phases 88 and 90. In a scaffold at 840px and wider, an expanded rail narrows the pane. From 600px to 839px it opens over the pane with a scrim, and Escape or a scrim tap collapses it.
-
-Completion check: at 1024px, expanding the rail narrows the pane by the difference between the expanded and collapsed widths. At 700px the pane keeps its width, a scrim appears, and tapping the scrim collapses the rail.
-
-Open for spec: whether the medium overlay reuses the rail's `modal` state, and whether CSS or the runtime sets it, since the rail goes modal only on compact windows today.
+Completed 2026-11-15. See [spec](2026/11/15/scaffold-medium-rail-overlay/).
 
 ### Phase 92: scroll the document on compact windows
 
-Depends on phase 90. Under 600px the scaffold scrolls the document instead of the pane, so mobile browsers can collapse their address bar. The app bar stays pinned, a footer `.navigation-bar` shows at the bottom, and the rail stays hidden until the app bar's menu button opens it as a modal.
-
-Completion check: at 390px, scrolling moves the document while the app bar and navigation bar stay in place. The rail is off-screen and out of the tab order until the menu button opens it with a scrim.
-
-Open for spec: whether scaffold rules or the existing `hide-on-*` helpers swap the rail and the navigation bar.
+Completed 2026-11-15. See [spec](2026/11/15/scaffold-compact-scroll/).
 
 ### Phase 93: float the trailing toolbar on compact windows
 
-Depends on phase 92. Under 600px the trailing vertical toolbar turns horizontal and floats, centered, above the navigation bar. Its buttons keep their keyboard order.
-
-Completion check: at 390px the toolbar is horizontal and sits above the navigation bar without covering it, and the end of the page can scroll clear of the toolbar.
-
-Open for spec: whether CSS overrides the toolbar's `vertical` class or the markup carries a second class, and how the scaffold reserves room at the end of the page.
+Completed 2026-11-15. See [spec](2026/11/15/scaffold-compact-toolbar/).
 
 ### Phase 94: add a status bar region
 
-Depends on phase 88. A `.status-bar` child of a scaffold spans the full width along the bottom, below the rail, pane and toolbar. Under 600px it is hidden.
-
-Completion check: at 1280px the status bar is as wide as the scaffold and sits below the pane. At 390px it isn't displayed.
-
-Open for spec: whether the status bar keeps its own sticky placement inside the scaffold or the grid places it.
+Completed 2026-11-15. See [spec](2026/11/15/scaffold-status-bar/).
 
 ### Phase 95: float the pane on a surface
 
-Depends on phase 88. From 600px up, the scaffold's background uses `surface-container`, and the pane area sits on a rounded `surface` with a gap around it. Under 600px the pane stays flat against the background.
-
-Completion check: at 1024px the pane area's background color differs from the scaffold's and its corners are rounded. At 390px both backgrounds match and the corners are square.
-
-Open for spec: whether the floating surface is the default or a modifier, given the product rule on changing existing markup, and how it combines with `.panes.separated`.
+Completed 2026-11-15. See [spec](2026/11/15/scaffold-floating-pane/).
 
 ### Phase 96: open a side sheet as a third column
 
-Depends on phase 88. A standard `.side-sheet` child opens as a column between the pane and the trailing toolbar and narrows the pane while it is open. Closing it gives the width back to the pane.
-
-Completion check: at 1440px, opening the sheet narrows the pane by the sheet's width and leaves the toolbar at the window edge. Closing the sheet restores the pane's width.
-
-Open for spec: what the sheet does below 840px, and whether the column width follows the sheet's open and close motion.
+Completed 2026-11-15. See [spec](2026/11/15/scaffold-side-sheet-column/).
 
 ### Phase 97: keep regions inside safe areas
 
-Depends on phases 88 and 92. The scaffold pads its outer regions by `env(safe-area-inset-*)`, so the app bar, rail, navigation bar and toolbar stay clear of a notch or home indicator. Insets that a component already applies are not added twice.
-
-Completion check: with nonzero safe-area insets on every side, no region's controls overlap an inset, and the navigation bar's bottom padding equals one inset.
-
-Open for spec: how tests supply inset values, since desktop browsers report zero.
+Completed 2026-11-15. See [spec](2026/11/15/scaffold-safe-areas/).
 
 ### Phase 98: move the bundled templates to `.scaffold`
 
-Depends on phases 88 to 97. The six bundled layout templates in `skills/expressivecss/assets/templates/` use `.scaffold` and drop their inline layout CSS. This phase closes the milestone.
+Completed 2026-11-15. See [spec](2026/11/15/scaffold-templates/).
 
-Completion check: none of the six templates has a `<style>` block for shell layout, and each one renders the same regions at 390px, 700px and 1280px as before.
+## Milestone: custom scrollbars
+
+`ScrollArea` replaces the native scrollbar with a themed bar drawn by the framework, on the page and on scroll containers. The browser still does the scrolling, so wheel, touch, keyboard, find-in-page and anchor links behave as before. The component opts in through a modifier on the existing `.scroll-area` utility, and without the runtime the utility's themed native bar stays. Forced colors and coarse pointers keep the native bar, and the drawn bar is hidden from assistive technology because keyboard scrolling stays native. The decisions come from a design discussion on 2026-11-16.
+
+### Phase 99: draw a custom vertical bar for the page
+
+No dependencies. With `ScrollArea` on `<html>`, the page's native vertical bar is hidden and a fixed bar at the inline-end edge shows a thumb whose length and position follow the document's scroll. The thumb tracks scrolling in every engine, through a scroll timeline where the engine has one and a scroll listener where it doesn't, and its length updates when the content grows or shrinks. Under forced colors or a coarse pointer the native bar shows and the drawn bar doesn't.
+
+Completion check: on a page three windows tall, the thumb is a third of the track's length, and after scrolling to the end it touches the track's end. With forced colors emulated, the native bar is back and the drawn bar isn't displayed.
+
+Open for spec: the modifier's name, and how the bar keeps clear of fixed page controls such as `.back-to-top` and the floating action button.
+
+### Phase 100: drag the thumb and page from the track
+
+Depends on phase 99. Dragging the page bar's thumb scrolls the document in proportion, and the drag continues when the pointer leaves the bar or the window. A press on the track outside the thumb scrolls one window toward the press.
+
+Completion check: dragging the thumb half the track's length scrolls the document half its scrollable distance, and a press below the thumb scrolls down by the window's height.
+
+Open for spec: whether holding a press on the track repeats the page scroll, as native bars do.
+
+### Phase 101: draw the bar on a scroll container
+
+Depends on phase 100. `ScrollArea` on a scroll container wraps it in an element and draws the same bar beside it, with the same thumb, drag and track behavior as the page bar. Destroying the component removes the wrapper and leaves the container where it was.
+
+Completion check: a 300px-tall container with 900px of content shows a thumb a third of the track's length, and dragging it scrolls the container, not the page. After `destroy()`, the container's parent is its original parent again.
+
+Open for spec: how the wrapper takes over the container's flex or grid placement and outer margins.
+
+### Phase 102: add the horizontal bar
+
+Depends on phase 101. On the page and on containers, content that overflows sideways gets a horizontal bar along the block-end edge with the same thumb, drag and track behavior. Under `dir="rtl"` the thumb starts at the right, and when both bars show they don't overlap at the corner.
+
+Completion check: a container wider than its viewport in both directions shows both bars, and neither thumb enters the corner square. Under `dir="rtl"` the horizontal thumb starts at the right end of the track.
+
+### Phase 103: grow the thumb on hover with a spring
+
+Depends on phase 99. The thumb is thin at rest, grows when the pointer is over the bar, and returns to its thin size with an M3 Expressive spring when the pointer leaves or a drag ends. With reduced motion, the size changes without animation.
+
+Completion check: hovering the bar widens the thumb to its hover size, and leaving returns it to its rest size. With `prefers-reduced-motion: reduce` emulated, the change has no transition.
+
+Open for spec: whether the spring reuses the motion tokens or the runtime `Spring` helper.
+
+### Phase 104: hide the bar while idle
+
+Depends on phase 99. The bar fades out after about a second without scrolling and comes back when the content scrolls or the pointer nears its edge. It stays visible while the pointer is over it or a drag is in progress. With reduced motion, it hides and shows without a fade.
+
+Completion check: one second after scrolling stops, the bar is hidden. Moving the pointer to the bar's edge shows it again, and it stays visible for as long as the pointer stays over it.
+
+Open for spec: whether the idle delay is an option, and how near the edge counts as near.
+
+### Phase 105: mark sections on the track
+
+Depends on phase 99. Headings or elements the author names get tick marks on the track at their scroll positions, and the marks move when the layout changes the targets' positions. The marks reuse the targets Scrollspy reads where a page already has them.
+
+Completion check: on a page with four named sections, the track shows four marks, and each mark's position along the track matches its section's scroll offset as a share of the scrollable distance.
+
+Open for spec: how authors name the targets, and whether a click on a mark scrolls to its section.
+
+### Phase 106: label the thumb while dragging
+
+Depends on phases 100 and 105. While the thumb is dragged, a label beside it shows the name of the section at the current scroll position, and it disappears when the drag ends. Pages without marked sections show no label.
+
+Completion check: dragging the thumb into the third section shows that section's heading text beside the thumb, and releasing the pointer hides it.
+
+Open for spec: whether the label can show text other than a heading, such as a date, and whether screen readers hear it.
 
 ## Deferred work
 
