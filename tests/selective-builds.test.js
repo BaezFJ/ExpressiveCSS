@@ -597,9 +597,11 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the trailing toolbar's 4px margin, read from no token: 93,517 gzip bytes (-12).
   // Reviewed the sheet column as a detached sheet (corners and gaps like the pane): 93,553 gzip bytes (+36).
   // Reviewed the scaffold milestone merged with master's busy spinner, anchored headings and compact and hover rail, with the scaffold holding a compact rail's 72px column: 94,450 gzip bytes.
+  // Reviewed card media keeping its aspect ratio when the image has width and height attributes: 94,452 gzip bytes (+2).
   // Reviewed the custom page bar, scroll timeline, stacking token, modal scroll lock and system-mode fallbacks against 644c91760: 94,779 gzip bytes (+329).
   // Reviewed Phase 100 thumb dragging, single-step track paging and edge clearance against df7ba6d3b: 94,944 gzip bytes (+165).
   // Reviewed Phase 100 native-mode author offsets against f89029ad4: 94,999 gzip bytes (+55; +220 against df7ba6d3b).
   // Reviewed Phase 100 shadow-safe inherited insets against 69adf61b6: 94,927 gzip bytes (-72; +148 against df7ba6d3b).
-  assert.ok(sizes(css).gzip <= 94927, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed master's card media fix on the Phase 100 styles: 94,930 gzip bytes (+3 against 40ab4fb74).
+  assert.ok(sizes(css).gzip <= 94930, `CSS gzip: ${sizes(css).gzip}`);
 });

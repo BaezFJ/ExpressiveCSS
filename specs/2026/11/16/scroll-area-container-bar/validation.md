@@ -74,3 +74,18 @@ jsdom checks set `clientHeight` 300, `scrollHeight` 900, `clientWidth` 240 and `
   - "Refusal. The phase adds no permission or data boundary." stays, because `feature-spec` requires a line for each risk-pass question. The Status column stays although every row has one value, because it tells a reader that the user approved none of the decisions.
 - The roadmap says the bar is drawn "beside" the container. This spec overlays the container's padding box at the inline-end edge (Decisions). The roadmap text is unchanged on this branch.
 - Left for the build: the frame after a container loses its box, and sticky containers, can only be seen in a browser. The plan names a probe for each and what to do with either result.
+
+## Master integration prerequisite
+
+2026-11-16. After the spec commit `2c73bbbfabecd045217c662985fe9efc4629fe4e`, the parent integrated master commit `bb1c50c6f04415f0a42e484c5e9e3812029df4c6`, the card-media aspect-ratio fix from PR #533. Both changelog entries remain. The upstream card stylesheet and browser regression match master's bytes. The 104 conflicting skill/MCP files were regenerated from their owners. No container runtime has been built yet, so V1 through V24 remain Pending.
+
+The combined CSS is 94,930 gzip bytes using the budget test's source-map removal and `trimEnd()`, three bytes above the Phase 100 artifact. The size-budget test retains both histories and records the measured combined limit. The implementation-start commit is the resulting merge commit; the phase's original review base remains `40ab4fb74`.
+
+| Command | Finished result | Evidence |
+| --- | --- | --- |
+| `npm run build:semantics`, then `npm run build:skill` | Passed. Generated semantics and 101 component guides from their owners. | `/tmp/phase101-master-semantics.log`, `/tmp/phase101-master-skill.log` |
+| `npm run verify` | Passed. 4,179 tests, 4,176 passed, zero failed and three existing Firefox WebGL2 skips. Build, both typechecks, generated data and docs verification passed, including 145 pages, 11 aliases and 124 Markdown counterparts. | `/tmp/phase101-master-verify.log` |
+| `npm test --prefix mcp/expressivecss` | Passed, eight tools, resources, completion, response budgets and recovery. | `/tmp/phase101-master-mcp.log` |
+| `npm run verify:packages` | Passed, isolated framework 0.19.0 and MCP 0.6.0 consumers, sequentially after MCP smoke. | `/tmp/phase101-master-packages.log` |
+
+These runs validate the upstream integration and completed phases 99 and 100. They do not establish any Phase 101 container result. No visual or physical-device check was added during integration.
