@@ -102,7 +102,9 @@ const settled = (page, selector, open) => page.waitForFunction(([selector, open]
   const actions = row.querySelector('.swipe-actions').getBoundingClientRect();
   const inside = actions.left >= list.left - 1 && actions.right <= list.right + 1;
   const outside = actions.left >= list.right - 1 || actions.right <= list.left + 1;
-  return open ? inside : outside;
+  // The row can reach these bounds before WebKit finishes its translate transition.
+  const moving = row.getAnimations().some(animation => animation.transitionProperty === 'translate');
+  return !moving && (open ? inside : outside);
 }, [selector, open]);
 
 const expanded = (page, selector) => page.locator(`${selector} [data-swipe-toggle]`).getAttribute('aria-expanded');
