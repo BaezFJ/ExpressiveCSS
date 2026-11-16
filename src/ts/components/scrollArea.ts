@@ -1,5 +1,5 @@
 import { Component, BaseOptions } from '../core/component';
-import { Utils } from '../core/utils';
+import { controllerFor, deepActiveElement, Utils } from '../core/utils';
 
 /** A vertical scrollbar with thumb dragging and single-step track paging. */
 export class ScrollArea extends Component<BaseOptions> {
@@ -16,6 +16,7 @@ export class ScrollArea extends Component<BaseOptions> {
   private _frame?: number;
   private _drag?: { pointerId: number; clientY: number; scrollTop: number; ratio: number };
   private _dragObserver?: MutationObserver;
+  private _dragEvents?: AbortController;
 
   private get _window() {
     return this.el.ownerDocument.defaultView!;
@@ -32,13 +33,17 @@ export class ScrollArea extends Component<BaseOptions> {
     thumb.className = 'scroll-area-thumb';
     this._bar.append(thumb);
     this._placeBar();
+    if (!this._bar) return;
     this._bar.addEventListener('pointerdown', this._handlePointerDown, { signal: this._events.signal });
     this._bar.addEventListener('pointermove', this._handlePointerMove, { signal: this._events.signal });
     for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
       this._bar.addEventListener(type, this._handlePointerEnd, { signal: this._events.signal });
     }
     this._window.matchMedia('screen and (forced-colors: none) and (not (pointer: coarse))').addEventListener(
-      'change', () => this._endDrag(), { signal: this._events.signal },
+      'change', () => {
+        this._endDrag();
+        if (this._wrapper) this._queueMeasure();
+      }, { signal: this._events.signal },
     );
     this._observer = new this._window.ResizeObserver(this._queueMeasure);
     this._observer.observe(el);
@@ -50,8 +55,11 @@ export class ScrollArea extends Component<BaseOptions> {
   private _placeBar(): void {
     if (this.el === this.el.ownerDocument.documentElement) this.el.append(this._bar!);
     else {
-      this._wrap();
       this._bar!.addEventListener('wheel', this._handleWheel, { passive: false, signal: this._events.signal });
+      for (const query of ['(prefers-color-scheme: dark)', '(prefers-contrast: more)']) {
+        this._window.matchMedia(query).addEventListener('change', this._queueMeasure, { signal: this._events.signal });
+      }
+      this._wrap();
     }
   }
 
@@ -91,8 +99,8 @@ export class ScrollArea extends Component<BaseOptions> {
   private _saveState(): () => void {
     const { scrollTop, scrollLeft } = this.el;
     const active = this.el.getRootNode() as Document | ShadowRoot;
-    const focused = active.activeElement as HTMLElement | null;
-    const focus = focused && this.el.contains(focused) ? focused : undefined;
+    const focused = active.activeElement;
+    const focus = focused && this.el.contains(focused) ? deepActiveElement(active) as HTMLElement : undefined;
     return () => {
       this.el.scrollTo({ top: scrollTop, left: scrollLeft, behavior: 'instant' });
       focus?.focus({ preventScroll: true });
@@ -117,13 +125,11 @@ export class ScrollArea extends Component<BaseOptions> {
   }
 
   private _removeAnchor(): void {
-    if (this._anchorValue === 'none' && this.el.style.getPropertyValue('anchor-name') === this._anchor) {
-      this.el.style.setProperty('anchor-name', 'none', this._anchorPriority);
-      return;
-    }
-    Utils.setAnchorName(this.el, this._anchor!, false);
     const value = this.el.style.getPropertyValue('anchor-name');
-    if (value) this.el.style.setProperty('anchor-name', value, this._anchorPriority);
+    const priority = this.el.style.getPropertyPriority('anchor-name');
+    const names = value.split(',').filter(name => name.trim() !== this._anchor);
+    if (value === this._anchor && this._anchorValue === 'none') names.push('none');
+    this.el.style.setProperty('anchor-name', names.join(','), priority);
   }
 
   private _unwrap(): void {
@@ -156,18 +162,22 @@ export class ScrollArea extends Component<BaseOptions> {
     this._bar!.setPointerCapture(e.pointerId);
     // Chromium withholds captured moves while a modal makes the bar inert.
     this._dragObserver ??= new this._window.MutationObserver(this._endHiddenDrag);
-    const options = { attributes: true, subtree: true, attributeFilter: ['class', 'open', 'hidden', 'inert', 'style'] };
-    this._dragObserver.observe(this.el.ownerDocument.documentElement, options);
-    const root = this.el.getRootNode();
-    if (root !== this.el.ownerDocument) this._dragObserver.observe(root, options);
+    const options = { attributes: true, attributeOldValue: true, subtree: true, attributeFilter: ['class', 'open', 'hidden', 'inert', 'style'] };
+    const roots = new Set(this._composedAncestors().map(el => el.getRootNode()));
+    this._dragEvents = controllerFor(this.el);
+    for (const root of roots) {
+      this._dragObserver.observe(root, options);
+      // A modal in another closed root changes focus without exposing its mutations.
+      root.addEventListener('focusin', () => this._endDrag(), { capture: true, signal: this._dragEvents.signal });
+    }
   }
 
-  private _endHiddenDrag = (): void => {
-    if (this._dragBlocked()) this._endDrag();
+  private _endHiddenDrag = (records: MutationRecord[]): void => {
+    if (this._dragBlocked() || records.some(record => this._openedOutsideModal(record))) this._endDrag();
   };
 
   private _dragBlocked(): boolean {
-    return !this._bar!.getClientRects().length || !this._containerHasHeight() || this._inertContainer() || this._outsideModal();
+    return !this._bar!.getClientRects().length || !this._containerHasHeight() || this._inertContainer();
   }
 
   private _containerHasHeight(): boolean {
@@ -175,16 +185,23 @@ export class ScrollArea extends Component<BaseOptions> {
   }
 
   private _inertContainer(): boolean {
-    const root = this.el.getRootNode() as ShadowRoot;
-    return !!(this.el.closest('[inert]') || root.host?.closest('[inert]'));
+    return this._composedAncestors().some(el => el.hasAttribute('inert'));
   }
 
-  private _outsideModal(): boolean {
-    const doc = this.el.ownerDocument;
-    const root = this.el.getRootNode() as Document | ShadowRoot;
-    const modals = [...doc.querySelectorAll('dialog:modal')];
-    if (root !== doc) modals.push(...root.querySelectorAll('dialog:modal'));
-    return modals.some(modal => !modal.contains(this.el) && !modal.contains((root as ShadowRoot).host));
+  private _composedAncestors(): Element[] {
+    const ancestors: Element[] = [];
+    let el: Element | undefined = this.el;
+    while (el) {
+      ancestors.push(el);
+      el = el.assignedSlot ?? el.parentElement ?? (el.getRootNode() as ShadowRoot).host;
+    }
+    return ancestors;
+  }
+
+  private _openedOutsideModal(record: MutationRecord): boolean {
+    if (record.attributeName !== 'open' || record.oldValue !== null) return false;
+    const modal = record.target as Element;
+    return modal.matches('dialog:modal') && !this._composedAncestors().includes(modal);
   }
 
   private _handlePointerMove = (e: PointerEvent): void => {
@@ -202,6 +219,8 @@ export class ScrollArea extends Component<BaseOptions> {
     const drag = this._drag;
     this._drag = undefined;
     this._dragObserver?.disconnect();
+    this._dragEvents?.abort();
+    this._dragEvents = undefined;
     if (drag && this._bar?.hasPointerCapture(drag.pointerId)) this._bar.releasePointerCapture(drag.pointerId);
   }
 
@@ -245,15 +264,19 @@ export class ScrollArea extends Component<BaseOptions> {
   private _observeChildren(): void {
     this._observer!.observe(this.el);
     for (const child of this.el.children) this._observer!.observe(child);
-    this._childrenObserver ??= new this._window.MutationObserver(() => {
-      this._observer!.disconnect();
+    this._childrenObserver ??= new this._window.MutationObserver(records => {
+      if (records.some(record => record.type === 'childList')) this._observer!.disconnect();
       this._queueMeasure();
     });
-    this._childrenObserver.observe(this.el, { childList: true });
+    for (const ancestor of this._composedAncestors()) {
+      this._childrenObserver.observe(ancestor, { attributes: true, childList: ancestor === this.el });
+    }
   }
 
   private _copyContainerStyle(style: CSSStyleDeclaration): void {
     this._bar!.dir = style.direction;
+    this._copyProperty('color', style.color);
+    this._copyProperty('color-scheme', style.colorScheme);
     this._copyProperty('z-index', style.zIndex === 'auto' ? '' : style.zIndex);
     for (const side of ['block-start', 'block-end', 'inline-end']) {
       this._copyProperty(`--scroll-area-border-${side}`, style.getPropertyValue(`border-${side}-width`));

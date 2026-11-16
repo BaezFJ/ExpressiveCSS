@@ -966,6 +966,11 @@ test('V18 custom scroll containers reject only wrapper-incompatible structures w
     "<div class=\"button-group\"><button class=\"scroll-area custom\"></button></div>",
     "<div class=\"navigation-bar\"><button class=\"scroll-area custom\"></button></div>",
     "<div class=\"toolbar\"><button class=\"scroll-area custom\"></button></div>",
+    "<div class=\"toolbar\"><a href=\"#tags\" class=\"scroll-area custom\">Tags</a></div>",
+    "<ul class=\"list\"><li><a href=\"#tags\" class=\"scroll-area custom\">Tags</a></li></ul>",
+    "<ul class=\"list\"><li><label class=\"scroll-area custom\">Tags</label></li></ul>",
+    "<ul class=\"list\"><li><button class=\"scroll-area custom\">Tags</button></li></ul>",
+    "<ul class=\"list\"><li><span class=\"scroll-area custom\">Tags</span></li></ul>",
     "<nav class=\"tabs\" aria-label=\"Tags\"><a href=\"#tags\" class=\"scroll-area custom\">Tags</a></nav>",
     "<div class=\"pagination\"><ul class=\"scroll-area custom\"></ul></div>",
     "<div class=\"data-table\"><table class=\"scroll-area custom\"></table></div>"

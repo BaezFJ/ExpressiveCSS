@@ -94,6 +94,91 @@ for (const [engine, type, browserTest] of engines) {
       const end = await geometry(page); near(end.thumb.bottom,end.bar.bottom,'end'); await destroy(page);
     }
   }));
+  browserTest(`V4 container colors retain their color context on refresh (${engine})`, () => run(async page => {
+    await setup(page);
+    await page.evaluate(() => {
+      box.style.colorScheme = 'dark';
+      box.style.setProperty('--scroll-area-thumb-color', 'light-dark(red, blue)');
+      box.style.setProperty('--scroll-area-track-color', 'light-dark(green, yellow)');
+    });
+    await init(page);
+    const colors = () => page.evaluate(() => {
+      const bar = box.nextElementSibling;
+      return [getComputedStyle(bar.firstElementChild).backgroundColor, getComputedStyle(bar).backgroundColor,
+        getComputedStyle(bar).colorScheme === getComputedStyle(box).colorScheme];
+    });
+    assert.deepEqual(await colors(), ['rgb(0, 0, 255)', 'rgb(255, 255, 0)', true]);
+    await page.evaluate(() => {
+      box.style.removeProperty('color-scheme');
+      box.style.color = 'rgb(0, 128, 0)';
+      box.style.setProperty('--scroll-area-thumb-color', 'currentColor');
+      box.style.setProperty('--scroll-area-track-color', 'currentColor');
+      area.refresh();
+    });
+    assert.deepEqual(await colors(), ['rgb(0, 128, 0)', 'rgb(0, 128, 0)', true]);
+    if (engine !== 'webkit') {
+      await page.emulateMedia({forcedColors:'active'});
+      await frames(page);
+      await page.emulateMedia({forcedColors:'none'});
+      await frames(page);
+      assert.deepEqual(await colors(), ['rgb(0, 128, 0)', 'rgb(0, 128, 0)', true]);
+    }
+    await page.evaluate(() => { box.style.removeProperty('color'); area.refresh(); });
+    assert.equal(await page.evaluate(() => getComputedStyle(box.nextElementSibling).color === getComputedStyle(box).color), true);
+    await destroy(page);
+    await setup(page);
+    await page.evaluate(() => {
+      box.style.setProperty('--scroll-area-thumb-color', 'light-dark(red, blue)');
+      box.style.setProperty('--scroll-area-track-color', 'currentColor');
+    });
+    await init(page);
+    await frames(page);
+    await page.evaluate(() => document.documentElement.setAttribute('theme', 'dark'));
+    await frames(page);
+    let expectedColor = await page.evaluate(() => getComputedStyle(box).color);
+    assert.deepEqual(await colors(), ['rgb(0, 0, 255)', expectedColor, true]);
+    await page.evaluate(() => { host.style.colorScheme = 'light'; host.style.color = 'rgb(0, 128, 0)'; });
+    await frames(page);
+    assert.deepEqual(await colors(), ['rgb(255, 0, 0)', 'rgb(0, 128, 0)', true]);
+    await page.evaluate(() => { host.style.removeProperty('color'); host.style.removeProperty('color-scheme'); document.documentElement.removeAttribute('theme'); });
+    await frames(page);
+    expectedColor = await page.evaluate(() => getComputedStyle(box).color);
+    assert.deepEqual(await colors(), ['rgb(255, 0, 0)', expectedColor, true]);
+    await destroy(page);
+    await setup(page);
+    await page.evaluate(() => {
+      host.style.colorScheme = 'light'; host.style.color = 'black';
+      box.style.colorScheme = 'dark'; box.style.color = 'rgb(0, 128, 0)';
+      box.style.setProperty('--scroll-area-thumb-color', 'currentColor');
+      box.style.setProperty('--scroll-area-track-color', 'currentColor');
+    });
+    await init(page);
+    await page.evaluate(() => { host.style.colorScheme = 'dark'; host.style.color = 'rgb(0, 128, 0)'; });
+    await frames(page);
+    await page.evaluate(() => box.scrollTop = 1);
+    await frames(page);
+    await page.evaluate(() => { host.style.colorScheme = 'light'; host.style.color = 'black'; });
+    await frames(page);
+    assert.deepEqual(await colors(), ['rgb(0, 128, 0)', 'rgb(0, 128, 0)', true]);
+    await destroy(page);
+    await setup(page);
+    await page.emulateMedia({colorScheme:'light'});
+    await page.evaluate(() => {
+      box.style.color = 'light-dark(red, blue)';
+      box.style.setProperty('--scroll-area-thumb-color', 'currentColor');
+      box.style.setProperty('--scroll-area-track-color', 'currentColor');
+    });
+    await init(page);
+    await page.evaluate(() => document.documentElement.setAttribute('theme', 'dark'));
+    await frames(page);
+    assert.deepEqual(await colors(), ['rgb(0, 0, 255)', 'rgb(0, 0, 255)', true]);
+    await page.evaluate(() => document.documentElement.removeAttribute('theme'));
+    await frames(page);
+    assert.deepEqual(await colors(), ['rgb(255, 0, 0)', 'rgb(255, 0, 0)', true]);
+    await page.emulateMedia({colorScheme:'dark'});
+    await frames(page);
+    assert.deepEqual(await colors(), ['rgb(0, 0, 255)', 'rgb(0, 0, 255)', true]);
+  }));
   browserTest(`V5 container thumb follows only its own scroll (${engine})`, () => run(async page => {
     await setup(page); await init(page); await frames(page);
     await page.evaluate(() => scrollTo(0,200)); await frames(page);
@@ -340,6 +425,98 @@ for (const [engine, type, browserTest] of engines) {
         await page.waitForTimeout(300);assert.deepEqual(await page.evaluate(()=>[shadowBox.scrollTop,shadowBox.scrollLeft,shadow.activeElement===focused]),[150,20,true]);
       }
     }
+  }));
+
+  browserTest(`V3 moves preserve focus in descendant open shadow roots (${engine})`, () => run(async page => {
+    await setup(page, fixture.replace('></div></div><p', '><div id="mount"></div></div></div><p'));
+    await page.evaluate(() => {
+      const outer = mount.attachShadow({mode:'open'});
+      outer.innerHTML = '<div></div>';
+      window.focusRoot = outer.firstElementChild.attachShadow({mode:'open'});
+      focusRoot.innerHTML = '<button>Focus</button>';
+      focusRoot.firstElementChild.focus({preventScroll:true});
+    });
+    for (const change of [init, destroy]) {
+      await change(page);
+      assert.equal(await page.evaluate(() => focusRoot.activeElement === focusRoot.firstElementChild), true);
+    }
+  }));
+
+  browserTest(`V3 focus restoration permits a listener to destroy the instance (${engine})`, () => run(async page => {
+    await setup(page, '<div id="box" class="scroll-area custom"><input id="field"></div>');
+    await page.evaluate(() => {
+      field.focus();
+      field.addEventListener('focus', () => Expressive.ScrollArea.getInstance(box)?.destroy());
+      window.area = Expressive.ScrollArea.init(box);
+    });
+    assert.equal(await page.locator('.scroll-area-wrapper,.scroll-area-bar').count(), 0);
+    assert.equal(await page.evaluate(() => Expressive.ScrollArea.getInstance(box)), undefined);
+  }));
+
+  browserTest(`V12 nested shadow roots retain modal and inert ownership (${engine})`, () => run(async page => {
+    await setup(page, '<dialog id="background">Background</dialog><dialog id="inside"><section><div id="mount"></div></section></dialog>', 'dialog{transition:none}');
+    await page.evaluate(css => {
+      window.outer = mount.attachShadow({mode:'closed'});
+      outer.innerHTML = '<section><div id="inner"></div></section><dialog>Outside</dialog>';
+      const inner = outer.querySelector('#inner').attachShadow({mode:'closed'});
+      const sheet = new CSSStyleSheet();
+      sheet.replaceSync(css);
+      inner.adoptedStyleSheets = [sheet];
+      inner.innerHTML = '<div class="scroll-area custom" style="height:300px;width:240px"><div style="height:900px"></div></div>';
+      background.showModal();
+      inside.showModal();
+      window.shadowArea = Expressive.ScrollArea.init(inner.firstElementChild);
+    }, css);
+    for (const state of ['outer-inert', 'middle-inert', 'middle-hidden', 'middle-modal']) {
+      await page.evaluate(() => { shadowArea.el.scrollTop = 0; shadowArea.refresh(); });
+      await frames(page);
+      const r = await page.evaluate(() => {
+        const r = shadowArea.el.nextElementSibling.getBoundingClientRect();
+        return {x:r.x + 6, y:r.y};
+      });
+      await page.mouse.move(r.x, r.y + 50);
+      await page.mouse.down();
+      await page.mouse.move(r.x, r.y + 100, {steps:3});
+      near(await page.evaluate(() => shadowArea.el.scrollTop), 150, 'enclosing modal permits the drag');
+      const change = enabled => page.evaluate(({state, enabled}) => {
+        const section = outer.querySelector('section');
+        if (state === 'outer-inert') mount.inert = enabled;
+        if (state === 'middle-inert') section.inert = enabled;
+        if (state === 'middle-hidden') section.hidden = enabled;
+        if (state === 'middle-modal') {
+          const dialog = outer.querySelector('dialog');
+          if (enabled) dialog.showModal(); else dialog.close();
+        }
+      }, {state, enabled});
+      await change(true);
+      await frames(page);
+      await change(false);
+      await frames(page);
+      await page.mouse.move(r.x, r.y + 200, {steps:3});
+      near(await page.evaluate(() => shadowArea.el.scrollTop), 150, `${state} ends the drag`);
+      await page.mouse.up();
+    }
+  }));
+
+  browserTest(`V12 a modal in another closed shadow root ends capture (${engine})`, () => run(async page => {
+    await setup(page, fixture + '<div id="mount"></div>');
+    await page.evaluate(() => {
+      window.shadow = mount.attachShadow({mode:'closed'});
+      shadow.innerHTML = '<dialog>Outside</dialog>';
+    });
+    await init(page);
+    await frames(page);
+    const g = await geometry(page), x = g.bar.left + 6, y = g.bar.top;
+    await page.mouse.move(x, y + 50);
+    await page.mouse.down();
+    await page.mouse.move(x, y + 100, {steps:3});
+    near(await page.evaluate(() => box.scrollTop), 150);
+    await page.evaluate(() => shadow.firstElementChild.showModal());
+    await frames(page);
+    await page.evaluate(() => shadow.firstElementChild.close());
+    await page.mouse.move(x, y + 200, {steps:3});
+    near(await page.evaluate(() => box.scrollTop), 150, 'a closed-root modal ends rather than pauses capture');
+    await page.mouse.up();
   }));
 
 }

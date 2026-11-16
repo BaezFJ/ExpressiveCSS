@@ -10,8 +10,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `ScrollArea` draws an opt-in vertical page bar on `<html class="scroll-area custom">`
   and on bounded `.scroll-area.custom` containers. Containers use a generated
   `display: contents` wrapper and an anchored bar; destroying restores their parent.
-  Its proportional thumb follows native scrolling, with a 48px minimum. Scroll timelines
-  drive its position where supported and a passive listener handles other engines.
+  Its proportional thumb follows native scrolling, with a 48px minimum. Page thumbs use
+  scroll timelines where supported and a passive listener elsewhere. Container thumbs
+  use a passive listener in every engine.
   `refresh()` updates layouts whose content overflows a fixed-height body. Forced colors
   and coarse pointers keep the native bar. The plain `.scroll-area` utility is unchanged.
   Drag the thumb or press the track to scroll one viewport without hold-repeat.

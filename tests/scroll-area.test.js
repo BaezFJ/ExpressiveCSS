@@ -358,6 +358,22 @@ test('V13 container restores exact nodes, inline declarations and ownership', ()
   }
 });
 
+test('V13 container preserves author anchor edits made while it lives', () => {
+  for (const value of ['none', '--replacement', '--mine']) {
+    for (const priority of ['', 'important']) {
+      document.body.innerHTML = '<div class="scroll-area custom" style="anchor-name: --mine !important"></div>';
+      const el = document.body.firstElementChild;
+      const area = Expressive.ScrollArea.init(el);
+      try {
+        const own = el.nextElementSibling.style.getPropertyValue('position-anchor');
+        el.style.setProperty('anchor-name', value === '--mine' ? `--mine, ${own}` : value, priority);
+      } finally { area.destroy(); }
+      assert.equal(el.style.getPropertyValue('anchor-name'), value);
+      assert.equal(el.style.getPropertyPriority('anchor-name'), priority);
+    }
+  }
+});
+
 test('V5 container observes children and coalesces one passive scroll listener', () => {
   document.body.innerHTML='<div class="scroll-area custom"><div></div></div>';
   const el=document.body.firstElementChild;
