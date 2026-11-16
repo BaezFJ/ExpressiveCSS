@@ -43,7 +43,7 @@ Outcome: the app bar's trailing action and the two fixed controls are usable and
 - [x] Add the clearance cases (V9) with the app bar markup `docs/src/pages/navbar.astro` documents, placed as a child of `<body>` (the test file's `setup()` nests its extra markup in `#content`), and watch the trailing-button and 12px-distance cases fail.
 - [x] In `src/sass/utilities/_scroll-area.scss`, set `--scroll-area-bar-clearance` on `html.scroll-area.custom:has(> .scroll-area-bar)` inside the existing `@media screen and (forced-colors: none) and (not (pointer: coarse))` block.
 - [x] In `src/sass/components/_navbar.scss`, give `:root > body > header > #{$_bar}` and `:root > body > .scaffold > header > #{$_bar}` the declaration `padding-inline-end: var(--scroll-area-bar-clearance, 4px)`, placed after the existing `padding-inline: 4px` rule, beside `$_page-bar`, because the two selectors tie on specificity and the later one wins.
-- [x] In `_back-to-top.scss` and `_fab-menu.scss`, leave the existing `inset-inline-end` and add `max(<offset property>, var(--scroll-area-bar-clearance, 0px))` under `html.scroll-area.custom:has(> .scroll-area-bar)`.
+- [x] In `_back-to-top.scss` and `_fab-menu.scss`, derive a private local inset with `max(<offset property>, var(--scroll-area-bar-clearance))` and read it with the original offset as fallback. Independent quality review confirmed this smaller equivalent preserves native unitless-zero and negative offsets and reaches shadow-contained fixed controls without document selectors.
 - [x] Confirm the app bar and back-to-top tests still pass unchanged.
 
 Completion check: V9 passes in all three engines, in `ltr` and `rtl`.

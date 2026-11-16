@@ -99,6 +99,12 @@ area.destroy(); // Remove the drawn bar and restore the native one.`} />
       Give <code>--md-comp-back-to-top-offset</code> and <code>--md-comp-fab-menu-offset</code>
       a length with a unit beside the custom bar. The bar takes presses over edge
       content, so keep interactive content clear and choose a contrasting thumb color.</p>
+    <p>Fixed <code>.back-to-top</code> and <code>.fab-menu</code> controls inside a
+      shadow root also read the document's inherited clearance. Automatic app-bar
+      padding applies only to document-level headers. For a viewport-wide app bar
+      inside a shadow root, add
+      <code>padding-inline-end: var(--scroll-area-bar-clearance, 4px)</code>
+      to its bar element in that root's stylesheet.</p>
   </Section>
   <Section {...S.styling}>
     <p>Set these properties on the scroll container or an ancestor.</p>

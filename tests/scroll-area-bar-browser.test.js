@@ -89,6 +89,66 @@ test('custom native-bar rules and accessibility media are present in the bundle'
 });
 
 for (const [engine, browserType, browserTest] of engines) {
+  browserTest(`shadow fixed controls inherit page-bar clearance (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    const page = await browser.newPage({ viewport: { width: 400, height: 300 } });
+    const insets = () => page.evaluate(() => [...window.shadowRoot.querySelectorAll('.back-to-top, .fab-menu')].map(el => getComputedStyle(el).insetInlineEnd));
+    const offsets = value => page.evaluate(value => {
+      window.shadowRoot.querySelector('.back-to-top').style.setProperty('--md-comp-back-to-top-offset', value);
+      window.shadowRoot.querySelector('.fab-menu').style.setProperty('--md-comp-fab-menu-offset', value);
+    }, value);
+    try {
+      await setup(page);
+      await page.evaluate(css => {
+        const host = document.createElement('div');
+        document.body.append(host);
+        window.shadowRoot = host.attachShadow({ mode: 'closed' });
+        const sheet = new CSSStyleSheet();
+        sheet.replaceSync(css);
+        window.shadowRoot.adoptedStyleSheets = [sheet];
+        window.shadowRoot.innerHTML = '<header><nav aria-label="Shadow"><h2>Shadow page</h2></nav></header><a class="back-to-top button circle extra" href="#content">Top</a><div class="fab-menu"><button type="button" class="button circle extra">Add</button></div>';
+      }, css);
+      assert.deepEqual(await insets(), ['16px', '16px']);
+      await init(page);
+      assert.deepEqual(await insets(), ['18px', '18px']);
+      assert.ok(await page.evaluate(() => getComputedStyle(window.shadowRoot.host).getPropertyValue('--scroll-area-bar-clearance')));
+      assert.equal(await page.evaluate(() => getComputedStyle(window.shadowRoot.querySelector('nav')).paddingInlineEnd), '4px');
+      // A shadow header is not a document-level app bar; its author opts into page clearance.
+      await page.evaluate(() => {
+        const sheet = new CSSStyleSheet();
+        sheet.replaceSync('header > nav { padding-inline-end: var(--scroll-area-bar-clearance, 4px); }');
+        window.shadowRoot.adoptedStyleSheets = [...window.shadowRoot.adoptedStyleSheets, sheet];
+      });
+      for (const dir of ['ltr', 'rtl']) {
+        await page.evaluate(dir => document.documentElement.dir = dir, dir);
+        for (const [size, expected] of [[12, '18px'], [14, '19px'], [30, '30px']]) {
+          await page.evaluate(size => document.documentElement.style.setProperty('--scroll-area-bar-size', `${size}px`), size);
+          assert.deepEqual(await insets(), [expected, expected]);
+          assert.equal(await page.evaluate(() => getComputedStyle(window.shadowRoot.querySelector('nav')).paddingInlineEnd), expected);
+        }
+        await offsets('40px');
+        assert.deepEqual(await insets(), ['40px', '40px']);
+        await offsets('16px');
+      }
+      for (const disable of [
+        () => page.evaluate(() => document.documentElement.classList.remove('custom')),
+        ...(engine === 'webkit' ? [] : [() => page.emulateMedia({ forcedColors: 'active' })]),
+        () => page.emulateMedia({ media: 'print' }),
+        () => destroy(page),
+      ]) {
+        await disable();
+        for (const offset of ['0', '-20px', '40px', '16px']) {
+          await offsets(offset);
+          const expected = offset === '0' ? '0px' : offset;
+          assert.deepEqual(await insets(), [expected, expected]);
+        }
+        assert.equal(await page.evaluate(() => getComputedStyle(window.shadowRoot.querySelector('nav')).paddingInlineEnd), '4px');
+        await page.emulateMedia({ media: 'screen', forcedColors: 'none' });
+        await page.evaluate(() => document.documentElement.classList.add('custom'));
+      }
+    } finally { await destroy(page); await browser.close(); }
+  });
+
   browserTest(`page bar clearance defers to native modes and runtime removal (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);
     const page = await browser.newPage({ viewport: { width: 400, height: 300 } });

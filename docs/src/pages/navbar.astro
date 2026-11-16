@@ -42,7 +42,9 @@ const S = defineSections([
         </p>
         <p>A page-level app bar keeps its trailing action clear of the custom page
           scrollbar through <code>--scroll-area-bar-clearance</code>. Its trailing
-          padding becomes 18px with the default bar; nested app bars keep 4px.</p>
+          padding becomes 18px with the default bar; nested app bars keep 4px.
+          This applies to document-level headers. A viewport-wide app bar inside
+          a shadow root needs the <a href="scroll-area.html#page">shadow app-bar clearance rule</a>.</p>
         <p>
           Top app bars stay pinned to the top by default, without a helper class.
           The layout is CSS. <code>AppBar</code> collapses

@@ -48,12 +48,9 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
   --md-comp-fab-menu-effects-easing: var(--md-sys-motion-spring-fast-effects);
 
   position: fixed;
-  inset-inline-end: var(--md-comp-fab-menu-offset);
-  @media screen and (forced-colors: none) and (not (pointer: coarse)) {
-    html.scroll-area.custom:has(> .scroll-area-bar) & {
-      inset-inline-end: max(var(--md-comp-fab-menu-offset), var(--scroll-area-bar-clearance, 0px));
-    }
-  }
+  // Without page clearance this is invalid, so the inset keeps the author's offset.
+  --_page-bar-inset: max(var(--md-comp-fab-menu-offset), var(--scroll-area-bar-clearance));
+  inset-inline-end: var(--_page-bar-inset, var(--md-comp-fab-menu-offset));
   bottom: var(--md-comp-fab-menu-offset);
   z-index: var(--md-comp-fab-menu-z);
   margin: 0;

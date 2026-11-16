@@ -370,6 +370,10 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(appBar, /Navigation rails and tabs are separate components\. Do not nest either one in the header\./);
     assert.match(guide('fab.md'), /Expanded is the framework's state[\s\S]*aria-expanded[\s\S]*Do not write either into the markup\./);
     assert.match(guide('back-to-top.md'), /A link that appears once a long page has scrolled down, and returns to the top with focus on the main content\./);
+    for (const name of ['fab.md', 'back-to-top.md']) {
+      assert.match(guide(name), /The inherited clearance also reaches (links|menus) inside shadow roots/);
+    }
+    assert.match(appBar, /viewport-wide app bar inside a shadow root needs its own/);
   });
 
   test('keeps the generated Cards guide load-bearing contract complete', () => {

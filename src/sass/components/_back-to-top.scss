@@ -14,12 +14,9 @@
   --md-comp-back-to-top-easing: var(--md-sys-motion-spring-fast-effects);
 
   position: fixed;
-  inset-inline-end: var(--md-comp-back-to-top-offset);
-  @media screen and (forced-colors: none) and (not (pointer: coarse)) {
-    html.scroll-area.custom:has(> .scroll-area-bar) & {
-      inset-inline-end: max(var(--md-comp-back-to-top-offset), var(--scroll-area-bar-clearance, 0px));
-    }
-  }
+  // Without page clearance this is invalid, so the inset keeps the author's offset.
+  --_page-bar-inset: max(var(--md-comp-back-to-top-offset), var(--scroll-area-bar-clearance));
+  inset-inline-end: var(--_page-bar-inset, var(--md-comp-back-to-top-offset));
   bottom: var(--md-comp-back-to-top-offset);
   z-index: var(--md-comp-back-to-top-z);
   transition: opacity var(--md-comp-back-to-top-duration) var(--md-comp-back-to-top-easing);

@@ -15,6 +15,7 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   Drag the thumb or press the track to scroll one viewport without hold-repeat.
   Presses preserve focus and selection. Page app bars, back-to-top links and FAB menus
   keep clear through `--scroll-area-bar-clearance`, 18px with the default bar.
+  Fixed back-to-top links and FAB menus also inherit that clearance inside shadow roots.
 
 ## [0.19.0] - 2026-11-15
 

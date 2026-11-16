@@ -174,6 +174,9 @@ shadow tree cannot be pinned to a theme the way a page can.
 The document's runtime `--scroll-area-bar-clearance` measurement has no shadow-host
 counterpart. Its exact page-bar selector and property are an explicit exception in
 `tests/shadow-dom.test.js`; component and theme tokens still need both anchors.
+Fixed back-to-top links and FAB menus read that inherited clearance inside shadow
+trees. The app-bar rule remains limited to document-level headers; a viewport-wide
+shadow app bar needs the padding rule in the [scroll area guide](https://www.expressivecss.com/scroll-area.html#page).
 
 `:host` matches nothing in a document, so pairing an anchor cannot change a
 normal load. It is not weightless, though: bare `:host` matches `:root` at

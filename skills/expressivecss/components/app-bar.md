@@ -9,7 +9,7 @@ Component ID: `app-bar`
 
 Contract: ExpressiveCSS 0.19.0
 
-Contract SHA-256: `308bd4b68cfe11caa858f1c413dc083b1d6605802e1633ca81e243956d8e758b`
+Contract SHA-256: `b61045516d091903af29b61e7c87d1c07f3f0b4ea97c30ab2353ce599a9ed31d`
 
 #### Selection and adaptation
 
@@ -45,7 +45,7 @@ The bar is the markup. A `<header>` whose child is a `<nav>` is a top app bar. T
 
 Small is 64dp at `title-large`. `medium` is the Expressive medium-flexible bar: 112dp / `headline-medium`, 136dp with a subtitle. `large` is large-flexible: 120dp / `display-small`, 152dp with a subtitle. `AppBar` (started by `AutoInit()`) collapses those two on scroll and opens the related search view when the search field is selected. Icons are 24dp in a 48dp target and inherit the header color so a fill + `on-*` pair stays readable.
 
-Navigation rails and tabs are separate components. Do not nest either one in the header. A page-level app bar keeps its trailing action clear of the custom page scrollbar through `--scroll-area-bar-clearance`, giving 18px trailing padding with the default bar. Nested app bars keep 4px.
+Navigation rails and tabs are separate components. Do not nest either one in the header. A page-level app bar keeps its trailing action clear of the custom page scrollbar through `--scroll-area-bar-clearance`, giving 18px trailing padding with the default bar. Nested app bars keep 4px. This applies to document-level headers. A viewport-wide app bar inside a shadow root needs its own `padding-inline-end: var(--scroll-area-bar-clearance, 4px)` rule.
 
 #### Syntax
 

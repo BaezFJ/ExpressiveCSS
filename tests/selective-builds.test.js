@@ -600,5 +600,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the custom page bar, scroll timeline, stacking token, modal scroll lock and system-mode fallbacks against 644c91760: 94,779 gzip bytes (+329).
   // Reviewed Phase 100 thumb dragging, single-step track paging and edge clearance against df7ba6d3b: 94,944 gzip bytes (+165).
   // Reviewed Phase 100 native-mode author offsets against f89029ad4: 94,999 gzip bytes (+55; +220 against df7ba6d3b).
-  assert.ok(sizes(css).gzip <= 94999, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed Phase 100 shadow-safe inherited insets against 69adf61b6: 94,927 gzip bytes (-72; +148 against df7ba6d3b).
+  assert.ok(sizes(css).gzip <= 94927, `CSS gzip: ${sizes(css).gzip}`);
 });
