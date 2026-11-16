@@ -31,7 +31,7 @@ async function nativeInputs(page) {
   }
 }
 const near = (actual, expected, label) => assert.ok(Math.abs(actual - expected) <= 1, `${label}: ${actual}, expected ${expected}`);
-const geometry = page => page.locator('.scroll-area-bar').evaluate(bar => {
+const geometry = page => page.locator('.scroll-area-bar:not(.horizontal)').evaluate(bar => {
   const track = bar.getBoundingClientRect();
   const thumb = bar.firstElementChild.getBoundingClientRect();
   return { length: thumb.height, offset: thumb.top - track.top, bottom: thumb.bottom, end: track.bottom, hidden: bar.hidden, display: getComputedStyle(bar).display };
@@ -205,7 +205,7 @@ for (const [engine, browserType, browserTest] of engines) {
         for (const selector of ['#trailing', '#back', '.fab-menu > button', '.fab-menu li button']) {
           await page.evaluate(() => window.fab.open()); await frames(page);
           const box = await page.locator(selector).boundingBox();
-          const bar = await page.locator('.scroll-area-bar').boundingBox();
+          const bar = await page.locator('.scroll-area-bar:not(.horizontal)').boundingBox();
           const distance = dir === 'ltr' ? bar.x + bar.width / 2 - box.x - box.width : box.x - bar.x - bar.width / 2;
           assert.ok(distance >= 12, `${selector} has ${distance}px center-line clearance`);
           await page.mouse.click(dir === 'ltr' ? box.x + box.width - 1 : box.x + 1, box.y + box.height / 2);
@@ -278,7 +278,7 @@ for (const [engine, browserType, browserTest] of engines) {
       for (const mode of ['modal', 'custom', 'unscrollable']) {
         await page.goto('about:blank');
         await setup(page, 900, '<dialog>Modal</dialog>'); await init(page);
-        await page.evaluate(() => { window.moves = 0; document.querySelector('.scroll-area-bar').addEventListener('pointermove', () => window.moves++); });
+        await page.evaluate(() => { window.moves = 0; document.querySelector('.scroll-area-bar:not(.horizontal)').addEventListener('pointermove', () => window.moves++); });
         await page.mouse.move(394, 50); await page.mouse.down(); await page.mouse.move(394, 100); await frames(page);
         near(await page.evaluate(() => scrollY), 150, 'initial drag');
         await page.evaluate(mode => {
@@ -310,12 +310,12 @@ for (const [engine, browserType, browserTest] of engines) {
     try {
       for (const media of [...(engine === 'webkit' ? [] : [{ forcedColors: 'active' }]), { media: 'print' }]) {
         await page.goto('about:blank'); await setup(page); await init(page);
-        await page.locator('.scroll-area-bar').evaluate(bar => bar.addEventListener('pointerdown', e => window.pointer = e.pointerId));
+        await page.locator('.scroll-area-bar:not(.horizontal)').evaluate(bar => bar.addEventListener('pointerdown', e => window.pointer = e.pointerId));
         await page.mouse.move(394, 50); await page.mouse.down(); await page.mouse.move(394, 100); await frames(page);
         near(await page.evaluate(() => scrollY), 150, 'initial drag');
         await page.emulateMedia(media); await frames(page);
         assert.equal((await geometry(page)).display, 'none');
-        assert.equal(await page.locator('.scroll-area-bar').evaluate(bar => bar.hasPointerCapture(window.pointer)), false);
+        assert.equal(await page.locator('.scroll-area-bar:not(.horizontal)').evaluate(bar => bar.hasPointerCapture(window.pointer)), false);
         const top = await page.evaluate(() => scrollY);
         await page.emulateMedia({ media: 'screen', forcedColors: 'none' }); await frames(page);
         await page.mouse.move(394, 150); await frames(page);
@@ -362,14 +362,14 @@ for (const [engine, browserType, browserTest] of engines) {
     try {
       await setup(page); await init(page);
       await page.evaluate(() => {
-        const bar = document.querySelector('.scroll-area-bar');
+        const bar = document.querySelector('.scroll-area-bar:not(.horizontal)');
         bar.addEventListener('pointerdown', e => window.pointer = e.pointerId);
         bar.addEventListener('pointermove', e => window.lastMove = [e.clientX, e.clientY]);
       });
       await page.mouse.move(394, 50); await page.mouse.down();
       await page.mouse.move(200, 150); await frames(page);
       near(await page.evaluate(() => scrollY), 300, 'off-bar capture');
-      assert.equal(await page.locator('.scroll-area-bar').evaluate(el => el.hasPointerCapture(window.pointer)), true);
+      assert.equal(await page.locator('.scroll-area-bar:not(.horizontal)').evaluate(el => el.hasPointerCapture(window.pointer)), true);
       let outsideSupported = true;
       for (const [y, top] of [[500, 600], [-200, 0]]) {
         await page.mouse.move(-40, y); await frames(page);
@@ -389,7 +389,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const released = await page.evaluate(() => scrollY);
       await page.mouse.move(394, 150); await frames(page);
       near(await page.evaluate(() => scrollY), released, 'release outside ends drag');
-      assert.equal(await page.locator('.scroll-area-bar').evaluate(el => el.hasPointerCapture(window.pointer)), false);
+      assert.equal(await page.locator('.scroll-area-bar:not(.horizontal)').evaluate(el => el.hasPointerCapture(window.pointer)), false);
     } finally { await page.mouse.up(); await destroy(page); await browser.close(); }
   });
 
@@ -419,7 +419,7 @@ for (const [engine, browserType, browserTest] of engines) {
     try {
       await setup(page, 2000, '<input value="selected text"><p>Text crossed by a pointer drag</p>');
       await init(page);
-      const style = await page.locator('.scroll-area-bar').evaluate(el => ({ pointer: getComputedStyle(el).pointerEvents, touch: getComputedStyle(el).touchAction }));
+      const style = await page.locator('.scroll-area-bar:not(.horizontal)').evaluate(el => ({ pointer: getComputedStyle(el).pointerEvents, touch: getComputedStyle(el).touchAction }));
       assert.deepEqual(style, { pointer: 'auto', touch: 'none' });
       await page.evaluate(() => { const input = document.querySelector('input'); input.focus(); input.select(); document.addEventListener('contextmenu', e => window.menuCancelled = e.defaultPrevented); });
       const selected = await page.evaluate(() => getSelection().toString());
@@ -534,30 +534,30 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.waitForFunction(() => !document.querySelector('.back-to-top').hasAttribute('inert'));
       for (const dir of ['ltr', 'rtl']) {
         await page.evaluate(dir => document.documentElement.dir = dir, dir);
-        const bar = await page.locator('.scroll-area-bar').boundingBox();
+        const bar = await page.locator('.scroll-area-bar:not(.horizontal)').boundingBox();
         for (const selector of ['.back-to-top', '.fab-menu']) {
           const box = await page.locator(selector).boundingBox();
           assert.ok(box.x + box.width <= bar.x || bar.x + bar.width <= box.x, `${dir} ${selector}`);
         }
       }
-      assert.equal(await page.locator('.scroll-area-bar').evaluate(el => getComputedStyle(el).zIndex), '999');
+      assert.equal(await page.locator('.scroll-area-bar:not(.horizontal)').evaluate(el => getComputedStyle(el).zIndex), '999');
       if (engine !== 'webkit') {
         await page.emulateMedia({ forcedColors: 'active' });
         assert.equal(await page.evaluate(() => matchMedia('(forced-colors: active)').matches), true);
-        assert.equal(await page.locator('.scroll-area-bar').evaluate(el => getComputedStyle(el).display), 'none');
+        assert.equal(await page.locator('.scroll-area-bar:not(.horizontal)').evaluate(el => getComputedStyle(el).display), 'none');
         assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).scrollbarColor), 'auto');
         if (engine === 'chromium') assert.notEqual(await page.evaluate(() => getComputedStyle(document.documentElement).scrollbarWidth), 'none');
         await page.emulateMedia({ forcedColors: 'none' });
       }
       await page.emulateMedia({ media: 'print' });
-      assert.equal(await page.locator('.scroll-area-bar').evaluate(el => getComputedStyle(el).display), 'none');
+      assert.equal(await page.locator('.scroll-area-bar:not(.horizontal)').evaluate(el => getComputedStyle(el).display), 'none');
       if (engine === 'chromium') {
         const touch = await browser.newContext({ viewport: { width: 400, height: 300 }, hasTouch: true, isMobile: true });
         const mobile = await touch.newPage();
         try {
           await setup(mobile); await init(mobile);
           assert.equal(await mobile.evaluate(() => matchMedia('(pointer: coarse)').matches), true);
-          assert.equal(await mobile.locator('.scroll-area-bar').evaluate(el => getComputedStyle(el).display), 'none');
+          assert.equal(await mobile.locator('.scroll-area-bar:not(.horizontal)').evaluate(el => getComputedStyle(el).display), 'none');
           assert.notEqual(await mobile.evaluate(() => getComputedStyle(document.documentElement).scrollbarWidth), 'none');
         } finally { await destroy(mobile); await touch.close(); }
       }
@@ -578,21 +578,21 @@ for (const [engine, browserType, browserTest] of engines) {
       if (engine !== 'firefox') assert.equal(await width(), 'none');
       for (const dir of ['ltr', 'rtl']) {
         await page.evaluate(dir => document.documentElement.dir = dir, dir);
-        const box = await page.locator('.scroll-area-bar').boundingBox();
+        const box = await page.locator('.scroll-area-bar:not(.horizontal)').boundingBox();
         assert.equal(box.width, 12); assert.equal(box.height, 300);
         assert.equal(box.x, dir === 'ltr' ? 388 : 0);
         assert.equal(await page.locator('.scroll-area-thumb').evaluate(el => el.getBoundingClientRect().width), 8);
-        assert.equal(await page.locator('.scroll-area-bar').evaluate(el => getComputedStyle(el).position), 'fixed');
+        assert.equal(await page.locator('.scroll-area-bar:not(.horizontal)').evaluate(el => getComputedStyle(el).position), 'fixed');
         await page.evaluate(() => { window.clicked = false; });
         await page.mouse.click(box.x + 6, 150);
         assert.equal(await page.evaluate(() => window.clicked), false);
       }
       await page.evaluate(() => { document.documentElement.classList.remove('custom'); });
       if (engine !== 'firefox') assert.equal(await width(), 'thin');
-      assert.equal(await page.locator('.scroll-area-bar').evaluate(el => getComputedStyle(el).display), 'none');
+      assert.equal(await page.locator('.scroll-area-bar:not(.horizontal)').evaluate(el => getComputedStyle(el).display), 'none');
       await page.evaluate(() => { document.documentElement.classList.add('custom'); document.documentElement.style.cssText = '--scroll-area-thumb-color:rgb(12,34,56);--scroll-area-bar-size:14px'; });
       if (engine !== 'firefox') assert.equal(await width(), 'none');
-      assert.equal(await page.locator('.scroll-area-bar').evaluate(el => el.getBoundingClientRect().width), 14);
+      assert.equal(await page.locator('.scroll-area-bar:not(.horizontal)').evaluate(el => el.getBoundingClientRect().width), 14);
       assert.equal(await page.locator('.scroll-area-thumb').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(12, 34, 56)');
       await destroy(page);
       if (engine !== 'firefox') assert.equal(await width(), 'thin');

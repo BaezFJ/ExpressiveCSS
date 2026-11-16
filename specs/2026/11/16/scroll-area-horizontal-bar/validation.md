@@ -4,6 +4,8 @@ Phase 102: add the horizontal bar. Requirements: [requirements.md](requirements.
 
 Phase review base: `d039e1e96cf36401419117df8ce53d3b27f5d0d0`. The milestone run records the commit that implementation starts from here before plan group 1, and the rows below call it the start commit. Its source tree equals the review base unless that record says otherwise.
 
+Implementation starts from `7edf419453bb9b631611f3af40904e7ee83944da`, whose framework source equals the phase review base. The clean baseline build completed before group 1; declarations are retained at `/tmp/phase102-baseline-scrollArea.d.ts`.
+
 Every result below is pending. Writing this spec ran no build, test or browser, so each statement in the spec about engine behavior is unverified until its check runs.
 
 ## Agent-run checks

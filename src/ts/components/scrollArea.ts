@@ -5,6 +5,7 @@ import { controllerFor, deepActiveElement, Utils } from '../core/utils';
 export class ScrollArea extends Component<BaseOptions> {
   static key = 'Expressive_ScrollArea';
   private _bar?: HTMLDivElement;
+  private _horizontal?: HTMLDivElement;
   private _wrapper?: HTMLDivElement;
   private _anchor?: string;
   private _anchorValue = '';
@@ -24,26 +25,12 @@ export class ScrollArea extends Component<BaseOptions> {
 
   constructor(el: HTMLElement, options: Partial<BaseOptions> = {}) {
     super(el, options);
-    const doc = el.ownerDocument;
     if (!this._supported()) return;
-    this._bar = doc.createElement('div');
-    this._bar.className = 'scroll-area-bar';
-    this._bar.setAttribute('aria-hidden', 'true');
-    const thumb = doc.createElement('div');
-    thumb.className = 'scroll-area-thumb';
-    this._bar.append(thumb);
+    this._bar = this._createBar();
+    this._horizontal = this._createBar(true);
     this._placeBar();
+    for (const bar of this._bars) this._listenBar(bar);
     if (!this._bar) return;
-    this._bar.addEventListener('click', e => {
-      if (e.button !== 0 || e.ctrlKey) return;
-      e.preventDefault();
-      e.stopPropagation();
-    }, { signal: this._events.signal });
-    this._bar.addEventListener('pointerdown', this._handlePointerDown, { signal: this._events.signal });
-    this._bar.addEventListener('pointermove', this._handlePointerMove, { signal: this._events.signal });
-    for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
-      this._bar.addEventListener(type, this._handlePointerEnd, { signal: this._events.signal });
-    }
     this._window.matchMedia('screen and (forced-colors: none) and (not (pointer: coarse))').addEventListener(
       'change', () => {
         this._endDrag();
@@ -57,10 +44,37 @@ export class ScrollArea extends Component<BaseOptions> {
     this.refresh();
   }
 
+  private get _bars(): HTMLDivElement[] {
+    return [this._bar, this._horizontal].filter((bar): bar is HTMLDivElement => !!bar);
+  }
+
+  private _createBar(horizontal = false): HTMLDivElement {
+    const bar = this.el.ownerDocument.createElement('div');
+    bar.className = `scroll-area-bar${horizontal ? ' horizontal' : ''}`;
+    bar.setAttribute('aria-hidden', 'true');
+    const thumb = this.el.ownerDocument.createElement('div');
+    thumb.className = 'scroll-area-thumb';
+    bar.append(thumb);
+    return bar;
+  }
+
+  private _listenBar(bar: HTMLDivElement): void {
+    bar.addEventListener('click', e => {
+      if (e.button !== 0 || e.ctrlKey) return;
+      e.preventDefault();
+      e.stopPropagation();
+    }, { signal: this._events.signal });
+    bar.addEventListener('pointerdown', this._handlePointerDown, { signal: this._events.signal });
+    bar.addEventListener('pointermove', this._handlePointerMove, { signal: this._events.signal });
+    for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
+      bar.addEventListener(type, this._handlePointerEnd, { signal: this._events.signal });
+    }
+  }
+
   private _placeBar(): void {
-    if (this.el === this.el.ownerDocument.documentElement) this.el.append(this._bar!);
+    if (this.el === this.el.ownerDocument.documentElement) this.el.append(...this._bars);
     else {
-      this._bar!.addEventListener('wheel', this._handleWheel, { passive: false, signal: this._events.signal });
+      for (const bar of this._bars) bar.addEventListener('wheel', this._handleWheel, { passive: false, signal: this._events.signal });
       for (const query of ['(prefers-color-scheme: dark)', '(prefers-contrast: more)']) {
         this._window.matchMedia(query).addEventListener('change', this._queueMeasure, { signal: this._events.signal });
       }
@@ -119,14 +133,14 @@ export class ScrollArea extends Component<BaseOptions> {
     if (this.el.hasAttribute('slot')) this._wrapper.setAttribute('slot', this.el.getAttribute('slot')!);
     this._hadStyle = this.el.hasAttribute('style');
     this.el.before(this._wrapper);
-    this._wrapper.append(this.el, this._bar!);
+    this._wrapper.append(this.el, ...this._bars);
     if (!this._bar) return;
     this._anchor = `--scroll-area-${Utils.guid()}`;
     this._anchorValue = this.el.style.getPropertyValue('anchor-name');
     this._anchorPriority = this.el.style.getPropertyPriority('anchor-name');
     Utils.setAnchorName(this.el, this._anchor, true);
     this.el.style.setProperty('anchor-name', this.el.style.getPropertyValue('anchor-name'), this._anchorPriority);
-    this._bar!.style.setProperty('position-anchor', this._anchor);
+    for (const bar of this._bars) bar.style.setProperty('position-anchor', this._anchor);
     restore();
   }
 
@@ -341,8 +355,8 @@ export class ScrollArea extends Component<BaseOptions> {
     this._observer?.disconnect();
     this._modalObserver?.disconnect();
     this._childrenObserver?.disconnect();
-    this._bar?.remove();
-    this._bar = undefined;
+    for (const bar of this._bars) bar.remove();
+    this._bar = this._horizontal = undefined;
     this._unwrap();
     super.destroy();
   }

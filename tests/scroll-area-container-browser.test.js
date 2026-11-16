@@ -259,11 +259,11 @@ for (const [engine, type, browserTest] of engines) {
     // Read in the next frame, before ResizeObserver's queued measurement.
     const lost = await page.evaluate(() => new Promise(resolve => {
       box.style.display='none';
-      requestAnimationFrame(() => {const bar=document.querySelector('.scroll-area-bar');resolve([bar.getBoundingClientRect().height,bar.firstElementChild.getBoundingClientRect().height]);});
+      requestAnimationFrame(() => {const bar=document.querySelector('.scroll-area-bar:not(.horizontal)');resolve([bar.getBoundingClientRect().height,bar.firstElementChild.getBoundingClientRect().height]);});
     }));
     assert.deepEqual(lost,[0,0]);
     await page.evaluate(() => {box.style.display='';area.refresh();host.append(box);area.refresh();});
-    assert.equal(await page.locator('.scroll-area-bar').evaluate(el => el.hidden),true);
+    assert.equal(await page.locator('.scroll-area-bar:not(.horizontal)').evaluate(el => el.hidden),true);
     await destroy(page);
     await setup(page, `<dialog><section>${box}</section></dialog>`);
     await init(page); assert.equal((await geometry(page)).hidden,true);

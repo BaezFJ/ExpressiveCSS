@@ -10,13 +10,14 @@ afterEach(() => {
   resetBody();
 });
 
-test('ScrollArea owns one unfocusable page bar on the document element', () => {
+test('ScrollArea owns two unfocusable page bars on the document element', () => {
   const root = document.documentElement;
   root.className = 'scroll-area custom';
   const first = Expressive.ScrollArea.init(root);
   let second;
   try {
-    const bar = root.lastElementChild;
+    const bar = root.querySelector('.scroll-area-bar:not(.horizontal)');
+    assert.deepEqual([...root.children].slice(-2).map(el => el.className), ['scroll-area-bar', 'scroll-area-bar horizontal']);
     assert.equal(bar.className, 'scroll-area-bar');
     assert.equal(bar.getAttribute('aria-hidden'), 'true');
     assert.equal(bar.children.length, 1);
@@ -24,7 +25,7 @@ test('ScrollArea owns one unfocusable page bar on the document element', () => {
     assert.equal(bar.querySelector('[tabindex]'), null);
     assert.equal(bar.hasAttribute('tabindex'), false);
     second = Expressive.ScrollArea.init(root);
-    assert.equal(root.querySelectorAll('.scroll-area-bar').length, 1);
+    assert.equal(root.querySelectorAll('.scroll-area-bar').length, 2);
     first.destroy();
     assert.equal(Expressive.ScrollArea.getInstance(root), second);
   } finally {
@@ -64,10 +65,10 @@ test('ScrollArea uses the iframe document', () => {
   frame.contentWindow.scrollTo = options => moves.push(options);
   const instance = frame.contentWindow.Expressive.ScrollArea.init(root);
   try {
-    assert.equal(root.lastElementChild.ownerDocument, frame.contentDocument);
-    assert.equal(root.lastElementChild.className, 'scroll-area-bar');
+    assert.equal(root.querySelector('.scroll-area-bar:not(.horizontal)').ownerDocument, frame.contentDocument);
+    assert.equal(root.querySelector('.scroll-area-bar:not(.horizontal)').className, 'scroll-area-bar');
     assert.equal(document.documentElement.querySelector(':scope > .scroll-area-bar'), null);
-    const bar = root.lastElementChild;
+    const bar = root.querySelector('.scroll-area-bar:not(.horizontal)');
     bar.setPointerCapture = () => {};
     bar.hasPointerCapture = () => false;
     bar.getClientRects = () => [{}];
@@ -198,7 +199,7 @@ test('AutoInit claims html only for ScrollArea and only from body', () => {
     Expressive.AutoInit();
     assert.ok(Expressive.ScrollArea.getInstance(root));
     Expressive.AutoInit(document.body, {});
-    assert.equal(root.querySelectorAll('.scroll-area-bar').length, 1);
+    assert.equal(root.querySelectorAll('.scroll-area-bar').length, 2);
     assert.equal(Expressive.ScrollSpy.getInstance(root), undefined);
   } finally {
     Expressive.ScrollArea.getInstance(root)?.destroy();
@@ -225,7 +226,7 @@ test('ScrollArea anchors capture and drag metrics until every ending', () => {
   window.scrollTo = value => moves.push(value);
   window.scrollBy = () => assert.fail('thumb press must not page');
   const area = Expressive.ScrollArea.init(root);
-  const bar = root.lastElementChild;
+  const bar = root.querySelector('.scroll-area-bar:not(.horizontal)');
   let captured;
   bar.setPointerCapture = id => { captured = id; captures.push(id); };
   bar.hasPointerCapture = id => captured === id;
@@ -280,7 +281,7 @@ test('ScrollArea track press pages once without capture or repeat', t => {
   window.scrollBy = options => calls.push(options);
   t.mock.timers.enable({ apis: ['setTimeout', 'setInterval'] });
   const area = Expressive.ScrollArea.init(root);
-  const bar = root.lastElementChild;
+  const bar = root.querySelector('.scroll-area-bar:not(.horizontal)');
   bar.setPointerCapture = () => {};
   bar.hasPointerCapture = () => false;
   try {
@@ -311,8 +312,14 @@ test('V1 container structure and slot keep author attributes', () => {
       assert.deepEqual([...wrapper.attributes].map(a => a.name).sort(), slot ? ['class', 'slot'] : ['class']);
       assert.equal(wrapper.getAttribute('slot'), slot ? 'body' : null);
       assert.equal(wrapper.firstElementChild, el);
+      assert.deepEqual([...wrapper.children].map(el => el.className), ['scroll-area custom', 'scroll-area-bar', 'scroll-area-bar horizontal']);
+      const horizontal = wrapper.lastElementChild;
+      assert.deepEqual([...horizontal.attributes].map(a => a.name).sort(), ['aria-hidden', 'class', 'style']);
+      assert.equal(horizontal.getAttribute('aria-hidden'), 'true');
+      assert.equal(horizontal.firstElementChild.className, 'scroll-area-thumb');
+      assert.equal(horizontal.style.getPropertyValue('position-anchor'), el.style.getPropertyValue('anchor-name'));
       assert.deepEqual([...el.childNodes], children);
-      const bar = wrapper.lastElementChild;
+      const bar = wrapper.querySelector('.scroll-area-bar:not(.horizontal)');
       assert.equal(bar.className, 'scroll-area-bar');
       assert.equal(bar.getAttribute('aria-hidden'), 'true');
       assert.equal(bar.firstElementChild.className, 'scroll-area-thumb');
