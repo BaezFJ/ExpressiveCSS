@@ -38,7 +38,11 @@ for (const [engine, type, browserTest] of engines) {
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     try { await body(page); assert.deepEqual(errors, []); }
-    finally { await destroy(page).catch(() => {}); await browser.close(); }
+    finally {
+      await page.mouse.up().catch(()=>{});
+      await page.evaluate(() => { window.stopWatching?.();window.areas?.forEach(area=>area.destroy());window.shadowArea?.destroy(); }).catch(()=>{});
+      await destroy(page).catch(() => {}); await browser.close();
+    }
   }
   browserTest(`V2 wrapper keeps layout across media (${engine})`, () => run(async page => {
     const layouts = [
@@ -196,6 +200,86 @@ for (const [engine, type, browserTest] of engines) {
     for (const top of [0,100,200,400]) {await page.evaluate(top=>scroller.scrollTop=top,top);await frames(page);const g=await geometry(page);differences.push(g.bar.top-g.box.top);}
     console.log(`Sticky ${engine}: ${JSON.stringify(differences)}`);
     differences.forEach(difference=>near(difference,0,'sticky edge'));
+  }));
+
+  browserTest(`V9 drag, track press, capture and selection (${engine})`, () => run(async page => {
+    await setup(page,'<input id="field" class="browser-default" value="Selected text">'+fixture);
+    await init(page);await frames(page);
+    const selected=await page.evaluate(()=>{field.focus({preventScroll:true});field.setSelectionRange(1,8);return [document.activeElement.id,field.selectionStart,field.selectionEnd,getSelection().toString()];});
+    const g=await geometry(page),x=g.bar.left+6,y=g.bar.top;
+    await page.locator('#box + .scroll-area-bar').evaluate(bar=>{bar.addEventListener('pointermove',e=>window.delivered=[e.clientX,e.clientY]);bar.addEventListener('contextmenu',e=>window.contextCancelled=e.defaultPrevented);});
+    await page.mouse.move(x,y+50);await page.mouse.down();
+    for(const [at,expected,offset] of [[150,300,100],[250,600,200],[290,600,200],[50,0,0]]) {
+      await page.mouse.move(x,y+at,{steps:5});await frames(page);near(await page.locator('#box').evaluate(el=>el.scrollTop),expected);
+      const now=await geometry(page);near(now.thumb.top-now.bar.top,offset);assert.equal(await page.evaluate(()=>scrollY),0);
+    }
+    await page.mouse.move(x-100,y+100,{steps:3});await frames(page);near(await page.locator('#box').evaluate(el=>el.scrollTop),150);
+    if(engine!=='firefox') {
+      await page.mouse.move(-40,y+150,{steps:3});await frames(page);assert.deepEqual(await page.evaluate(()=>window.delivered),[-40,y+150]);near(await page.locator('#box').evaluate(el=>el.scrollTop),300);
+      await page.mouse.up();await page.mouse.move(x,y+250);await frames(page);near(await page.locator('#box').evaluate(el=>el.scrollTop),300);
+    } else await page.mouse.up();
+    for(const [start,at] of [[0,250],[600,20]]) {
+      await page.locator('#box').evaluate((el,start)=>el.scrollTop=start,start);await frames(page);await page.mouse.click(x,y+at);await frames(page);near(await page.locator('#box').evaluate(el=>el.scrollTop),300);
+    }
+    await page.locator('#box').evaluate(el=>el.scrollTop=0);await frames(page);
+    await page.mouse.move(x,y+250);await page.mouse.down();await page.waitForTimeout(1500);await page.mouse.up();near(await page.locator('#box').evaluate(el=>el.scrollTop),300);
+    assert.deepEqual(await page.evaluate(()=>[document.activeElement.id,field.selectionStart,field.selectionEnd,getSelection().toString()]),selected);
+    assert.equal(await page.locator('#before').evaluate(el=>getSelection().containsNode(el,true)),false);
+    await page.mouse.click(x,y+250,{button:'right'});near(await page.locator('#box').evaluate(el=>el.scrollTop),300);
+    assert.equal(await page.evaluate(()=>window.contextCancelled),false);
+    await page.locator('#box').evaluate(el=>{el.style.scrollBehavior='smooth';el.scrollTo({top:0,behavior:'instant'});});await frames(page);
+    await page.mouse.move(x,y+50);await page.mouse.down();await page.mouse.move(x,y+150,{steps:4});await frames(page);near(await page.locator('#box').evaluate(el=>el.scrollTop),300);await page.mouse.up();
+  }));
+  browserTest(`V11 wheel over bar scrolls container then chains (${engine})`, () => run(async page => {
+    await setup(page);await init(page);await frames(page);const g=await geometry(page);
+    await page.mouse.move(g.bar.left+6,g.bar.top+150);await page.mouse.wheel(0,120);
+    await page.waitForFunction(()=>box.scrollTop>0);assert.equal(await page.evaluate(()=>scrollY),0);
+    await page.locator('#box').evaluate(el=>el.scrollTop=el.scrollHeight);await frames(page);
+    await page.mouse.wheel(0,120);await page.waitForFunction(()=>scrollY>0);
+  }));
+  browserTest(`V12 drag cancels on modal, inert, class and media changes (${engine})`, () => run(async page => {
+    for(const state of ['modal','custom','inert','print',...(engine==='webkit'?[]:['forced'])]) {
+      await setup(page,fixture+'<dialog>Modal</dialog>','dialog{transition:none}');await init(page);await frames(page);const g=await geometry(page),x=g.bar.left+6,y=g.bar.top;
+      await page.mouse.move(x,y+50);await page.mouse.down();await page.mouse.move(x,y+100,{steps:3});await frames(page);near(await page.locator('#box').evaluate(el=>el.scrollTop),150);
+      const change=async enabled=>{
+        if(state==='print')await page.emulateMedia({media:enabled?'print':'screen'});
+        else if(state==='forced')await page.emulateMedia({forcedColors:enabled?'active':'none'});
+        else await page.evaluate(({state,enabled})=>{
+          if(state==='modal'){const dialog=document.querySelector('dialog');if(enabled)dialog.showModal();else dialog.close();}
+          if(state==='custom')box.classList.toggle('custom',!enabled);
+          if(state==='inert')host.inert=enabled;
+        },{state,enabled});
+      };
+      await change(true);await frames(page);await page.mouse.move(x,y+200,{steps:3});near(await page.locator('#box').evaluate(el=>el.scrollTop),150);
+      await change(false);await frames(page);await page.mouse.move(x,y+250,{steps:3});near(await page.locator('#box').evaluate(el=>el.scrollTop),150);await page.mouse.up();await destroy(page);
+    }
+    await setup(page,`<dialog><section>${box}</section></dialog>`,'dialog{transition:none}');await page.evaluate(()=>document.querySelector('dialog').showModal());await init(page);await frames(page);const g=await geometry(page);
+    await page.mouse.move(g.bar.left+6,g.bar.top+50);await page.mouse.down();await page.mouse.move(g.bar.left+6,g.bar.top+150,{steps:3});await frames(page);near(await page.locator('#box').evaluate(el=>el.scrollTop),300);await page.mouse.up();
+  }));
+  browserTest(`V13 destroying a captured container stops the drag (${engine})`, () => run(async page => {
+    await setup(page);await init(page);await frames(page);const g=await geometry(page);
+    await page.mouse.move(g.bar.left+6,g.bar.top+50);await page.mouse.down();await destroy(page);await page.mouse.move(g.bar.left+6,g.bar.top+150);await page.mouse.up();assert.equal(await page.locator('#box').evaluate(el=>el.scrollTop),0);
+    assert.equal(await page.locator('.scroll-area-wrapper,.scroll-area-bar').count(),0);assert.equal(await page.locator('#host > #box').count(),1);
+  }));
+  browserTest(`V15 page, nested containers and closed shadow root stay independent (${engine})`, () => run(async page => {
+    await setup(page,fixture+box.replaceAll('id="box"','id="other"').replaceAll('id="content"','id="otherContent"'));
+    await page.evaluate(()=>{
+      document.documentElement.className='scroll-area custom';
+      content.innerHTML='<div id="nested" class="scroll-area custom" style="height:300px;width:180px"><div style="height:900px"></div></div>';
+      window.areas=[document.documentElement,box,other,nested].map(el=>Expressive.ScrollArea.init(el));
+    });await frames(page);
+    const names=await page.evaluate(()=>[box,other,nested].map(el=>{const b=el.nextElementSibling.getBoundingClientRect(),r=el.getBoundingClientRect();return [el.style.anchorName,b.right-r.right,b.top-r.top];}));
+    assert.equal(new Set(names.map(n=>n[0])).size,3);names.forEach(n=>{near(n[1],0);near(n[2],0);});
+    const r=await page.locator('#nested + .scroll-area-bar').boundingBox();await page.mouse.move(r.x+6,r.y+50);await page.mouse.down();await page.mouse.move(r.x+6,r.y+150,{steps:4});await page.mouse.up();await frames(page);
+    assert.deepEqual(await page.evaluate(()=>[nested.scrollTop,box.scrollTop,other.scrollTop,scrollY]),[300,0,0,0]);
+    await page.evaluate(css=>{
+      const host=document.createElement('div');document.body.prepend(host);window.shadow=host.attachShadow({mode:'closed'});const sheet=new CSSStyleSheet();sheet.replaceSync(css);shadow.adoptedStyleSheets=[sheet];
+      shadow.innerHTML='<div class="scroll-area custom" style="height:300px;width:240px"><div style="height:900px"></div></div>';
+      window.shadowArea=Expressive.ScrollArea.init(shadow.firstElementChild);
+    },css);await frames(page);
+    const sr=await page.evaluate(()=>{const el=shadow.firstElementChild.firstElementChild,b=el.nextElementSibling.getBoundingClientRect(),r=el.getBoundingClientRect();return{x:b.x,y:b.y,width:b.width,difference:b.right-r.right};});
+    near(sr.difference,0);near(sr.width,12);await page.mouse.move(sr.x+6,sr.y+50);await page.mouse.down();await page.mouse.move(sr.x+6,sr.y+150,{steps:4});await page.mouse.up();await frames(page);
+    assert.equal(await page.evaluate(()=>shadow.firstElementChild.firstElementChild.scrollTop),300);
   }));
 
 }

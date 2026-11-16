@@ -29,8 +29,7 @@ export class ScrollArea extends Component<BaseOptions> {
     const thumb = doc.createElement('div');
     thumb.className = 'scroll-area-thumb';
     this._bar.append(thumb);
-    if (el === doc.documentElement) el.append(this._bar);
-    else this._wrap();
+    this._placeBar();
     this._bar.addEventListener('pointerdown', this._handlePointerDown, { signal: this._events.signal });
     this._bar.addEventListener('pointermove', this._handlePointerMove, { signal: this._events.signal });
     for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
@@ -44,6 +43,36 @@ export class ScrollArea extends Component<BaseOptions> {
     this._window.addEventListener('resize', this._queueMeasure, { signal: this._events.signal });
     this._listenForScroll();
     this.refresh();
+  }
+
+  private _placeBar(): void {
+    if (this.el === this.el.ownerDocument.documentElement) this.el.append(this._bar!);
+    else {
+      this._wrap();
+      this._bar!.addEventListener('wheel', this._handleWheel, { passive: false, signal: this._events.signal });
+    }
+  }
+
+  private get _scrollTarget(): Window | HTMLElement {
+    return this._wrapper ? this.el : this._window;
+  }
+
+  private _handleWheel = (e: WheelEvent): void => {
+    if (e.ctrlKey || !this._canWheel(e)) return;
+    e.preventDefault();
+    const scale = [1, 40, this.el.clientHeight][e.deltaMode];
+    this.el.scrollBy({ top: e.deltaY * scale, left: e.deltaX * scale, behavior: 'instant' });
+  };
+
+  private _canWheel(e: WheelEvent): boolean {
+    if (Math.abs(e.deltaY) >= Math.abs(e.deltaX)) {
+      return this._hasTravel(e.deltaY, this.el.scrollTop, this.el.scrollHeight - this.el.clientHeight);
+    }
+    return this._hasTravel(e.deltaX, this.el.scrollLeft, this.el.scrollWidth - this.el.clientWidth);
+  }
+
+  private _hasTravel(delta: number, offset: number, range: number): boolean {
+    return delta < 0 ? offset > 0 : delta > 0 && offset < range;
   }
 
   private _supported(): boolean {
@@ -99,8 +128,9 @@ export class ScrollArea extends Component<BaseOptions> {
     if (this._drag) return;
     e.preventDefault();
     const { length, travel, range, offset, scrollTop } = this._metrics;
-    if (e.clientY >= offset && e.clientY <= offset + length) this._startDrag(e, scrollTop, range, travel);
-    else this._window.scrollBy({ top: Math.sign(e.clientY - offset) * this.el.clientHeight });
+    const y = e.clientY - this._bar!.getBoundingClientRect().top;
+    if (y >= offset && y <= offset + length) this._startDrag(e, scrollTop, range, travel);
+    else this._scrollTarget.scrollBy({ top: Math.sign(y - offset) * this.el.clientHeight });
   }
 
   private _startDrag(e: PointerEvent, scrollTop: number, range: number, travel: number): void {
@@ -109,18 +139,30 @@ export class ScrollArea extends Component<BaseOptions> {
     this._bar!.setPointerCapture(e.pointerId);
     // Chromium withholds captured moves while a modal makes the bar inert.
     this._dragObserver ??= new this._window.MutationObserver(this._endHiddenDrag);
-    this._dragObserver.observe(this.el, { attributes: true, subtree: true, attributeFilter: ['class', 'open'] });
+    this._dragObserver.observe(this.el.ownerDocument.documentElement, {
+      attributes: true, subtree: true, attributeFilter: ['class', 'open', 'hidden', 'inert'],
+    });
   }
 
   private _endHiddenDrag = (): void => {
-    if (!this._bar!.getClientRects().length) this._endDrag();
+    if (this._dragBlocked()) this._endDrag();
   };
+
+  private _dragBlocked(): boolean {
+    return !this._bar!.getClientRects().length || !!this._bar!.closest('[inert]') || this._outsideModal();
+  }
+
+  private _outsideModal(): boolean {
+    const root = this.el.getRootNode() as Document | ShadowRoot;
+    const modal = root.querySelector('dialog:modal') || this.el.ownerDocument.querySelector('dialog:modal');
+    return !!modal && !modal.contains(this.el);
+  }
 
   private _handlePointerMove = (e: PointerEvent): void => {
     if (e.pointerId !== this._drag?.pointerId) return;
-    if (!this._bar!.getClientRects().length) { this._endDrag(); return; }
+    if (this._dragBlocked()) { this._endDrag(); return; }
     const { clientY, scrollTop, ratio } = this._drag;
-    this._window.scrollTo({ top: scrollTop + (e.clientY - clientY) * ratio, behavior: 'instant' });
+    this._scrollTarget.scrollTo({ top: scrollTop + (e.clientY - clientY) * ratio, behavior: 'instant' });
   }
 
   private _handlePointerEnd = (e: PointerEvent): void => {

@@ -51,11 +51,11 @@ Completion check: V8, V16 and V17 pass in all three engines.
 
 Outcome: the container's bar drags, pages and takes the wheel, never scrolls the page, and instances don't interfere. Prerequisites: groups 2 and 3. Covers R14, R15, R16, R19. Checks V9, V10, V11, V12, V15.
 
-- [ ] Add the jsdom cases (V10, and the delta arm of V11) and the browser cases (V9, V11, V12, V15), and watch V9, V10 and V11 fail.
-- [ ] Give the instance one scroll target: the window on the page path and the container on the container path. `_startDrag`, the move handler and `_press` call `scrollTo` and `scrollBy` on it.
-- [ ] In `_press`, subtract the bar's `getBoundingClientRect().top` from `clientY` before the hit test and the direction test. The page bar's top is 0, so its results don't change.
-- [ ] Add the `wheel` listener on a container's bar, not passive, with the instance's signal. It returns for Ctrl and for an event whose larger delta the container can't follow. Otherwise it cancels the event and calls `scrollBy({ top, left, behavior: 'instant' })` with the deltas scaled by `deltaMode`. Use a three-entry table for the scale to stay below complexity 5.
-- [ ] Widen the drag observer to the document element's subtree with `class`, `open`, `hidden` and `inert`, and end the drag when the bar has no box, when an open modal dialog doesn't contain it, or when it has an `inert` ancestor. If V12 shows an engine that needs another signal, add it and record it in validation.md.
+- [x] Add the jsdom cases (V10, and the delta arm of V11) and the browser cases (V9, V11, V12, V15), and watch V9, V10 and V11 fail.
+- [x] Give the instance one scroll target: the window on the page path and the container on the container path. `_startDrag`, the move handler and `_press` call `scrollTo` and `scrollBy` on it.
+- [x] In `_press`, subtract the bar's `getBoundingClientRect().top` from `clientY` before the hit test and the direction test. The page bar's top is 0, so its results don't change.
+- [x] Add the `wheel` listener on a container's bar, not passive, with the instance's signal. It returns for Ctrl and for an event whose larger delta the container can't follow. Otherwise it cancels the event and calls `scrollBy({ top, left, behavior: 'instant' })` with the deltas scaled by `deltaMode`. Use a three-entry table for the scale to stay below complexity 5.
+- [x] Widen the drag observer to the document element's subtree with `class`, `open`, `hidden` and `inert`, and end the drag when the bar has no box, when an open modal dialog doesn't contain it, or when it has an `inert` ancestor. If V12 shows an engine that needs another signal, add it and record it in validation.md.
 
 Completion check: V9 through V12 and V15 pass in all three engines, and the second part of the roadmap's check holds: dragging the thumb scrolls the container while `window.scrollY` stays where it was.
 

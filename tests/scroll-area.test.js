@@ -384,3 +384,51 @@ test('V5 container observes children and coalesces one passive scroll listener',
     window.requestAnimationFrame=original.raf;window.cancelAnimationFrame=original.cancel;window.addEventListener=original.add;el.addEventListener=original.elAdd;
   }
 });
+
+function containerMetrics(el) {
+  Object.defineProperties(el,{clientHeight:{value:300},scrollHeight:{value:900},clientWidth:{value:240},scrollWidth:{value:500}});
+}
+
+test('V10 container gesture uses bar-relative coordinates and its own scroll target', () => {
+  document.body.innerHTML='<div class="scroll-area custom"></div>';const el=document.body.firstElementChild;containerMetrics(el);
+  const original={to:window.scrollTo,by:window.scrollBy};const calls=[];
+  el.scrollTo=o=>calls.push(['to',o]);el.scrollBy=o=>calls.push(['by',o]);
+  const area=Expressive.ScrollArea.init(el);calls.length=0;const bar=el.nextElementSibling;
+  bar.getBoundingClientRect=()=>({top:80});bar.getClientRects=()=>[{}];bar.setPointerCapture=()=>{};bar.hasPointerCapture=()=>false;
+  window.scrollTo=()=>assert.fail('window scrollTo');window.scrollBy=()=>assert.fail('window scrollBy');
+  try {
+    pointer(bar.firstElementChild,'pointerdown',{clientY:130});pointer(bar,'pointermove',{clientY:230});pointer(bar,'pointerup');pointer(bar,'pointermove',{clientY:250});
+    assert.deepEqual(calls,[['to',{top:300,behavior:'instant'}]]);
+    pointer(bar,'pointerdown',{clientY:330});
+    for(const values of [{button:2},{ctrlKey:true},{isPrimary:false}])pointer(bar,'pointerdown',{clientY:330,...values});
+    assert.deepEqual(calls,[['to',{top:300,behavior:'instant'}],['by',{top:300}]]);
+  } finally {area.destroy();window.scrollTo=original.to;window.scrollBy=original.by;}
+});
+
+test('V11 container wheel scales modes and preserves chaining, horizontal scroll and zoom', () => {
+  document.body.innerHTML='<div class="scroll-area custom"></div>';const el=document.body.firstElementChild;containerMetrics(el);
+  const calls=[];el.scrollBy=o=>calls.push(o);const area=Expressive.ScrollArea.init(el);const bar=el.nextElementSibling;
+  const wheel=values=>{const e=new window.WheelEvent('wheel',{bubbles:true,cancelable:true,...values});bar.dispatchEvent(e);return e.defaultPrevented;};
+  try {
+    for(const values of [{deltaY:120},{deltaY:3,deltaMode:1},{deltaY:1,deltaMode:2},{deltaX:50}])assert.equal(wheel(values),true);
+    assert.deepEqual(calls,[{top:120,left:0,behavior:'instant'},{top:120,left:0,behavior:'instant'},{top:300,left:0,behavior:'instant'},{top:0,left:50,behavior:'instant'}]);
+    assert.equal(wheel({deltaY:120,ctrlKey:true}),false);el.scrollTop=600;assert.equal(wheel({deltaY:120}),false);
+    assert.equal(wheel({deltaX:-10,deltaY:5}),false);assert.equal(wheel({deltaX:0,deltaY:0}),false);assert.equal(calls.length,4);
+    const page=Expressive.ScrollArea.init(document.documentElement);
+    try {const e=new window.WheelEvent('wheel',{cancelable:true,deltaY:120});document.documentElement.lastElementChild.dispatchEvent(e);assert.equal(e.defaultPrevented,false);}finally{page.destroy();}
+  } finally {area.destroy();}
+});
+
+test('V15 iframe container uses its own element and window', () => {
+  const dom=new JSDOM('<iframe></iframe>',{runScripts:'outside-only'});const frame=dom.window.document.querySelector('iframe');const win=frame.contentWindow;
+  win.eval(readFileSync(new URL('../dist/js/expressive.js',import.meta.url),'utf8'));win.ResizeObserver=window.ResizeObserver;win.matchMedia=window.matchMedia;
+  win.document.body.innerHTML='<div class="scroll-area custom"></div>';const el=win.document.body.firstElementChild;containerMetrics(el);
+  const moves=[];el.scrollTo=o=>moves.push(o);win.scrollTo=()=>assert.fail('iframe window must not scroll');
+  const area=win.Expressive.ScrollArea.init(el);moves.length=0;
+  try {
+    const bar=el.nextElementSibling;bar.getClientRects=()=>[{}];bar.setPointerCapture=()=>{};bar.hasPointerCapture=()=>false;
+    pointer(bar,'pointerdown');pointer(bar,'pointermove',{clientY:150});
+    assert.equal(moves.length,1);assert.equal(moves[0].top,300);assert.equal(moves[0].behavior,'instant');
+    assert.equal(bar.ownerDocument,win.document);
+  } finally {area.destroy();dom.window.close();}
+});
