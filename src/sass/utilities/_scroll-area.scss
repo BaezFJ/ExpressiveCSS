@@ -43,6 +43,7 @@ html.scroll-area.custom > .scroll-area-bar {
 
 @media screen and (forced-colors: none) and (not (pointer: coarse)) {
   html.scroll-area.custom:has(> .scroll-area-bar) {
+    --scroll-area-bar-clearance: max(var(--scroll-area-bar-size, 12px), calc(var(--scroll-area-bar-size, 12px) / 2 + 12px));
     scrollbar-width: none;
 
     &::-webkit-scrollbar {

@@ -49,6 +49,9 @@ $_fab-menu-roles: ("primary", "secondary", "tertiary");
 
   position: fixed;
   inset-inline-end: var(--md-comp-fab-menu-offset);
+  html.scroll-area.custom:has(> .scroll-area-bar) & {
+    inset-inline-end: max(var(--md-comp-fab-menu-offset), var(--scroll-area-bar-clearance, 0px));
+  }
   bottom: var(--md-comp-fab-menu-offset);
   z-index: var(--md-comp-fab-menu-z);
   margin: 0;

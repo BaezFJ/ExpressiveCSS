@@ -500,6 +500,11 @@ header:has(> #{$_bar}) {
 // each test names the bar as a child of the header.
 $_page-bar: ":root:has(> body > header > #{$_bar})";
 
+:root > body > header > #{$_bar},
+:root > body > .scaffold > header > #{$_bar} {
+  padding-inline-end: var(--scroll-area-bar-clearance, 4px);
+}
+
 :where(#{$_page-bar}) {
   --md-comp-top-app-bar-anchor-offset: #{rem($_small-height + $_anchor-gap)};
 }

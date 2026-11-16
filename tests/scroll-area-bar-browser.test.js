@@ -37,6 +37,21 @@ const geometry = page => page.locator('.scroll-area-bar').evaluate(bar => {
   return { length: thumb.height, offset: thumb.top - track.top, bottom: thumb.bottom, end: track.bottom, hidden: bar.hidden, display: getComputedStyle(bar).display };
 });
 
+async function clearanceFixture(page) {
+  await setup(page, 2000, '<main id="main">Top</main><a id="back" class="back-to-top button circle extra" href="#main" aria-label="Top" style="bottom:180px">Top</a><div class="fab-menu"><button class="button circle extra" type="button">Add</button><ul><li><button type="button">Draft</button></li></ul></div><button id="edge" style="position:fixed;inset-block:0;inset-inline-end:0;width:12px;padding:0;border:0">Edge</button><dialog>Modal</dialog>');
+  await page.evaluate(() => {
+    document.body.insertAdjacentHTML('afterbegin', '<header><nav aria-label="Main"><button type="button" aria-label="Menu"><span class="material-symbols" aria-hidden="true">menu</span></button><h2>Title</h2><button id="trailing" type="button" aria-label="More"><span class="material-symbols" aria-hidden="true">more_vert</span></button></nav></header>');
+    window.clicks = {};
+    for (const el of document.querySelectorAll('#trailing, #back, .fab-menu > button, .fab-menu li button, #edge')) el.addEventListener('click', e => { e.preventDefault(); window.clicks[el.id || el.textContent] = (window.clicks[el.id || el.textContent] || 0) + 1; });
+    window.fab = Expressive.FloatingActionButton.init(document.querySelector('.fab-menu'));
+  });
+}
+const clearance = page => page.evaluate(() => [
+  getComputedStyle(document.querySelector('header > nav')).paddingInlineEnd,
+  getComputedStyle(document.querySelector('#back')).insetInlineEnd,
+  getComputedStyle(document.querySelector('.fab-menu')).insetInlineEnd,
+]);
+
 test('custom native-bar rules and accessibility media are present in the bundle', () => {
   const hiding = css.match(/@media screen and \(forced-colors: none\) and \(not \(pointer: coarse\)\) \{([\s\S]*?)\n\}/);
   assert.ok(hiding, 'native hiding is limited to modes that show the custom bar');
@@ -55,6 +70,94 @@ test('custom native-bar rules and accessibility media are present in the bundle'
 });
 
 for (const [engine, browserType, browserTest] of engines) {
+  browserTest(`page bar clearance defers to native modes and runtime removal (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    const page = await browser.newPage({ viewport: { width: 400, height: 300 } });
+    try {
+      await clearanceFixture(page); await init(page);
+      for (const media of [...(engine === 'webkit' ? [] : [{ forcedColors: 'active' }]), { media: 'print' }]) {
+        await page.emulateMedia(media);
+        assert.deepEqual(await clearance(page), ['4px', '16px', '16px']);
+        await page.emulateMedia({ media: 'screen', forcedColors: 'none' });
+      }
+      for (const remove of ['custom', 'destroy']) {
+        await page.evaluate(remove => {
+          if (remove === 'custom') document.documentElement.classList.remove('custom');
+          else window.area.destroy();
+        }, remove);
+        assert.deepEqual(await clearance(page), ['4px', '16px', '16px']);
+        await page.mouse.click(394, 250);
+        assert.equal(await page.evaluate(() => window.clicks.edge), remove === 'custom' ? 1 : 2);
+        await page.evaluate(() => document.documentElement.classList.add('custom'));
+      }
+      if (engine === 'chromium') {
+        const context = await browser.newContext({ viewport: { width: 400, height: 300 }, hasTouch: true, isMobile: true });
+        const mobile = await context.newPage();
+        try {
+          await clearanceFixture(mobile); await init(mobile);
+          assert.equal(await mobile.evaluate(() => matchMedia('(pointer: coarse)').matches), true);
+          assert.deepEqual(await clearance(mobile), ['4px', '16px', '16px']);
+        } finally { await mobile.evaluate(() => window.fab?.destroy()); await destroy(mobile); await context.close(); }
+      }
+    } finally { await page.evaluate(() => window.fab?.destroy()); await destroy(page); await browser.close(); }
+  });
+
+  browserTest(`page bar gives edge controls target spacing in both directions (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    const page = await browser.newPage({ viewport: { width: 400, height: 300 }, reducedMotion: 'reduce' });
+    try {
+      for (const dir of ['ltr', 'rtl']) {
+        await page.goto('about:blank'); await clearanceFixture(page);
+        await page.evaluate(dir => document.documentElement.dir = dir, dir);
+        assert.deepEqual(await clearance(page), ['4px', '16px', '16px']);
+        await page.locator('#back').evaluate(el => el.style.setProperty('--md-comp-back-to-top-offset', '0'));
+        assert.equal((await clearance(page))[1], '0px');
+        await page.locator('#back').evaluate(el => el.style.removeProperty('--md-comp-back-to-top-offset'));
+        await init(page);
+        assert.deepEqual(await clearance(page), ['18px', '18px', '18px']);
+        await page.evaluate(() => { window.backArea = Expressive.BackToTop.init(document.querySelector('#back')); scrollTo(0, 1000); });
+        await page.waitForFunction(() => !document.querySelector('#back').inert);
+        for (const selector of ['#trailing', '#back', '.fab-menu > button', '.fab-menu li button']) {
+          await page.evaluate(() => window.fab.open()); await frames(page);
+          const box = await page.locator(selector).boundingBox();
+          const bar = await page.locator('.scroll-area-bar').boundingBox();
+          const distance = dir === 'ltr' ? bar.x + bar.width / 2 - box.x - box.width : box.x - bar.x - bar.width / 2;
+          assert.ok(distance >= 12, `${selector} has ${distance}px center-line clearance`);
+          await page.mouse.click(dir === 'ltr' ? box.x + box.width - 1 : box.x + 1, box.y + box.height / 2);
+        }
+        assert.deepEqual(await page.evaluate(() => window.clicks), { trailing: 1, back: 1, Add: 1, Draft: 1 });
+        await page.evaluate(() => { window.fab.close(); scrollTo(0, 0); }); await frames(page);
+        await page.mouse.click(dir === 'ltr' ? 394 : 6, 250); await frames(page);
+        near(await page.evaluate(() => scrollY), 300, 'bar takes edge press');
+        assert.equal(await page.evaluate(() => window.clicks.edge || 0), 0);
+        for (const variant of ['medium', 'large', '']) {
+          await page.locator('header').evaluate((el, value) => el.className = value, variant);
+          assert.deepEqual(await clearance(page), ['18px', '18px', '18px']);
+        }
+        for (const [size, inset] of [[14, '19px'], [30, '30px'], [12, '18px']]) {
+          await page.evaluate(size => document.documentElement.style.setProperty('--scroll-area-bar-size', `${size}px`), size);
+          assert.deepEqual(await clearance(page), [inset, inset, inset]);
+        }
+        await page.locator('#back').evaluate(el => el.style.setProperty('--md-comp-back-to-top-offset', '40px'));
+        assert.equal((await clearance(page))[1], '40px');
+        await page.locator('#back').evaluate(el => el.style.removeProperty('--md-comp-back-to-top-offset'));
+        await page.evaluate(() => { const article = document.createElement('article'); document.body.append(article); article.append(document.querySelector('header')); });
+        assert.equal((await clearance(page))[0], '4px');
+        await page.evaluate(() => { const shell = document.createElement('div'); shell.className = 'scaffold'; document.body.prepend(shell); shell.append(document.querySelector('header')); });
+        assert.equal((await clearance(page))[0], '18px');
+        await page.evaluate(() => { document.querySelector('dialog').showModal(); window.area.refresh(); });
+        await page.setViewportSize({ width: 400, height: 200 }); await frames(page);
+        assert.equal((await geometry(page)).hidden, true);
+        assert.deepEqual(await clearance(page), ['18px', '18px', '18px']);
+        await page.evaluate(() => { document.querySelector('dialog').close(); document.body.prepend(document.querySelector('header')); document.querySelector('.scaffold').remove(); window.backArea.destroy(); document.querySelector('#content').style.height = '0px'; scrollTo(0, 0); });
+        await page.setViewportSize({ width: 400, height: 300 }); await frames(page);
+        assert.equal((await geometry(page)).hidden, true);
+        assert.deepEqual(await clearance(page), ['18px', '18px', '18px']);
+        await page.evaluate(() => window.fab.destroy()); await destroy(page);
+      }
+    } finally { await page.evaluate(() => { window.backArea?.destroy(); window.fab?.destroy(); }); await destroy(page); await browser.close(); }
+  });
+
   browserTest(`track press pages once, clamps and respects smooth scrolling (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);
     const page = await browser.newPage({ viewport: { width: 400, height: 300 } });
@@ -323,7 +426,7 @@ for (const [engine, browserType, browserTest] of engines) {
     try {
       await setup(page, 2000, '<main id="main">Top</main><a class="back-to-top button circle extra" href="#main" aria-label="Back to top">Top</a><div class="fab-menu"><button type="button">Create</button><ul><li><button type="button">Draft</button></li></ul></div>');
       await init(page);
-      await page.evaluate(() => { window.back = Expressive.BackToTop.init(document.querySelector('.back-to-top')); scrollTo(0, 1000); });
+      await page.evaluate(() => { window.backArea = Expressive.BackToTop.init(document.querySelector('.back-to-top')); scrollTo(0, 1000); });
       await page.waitForFunction(() => !document.querySelector('.back-to-top').hasAttribute('inert'));
       for (const dir of ['ltr', 'rtl']) {
         await page.evaluate(dir => document.documentElement.dir = dir, dir);
@@ -355,7 +458,7 @@ for (const [engine, browserType, browserTest] of engines) {
         } finally { await destroy(mobile); await touch.close(); }
       }
     } finally {
-      await page.evaluate(() => window.back?.destroy());
+      await page.evaluate(() => window.backArea?.destroy());
       await destroy(page); await browser.close();
     }
   });
