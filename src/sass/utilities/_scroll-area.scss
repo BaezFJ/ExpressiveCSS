@@ -1,3 +1,7 @@
+.scroll-area-wrapper {
+  display: contents !important;
+}
+
 // Keep scrolling native; use the current theme for scrollbar colors.
 .scroll-area {
   overflow: auto;

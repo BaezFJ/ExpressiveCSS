@@ -35,7 +35,9 @@ test('ScrollArea owns one unfocusable page bar on the document element', () => {
   assert.equal(Expressive.ScrollArea.getInstance(root), undefined);
 });
 
-test('ScrollArea leaves a container unchanged', () => {
+test('ScrollArea leaves an unsupported container unchanged', () => {
+  const oldCSS = window.CSS;
+  window.CSS = { supports: () => false };
   document.body.innerHTML = '<div class="scroll-area custom"></div>';
   const el = document.body.firstElementChild;
   const instance = Expressive.ScrollArea.init(el);
@@ -44,6 +46,7 @@ test('ScrollArea leaves a container unchanged', () => {
     assert.equal(pointer(el, 'pointerdown').defaultPrevented, false);
   } finally {
     instance.destroy();
+    window.CSS = oldCSS;
   }
 });
 
@@ -292,5 +295,65 @@ test('ScrollArea track press pages once without capture or repeat', t => {
   } finally {
     area.destroy(); t.mock.timers.reset(); window.scrollBy = oldBy;
     delete root.clientHeight; delete root.scrollHeight; root.scrollTop = 0;
+  }
+});
+
+
+test('V1 container structure and slot keep author attributes', () => {
+  for (const slot of ['', ' slot="body"']) {
+    document.body.innerHTML = `<i></i><div class="scroll-area custom"${slot}><b>Content</b></div><i></i>`;
+    const el = document.body.children[1];
+    const children = [...el.childNodes];
+    const area = Expressive.ScrollArea.init(el);
+    try {
+      const wrapper = document.body.children[1];
+      assert.equal(wrapper.className, 'scroll-area-wrapper');
+      assert.deepEqual([...wrapper.attributes].map(a => a.name).sort(), slot ? ['class', 'slot'] : ['class']);
+      assert.equal(wrapper.getAttribute('slot'), slot ? 'body' : null);
+      assert.equal(wrapper.firstElementChild, el);
+      assert.deepEqual([...el.childNodes], children);
+      const bar = wrapper.lastElementChild;
+      assert.equal(bar.className, 'scroll-area-bar');
+      assert.equal(bar.getAttribute('aria-hidden'), 'true');
+      assert.equal(bar.firstElementChild.className, 'scroll-area-thumb');
+      assert.equal(wrapper.querySelector('[tabindex], [role]'), null);
+      assert.match(el.style.getPropertyValue('anchor-name'), /^--/);
+      assert.equal(bar.style.getPropertyValue('position-anchor'), el.style.getPropertyValue('anchor-name'));
+    } finally { area.destroy(); }
+  }
+  for (const el of [document.body, document.createElement('div')]) {
+    const nodes = [...el.childNodes];
+    const area = Expressive.ScrollArea.init(el);
+    try { assert.deepEqual([...el.childNodes], nodes); } finally { area.destroy(); }
+  }
+});
+
+test('V13 container restores exact nodes, inline declarations and ownership', () => {
+  for (const style of ['', ' style="anchor-name: --mine; color: red"']) {
+    document.body.innerHTML = `<i></i>text<div class="scroll-area custom"${style}></div><i></i>`;
+    const el = document.body.querySelector('div');
+    const nodes = [...document.body.childNodes], cssText = el.style.cssText;
+    const area = Expressive.ScrollArea.init(el);
+    try {
+      assert.equal(el.parentElement.className, 'scroll-area-wrapper');
+      if (style) assert.match(el.style.getPropertyValue('anchor-name'), /^--mine, --/);
+    } finally { area.destroy(); }
+    assert.deepEqual([...document.body.childNodes], nodes);
+    assert.equal(el.parentElement, document.body);
+    assert.equal(el.style.cssText, cssText);
+    assert.equal(el.hasAttribute('style'), !!style);
+    area.destroy();
+    let instance = Expressive.ScrollArea.init(el);
+    el.parentElement.before(el); instance.destroy();
+    assert.equal(document.querySelector('.scroll-area-wrapper'), null);
+    instance = Expressive.ScrollArea.init(el);
+    el.parentElement.remove(); instance.destroy(); instance.destroy();
+    document.body.append(el);
+    const first = Expressive.ScrollArea.init(el), second = Expressive.ScrollArea.init(el);
+    try {
+      first.destroy();
+      assert.equal(Expressive.ScrollArea.getInstance(el), second);
+      assert.equal(el.parentElement.className, 'scroll-area-wrapper');
+    } finally { second.destroy(); first.destroy(); }
   }
 });

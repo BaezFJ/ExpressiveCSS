@@ -10,13 +10,13 @@ The milestone run merges master into the branch after this spec is committed and
 
 Outcome: a container instance wraps its element without moving any box, and `destroy()` puts the nodes back. Prerequisites: none. Covers R1, R2, R3, R4, R5, R17, R20. Checks V1, V2, V3, V13.
 
-- [ ] Add the jsdom structure and restoration cases (V1, V13) and the browser layout and state cases (V2, V3). Turn "ScrollArea leaves a container unchanged" into the unsupported case, with `supports` stubbed to return false. Watch V1, V2's author-rule arm and V13 fail. V3 passes before the change, because an instance that doesn't move the container keeps its state, so run it to see it pass after.
-- [ ] In `src/ts/components/scrollArea.ts`, replace the early return at line 20 with two paths. The page path is today's code. The container path runs only when the element has a parent node, isn't `<body>`, and `this._window.CSS?.supports?.('anchor-name: --a')` is true, read per instance as line 97 reads scroll timelines.
-- [ ] Wrap: record `scrollTop`, `scrollLeft` and the active element when it is the container or inside it. Insert the wrapper with `el.before(wrapper)`, append the container and the bar, copy `slot`, then put the offsets back with `scrollTo({ behavior: 'instant' })` and focus back with `focus({ preventScroll: true })`.
-- [ ] Add the instance's anchor name to the container with `Utils.setAnchorName` and a `Utils.guid()` name, and set the bar's inline `position-anchor`.
-- [ ] `destroy()`: record the same state, remove the bar, call `wrapper.replaceWith(...wrapper.childNodes)` as `unwrapControl` does in `core/formControl.ts`, remove the anchor name, remove a `style` attribute that is empty and was absent before `init`, and put the state back. Keep it safe for an instance that never wrapped and for one a later instance replaced.
-- [ ] In `src/sass/utilities/_scroll-area.scss`, add `.scroll-area-wrapper { display: contents !important; }` outside every media query.
-- [ ] Keep each function below complexity 5: one helper for the guard, one for the saved state, one for the wrap.
+- [x] Add the jsdom structure and restoration cases (V1, V13) and the browser layout and state cases (V2, V3). Turn "ScrollArea leaves a container unchanged" into the unsupported case, with `supports` stubbed to return false. Watch V1, V2's author-rule arm and V13 fail. V3 passes before the change, because an instance that doesn't move the container keeps its state, so run it to see it pass after.
+- [x] In `src/ts/components/scrollArea.ts`, replace the early return at line 20 with two paths. The page path is today's code. The container path runs only when the element has a parent node, isn't `<body>`, and `this._window.CSS?.supports?.('anchor-name: --a')` is true, read per instance as line 97 reads scroll timelines.
+- [x] Wrap: record `scrollTop`, `scrollLeft` and the active element when it is the container or inside it. Insert the wrapper with `el.before(wrapper)`, append the container and the bar, copy `slot`, then put the offsets back with `scrollTo({ behavior: 'instant' })` and focus back with `focus({ preventScroll: true })`.
+- [x] Add the instance's anchor name to the container with `Utils.setAnchorName` and a `Utils.guid()` name, and set the bar's inline `position-anchor`.
+- [x] `destroy()`: record the same state, remove the bar, call `wrapper.replaceWith(...wrapper.childNodes)` as `unwrapControl` does in `core/formControl.ts`, remove the anchor name, remove a `style` attribute that is empty and was absent before `init`, and put the state back. Keep it safe for an instance that never wrapped and for one a later instance replaced.
+- [x] In `src/sass/utilities/_scroll-area.scss`, add `.scroll-area-wrapper { display: contents !important; }` outside every media query.
+- [x] Keep each function below complexity 5: one helper for the guard, one for the saved state, one for the wrap.
 
 Completion check: V1, V2, V3 and V13 pass in Chromium, Firefox and WebKit, and the third part of the roadmap's check holds: after `destroy()` the container's parent is its original parent.
 

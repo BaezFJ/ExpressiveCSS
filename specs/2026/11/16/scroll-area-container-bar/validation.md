@@ -2,7 +2,7 @@
 
 Phase 101: draw the bar on a scroll container. Requirements: [requirements.md](requirements.md). Plan: [plan.md](plan.md).
 
-No implementation exists yet, so every result below is pending. Whoever builds the phase records the commit implementation starts from here before plan group 1. The rows below call it the start commit.
+Implementation starts from `0b0493f2840dcc11ba8b670a5d995b9d146fc79a`, after master integration. The rows below call it the start commit. Phase review base remains `40ab4fb74044d1b9a45ba10494c5a9fc8d8668b1`.
 
 ## Agent-run checks
 
@@ -89,3 +89,8 @@ The combined CSS is 94,930 gzip bytes using the budget test's source-map removal
 | `npm run verify:packages` | Passed, isolated framework 0.19.0 and MCP 0.6.0 consumers, sequentially after MCP smoke. | `/tmp/phase101-master-packages.log` |
 
 These runs validate the upstream integration and completed phases 99 and 100. They do not establish any Phase 101 container result. No visual or physical-device check was added during integration.
+
+
+## Build evidence
+
+Group 1, 2026-11-16. `npm run build` passed. `node --test tests/scroll-area.test.js` passed 10 tests. The container browser file passed six tests across Chromium, Firefox and WebKit. Before implementation V1 and V13 both failed because no wrapper existed, V2 failed because no wrapper existed, and V3 passed. Removing only `!important` from the compiled wrapper declaration made V2 fail against the author rule. The exact saved CSS bytes were restored in `finally`. Logs are `/tmp/p101-g1-{red-node,red-browser,author-red,green-node,green-browser}.log`.

@@ -1,9 +1,13 @@
 import { Component, BaseOptions } from '../core/component';
+import { Utils } from '../core/utils';
 
 /** A vertical page scrollbar with thumb dragging and single-step track paging. */
 export class ScrollArea extends Component<BaseOptions> {
   static key = 'Expressive_ScrollArea';
   private _bar?: HTMLDivElement;
+  private _wrapper?: HTMLDivElement;
+  private _anchor?: string;
+  private _hadStyle = false;
   private _observer?: ResizeObserver;
   private _modalObserver?: MutationObserver;
   private _frame?: number;
@@ -17,14 +21,15 @@ export class ScrollArea extends Component<BaseOptions> {
   constructor(el: HTMLElement, options: Partial<BaseOptions> = {}) {
     super(el, options);
     const doc = el.ownerDocument;
-    if (el !== doc.documentElement) return;
+    if (!this._supported()) return;
     this._bar = doc.createElement('div');
     this._bar.className = 'scroll-area-bar';
     this._bar.setAttribute('aria-hidden', 'true');
     const thumb = doc.createElement('div');
     thumb.className = 'scroll-area-thumb';
     this._bar.append(thumb);
-    el.append(this._bar);
+    if (el === doc.documentElement) el.append(this._bar);
+    else this._wrap();
     this._bar.addEventListener('pointerdown', this._handlePointerDown, { signal: this._events.signal });
     this._bar.addEventListener('pointermove', this._handlePointerMove, { signal: this._events.signal });
     for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
@@ -38,6 +43,50 @@ export class ScrollArea extends Component<BaseOptions> {
     this._window.addEventListener('resize', this._queueMeasure, { signal: this._events.signal });
     this._listenForScroll();
     this.refresh();
+  }
+
+  private _supported(): boolean {
+    return this.el === this.el.ownerDocument.documentElement || this._canWrap();
+  }
+
+  private _canWrap(): boolean {
+    if (!this.el.parentNode || this.el === this.el.ownerDocument.body) return false;
+    return !!this._window.CSS?.supports?.('anchor-name: --a');
+  }
+
+  private _saveState(): () => void {
+    const { scrollTop, scrollLeft } = this.el;
+    const active = this.el.getRootNode() as Document | ShadowRoot;
+    const focused = active.activeElement as HTMLElement | null;
+    const focus = focused && this.el.contains(focused) ? focused : undefined;
+    return () => {
+      this.el.scrollTo({ top: scrollTop, left: scrollLeft, behavior: 'instant' });
+      focus?.focus({ preventScroll: true });
+    };
+  }
+
+  private _wrap(): void {
+    const restore = this._saveState();
+    this._wrapper = this.el.ownerDocument.createElement('div');
+    this._wrapper.className = 'scroll-area-wrapper';
+    if (this.el.hasAttribute('slot')) this._wrapper.setAttribute('slot', this.el.getAttribute('slot')!);
+    this.el.before(this._wrapper);
+    this._wrapper.append(this.el, this._bar!);
+    this._hadStyle = this.el.hasAttribute('style');
+    this._anchor = `--scroll-area-${Utils.guid()}`;
+    Utils.setAnchorName(this.el, this._anchor, true);
+    this._bar!.style.setProperty('position-anchor', this._anchor);
+    restore();
+  }
+
+  private _unwrap(): void {
+    if (!this._wrapper) return;
+    const restore = this._saveState();
+    this._wrapper.replaceWith(...this._wrapper.childNodes);
+    this._wrapper = undefined;
+    Utils.setAnchorName(this.el, this._anchor!, false);
+    if (!this._hadStyle && !this.el.style.cssText) this.el.removeAttribute('style');
+    restore();
   }
 
   private _handlePointerDown = (e: PointerEvent): void => {
@@ -150,6 +199,7 @@ export class ScrollArea extends Component<BaseOptions> {
     this._modalObserver?.disconnect();
     this._bar?.remove();
     this._bar = undefined;
+    this._unwrap();
     super.destroy();
   }
 }
