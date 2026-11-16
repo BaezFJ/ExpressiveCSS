@@ -314,7 +314,7 @@ test('V1 container structure and slot keep author attributes', () => {
       assert.equal(wrapper.firstElementChild, el);
       assert.deepEqual([...wrapper.children].map(el => el.className), ['scroll-area custom', 'scroll-area-bar', 'scroll-area-bar horizontal']);
       const horizontal = wrapper.lastElementChild;
-      assert.deepEqual([...horizontal.attributes].map(a => a.name).sort(), ['aria-hidden', 'class', 'style']);
+      assert.deepEqual([...horizontal.attributes].map(a => a.name).filter(name => !['dir', 'hidden', 'style'].includes(name)).sort(), ['aria-hidden', 'class']);
       assert.equal(horizontal.getAttribute('aria-hidden'), 'true');
       assert.equal(horizontal.firstElementChild.className, 'scroll-area-thumb');
       assert.equal(horizontal.style.getPropertyValue('position-anchor'), el.style.getPropertyValue('anchor-name'));
@@ -564,4 +564,33 @@ test('V11 RTL wheel forwarding follows the negative scrollLeft range', () => {
     assert.equal(wheel(50),false);assert.equal(wheel(-50),true);el.scrollLeft=-260;assert.equal(wheel(-50),false);assert.equal(wheel(50),true);
     assert.deepEqual(calls,[{top:0,left:-50,behavior:'instant'},{top:0,left:50,behavior:'instant'}]);
   } finally {area.destroy();}
+});
+
+
+test('horizontal V7 both axes are read in the gutter-free candidate state', () => {
+  for (const model of ['horizontal-gutter', 'vertical-gutter', 'text-reflow']) {
+    document.body.innerHTML = '<div class="scroll-area custom"></div>';
+    const el = document.body.firstElementChild;
+    let badReads = 0;
+    const native = () => {
+      const bars = [...el.parentElement.querySelectorAll('.scroll-area-bar')];
+      const hidden = bars.length === 2 && bars.every(bar => bar.hidden);
+      if (hidden) badReads++;
+      return hidden;
+    };
+    Object.defineProperties(el, {
+      clientHeight: { get: () => native() ? 290 : 300 },
+      clientWidth: { get: () => native() ? 230 : 240 },
+      scrollHeight: { get: () => model === 'text-reflow' && native() ? 320 : 295 },
+      scrollWidth: { get: () => model === 'vertical-gutter' ? 235 : 230 },
+    });
+    const area = Expressive.ScrollArea.init(el);
+    try {
+      for (let i = 0; i < 12; i++) {
+        area.refresh();
+        assert.deepEqual([...el.parentElement.querySelectorAll('.scroll-area-bar')].map(bar => bar.hidden), [true, true], model);
+      }
+      assert.equal(badReads, 0, model);
+    } finally { area.destroy(); }
+  }
 });

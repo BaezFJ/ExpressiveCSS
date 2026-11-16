@@ -478,7 +478,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await setup(page); await init(page); await frames(page);
       const timeline = await page.evaluate(() => CSS.supports('animation-timeline: scroll()'));
       t.diagnostic(`animation-timeline supported: ${timeline}`);
-      if (timeline) assert.notEqual(await page.locator('.scroll-area-thumb').evaluate(el => getComputedStyle(el).animationTimeline), 'auto');
+      if (timeline) assert.notEqual(await page.locator('.scroll-area-bar:not(.horizontal) > .scroll-area-thumb').evaluate(el => getComputedStyle(el).animationTimeline), 'auto');
       for (const top of [0, 300, 600]) {
         await page.evaluate(top => scrollTo(0, top), top); await frames(page);
         const box = await geometry(page);
@@ -581,7 +581,7 @@ for (const [engine, browserType, browserTest] of engines) {
         const box = await page.locator('.scroll-area-bar:not(.horizontal)').boundingBox();
         assert.equal(box.width, 12); assert.equal(box.height, 300);
         assert.equal(box.x, dir === 'ltr' ? 388 : 0);
-        assert.equal(await page.locator('.scroll-area-thumb').evaluate(el => el.getBoundingClientRect().width), 8);
+        assert.equal(await page.locator('.scroll-area-bar:not(.horizontal) > .scroll-area-thumb').evaluate(el => el.getBoundingClientRect().width), 8);
         assert.equal(await page.locator('.scroll-area-bar:not(.horizontal)').evaluate(el => getComputedStyle(el).position), 'fixed');
         await page.evaluate(() => { window.clicked = false; });
         await page.mouse.click(box.x + 6, 150);
@@ -593,7 +593,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.evaluate(() => { document.documentElement.classList.add('custom'); document.documentElement.style.cssText = '--scroll-area-thumb-color:rgb(12,34,56);--scroll-area-bar-size:14px'; });
       if (engine !== 'firefox') assert.equal(await width(), 'none');
       assert.equal(await page.locator('.scroll-area-bar:not(.horizontal)').evaluate(el => el.getBoundingClientRect().width), 14);
-      assert.equal(await page.locator('.scroll-area-thumb').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(12, 34, 56)');
+      assert.equal(await page.locator('.scroll-area-bar:not(.horizontal) > .scroll-area-thumb').evaluate(el => getComputedStyle(el).backgroundColor), 'rgb(12, 34, 56)');
       await destroy(page);
       if (engine !== 'firefox') assert.equal(await width(), 'thin');
       await nativeInputs(page);

@@ -269,7 +269,7 @@ for (const [engine, type, browserTest] of engines) {
     await init(page); assert.equal((await geometry(page)).hidden,true);
     await page.evaluate(() => {content.style.height='1800px';document.querySelector('dialog').show();}); await frames(page);
     assert.equal((await geometry(page)).hidden,false);
-    near(await page.locator('.scroll-area-thumb').evaluate(el => parseFloat(getComputedStyle(el).blockSize)),50);
+    near(await page.locator('.scroll-area-bar:not(.horizontal) > .scroll-area-thumb').evaluate(el => parseFloat(getComputedStyle(el).blockSize)),50);
   }));
 
   browserTest(`V8 native fallback, media and clearance (${engine})`, () => run(async page => {

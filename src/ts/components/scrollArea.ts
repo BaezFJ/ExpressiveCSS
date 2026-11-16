@@ -1,6 +1,12 @@
 import { Component, BaseOptions } from '../core/component';
 import { controllerFor, deepActiveElement, Utils } from '../core/utils';
 
+const axes = [
+  { client: 'clientHeight', size: 'scrollHeight', scroll: 'scrollTop', overflow: 'overflowY', pointer: 'clientY', edge: 'top', position: 'top' },
+  { client: 'clientWidth', size: 'scrollWidth', scroll: 'scrollLeft', overflow: 'overflowX', pointer: 'clientX', edge: 'left', position: 'left' },
+] as const;
+type Axis = typeof axes[number];
+
 /** A vertical scrollbar with thumb dragging and single-step track paging. */
 export class ScrollArea extends Component<BaseOptions> {
   static key = 'Expressive_ScrollArea';
@@ -170,7 +176,7 @@ export class ScrollArea extends Component<BaseOptions> {
   private _press(e: PointerEvent): void {
     if (this._drag) return;
     e.preventDefault();
-    const { length, travel, range, offset, scrollTop } = this._metrics;
+    const { length, travel, range, offset, scrollTop } = this._metrics();
     const y = e.clientY - this._bar!.getBoundingClientRect().top;
     if (y >= offset && y <= offset + length) this._startDrag(e, scrollTop, range, travel);
     else this._scrollTarget.scrollBy({ top: Math.sign(y - offset) * this.el.clientHeight });
@@ -244,14 +250,23 @@ export class ScrollArea extends Component<BaseOptions> {
     if (drag && this._bar?.hasPointerCapture(drag.pointerId)) this._bar.releasePointerCapture(drag.pointerId);
   }
 
-  private get _metrics() {
-    const { clientHeight, scrollHeight, scrollTop } = this.el;
-    const range = Math.max(0, scrollHeight - clientHeight);
-    const length = Math.min(clientHeight, Math.max(48, clientHeight * clientHeight / Math.max(1, scrollHeight)));
-    const travel = clientHeight - length;
-    const progress = Math.min(1, Math.max(0, scrollTop / Math.max(1, range)));
-    return { length, travel, range, offset: progress * travel, scrollTop };
-  };
+  private get _corner(): number {
+    if (this._bars.some(bar => bar.hidden)) return 0;
+    return parseFloat(this._window.getComputedStyle(this._bar!).inlineSize) || 0;
+  }
+
+  private _metrics(axis: Axis = axes[0], corner = this._corner) {
+    return this._geometry(this.el[axis.client], this.el[axis.size], this.el[axis.scroll], corner, axis === axes[1]);
+  }
+
+  private _geometry(client: number, size: number, scrollTop: number, corner: number, inline = false) {
+    const range = Math.max(0, size - client);
+    const track = Math.max(0, client - corner);
+    const length = Math.min(track, Math.max(48, track * client / Math.max(1, size)));
+    const travel = track - length;
+    const progress = Math.min(1, Math.max(0, (inline ? Math.abs(scrollTop) : scrollTop) / Math.max(1, range)));
+    return { client, size, length, travel, range, offset: progress * travel, scrollTop };
+  }
 
   private _listenForScroll(): void {
     if (this._wrapper) {
@@ -294,11 +309,11 @@ export class ScrollArea extends Component<BaseOptions> {
   }
 
   private _copyContainerStyle(style: CSSStyleDeclaration): void {
-    this._bar!.dir = style.direction;
+    this._bar!.dir = this._horizontal!.dir = style.direction;
     this._copyProperty('color', style.color);
     this._copyProperty('color-scheme', style.colorScheme);
     this._copyProperty('z-index', style.zIndex === 'auto' ? '' : style.zIndex);
-    for (const side of ['block-start', 'block-end', 'inline-end']) {
+    for (const side of ['block-start', 'block-end', 'inline-start', 'inline-end']) {
       this._copyProperty(`--scroll-area-border-${side}`, style.getPropertyValue(`border-${side}-width`));
     }
     for (const name of ['--scroll-area-bar-size', '--scroll-area-thumb-color', '--scroll-area-track-color', '--md-sys-color-on-surface-variant']) {
@@ -314,8 +329,10 @@ export class ScrollArea extends Component<BaseOptions> {
   }
 
   private _copyProperty(name: string, value: string): void {
-    if (value) this._bar!.style.setProperty(name, value);
-    else this._bar!.style.removeProperty(name);
+    for (const bar of this._bars) {
+      if (value) bar.style.setProperty(name, value);
+      else bar.style.removeProperty(name);
+    }
   }
 
   private _observeBody(): void {
@@ -333,19 +350,29 @@ export class ScrollArea extends Component<BaseOptions> {
     });
   }
 
-  private _unscrollable(range: number, style: CSSStyleDeclaration): boolean {
-    return range === 0 || ['hidden', 'clip'].includes(style.overflowY);
+  private _unscrollable(range: number, overflow: string): boolean {
+    return range === 0 || ['hidden', 'clip'].includes(overflow);
+  }
+
+  private _writeBar(bar: HTMLDivElement, metrics: ReturnType<ScrollArea['_geometry']>, hidden: boolean, sign: number): void {
+    if (bar.hidden !== hidden) bar.hidden = hidden;
+    if (hidden && this._drag) this._endDrag();
+    bar.style.setProperty('--scroll-area-thumb-length', `${metrics.length}px`);
+    bar.style.setProperty('--scroll-area-thumb-travel', `${metrics.travel * sign}px`);
+    bar.style.setProperty('--scroll-area-thumb-offset', `${metrics.offset * sign}px`);
   }
 
   private _measure(): void {
     const style = this._window.getComputedStyle(this.el);
     const hidden = this._wrapper ? this._containerHidden(style) : false;
-    const { range, length, travel, offset } = this._metrics;
-    this._bar!.hidden = this._unscrollable(range, style) || hidden;
-    if (this._bar!.hidden) this._endDrag();
-    this._bar!.style.setProperty('--scroll-area-thumb-length', `${length}px`);
-    this._bar!.style.setProperty('--scroll-area-thumb-travel', `${travel}px`);
-    this._bar!.style.setProperty('--scroll-area-thumb-offset', `${offset}px`);
+    const metrics = axes.map(axis => this._metrics(axis, 0));
+    const flags = axes.map((axis, i) => hidden || this._unscrollable(metrics[i].range, style[axis.overflow]));
+    const corner = flags.some(Boolean) ? 0 : parseFloat(this._window.getComputedStyle(this._bar!).inlineSize) || 0;
+    this._bars.forEach((bar, i) => {
+      const { client, size, scrollTop } = metrics[i];
+      const sign = i === 1 && style.direction === 'rtl' ? -1 : 1;
+      this._writeBar(bar, this._geometry(client, size, scrollTop, corner, i === 1), flags[i], sign);
+    });
   }
 
   destroy(): void {

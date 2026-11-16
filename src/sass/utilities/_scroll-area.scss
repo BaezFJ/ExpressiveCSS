@@ -24,7 +24,15 @@ html.scroll-area.custom > .scroll-area-bar {
   background-color: var(--scroll-area-track-color, transparent);
 }
 
-.scroll-area-wrapper > .scroll-area.custom + .scroll-area-bar {
+html.scroll-area.custom > .scroll-area-bar.horizontal {
+  inset-block-start: auto;
+  inset-block-end: 0;
+  inset-inline: 0;
+  inline-size: auto;
+  block-size: var(--scroll-area-bar-size, 12px);
+}
+
+.scroll-area-wrapper > .scroll-area.custom ~ .scroll-area-bar {
   position: absolute;
   inset-block-start: calc(anchor(top) + var(--scroll-area-border-block-start, 0px));
   inset-block-end: calc(anchor(bottom) + var(--scroll-area-border-block-end, 0px));
@@ -36,8 +44,33 @@ html.scroll-area.custom > .scroll-area-bar {
   background-color: var(--scroll-area-track-color, transparent);
 }
 
-.scroll-area-wrapper > .scroll-area.custom + .scroll-area-bar > .scroll-area-thumb {
+.scroll-area-wrapper > .scroll-area.custom ~ .scroll-area-bar > .scroll-area-thumb {
   max-block-size: 100%;
+}
+
+.scroll-area-wrapper > .scroll-area.custom ~ .scroll-area-bar.horizontal {
+  inset-block-start: auto;
+  inset-inline-start: calc(anchor(self-start) + var(--scroll-area-border-inline-start, 0px));
+  inline-size: max(0px, calc(anchor-size(width, 0px) - var(--scroll-area-border-inline-start, 0px) - var(--scroll-area-border-inline-end, 0px)));
+  block-size: var(--scroll-area-bar-size, 12px);
+}
+
+html.scroll-area.custom:not(:has(dialog:modal)):has(> .scroll-area-bar.horizontal:not([hidden])) > .scroll-area-bar:not(.horizontal) {
+  inset-block-end: var(--scroll-area-bar-size, 12px);
+}
+
+html.scroll-area.custom:not(:has(dialog:modal)):has(> .scroll-area-bar:not(.horizontal):not([hidden])) > .scroll-area-bar.horizontal {
+  inset-inline-end: var(--scroll-area-bar-size, 12px);
+}
+
+.scroll-area-wrapper:has(> .scroll-area-bar.horizontal:not([hidden])) > .scroll-area.custom ~ .scroll-area-bar:not(.horizontal) {
+  inset-block-end: calc(anchor(bottom) + var(--scroll-area-border-block-end, 0px) + var(--scroll-area-bar-size, 12px));
+  block-size: max(0px, calc(anchor-size(height, 0px) - var(--scroll-area-border-block-start, 0px) - var(--scroll-area-border-block-end, 0px) - var(--scroll-area-bar-size, 12px)));
+}
+
+.scroll-area-wrapper:has(> .scroll-area-bar:not(.horizontal):not([hidden])) > .scroll-area.custom ~ .scroll-area-bar.horizontal {
+  inset-inline-end: calc(anchor(self-end) + var(--scroll-area-border-inline-end, 0px) + var(--scroll-area-bar-size, 12px));
+  inline-size: max(0px, calc(anchor-size(width, 0px) - var(--scroll-area-border-inline-start, 0px) - var(--scroll-area-border-inline-end, 0px) - var(--scroll-area-bar-size, 12px)));
 }
 
 .scroll-area-thumb {
@@ -49,10 +82,35 @@ html.scroll-area.custom > .scroll-area-bar {
   transform: translateY(var(--scroll-area-thumb-offset, 0px));
 }
 
+.scroll-area-bar.horizontal > .scroll-area-thumb {
+  inline-size: var(--scroll-area-thumb-length, 48px);
+  max-inline-size: 100%;
+  block-size: 8px;
+  margin-block: calc((var(--scroll-area-bar-size, 12px) - 8px) / 2);
+  margin-inline: 0;
+  transform: translateX(var(--scroll-area-thumb-offset, 0px));
+
+}
+
+.scroll-area-bar.horizontal:dir(rtl) > .scroll-area-thumb {
+  margin-inline-start: 0;
+  margin-inline-end: auto;
+}
+
 @supports (animation-timeline: scroll()) {
   html.scroll-area.custom > .scroll-area-bar > .scroll-area-thumb {
     animation: scroll-area-position linear both;
     animation-timeline: scroll(root block);
+  }
+
+  html.scroll-area.custom > .scroll-area-bar.horizontal > .scroll-area-thumb {
+    animation-name: scroll-area-inline-position;
+    animation-timeline: scroll(root inline);
+  }
+
+  @keyframes scroll-area-inline-position {
+    from { transform: translateX(0); }
+    to { transform: translateX(var(--scroll-area-thumb-travel, 0px)); }
   }
 
   @keyframes scroll-area-position {
@@ -71,7 +129,7 @@ html.scroll-area.custom > .scroll-area-bar {
     }
   }
 
-  .scroll-area-wrapper > .scroll-area.custom + .scroll-area-bar:not([hidden]) {
+  .scroll-area-wrapper > .scroll-area.custom ~ .scroll-area-bar:not([hidden]) {
     display: block;
   }
 
