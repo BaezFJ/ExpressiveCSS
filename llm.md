@@ -1419,26 +1419,39 @@ Give a generic scroll region `tabindex="0"` and an accessible name so keyboard u
 
 Add `.scroll-area` to `<html>` to style the page's own scrollbar. The viewport keeps native scrolling, and the thumb color follows the theme.
 
-For a custom vertical page bar, opt in with `<html class="scroll-area custom">` and call `Expressive.AutoInit()` after the DOM is ready. `AutoInit(document.body, options)` also starts it on the matching `<html>`; `.no-autoinit` opts out. No other component starts on `<html>`. `ScrollArea` has no options or events. The framework generates the bar, thumb and `aria-hidden`; do not author them. Drag the thumb to scroll, or press the track above or below it to scroll one viewport toward the press. Holding a track press does not repeat. Primary presses preserve focus and the selection. A drag stays instant under smooth scrolling; a track step follows the page's scroll behavior. Wheel, keyboard, touch and fragment scrolling remain native.
+For custom page bars, opt in with `<html class="scroll-area custom">` and initialize `ScrollArea` after the body exists, or call `Expressive.AutoInit()`. `AutoInit(document.body, options)` also claims the matching `<html>` unless `.no-autoinit` opts out. The framework generates a vertical bar at the inline-end edge and a horizontal bar at the block-end edge, with a thumb on each. Both bars are hidden from assistive technology. Do not author them. `ScrollArea` has no options or events; reinitializing replaces the instance.
 
 ```js
-// Use this instead of AutoInit for an explicitly managed page bar.
 const area = Expressive.ScrollArea.init(document.documentElement);
 area.refresh();
 area.destroy();
 ```
 
-The thumb's length follows the viewport-to-document ratio with a 48px minimum. Its position uses a root scroll timeline where supported and a passive, frame-coalesced scroll listener elsewhere. Reduced motion still follows the scroll position. Element size changes and window resizes update measurements automatically. Call `refresh()` after content overflows a fixed-height body, after changing your own scroll lock, or after adding a body to an instance started before it existed. `destroy()` removes the bar and its observers and listeners. Reinitializing replaces the earlier instance.
+Drag either thumb to scroll its axis. A track press scrolls one viewport width or height toward the press, once, without hold-repeat. Primary presses preserve focus and the selection and cancel the generated click. Dragging stays instant under smooth scrolling; a track press follows the page's scroll behavior. Wheel, keyboard, touch and fragment scrolling remain native.
 
-The custom bar uses `--scroll-area-bar-size`, default `12px`, and `--expressive-z-scroll-area`, default `999`, above app bars and below non-modal sheets. Set the size and `dir` on `<html>`; the bar follows its inline-end edge. The default 16px inset of `.back-to-top` and `.fab-menu` becomes 18px beside the bar, and a page-level app bar's trailing padding becomes 18px. `--scroll-area-bar-clearance` is `max(var(--scroll-area-bar-size, 12px), calc(var(--scroll-area-bar-size, 12px) / 2 + 12px))`, leaving 6px clear of the default bar. It stays set while the runtime bar exists under active screen media, including a modal lock or an unscrollable page. It is absent without the instance or `.custom`, under forced colors, with a coarse primary pointer and in print. Larger author offsets stay. Use lengths with units for `--md-comp-back-to-top-offset` and `--md-comp-fab-menu-offset` beside the custom bar. For your own edge control, use `inset-inline-end: max(16px, var(--scroll-area-bar-clearance, 0px))`. The fixed controls also read the inherited clearance inside shadow roots. Automatic app-bar padding applies only to document-level headers; a viewport-wide shadow app bar needs its own `padding-inline-end: var(--scroll-area-bar-clearance, 4px)` rule. The bar takes presses over edge content, so keep controls clear and check thumb contrast.
+Each thumb follows its viewport-to-content ratio with a 48px minimum. The horizontal thumb starts on the right under `dir="rtl"`. When both bars show, each stops one bar width before the corner square. That square belongs to neither bar; presses there reach the content below. With one bar shown, it spans the whole edge. Set `dir` and `--scroll-area-bar-size`, default `12px`, on `<html>`. `--expressive-z-scroll-area`, default `999`, places the page bars above app bars and below non-modal sheets.
 
-Without initialization or after removing `.custom`, the themed native bar stays. Forced colors and a coarse primary pointer also use the native bar; print and an open modal dialog hide the drawn bar. On systems with classic scrollbars, hiding the native bar widens the page once at initialization.
+The page thumbs use root scroll timelines where supported and one passive, frame-coalesced scroll listener elsewhere. Reduced motion keeps the position accurate. Element size changes and window resizes update measurements. Call `refresh()` for sideways overflow that resizes neither `<html>` nor `<body>`, for content overflowing a fixed-height body, after changing a custom scroll lock, or after adding a body to an instance started before it existed. `destroy()` removes both bars, observers and listeners.
 
-For a custom container bar, add `.scroll-area.custom` to a bounded container and initialize it with `Expressive.ScrollArea.init(el)` or `AutoInit()`. A generated `.scroll-area-wrapper` with `display: contents !important` holds the container and its bar. Do not author that wrapper, bar or thumb. `destroy()` removes the bar and returns the container to its parent. Keep the region's authored role, name and keyboard focusability.
+Without initialization or `.custom`, the themed native bars remain. Forced colors and a coarse primary pointer use native bars; print and an open modal dialog hide both drawn bars. On systems with classic scrollbars, initialization removes the native gutters once.
 
-A 300px-tall container with 900px of content has a 100px thumb. Dragging moves only that container; a track press scrolls one container height, once. Primary presses preserve focus and selection and cancel the generated click, so ancestor links and bubbling click handlers do not activate. Content clicks and secondary-button behavior stay native. The container's thumb uses a passive, frame-coalesced scroll listener in every engine. Its element children and container size are observed; direct child additions and removals also trigger a measurement. Attribute changes on the container or its composed ancestors and system color-scheme or contrast changes queue a measurement. `refresh()` remeasures after direct text-node changes or stylesheet changes that resize nothing. Each measurement reads the container's computed direction, borders, `color`, `color-scheme`, `z-index`, visibility, `--scroll-area-bar-size`, `--scroll-area-thumb-color` and `--scroll-area-track-color`. Ancestor values apply; removing a container override restores them. The bar follows the container's inline-end padding edge, inside its border, with the container's stacking value. It hides when vertical scrolling is unavailable or the container is not visible or rendered. If the content fits vertically when native gutters are absent, it keeps native bars. This prevents gutter size or text wrapping from toggling the drawn bar. A closed dialog is measured again when it opens.
+The default 16px inset of `.back-to-top` and `.fab-menu` becomes 18px for both the inline-end inset and the block-end inset beside a custom page bar. A 14px bar gives 19px clearance; a 30px bar gives 30px. Larger author offsets stay. The page-level app bar's trailing padding also reads `--scroll-area-bar-clearance`. The clearance stays set while the instance exists under active screen media, including a modal lock, fitting content and horizontal fit/overflow changes, so controls do not move with either bar's visibility.
 
-The native bar returns without an instance or `.custom`, under forced colors, with a coarse primary pointer, in print, or when the vertical drawn bar is hidden. Container bars set no page clearance. A container inside a modal dialog works; opening a modal outside it, adding `inert`, removing `.custom`, or changing the bar's media conditions ends a drag until the next press. A modal in a separate inaccessible closed shadow root cannot cancel a drag if it exposes no external focus transition. Its owner must destroy affected `ScrollArea` instances before `showModal()` and reinitialize them after closing; `refresh()` cannot detect or cancel this case. With AutoInit watching, opt those containers out before destroying them. Multiple, nested, iframe and shadow-root instances keep separate targets and anchor names.
+The status bar and edge-pinned navigation rows grow bottom padding without shrinking their targets or leaving a gap in their viewport-edge backgrounds. This includes a scaffold's footer-wrapped navigation. Bottom docked toolbars grow too. A floating horizontal toolbar's actions already end 24px above the edge at its default 16px external inset, so 12px and 14px bars keep that inset; a 30px bar raises it to 22px. Top and vertically centered toolbars keep their layout. Scaffold rows, compact trailing groups with companion FABs, shell padding and root scroll padding follow these sizes. A status row supplies navigation's clearance without padding it twice.
+
+For an author's own nonnegative control inset, use `inset-block-end: max(16px, var(--scroll-area-bar-clearance, 0px))`, and apply the same rule at inline-end when needed. To preserve a negative or unitless inset while the property is unset, use a private value such as `--_bar-inset: max(var(--my-inset), var(--scroll-area-bar-clearance))` and `inset-block-end: var(--_bar-inset, var(--my-inset))`. Framework offsets beside an active bar use lengths with units. The bars cover edge content, so leave content padding and choose a contrasting thumb color.
+
+Fixed controls inside shadow roots inherit page clearance. The existing inline-end limits remain: automatic app-bar padding applies to document-level headers; a viewport-wide shadow app bar needs `padding-inline-end: var(--scroll-area-bar-clearance, 4px)` in that root's stylesheet. A container instance sets no page clearance.
+
+For custom container bars, add `.scroll-area.custom` to a bounded container and initialize it with `Expressive.ScrollArea.init(el)` or `AutoInit()`. A generated `.scroll-area-wrapper` with `display: contents !important` holds the container, the vertical bar and then the horizontal bar. Do not author the wrapper, bars or thumbs. `destroy()` removes both bars and returns the container to its parent. Keep the region's authored role, name and keyboard focusability.
+
+A 300px-tall, 240px-wide container with 900px-tall, 720px-wide content has a 288px vertical track with a 96px thumb and a 228px horizontal track with a 76px thumb. Both stop before the 12px corner square. The horizontal thumb starts at the right in RTL. A sideways-only container has a 240px track with an 80px thumb. Dragging moves only that container; a track press scrolls one client width or height toward the press, once. Primary presses preserve focus and selection and cancel the generated click, so ancestor links and bubbling click handlers do not activate. Content clicks and secondary-button behavior stay native.
+
+Both container thumbs use one passive, frame-coalesced scroll listener in every engine. Element children and the container are observed; direct child additions and removals also trigger a measurement. Attribute changes on the container or its composed ancestors and system color-scheme or contrast changes queue a measurement. `refresh()` remeasures direct text-node changes or stylesheet changes that resize nothing. Measurements copy computed direction, borders, `color`, `color-scheme`, `z-index`, visibility, `--scroll-area-bar-size`, `--scroll-area-thumb-color` and `--scroll-area-track-color`. Ancestor values apply; removing an override restores them. The bars follow the padding edges inside the border with the container's stacking value.
+
+Each bar hides independently when its axis cannot scroll, or when the container is invisible, has no box, or leaves its wrapper. Native bars hide while either drawn bar shows, including sideways-only overflow. Eligibility on both axes is read together without native gutters; content fitting both axes keeps native bars. This prevents native gutter size or text wrapping from toggling drawn bars. A closed dialog is measured again when it opens.
+
+Native bars return without an instance or `.custom`, under forced colors, with a coarse primary pointer, in print, or when both drawn bars are hidden. Container bars set no page clearance. A drag ends when its own bar hides; the other bar's appearing or hiding keeps the ratio recorded at the press. A container inside a modal works. Opening a modal outside it, adding `inert`, removing `.custom`, or changing the bar's media conditions ends a drag until a new press. A modal in a separate inaccessible closed shadow root cannot cancel a drag if it exposes no external focus transition. Its owner must destroy affected `ScrollArea` instances before `showModal()` and reinitialize after closing; `refresh()` cannot detect or cancel that case. With AutoInit watching, opt those containers out before destroying them. Multiple, nested, iframe and shadow-root instances keep separate targets and anchor names.
 
 Container limits:
 
@@ -1448,11 +1461,11 @@ Container limits:
 4. A scrolling ancestor clips the bar only if it, or an intervening ancestor, has a `position`. Use `position: relative` on an author's scroller. The scaffold's pane, dialog body and pane body provide it while they hold a wrapper.
 5. Positive `z-index` content can cover the bar. Add `isolation: isolate` on the container when its content must stack below it.
 6. Put `opacity`, `filter`, `transform` and animations on a parent so they also affect the sibling bar. Attribute changes remeasure on the next frame. Call `refresh()` after editing stylesheet rules for container `visibility`, `dir`, `color`, `color-scheme`, `z-index` or scroll-area properties when no resize or observed attribute change triggers a measurement.
-7. The default bar covers the last 12px. Give controls at least 24px by 24px and 18px of inline-end padding. Wider bars need more padding. For smaller controls, check the [WCAG 2.5.8 spacing rule and exceptions](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html); 18px alone may not separate their target circles.
+7. The default bars cover the last 12px at inline-end and block-end. Give controls at least 24px by 24px and 18px of padding at both edges. Wider bars need more padding. For smaller controls, check the [WCAG 2.5.8 spacing rule and exceptions](https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html); 18px alone may not separate their target circles.
 8. A wheel over the bar forwards pixel deltas, uses 40px per line or one container height per page, and scrolls instantly without smooth wheel animation. It chains at the end even with `overscroll-behavior: contain`. Ctrl-wheel remains native zoom.
 9. An engine without anchor positioning keeps the native bar.
 10. A `position: fixed` container is unsupported. The bar follows a sticky container during parent scrolling.
-11. While the vertical bar is drawn, the horizontal native bar is hidden too. A sideways-only scroller keeps its native bar; wheel, keys and touch still scroll sideways.
+11. When both bars show, they stop before the corner square. The corner takes no pointer; a press there reaches the content below. Keep pinned content such as an authored status bar clear at both edges.
 
 Override `--scroll-area-thumb-color` and `--scroll-area-track-color` on the container or an ancestor. Defaults are `var(--md-sys-color-on-surface-variant)` and `transparent`. Choose colors with enough contrast against the track and container. Native scrollbar shape, exact width, and automatic hiding depend on the browser and operating system. Older WebKit engines use rounded 8px scrollbars. Forced-colors mode restores system colors and the default width. Selective Sass builds can load `"scroll-area"` through `$utilities`.
 
@@ -1852,7 +1865,7 @@ A shadow does not decide what sits on top. Surfaces that float over the page tak
 | `--expressive-z-toolbar` | 996 | A fixed toolbar. |
 | `--expressive-z-app-bar` | 997 | A pinned top app bar and a fixed navigation bar. |
 | `--expressive-z-modal-rail` | 998 | An expanded navigation rail over the page. |
-| `--expressive-z-scroll-area` | 999 | The custom vertical page scrollbar. |
+| `--expressive-z-scroll-area` | 999 | The custom page bars for both axes. |
 | `--expressive-z-sheet` | 1100 | A bottom or side sheet opened without `showModal()`. |
 | `--expressive-z-lightbox` | 1200 | Nothing. An open lightbox is in the top layer. |
 | `--expressive-z-tooltip` | 2000 | Tooltips. |
@@ -4382,7 +4395,7 @@ Use a standalone FAB for the primary action or a FAB menu for related labelled a
 
 `fab-menu` is the FAB that expands into a list of labelled actions. The trigger is an ordinary FAB; the actions are a `<ul>` (or `<menu>`) of pills, each an icon and a label at 56dp on a full corner. Click the FAB to expand; click it again, click outside, or press Escape to collapse.
 
-Expanded is the framework's state, not the author's: the constructor stamps `aria-expanded` on the trigger and `open()` / `close()` move it along with the `active` class. Do not write either into the markup. The menu keeps clear of the custom page scrollbar through `--scroll-area-bar-clearance`. Its inline-end inset becomes 18px with the default bar, preserving a larger `--md-comp-fab-menu-offset`. Use a length with a unit beside that bar. The inherited clearance also reaches menus inside shadow roots.
+Expanded is the framework's state, not the author's: the constructor stamps `aria-expanded` on the trigger and `open()` / `close()` move it along with the `active` class. Do not write either into the markup. The menu keeps both insets clear of custom page scrollbars through `--scroll-area-bar-clearance`. Its inline-end and block-end insets become 18px with the default bar, preserving a larger `--md-comp-fab-menu-offset`. Use a length with a unit beside that bar. The inherited clearance also reaches menus inside shadow roots.
 
 ```html
 <div class="fab-menu">
@@ -4474,13 +4487,15 @@ instance.destroy();
 
 Replace `.fab` and `.fixed-action-btn` wrappers with `.fab-menu` and labelled actions using the markup above. Remove `direction`, `hoverEnabled`, `toolbarEnabled`, their markup switches and speed-dial-only tokens. Hover opening, directional layouts and FAB-to-toolbar expansion have been removed. Use a current toolbar for persistent commands. Replace `circle extra small` with `circle extra`, and sizeless `extend` with `extend small`. Medium and large FABs, all three explicit extended sizes, and FAB menus remain supported. Use primary, secondary or tertiary container colors instead of surface-colored FABs; pair icon-only FAB colors with the matching on-container text role. General surface utilities remain supported outside FABs.
 
+Without page clearance, `--md-comp-fab-menu-offset` keeps its authored value, including unitless zero and negative lengths.
+
 ---
 
 ## Back to top
 
 A link that appears once a long page has scrolled down, and returns to the top with focus on the main content.
 
-Write an `<a class="back-to-top">` whose `href` names the page's main content, give it an `aria-label`, and add the FAB classes `button circle extra` for its look. `AutoInit()` starts every `.back-to-top`. The link sits in the bottom inline-end corner, `position: fixed`, and stays hidden until the window has scrolled past `threshold`, one viewport height by default. It hides again above it, unless it has focus: a focused link stays until focus leaves, so pressing Home on it does not drop focus to the body. Without the script the link is always visible and jumps to its target, as any in-page link does. Until the script starts it is also visible at the top of the page, so call `AutoInit()` before the first paint, from a script at the end of the body, to keep it from showing there. The link keeps clear of the custom page scrollbar through `--scroll-area-bar-clearance`. Its inline-end inset becomes 18px with the default bar, preserving a larger `--md-comp-back-to-top-offset`. Use a length with a unit beside that bar. The inherited clearance also reaches links inside shadow roots.
+Write an `<a class="back-to-top">` whose `href` names the page's main content, give it an `aria-label`, and add the FAB classes `button circle extra` for its look. `AutoInit()` starts every `.back-to-top`. The link sits in the bottom inline-end corner, `position: fixed`, and stays hidden until the window has scrolled past `threshold`, one viewport height by default. It hides again above it, unless it has focus: a focused link stays until focus leaves, so pressing Home on it does not drop focus to the body. Without the script the link is always visible and jumps to its target, as any in-page link does. Until the script starts it is also visible at the top of the page, so call `AutoInit()` before the first paint, from a script at the end of the body, to keep it from showing there. The link keeps both insets clear of custom page scrollbars through `--scroll-area-bar-clearance`. Its inline-end and block-end insets become 18px with the default bar, preserving a larger `--md-comp-back-to-top-offset`. Use a length with a unit beside that bar. The inherited clearance also reaches links inside shadow roots.
 
 ```html
 <main id="main">…</main>
@@ -4515,6 +4530,8 @@ Removes the observer and the threshold element, and any `tabindex` the script ad
 | `--md-comp-back-to-top-z` | 997 |
 | `--md-comp-back-to-top-duration` | the fast effects spring's duration |
 | `--md-comp-back-to-top-easing` | fast effects spring |
+
+Without page clearance, `--md-comp-back-to-top-offset` keeps its authored value, including unitless zero and negative lengths.
 
 ---
 
@@ -4887,6 +4904,8 @@ Add `fixed` to stick the bar to the bottom of the viewport. Padding includes `sa
 ```html
 <nav class="navigation-bar fixed" aria-label="Main">…</nav>
 ```
+
+Beside a custom page scrollbar, edge-pinned stacked and horizontal bars grow their bottom padding to at least `--scroll-area-bar-clearance`, preserving destination heights and the edge background. This also applies to a scaffold's footer-wrapped navigation. Navigation above a scaffold status row keeps its original padding because the status row supplies the gap.
 
 ---
 
@@ -5280,6 +5299,8 @@ Add `viewport-fit=cover` to the viewport meta tag on phones with a notch: the sc
 The scaffold adds no landmark: the `<header>` is the banner, the rail a navigation landmark and `<main>` the main landmark. Never write it as a landmark element or give it a landmark role, and never nest one scaffold in another. `hidden="until-found"` still takes part in layout, so it counts as a visible child.
 
 Limits: `.medium` and `.large` app bars stay expanded in a scaffold. `back-to-top` follows the window, so it appears only below 600px, where it overlaps the navigation bar. On compact windows the rail opens and closes without animating, and a scrim tap leaves focus on the page. A rail's side panel spans the window height and opens over the bar. A trailing toolbar taller than its region is clipped at the bottom, so keep it to the actions that fit. Custom `scaffold-rail` and `scaffold-trailing` content scrolls when it doesn't fit.
+
+With a custom page scrollbar, the inherited `--scroll-area-bar-clearance` grows status and edge-pinned navigation rows without shrinking targets. Status-present navigation keeps its original bottom padding to avoid counting the gap twice. Grid rows and compact root scroll padding follow the grown sizes. Without a bottom row, the medium shell pads at least the clearance. Compact trailing toolbars and companion FAB groups clear the horizontal bar, with matching flow margins and scroll padding. This spacing stays while the instance exists, even when horizontal content fits.
 
 ---
 
@@ -8162,6 +8183,8 @@ A floating bar can sit beside a companion FAB. Wrap both in `.toolbar-group`; th
 <div class="toolbar docked fixed">…</div>
 ```
 
+Beside a custom page scrollbar, a bottom docked toolbar grows its bottom padding without shrinking its 48px actions. A floating horizontal toolbar's actions already end 24px above the edge at the default 16px external inset: 12px and 14px bars keep that inset, while a 30px bar raises it to 22px. Larger author insets stay. Top and vertically centered fixed toolbars keep their layout. Compact scaffold trailing groups, including companion FABs, also clear the page bar.
+
 ## Status bar
 
 A thin bar of app state along the bottom of an app shell, like the status bar in a code editor.
@@ -8200,6 +8223,8 @@ The bar is 24px tall in `body-small`, and it grows with enlarged text. Items are
 ```
 
 Tokens: `--md-comp-status-bar-container-height` (1.5rem), `--md-comp-status-bar-container-color` (surface-container), `--md-comp-status-bar-color` (on-surface-variant), `--md-comp-status-bar-item-space` (8px) and `--md-comp-status-bar-icon-size` (1rem).
+
+A custom page scrollbar makes the status bar's bottom padding at least the inherited `--scroll-area-bar-clearance` or its safe area, whichever is larger. The row grows while its item heights stay unchanged, and its background still reaches the viewport edge. A scaffold uses the grown row in its layout.
 
 ---
 

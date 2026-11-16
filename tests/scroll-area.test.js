@@ -644,3 +644,13 @@ test('horizontal V15 iframe container drags its own inline axis', () => {
   const calls=[];el.scrollTo=value=>calls.push(value);win.scrollTo=()=>assert.fail('parent window must not scroll');const area=win.Expressive.ScrollArea.init(el);calls.length=0;
   try {const bar=el.parentElement.querySelector('.horizontal');bar.getClientRects=()=>[{}];bar.setPointerCapture=()=>{};bar.hasPointerCapture=()=>false;pointer(bar,'pointerdown',{clientX:40});pointer(bar,'pointermove',{clientX:120});assert.equal(calls.length,1);assert.equal(calls[0].left,240);assert.equal(calls[0].top,undefined);assert.equal(calls[0].behavior,'instant');}finally{area.destroy();dom.window.close();}
 });
+
+test('horizontal V7 commits both visibility flags before writing either thumb', () => {
+  document.body.innerHTML='<div class="scroll-area custom"></div>';const el=document.body.firstElementChild;
+  let height=900,width=720;
+  Object.defineProperties(el,{clientHeight:{value:300},scrollHeight:{get:()=>height},clientWidth:{value:240},scrollWidth:{get:()=>width}});
+  const area=Expressive.ScrollArea.init(el),bars=[...el.parentElement.querySelectorAll('.scroll-area-bar')],write=bars[0].style.setProperty;
+  let flags;
+  bars[0].style.setProperty=function(name,...args){if(name==='--scroll-area-thumb-length')flags=bars.map(bar=>bar.hidden);return write.call(this,name,...args);};
+  try {height=300;width=240;area.refresh();assert.deepEqual(flags,[true,true]);}finally{area.destroy();}
+});

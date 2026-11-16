@@ -7,9 +7,9 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- `ScrollArea` draws an opt-in vertical page bar on `<html class="scroll-area custom">`
+- `ScrollArea` draws opt-in bars for both axes on `<html class="scroll-area custom">`
   and on bounded `.scroll-area.custom` containers. Containers use a generated
-  `display: contents` wrapper and an anchored bar; destroying restores their parent.
+  `display: contents` wrapper and anchored bars; destroying restores their parent.
   Its proportional thumb follows native scrolling, with a 48px minimum. Page thumbs use
   scroll timelines where supported and a passive listener elsewhere. Container thumbs
   use a passive listener in every engine.
@@ -18,7 +18,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   Drag the thumb or press the track to scroll one viewport without hold-repeat.
   Presses preserve focus and selection. Page app bars, back-to-top links and FAB menus
   keep clear through `--scroll-area-bar-clearance`, 18px with the default bar.
-  Fixed back-to-top links and FAB menus also inherit that clearance inside shadow roots.
+  Both bars leave a pointer-transparent corner; horizontal thumbs start on the right in RTL.
+  Bottom controls, status and navigation rows, toolbars and scaffold scroll padding clear the
+  horizontal page bar without shrinking targets. Fixed back-to-top links and FAB menus
+  also inherit both insets inside shadow roots.
 
 ### Fixed
 

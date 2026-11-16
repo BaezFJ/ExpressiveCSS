@@ -7,7 +7,7 @@ const axes = [
 ] as const;
 type Axis = typeof axes[number];
 
-/** A vertical scrollbar with thumb dragging and single-step track paging. */
+/** Scrollbars for both axes with thumb dragging and single-step track paging. */
 export class ScrollArea extends Component<BaseOptions> {
   static key = 'Expressive_ScrollArea';
   private _bar?: HTMLDivElement;
@@ -370,9 +370,7 @@ export class ScrollArea extends Component<BaseOptions> {
     if (bar === this._drag?.bar) this._endDrag();
   }
 
-  private _writeBar(bar: HTMLDivElement, metrics: ReturnType<ScrollArea['_geometry']>, hidden: boolean, sign: number): void {
-    if (bar.hidden !== hidden) bar.hidden = hidden;
-    if (hidden) this._endBarDrag(bar);
+  private _writeBar(bar: HTMLDivElement, metrics: ReturnType<ScrollArea['_geometry']>, sign: number): void {
     bar.style.setProperty('--scroll-area-thumb-length', `${metrics.length}px`);
     bar.style.setProperty('--scroll-area-thumb-travel', `${metrics.travel * sign}px`);
     bar.style.setProperty('--scroll-area-thumb-offset', `${metrics.offset * sign}px`);
@@ -385,9 +383,13 @@ export class ScrollArea extends Component<BaseOptions> {
     const flags = axes.map((axis, i) => hidden || this._unscrollable(metrics[i].range, style[axis.overflow]));
     const corner = flags.some(Boolean) ? 0 : parseFloat(this._window.getComputedStyle(this._bar!).inlineSize) || 0;
     this._bars.forEach((bar, i) => {
+      if (bar.hidden !== flags[i]) bar.hidden = flags[i];
+      if (flags[i]) this._endBarDrag(bar);
+    });
+    this._bars.forEach((bar, i) => {
       const { client, size, scrollTop } = metrics[i];
       const sign = i === 1 && style.direction === 'rtl' ? -1 : 1;
-      this._writeBar(bar, this._geometry(client, size, scrollTop, corner, i === 1), flags[i], sign);
+      this._writeBar(bar, this._geometry(client, size, scrollTop, corner, i === 1), sign);
     });
   }
 

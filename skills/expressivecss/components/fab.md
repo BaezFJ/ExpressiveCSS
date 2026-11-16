@@ -9,7 +9,7 @@ Component ID: `fab`
 
 Contract: ExpressiveCSS 0.19.0
 
-Contract SHA-256: `88c61bbb718663da042e673747560e23be12844057f001a79b85d21c27554aa9`
+Contract SHA-256: `52a026f2225ad0c6e4fa9bd0d5bb6254000f8907b88b392fc4a9b93bdeb5d42f`
 
 #### Selection and adaptation
 
@@ -51,7 +51,7 @@ Use a standalone FAB for the primary action or a FAB menu for related labelled a
 
 `fab-menu` is the FAB that expands into a list of labelled actions. The trigger is an ordinary FAB; the actions are a `<ul>` (or `<menu>`) of pills, each an icon and a label at 56dp on a full corner. Click the FAB to expand; click it again, click outside, or press Escape to collapse.
 
-Expanded is the framework's state, not the author's: the constructor stamps `aria-expanded` on the trigger and `open()` / `close()` move it along with the `active` class. Do not write either into the markup. The menu keeps clear of the custom page scrollbar through `--scroll-area-bar-clearance`. Its inline-end inset becomes 18px with the default bar, preserving a larger `--md-comp-fab-menu-offset`. Use a length with a unit beside that bar. The inherited clearance also reaches menus inside shadow roots.
+Expanded is the framework's state, not the author's: the constructor stamps `aria-expanded` on the trigger and `open()` / `close()` move it along with the `active` class. Do not write either into the markup. The menu keeps both insets clear of custom page scrollbars through `--scroll-area-bar-clearance`. Its inline-end and block-end insets become 18px with the default bar, preserving a larger `--md-comp-fab-menu-offset`. Use a length with a unit beside that bar. The inherited clearance also reaches menus inside shadow roots.
 
 #### Syntax
 

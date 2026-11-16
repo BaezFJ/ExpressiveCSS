@@ -9,7 +9,7 @@ Component ID: `back-to-top`
 
 Contract: ExpressiveCSS 0.19.0
 
-Contract SHA-256: `88c61bbb718663da042e673747560e23be12844057f001a79b85d21c27554aa9`
+Contract SHA-256: `52a026f2225ad0c6e4fa9bd0d5bb6254000f8907b88b392fc4a9b93bdeb5d42f`
 
 #### Selection and adaptation
 
@@ -37,7 +37,7 @@ Full parity remains unassessed. [Capability evidence](../references/capability-r
 
 #### Contract
 
-Write an `<a class="back-to-top">` whose `href` names the page's main content, give it an `aria-label`, and add the FAB classes `button circle extra` for its look. `AutoInit()` starts every `.back-to-top`. The link sits in the bottom inline-end corner, `position: fixed`, and stays hidden until the window has scrolled past `threshold`, one viewport height by default. It hides again above it, unless it has focus: a focused link stays until focus leaves, so pressing Home on it does not drop focus to the body. Without the script the link is always visible and jumps to its target, as any in-page link does. Until the script starts it is also visible at the top of the page, so call `AutoInit()` before the first paint, from a script at the end of the body, to keep it from showing there. The link keeps clear of the custom page scrollbar through `--scroll-area-bar-clearance`. Its inline-end inset becomes 18px with the default bar, preserving a larger `--md-comp-back-to-top-offset`. Use a length with a unit beside that bar. The inherited clearance also reaches links inside shadow roots.
+Write an `<a class="back-to-top">` whose `href` names the page's main content, give it an `aria-label`, and add the FAB classes `button circle extra` for its look. `AutoInit()` starts every `.back-to-top`. The link sits in the bottom inline-end corner, `position: fixed`, and stays hidden until the window has scrolled past `threshold`, one viewport height by default. It hides again above it, unless it has focus: a focused link stays until focus leaves, so pressing Home on it does not drop focus to the body. Without the script the link is always visible and jumps to its target, as any in-page link does. Until the script starts it is also visible at the top of the page, so call `AutoInit()` before the first paint, from a script at the end of the body, to keep it from showing there. The link keeps both insets clear of custom page scrollbars through `--scroll-area-bar-clearance`. Its inline-end and block-end insets become 18px with the default bar, preserving a larger `--md-comp-back-to-top-offset`. Use a length with a unit beside that bar. The inherited clearance also reaches links inside shadow roots.
 
 #### Syntax
 

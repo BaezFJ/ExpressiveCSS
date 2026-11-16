@@ -1221,7 +1221,7 @@ The wash a modal surface paints behind itself, added in 1.x (#37). A foundation,
 
 ### scroll-area
 
-The plain utility uses a native scrollbar. ScrollArea on html.scroll-area.custom or a supported container generates the pointer-operated bar, thumb and aria-hidden state. Container instances also generate a display: contents scroll-area-wrapper; authors do not write these elements.
+The plain utility uses a native scrollbar. ScrollArea on html.scroll-area.custom or a supported container generates pointer-operated bars and thumbs for both axes with aria-hidden state. Container instances also generate a display: contents scroll-area-wrapper; authors do not write these elements.
 
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |

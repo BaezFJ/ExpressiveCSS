@@ -378,5 +378,6 @@ const S = defineSections([
           landmark role. A page has one scaffold; use panes or the grid inside
           <code>&lt;main&gt;</code> for more columns.
         </p>
+    <p>With a custom page scrollbar, the inherited <code>--scroll-area-bar-clearance</code> grows status and edge-pinned navigation rows without shrinking targets. Status-present navigation keeps its original bottom padding to avoid counting the gap twice. Grid rows and compact root scroll padding follow the grown sizes. Without a bottom row, the medium shell pads at least the clearance. Compact trailing toolbars and companion FAB groups clear the horizontal bar, with matching flow margins and scroll padding. This spacing stays while the instance exists, even when horizontal content fits.</p>
   </Section>
 </DocsLayout>

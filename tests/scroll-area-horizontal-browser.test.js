@@ -286,4 +286,10 @@ for (const [engine,type,browserTest] of engines) {
     for(const fixture of controls){await setupControls(page,fixture);const baseline=await controlGeometry(page,fixture);await init(page,true);await frames(page);assert.deepEqual(await controlGeometry(page,fixture),baseline);await destroy(page);await page.evaluate(()=>window.fab?.destroy());}
   },{hasTouch:true,isMobile:true}));
 
+  browserTest(`horizontal V4 tiny tracks have bounded thumbs and no drag travel (${engine})`,()=>run(async page=>{
+    await setup(page,box.replace('height:300px;width:240px','height:40px;width:40px'));await init(page);await frames(page);let g=await geometry(page);near(g.bars[0].thumb.height,28);near(g.bars[1].thumb.width,28);
+    await page.mouse.move(g.bars[1].bar.left+14,g.bars[1].bar.top+6);await page.mouse.down();await page.mouse.move(g.bars[1].bar.left+24,g.bars[1].bar.top+6);await page.mouse.up();assert.equal(await page.locator('#box').evaluate(el=>el.scrollLeft),0);
+    await page.evaluate(()=>{box.style.cssText+=';width:20px;height:20px;--scroll-area-bar-size:30px';area.refresh();});await frames(page);g=await geometry(page);near(g.bars[0].bar.height,0);near(g.bars[0].thumb.height,0);near(g.bars[1].bar.width,0);near(g.bars[1].thumb.width,0);
+  }));
+
 }

@@ -184,11 +184,6 @@ const S = defineSections([
         </div>
   </Section>
   <Section {...S["fab-menu"]}>
-        <p>The menu keeps clear of the custom page scrollbar through
-          <code>--scroll-area-bar-clearance</code>. Its inline-end inset becomes
-          18px with the default bar and preserves a larger
-          <code>--md-comp-fab-menu-offset</code>. Use a length with a unit for that offset.
-          The inherited clearance also reaches menus inside shadow roots.</p>
         <p>
           Use <code>fab-menu</code> for a FAB that expands into a list of
           labelled actions. The trigger is an ordinary FAB. The actions are a
@@ -283,6 +278,11 @@ const S = defineSections([
           <code>--md-comp-fab-menu-effects-easing</code> and
           <code>--md-comp-fab-menu-effects-duration</code> for the fade.
         </p>
+        <p>The menu keeps clear of the custom page scrollbar through
+          <code>--scroll-area-bar-clearance</code>. Its inline-end and block-end insets become
+          18px with the default bar and preserves a larger
+          <code>--md-comp-fab-menu-offset</code>. Use a length with a unit for that offset.
+          The inherited clearance also reaches menus inside shadow roots.</p>
         <div class="docs-table-scroll">
         <TokenTable>
             <tr><td><code>--md-comp-fab-menu-close-button-container-height</code></td><td>56px</td></tr>
