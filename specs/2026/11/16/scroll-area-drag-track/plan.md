@@ -66,9 +66,9 @@ Completion check: `npm run check:generated` and the docs-coverage, docs-astro, s
 
 Outcome: the repository's required local checks pass on the phase's last commit. Prerequisites: group 5. Covers R17. Checks V13.
 
-- [ ] `npm run verify`, with a long timeout.
-- [ ] `npm test --prefix mcp/expressivecss`, after `npm ci --prefix mcp/expressivecss`.
-- [ ] Rerun alone any failing test the phase doesn't touch before treating it as a failure, then run the verify steps the failure skipped.
-- [ ] Record each result in [validation.md](validation.md) from the run's last line.
+- [x] `npm run verify`, with a long timeout.
+- [x] `npm test --prefix mcp/expressivecss`, after `npm ci --prefix mcp/expressivecss`.
+- [x] Rerun alone any failing test the phase doesn't touch before treating it as a failure, then run the verify steps the failure skipped.
+- [x] Record each result in [validation.md](validation.md) from the run's last line.
 
 Completion check: both commands pass, or each failure is in a test the phase doesn't touch and passes alone.
