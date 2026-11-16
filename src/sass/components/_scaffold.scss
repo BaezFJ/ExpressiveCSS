@@ -226,6 +226,8 @@ $_rail-shown: "> #{$_rail}:not([hidden], :empty)";
     grid-area: pane;
     overflow: auto;
     scroll-timeline: --scaffold-pane block;
+
+    &:has(.scroll-area-wrapper) { position: relative; }
   }
 
   > #{$_trailing} {

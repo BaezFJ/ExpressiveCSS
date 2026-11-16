@@ -265,6 +265,8 @@
     overflow-y: auto;
     overscroll-behavior: contain;
     padding: 16px 24px;
+
+    &:has(.scroll-area-wrapper) { position: relative; }
   }
 
   // Direct list inside pane (fills list seamlessly without padding clip)

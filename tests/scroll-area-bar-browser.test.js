@@ -85,6 +85,12 @@ test('custom native-bar rules and accessibility media are present in the bundle'
     assert.ok(media.some(r => r.selectors.includes('html.scroll-area.custom > .scroll-area-bar') && /display:\s*none/.test(r.body)), query);
     assert.equal(media.some(r => r.selectors.some(s => s.includes('::-webkit-scrollbar'))), false, `${query} leaves the system scrollbar unstyled`);
   }
+  const container = '.scroll-area-wrapper > .scroll-area.custom:has(+ .scroll-area-bar:not([hidden]))';
+  const active = parseRules(css.slice(css.indexOf('@media screen and (forced-colors: none)'), css.indexOf('html.scroll-area.custom > .scroll-area-bar[hidden]')));
+  assert.ok(active.some(r => r.selectors.includes(container) && /scrollbar-width:\s*none/.test(r.body)));
+  assert.ok(active.some(r => r.selectors.includes(`${container}::-webkit-scrollbar`) && /display:\s*none/.test(r.body)));
+  assert.match(css, /inset-inline-end: calc\(anchor\(self-end\)/);
+  assert.match(css, /html\.scroll-area\.custom > \.scroll-area-bar > \.scroll-area-thumb/);
   assert.match(css, /@media print\s*\{\s*html\.scroll-area\.custom > \.scroll-area-bar\s*\{\s*display: none/);
 });
 

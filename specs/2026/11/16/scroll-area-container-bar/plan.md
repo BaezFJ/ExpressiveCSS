@@ -39,11 +39,11 @@ Completion check: V4 through V7 pass in all three engines, and the first part of
 
 Outcome: the native bar hides only while the drawn bar shows, and the framework's scrolling bodies clip the bar. Prerequisites: group 2. Covers R2, R12, R13, R24. Checks V8, V16, V17.
 
-- [ ] Add the browser cases (V8, V16, V17) and extend the bundle test with the container rules, and watch V8 and V16 fail.
-- [ ] Inside the same media block, hide the native bar of `.scroll-area-wrapper > .scroll-area.custom:has(+ .scroll-area-bar:not([hidden]))`, with the `::-webkit-scrollbar` twin.
-- [ ] Set no `--scroll-area-bar-clearance` on the wrapper or the container.
-- [ ] Read the computed `position` of the scaffold's pane, a dialog's body and a pane's body at the start commit. Where it is `static`, add `position: relative` under `:has(.scroll-area-wrapper)` in the owning partial, on the selectors at `_scaffold.scss:225`, `_dialog.scss:135` and `_panes.scss:262`. Where a body is already positioned, add nothing and record that. Run the scaffold selector ownership case of `tests/scaffold-browser.test.js`.
-- [ ] Probe a `position: sticky` container in each engine: scroll its parent through the sticky range and compare the bar's rect with the padding box. If the bar stays on the edge in all three, add the arm to V6 and drop sticky from item 10 of R22. Otherwise keep the limit. Record the result either way.
+- [x] Add the browser cases (V8, V16, V17) and extend the bundle test with the container rules, and watch V8 and V16 fail.
+- [x] Inside the same media block, hide the native bar of `.scroll-area-wrapper > .scroll-area.custom:has(+ .scroll-area-bar:not([hidden]))`, with the `::-webkit-scrollbar` twin.
+- [x] Set no `--scroll-area-bar-clearance` on the wrapper or the container.
+- [x] Read the computed `position` of the scaffold's pane, a dialog's body and a pane's body at the start commit. Where it is `static`, add `position: relative` under `:has(.scroll-area-wrapper)` in the owning partial, on the selectors at `_scaffold.scss:225`, `_dialog.scss:135` and `_panes.scss:262`. Where a body is already positioned, add nothing and record that. Run the scaffold selector ownership case of `tests/scaffold-browser.test.js`.
+- [x] Probe a `position: sticky` container in each engine: scroll its parent through the sticky range and compare the bar's rect with the padding box. If the bar stays on the edge in all three, add the arm to V6 and drop sticky from item 10 of R22. Otherwise keep the limit. Record the result either way.
 
 Completion check: V8, V16 and V17 pass in all three engines.
 

@@ -133,4 +133,69 @@ for (const [engine, type, browserTest] of engines) {
     near(await page.locator('.scroll-area-thumb').evaluate(el => parseFloat(getComputedStyle(el).blockSize)),50);
   }));
 
+  browserTest(`V8 native fallback, media and clearance (${engine})`, () => run(async page => {
+    await setup(page,fixture+'<div id="native" class="scroll-area custom" style="height:300px;width:240px"><div style="height:900px"></div></div><div id="sideways" class="scroll-area custom" style="height:100px;width:100px"><div style="height:50px;width:500px"></div></div>');
+    await page.evaluate(() => {box.insertAdjacentHTML('beforeend','<a class="back-to-top" href="#before">Top</a><div class="fab-menu"><button>Action</button></div>');window.side=Expressive.ScrollArea.init(sideways);});
+    await init(page); await frames(page);
+    const state = () => page.evaluate(() => [getComputedStyle(box).scrollbarWidth,getComputedStyle(document.querySelector('#box + .scroll-area-bar')).display]);
+    assert.deepEqual(await state(),['none','block']);
+    if (engine !== 'firefox') assert.deepEqual(await page.evaluate(() => [getComputedStyle(document.querySelector('#native')).scrollbarWidth,getComputedStyle(sideways).scrollbarWidth]),['thin','thin']);
+    else {
+      const probe=await page.locator('#native').evaluate(el=>{el.style.scrollbarWidth='thin';return [el.style.scrollbarWidth,getComputedStyle(el).scrollbarWidth];});
+      console.log('Firefox scrollbar-width probe:',probe);assert.deepEqual(probe,['thin','none']);
+      await page.locator('#native').evaluate(el=>el.scrollTop=50);assert.equal(await page.locator('#native').evaluate(el=>el.scrollTop),50);
+    }
+    assert.deepEqual(await page.evaluate(() => [getComputedStyle(box).getPropertyValue('--scroll-area-bar-clearance'),...['.back-to-top','.fab-menu'].map(s=>getComputedStyle(box.querySelector(s)).insetInlineEnd)]),['','16px','16px']);
+    await page.evaluate(() => box.classList.remove('custom'));assert.equal((await state())[1],'none');if (engine !== 'firefox') assert.notEqual((await state())[0],'none');
+    await page.evaluate(() => box.classList.add('custom'));assert.deepEqual(await state(),['none','block']);
+    for (const media of [...(engine === 'webkit' ? [] : [{forcedColors:'active'}]),{media:'print',forcedColors:'none'}]) {
+      await page.emulateMedia(media);assert.equal((await state())[1],'none');if (engine !== 'firefox') assert.notEqual((await state())[0],'none');
+    }
+    await page.emulateMedia({media:'screen',forcedColors:'none'});await destroy(page);
+    if (engine !== 'firefox') assert.equal(await page.locator('#box').evaluate(el=>getComputedStyle(el).scrollbarWidth),'thin');
+    await page.evaluate(()=>window.side.destroy());
+  }));
+  if (engine === 'chromium') browserTest('V2/V8 coarse pointer preserves layout and native bar', () => run(async page => {
+    await setup(page);const before=await page.locator('#box').boundingBox();await init(page);
+    assert.deepEqual(await page.locator('#box').boundingBox(),before);
+    assert.equal(await page.locator('.scroll-area-wrapper').evaluate(el=>getComputedStyle(el).display),'contents');
+    assert.equal((await geometry(page)).display,'none');
+    assert.notEqual(await page.locator('#box').evaluate(el=>getComputedStyle(el).scrollbarWidth),'none');
+  },{hasTouch:true,isMobile:true}));
+  for (const owner of ['scaffold','dialog','pane','author']) browserTest(`V16 ${owner} clips a container bar (${engine})`, () => run(async page => {
+    await page.setViewportSize({width:1200,height:700});
+    const inner = fixture+'<div style="height:1200px"></div>';
+    const owners={
+      scaffold:`<div class="scaffold" style="height:400px"><main id="scroller">${inner}</main></div>`,
+      dialog:`<dialog open style="height:400px"><h2>Title</h2><div id="scroller">${inner}</div></dialog>`,
+      pane:`<div class="panes" style="height:400px"><div class="pane"><header>Title</header><section id="scroller">${inner}</section></div></div>`,
+      author:`<div id="scroller" style="height:300px;overflow:auto;position:relative">${inner}</div>`,
+    };
+    await setup(page,'<div style="height:150px"></div>'+owners[owner],'dialog{transition:none}');
+    const baseline=await page.locator('#scroller').evaluate(el=>getComputedStyle(el).position);
+    await init(page);await frames(page);
+    const result=await page.evaluate(()=>{
+      const ancestor=scroller.getBoundingClientRect();const r=box.getBoundingClientRect();scroller.scrollTop=r.top-ancestor.top+100;
+      const b=document.querySelector('#box + .scroll-area-bar').getBoundingClientRect();
+      const hit=y=>document.elementFromPoint(b.x+b.width/2,y)?.closest('.scroll-area-bar')!==null;
+      return {position:getComputedStyle(scroller).position,above:hit(ancestor.top-50),below:hit(ancestor.top+50)};
+    });
+    console.log(`V16 ${engine} ${owner} baseline ${baseline}, active ${result.position}`);
+    assert.notEqual(result.position,'static');assert.equal(result.above,false);assert.equal(result.below,true);
+    await destroy(page);assert.equal(await page.locator('#scroller').evaluate(el=>getComputedStyle(el).position),baseline);
+  }));
+  browserTest(`V17 unsupported anchor window keeps native markup (${engine})`, () => run(async page => {
+    await setup(page);await page.evaluate(()=>CSS.supports=()=>false);await init(page);
+    assert.equal(await page.locator('.scroll-area-wrapper').count(),0);assert.equal(await page.locator('#host > #box').count(),1);
+    if (engine !== 'firefox') assert.equal(await page.locator('#box').evaluate(el=>getComputedStyle(el).scrollbarWidth),'thin');await destroy(page);
+  }));
+  browserTest(`V6 sticky anchor probe (${engine})`, () => run(async page => {
+    await setup(page,`<div id="scroller" style="height:300px;overflow:auto;position:relative"><div style="height:150px"></div>${box}<div style="height:1200px"></div></div>`,'#box{position:sticky;top:0}');
+    await init(page);
+    const differences=[];
+    for (const top of [0,100,200,400]) {await page.evaluate(top=>scroller.scrollTop=top,top);await frames(page);const g=await geometry(page);differences.push(g.bar.top-g.box.top);}
+    console.log(`Sticky ${engine}: ${JSON.stringify(differences)}`);
+    differences.forEach(difference=>near(difference,0,'sticky edge'));
+  }));
+
 }

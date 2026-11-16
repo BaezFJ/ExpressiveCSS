@@ -56,10 +56,6 @@ html.scroll-area.custom > .scroll-area-bar {
 }
 
 @media screen and (forced-colors: none) and (not (pointer: coarse)) {
-  .scroll-area-wrapper > .scroll-area.custom + .scroll-area-bar:not([hidden]) {
-    display: block;
-  }
-
   html.scroll-area.custom:has(> .scroll-area-bar) {
     --scroll-area-bar-clearance: max(var(--scroll-area-bar-size, 12px), calc(var(--scroll-area-bar-size, 12px) / 2 + 12px));
     scrollbar-width: none;
@@ -67,6 +63,16 @@ html.scroll-area.custom > .scroll-area-bar {
     &::-webkit-scrollbar {
       display: none;
     }
+  }
+
+  .scroll-area-wrapper > .scroll-area.custom + .scroll-area-bar:not([hidden]) {
+    display: block;
+  }
+
+  .scroll-area-wrapper > .scroll-area.custom:has(+ .scroll-area-bar:not([hidden])) {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar { display: none; }
   }
 }
 
