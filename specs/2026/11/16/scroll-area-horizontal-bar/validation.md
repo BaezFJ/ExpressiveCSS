@@ -186,3 +186,24 @@ The generated diff was checked as data as well as text. Of 101 component guides,
 The source, tests and generated inputs still equal `89173d235`; only validation records changed afterward. The earlier affinity-wrapped contributor pass remains the accepted full gate, with 4,858 total, 4,855 passed, no failures and three existing Firefox WebGL2 skips. Its docs check confirms 145 pages, 11 aliases and 124 Markdown counterparts. The eight-tool MCP smoke and isolated framework/MCP consumer passes remain the accepted sequential package gates. This reviewer read those logs and did not rerun those broad gates. The two default contributor failures remain recorded above.
 
 The accepted JS/CSS gzip values stay 115,344/95,607 bytes, +585/+487 against the clean implementation start. No new visual run is needed for unchanged source. The existing four stable screenshot differences remain advisory, with V20 Pending. V18 through V22 and the recorded physical-device, classic-gutter, inaccessible-focus and opaque-modal limits remain unchanged. The exact local CLI review is the next milestone step.
+
+## Local Codex review and final gates
+
+On 2026-11-16, milestone steps 5 and 6 started from clean `7acdb3b163b563bebff761a770c9fe098f5676c3`. The source, tests and generated inputs still equal `89173d235a3e9c12835ff8404e83e17546f3f84c`. This step changes only this validation record. The exact local command was:
+
+```sh
+PHASE_BASE=d039e1e96cf36401419117df8ce53d3b27f5d0d0
+codex review --base "$PHASE_BASE" > "$(git rev-parse --git-dir)/codex-review-phase-102.txt" 2>&1
+```
+
+Codex CLI 0.169.0 completed with exit 0. Its saved output was read through the final line at `/home/javier/Repos/ExpressiveCSS/.git/worktrees/t3-8cf9a6a8-68778784d7994af6/codex-review-phase-102.txt`. The independent review reported no actionable regressions. It returned no finding, optional suggestion or nit, so this step fixed zero and rejected zero. No source or test change was required.
+
+The CLI reported passing focused source checks, Sass compilation, typechecking and generated-file checks. Its direct Chromium launch exited 1 at `sandbox_host_linux.cc:41` with `shutdown: Operation not permitted`. Its attempted combined build and runtime checks ended with exit 130 while running `build:js`. The CLI completed its source review; its browser validation and full contributor attempt remained incomplete. The fresh workspace gates below supply the final verification evidence.
+
+- `taskset -c 0-3 npm run verify` exited 0 in `/tmp/phase102-codex-verify.log`. It records 4,858 tests, 4,855 passed, zero failed and three existing Firefox WebGL2 skips. Build, typechecks and generated-data checks pass. The final line confirms `145 pages, 11 aliases, 124 Markdown counterparts, assets and LLM documents all present`.
+- After reading that process's actual final exit, `npm test --prefix mcp/expressivecss` exited 0 in `/tmp/phase102-codex-mcp.log`. Its final line confirms the eight-tool smoke check, catalogue and component resources, resource completion, aggregate response budgets and recovery.
+- After reading the MCP process's actual final exit, `npm run verify:packages` exited 0 in `/tmp/phase102-codex-packages.log`. Both isolated consumers pass, `@expressivecss/expressive@0.19.0` and `@expressivecss/mcp-server@0.6.0`. The latter confirmation is the final line.
+
+Each workspace command ran alone, with its final exit and log read before the next command started. The contributor result uses the documented four-CPU affinity wrapper, which makes Node report four available CPUs. The two earlier default-command failures remain recorded above. No helper, assertion, deadline, retry or wait changed.
+
+V1 through V17 pass on the unchanged implementation. JS/CSS gzip values remain 115,344/95,607 bytes, +585/+487 against the clean implementation start. There is no new visual capture because this step changes no visual behavior. The four existing stable screenshot differences still need human review. V18 through V22 remain Pending. Classic native gutters remain proven only in Chromium. Physical device checks remain open. Owners still restore focus inside inaccessible descendant roots and destroy affected instances before opening a separate opaque modal, then reinitialize after closing, as recorded above.
