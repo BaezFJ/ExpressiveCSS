@@ -5,6 +5,7 @@ export class ScrollArea extends Component<BaseOptions> {
   static key = 'Expressive_ScrollArea';
   private _bar?: HTMLDivElement;
   private _observer?: ResizeObserver;
+  private _modalObserver?: MutationObserver;
   private _frame?: number;
 
   private get _window() {
@@ -25,7 +26,6 @@ export class ScrollArea extends Component<BaseOptions> {
     this._observer = new this._window.ResizeObserver(this._queueMeasure);
     this._observer.observe(el);
     this._window.addEventListener('resize', this._queueMeasure, { signal: this._events.signal });
-    doc.addEventListener('close', this._queueMeasure, { capture: true, signal: this._events.signal });
     this._listenForScroll();
     this.refresh();
   }
@@ -50,12 +50,23 @@ export class ScrollArea extends Component<BaseOptions> {
   refresh(): void {
     if (!this._bar) return;
     this._observeBody();
+    this._observeModal();
     this._measure();
   }
 
   private _observeBody(): void {
     const body = this.el.ownerDocument.body;
     if (body) this._observer!.observe(body);
+  }
+
+  private _observeModal(): void {
+    this._modalObserver?.disconnect();
+    if (!this.el.matches(':has(dialog:modal)')) return;
+    // Removing a modal or its ancestor unlocks the page without firing close.
+    this._modalObserver ??= new this._window.MutationObserver(this._queueMeasure);
+    this._modalObserver.observe(this.el, {
+      childList: true, subtree: true, attributes: true, attributeFilter: ['open'],
+    });
   }
 
   private _measure(): void {
@@ -75,6 +86,7 @@ export class ScrollArea extends Component<BaseOptions> {
     if (this._frame !== undefined) this._window.cancelAnimationFrame(this._frame);
     this._frame = undefined;
     this._observer?.disconnect();
+    this._modalObserver?.disconnect();
     this._bar?.remove();
     this._bar = undefined;
     super.destroy();

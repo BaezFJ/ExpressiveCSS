@@ -69,17 +69,29 @@ for (const timeline of [false, true]) {
     const root = document.documentElement;
     const oldCSS = window.CSS;
     const oldRO = window.ResizeObserver;
+    const oldMO = window.MutationObserver;
+    const oldMatches = root.matches;
     const oldRAF = window.requestAnimationFrame;
     const oldCancel = window.cancelAnimationFrame;
     const oldAdd = window.addEventListener;
     const observers = [];
+    const modalObservers = [];
     const frames = new Map();
     const listeners = [];
     let nextFrame = 0;
+    let modal = false;
+    root.matches = function (selector) {
+      return selector === ':has(dialog:modal)' ? modal : oldMatches.call(this, selector);
+    };
     window.CSS = { supports: () => timeline };
     window.ResizeObserver = class {
       constructor(callback) { this.callback = callback; this.targets = []; observers.push(this); }
       observe(el) { if (!this.targets.includes(el)) this.targets.push(el); }
+      disconnect() { this.targets = []; }
+    };
+    window.MutationObserver = class {
+      constructor(callback) { this.callback = callback; this.targets = []; modalObservers.push(this); }
+      observe(el, options) { this.targets.push(el); this.options = options; }
       disconnect() { this.targets = []; }
     };
     window.requestAnimationFrame = callback => { frames.set(++nextFrame, callback); return nextFrame; };
@@ -120,17 +132,33 @@ for (const timeline of [false, true]) {
       root.style.overflowY = 'hidden'; instance.refresh(); assert.equal(bar.hidden, true);
       root.style.overflowY = 'clip'; instance.refresh(); assert.equal(bar.hidden, true);
       root.style.overflowY = ''; instance.refresh(); assert.equal(bar.hidden, false);
+      modal = true; root.style.overflowY = 'hidden';
+      instance.refresh(); instance.refresh();
+      assert.equal(bar.hidden, true);
+      assert.equal(modalObservers.length, 1);
+      assert.deepEqual(modalObservers[0].targets, [root]);
+      assert.equal(modalObservers[0].options.subtree, true);
+      assert.equal(modalObservers[0].options.childList, true);
+      assert.deepEqual(modalObservers[0].options.attributeFilter, ['open']);
+      modal = false; root.style.overflowY = '';
+      modalObservers[0].callback();
+      const callback = [...frames.values()][0]; frames.clear(); callback();
+      assert.equal(bar.hidden, false);
+      assert.deepEqual(modalObservers[0].targets, []);
+      modal = true; instance.refresh();
       window.dispatchEvent(new window.Event('resize'));
       assert.equal(frames.size, 1);
       instance.destroy();
       assert.equal(frames.size, 0);
       assert.equal(observers[0].targets.length, 0);
+      assert.equal(modalObservers[0].targets.length, 0);
       window.dispatchEvent(new window.Event('scroll'));
       document.dispatchEvent(new window.Event('close'));
       assert.equal(frames.size, 0);
     } finally {
       instance.destroy();
-      window.CSS = oldCSS; window.ResizeObserver = oldRO;
+      window.CSS = oldCSS; window.ResizeObserver = oldRO; window.MutationObserver = oldMO;
+      root.matches = oldMatches;
       window.requestAnimationFrame = oldRAF; window.cancelAnimationFrame = oldCancel;
       window.addEventListener = oldAdd;
       delete root.clientHeight; delete root.scrollHeight;

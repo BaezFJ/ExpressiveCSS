@@ -52,6 +52,25 @@ test('custom native-bar rules and accessibility media are present in the bundle'
 });
 
 for (const [engine, browserType, browserTest] of engines) {
+  browserTest(`page bar restores after a measured modal is removed (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    const page = await browser.newPage({ viewport: { width: 400, height: 300 } });
+    try {
+      await setup(page, 900, '<div id="modal-host"><dialog>Modal</dialog></div>');
+      await init(page);
+      await page.evaluate(() => {
+        document.querySelector('dialog').showModal();
+        window.area.refresh();
+      });
+      assert.equal((await geometry(page)).hidden, true);
+      await page.evaluate(() => document.querySelector('#modal-host').remove());
+      await frames(page);
+      assert.equal(await page.evaluate(() => getComputedStyle(document.documentElement).overflowY), 'auto');
+      assert.equal((await geometry(page)).hidden, false);
+      assert.notEqual((await geometry(page)).display, 'none');
+    } finally { await destroy(page); await browser.close(); }
+  });
+
   browserTest(`page thumb fallback follows native scroll without timelines (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);
     const page = await browser.newPage({ viewport: { width: 400, height: 300 }, reducedMotion: 'reduce' });

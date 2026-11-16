@@ -1434,7 +1434,6 @@ The custom bar uses `--scroll-area-bar-size`, default `12px`, and `--expressive-
 
 Without initialization or after removing `.custom`, the themed native bar stays. Forced colors and a coarse primary pointer also use the native bar; print and an open modal dialog hide the drawn bar. On systems with classic scrollbars, hiding the native bar widens the page once at initialization.
 
-
 Override `--scroll-area-thumb-color` and `--scroll-area-track-color` on the container or an ancestor. Defaults are `var(--md-sys-color-on-surface-variant)` and `transparent`. Choose colors with enough contrast against the track and container. Native scrollbar shape, exact width, and automatic hiding depend on the browser and operating system. Older WebKit engines use rounded 8px scrollbars. Forced-colors mode restores system colors and the default width. Selective Sass builds can load `"scroll-area"` through `$utilities`.
 
 ### Shapes

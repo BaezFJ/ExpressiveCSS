@@ -361,8 +361,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed outside navigation rail toggles and the first-child toggle lookup: 111,741 gzip bytes (+349).
   // Reviewed the rail reading its overlay state from the stylesheet: 111,750 gzip bytes (+9).
   // Reviewed the scaffold milestone merged with master's busy buttons, data table pages and compact and hover rail: 112,245 gzip bytes.
-  // Reviewed the page-only ScrollArea component, AutoInit claim, measurements, fallback listener and modal-close refresh against 644c91760: 112,792 gzip bytes (+547).
-  assert.ok(sizes(js).gzip <= 112792, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed the page-only ScrollArea component, AutoInit claim, measurements, fallback listener and temporary modal observer against 644c91760: 112,862 gzip bytes (+617).
+  assert.ok(sizes(js).gzip <= 112862, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
