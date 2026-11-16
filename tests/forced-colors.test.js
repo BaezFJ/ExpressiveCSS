@@ -16,6 +16,7 @@ const SYSTEM_FILL = /forced-color-adjust:\s*none;[\s\S]*background-color:\s*(Hig
 
 describe('Forced colors', () => {
   const selected = {
+    'custom page scrollbar defers to the system bar': [/^html\.scroll-area\.custom > \.scroll-area-bar$/, /display:\s*none/],
     'tab indicator bar': [/^\.tabs > \.indicator$/, SYSTEM_FILL],
     'tab indicator without JS': [/^\.tabs:not\(:has\(> \.indicator\)\) > a\.active::after$/, SYSTEM_FILL],
     'navigation bar destination': [/^\.navigation-bar > :is\(a, button\)\.active > /, OUTLINE],
