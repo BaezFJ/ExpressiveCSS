@@ -73,13 +73,15 @@ Completion check: V10 through V13 and V15 pass in all three engines.
 
 ## 5. Block-end clearance
 
-Outcome: `.back-to-top` and `.fab-menu` keep clear of the page's horizontal bar and the corner. Prerequisites: group 2. Covers R17. Checks V14.
+Outcome: framework block-end targets clear the horizontal page bar without shrinking, and scaffold rows and scroll padding agree. Prerequisites: group 2. Covers R17. Checks V14.
 
-- [ ] Add the browser case (V14) and watch it fail at the 18px inset.
-- [ ] In `src/sass/components/_back-to-top.scss:20` and `src/sass/components/_fab-menu.scss:54`, change `bottom` to read `var(--_page-bar-inset, <the offset property>)`, as the line above each already does for `inset-inline-end`.
-- [ ] Run `tests/back-to-top.test.js`, `tests/back-to-top-browser.test.js`, `tests/shadow-dom.test.js` and the page cases of `tests/scroll-area-bar-browser.test.js`. Change only a case that reads a block-end inset beside a page instance.
+- [ ] Add V14's isolated fixtures and watch the unpadded edge targets fail. Include 12px, 14px and 30px bars, both directions and the existing native/shadow paths.
+- [ ] Make `_back-to-top.scss` and `_fab-menu.scss` read their existing `--_page-bar-inset` for `bottom`, retaining their offset fallback.
+- [ ] Update `_status-bar.scss`, `_navigation-bar.scss` and `_toolbar.scss` in their owning variants. Use inherited clearance, preserve target heights and edge backgrounds, and leave already-clear floating actions in place. Keep unset-property and negative-offset behavior.
+- [ ] Update `_scaffold.scss` row sizes, root scroll padding and compact trailing groups together. Preserve status-present navigation padding and bottom-row zeroing; include companion FABs and the medium-width shell with neither bottom row.
+- [ ] Run the named compatibility cases, tokens and scaffold checks. Change an existing expectation only under R21's explicit page-instance or source-shape rule, with the failure and reason recorded.
 
-Completion check: V14 passes in all three engines, and the four named files pass.
+Completion check: V14 passes in all three engines, actual targets receive bottom-row presses, and the compatibility checks pass.
 
 ## 6. Docs, semantics and records
 
@@ -87,11 +89,11 @@ Outcome: every reader in R19 and R20 agrees with the code. Prerequisites: groups
 
 - [ ] Update `docs/src/pages/scroll-area.astro`: the two-axis example, the page and container prose, items 7 and 11 of the container limits, the block-end clearance guidance and the styling table row.
 - [ ] Update the scroll area section and the stacking row of `llm.md`, and `skills/expressivecss/expressivecss-usage/references/helpers.md`, with the same facts.
-- [ ] Update the clearance sentences in `docs/src/pages/back-to-top.astro`, `docs/src/pages/floating-action-button.astro` and their `llm.md` sections.
+- [ ] Update the owning BTT/FAB, status-bar, navigation-bar, toolbar and scaffold documentation and relevant `llm.md` sections with actual R17 variants. Append clearance guidance after core usage and semantics; verify the generated core nesting and expanded-state rules remain.
 - [ ] Reword the `semantics.json` note and run `npm run build:semantics`.
 - [ ] Reword the class comment in `scrollArea.ts` and extend the Unreleased `ScrollArea` entry in `CHANGELOG.md`.
 - [ ] Measure the JS and CSS gzip sizes against a clean build of the start commit and add reviewed budget lines to `tests/selective-builds.test.js`.
-- [ ] For `_scroll-area.scss`, `_back-to-top.scss` and `_fab-menu.scss`, re-pin in `docs/src/data/component-decisions.json` only a pin that equals its file's hash at the start commit. Leave `sourceRevision`.
+- [ ] For the seven Sass owners R19 names, re-pin in `docs/src/data/component-decisions.json` only a pin that equals its file's hash at the start commit. Leave `sourceRevision`.
 - [ ] Run `npm run build:skill` last, then diff the generated guides.
 
 Completion check: V16 passes.
