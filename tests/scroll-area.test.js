@@ -10,7 +10,7 @@ afterEach(() => {
   resetBody();
 });
 
-test('ScrollArea owns one decorative bar on the document element', () => {
+test('ScrollArea owns one unfocusable page bar on the document element', () => {
   const root = document.documentElement;
   root.className = 'scroll-area custom';
   const first = Expressive.ScrollArea.init(root);

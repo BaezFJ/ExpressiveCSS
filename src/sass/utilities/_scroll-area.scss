@@ -16,7 +16,7 @@ html.scroll-area.custom > .scroll-area-bar {
   inset-inline-end: 0;
   inline-size: var(--scroll-area-bar-size, 12px);
   z-index: var(--expressive-z-scroll-area);
-  pointer-events: none;
+  touch-action: none;
   background-color: var(--scroll-area-track-color, transparent);
 }
 

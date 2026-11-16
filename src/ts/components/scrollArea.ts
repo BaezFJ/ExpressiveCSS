@@ -23,12 +23,18 @@ export class ScrollArea extends Component<BaseOptions> {
     thumb.className = 'scroll-area-thumb';
     this._bar.append(thumb);
     el.append(this._bar);
+    this._bar.addEventListener('pointerdown', this._handlePointerDown, { signal: this._events.signal });
     this._observer = new this._window.ResizeObserver(this._queueMeasure);
     this._observer.observe(el);
     this._window.addEventListener('resize', this._queueMeasure, { signal: this._events.signal });
     this._listenForScroll();
     this.refresh();
   }
+
+  private _handlePointerDown = (e: PointerEvent): void => {
+    if (!e.isPrimary || e.button !== 0 || e.ctrlKey) return;
+    e.preventDefault();
+  };
 
   private _listenForScroll(): void {
     if (this._window.CSS?.supports('animation-timeline: scroll()')) return;

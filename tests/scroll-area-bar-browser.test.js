@@ -41,6 +41,9 @@ test('custom native-bar rules and accessibility media are present in the bundle'
   const hiding = css.match(/@media screen and \(forced-colors: none\) and \(not \(pointer: coarse\)\) \{([\s\S]*?)\n\}/);
   assert.ok(hiding, 'native hiding is limited to modes that show the custom bar');
   const rules = parseRules(hiding[1]);
+  const barRule = parseRules(css).find(r => r.selectors.includes('html.scroll-area.custom > .scroll-area-bar') && /position:\s*fixed/.test(r.body));
+  assert.doesNotMatch(barRule.body, /pointer-events:\s*none/);
+  assert.match(barRule.body, /touch-action:\s*none/);
   assert.ok(rules.some(r => r.selectors.includes('html.scroll-area.custom:has(> .scroll-area-bar)') && /scrollbar-width:\s*none/.test(r.body)));
   assert.ok(rules.some(r => r.selectors.includes('html.scroll-area.custom:has(> .scroll-area-bar)::-webkit-scrollbar') && /display:\s*none/.test(r.body)));
   for (const query of ['forced-colors: active', 'pointer: coarse']) {
@@ -52,6 +55,29 @@ test('custom native-bar rules and accessibility media are present in the bundle'
 });
 
 for (const [engine, browserType, browserTest] of engines) {
+  browserTest(`page bar preserves focus, selection, context menu and wheel (${engine})`, async () => {
+    const browser = await leaseBrowser(browserType);
+    const page = await browser.newPage({ viewport: { width: 400, height: 300 } });
+    try {
+      await setup(page, 2000, '<input value="selected text"><p>Text crossed by a pointer drag</p>');
+      await init(page);
+      const style = await page.locator('.scroll-area-bar').evaluate(el => ({ pointer: getComputedStyle(el).pointerEvents, touch: getComputedStyle(el).touchAction }));
+      assert.deepEqual(style, { pointer: 'auto', touch: 'none' });
+      await page.evaluate(() => { const input = document.querySelector('input'); input.focus(); input.select(); document.addEventListener('contextmenu', e => window.menuCancelled = e.defaultPrevented); });
+      const selected = await page.evaluate(() => getSelection().toString());
+      await page.mouse.move(394, 20); await page.mouse.down();
+      await page.mouse.move(200, 120, { steps: 4 }); await page.mouse.up();
+      await page.mouse.click(394, 250);
+      assert.deepEqual(await page.evaluate(() => ({ focus: document.activeElement.tagName, start: document.querySelector('input').selectionStart, end: document.querySelector('input').selectionEnd, text: getSelection().toString() })), { focus: 'INPUT', start: 0, end: 13, text: selected });
+      const top = await page.evaluate(() => scrollY);
+      await page.mouse.click(394, 250, { button: 'right' });
+      assert.equal(await page.evaluate(() => scrollY), top);
+      assert.equal(await page.evaluate(() => window.menuCancelled), false);
+      await page.mouse.move(394, 150); await page.mouse.wheel(0, 300);
+      await page.waitForFunction(top => scrollY > top, top);
+    } finally { await destroy(page); await browser.close(); }
+  });
+
   browserTest(`page bar restores after a measured modal is removed (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);
     const page = await browser.newPage({ viewport: { width: 400, height: 300 } });
@@ -182,7 +208,7 @@ for (const [engine, browserType, browserTest] of engines) {
     }
   });
 
-  browserTest(`page bar opt-in restores native scrolling and ignores pointer (${engine})`, async () => {
+  browserTest(`page bar opt-in restores native scrolling and takes pointer input (${engine})`, async () => {
     const browser = await leaseBrowser(browserType);
     const page = await browser.newPage({ viewport: { width: 400, height: 300 } });
     try {
@@ -200,7 +226,7 @@ for (const [engine, browserType, browserTest] of engines) {
         assert.equal(await page.locator('.scroll-area-bar').evaluate(el => getComputedStyle(el).position), 'fixed');
         await page.evaluate(() => { window.clicked = false; });
         await page.mouse.click(box.x + 6, 150);
-        assert.equal(await page.evaluate(() => window.clicked), true);
+        assert.equal(await page.evaluate(() => window.clicked), false);
       }
       await page.evaluate(() => { document.documentElement.classList.remove('custom'); });
       if (engine !== 'firefox') assert.equal(await width(), 'thin');
