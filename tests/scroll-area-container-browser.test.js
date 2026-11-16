@@ -278,12 +278,13 @@ for (const [engine, type, browserTest] of engines) {
     await init(page); await frames(page);
     const state = () => page.evaluate(() => [getComputedStyle(box).scrollbarWidth,getComputedStyle(document.querySelector('#box + .scroll-area-bar')).display]);
     assert.deepEqual(await state(),['none','block']);
-    if (engine !== 'firefox') assert.deepEqual(await page.evaluate(() => [getComputedStyle(document.querySelector('#native')).scrollbarWidth,getComputedStyle(sideways).scrollbarWidth]),['thin','thin']);
+    if (engine !== 'firefox') assert.deepEqual(await page.evaluate(() => [getComputedStyle(document.querySelector('#native')).scrollbarWidth,getComputedStyle(sideways).scrollbarWidth]),['thin','none']);
     else {
       const probe=await page.locator('#native').evaluate(el=>{el.style.scrollbarWidth='thin';return [el.style.scrollbarWidth,getComputedStyle(el).scrollbarWidth];});
       console.log('Firefox scrollbar-width probe:',probe);assert.deepEqual(probe,['thin','none']);
       await page.locator('#native').evaluate(el=>el.scrollTop=50);assert.equal(await page.locator('#native').evaluate(el=>el.scrollTop),50);
     }
+    assert.equal(await page.locator('#sideways').evaluate(el => getComputedStyle(el.parentElement.querySelector('.horizontal')).display), 'block');
     assert.deepEqual(await page.evaluate(() => [getComputedStyle(box).getPropertyValue('--scroll-area-bar-clearance'),...['.back-to-top','.fab-menu'].map(s=>getComputedStyle(box.querySelector(s)).insetInlineEnd)]),['','16px','16px']);
     await page.evaluate(() => box.classList.remove('custom'));assert.equal((await state())[1],'none');if (engine !== 'firefox') assert.notEqual((await state())[0],'none');
     await page.evaluate(() => box.classList.add('custom'));assert.deepEqual(await state(),['none','block']);

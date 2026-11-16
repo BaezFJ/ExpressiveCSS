@@ -133,7 +133,7 @@ html.scroll-area.custom:not(:has(dialog:modal)):has(> .scroll-area-bar:not(.hori
     display: block;
   }
 
-  .scroll-area-wrapper > .scroll-area.custom:has(+ .scroll-area-bar:not([hidden])) {
+  .scroll-area-wrapper > .scroll-area.custom:has(~ .scroll-area-bar:not([hidden])) {
     scrollbar-width: none;
 
     &::-webkit-scrollbar { display: none; }

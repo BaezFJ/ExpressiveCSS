@@ -115,5 +115,54 @@ for (const [engine,type,browserTest] of engines) {
       const hit=await page.evaluate(()=>{const owner=scroller.getBoundingClientRect();scroller.scrollTop=box.getBoundingClientRect().bottom-owner.bottom-100;const bar=box.parentElement.querySelector('.horizontal'),r=bar.getBoundingClientRect();return {below:r.top>owner.bottom,hit:!!document.elementFromPoint(r.left+r.width/2,r.top+r.height/2)?.closest('.scroll-area-bar')};});assert.equal(hit.below,true);assert.equal(hit.hit,false);await destroy(page);
     }
   }));
+  browserTest(`horizontal V6 independent axes, visibility and native bars (${engine})`,()=>run(async page=>{
+    for(const [width,height,overflow,expected] of [[720,900,'auto',[false,false]],[720,100,'auto',[true,false]],[100,900,'auto',[false,true]],[100,100,'auto',[true,true]],[720,900,'hidden',[false,true]]]) {
+      await setup(page);await page.evaluate(({width,height,overflow})=>{content.style.width=`${width}px`;content.style.height=`${height}px`;box.style.overflowX=overflow;},{width,height,overflow});await init(page);await frames(page);
+      let g=await geometry(page);assert.deepEqual(g.bars.map(b=>b.hidden),expected);if(engine!=='firefox')assert.equal(await page.locator('#box').evaluate(el=>getComputedStyle(el).scrollbarWidth),expected.every(Boolean)?'thin':'none');
+      await page.evaluate(()=>{box.style.visibility='hidden';area.refresh();});assert.deepEqual((await geometry(page)).bars.map(b=>b.hidden),[true,true]);await page.evaluate(()=>{box.style.visibility='';area.refresh();});assert.deepEqual((await geometry(page)).bars.map(b=>b.hidden),expected);
+      await page.evaluate(()=>{content.style.cssText='width:100px;height:100px';});await frames(page);assert.deepEqual((await geometry(page)).bars.map(b=>b.hidden),[true,true]);await destroy(page);
+    }
+    await setup(page,`<section>${box}</section>`);await init(page);await page.evaluate(()=>{document.body.append(box);area.refresh();});assert.equal(await page.locator('.scroll-area-bar').evaluateAll(bars=>bars.every(bar=>bar.hidden)),true);await destroy(page);
+    await setup(page,`<dialog>${box}</dialog>`);await init(page);assert.deepEqual((await geometry(page)).bars.map(b=>b.hidden),[true,true]);await page.evaluate(()=>document.querySelector('dialog').show());await frames(page);assert.deepEqual((await geometry(page)).bars.map(b=>b.hidden),[false,false]);await destroy(page);
+    await setup(page,'<div style="height:1500px;width:1800px"></div><dialog></dialog>','', 'ltr',true);await init(page,true);await page.evaluate(()=>document.querySelector('dialog').showModal());assert.deepEqual((await geometry(page)).bars.map(b=>b.display),['none','none']);
+  }));
+  browserTest(`horizontal V7 transitions settle and scroll does not toggle an idle bar (${engine})`,()=>run(async page=>{
+    await setup(page);await init(page);
+    for(const [width,height,expected] of [[100,100,[true,true]],[720,100,[true,false]],[720,900,[false,false]],[100,100,[true,true]]]) {
+      await page.evaluate(({width,height})=>{content.style.width=`${width}px`;content.style.height=`${height}px`;},{width,height});await frames(page);await frames(page);
+      const samples=await page.evaluate(()=>new Promise(resolve=>{let calls=0;const refresh=area.refresh;area.refresh=function(){calls++;return refresh.call(this)};const rows=[];const tick=()=>{rows.push([...box.parentElement.querySelectorAll('.scroll-area-bar')].map(b=>b.hidden));if(rows.length<12)requestAnimationFrame(tick);else{area.refresh=refresh;resolve({calls,rows});}};requestAnimationFrame(tick);}));assert.equal(samples.calls,0);for(const row of samples.rows)assert.deepEqual(row,expected);
+    }
+    for(const sideways of [false,true]) {
+      await page.evaluate(sideways=>{content.style.cssText=sideways?'width:720px;height:100px':'width:100px;height:900px';},sideways);await frames(page);await frames(page);
+      const count=await page.evaluate(sideways=>new Promise(resolve=>{let count=0,i=0;const observer=new MutationObserver(records=>count+=records.length);for(const bar of box.parentElement.querySelectorAll('.scroll-area-bar'))observer.observe(bar,{attributes:true,attributeFilter:['hidden']});const tick=()=>{box[sideways?'scrollLeft':'scrollTop']+=10;if(++i<12)requestAnimationFrame(tick);else requestAnimationFrame(()=>{observer.disconnect();resolve(count)});};requestAnimationFrame(tick);}),sideways);assert.equal(count,0,sideways?'sideways idle bar':'upright idle bar');
+    }
+  }));
+  for (const root of [false, true]) for (const mode of ['no-instance', 'destroy', 'custom', 'print', ...(engine === 'webkit' ? [] : ['forced']), ...(!root ? ['unsupported'] : [])]) {
+    browserTest(`horizontal V8 ${root ? 'page' : 'container'} ${mode} keeps native access (${engine})`, () => run(async page => {
+      await setup(page, root ? '<div id="content" style="height:1500px;width:1800px"></div>' : box, '', 'ltr', root);
+      if (mode === 'unsupported') await page.evaluate(() => CSS.supports = () => false);
+      if (mode !== 'no-instance') await init(page, root);
+      const changes = {
+        destroy: () => destroy(page), custom: () => page.evaluate(root => (root ? document.documentElement : box).classList.remove('custom'), root),
+        print: () => page.emulateMedia({ media: 'print' }), forced: () => page.emulateMedia({ forcedColors: 'active' }),
+      };
+      await changes[mode]?.();
+      const state = await page.evaluate(root => {
+        const el = root ? document.documentElement : box; el.scrollTo(100, 100);
+        return { bars: [...document.querySelectorAll('.scroll-area-bar')].map(b => getComputedStyle(b).display), native: getComputedStyle(el).scrollbarWidth, offset: [el.scrollLeft, el.scrollTop] };
+      }, root);
+      assert.equal(state.bars.every(display => display === 'none'), true, mode);
+      if (engine !== 'firefox') assert.notEqual(state.native, 'none');
+      assert.deepEqual(state.offset, [100, 100]); await page.mouse.move(100, 100); await page.mouse.wheel(60, 0);
+      await page.waitForFunction(root => (root ? document.documentElement : box).scrollLeft > 100, root);
+      await page.emulateMedia({ media: 'screen', forcedColors: 'none' });
+    }));
+  }
+  if(engine==='chromium')browserTest('horizontal V8 coarse primary pointer keeps both axes native',()=>run(async page=>{await setup(page);await init(page);assert.deepEqual((await geometry(page)).bars.map(b=>b.display),['none','none']);await page.evaluate(()=>box.scrollTo(100,100));assert.deepEqual(await page.locator('#box').evaluate(el=>[el.scrollLeft,el.scrollTop]),[100,100]);},{hasTouch:true,isMobile:true}));
+  browserTest(`horizontal V9 resize and refresh update both tracks (${engine})`,()=>run(async page=>{
+    await setup(page,box.replace('height:900px','height:100px'));await init(page);await frames(page);
+    for(const [change,length,track] of [[()=>box.style.width='200px',200*200/720,200],[()=>content.style.width='1440px',48,200],[()=>{box.style.width='240px';content.style.width='720px';box.insertAdjacentHTML('beforeend','<div style="height:900px;width:720px"></div>');},76,228]]){await page.evaluate(change);await frames(page);const h=(await geometry(page)).bars[1];near(h.thumb.width,length);near(h.bar.width,track);}await destroy(page);
+    await setup(page,'<div id="content" style="height:1500px;width:1800px"></div>','', 'ltr',true);await init(page,true);await page.setViewportSize({width:900,height:500});await frames(page);let g=await geometry(page);near(g.bars[1].thumb.width,888*900/1800);await page.evaluate(()=>{content.style.width='2400px';area.refresh();});await frames(page);g=await geometry(page);near(g.bars[1].thumb.width,888*900/2400);
+  }));
 
 }

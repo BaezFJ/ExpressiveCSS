@@ -323,7 +323,7 @@ export class ScrollArea extends Component<BaseOptions> {
 
   private _containerHidden(style: CSSStyleDeclaration): boolean {
     // Measure without native gutters, then restore them before paint if content fits.
-    this._bar!.hidden = false;
+    if (this._bars.every(bar => bar.hidden)) this._bar!.hidden = false;
     this._copyContainerStyle(style);
     return style.visibility !== 'visible' || this.el.parentNode !== this._wrapper;
   }
