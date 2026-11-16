@@ -282,4 +282,13 @@ for (const [engine, type, browserTest] of engines) {
     assert.equal(await page.evaluate(()=>shadow.firstElementChild.firstElementChild.scrollTop),300);
   }));
 
+  browserTest(`V14 watcher draws once and keeps the same instance (${engine})`, () => run(async page => {
+    await setup(page,'<div id="host"></div>');
+    await page.evaluate(html=>{window.stopWatching=Expressive.AutoInit(document.body,undefined,{watch:true});host.innerHTML=html;},box);
+    await page.waitForFunction(()=>Expressive.ScrollArea.getInstance(box));await frames(page);
+    await page.evaluate(()=>window.first=Expressive.ScrollArea.getInstance(box));await frames(page);
+    assert.equal(await page.evaluate(()=>first===Expressive.ScrollArea.getInstance(box)),true);assert.equal(await page.locator('.scroll-area-wrapper').count(),1);
+    const g=await geometry(page);near(g.bar.height,300);near(g.bar.right,g.box.right);
+  }));
+
 }

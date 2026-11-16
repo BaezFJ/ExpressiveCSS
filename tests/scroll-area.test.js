@@ -432,3 +432,24 @@ test('V15 iframe container uses its own element and window', () => {
     assert.equal(bar.ownerDocument,win.document);
   } finally {area.destroy();dom.window.close();}
 });
+
+const turns = async () => {await new Promise(resolve=>setTimeout(resolve,0));await new Promise(resolve=>setTimeout(resolve,0));};
+test('V14 AutoInit watcher retains wrapped instances and restores removed markup', async () => {
+  document.body.innerHTML='<div id="host"><div class="scroll-area custom"></div><div class="scroll-area custom no-autoinit"></div></div>';
+  const host=document.querySelector('#host'),el=host.firstElementChild;let stop;
+  try {
+    Expressive.AutoInit();assert.equal(host.querySelectorAll('.scroll-area-wrapper').length,1);
+    Expressive.AutoInit();assert.equal(host.querySelectorAll('.scroll-area-wrapper').length,1);
+    Expressive.ScrollArea.init(el);Expressive.ScrollArea.init(el);assert.equal(host.querySelectorAll('.scroll-area-wrapper').length,1);
+    assert.equal(host.lastElementChild.className,'scroll-area custom no-autoinit');
+    stop=Expressive.AutoInit(document.body,undefined,{watch:true});
+    const parent=document.createElement('div');parent.innerHTML='<div class="scroll-area custom"></div>';host.append(parent);const added=parent.firstElementChild;
+    await turns();const first=Expressive.ScrollArea.getInstance(added);assert.ok(first);assert.equal(parent.querySelectorAll('.scroll-area-wrapper').length,1);
+    await turns();assert.equal(Expressive.ScrollArea.getInstance(added),first);assert.equal(parent.querySelectorAll('.scroll-area-wrapper .scroll-area-wrapper').length,0);
+    parent.remove();await turns();assert.equal(Expressive.ScrollArea.getInstance(added),undefined);assert.equal(parent.querySelector('.scroll-area-wrapper'),null);
+    const old=Expressive.ScrollArea.getInstance(el);old.destroy();await turns();assert.ok(Expressive.ScrollArea.getInstance(el));assert.notEqual(Expressive.ScrollArea.getInstance(el),old);assert.equal(el.parentElement.className,'scroll-area-wrapper');
+    el.classList.remove('custom');Expressive.ScrollArea.getInstance(el).destroy();await turns();assert.equal(Expressive.ScrollArea.getInstance(el),undefined);assert.equal(el.parentElement,host);
+  } finally {
+    stop?.();for(const el of document.querySelectorAll('.scroll-area'))Expressive.ScrollArea.getInstance(el)?.destroy();
+  }
+});

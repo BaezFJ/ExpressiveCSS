@@ -63,8 +63,8 @@ Completion check: V9 through V12 and V15 pass in all three engines, and the seco
 
 Outcome: AutoInit and its watcher behave as R18 says. Prerequisites: group 1. Covers R18. Checks V14.
 
-- [ ] Add the jsdom AutoInit cases and the browser watch arm (V14). No registry change is expected. If a case fails, fix the component and leave `registry.ts` alone.
-- [ ] Confirm `tests/autoinit.test.js` and `tests/autoinit-watch-browser.test.js` pass unmodified, with the `div` fixture now wrapped in jsdom.
+- [x] Add the jsdom AutoInit cases and the browser watch arm (V14). No registry change is expected. If a case fails, fix the component and leave `registry.ts` alone.
+- [x] Confirm `tests/autoinit.test.js` and `tests/autoinit-watch-browser.test.js` pass unmodified, with the `div` fixture now wrapped in jsdom.
 
 Completion check: V14 passes.
 
