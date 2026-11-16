@@ -41,6 +41,7 @@ test('ScrollArea leaves a container unchanged', () => {
   const instance = Expressive.ScrollArea.init(el);
   try {
     assert.equal(el.children.length, 0);
+    assert.equal(pointer(el, 'pointerdown').defaultPrevented, false);
   } finally {
     instance.destroy();
   }
@@ -53,11 +54,23 @@ test('ScrollArea uses the iframe document', () => {
   const root = frame.contentDocument.documentElement;
   frame.contentWindow.ResizeObserver = window.ResizeObserver;
   root.className = 'scroll-area custom';
+  Object.defineProperty(root, 'clientHeight', { get: () => 300 });
+  Object.defineProperty(root, 'scrollHeight', { get: () => 900 });
+  const moves = [];
+  frame.contentWindow.scrollTo = options => moves.push(options);
   const instance = frame.contentWindow.Expressive.ScrollArea.init(root);
   try {
     assert.equal(root.lastElementChild.ownerDocument, frame.contentDocument);
     assert.equal(root.lastElementChild.className, 'scroll-area-bar');
     assert.equal(document.documentElement.querySelector(':scope > .scroll-area-bar'), null);
+    const bar = root.lastElementChild;
+    bar.setPointerCapture = () => {};
+    bar.hasPointerCapture = () => false;
+    bar.getClientRects = () => [{}];
+    pointer(bar, 'pointerdown'); pointer(bar, 'pointermove', { clientY: 150 });
+    assert.equal(moves.length, 1);
+    assert.equal(moves[0].top, 300);
+    assert.equal(moves[0].behavior, 'instant');
   } finally {
     instance.destroy();
     dom.window.close();
@@ -185,5 +198,70 @@ test('AutoInit claims html only for ScrollArea and only from body', () => {
     assert.equal(Expressive.ScrollSpy.getInstance(root), undefined);
   } finally {
     Expressive.ScrollArea.getInstance(root)?.destroy();
+  }
+});
+
+function pointer(target, type, values = {}) {
+  const event = new target.ownerDocument.defaultView.Event(type, { bubbles: true, cancelable: true });
+  Object.assign(event, { pointerId: 1, isPrimary: true, button: 0, clientY: 50, pointerType: 'mouse', ...values });
+  target.dispatchEvent(event);
+  return event;
+}
+
+test('ScrollArea anchors capture and drag metrics until every ending', () => {
+  const root = document.documentElement;
+  let height = 900;
+  let viewport = 300;
+  Object.defineProperty(root, 'clientHeight', { configurable: true, get: () => viewport });
+  Object.defineProperty(root, 'scrollHeight', { configurable: true, get: () => height });
+  root.scrollTop = 0;
+  const oldScroll = window.scrollTo;
+  const oldBy = window.scrollBy;
+  const moves = [], captures = [];
+  window.scrollTo = value => moves.push(value);
+  window.scrollBy = () => assert.fail('thumb press must not page');
+  const area = Expressive.ScrollArea.init(root);
+  const bar = root.lastElementChild;
+  let captured;
+  bar.setPointerCapture = id => { captured = id; captures.push(id); };
+  bar.hasPointerCapture = id => captured === id;
+  bar.releasePointerCapture = () => { captured = undefined; };
+  bar.getClientRects = () => [{}];
+  try {
+    pointer(bar.firstElementChild, 'pointerdown');
+    pointer(bar, 'pointerdown', { pointerId: 2 });
+    pointer(bar, 'pointermove', { pointerId: 2, clientY: 200 });
+    pointer(bar, 'pointermove', { clientY: 150 });
+    height = 1800;
+    pointer(bar, 'pointermove', { clientY: 160 });
+    assert.deepEqual(captures, [1]);
+    assert.deepEqual(moves, [{ top: 300, behavior: 'instant' }, { top: 330, behavior: 'instant' }]);
+    pointer(bar, 'pointerup');
+    for (const ending of ['pointercancel', 'lostpointercapture']) {
+      height = 900;
+      pointer(bar, 'pointerdown'); pointer(bar, ending);
+      pointer(bar, 'pointermove', { clientY: 200 });
+      assert.equal(moves.length, 2);
+    }
+    for (const pointerType of ['pen', 'touch']) {
+      pointer(bar, 'pointerdown', { pointerType });
+      pointer(bar, 'pointermove', { pointerType, clientY: 150 });
+      assert.deepEqual(moves.at(-1), { top: 300, behavior: 'instant' });
+      pointer(bar, 'pointerup', { pointerType });
+    }
+    const count = captures.length;
+    for (const values of [{ button: 2 }, { ctrlKey: true }, { isPrimary: false }]) pointer(bar, 'pointerdown', values);
+    viewport = 48;
+    pointer(bar, 'pointerdown', { clientY: 20 }); pointer(bar, 'pointermove');
+    assert.equal(captures.length, count);
+    viewport = 300;
+    pointer(bar, 'pointerdown'); area.destroy();
+    const ended = moves.length;
+    pointer(bar, 'pointermove', { clientY: 200 });
+    assert.equal(moves.length, ended);
+    assert.equal(captured, undefined);
+  } finally {
+    area.destroy(); window.scrollTo = oldScroll; window.scrollBy = oldBy;
+    delete root.clientHeight; delete root.scrollHeight; root.scrollTop = 0;
   }
 });
