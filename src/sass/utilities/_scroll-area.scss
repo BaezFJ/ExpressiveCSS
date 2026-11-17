@@ -114,3 +114,13 @@
 @media (prefers-reduced-motion: reduce) {
   .scroll-area-bar { transition: none; }
 }
+
+.scroll-area-mark {
+  position: absolute;
+  inset-inline-end: 2px;
+  inline-size: 12px;
+  block-size: 2px;
+  background: var(--scroll-area-thumb-color, var(--md-sys-color-on-surface-variant));
+  opacity: .6;
+  pointer-events: none;
+}

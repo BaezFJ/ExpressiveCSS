@@ -81,6 +81,13 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
       on an authored outer element if they need to change after initialization. Direct-child
       selectors must account for the wrapper. Call <code>refresh()</code> after layout changes
       that do not resize the scrollport or its direct children.</p>
+    <p>The <code>sections</code> selector defaults to <code>.scrollspy, [data-scroll-area-section]</code>,
+      reusing ScrollSpy targets or explicit section markers. Set it to a heading selector
+      such as <code>h2[id]</code> to mark those instead; an invalid selector produces no marks.
+      Vertical ticks follow each target's scroll offset as a share of the scrollable distance.
+      Layout changes update them; call <code>refresh()</code> for shifts outside the observed content.
+      Ticks are decorative and track presses still page one viewport.</p>
+    <Code code={`<section data-scroll-area-section><h2>November releases</h2>...</section>`} />
     <p>Bars fade after <code>idleDelay</code> milliseconds without activity (default 1000).
       Scrolling or entering the 16px edge strip shows them again; hover and dragging keep
       them visible. Pass <code>&#123; idleDelay: 1500 &#125;</code> at initialization to change it.

@@ -537,6 +537,8 @@ Completion check: on a page with four named sections, the track shows four marks
 
 Open for spec: how authors name the targets, and whether a click on a mark scrolls to its section.
 
+Implemented in `feat/custom-scrollbars`; see [decisions and validation](2026/11/16/scroll-area-sections/requirements.md).
+
 ### Phase 106: label the thumb while dragging
 
 Depends on phases 100 and 105. While the thumb is dragged, a label beside it shows the name of the section at the current scroll position, and it disappears when the drag ends. Pages without marked sections show no label.

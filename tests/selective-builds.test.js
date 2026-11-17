@@ -368,7 +368,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Custom scrollbars phase 102: 114,352 gzip bytes.
   // Custom scrollbars phase 103: 114,377 gzip bytes.
   // Custom scrollbars phase 104: 114,575 gzip bytes.
-  assert.ok(sizes(js).gzip <= 114575, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Custom scrollbars phase 105: 114,867 gzip bytes.
+  assert.ok(sizes(js).gzip <= 114867, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -609,5 +610,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Custom scrollbars phase 102: 94,749 gzip bytes.
   // Custom scrollbars phase 103: 94,857 gzip bytes.
   // Custom scrollbars phase 104: 94,892 gzip bytes.
-  assert.ok(sizes(css).gzip <= 94892, `CSS gzip: ${sizes(css).gzip}`);
+  // Custom scrollbars phase 105: 94,922 gzip bytes.
+  assert.ok(sizes(css).gzip <= 94922, `CSS gzip: ${sizes(css).gzip}`);
 });

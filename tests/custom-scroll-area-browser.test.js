@@ -203,4 +203,24 @@ for (const [engine, type, browserTest] of engines) {
     }
   });
 
+  browserTest(`custom section marks reuse scrollspy targets and follow layout (${engine})`, async () => {
+    const browser = await leaseBrowser(type);
+    let page;
+    try {
+      page = await browser.newPage({ viewport:{width:800,height:600} });
+      await setup(page,Array.from({length:4},(_,i)=>`<section id="s${i}" class="scrollspy" style="height:600px">Section ${i}</section>`).join(''));
+      assert.equal(await page.locator('.scroll-area-mark').count(),4);
+      const positions=await page.locator('.scroll-area-mark').evaluateAll(marks=>marks.map(m=>parseFloat(m.style.top)));
+      positions.forEach((value,index)=>near(value,index*100/3,'section mark position'));
+      await page.locator('#s0').evaluate(el=>el.style.height='1200px');
+      await page.waitForFunction(() => Math.abs(parseFloat(document.querySelectorAll('.scroll-area-mark')[1].style.top)-50)<1);
+      await page.evaluate(() => { area.destroy(); area=Expressive.ScrollArea.init(document.documentElement,{ sections:'[' }); });
+      await page.evaluate(() => new Promise(resolve=>requestAnimationFrame(resolve)));
+      assert.equal(await page.locator('.scroll-area-mark').count(),0);
+    } finally {
+      if (page) await page.evaluate(() => window.area?.destroy());
+      await browser.close();
+    }
+  });
+
 }

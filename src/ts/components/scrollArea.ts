@@ -3,6 +3,10 @@ import { Component, BaseOptions } from '../core/component';
 export interface ScrollAreaOptions extends BaseOptions {
   /** Milliseconds after activity before hiding the bar. @default 1000 */
   idleDelay: number;
+  /** Targets for decorative vertical track marks. Invalid selectors match nothing.
+   * @default '.scrollspy, [data-scroll-area-section]'
+   */
+  sections: string;
 }
 
 type Axis = 'x' | 'y';
@@ -19,7 +23,7 @@ interface Bar {
 /** A decorative scrollbar over a native scrollport. Keyboard and touch stay native. */
 export class ScrollArea extends Component<ScrollAreaOptions> {
   static key = 'Expressive_ScrollArea';
-  static get defaults(): ScrollAreaOptions { return { idleDelay: 1000 }; }
+  static get defaults(): ScrollAreaOptions { return { idleDelay: 1000, sections: '.scrollspy, [data-scroll-area-section]' }; }
 
   private _view: Window;
   private _page: boolean;
@@ -27,6 +31,7 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
   private _styles = new Map<string, [string, string]>();
   private _bars: Bar[] = [];
   private _rtl = false;
+  private _sections: { el: HTMLElement; offset: number }[] = [];
   private _resize: ResizeObserver;
   private _observed = new Set<Element>();
   private _mutations: MutationObserver;
@@ -72,7 +77,8 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
     this._mutations = new MutationObserver(records => {
       if (records.some(record => !this._bars.some(bar => bar.rail.contains(record.target)) && !(record.target === this.el && record.attributeName === 'class'))) this.refresh();
     });
-    this._mutations.observe(el, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['style', 'class', 'hidden', 'dir'] });
+    this._mutations.observe(el, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['style', 'class', 'hidden', 'dir', 'data-scroll-area-section'] });
+    el.ownerDocument.fonts?.ready.then(this.refresh);
     this.refresh();
   }
 
@@ -86,7 +92,8 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
   };
 
   private _measure() {
-    const targets = new Set<Element>([this.el, ...this.el.children]);
+    this._readSections();
+    const targets = new Set<Element>([this.el, ...this.el.children, ...this._sections.map(section => section.el)]);
     if (this._page) targets.add(this.el.ownerDocument.body);
     for (const bar of this._bars) targets.delete(bar.rail);
     for (const old of this._observed) if (!targets.has(old)) this._resize.unobserve(old);
@@ -140,8 +147,32 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
         );
       }
     }
+    this._marks();
     this._position();
     this._wake();
+  }
+
+  private _readSections() {
+    let elements: HTMLElement[] = [];
+    try { elements = Array.from(this.el.querySelectorAll<HTMLElement>(this.options.sections)); } catch { /* Invalid author selector: no marks. */ }
+    const origin = this._page ? 0 : this.el.getBoundingClientRect().top + this.el.clientTop;
+    this._sections = elements.filter(el => {
+      const scrollport = el.parentElement?.closest('.scroll-area');
+      return (!scrollport || scrollport === this.el) && el.getClientRects().length > 0;
+    }).map(el => ({ el, offset: el.getBoundingClientRect().top - origin + this.el.scrollTop }))
+      .sort((a, b) => a.offset - b.offset);
+  }
+
+  private _marks() {
+    const bar = this._bars.find(bar => bar.axis === 'y');
+    bar.rail.querySelectorAll('.scroll-area-mark').forEach(mark => mark.remove());
+    if (!bar.range) return;
+    for (const section of this._sections) {
+      const mark = this.el.ownerDocument.createElement('span');
+      mark.className = 'scroll-area-mark';
+      mark.style.top = `${Math.max(0, Math.min(1, section.offset / bar.range)) * 100}%`;
+      bar.rail.append(mark);
+    }
   }
 
   private _wrap() {

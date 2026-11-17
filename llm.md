@@ -1409,6 +1409,11 @@ after layout changes that do not resize the scrollport or its direct children.
 
 For a framework-drawn page bar, use `<html class="scroll-area custom">` and
 `ScrollArea.init(document.documentElement)`, or `AutoInit(document.documentElement)`.
+`sections` defaults to `.scrollspy, [data-scroll-area-section]`, reusing ScrollSpy
+targets or explicit markers. A custom selector (e.g. `h2[id]`) replaces it.
+Invalid selectors match nothing. Vertical ticks are decorative, proportional to
+target scroll offsets / scrollable distance, and update on layout changes.
+Ticks do not navigate; pressing the track still pages.
 Bars fade after `idleDelay` milliseconds (default 1000). Scrolling or entering the
 16px rail wakes them; hover/drag holds them visible. Reduced motion removes fades.
 The thumb grows from 4px to 8px on hover/drag with the shared fast spatial spring
