@@ -2,6 +2,17 @@ import { Component, BaseOptions } from '../core/component';
 
 export interface ScrollAreaOptions extends BaseOptions {}
 
+type Axis = 'x' | 'y';
+interface Bar {
+  axis: Axis;
+  rail: HTMLElement;
+  thumb: HTMLElement;
+  animation: Animation | null;
+  travel: number;
+  range: number;
+  extent: number;
+}
+
 /** A decorative scrollbar over a native scrollport. Keyboard and touch stay native. */
 export class ScrollArea extends Component<ScrollAreaOptions> {
   static key = 'Expressive_ScrollArea';
@@ -11,37 +22,37 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
   private _page: boolean;
   private _wrapper: HTMLElement | null = null;
   private _styles = new Map<string, [string, string]>();
-  private _rail: HTMLElement;
-  private _thumb: HTMLElement;
+  private _bars: Bar[] = [];
+  private _rtl = false;
   private _resize: ResizeObserver;
   private _observed = new Set<Element>();
   private _mutations: MutationObserver;
   private _media: MediaQueryList[];
   private _frame = 0;
-  private _animation: Animation | null = null;
-  private _travel = 0;
-  private _range = 0;
   private _active = false;
-  private _drag: { pointer: number; start: number; scroll: number } | null = null;
+  private _drag: { bar: Bar; pointer: number; start: number; scroll: number } | null = null;
 
   constructor(el: HTMLElement, options: Partial<ScrollAreaOptions> = {}) {
     super(el, options);
     this._view = el.ownerDocument.defaultView;
     this._page = el === el.ownerDocument.documentElement;
-    this._rail = el.ownerDocument.createElement('div');
-    this._rail.className = `scroll-area-bar vertical${this._page ? ' page' : ''}`;
-    this._rail.setAttribute('aria-hidden', 'true');
-    this._thumb = el.ownerDocument.createElement('div');
-    this._thumb.className = 'scroll-area-thumb';
-    this._rail.append(this._thumb);
-    if (this._page) el.ownerDocument.body.append(this._rail);
+    for (const axis of ['y', 'x'] as const) {
+      const rail = el.ownerDocument.createElement('div');
+      rail.className = `scroll-area-bar ${axis === 'y' ? 'vertical' : 'horizontal'}${this._page ? ' page' : ''}`;
+      rail.setAttribute('aria-hidden', 'true');
+      const thumb = el.ownerDocument.createElement('div');
+      thumb.className = 'scroll-area-thumb';
+      rail.append(thumb);
+      const bar: Bar = { axis, rail, thumb, animation: null, travel: 0, range: 0, extent: 0 };
+      this._bars.push(bar);
+      const { signal } = this._events;
+      rail.addEventListener('pointerdown', event => this._down(event, bar), { signal });
+      rail.addEventListener('pointermove', this._move, { signal });
+      for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) rail.addEventListener(type, this._end, { signal });
+    }
+    if (this._page) el.ownerDocument.body.append(...this._bars.map(bar => bar.rail));
     else this._wrap();
     const { signal } = this._events;
-    this._rail.addEventListener('pointerdown', this._down, { signal });
-    this._rail.addEventListener('pointermove', this._move, { signal });
-    for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
-      this._rail.addEventListener(type, this._end, { signal });
-    }
     this._view.addEventListener('blur', this._end, { signal });
     this._media = ['(forced-colors: active)', '(pointer: coarse)'].map(query => this._view.matchMedia(query));
     this._media.forEach(media => media.addEventListener('change', this.refresh, { signal }));
@@ -52,7 +63,7 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
 
     // A fixed-height scrollport need not resize when its children change.
     this._mutations = new MutationObserver(records => {
-      if (records.some(record => !this._rail.contains(record.target) && !(record.target === this.el && record.attributeName === 'class'))) this.refresh();
+      if (records.some(record => !this._bars.some(bar => bar.rail.contains(record.target)) && !(record.target === this.el && record.attributeName === 'class'))) this.refresh();
     });
     this._mutations.observe(el, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['style', 'class', 'hidden', 'dir'] });
     this.refresh();
@@ -70,40 +81,57 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
   private _measure() {
     const targets = new Set<Element>([this.el, ...this.el.children]);
     if (this._page) targets.add(this.el.ownerDocument.body);
-    targets.delete(this._rail);
+    for (const bar of this._bars) targets.delete(bar.rail);
     for (const old of this._observed) if (!targets.has(old)) this._resize.unobserve(old);
     for (const target of targets) if (!this._observed.has(target)) this._resize.observe(target);
     this._observed = targets;
     this._active = !this._media.some(media => media.matches);
     if (!this._active) this._end();
     this.el.classList.toggle('scroll-area-enhanced', this._active);
-    this._rail.hidden = !this._active;
-    if (this._wrapper) {
-      // The scrollport may have its own width, borders and padding. Anchor to
-      // its box, not to the wrapper's potentially stretched grid track.
-      const box = this.el.getBoundingClientRect(), frame = this._wrapper.getBoundingClientRect();
-      this._rail.style.top = `${box.top - frame.top}px`;
-      this._rail.style.bottom = 'auto';
-      this._rail.style.height = `${this.el.clientHeight}px`;
-      this._rail.style.right = `${frame.right - box.right}px`;
+    const style = this._view.getComputedStyle(this.el);
+    this._rtl = style.direction === 'rtl';
+    for (const bar of this._bars) {
+      bar.rail.style.colorScheme = style.colorScheme;
+      for (const property of ['--scroll-area-thumb-color', '--scroll-area-track-color', '--scroll-area-inset-start', '--scroll-area-inset-end', '--scroll-area-z']) {
+        bar.rail.style.setProperty(property, style.getPropertyValue(property));
+      }
+      bar.rail.style.setProperty('--scroll-area-thumb-color', style.getPropertyValue('--scroll-area-thumb-color') || style.getPropertyValue('--md-sys-color-on-surface-variant'));
+      bar.extent = bar.axis === 'y' ? this.el.clientHeight : this.el.clientWidth;
+      const total = bar.axis === 'y' ? this.el.scrollHeight : this.el.scrollWidth;
+      bar.range = Math.max(0, total - bar.extent);
+      bar.rail.hidden = !this._active || !bar.range;
+      bar.rail.style.direction = this._rtl ? 'rtl' : 'ltr';
     }
-    const extent = this.el.clientHeight;
-    this._range = Math.max(0, this.el.scrollHeight - extent);
-    this._rail.hidden ||= !this._range;
-    const length = this._rail.clientHeight;
-    const thumb = Math.min(length, Math.max(24, length * extent / Math.max(extent, this.el.scrollHeight)));
-    this._thumb.style.height = `${thumb}px`;
-    this._travel = length - thumb;
-    this._animation?.cancel();
-    this._animation = null;
-    // WAAPI ScrollTimeline keeps position on the compositor where supported.
-    // Other engines use the same geometry in a passive scroll listener.
-    const Timeline = (this._view as unknown as { ScrollTimeline?: new (options: object) => AnimationTimeline }).ScrollTimeline;
-    if (this._active && this._range && Timeline && this._thumb.animate) {
-      this._animation = this._thumb.animate(
-        [{ transform: 'translateY(0)' }, { transform: `translateY(${this._travel}px)` }],
-        { timeline: new Timeline({ source: this.el, axis: 'y' }), fill: 'both' }
-      );
+    for (const bar of this._bars) {
+      const other = this._bars.find(candidate => candidate !== bar);
+      const corner = other.range ? 16 : 0;
+      bar.rail.classList.toggle('both', !!corner);
+      if (this._wrapper) {
+        const box = this.el.getBoundingClientRect(), frame = this._wrapper.getBoundingClientRect();
+        const left = box.left - frame.left + this.el.clientLeft;
+        const top = box.top - frame.top + this.el.clientTop;
+        const vertical = bar.axis === 'y';
+        bar.rail.style.inset = 'auto';
+        bar.rail.style.top = `${top + (vertical ? 0 : this.el.clientHeight - 16)}px`;
+        bar.rail.style.left = `${left + (vertical ? (this._rtl ? 0 : this.el.clientWidth - 16) : (this._rtl ? corner : 0))}px`;
+        bar.rail.style.width = `${vertical ? 16 : this.el.clientWidth - corner}px`;
+        bar.rail.style.height = `${vertical ? this.el.clientHeight - corner : 16}px`;
+      }
+      const length = bar.axis === 'y' ? bar.rail.clientHeight : bar.rail.clientWidth;
+      const thumb = Math.min(length, Math.max(24, length * bar.extent / Math.max(bar.extent, bar.range + bar.extent)));
+      bar.thumb.style[bar.axis === 'y' ? 'height' : 'width'] = `${thumb}px`;
+      bar.travel = length - thumb;
+      bar.animation?.cancel();
+      bar.animation = null;
+      const Timeline = (this._view as unknown as { ScrollTimeline?: new (options: object) => AnimationTimeline }).ScrollTimeline;
+      if (this._active && bar.range && Timeline && bar.thumb.animate) {
+        const reverse = bar.axis === 'x' && this._rtl;
+        bar.animation = bar.thumb.animate(
+          [{ transform: this._transform(bar, reverse ? bar.travel : 0) },
+            { transform: this._transform(bar, reverse ? 0 : bar.travel) }],
+          { timeline: new Timeline({ source: this.el, axis: bar.axis }), fill: 'both' }
+        );
+      }
     }
     this._position();
   }
@@ -129,7 +157,7 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
       }
     }
     this.el.before(wrapper);
-    wrapper.append(this.el, this._rail);
+    wrapper.append(this.el, ...this._bars.map(bar => bar.rail));
     this._wrapper = wrapper;
   }
 
@@ -138,41 +166,61 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
     this.el.style.setProperty(property, value);
   }
 
-  private _down = (event: PointerEvent) => {
-    if (!this._active || event.button !== 0 || !event.isPrimary || !this._range) return;
+  private _offset(bar: Bar) {
+    return bar.axis === 'y' ? this.el.scrollTop : Math.abs(this.el.scrollLeft);
+  }
+
+  private _coordinate(event: PointerEvent, bar: Bar) {
+    return bar.axis === 'y' ? event.clientY : event.clientX;
+  }
+
+  private _down(event: PointerEvent, bar: Bar) {
+    if (!this._active || event.button !== 0 || !event.isPrimary || !bar.range) return;
     event.preventDefault();
-    if (this._thumb.contains(event.target as Node)) {
-      this._drag = { pointer: event.pointerId, start: event.clientY, scroll: this.el.scrollTop };
-      this._rail.setPointerCapture(event.pointerId);
-      this._rail.classList.add('dragging');
+    if (bar.thumb.contains(event.target as Node)) {
+      this._end();
+      this._drag = { bar, pointer: event.pointerId, start: this._coordinate(event, bar), scroll: this._offset(bar) };
+      bar.rail.setPointerCapture(event.pointerId);
+      bar.rail.classList.add('dragging');
     } else {
-      const direction = event.clientY < this._thumb.getBoundingClientRect().top ? -1 : 1;
-      this._setScroll(this.el.scrollTop + direction * this.el.clientHeight);
+      const box = bar.thumb.getBoundingClientRect();
+      let direction = this._coordinate(event, bar) < (bar.axis === 'y' ? box.top : box.left) ? -1 : 1;
+      if (bar.axis === 'x' && this._rtl) direction *= -1;
+      this._setScroll(bar, this._offset(bar) + direction * bar.extent);
     }
-  };
+  }
 
   private _move = (event: PointerEvent) => {
-    if (!this._drag || event.pointerId !== this._drag.pointer || !this._travel) return;
-    this._setScroll(this._drag.scroll + (event.clientY - this._drag.start) / this._travel * this._range);
+    if (!this._drag || event.pointerId !== this._drag.pointer) return;
+    const { bar, start, scroll } = this._drag;
+    if (!bar.travel) return;
+    const sign = bar.axis === 'x' && this._rtl ? -1 : 1;
+    this._setScroll(bar, scroll + sign * (this._coordinate(event, bar) - start) / bar.travel * bar.range);
   };
 
   private _end = () => {
-    const pointer = this._drag?.pointer;
+    const drag = this._drag;
     this._drag = null;
-    this._rail.classList.remove('dragging');
-    if (pointer !== undefined && this._rail.hasPointerCapture(pointer)) this._rail.releasePointerCapture(pointer);
+    if (!drag) return;
+    drag.bar.rail.classList.remove('dragging');
+    if (drag.bar.rail.hasPointerCapture(drag.pointer)) drag.bar.rail.releasePointerCapture(drag.pointer);
   };
 
-  private _setScroll(top: number) {
-    (this._page ? this._view : this.el).scrollTo({ top, behavior: 'instant' });
+  private _setScroll(bar: Bar, offset: number) {
+    const value = Math.max(0, Math.min(bar.range, offset));
+    const position = bar.axis === 'y' ? { top: value } : { left: this._rtl ? -value : value };
+    (this._page ? this._view : this.el).scrollTo({ ...position, behavior: 'instant' });
   }
+
+  private _transform(bar: Bar, distance: number) { return `translate${bar.axis.toUpperCase()}(${distance}px)`; }
 
   private _scroll = () => { this._position(); };
 
   private _position() {
-    if (!this._animation) {
-      const fraction = this._range ? Math.max(0, Math.min(1, this.el.scrollTop / this._range)) : 0;
-      this._thumb.style.transform = `translateY(${fraction * this._travel}px)`;
+    for (const bar of this._bars) if (!bar.animation) {
+      let fraction = bar.range ? Math.max(0, Math.min(1, this._offset(bar) / bar.range)) : 0;
+      if (bar.axis === 'x' && this._rtl) fraction = 1 - fraction;
+      bar.thumb.style.transform = this._transform(bar, fraction * bar.travel);
     }
   }
 
@@ -181,8 +229,10 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
     this._view.cancelAnimationFrame(this._frame);
     this._resize.disconnect();
     this._mutations.disconnect();
-    this._animation?.cancel();
-    this._rail.remove();
+    for (const bar of this._bars) {
+      bar.animation?.cancel();
+      bar.rail.remove();
+    }
     if (this._wrapper) {
       this._wrapper.replaceWith(this.el);
       this._wrapper = null;

@@ -507,6 +507,8 @@ Depends on phase 101. On the page and on containers, content that overflows side
 
 Completion check: a container wider than its viewport in both directions shows both bars, and neither thumb enters the corner square. Under `dir="rtl"` the horizontal thumb starts at the right end of the track.
 
+Implemented in `feat/custom-scrollbars`; see [decisions and validation](2026/11/16/scroll-area-horizontal/requirements.md).
+
 ### Phase 103: grow the thumb on hover with a spring
 
 Depends on phase 99. The thumb is thin at rest, grows when the pointer is over the bar, and returns to its thin size with an M3 Expressive spring when the pointer leaves or a drag ends. With reduced motion, the size changes without animation.

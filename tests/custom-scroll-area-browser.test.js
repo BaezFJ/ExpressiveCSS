@@ -10,6 +10,7 @@ async function setup(page, body = '<div style="height:300vh">Content</div>', roo
     <style>body{margin:0}html{scroll-behavior:auto}</style></head><body>${body}<script>${js}</script></body></html>`);
   await page.evaluate(options => { window.area = Expressive.ScrollArea.init(document.querySelector('.scroll-area.custom'), JSON.parse(options)); }, options);
   await page.waitForFunction(() => document.querySelector('.scroll-area-enhanced'));
+  await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 }
 async function geometry(page, axis = 'vertical') {
   return page.locator(`.scroll-area-bar.${axis}`).evaluate(rail => {
@@ -36,7 +37,7 @@ for (const [engine, type, browserTest] of engines) {
       if (engine !== 'webkit') {
       await page.emulateMedia({ forcedColors:'active' });
       await page.waitForFunction(() => !document.documentElement.classList.contains('scroll-area-enhanced'));
-      assert.equal(await page.locator('.scroll-area-bar').evaluate(el => getComputedStyle(el).display), 'none');
+      assert.equal(await page.locator('.scroll-area-bar.vertical').evaluate(el => getComputedStyle(el).display), 'none');
       assert.equal(await page.locator('html').evaluate(el => getComputedStyle(el).scrollbarColor), 'auto');
       await page.emulateMedia({ forcedColors:'none' });
       await page.waitForFunction(() => document.documentElement.classList.contains('scroll-area-enhanced'));
@@ -123,5 +124,35 @@ for (const [engine, type, browserTest] of engines) {
       await browser.close();
     }
   });
+
+  for (const dir of ['ltr','rtl']) for (const root of [true,false]) {
+    browserTest(`custom horizontal bar, corner and ${dir} dragging on ${root ? 'page' : 'container'} (${engine})`, async () => {
+      const browser = await leaseBrowser(type);
+      let page;
+      try {
+        page = await browser.newPage({ viewport:{ width:800,height:600 } });
+        const content = '<div style="width:2400px;height:1800px">Wide content</div>';
+        await setup(page,root ? content : `<div class="scroll-area custom" style="width:300px;height:300px">${content}</div>`, `dir="${dir}" ${root ? 'class="scroll-area custom"' : ''}`);
+        const h=await geometry(page,'horizontal'), v=await geometry(page);
+        assert.ok(h.bottom <= v.bottom + 16 && h.top >= v.bottom - 1, 'vertical track ends before horizontal');
+        if (dir === 'rtl') near(h.thumbRight,h.right,'RTL starts at the right');
+        else near(h.thumbLeft,h.left,'LTR starts at the left');
+        const start=dir==='rtl' ? h.thumbRight-5 : h.thumbLeft+5;
+        await page.mouse.move(start,h.bottom-8);
+        await page.mouse.down();
+        await page.mouse.move(start + (dir==='rtl' ? -1 : 1)*(h.width-h.thumbWidth)/2,h.bottom-8);
+        await page.mouse.up();
+        const scroll=await page.locator('.scroll-area.custom').evaluate(el => [Math.abs(el.scrollLeft),el.scrollWidth-el.clientWidth]);
+        assert.ok(Math.abs(scroll[0]/scroll[1] - .5) < .01, 'horizontal half travel within a rounded pointer pixel');
+        await page.waitForFunction(() => {
+          const r=document.querySelector('.horizontal'),t=r.firstElementChild.getBoundingClientRect(),b=r.getBoundingClientRect();
+          return Math.abs((t.left+t.right)/2-(b.left+b.right)/2)<2;
+        });
+      } finally {
+        if (page) await page.evaluate(() => window.area?.destroy());
+        await browser.close();
+      }
+    });
+  }
 
 }

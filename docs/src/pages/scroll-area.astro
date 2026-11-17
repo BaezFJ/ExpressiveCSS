@@ -81,6 +81,9 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
       on an authored outer element if they need to change after initialization. Direct-child
       selectors must account for the wrapper. Call <code>refresh()</code> after layout changes
       that do not resize the scrollport or its direct children.</p>
+    <p>Horizontal overflow adds a bottom bar. Both axes reserve a 16px corner; in RTL
+      the vertical bar is on the left and the horizontal thumb starts on the right.
+      Horizontal writing modes are supported.</p>
     <p>Drag the thumb to scroll proportionally, or press the track to page one viewport.
       A held track press does not repeat. Pointer capture keeps the drag outside the bar;
       cancellation and window blur end it.</p>

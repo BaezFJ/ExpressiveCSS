@@ -79,3 +79,18 @@
   min-inline-size: 0;
   min-block-size: 0;
 }
+
+.scroll-area-bar {
+  &.vertical.both { inset-block-end: calc(var(--scroll-area-inset-end, 0px) + 16px); }
+  &.horizontal {
+    block-size: 16px;
+    inline-size: auto;
+    inset-block: auto 0;
+    inset-inline: 0;
+    &.both { inset-inline-end: 16px; }
+    .scroll-area-thumb {
+      inset: auto auto 4px 0;
+      block-size: 8px;
+    }
+  }
+}
