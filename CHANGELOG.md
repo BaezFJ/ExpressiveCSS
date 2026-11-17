@@ -5,6 +5,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `ScrollArea` draws an optional themed scrollbar on `.scroll-area.custom`,
+  preserving native scrolling and falling back under forced colors and coarse pointers.
+
 ### Fixed
 
 - Card media with `width` and `height` attributes keeps its aspect ratio. The

@@ -1400,6 +1400,15 @@ Scrolling needs a bounded size. Use `.overflow-x-auto` for wide tables or action
 
 ### Scroll area
 
+For a framework-drawn page bar, use `<html class="scroll-area custom">` and
+`ScrollArea.init(document.documentElement)`, or `AutoInit(document.documentElement)`.
+Native scrolling, focus and anchors stay intact. Without runtime, with forced
+colors or a coarse primary pointer, the native bar stays. Generated bars are
+`aria-hidden`, with no tab stops. `getInstance()`, `refresh()` and `destroy()`
+follow the component lifecycle. `--scroll-area-inset-start` and
+`--scroll-area-inset-end` reserve space for fixed controls. `--scroll-area-z`
+defaults to 10, below FAB and back-to-top controls.
+
 Add `.scroll-area` to a bounded container for native scrolling with thin, theme-aware scrollbars. It sets `overflow: auto` for both axes. Wheel, touch, keyboard, and scrollbar dragging remain native; no JavaScript initialization is needed.
 
 ```html

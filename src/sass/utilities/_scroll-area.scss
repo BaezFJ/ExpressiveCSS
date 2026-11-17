@@ -31,3 +31,42 @@
     scrollbar-color: auto;
   }
 }
+
+// Only the runtime adds this class, so a failed or missing script keeps a bar.
+@media (forced-colors: none) and (pointer: fine) {
+  .scroll-area.scroll-area-enhanced {
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+}
+
+.scroll-area-bar {
+  position: absolute;
+  inline-size: 16px;
+  inset-block: var(--scroll-area-inset-start, 0px) var(--scroll-area-inset-end, 0px);
+  inset-inline-end: 0;
+  background: var(--scroll-area-track-color, transparent);
+  touch-action: none;
+  user-select: none;
+  z-index: var(--scroll-area-z, 10);
+
+  &.page { position: fixed; }
+  &[hidden] { display: none; }
+}
+
+.scroll-area-thumb {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: 4px;
+  inline-size: 8px;
+  border-radius: 999px;
+  background: var(--scroll-area-thumb-color, var(--md-sys-color-on-surface-variant));
+}
+
+@media (forced-colors: active), (pointer: coarse) {
+  .scroll-area-bar { display: none; }
+}
+
+@media print {
+  .scroll-area-bar { display: none; }
+}

@@ -479,6 +479,8 @@ Completion check: on a page three windows tall, the thumb is a third of the trac
 
 Open for spec: the modifier's name, and how the bar keeps clear of fixed page controls such as `.back-to-top` and the floating action button.
 
+Implemented in `feat/custom-scrollbars`; see [decisions and validation](2026/11/16/scroll-area-page/requirements.md).
+
 ### Phase 100: drag the thumb and page from the track
 
 Depends on phase 99. Dragging the page bar's thumb scrolls the document in proportion, and the drag continues when the pointer leaves the bar or the window. A press on the track outside the thumb scrolls one window toward the press.

@@ -8,6 +8,7 @@ const S = defineSections([
   { id: "usage", label: "Usage" },
   { id: "horizontal", label: "Horizontal scrolling" },
   { id: "page", label: "Page scrollbar" },
+  { id: "custom", label: "Custom bars" },
   { id: "styling", label: "Custom styling" },
 ]);
 const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}`);
@@ -58,6 +59,21 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
     <p>Add the class to <code>&lt;html&gt;</code> to style the page's own scrollbar.
       The viewport keeps native scrolling, and the thumb color follows the theme.</p>
     <Code code={`<html lang="en" class="scroll-area">`} />
+  </Section>
+  <Section {...S.custom}>
+    <p>Add <code>.custom</code> to opt into <code>ScrollArea</code>. The page bar is drawn
+      by the framework; scrolling remains native. Without JavaScript, under forced colors,
+      or with a coarse primary pointer, the native bar stays. The decorative bar is hidden
+      from assistive technology and adds no tab stop.</p>
+    <Code code={`<html class="scroll-area custom" lang="en">
+<!-- Initialize the root explicitly; AutoInit defaults to body. -->
+<script>Expressive.ScrollArea.init(document.documentElement);</script>`} />
+    <p><code>ScrollArea.init(element)</code>, <code>ScrollArea.getInstance(element)</code>,
+      <code>refresh()</code> and <code>destroy()</code> follow the component lifecycle.
+      <code>AutoInit(document.documentElement)</code> also claims the root.
+      Set <code>--scroll-area-inset-start</code> and <code>--scroll-area-inset-end</code>
+      to reserve space for fixed controls. The default z-index is 10, below floating
+      action buttons and back-to-top controls; override <code>--scroll-area-z</code> if needed.</p>
   </Section>
   <Section {...S.styling}>
     <p>Set these properties on the scroll container or an ancestor.</p>

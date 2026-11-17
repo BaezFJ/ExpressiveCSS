@@ -56,3 +56,5 @@ export { Tabs } from "./tabs";
 export { Timepicker } from "./timepicker";
 export { Snackbar } from "./snackbar";
 export { Tooltip } from "./tooltip";
+
+export { ScrollArea } from './scrollArea';
