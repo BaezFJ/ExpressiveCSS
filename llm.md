@@ -1409,6 +1409,8 @@ after layout changes that do not resize the scrollport or its direct children.
 
 For a framework-drawn page bar, use `<html class="scroll-area custom">` and
 `ScrollArea.init(document.documentElement)`, or `AutoInit(document.documentElement)`.
+The thumb grows from 4px to 8px on hover/drag with the shared fast spatial spring
+tokens, including `motion="expressive"`; reduced motion removes the transition.
 Horizontal overflow adds a bottom bar; both axes reserve a 16px corner. RTL
 places the vertical bar at the left and starts the horizontal thumb at the right.
 Horizontal writing modes are supported. Drag the thumb proportionally or press the track to page one viewport (no repeat).

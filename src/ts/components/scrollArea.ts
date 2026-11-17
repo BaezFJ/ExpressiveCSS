@@ -92,7 +92,7 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
     this._rtl = style.direction === 'rtl';
     for (const bar of this._bars) {
       bar.rail.style.colorScheme = style.colorScheme;
-      for (const property of ['--scroll-area-thumb-color', '--scroll-area-track-color', '--scroll-area-inset-start', '--scroll-area-inset-end', '--scroll-area-z']) {
+      for (const property of ['--scroll-area-thumb-color', '--scroll-area-track-color', '--scroll-area-inset-start', '--scroll-area-inset-end', '--scroll-area-z', '--md-sys-motion-spring-fast-spatial-duration', '--md-sys-motion-spring-fast-spatial']) {
         bar.rail.style.setProperty(property, style.getPropertyValue(property));
       }
       bar.rail.style.setProperty('--scroll-area-thumb-color', style.getPropertyValue('--scroll-area-thumb-color') || style.getPropertyValue('--md-sys-color-on-surface-variant'));

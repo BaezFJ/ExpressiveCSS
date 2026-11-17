@@ -517,6 +517,8 @@ Completion check: hovering the bar widens the thumb to its hover size, and leavi
 
 Open for spec: whether the spring reuses the motion tokens or the runtime `Spring` helper.
 
+Implemented in `feat/custom-scrollbars`; see [decisions and validation](2026/11/16/scroll-area-spring/requirements.md).
+
 ### Phase 104: hide the bar while idle
 
 Depends on phase 99. The bar fades out after about a second without scrolling and comes back when the content scrolls or the pointer nears its edge. It stays visible while the pointer is over it or a drag is in progress. With reduced motion, it hides and shows without a fade.

@@ -155,4 +155,26 @@ for (const [engine, type, browserTest] of engines) {
     });
   }
 
+  browserTest(`custom thumb hover spring and reduced motion (${engine})`, async () => {
+    const browser = await leaseBrowser(type);
+    let page;
+    try {
+      page = await browser.newPage();
+      await setup(page);
+      near((await geometry(page)).thumbWidth,4,'rest width');
+      const b=await geometry(page);
+      await page.mouse.move(b.right-8,b.thumbTop+10);
+      await page.waitForFunction(() => Math.abs(document.querySelector('.vertical .scroll-area-thumb').getBoundingClientRect().width-8)<.1);
+      await page.mouse.move(10,10);
+      await page.waitForFunction(() => Math.abs(document.querySelector('.vertical .scroll-area-thumb').getBoundingClientRect().width-4)<.1);
+      await page.emulateMedia({ reducedMotion:'reduce' });
+      assert.equal(await page.locator('.vertical .scroll-area-thumb').evaluate(el => getComputedStyle(el).transitionDuration), '0s');
+      await page.mouse.move(b.right-8,b.thumbTop+10);
+      near((await geometry(page)).thumbWidth,8,'reduced motion hover width');
+    } finally {
+      if (page) await page.evaluate(() => window.area?.destroy());
+      await browser.close();
+    }
+  });
+
 }

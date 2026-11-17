@@ -58,7 +58,8 @@
   position: absolute;
   inset-block-start: 0;
   inset-inline-end: 4px;
-  inline-size: 8px;
+  inline-size: 4px;
+  transition: inline-size var(--md-sys-motion-spring-fast-spatial-duration) var(--md-sys-motion-spring-fast-spatial);
   border-radius: 999px;
   background: var(--scroll-area-thumb-color, var(--md-sys-color-on-surface-variant));
 }
@@ -90,7 +91,17 @@
     &.both { inset-inline-end: 16px; }
     .scroll-area-thumb {
       inset: auto auto 4px 0;
-      block-size: 8px;
+      block-size: 4px;
+      transition-property: block-size;
     }
   }
+}
+
+.scroll-area-bar:is(:hover, .dragging) {
+  &.vertical .scroll-area-thumb { inline-size: 8px; }
+  &.horizontal .scroll-area-thumb { block-size: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-area-thumb { transition: none; }
 }
