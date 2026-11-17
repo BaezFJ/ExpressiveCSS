@@ -31,3 +31,11 @@
     scrollbar-color: auto;
   }
 }
+
+// Only the runtime adds this class, so a failed or missing script keeps a bar.
+@media (forced-colors: none) and (pointer: fine) {
+  .scroll-area.scroll-area-enhanced {
+    scrollbar-width: none;
+    &::-webkit-scrollbar { display: none; }
+  }
+}

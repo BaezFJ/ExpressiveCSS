@@ -8,6 +8,7 @@ const S = defineSections([
   { id: "usage", label: "Usage" },
   { id: "horizontal", label: "Horizontal scrolling" },
   { id: "page", label: "Page scrollbar" },
+  { id: "custom", label: "Custom bars" },
   { id: "styling", label: "Custom styling" },
 ]);
 const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}`);
@@ -59,6 +60,62 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
       The viewport keeps native scrolling, and the thumb color follows the theme.</p>
     <Code code={`<html lang="en" class="scroll-area">`} />
   </Section>
+  <Section {...S.custom}>
+    <p>Add <code>.custom</code> to opt into <code>ScrollArea</code>. The page bar is drawn
+      by the framework; scrolling remains native. Without JavaScript, under forced colors,
+      or with a coarse primary pointer, the native bar stays. The decorative bar is hidden
+      from assistive technology and adds no tab stop.</p>
+    <Code code={`<html class="scroll-area custom" lang="en">
+<!-- Initialize the root explicitly; AutoInit defaults to body. -->
+<script>Expressive.ScrollArea.init(document.documentElement);</script>`} />
+    <div class="scroll-area custom p-4" style="height: 300px; max-width: 24rem"
+      tabindex="0" role="region" aria-label="Custom release tags">
+      <div style="height: 900px">{tags.map(tag => <p>{tag}</p>)}</div>
+    </div>
+    <Code code={`<div class="scroll-area custom" style="height:300px" tabindex="0"
+  role="region" aria-label="Release tags"><div style="height:900px">Tags</div></div>
+<script>Expressive.AutoInit();</script>`} />
+    <p>On containers, the runtime inserts a <code>.scroll-area-frame</code> grid wrapper.
+      It takes the initial flex/grid placement and margins; <code>destroy()</code> unwraps
+      the original element in place. Keep positioning and responsive layout constraints
+      on an authored outer element if they need to change after initialization. Direct-child
+      selectors must account for the wrapper. Call <code>refresh()</code> after layout changes
+      that do not resize the scrollport or its direct children.</p>
+    <p>During a vertical thumb drag, a label names the current marked section. It uses
+      <code>data-scroll-area-label</code> when present, otherwise the heading text (or target
+      text). Labels are plain text, limited to 160 characters, hidden from assistive
+      technology with the bar, and disappear on release or cancellation. Unmarked content
+      and horizontal drags show no label.</p>
+    <Code code={`<section data-scroll-area-section data-scroll-area-label="November 16">
+  <h2>November releases</h2>...
+</section>`} />
+    <p>The <code>sections</code> selector defaults to <code>.scrollspy, [data-scroll-area-section]</code>,
+      reusing ScrollSpy targets or explicit section markers. Set it to a heading selector
+      such as <code>h2[id]</code> to mark those instead; an invalid selector produces no marks.
+      Vertical ticks follow each target's scroll offset as a share of the scrollable distance.
+      Layout changes update them; call <code>refresh()</code> for shifts outside the observed content.
+      Ticks are decorative and track presses still page one viewport.</p>
+    <Code code={`<section data-scroll-area-section><h2>November releases</h2>...</section>`} />
+    <p>Bars fade after <code>idleDelay</code> milliseconds without activity (default 1000).
+      Scrolling or entering the 16px edge strip shows them again; hover and dragging keep
+      them visible. Pass <code>&#123; idleDelay: 1500 &#125;</code> at initialization to change it.
+      Reduced motion hides and shows immediately.</p>
+    <p>The thumb grows from 4px to 8px on hover or drag, using the shared fast spatial
+      spring tokens (including <code>motion="expressive"</code>). Reduced motion changes
+      its size immediately.</p>
+    <p>Horizontal overflow adds a bottom bar. Both axes reserve a 16px corner; in RTL
+      the vertical bar is on the left and the horizontal thumb starts on the right.
+      Horizontal writing modes are supported.</p>
+    <p>Drag the thumb to scroll proportionally, or press the track to page one viewport.
+      A held track press does not repeat. Pointer capture keeps the drag outside the bar;
+      cancellation and window blur end it.</p>
+    <p><code>ScrollArea.init(element)</code>, <code>ScrollArea.getInstance(element)</code>,
+      <code>refresh()</code> and <code>destroy()</code> follow the component lifecycle.
+      <code>AutoInit(document.documentElement)</code> also claims the root.
+      Set <code>--scroll-area-inset-start</code> and <code>--scroll-area-inset-end</code>
+      to reserve space for fixed controls. The default z-index is 10, below floating
+      action buttons and back-to-top controls; override <code>--scroll-area-z</code> if needed.</p>
+  </Section>
   <Section {...S.styling}>
     <p>Set these properties on the scroll container or an ancestor.</p>
     <table>
@@ -77,7 +134,8 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
       follows the browser and operating system, so shape, exact width, and automatic
       hiding can differ. Older WebKit engines use rounded 8px scrollbars.
       Forced-colors mode restores system colors and the default width.</p>
-    <p>For a selective Sass build, include <code>"scroll-area"</code> in <code>$utilities</code>.</p>
+    <p>For a selective Sass build, include <code>"scroll-area"</code> in <code>$utilities</code>
+      for native styling. Custom bars also need <code>"scroll-area"</code> in <code>$components</code>.</p>
   </Section>
 </DocsLayout>
 

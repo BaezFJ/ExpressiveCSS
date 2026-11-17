@@ -50,6 +50,7 @@ export const AUTO_INIT_COMPONENTS = {
     component: Components.ExpandingCard,
     selector: EXPANDING_CARD_SELECTOR,
   },
+  ScrollArea: { component: Components.ScrollArea, selector: ".scroll-area.custom" },
   Carousel: { component: Components.Carousel, selector: ".carousel" },
   Chips: { component: Components.Chips, selector: ".chips" },
   Confetti: { component: Components.Confetti, selector: ".confetti" },

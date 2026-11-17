@@ -190,6 +190,7 @@ export const AUTO_INIT_FIXTURES = [
     selector: ".lightboxed",
     html: `<img class="lightboxed" tabindex="0" role="button" width="100" src="http://localhost/1.jpg" alt="Sample">`,
   },
+  { name: "ScrollArea", selector: ".scroll-area.custom", html: `<div class="scroll-area custom" tabindex="0" role="region" aria-label="Tags">Tags</div>` },
   {
     name: "ScrollSpy",
     selector: ".scrollspy",

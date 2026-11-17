@@ -73,6 +73,7 @@ const TEMPLATES = ['starter', 'layout-compact', 'layout-rail', 'layout-expanded'
 
 // Secondary contracts omitted by each component's first example.
 const BEHAVIOR_CONTRACTS = [
+  { name: 'ScrollArea', heading: 'Scroll area', level: 3 },
   { name: 'Copy', heading: 'Copy button', level: 3 },
   { name: 'BusyButtons', heading: 'Loading state', level: 3 },
   { name: 'Theme', heading: 'Changing the theme', level: 3 },
@@ -83,7 +84,7 @@ const BEHAVIOR_CONTRACTS = [
 const anchorFor = (heading) => heading.toLowerCase().replaceAll(' ', '-');
 
 function renderBehaviorContracts(llm) {
-  return `${GENERATED_MARKER}\n\n# Shared behaviors and secondary contracts\n\nRead only the section needed for the selected behavior. These contracts come from \`llm.md\`; reuse the resolved framework version and the Runtime guide's ownership rules. The root bundle starts shared document behaviors; the modular entry requires the explicit initialization shown below. ExpandingCard also has per-element instances to destroy.\n\n${BEHAVIOR_CONTRACTS.map(({ name, heading }) => `- [${name}](#${anchorFor(heading)})`).join('\n')}\n\n${BEHAVIOR_CONTRACTS.map(({ name, heading, level }) => `## ${heading}\n\nExport: \`${name}\`.\n\n${rebaseHeadings(sectionFor(llm, heading, level), 2 - level)}`).join('\n\n')}\n`;
+  return `${GENERATED_MARKER}\n\n# Shared behaviors and secondary contracts\n\nRead only the section needed for the selected behavior. These contracts come from \`llm.md\`; reuse the resolved framework version and the Runtime guide's ownership rules. The root bundle starts shared document behaviors; the modular entry requires the explicit initialization shown below. ExpandingCard and ScrollArea also have per-element instances to destroy.\n\n${BEHAVIOR_CONTRACTS.map(({ name, heading }) => `- [${name}](#${anchorFor(heading)})`).join('\n')}\n\n${BEHAVIOR_CONTRACTS.map(({ name, heading, level }) => `## ${heading}\n\nExport: \`${name}\`.\n\n${rebaseHeadings(sectionFor(llm, heading, level), 2 - level)}`).join('\n\n')}\n`;
 }
 
 function documentationUrl(page) {

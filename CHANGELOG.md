@@ -5,6 +5,14 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `ScrollArea` draws an optional themed scrollbar on `.scroll-area.custom`,
+  preserving native scrolling and falling back under forced colors and coarse pointers.
+  Page and container bars support both axes, RTL dragging, track paging, spring
+  hover growth, configurable idle hiding, section marks and drag labels. Container
+  enhancement inserts a wrapper; direct-child selectors need to account for it.
+
 ### Fixed
 
 - Card media with `width` and `height` attributes keeps its aspect ratio. The

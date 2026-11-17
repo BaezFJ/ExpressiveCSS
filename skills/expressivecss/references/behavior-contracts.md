@@ -2,14 +2,94 @@
 
 # Shared behaviors and secondary contracts
 
-Read only the section needed for the selected behavior. These contracts come from `llm.md`; reuse the resolved framework version and the Runtime guide's ownership rules. The root bundle starts shared document behaviors; the modular entry requires the explicit initialization shown below. ExpandingCard also has per-element instances to destroy.
+Read only the section needed for the selected behavior. These contracts come from `llm.md`; reuse the resolved framework version and the Runtime guide's ownership rules. The root bundle starts shared document behaviors; the modular entry requires the explicit initialization shown below. ExpandingCard and ScrollArea also have per-element instances to destroy.
 
+- [ScrollArea](#scroll-area)
 - [Copy](#copy-button)
 - [BusyButtons](#loading-state)
 - [Theme](#changing-the-theme)
 - [PaneResize](#resizing)
 - [ExpandingCard](#expanding-card)
 - [Dialogs](#confirm-from-script)
+
+## Scroll area
+
+Export: `ScrollArea`.
+
+For containers, `.scroll-area.custom` is claimed by `AutoInit()`. `ScrollArea`
+wraps the scrollport in `.scroll-area-frame`, carrying its initial flex/grid
+placement and margins; `destroy()` unwraps in place and restores altered styles.
+Keep dynamic responsive layout/positioning constraints on an authored outer
+container. Direct-child selectors must account for the wrapper. Call `refresh()`
+after layout changes that do not resize the scrollport or its direct children.
+
+For a framework-drawn page bar, use `<html class="scroll-area custom">` and
+`ScrollArea.init(document.documentElement)`, or `AutoInit(document.documentElement)`.
+While dragging the vertical thumb, a label shows the current marked section.
+`data-scroll-area-label` overrides its heading text (or target text). Labels use
+plain text, at most 160 characters, stay aria-hidden and disappear on release,
+cancellation or destroy. No marks or a horizontal drag means no label.
+`sections` defaults to `.scrollspy, [data-scroll-area-section]`, reusing ScrollSpy
+targets or explicit markers. A custom selector (e.g. `h2[id]`) replaces it.
+Invalid selectors match nothing. Vertical ticks are decorative, proportional to
+target scroll offsets / scrollable distance, and update on layout changes.
+Ticks do not navigate; pressing the track still pages.
+Bars fade after `idleDelay` milliseconds (default 1000). Scrolling or entering the
+16px rail wakes them; hover/drag holds them visible. Reduced motion removes fades.
+The thumb grows from 4px to 8px on hover/drag with the shared fast spatial spring
+tokens, including `motion="expressive"`; reduced motion removes the transition.
+Horizontal overflow adds a bottom bar; both axes reserve a 16px corner. RTL
+places the vertical bar at the left and starts the horizontal thumb at the right.
+Horizontal writing modes are supported. Drag the thumb proportionally or press the track to page one viewport (no repeat).
+Pointer capture keeps a drag outside the bar; cancellation or blur ends it.
+Native scrolling, focus and anchors stay intact. Without runtime, with forced
+colors or a coarse primary pointer, the native bar stays. Generated bars are
+`aria-hidden`, with no tab stops. `getInstance()`, `refresh()` and `destroy()`
+follow the component lifecycle. `--scroll-area-inset-start` and
+`--scroll-area-inset-end` reserve space for fixed controls. `--scroll-area-z`
+defaults to 10, below FAB and back-to-top controls.
+
+Add `.scroll-area` to a bounded container for native scrolling with thin, theme-aware scrollbars. It sets `overflow: auto` for both axes. Wheel, touch, keyboard, and scrollbar dragging remain native; no JavaScript initialization is needed.
+
+```html
+<div class="scroll-area p-4" style="width: 12rem; height: 18rem"
+  tabindex="0" role="region" aria-labelledby="release-tags-title">
+  <h2 id="release-tags-title" class="title-small mt-0">Tags</h2>
+  <ul>
+    <li>v1.2.0-beta.50</li>
+    <li>v1.2.0-beta.49</li>
+    <!-- More tags -->
+  </ul>
+</div>
+```
+
+Give a generic scroll region `tabindex="0"` and an accessible name so keyboard users can focus and scroll it. Leave padding for child focus rings. Use `.min-h-0` or `.min-w-0` when a flex or grid child needs to shrink. The class supplies no dimensions, border, padding, or layout.
+
+Add `.scroll-area` to `<html>` to style the page's own scrollbar. The viewport keeps native scrolling, and the thumb color follows the theme.
+
+Override `--scroll-area-thumb-color` and `--scroll-area-track-color` on the container or an ancestor. Defaults are `var(--md-sys-color-on-surface-variant)` and `transparent`. Choose colors with enough contrast against the track and container. Native scrollbar shape, exact width, and automatic hiding depend on the browser and operating system. Older WebKit engines use rounded 8px scrollbars. Forced-colors mode restores system colors and the default width. Selective Sass builds load `"scroll-area"` through `$utilities` for native styling; custom bars also need `"scroll-area"` through `$components`.
+
+### Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `idleDelay` | number | `1000` | Milliseconds without activity before bars hide. |
+| `sections` | string | `'.scrollspy, [data-scroll-area-section]'` | Selector for section marks and drag labels; invalid selectors match nothing. |
+
+### Methods
+
+#### `ScrollArea.init(element, options?)`
+
+Initialize a page root or scroll container; returns its instance. `getInstance(element)` looks it up.
+
+#### `.refresh()`
+
+Schedule a measurement after layout shifts outside observed content.
+
+#### `.destroy()`
+
+Cancel observers, listeners, capture, animation and timers, remove generated bars,
+and unwrap a container while restoring its modified styles.
 
 ## Copy button
 

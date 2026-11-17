@@ -70,3 +70,5 @@ export type * from './components/tabs';
 export type * from './components/timepicker';
 export type * from './components/snackbar';
 export type * from './components/tooltip';
+
+export type * from './components/scrollArea';

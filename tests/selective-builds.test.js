@@ -81,7 +81,12 @@ test('default custom Sass matches the complete stylesheet and preserves configur
   assert.match(textColor, /body,:host\{color:red\}/);
   const scrollArea = compileString('@use "custom" with ($components: (), $utilities: ("scroll-area"), $expressive-include-fonts: false);', options).css;
   assert.match(scrollArea, /\.scroll-area\{overflow:auto;scrollbar-width:thin/);
-  assert.doesNotMatch(scrollArea, /\.datepicker|\.tabs|\.overflow-x-auto/);
+  assert.doesNotMatch(scrollArea, /\.datepicker|\.tabs|\.overflow-x-auto|\.scroll-area-bar/);
+  const customScrollArea = compileString('@use "custom" with ($components: ("scroll-area"), $utilities: ("scroll-area"), $expressive-include-fonts: false);', options).css;
+  assert.match(customScrollArea, /\.scroll-area-bar/);
+  assert.match(customScrollArea, /\.scroll-area-frame/);
+  assert.match(customScrollArea, /scrollbar-width:none/);
+  assert.doesNotMatch(customScrollArea, /\.datepicker|\.tabs/);
   const shapes = compileString('@use "custom" with ($components: (), $utilities: ("shapes"), $expressive-include-fonts: false);', options).css;
   const masks = [...shapes.matchAll(/\.shape-([a-z0-9-]+)\{--shape-mask: ?url\("data:image\/svg\+xml,([^"]+)"\)/g)];
   assert.equal(masks.length, 20);
@@ -361,7 +366,15 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed outside navigation rail toggles and the first-child toggle lookup: 111,741 gzip bytes (+349).
   // Reviewed the rail reading its overlay state from the stylesheet: 111,750 gzip bytes (+9).
   // Reviewed the scaffold milestone merged with master's busy buttons, data table pages and compact and hover rail: 112,245 gzip bytes.
-  assert.ok(sizes(js).gzip <= 112245, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Custom scrollbars phase 99: 112,969 gzip bytes.
+  // Custom scrollbars phase 100: 113,294 gzip bytes.
+  // Custom scrollbars phase 101: 113,801 gzip bytes.
+  // Custom scrollbars phase 102: 114,352 gzip bytes.
+  // Custom scrollbars phase 103: 114,377 gzip bytes.
+  // Custom scrollbars phase 104: 114,575 gzip bytes.
+  // Custom scrollbars phase 105: 114,867 gzip bytes.
+  // Custom scrollbars phase 106: 115,288 gzip bytes.
+  assert.ok(sizes(js).gzip <= 115288, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -595,5 +608,13 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the sheet column as a detached sheet (corners and gaps like the pane): 93,553 gzip bytes (+36).
   // Reviewed the scaffold milestone merged with master's busy spinner, anchored headings and compact and hover rail, with the scaffold holding a compact rail's 72px column: 94,450 gzip bytes.
   // Reviewed card media keeping its aspect ratio when the image has width and height attributes: 94,452 gzip bytes (+2).
-  assert.ok(sizes(css).gzip <= 94452, `CSS gzip: ${sizes(css).gzip}`);
+  // Custom scrollbars phase 99: 94,637 gzip bytes.
+  // Custom scrollbars phase 100: 94,637 gzip bytes.
+  // Custom scrollbars phase 101: 94,673 gzip bytes.
+  // Custom scrollbars phase 102: 94,749 gzip bytes.
+  // Custom scrollbars phase 103: 94,857 gzip bytes.
+  // Custom scrollbars phase 104: 94,892 gzip bytes.
+  // Custom scrollbars phase 105: 94,922 gzip bytes.
+  // Custom scrollbars phase 106: 94,925 gzip bytes.
+  assert.ok(sizes(css).gzip <= 94925, `CSS gzip: ${sizes(css).gzip}`);
 });

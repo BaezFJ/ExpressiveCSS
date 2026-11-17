@@ -25,10 +25,10 @@ added to the framework starts enforced. An individual example may opt out with
 a reason - ```` ```html ignore-semantics: why ```` in Markdown, or
 `<Code check={false} reason="why" ... />` in an Astro page.
 
-**110 of 110 rows enforced; 0 remaining.**
+**111 of 111 rows enforced; 0 remaining.**
 
 105 of those rows are components - a part of the framework an author writes markup for.
-The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `transitions` (foundation).
+The rest are not, and say which they are: `character-counter` (behavior), `docked-display` (behavior), `modal-display` (behavior), `scrim` (foundation), `scroll-area` (behavior), `transitions` (foundation).
 CONTEXT.md defines the kinds. Their rules run the same either way: a kind says what a row is,
 not whether it is checked.
 
@@ -1218,6 +1218,18 @@ The wash a modal surface paints behind itself, added in 1.x (#37). A foundation,
 | Rule | Kind | Selector | Requirement |
 | --- | --- | --- | --- |
 
+
+### scroll-area
+
+**Kind:** behavior.
+
+ScrollArea enhances an existing native scrollport. Bars, ticks, labels and frames are generated; keyboard scrolling stays native and the bars add no tab stops. Runtime checks live in tests/custom-scroll-area-browser.test.js.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `scroll-area-generated-bars-hidden` | require-attr | `.scroll-area-bar` | must have `aria-hidden` = `true` |
+
+- **scroll-area-generated-bars-hidden** - Drawn bars are decorative pointer affordances over a native scrollport; hide them and their marks and labels from assistive technology.
 
 ### scrollspy
 
