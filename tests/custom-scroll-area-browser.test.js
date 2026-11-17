@@ -65,4 +65,32 @@ for (const [engine, type, browserTest] of engines) {
       await browser.close();
     }
   });
+  browserTest(`custom page thumb capture, track paging and cancellation (${engine})`, async () => {
+    const browser = await leaseBrowser(type);
+    let page;
+    try {
+      page = await browser.newPage({ viewport:{ width:800, height:600 } });
+      await setup(page);
+      const b = await geometry(page), x = b.right - 8;
+      await page.mouse.move(x, b.thumbTop + 10);
+      await page.mouse.down();
+      await page.mouse.move(x - 100, b.thumbTop + 10 + (b.height - b.thumbHeight) / 2);
+      near(await page.evaluate(() => scrollY), 600, 'half travel scrolls half the range');
+      await page.mouse.up();
+      assert.equal(await page.locator('.dragging').count(), 0);
+      await page.evaluate(() => scrollTo(0,0));
+      await page.waitForFunction(() => document.querySelector('.scroll-area-thumb').getBoundingClientRect().top < 2);
+      await page.mouse.click(x, 500);
+      near(await page.evaluate(() => scrollY), 600, 'track pages one viewport');
+      await page.mouse.move(x, (await geometry(page)).thumbTop + 10);
+      await page.mouse.down();
+      await page.evaluate(() => dispatchEvent(new Event('blur')));
+      assert.equal(await page.locator('.dragging').count(), 0);
+      await page.mouse.up();
+    } finally {
+      if (page) await page.evaluate(() => window.area?.destroy());
+      await browser.close();
+    }
+  });
+
 }

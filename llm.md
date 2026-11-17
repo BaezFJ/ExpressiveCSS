@@ -1402,6 +1402,8 @@ Scrolling needs a bounded size. Use `.overflow-x-auto` for wide tables or action
 
 For a framework-drawn page bar, use `<html class="scroll-area custom">` and
 `ScrollArea.init(document.documentElement)`, or `AutoInit(document.documentElement)`.
+Drag the thumb proportionally or press the track to page one viewport (no repeat).
+Pointer capture keeps a drag outside the bar; cancellation or blur ends it.
 Native scrolling, focus and anchors stay intact. Without runtime, with forced
 colors or a coarse primary pointer, the native bar stays. Generated bars are
 `aria-hidden`, with no tab stops. `getInstance()`, `refresh()` and `destroy()`

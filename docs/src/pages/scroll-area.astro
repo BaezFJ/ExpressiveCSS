@@ -68,6 +68,9 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
     <Code code={`<html class="scroll-area custom" lang="en">
 <!-- Initialize the root explicitly; AutoInit defaults to body. -->
 <script>Expressive.ScrollArea.init(document.documentElement);</script>`} />
+    <p>Drag the thumb to scroll proportionally, or press the track to page one viewport.
+      A held track press does not repeat. Pointer capture keeps the drag outside the bar;
+      cancellation and window blur end it.</p>
     <p><code>ScrollArea.init(element)</code>, <code>ScrollArea.getInstance(element)</code>,
       <code>refresh()</code> and <code>destroy()</code> follow the component lifecycle.
       <code>AutoInit(document.documentElement)</code> also claims the root.

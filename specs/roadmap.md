@@ -489,6 +489,8 @@ Completion check: dragging the thumb half the track's length scrolls the documen
 
 Open for spec: whether holding a press on the track repeats the page scroll, as native bars do.
 
+Implemented in `feat/custom-scrollbars`; see [decisions and validation](2026/11/16/scroll-area-drag/requirements.md).
+
 ### Phase 101: draw the bar on a scroll container
 
 Depends on phase 100. `ScrollArea` on a scroll container wraps it in an element and draws the same bar beside it, with the same thumb, drag and track behavior as the page bar. Destroying the component removes the wrapper and leaves the container where it was.

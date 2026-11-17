@@ -19,6 +19,7 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
   private _travel = 0;
   private _range = 0;
   private _active = false;
+  private _drag: { pointer: number; start: number; scroll: number } | null = null;
 
   constructor(el: HTMLElement, options: Partial<ScrollAreaOptions> = {}) {
     super(el, options);
@@ -32,6 +33,12 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
     this._rail.append(this._thumb);
     el.ownerDocument.body.append(this._rail);
     const { signal } = this._events;
+    this._rail.addEventListener('pointerdown', this._down, { signal });
+    this._rail.addEventListener('pointermove', this._move, { signal });
+    for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) {
+      this._rail.addEventListener(type, this._end, { signal });
+    }
+    this._view.addEventListener('blur', this._end, { signal });
     this._media = ['(forced-colors: active)', '(pointer: coarse)'].map(query => this._view.matchMedia(query));
     this._media.forEach(media => media.addEventListener('change', this.refresh, { signal }));
     this._view.addEventListener('resize', this.refresh, { signal });
@@ -59,6 +66,7 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
 
   private _measure() {
     this._active = this._page && !this._media.some(media => media.matches);
+    if (!this._active) this._end();
     this.el.classList.toggle('scroll-area-enhanced', this._active);
     this._rail.hidden = !this._active;
     const extent = this.el.clientHeight;
@@ -82,6 +90,35 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
     this._position();
   }
 
+  private _down = (event: PointerEvent) => {
+    if (!this._active || event.button !== 0 || !event.isPrimary || !this._range) return;
+    event.preventDefault();
+    if (this._thumb.contains(event.target as Node)) {
+      this._drag = { pointer: event.pointerId, start: event.clientY, scroll: this.el.scrollTop };
+      this._rail.setPointerCapture(event.pointerId);
+      this._rail.classList.add('dragging');
+    } else {
+      const direction = event.clientY < this._thumb.getBoundingClientRect().top ? -1 : 1;
+      this._setScroll(this.el.scrollTop + direction * this.el.clientHeight);
+    }
+  };
+
+  private _move = (event: PointerEvent) => {
+    if (!this._drag || event.pointerId !== this._drag.pointer || !this._travel) return;
+    this._setScroll(this._drag.scroll + (event.clientY - this._drag.start) / this._travel * this._range);
+  };
+
+  private _end = () => {
+    const pointer = this._drag?.pointer;
+    this._drag = null;
+    this._rail.classList.remove('dragging');
+    if (pointer !== undefined && this._rail.hasPointerCapture(pointer)) this._rail.releasePointerCapture(pointer);
+  };
+
+  private _setScroll(top: number) {
+    this._view.scrollTo({ top, behavior: 'instant' });
+  }
+
   private _scroll = () => { this._position(); };
 
   private _position() {
@@ -92,6 +129,7 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
   }
 
   destroy() {
+    this._end();
     this._view.cancelAnimationFrame(this._frame);
     this._resize.disconnect();
     this._mutations.disconnect();
