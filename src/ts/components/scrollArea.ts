@@ -1,6 +1,9 @@
 import { Component, BaseOptions } from '../core/component';
 
-export interface ScrollAreaOptions extends BaseOptions {}
+export interface ScrollAreaOptions extends BaseOptions {
+  /** Milliseconds after activity before hiding the bar. @default 1000 */
+  idleDelay: number;
+}
 
 type Axis = 'x' | 'y';
 interface Bar {
@@ -16,7 +19,7 @@ interface Bar {
 /** A decorative scrollbar over a native scrollport. Keyboard and touch stay native. */
 export class ScrollArea extends Component<ScrollAreaOptions> {
   static key = 'Expressive_ScrollArea';
-  static get defaults(): ScrollAreaOptions { return {}; }
+  static get defaults(): ScrollAreaOptions { return { idleDelay: 1000 }; }
 
   private _view: Window;
   private _page: boolean;
@@ -30,6 +33,8 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
   private _media: MediaQueryList[];
   private _frame = 0;
   private _active = false;
+  private _idleTimer = 0;
+  private _over = new Set<Bar>();
   private _drag: { bar: Bar; pointer: number; start: number; scroll: number } | null = null;
 
   constructor(el: HTMLElement, options: Partial<ScrollAreaOptions> = {}) {
@@ -46,6 +51,8 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
       const bar: Bar = { axis, rail, thumb, animation: null, travel: 0, range: 0, extent: 0 };
       this._bars.push(bar);
       const { signal } = this._events;
+      rail.addEventListener('pointerenter', () => { this._over.add(bar); this._wake(); }, { signal });
+      rail.addEventListener('pointerleave', () => { this._over.delete(bar); this._scheduleIdle(); }, { signal });
       rail.addEventListener('pointerdown', event => this._down(event, bar), { signal });
       rail.addEventListener('pointermove', this._move, { signal });
       for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) rail.addEventListener(type, this._end, { signal });
@@ -134,6 +141,7 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
       }
     }
     this._position();
+    this._wake();
   }
 
   private _wrap() {
@@ -177,6 +185,7 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
   private _down(event: PointerEvent, bar: Bar) {
     if (!this._active || event.button !== 0 || !event.isPrimary || !bar.range) return;
     event.preventDefault();
+    this._wake();
     if (bar.thumb.contains(event.target as Node)) {
       this._end();
       this._drag = { bar, pointer: event.pointerId, start: this._coordinate(event, bar), scroll: this._offset(bar) };
@@ -204,6 +213,7 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
     if (!drag) return;
     drag.bar.rail.classList.remove('dragging');
     if (drag.bar.rail.hasPointerCapture(drag.pointer)) drag.bar.rail.releasePointerCapture(drag.pointer);
+    this._scheduleIdle();
   };
 
   private _setScroll(bar: Bar, offset: number) {
@@ -214,7 +224,23 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
 
   private _transform(bar: Bar, distance: number) { return `translate${bar.axis.toUpperCase()}(${distance}px)`; }
 
-  private _scroll = () => { this._position(); };
+  private _wake() {
+    for (const bar of this._bars) bar.rail.classList.remove('idle');
+    this._scheduleIdle();
+  }
+
+  private _scheduleIdle() {
+    this._view.clearTimeout(this._idleTimer);
+    this._idleTimer = 0;
+    if (this._events.signal.aborted || !this._active || this._over.size || this._drag) return;
+    const delay = Number.isFinite(this.options.idleDelay) && this.options.idleDelay >= 0 ? this.options.idleDelay : 1000;
+    this._idleTimer = this._view.setTimeout(() => {
+      this._idleTimer = 0;
+      for (const bar of this._bars) bar.rail.classList.add('idle');
+    }, delay);
+  }
+
+  private _scroll = () => { this._position(); this._wake(); };
 
   private _position() {
     for (const bar of this._bars) if (!bar.animation) {
@@ -226,6 +252,7 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
 
   destroy() {
     this._end();
+    this._view.clearTimeout(this._idleTimer);
     this._view.cancelAnimationFrame(this._frame);
     this._resize.disconnect();
     this._mutations.disconnect();

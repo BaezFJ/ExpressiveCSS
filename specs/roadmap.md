@@ -527,6 +527,8 @@ Completion check: one second after scrolling stops, the bar is hidden. Moving th
 
 Open for spec: whether the idle delay is an option, and how near the edge counts as near.
 
+Implemented in `feat/custom-scrollbars`; see [decisions and validation](2026/11/16/scroll-area-idle/requirements.md).
+
 ### Phase 105: mark sections on the track
 
 Depends on phase 99. Headings or elements the author names get tick marks on the track at their scroll positions, and the marks move when the layout changes the targets' positions. The marks reuse the targets Scrollspy reads where a page already has them.

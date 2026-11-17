@@ -105,3 +105,12 @@
 @media (prefers-reduced-motion: reduce) {
   .scroll-area-thumb { transition: none; }
 }
+
+.scroll-area-bar {
+  transition: opacity var(--md-sys-motion-spring-fast-effects-duration) var(--md-sys-motion-spring-fast-effects);
+  &.idle { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-area-bar { transition: none; }
+}

@@ -177,4 +177,30 @@ for (const [engine, type, browserTest] of engines) {
     }
   });
 
+  browserTest(`custom bars hide while idle and wake at the edge or on scroll (${engine})`, async () => {
+    const browser = await leaseBrowser(type);
+    let page;
+    try {
+      page = await browser.newPage();
+      await setup(page);
+      await page.waitForFunction(() => getComputedStyle(document.querySelector('.vertical')).opacity === '0');
+      const b=await geometry(page);
+      await page.mouse.move(b.right-2,100);
+      await page.waitForFunction(() => getComputedStyle(document.querySelector('.vertical')).opacity === '1');
+      await page.waitForTimeout(1100);
+      assert.equal(await page.locator('.vertical').evaluate(el => getComputedStyle(el).opacity), '1');
+      await page.mouse.move(10,10);
+      await page.waitForFunction(() => getComputedStyle(document.querySelector('.vertical')).opacity === '0');
+      await page.evaluate(() => scrollTo(0,100));
+      await page.waitForFunction(() => getComputedStyle(document.querySelector('.vertical')).opacity === '1');
+      await page.emulateMedia({ reducedMotion:'reduce' });
+      assert.equal(await page.locator('.vertical').evaluate(el => getComputedStyle(el).transitionDuration), '0s');
+      await page.evaluate(() => area.destroy());
+      assert.equal(await page.locator('.scroll-area-bar').count(),0);
+    } finally {
+      if (page) await page.evaluate(() => window.area?.destroy());
+      await browser.close();
+    }
+  });
+
 }

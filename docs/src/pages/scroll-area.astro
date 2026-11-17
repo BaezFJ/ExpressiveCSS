@@ -81,6 +81,10 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
       on an authored outer element if they need to change after initialization. Direct-child
       selectors must account for the wrapper. Call <code>refresh()</code> after layout changes
       that do not resize the scrollport or its direct children.</p>
+    <p>Bars fade after <code>idleDelay</code> milliseconds without activity (default 1000).
+      Scrolling or entering the 16px edge strip shows them again; hover and dragging keep
+      them visible. Pass <code>&#123; idleDelay: 1500 &#125;</code> at initialization to change it.
+      Reduced motion hides and shows immediately.</p>
     <p>The thumb grows from 4px to 8px on hover or drag, using the shared fast spatial
       spring tokens (including <code>motion="expressive"</code>). Reduced motion changes
       its size immediately.</p>

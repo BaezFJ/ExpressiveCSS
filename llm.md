@@ -1409,6 +1409,8 @@ after layout changes that do not resize the scrollport or its direct children.
 
 For a framework-drawn page bar, use `<html class="scroll-area custom">` and
 `ScrollArea.init(document.documentElement)`, or `AutoInit(document.documentElement)`.
+Bars fade after `idleDelay` milliseconds (default 1000). Scrolling or entering the
+16px rail wakes them; hover/drag holds them visible. Reduced motion removes fades.
 The thumb grows from 4px to 8px on hover/drag with the shared fast spatial spring
 tokens, including `motion="expressive"`; reduced motion removes the transition.
 Horizontal overflow adds a bottom bar; both axes reserve a 16px corner. RTL
