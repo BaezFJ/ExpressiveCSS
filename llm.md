@@ -369,6 +369,7 @@ function unmount() {
 | `CurrencyInput` | `input[data-currency]` of type text |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
+| `ScrollArea` | `.scroll-area.custom` |
 | `ScrollSpy` | `.scrollspy` |
 | `BackToTop` | `.back-to-top` |
 | `FormSelect` | `select` without `data-tree` |
@@ -1409,6 +1410,10 @@ after layout changes that do not resize the scrollport or its direct children.
 
 For a framework-drawn page bar, use `<html class="scroll-area custom">` and
 `ScrollArea.init(document.documentElement)`, or `AutoInit(document.documentElement)`.
+While dragging the vertical thumb, a label shows the current marked section.
+`data-scroll-area-label` overrides its heading text (or target text). Labels use
+plain text, at most 160 characters, stay aria-hidden and disappear on release,
+cancellation or destroy. No marks or a horizontal drag means no label.
 `sections` defaults to `.scrollspy, [data-scroll-area-section]`, reusing ScrollSpy
 targets or explicit markers. A custom selector (e.g. `h2[id]`) replaces it.
 Invalid selectors match nothing. Vertical ticks are decorative, proportional to
@@ -1447,7 +1452,29 @@ Give a generic scroll region `tabindex="0"` and an accessible name so keyboard u
 
 Add `.scroll-area` to `<html>` to style the page's own scrollbar. The viewport keeps native scrolling, and the thumb color follows the theme.
 
-Override `--scroll-area-thumb-color` and `--scroll-area-track-color` on the container or an ancestor. Defaults are `var(--md-sys-color-on-surface-variant)` and `transparent`. Choose colors with enough contrast against the track and container. Native scrollbar shape, exact width, and automatic hiding depend on the browser and operating system. Older WebKit engines use rounded 8px scrollbars. Forced-colors mode restores system colors and the default width. Selective Sass builds can load `"scroll-area"` through `$utilities`.
+Override `--scroll-area-thumb-color` and `--scroll-area-track-color` on the container or an ancestor. Defaults are `var(--md-sys-color-on-surface-variant)` and `transparent`. Choose colors with enough contrast against the track and container. Native scrollbar shape, exact width, and automatic hiding depend on the browser and operating system. Older WebKit engines use rounded 8px scrollbars. Forced-colors mode restores system colors and the default width. Selective Sass builds load `"scroll-area"` through `$utilities` for native styling; custom bars also need `"scroll-area"` through `$components`.
+
+#### Options
+
+| Option | Type | Default | Description |
+| --- | --- | --- | --- |
+| `idleDelay` | number | `1000` | Milliseconds without activity before bars hide. |
+| `sections` | string | `'.scrollspy, [data-scroll-area-section]'` | Selector for section marks and drag labels; invalid selectors match nothing. |
+
+#### Methods
+
+##### `ScrollArea.init(element, options?)`
+
+Initialize a page root or scroll container; returns its instance. `getInstance(element)` looks it up.
+
+##### `.refresh()`
+
+Schedule a measurement after layout shifts outside observed content.
+
+##### `.destroy()`
+
+Cancel observers, listeners, capture, animation and timers, remove generated bars,
+and unwrap a container while restoring its modified styles.
 
 ### Shapes
 
@@ -6797,6 +6824,7 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `CurrencyInput` | `input[data-currency]` of type text |
 | `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
+| `ScrollArea` | `.scroll-area.custom` |
 | `ScrollSpy` | `.scrollspy` |
 | `BackToTop` | `.back-to-top` |
 | `FormSelect` | `select` without `data-tree` |

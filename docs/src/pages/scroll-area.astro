@@ -81,6 +81,14 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
       on an authored outer element if they need to change after initialization. Direct-child
       selectors must account for the wrapper. Call <code>refresh()</code> after layout changes
       that do not resize the scrollport or its direct children.</p>
+    <p>During a vertical thumb drag, a label names the current marked section. It uses
+      <code>data-scroll-area-label</code> when present, otherwise the heading text (or target
+      text). Labels are plain text, limited to 160 characters, hidden from assistive
+      technology with the bar, and disappear on release or cancellation. Unmarked content
+      and horizontal drags show no label.</p>
+    <Code code={`<section data-scroll-area-section data-scroll-area-label="November 16">
+  <h2>November releases</h2>...
+</section>`} />
     <p>The <code>sections</code> selector defaults to <code>.scrollspy, [data-scroll-area-section]</code>,
       reusing ScrollSpy targets or explicit section markers. Set it to a heading selector
       such as <code>h2[id]</code> to mark those instead; an invalid selector produces no marks.
@@ -126,7 +134,8 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
       follows the browser and operating system, so shape, exact width, and automatic
       hiding can differ. Older WebKit engines use rounded 8px scrollbars.
       Forced-colors mode restores system colors and the default width.</p>
-    <p>For a selective Sass build, include <code>"scroll-area"</code> in <code>$utilities</code>.</p>
+    <p>For a selective Sass build, include <code>"scroll-area"</code> in <code>$utilities</code>
+      for native styling. Custom bars also need <code>"scroll-area"</code> in <code>$components</code>.</p>
   </Section>
 </DocsLayout>
 

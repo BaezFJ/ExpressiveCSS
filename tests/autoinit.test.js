@@ -28,19 +28,21 @@ describe("AutoInit", () => {
       Expressive.AutoInit();
 
       const instance = Expressive[name].getInstance(el);
-      assert.ok(
-        instance,
-        `${name}.getInstance() returned nothing after AutoInit()`,
-      );
-      assert.ok(
-        instance instanceof Expressive[name],
+      try {
+        assert.ok(
+          instance,
+          `${name}.getInstance() returned nothing after AutoInit()`,
+        );
+        assert.ok(
+          instance instanceof Expressive[name],
         `instance for ${selector} is ${instance?.constructor?.name}, expected ${name}`,
-      );
-      assert.equal(
-        instance.el,
-        el,
-        `${name} instance is bound to the wrong element`,
-      );
+        );
+        assert.equal(
+          instance.el,
+          el,
+          `${name} instance is bound to the wrong element`,
+        );
+      } finally { instance?.destroy(); }
     });
   }
 
@@ -51,7 +53,7 @@ describe("AutoInit", () => {
       selectors.length,
       "duplicate selector in fixtures",
     );
-    assert.equal(AUTO_INIT_FIXTURES.length, 47);
+    assert.equal(AUTO_INIT_FIXTURES.length, 48);
   });
 
   test("skips elements marked .no-autoinit", () => {

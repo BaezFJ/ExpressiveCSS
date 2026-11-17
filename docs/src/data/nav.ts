@@ -185,7 +185,7 @@ export const NAV: DocsGroup[] = [
       {
         id: "scroll-area",
         exports: ["ScrollArea"],
-        styles: ["utilities/scroll-area"],
+        styles: ["components/scroll-area", "utilities/scroll-area"],
         label: "Scroll area",
         route: "/scroll-area.html",
         description:

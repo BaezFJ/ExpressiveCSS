@@ -223,4 +223,129 @@ for (const [engine, type, browserTest] of engines) {
     }
   });
 
+  browserTest(`custom drag label names the current section safely and clears on release (${engine})`, async () => {
+    const browser = await leaseBrowser(type);
+    let page;
+    try {
+      page = await browser.newPage({ viewport:{width:800,height:600} });
+      await setup(page,Array.from({length:4},(_,i)=>`<section data-scroll-area-section style="height:600px"><h2 style="margin:0">Section ${i+1}</h2></section>`).join(''));
+      const b=await geometry(page),x=b.right-7,start=b.thumbTop+10;
+      await page.mouse.move(x,start);
+      await page.mouse.down();
+      await page.mouse.move(x,start+2*(b.height-b.thumbHeight)/3);
+      await page.waitForFunction(() => document.querySelector('.scroll-area-label').textContent === 'Section 3');
+      assert.equal(await page.locator('.scroll-area-label').isVisible(),true);
+      assert.equal(await page.locator('.scroll-area-label').evaluate(el => el.closest('[aria-hidden]').getAttribute('aria-hidden')),'true');
+      await page.locator('[data-scroll-area-section]').nth(2).evaluate(el => el.setAttribute('data-scroll-area-label','<img src=x onerror=alert(1)>'));
+      await page.waitForFunction(() => document.querySelector('.scroll-area-label').textContent.startsWith('<img'));
+      assert.equal(await page.locator('.scroll-area-label img').count(),0);
+      await page.mouse.up();
+      assert.equal(await page.locator('.scroll-area-label').isVisible(),false);
+    } finally {
+      if (page) await page.evaluate(() => window.area?.destroy());
+      await browser.close();
+    }
+  });
+
+  browserTest(`custom bars stay inside a shadow root and copy local colors (${engine})`, async () => {
+    const browser = await leaseBrowser(type);
+    let page;
+    try {
+      page = await browser.newPage();
+      await page.setContent('<div id="host"></div>');
+      await page.addScriptTag({content:js});
+      await page.evaluate(css => {
+        const root=document.querySelector('#host').attachShadow({mode:'open'});
+        root.innerHTML=`<style>${css}</style><div class="scroll-area custom" style="height:300px;width:300px;--scroll-area-thumb-color:rgb(12,34,56)" tabindex="0" role="region" aria-label="Tags"><div style="height:900px">Tags</div></div>`;
+        window.area=Expressive.ScrollArea.init(root.querySelector('.scroll-area'));
+      },css);
+      await page.waitForFunction(() => document.querySelector('#host').shadowRoot.querySelector('.scroll-area-enhanced'));
+      assert.equal(await page.locator('#host .vertical .scroll-area-thumb').evaluate(el => getComputedStyle(el).backgroundColor),'rgb(12, 34, 56)');
+      assert.equal(await page.evaluate(() => document.querySelectorAll('.scroll-area-bar').length),0);
+      await page.locator('#host .scroll-area.custom').focus();
+      await page.keyboard.press('End');
+      await page.waitForFunction(() => document.querySelector('#host').shadowRoot.querySelector('.scroll-area').scrollTop > 500);
+      await page.evaluate(() => area.destroy());
+      assert.equal(await page.locator('#host .scroll-area-frame').count(),0);
+    } finally {
+      if (page) await page.evaluate(() => window.area?.destroy());
+      await browser.close();
+    }
+  });
+  if (engine !== 'firefox') browserTest(`coarse primary pointer keeps the native scrollbar (${engine})`, async () => {
+    const browser = await leaseBrowser(type);
+    let page;
+    try {
+      page = await browser.newPage({ isMobile:true, hasTouch:true });
+      await page.setContent(`<!doctype html><html class="scroll-area custom"><style>${css}</style><body><div style="height:300vh">Content</div><script>${js}</script></body></html>`);
+      await page.evaluate(() => { window.area=Expressive.ScrollArea.init(document.documentElement); });
+      await page.evaluate(() => new Promise(resolve => requestAnimationFrame(resolve)));
+      assert.equal(await page.evaluate(() => matchMedia('(pointer: coarse)').matches),true);
+      assert.equal(await page.locator('.scroll-area-enhanced').count(),0);
+      assert.equal(await page.locator('.vertical').evaluate(el => getComputedStyle(el).display),'none');
+    } finally {
+      if (page) await page.evaluate(() => window.area?.destroy());
+      await browser.close();
+    }
+  });
+
+  browserTest(`custom bar colors and springs follow runtime theme changes (${engine})`, async () => {
+    const browser = await leaseBrowser(type);
+    let page;
+    try {
+      page=await browser.newPage();
+      await setup(page);
+      const thumb=page.locator('.vertical .scroll-area-thumb');
+      const before=await thumb.evaluate(el=>getComputedStyle(el).backgroundColor);
+      await page.evaluate(() => { document.documentElement.setAttribute('theme','dark'); document.documentElement.setAttribute('motion','expressive'); });
+      await page.waitForFunction(before=>getComputedStyle(document.querySelector('.vertical .scroll-area-thumb')).backgroundColor !== before,before);
+      const values=await page.evaluate(() => {
+        const root=getComputedStyle(document.documentElement),bar=getComputedStyle(document.querySelector('.vertical'));
+        return [root.colorScheme,bar.colorScheme,root.getPropertyValue('--md-sys-motion-spring-fast-spatial'),bar.getPropertyValue('--md-sys-motion-spring-fast-spatial')];
+      });
+      assert.equal(values[0],values[1]); assert.equal(values[2],values[3]);
+    } finally {
+      if (page) await page.evaluate(() => window.area?.destroy());
+      await browser.close();
+    }
+  });
+
+  browserTest(`custom frame preserves spacing utilities and grid placement (${engine})`, async () => {
+    const browser = await leaseBrowser(type);
+    let page;
+    try {
+      page=await browser.newPage({viewport:{width:800,height:600}});
+      await page.setContent(`<style>${css}</style><div style="display:grid;grid-template-columns:1fr 1fr"><span>Before</span><div class="scroll-area custom m-3" style="width:200px;height:300px;grid-column:2"><div style="height:900px">Tags</div></div></div>`);
+      const rect=()=>page.locator('.scroll-area.custom').evaluate(el=>{const b=el.getBoundingClientRect();return [b.left,b.top,b.width,b.height];});
+      const before=await rect();
+      await page.addScriptTag({content:js});
+      await page.evaluate(()=>{window.area=Expressive.ScrollArea.init(document.querySelector('.scroll-area'));});
+      await page.waitForFunction(()=>document.querySelector('.scroll-area-enhanced'));
+      (await rect()).forEach((value,index)=>near(value,before[index],'original layout geometry'));
+      await page.evaluate(()=>area.destroy());
+      (await rect()).forEach((value,index)=>near(value,before[index],'restored layout geometry'));
+    } finally {
+      if (page) await page.evaluate(()=>window.area?.destroy());
+      await browser.close();
+    }
+  });
+
+  browserTest(`custom container color aliases follow an ancestor seed change (${engine})`, async () => {
+    const browser = await leaseBrowser(type);
+    let page;
+    try {
+      page=await browser.newPage();
+      await setup(page, '<div class="scroll-area custom" style="height:300px;--scroll-area-thumb-color:var(--md-sys-color-primary)"><div style="height:900px">Tags</div></div><span id="reference" aria-hidden="true" style="background:var(--md-sys-color-primary)"></span>', '');
+      await page.evaluate(async()=>{await document.fonts.ready;for(let i=0;i<4;i++)await new Promise(resolve=>requestAnimationFrame(resolve));});
+      const before=await page.locator('.vertical .scroll-area-thumb').evaluate(el=>getComputedStyle(el).backgroundColor);
+      await page.evaluate(()=>document.documentElement.style.setProperty('--md-source','#008800'));
+      await page.waitForFunction(before=>getComputedStyle(document.querySelector('.vertical .scroll-area-thumb')).backgroundColor!==before,before);
+      const colors=await page.evaluate(()=>[getComputedStyle(document.querySelector('.vertical .scroll-area-thumb')).backgroundColor,getComputedStyle(document.getElementById('reference')).backgroundColor]);
+      assert.equal(colors[0],colors[1]);
+    } finally {
+      if (page) await page.evaluate(()=>window.area?.destroy());
+      await browser.close();
+    }
+  });
+
 }

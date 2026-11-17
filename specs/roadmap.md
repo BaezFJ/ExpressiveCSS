@@ -29,6 +29,7 @@ Later phases build on these:
 - **App shells:** a `.scaffold` places an app's bar, rail, pane, trailing toolbar, side sheet and status bar, and rearranges them on compact and medium windows.
 - **App bars:** a heading reached through a fragment link rests below a page-level sticky top app bar, through `--md-comp-top-app-bar-anchor-offset`.
 - **Dialogs:** `Dialogs.confirm()` asks a yes-or-no question and returns a promise that resolves to the answer.
+- **Scroll areas:** optional `.scroll-area.custom` page and container bars with both axes, RTL, pointer dragging, spring hover, idle hiding, section marks and drag labels. Native scrolling and accessibility stay with the browser.
 - **Page helpers:** `.defer-render` skips layout and paint for a long list's off-screen rows. A `.loading-overlay` with `aria-busy="true"` blocks input under a scrim. A `hover-card-trigger` link shows its card after a delay, `.back-to-top` appears past a scroll threshold and returns to the top, and `.show-more` expands clamped text from a button that hides while the text fits.
 - **AutoInit:** starts every registered component in the page, with a `no-autoinit` opt-out. A `data-<name>-options` attribute supplies a component's options from markup. With `{ watch: true }`, AutoInit also starts components in markup added later and destroys those whose markup is removed.
 - **App behavior guidance:** the buttons, snackbar, lists, tabs, data table and text field guides say how to show loading, offer Undo, keep the view in the URL and submit forms. `Expressive.DataTables.showPage()` restores a local page from the URL.
@@ -41,7 +42,7 @@ Later phases build on these:
 
 ## Up next
 
-1. [Milestone: custom scrollbars](#milestone-custom-scrollbars)
+No further phases planned.
 
 ## Milestone: MCP authoring guidance
 
@@ -477,9 +478,9 @@ No dependencies. With `ScrollArea` on `<html>`, the page's native vertical bar i
 
 Completion check: on a page three windows tall, the thumb is a third of the track's length, and after scrolling to the end it touches the track's end. With forced colors emulated, the native bar is back and the drawn bar isn't displayed.
 
-Open for spec: the modifier's name, and how the bar keeps clear of fixed page controls such as `.back-to-top` and the floating action button.
+Decision: `.scroll-area.custom` opts in; CSS inset properties reserve space for fixed controls and the default z-index stays below FAB/back-to-top controls.
 
-Implemented in `feat/custom-scrollbars`; see [decisions and validation](2026/11/16/scroll-area-page/requirements.md).
+Completed 2026-11-16; see [decisions and validation](2026/11/16/scroll-area-page/requirements.md).
 
 ### Phase 100: drag the thumb and page from the track
 
@@ -487,9 +488,9 @@ Depends on phase 99. Dragging the page bar's thumb scrolls the document in propo
 
 Completion check: dragging the thumb half the track's length scrolls the document half its scrollable distance, and a press below the thumb scrolls down by the window's height.
 
-Open for spec: whether holding a press on the track repeats the page scroll, as native bars do.
+Decision: one page per press, without repeat.
 
-Implemented in `feat/custom-scrollbars`; see [decisions and validation](2026/11/16/scroll-area-drag/requirements.md).
+Completed 2026-11-16; see [decisions and validation](2026/11/16/scroll-area-drag/requirements.md).
 
 ### Phase 101: draw the bar on a scroll container
 
@@ -497,9 +498,9 @@ Depends on phase 100. `ScrollArea` on a scroll container wraps it in an element 
 
 Completion check: a 300px-tall container with 900px of content shows a thumb a third of the track's length, and dragging it scrolls the container, not the page. After `destroy()`, the container's parent is its original parent again.
 
-Open for spec: how the wrapper takes over the container's flex or grid placement and outer margins.
+Decision: the frame receives initial flex/grid placement and margins; dynamic responsive constraints belong on an authored outer element.
 
-Implemented in `feat/custom-scrollbars`; see [decisions and validation](2026/11/16/scroll-area-container/requirements.md).
+Completed 2026-11-16; see [decisions and validation](2026/11/16/scroll-area-container/requirements.md).
 
 ### Phase 102: add the horizontal bar
 
@@ -507,7 +508,7 @@ Depends on phase 101. On the page and on containers, content that overflows side
 
 Completion check: a container wider than its viewport in both directions shows both bars, and neither thumb enters the corner square. Under `dir="rtl"` the horizontal thumb starts at the right end of the track.
 
-Implemented in `feat/custom-scrollbars`; see [decisions and validation](2026/11/16/scroll-area-horizontal/requirements.md).
+Completed 2026-11-16; see [decisions and validation](2026/11/16/scroll-area-horizontal/requirements.md).
 
 ### Phase 103: grow the thumb on hover with a spring
 
@@ -515,9 +516,9 @@ Depends on phase 99. The thumb is thin at rest, grows when the pointer is over t
 
 Completion check: hovering the bar widens the thumb to its hover size, and leaving returns it to its rest size. With `prefers-reduced-motion: reduce` emulated, the change has no transition.
 
-Open for spec: whether the spring reuses the motion tokens or the runtime `Spring` helper.
+Decision: reuse the shared fast-spatial spring tokens, including the expressive motion scheme.
 
-Implemented in `feat/custom-scrollbars`; see [decisions and validation](2026/11/16/scroll-area-spring/requirements.md).
+Completed 2026-11-16; see [decisions and validation](2026/11/16/scroll-area-spring/requirements.md).
 
 ### Phase 104: hide the bar while idle
 
@@ -525,9 +526,9 @@ Depends on phase 99. The bar fades out after about a second without scrolling an
 
 Completion check: one second after scrolling stops, the bar is hidden. Moving the pointer to the bar's edge shows it again, and it stays visible for as long as the pointer stays over it.
 
-Open for spec: whether the idle delay is an option, and how near the edge counts as near.
+Decision: `idleDelay` defaults to 1000ms; entering the 16px rail counts as approaching the edge.
 
-Implemented in `feat/custom-scrollbars`; see [decisions and validation](2026/11/16/scroll-area-idle/requirements.md).
+Completed 2026-11-16; see [decisions and validation](2026/11/16/scroll-area-idle/requirements.md).
 
 ### Phase 105: mark sections on the track
 
@@ -535,9 +536,9 @@ Depends on phase 99. Headings or elements the author names get tick marks on the
 
 Completion check: on a page with four named sections, the track shows four marks, and each mark's position along the track matches its section's scroll offset as a share of the scrollable distance.
 
-Open for spec: how authors name the targets, and whether a click on a mark scrolls to its section.
+Decision: `sections` defaults to `.scrollspy, [data-scroll-area-section]`; marks are decorative and track presses still page.
 
-Implemented in `feat/custom-scrollbars`; see [decisions and validation](2026/11/16/scroll-area-sections/requirements.md).
+Completed 2026-11-16; see [decisions and validation](2026/11/16/scroll-area-sections/requirements.md).
 
 ### Phase 106: label the thumb while dragging
 
@@ -545,7 +546,9 @@ Depends on phases 100 and 105. While the thumb is dragged, a label beside it sho
 
 Completion check: dragging the thumb into the third section shows that section's heading text beside the thumb, and releasing the pointer hides it.
 
-Open for spec: whether the label can show text other than a heading, such as a date, and whether screen readers hear it.
+Decision: `data-scroll-area-label` overrides heading/target text; the label is decorative and remains hidden from assistive technology.
+
+Completed 2026-11-16; see [decisions and validation](2026/11/16/scroll-area-labels/requirements.md).
 
 ## Deferred work
 

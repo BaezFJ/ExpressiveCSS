@@ -2622,6 +2622,21 @@
       "kind": "foundation",
       "note": "Swept 0.8.0. A foundation, not a component: motion applied through classes to whatever element already exists, with no markup of its own.",
       "rules": []
+    },
+    "scroll-area": {
+      "status": "enforced",
+      "kind": "behavior",
+      "note": "ScrollArea enhances an existing native scrollport. Bars, ticks, labels and frames are generated; keyboard scrolling stays native and the bars add no tab stops. Runtime checks live in tests/custom-scroll-area-browser.test.js.",
+      "rules": [
+        {
+          "id": "scroll-area-generated-bars-hidden",
+          "kind": "require-attr",
+          "selector": ".scroll-area-bar",
+          "attr": "aria-hidden",
+          "equals": "true",
+          "message": "Drawn bars are decorative pointer affordances over a native scrollport; hide them and their marks and labels from assistive technology."
+        }
+      ]
     }
   },
   "fragmentSafe": "Set on a rule that fires on a wrong thing being PRESENT. Only these run against m3-guidelines.md, whose markup is prose fragments: a fragment can be wrong about what it contains, but omitting something is what a fragment is for. Note this is not the same as kind=forbid - `fieldset:not(:has(> legend))` forbids, but what it detects is an omission."

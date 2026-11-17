@@ -21,12 +21,20 @@ const demoOnly = '<article><header class="medium"><nav class="bar"><h1>Demo</h1>
 
 // Follow a fragment link the way a person does, then read where the heading
 // and the bar ended up in the viewport.
-const follow = (p) => p.evaluate(() => {
-  location.hash = 'target';
-  const heading = document.getElementById('target').getBoundingClientRect();
-  const bar = document.querySelector('body > header')?.getBoundingClientRect();
-  return { top: heading.top, barBottom: bar ? bar.bottom : 0 };
-});
+const follow = async (p) => {
+  // setContent keeps the previous URL fragment. Make this a new navigation
+  // and wait for native fragment scrolling before measuring the sticky bar.
+  await p.evaluate(() => { location.hash = ''; location.hash = 'target'; });
+  await p.waitForFunction(() => {
+    const top = document.getElementById('target').getBoundingClientRect().top;
+    return top >= 0 && top < innerHeight;
+  });
+  return p.evaluate(() => {
+    const heading = document.getElementById('target').getBoundingClientRect();
+    const bar = document.querySelector('body > header')?.getBoundingClientRect();
+    return { top: heading.top, barBottom: bar ? bar.bottom : 0 };
+  });
+};
 
 for (const [name, engine, test] of engines) {
   test(`${name}: a heading reached through a fragment link rests below a sticky top app bar`, { timeout: 30000 }, async () => {
@@ -44,10 +52,7 @@ for (const [name, engine, test] of engines) {
 
       for (const [label, header] of [['no bar', ''], ['a demo bar inside an article', demoOnly]]) {
         await p.setContent(page(header));
-        const top = await p.evaluate(() => {
-          location.hash = 'target';
-          return document.getElementById('target').getBoundingClientRect().top;
-        });
+        const { top } = await follow(p);
         assert.ok(Math.abs(top) < 1, `${label}: heading comes to rest at the top, got ${top}`);
       }
 
