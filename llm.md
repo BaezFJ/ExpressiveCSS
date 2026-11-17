@@ -1400,6 +1400,13 @@ Scrolling needs a bounded size. Use `.overflow-x-auto` for wide tables or action
 
 ### Scroll area
 
+For containers, `.scroll-area.custom` is claimed by `AutoInit()`. `ScrollArea`
+wraps the scrollport in `.scroll-area-frame`, carrying its initial flex/grid
+placement and margins; `destroy()` unwraps in place and restores altered styles.
+Keep dynamic responsive layout/positioning constraints on an authored outer
+container. Direct-child selectors must account for the wrapper. Call `refresh()`
+after layout changes that do not resize the scrollport or its direct children.
+
 For a framework-drawn page bar, use `<html class="scroll-area custom">` and
 `ScrollArea.init(document.documentElement)`, or `AutoInit(document.documentElement)`.
 Drag the thumb proportionally or press the track to page one viewport (no repeat).

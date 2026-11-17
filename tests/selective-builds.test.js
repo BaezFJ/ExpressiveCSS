@@ -363,7 +363,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the scaffold milestone merged with master's busy buttons, data table pages and compact and hover rail: 112,245 gzip bytes.
   // Custom scrollbars phase 99: 112,969 gzip bytes.
   // Custom scrollbars phase 100: 113,294 gzip bytes.
-  assert.ok(sizes(js).gzip <= 113294, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Custom scrollbars phase 101: 113,801 gzip bytes.
+  assert.ok(sizes(js).gzip <= 113801, `JavaScript gzip: ${sizes(js).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -599,5 +600,6 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed card media keeping its aspect ratio when the image has width and height attributes: 94,452 gzip bytes (+2).
   // Custom scrollbars phase 99: 94,637 gzip bytes.
   // Custom scrollbars phase 100: 94,637 gzip bytes.
-  assert.ok(sizes(css).gzip <= 94637, `CSS gzip: ${sizes(css).gzip}`);
+  // Custom scrollbars phase 101: 94,673 gzip bytes.
+  assert.ok(sizes(css).gzip <= 94673, `CSS gzip: ${sizes(css).gzip}`);
 });

@@ -68,6 +68,19 @@ const tags = Array.from({ length: 50 }, (_, index) => `v1.2.0-beta.${50 - index}
     <Code code={`<html class="scroll-area custom" lang="en">
 <!-- Initialize the root explicitly; AutoInit defaults to body. -->
 <script>Expressive.ScrollArea.init(document.documentElement);</script>`} />
+    <div class="scroll-area custom p-4" style="height: 300px; max-width: 24rem"
+      tabindex="0" role="region" aria-label="Custom release tags">
+      <div style="height: 900px">{tags.map(tag => <p>{tag}</p>)}</div>
+    </div>
+    <Code code={`<div class="scroll-area custom" style="height:300px" tabindex="0"
+  role="region" aria-label="Release tags"><div style="height:900px">Tags</div></div>
+<script>Expressive.AutoInit();</script>`} />
+    <p>On containers, the runtime inserts a <code>.scroll-area-frame</code> grid wrapper.
+      It takes the initial flex/grid placement and margins; <code>destroy()</code> unwraps
+      the original element in place. Keep positioning and responsive layout constraints
+      on an authored outer element if they need to change after initialization. Direct-child
+      selectors must account for the wrapper. Call <code>refresh()</code> after layout changes
+      that do not resize the scrollport or its direct children.</p>
     <p>Drag the thumb to scroll proportionally, or press the track to page one viewport.
       A held track press does not repeat. Pointer capture keeps the drag outside the bar;
       cancellation and window blur end it.</p>

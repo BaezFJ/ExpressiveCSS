@@ -9,9 +9,12 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
 
   private _view: Window;
   private _page: boolean;
+  private _wrapper: HTMLElement | null = null;
+  private _styles = new Map<string, [string, string]>();
   private _rail: HTMLElement;
   private _thumb: HTMLElement;
   private _resize: ResizeObserver;
+  private _observed = new Set<Element>();
   private _mutations: MutationObserver;
   private _media: MediaQueryList[];
   private _frame = 0;
@@ -26,12 +29,13 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
     this._view = el.ownerDocument.defaultView;
     this._page = el === el.ownerDocument.documentElement;
     this._rail = el.ownerDocument.createElement('div');
-    this._rail.className = 'scroll-area-bar vertical page';
+    this._rail.className = `scroll-area-bar vertical${this._page ? ' page' : ''}`;
     this._rail.setAttribute('aria-hidden', 'true');
     this._thumb = el.ownerDocument.createElement('div');
     this._thumb.className = 'scroll-area-thumb';
     this._rail.append(this._thumb);
-    el.ownerDocument.body.append(this._rail);
+    if (this._page) el.ownerDocument.body.append(this._rail);
+    else this._wrap();
     const { signal } = this._events;
     this._rail.addEventListener('pointerdown', this._down, { signal });
     this._rail.addEventListener('pointermove', this._move, { signal });
@@ -42,16 +46,15 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
     this._media = ['(forced-colors: active)', '(pointer: coarse)'].map(query => this._view.matchMedia(query));
     this._media.forEach(media => media.addEventListener('change', this.refresh, { signal }));
     this._view.addEventListener('resize', this.refresh, { signal });
-    el.ownerDocument.addEventListener('scroll', this._scroll, { signal, passive: true });
+    (this._page ? el.ownerDocument : el).addEventListener('scroll', this._scroll, { signal, passive: true });
     el.addEventListener('load', this.refresh, { signal, capture: true });
     this._resize = new ResizeObserver(this.refresh);
-    this._resize.observe(el);
-    this._resize.observe(el.ownerDocument.body);
+
     // A fixed-height scrollport need not resize when its children change.
     this._mutations = new MutationObserver(records => {
-      if (records.some(record => !this._rail.contains(record.target))) this.refresh();
+      if (records.some(record => !this._rail.contains(record.target) && !(record.target === this.el && record.attributeName === 'class'))) this.refresh();
     });
-    this._mutations.observe(el, { childList: true, subtree: true, characterData: true });
+    this._mutations.observe(el, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ['style', 'class', 'hidden', 'dir'] });
     this.refresh();
   }
 
@@ -65,10 +68,25 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
   };
 
   private _measure() {
-    this._active = this._page && !this._media.some(media => media.matches);
+    const targets = new Set<Element>([this.el, ...this.el.children]);
+    if (this._page) targets.add(this.el.ownerDocument.body);
+    targets.delete(this._rail);
+    for (const old of this._observed) if (!targets.has(old)) this._resize.unobserve(old);
+    for (const target of targets) if (!this._observed.has(target)) this._resize.observe(target);
+    this._observed = targets;
+    this._active = !this._media.some(media => media.matches);
     if (!this._active) this._end();
     this.el.classList.toggle('scroll-area-enhanced', this._active);
     this._rail.hidden = !this._active;
+    if (this._wrapper) {
+      // The scrollport may have its own width, borders and padding. Anchor to
+      // its box, not to the wrapper's potentially stretched grid track.
+      const box = this.el.getBoundingClientRect(), frame = this._wrapper.getBoundingClientRect();
+      this._rail.style.top = `${box.top - frame.top}px`;
+      this._rail.style.bottom = 'auto';
+      this._rail.style.height = `${this.el.clientHeight}px`;
+      this._rail.style.right = `${frame.right - box.right}px`;
+    }
     const extent = this.el.clientHeight;
     this._range = Math.max(0, this.el.scrollHeight - extent);
     this._rail.hidden ||= !this._range;
@@ -88,6 +106,36 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
       );
     }
     this._position();
+  }
+
+  private _wrap() {
+    const wrapper = this.el.ownerDocument.createElement('div');
+    wrapper.className = 'scroll-area-frame';
+    const style = this._view.getComputedStyle(this.el);
+    for (const property of ['flex', 'align-self', 'justify-self', 'order', 'grid-area', 'min-width', 'min-height']) {
+      wrapper.style.setProperty(property, style.getPropertyValue(property));
+    }
+    for (const edge of ['top', 'right', 'bottom', 'left']) {
+      wrapper.style.setProperty(`margin-${edge}`, style.getPropertyValue(`margin-${edge}`));
+      this._override(`margin-${edge}`, '0px');
+    }
+    for (const property of ['grid-row-start', 'grid-row-end', 'grid-column-start', 'grid-column-end']) this._override(property, '1');
+    // Inline percentage sizes need the original containing block, not an
+    // auto-sized intermediate grid. Transfer those constraints to the frame.
+    for (const property of ['width', 'height']) {
+      if (this.el.style.getPropertyValue(property).includes('%')) {
+        wrapper.style.setProperty(property, this.el.style.getPropertyValue(property));
+        this._override(property, '100%');
+      }
+    }
+    this.el.before(wrapper);
+    wrapper.append(this.el, this._rail);
+    this._wrapper = wrapper;
+  }
+
+  private _override(property: string, value: string) {
+    this._styles.set(property, [this.el.style.getPropertyValue(property), this.el.style.getPropertyPriority(property)]);
+    this.el.style.setProperty(property, value);
   }
 
   private _down = (event: PointerEvent) => {
@@ -116,7 +164,7 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
   };
 
   private _setScroll(top: number) {
-    this._view.scrollTo({ top, behavior: 'instant' });
+    (this._page ? this._view : this.el).scrollTo({ top, behavior: 'instant' });
   }
 
   private _scroll = () => { this._position(); };
@@ -135,6 +183,12 @@ export class ScrollArea extends Component<ScrollAreaOptions> {
     this._mutations.disconnect();
     this._animation?.cancel();
     this._rail.remove();
+    if (this._wrapper) {
+      this._wrapper.replaceWith(this.el);
+      this._wrapper = null;
+    }
+    for (const [property, [value, priority]] of this._styles) this.el.style.setProperty(property, value, priority);
+    this._styles.clear();
     this.el.classList.remove('scroll-area-enhanced');
     super.destroy();
   }

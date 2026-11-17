@@ -499,6 +499,8 @@ Completion check: a 300px-tall container with 900px of content shows a thumb a t
 
 Open for spec: how the wrapper takes over the container's flex or grid placement and outer margins.
 
+Implemented in `feat/custom-scrollbars`; see [decisions and validation](2026/11/16/scroll-area-container/requirements.md).
+
 ### Phase 102: add the horizontal bar
 
 Depends on phase 101. On the page and on containers, content that overflows sideways gets a horizontal bar along the block-end edge with the same thumb, drag and track behavior. Under `dir="rtl"` the thumb starts at the right, and when both bars show they don't overlap at the corner.

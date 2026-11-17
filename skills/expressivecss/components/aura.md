@@ -9,7 +9,7 @@ Component ID: `aura`
 
 Contract: ExpressiveCSS 0.19.0
 
-Contract SHA-256: `0c2383b1fac57112db084020ed590a38487dbd00e09bf61c519293162d615d6f`
+Contract SHA-256: `f582787a77b185567104159273da2eec1478b45b227c36499ec0e21b08c11ab3`
 
 #### Selection and adaptation
 

@@ -70,3 +70,12 @@
 @media print {
   .scroll-area-bar { display: none; }
 }
+
+.scroll-area-frame {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  min-inline-size: 0;
+  min-block-size: 0;
+}

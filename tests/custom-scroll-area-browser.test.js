@@ -93,4 +93,35 @@ for (const [engine, type, browserTest] of engines) {
     }
   });
 
+  browserTest(`custom container geometry, scroll isolation and layout restoration (${engine})`, async () => {
+    const browser = await leaseBrowser(type);
+    let page;
+    try {
+      page = await browser.newPage();
+      await setup(page, `<div id="parent" style="display:grid;grid-template-columns:1fr 1fr">
+        <div id="before">Before</div><div class="scroll-area custom" tabindex="0" role="region" aria-label="Tags"
+          style="height:300px;width:300px;margin:12px;grid-column:2"><div style="height:900px">Tags</div><button>Last</button></div><div id="after">After</div></div>`, '');
+      let b = await geometry(page);
+      const ratio = await page.locator('.scroll-area.custom').evaluate(el => el.clientHeight / el.scrollHeight);
+      near(b.thumbHeight, b.height * ratio, 'container thumb ratio');
+      const x = b.right - 8;
+      await page.mouse.move(x,b.thumbTop + 10);
+      await page.mouse.down();
+      await page.mouse.move(x-50,b.thumbTop+10+(b.height-b.thumbHeight)/2);
+      await page.mouse.up();
+      const expected = await page.locator('.scroll-area.custom').evaluate(el => (el.scrollHeight-el.clientHeight)/2);
+      near(await page.locator('.scroll-area.custom').evaluate(el => el.scrollTop), expected, 'container drag');
+      assert.equal(await page.evaluate(() => scrollY),0);
+      await page.locator('.scroll-area.custom').focus();
+      await page.keyboard.press('End');
+      await page.waitForFunction(() => document.querySelector('.scroll-area.custom').scrollTop > 500);
+      await page.evaluate(() => area.destroy());
+      assert.equal(await page.locator('.scroll-area-frame').count(),0);
+      assert.deepEqual(await page.locator('.scroll-area.custom').evaluate(el => [el.parentElement.id, el.previousElementSibling.id, el.nextElementSibling.id, el.style.margin,el.style.gridColumn]),['parent','before','after','12px','2']);
+    } finally {
+      if (page) await page.evaluate(() => window.area?.destroy());
+      await browser.close();
+    }
+  });
+
 }
