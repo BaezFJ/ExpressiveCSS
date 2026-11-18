@@ -4,7 +4,7 @@ ExpressiveCSS is a Material Design 3 front-end framework written in Sass and
 TypeScript. It gives you theme tokens, layout and utility classes, styled form
 controls, and JavaScript components.
 
-> Version `0.19.0` is under active development.
+> Version `0.20.0` is under active development.
 
 Documentation: [www.expressivecss.com](https://www.expressivecss.com)
 

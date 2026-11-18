@@ -17,7 +17,7 @@ export { TransferList } from './behaviors/transferList';
 export { AutoInit } from './components/registry';
 export type { AutoInitOptions } from './components/registry';
 
-export const version = '0.19.0';
+export const version = '0.20.0';
 
 export type * from './components/autocomplete';
 export type * from './components/appBar';
