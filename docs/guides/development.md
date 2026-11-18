@@ -13,6 +13,7 @@ framework still supports Node 20 and newer.
 | --- | --- |
 | `npm run build` | Build all CSS, JavaScript, and declaration files |
 | `npm run build:css` | Build expanded and minified CSS |
+| `npm run build:used -- <app-directory> --out-dir <output>` | Build a consumer stylesheet after `npm run build`; add `--entry <app/ui.ts>` for JavaScript |
 | `npm run build:js` | Build ESM, CommonJS, and browser bundles |
 | `npm run build:types` | Generate TypeScript declarations |
 | `npm run watch` | Watch Sass and TypeScript sources |

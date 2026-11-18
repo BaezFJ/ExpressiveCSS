@@ -309,6 +309,15 @@ my-site/
   </Section>
 
   <Section {...S["smaller-builds"]}>
+    <p>From an application with ExpressiveCSS installed, scan its templates for
+      component styles and utilities. Add a browser entry to bundle its JavaScript imports.</p>
+    <Code code={`npm install -D esbuild
+npx expressive-build index.html src --entry src/ui.ts`} />
+    <p>Serve <code>public/expressive/css/expressive.css</code> and
+      <code>public/expressive/js/app.js</code> (a module). If the entry imports application CSS,
+      load <code>public/expressive/css/app.css</code> after the framework stylesheet. Omit <code>--entry</code>
+      for CSS alone, or append <code>--check</code> in a pre-commit hook to detect
+      stale files. Use <code>--include</code> for class names supplied at runtime.</p>
     <p>Use the modular entry with a bundler to include selected JavaScript components.
       Initialize each component after its markup exists, and destroy instances when you remove the view.</p>
     <Code code={`import { Tabs } from '@expressivecss/expressive/modular';

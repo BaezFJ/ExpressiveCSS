@@ -7,6 +7,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- The `expressive-build` CLI builds CSS from an application's templates and
+  utilities, and can bundle a modular JavaScript entry. Its read-only `--check`
+  mode detects stale assets before a commit.
+
 - `ScrollArea` draws an optional themed scrollbar on `.scroll-area.custom`,
   preserving native scrolling and falling back under forced colors and coarse pointers.
   Page and container bars support both axes, RTL dragging, track paging, spring

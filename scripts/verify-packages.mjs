@@ -61,6 +61,21 @@ try {
       for (const file of ['index.html', 'app.mts', 'app.scss']) {
         copyFileSync(join(root, 'tests/fixtures/migration-consumer', file), join(target, file));
       }
+      const usedArgs = ['exec', '--offline', '--', 'expressive-build', 'index.html'];
+      run('npm', usedArgs, target);
+      run('npm', [...usedArgs, '--check'], target);
+      const usedCSS = readFileSync(join(target, 'public/expressive/css/expressive.css'), 'utf8');
+      assert.match(usedCSS, /\.button-group/);
+      assert.ok(!usedCSS.includes('.datepicker-container{'));
+      // Exercise a consumer pinned to a different esbuild minor than the framework.
+      run('npm', ['install', '--save-dev', '--save-exact', '--strict-peer-deps', '--ignore-scripts', '--no-audit', '--no-fund', 'esbuild@0.27.4'], target);
+      writeFileSync(join(target, 'ui.mjs'), `export { Tabs } from '${manifest.name}/modular';\n`);
+      const entryArgs = [...usedArgs, '--entry', 'ui.mjs'];
+      run('npm', entryArgs, target);
+      run('npm', [...entryArgs, '--check'], target);
+      const usedJS = readFileSync(join(target, 'public/expressive/js/app.js'), 'utf8');
+      assert.match(usedJS, /Expressive_Tabs/);
+      assert.doesNotMatch(usedJS, /Expressive_Datepicker/);
       const custom = compile(join(target, 'app.scss'), {
         importers: [new NodePackageImporter(target)],
       }).css;
