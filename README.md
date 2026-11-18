@@ -45,6 +45,18 @@ Then add the built files to a page:
 
 Keep `dist/fonts/` next to `dist/css/` so the fonts load.
 
+To build from an application's own templates and JavaScript imports, run the
+package CLI from that app:
+
+```sh
+npm install -D esbuild
+npx expressive-build index.html src --entry src/ui.ts
+```
+
+This writes the selected CSS, bundled browser entry and fonts to
+`public/expressive/`. Omit `--entry` for CSS alone. Add `--check` to verify
+committed assets in a pre-commit hook. See [Smaller builds](docs/guides/smaller-builds.md).
+
 ## Guides
 
 - [Getting started](docs/guides/getting-started.md): build output, starter

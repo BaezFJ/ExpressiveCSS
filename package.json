@@ -59,6 +59,7 @@
   },
   "files": [
     "dist",
+    "cli",
     "src/sass",
     "CHANGELOG.md"
   ],
@@ -68,7 +69,7 @@
   "scripts": {
     "prepack": "npm run build",
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
-    "build": "run-s clean build:css build:js build:types",
+    "build": "run-s clean build:css build:js build:types build:used:index",
     "build:fonts": "node scripts/copy-fonts.mjs",
     "build:css": "run-s build:fonts build:css:expanded build:css:min",
     "build:css:expanded": "sass src/sass/expressive.scss dist/css/expressive.css --style=expanded --source-map --load-path=src/sass",
@@ -94,7 +95,7 @@
     "docs:preview": "astro preview --root docs",
     "docs:verify": "node scripts/verify-site.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck:strict",
-    "test": "run-s build:js build:css test:run",
+    "test": "run-s build:js build:css build:used:index test:run",
     "test:run": "node --test",
     "test:browser": "run-s build:js build:css test:browser:run",
     "test:docker": "node scripts/run-docker.mjs",
@@ -114,7 +115,9 @@
     "test:node": "node scripts/run-node-tests.mjs",
     "record:capabilities": "node scripts/record-capability-evidence.mjs --record",
     "verify:consumer": "node scripts/lib/verify-consumer.mjs",
-    "typecheck:strict": "tsc -p tsconfig.strict.json"
+    "typecheck:strict": "tsc -p tsconfig.strict.json",
+    "build:used:index": "node scripts/build-used-styles.mjs",
+    "build:used": "node cli/expressive-build.mjs"
   },
   "engines": {
     "node": ">=20"
@@ -125,6 +128,9 @@
     "not IE 11",
     "not dead"
   ],
+  "dependencies": {
+    "entities": "^4.5.0"
+  },
   "devDependencies": {
     "@fontsource-variable/material-symbols-outlined": "^5.3.4",
     "@fontsource-variable/material-symbols-rounded": "^5.3.4",
@@ -140,16 +146,21 @@
     "@tiptap/starter-kit": "^3.31.4",
     "alpinejs": "^3.17.5",
     "astro": "^7.2.8",
+    "css-what": "^7.0.0",
     "esbuild": "^0.28.2",
     "fallow": "^3.33.1",
     "jsdom": "^31.0.0",
     "maplibre-gl": "^6.13.0",
     "npm-run-all2": "^9.0.3",
+    "postcss": "^8.5.32",
     "sass": "^1.102.0",
     "smol-toml": "^1.8.0",
     "turndown": "^7.2.4",
     "turndown-plugin-gfm": "^1.0.2",
     "typescript": "^7.0.2",
     "yaml": "^2.9.1"
+  },
+  "bin": {
+    "expressive-build": "./cli/expressive-build.mjs"
   }
 }
