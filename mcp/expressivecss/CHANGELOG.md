@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## 0.6.1 - 2026-11-18
+
+- Bundled guidance matches ExpressiveCSS 0.20.0, including `ScrollArea`,
+  the `expressive-build` CLI and the card media aspect-ratio fix.
+- The lint reports `scroll-area-generated-bars-hidden` when a
+  `.scroll-area-bar` is missing `aria-hidden="true"`. `ScrollArea` generates
+  that element, so markup without the class is unchanged.
+
 ## 0.6.0 - 2026-11-15
 
 - Bundled guidance matches ExpressiveCSS 0.19.0, including `.scaffold`,

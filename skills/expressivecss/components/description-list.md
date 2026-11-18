@@ -5,11 +5,11 @@ A record's details as label and value pairs, in two columns that stack on compac
 
 Component ID: `description-list`
 
-[Component documentation](https://www.expressivecss.com/description-list.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/description-list.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.19.0)
+[Component documentation](https://www.expressivecss.com/description-list.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/description-list.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.20.0)
 
-Contract: ExpressiveCSS 0.19.0
+Contract: ExpressiveCSS 0.20.0
 
-Contract SHA-256: `5ad3225f8d4b88d91a4ef575eff7044678396b5eedde6a261d1d6d24b88fa6b5`
+Contract SHA-256: `9572eb9544e6bc2b462220e2535968147b0c19ca83f15ac6481f8e5cb70d07f4`
 
 #### Selection and adaptation
 

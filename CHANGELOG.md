@@ -5,17 +5,36 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.20.0] - 2026-11-18
+
+This release adds `ScrollArea` for an optional themed scrollbar and the
+`expressive-build` CLI, which builds CSS from an application's templates and
+can bundle a modular JavaScript entry. Two changes need a look when upgrading:
+enhancing `.scroll-area.custom` inserts a wrapper, so a direct-child selector
+has to account for it, and card media with `width` and `height` attributes now
+keeps its aspect ratio.
+
 ### Added
 
 - The `expressive-build` CLI builds CSS from an application's templates and
   utilities, and can bundle a modular JavaScript entry. Its read-only `--check`
-  mode detects stale assets before a commit.
+  mode detects stale assets before a commit. A literal module-relative URL in
+  JavaScript, such as `new URL('./logo.svg', import.meta.url)`, is copied into
+  `assets/`, which has to be served next to `js/`.
 
 - `ScrollArea` draws an optional themed scrollbar on `.scroll-area.custom`,
   preserving native scrolling and falling back under forced colors and coarse pointers.
   Page and container bars support both axes, RTL dragging, track paging, spring
   hover growth, configurable idle hiding, section marks and drag labels. Container
   enhancement inserts a wrapper; direct-child selectors need to account for it.
+
+### Changed
+
+- The `expressivecss` skill is version 0.16.0. A task that names a component
+  opens that guide directly. Must-read guides open in the same turn as version
+  resolution. A long reference is searched by heading or ID instead of read
+  whole. `expressivecss-review` stays at 0.2.0, and `expressivecss-design-md`
+  and `expressivecss-migration` keep 0.1.0 and 0.1.1.
 
 ### Fixed
 
@@ -4438,7 +4457,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.19.0...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.20.0...HEAD
+[0.20.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.19.0...v0.20.0
 [0.19.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.18.1...v0.19.0
 [0.18.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.18.0...v0.18.1
 [0.18.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.17.0...v0.18.0
