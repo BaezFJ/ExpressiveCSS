@@ -23,17 +23,13 @@ Example: A shipping form asks for country, region and city in one field: a .casc
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-25); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-25, `llm.md#cascader`): Nested lists with data-value read into listbox columns in a popover anchored to a read-only combobox input; click and keyboard navigation with arrows, Home, End, Enter, Space, Escape and Tab, swapped under rtl; leaf-only commits shown as joined labels with input and change events; one form entry per level through a form-associated control; data-selected starting path, reset, required with i18n.required, aria-invalid and disabled state.
+Support: Nested lists with data-value read into listbox columns in a popover anchored to a read-only combobox input; click and keyboard navigation with arrows, Home, End, Enter, Space, Escape and Tab, swapped under rtl; leaf-only commits shown as joined labels with input and change events; one form entry per level through a form-associated control; data-selected starting path, reset, required with i18n.required, aria-invalid and disabled state.
 
 Web adaptation: The author's nested lists stay hidden as the source. A manual popover opened with the input as its source uses CSS anchor positioning, and a form-associated expressive-cascader-control wraps the input and submits the path, so the browser handles reset, validity and disabled state.
 
-Known boundary: Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified. There is no search, type-ahead, multiple selection or lazy loading, and only a leaf commits.
+Known boundary: There is no search, type-ahead, multiple selection or lazy loading, and only a leaf commits.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#cascader).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#cascader).
 
 #### Contract
 

@@ -23,17 +23,11 @@ Example: A contacts screen where people tap a name to open a profile is a list. 
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-27, `llm.md#data-table`): Scrolling native tables with sticky headers, numeric/dense rows, sorting, page-scoped selection, column resizing/visibility, text filtering and local paging with record/detail groups and authored counts.
+Support: Scrolling native tables with sticky headers, numeric/dense rows, sorting, page-scoped selection, column resizing/visibility, text filtering and local paging with record/detail groups and authored counts.
 
 Web adaptation: A plain div wraps a native table. Shared DataTables handlers own opt-in sorting, filtering, select-all and column operations; authors name controls and the scroll region, and keep native row and header semantics.
 
-Known boundary: Table semantics, the sticky header, numeric alignment, the sort arrow and selected rows are checked in a browser; sort announcements, enlarged text and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#data-table).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#data-table).
 
 #### Contract
 

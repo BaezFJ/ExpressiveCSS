@@ -21,17 +21,11 @@ Example: Home/Search/Profile should not require scrolling to a footer. Use a nav
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-09-13); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
-
-Support (2026-09-13, `llm.md#footer`): Native footer with navigation columns and copyright content.
+Support: Native footer with navigation columns and copyright content.
 
 Web adaptation: Web page landmark styled with theme roles.
 
-Known boundary: A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#footer).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#footer).
 
 #### Contract
 

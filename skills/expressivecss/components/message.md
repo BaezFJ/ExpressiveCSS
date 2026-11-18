@@ -21,17 +21,11 @@ Example: A "Saved" confirmation after an edit is app feedback, not a conversatio
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-06, `llm.md#message`): Start and end alignment, avatar, header, footer actions, message groups and outlined attachment bubbles.
+Support: Start and end alignment, avatar, header, footer actions, message groups and outlined attachment bubbles.
 
 Web adaptation: Plain div parts on a CSS grid; the page owns role="log" on a live conversation.
 
-Known boundary: Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#message).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#message).
 
 #### Contract
 

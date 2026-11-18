@@ -23,17 +23,13 @@ Example: Revenue split across three plans, with the total in the middle, is a do
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-07); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-07, `llm.md#pie-chart`): Slices drawn clockwise from the top from a figure's data table, with a legend of each row's cell and share, donut, values and sparkline modifiers, a <tfoot> total in the donut hole, labels with each slice's name outside it, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the slice.
+Support: Slices drawn clockwise from the top from a figure's data table, with a legend of each row's cell and share, donut, values and sparkline modifiers, a <tfoot> total in the donut hole, labels with each slice's name outside it, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the slice.
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the slices, values, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names and their leader lines, data-other grouping, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values have no slice. The .labels names only move up or down their side, so many thin slices near the top or bottom can run into the caption or legend unless data-other groups them.
+Known boundary: Zero and negative values have no slice. The .labels names only move up or down their side, so many thin slices near the top or bottom can run into the caption or legend unless data-other groups them.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#pie-chart).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#pie-chart).
 
 #### Contract
 

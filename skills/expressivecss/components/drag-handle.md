@@ -19,15 +19,7 @@ Runtime ownership: `css-only`. [Related Google guidance](https://m3.material.io/
 
 Relationship: related. Related guidance is not a dedicated component specification.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/bottom-sheets/overview).
-
-Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/bottom-sheets/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/bottom-sheets/guidelines).
-
-Support (2026-09-13, `llm.md#drag-handle`): Decorative grip and actionable button grip.
+Support: Decorative grip and actionable button grip.
 
 Web adaptation: The host element determines semantics; no general dragging engine.
 
@@ -35,7 +27,7 @@ Known boundary: A grip outside supported sheets implements neither dragging nor 
 
 Known boundary: Standalone grip styling supplies no drag, resize or reorder operation.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#drag-handle).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#drag-handle).
 
 #### Contract
 

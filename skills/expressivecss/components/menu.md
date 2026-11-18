@@ -21,21 +21,11 @@ Public JavaScript exports: `Menu`. See the [API index](../references/api-index.m
 
 Relationship: component.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/menus/overview).
-
-Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/menus/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/menus/guidelines).
-
-Support (2026-10-06, `llm.md#menu`): Vertical menus, nested flyouts, grouping, standard/vibrant styles, and context menus opened at the pointer.
+Support: Vertical menus, nested flyouts, grouping, standard/vibrant styles, and context menus opened at the pointer.
 
 Web adaptation: Native menu/li structure; Menu owns opening and keyboard behavior.
 
-Known boundary: Closing focus exclusion, scoped nested keys, RTL flyout placement and representative item targets have browser checks. Spoken output and full visual parity remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#menu).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#menu).
 
 #### Contract
 

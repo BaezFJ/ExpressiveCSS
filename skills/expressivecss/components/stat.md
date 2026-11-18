@@ -21,17 +21,11 @@ Example: Monthly revenue for every region and product is a data table. Stat tile
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-06, `llm.md#stat`): Wrapping tiles in a description list with headline values, and a change line with up, down and negative states.
+Support: Wrapping tiles in a description list with headline values, and a change line with up, down and negative states.
 
 Web adaptation: A <dl> pairs each value with its label; the arrow is decoration and the text carries the direction.
 
-Known boundary: Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#stat).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#stat).
 
 #### Contract
 

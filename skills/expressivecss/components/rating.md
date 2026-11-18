@@ -21,17 +21,11 @@ Example: Choosing a volume from 0 to 100 is a slider. Stars suit a short fixed s
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-06, `llm.md#rating`): A fieldset of radios drawn as stars with fill, hover preview and focus ring, and a read-only display that fills to a fractional value in LTR and RTL.
+Support: A fieldset of radios drawn as stars with fill, hover preview and focus ring, and a read-only display that fills to a fractional value in LTR and RTL.
 
 Web adaptation: Native radios keep keyboard, form and naming behavior; the display is a named role="img".
 
-Known boundary: Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#rating).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#rating).
 
 #### Contract
 

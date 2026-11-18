@@ -871,6 +871,20 @@ Use the canonical triage roles documented in the existing label reference. See `
 
 Single-context: `CONTEXT.md` at the repo root, ADRs in `adr/` — **not** `docs/adr/`, because `docs/` is the Astro site. See `docs/agents/domain.md`.
 
+### Skill token budget
+
+Every component guide is read on the build path, so each one carries only what changes the
+markup: relationship, documented support, web adaptation and build-relevant known boundaries.
+Audit provenance lives in the guide's capability roadmap section: upstream review scope, date
+and note, Google specification and guideline links, the support review source, and the full
+known-boundary list. Sentences that only report verification coverage ("checked in a
+browser", "remain unverified") are filtered out of guides by `buildBoundaries` in the
+generator. A boundary written in that style that also carries a build rule needs its own
+sentence, or the filter drops it from the guide. The root skill runs the version resolver in
+the same parallel turn as the must-read guides, opens a named component's guide directly, and
+searches the decision index instead of reading the whole table. The basic-button
+reading-path test records the byte budget.
+
 ## Menu reversal and filled select labels
 
 Menu owns delayed transition completion, entry styling and deferred document

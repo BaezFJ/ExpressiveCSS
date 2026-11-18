@@ -23,17 +23,13 @@ Example: An inbox where each message can be archived or deleted takes swipe acti
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-24); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-24, `llm.md#swipe-actions`): A touch swipe toward a row's inline start that reveals its .swipe-actions group, opening past half the group's width or on a flick and closing short of it, a [data-swipe-toggle] button with aria-expanded, focus on an action opening its row, Escape, an outside tap or an action closing it, one open row per list, an expressive:swipetoggle event and onToggle callback with { row, open }, open(row) and close(), right-to-left pages and reduced motion.
+Support: A touch swipe toward a row's inline start that reveals its .swipe-actions group, opening past half the group's width or on a flick and closing short of it, a [data-swipe-toggle] button with aria-expanded, focus on an action opening its row, Escape, an outside tap or an action closing it, one open row per list, an expressive:swipetoggle event and onToggle callback with { row, open }, open(row) and close(), right-to-left pages and reduced motion.
 
 Web adaptation: Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The row slides by a translate on one custom property, and the actions wait past its inline end in a list clipped on the inline axis, so focus on a closed row's action scrolls nothing. The author names the toggle and the actions; the script keeps aria-expanded.
 
-Known boundary: Swipe reveal, the slide limit, short, vertical, mouse, two-finger and cancelled drags, the toggle, focus on an action, Escape, an outside tap, closing after an action, one open row, the event and onToggle, right-to-left pages, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, flick velocity, pen input, spoken output and forced colors remain unverified. Actions only on the inline-end side, and no full swipe that runs an action.
+Known boundary: Actions only on the inline-end side, and no full swipe that runs an action.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#swipe-actions).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#swipe-actions).
 
 #### Contract
 

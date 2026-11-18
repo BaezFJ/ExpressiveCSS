@@ -21,17 +21,11 @@ Example: Twelve customer logos under a landing page hero are a marquee. Four fea
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-08); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-08, `llm.md#marquee`): Two identical groups that loop horizontally or vertically, with reverse, edge fades, a paused class, hover and focus pausing, token duration and gap, a reversed direction in RTL and a hand-scrolled strip under reduced motion.
+Support: Two identical groups that loop horizontally or vertically, with reverse, edge fades, a paused class, hover and focus pausing, token duration and gap, a reversed direction in RTL and a hand-scrolled strip under reduced motion.
 
 Web adaptation: A visual copy of the item list marked aria-hidden, with its links taken out of the tab order, so assistive technology and the keyboard meet each item once.
 
-Known boundary: The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#marquee).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#marquee).
 
 #### Contract
 

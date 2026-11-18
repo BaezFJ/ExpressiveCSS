@@ -23,17 +23,11 @@ Example: Choosing which of forty report columns to export, in the order they sho
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-25); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-25, `llm.md#transfer-list`): Two .list groups of labelled checkbox rows with add, add-all, remove and remove-all buttons between them, chosen rows kept in the order they arrived, rows returned to their original slots, the chosen values submitted under data-name in order, form reset, a polite announcement, an expressive:transfer event, and a layout that follows the page direction and stacks below the medium window size.
+Support: Two .list groups of labelled checkbox rows with add, add-all, remove and remove-all buttons between them, chosen rows kept in the order they arrived, rows returned to their original slots, the chosen values submitted under data-name in order, form reset, a polite announcement, an expressive:transfer event, and a layout that follows the page direction and stacks below the medium window size.
 
 Web adaptation: A document-delegated behavior moves the rows and appends the chosen values in a formdata listener, so the checkboxes carry no name. The rows stay native checkboxes rather than a listbox, so Tab and Space work without an arrow-key contract.
 
-Known boundary: The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser; spoken output and forced colors remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#transfer-list).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#transfer-list).
 
 #### Contract
 

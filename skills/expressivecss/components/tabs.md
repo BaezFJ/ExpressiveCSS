@@ -23,21 +23,13 @@ Example: Home/Search/Profile are app destinations, so use a navigation bar or ra
 
 Relationship: component.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/tabs/overview).
-
-Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/tabs/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/tabs/guidelines).
-
-Support (2026-09-13, `llm.md#tabs`): Primary and secondary tabs; stacked and horizontal icon layouts.
+Support: Primary and secondary tabs; stacked and horizontal icon layouts.
 
 Web adaptation: Links target panels; use the shipped runtime keyboard contract.
 
 Known boundary: Native links keep Tab and aria-current; Left, Right, Home and End move focus between them as a shortcut, without the selection model a tablist would announce.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#tabs).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#tabs).
 
 #### Contract
 

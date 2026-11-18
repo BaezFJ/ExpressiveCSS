@@ -23,17 +23,13 @@ Example: A five-question product survey with an optional comment at the end is a
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-08); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-08, `llm.md#questionnaire`): A native form of fieldsets shown one at a time, with single choice, multiple choice and text answers, choice descriptions, required and data-required questions, Skip for optional ones, authored or generated errors, a progress row, Enter to advance, disabled questions for branching and normal form submission.
+Support: A native form of fieldsets shown one at a time, with single choice, multiple choice and text answers, choice descriptions, required and data-required questions, Skip for optional ones, authored or generated errors, a progress row, Enter to advance, disabled questions for branching and normal form submission.
 
 Web adaptation: Each question is a native fieldset named by its legend; the browser's constraint validation checks answers, hidden questions use hidden, and without JavaScript the form shows every question and still submits.
 
-Known boundary: Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no answer keyboard shortcuts, no summary step and no saved progress; the page owns persistence and branching.
+Known boundary: There are no answer keyboard shortcuts, no summary step and no saved progress; the page owns persistence and branching.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#questionnaire).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#questionnaire).
 
 #### Contract
 

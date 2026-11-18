@@ -23,17 +23,13 @@ Example: A settings form that saves to a server takes a loading overlay while th
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-25); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-25, `llm.md#loading-overlay`): A region the page marks aria-busy="true" shows a surface scrim and its loading indicator and is made inert until the attribute goes, with focus taken from the control inside it, keeps an inert state the author set, announces the start and the finish in a status region after it with i18n strings, returns focus to the control that had it, and stops following the attribute on destroy().
+Support: A region the page marks aria-busy="true" shows a surface scrim and its loading indicator and is made inert until the attribute goes, with focus taken from the control inside it, keeps an inert state the author set, announces the start and the finish in a status region after it with i18n strings, returns focus to the control that had it, and stops following the attribute on destroy().
 
 Web adaptation: The native inert attribute blocks pointer and keyboard input instead of script handlers. The page owns aria-busy, and the script follows it with a MutationObserver. Inert content leaves the accessibility tree, so the script adds a visually hidden role="status" region outside the region.
 
-Known boundary: Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified. The scrim does not follow the content of a region that scrolls itself; the docs say to wrap the scroller.
+Known boundary: The scrim does not follow the content of a region that scrolls itself; the docs say to wrap the scroller.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#loading-overlay).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#loading-overlay).
 
 #### Contract
 

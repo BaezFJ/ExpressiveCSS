@@ -21,17 +21,11 @@ Example: Branch, sync, problem counts and cursor position along the bottom of a 
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-11-14); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. In M3, status bar names the system bar, not a component. Full visual parity and spoken output unverified.
-
-Support (2026-11-14, `llm.md#status-bar`): A 24px bar of button, link and read-only text items, an end group, a vibrant bar, items colored with the color helpers, low-priority items hidden below 600px and wrapping instead of scrolling.
+Support: A 24px bar of button, link and read-only text items, an end group, a vibrant bar, items colored with the color helpers, low-priority items hidden below 600px and wrapping instead of scrolling.
 
 Web adaptation: A <footer> or labelled <div> with one tab stop per item and no composite role; only the changing text item is a live region.
 
-Known boundary: Bar size, sticking, item targets, the end group, colors, priority hiding, wrapping, RTL, enlarged text, forced colors and blocked filled-button states are checked in a browser; spoken output and a real safe-area inset remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#status-bar).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#status-bar).
 
 #### Contract
 

@@ -23,17 +23,13 @@ Example: A product card clamps its description to three lines with a Show more t
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-25); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-25, `llm.md#show-more`): A .show-more holding text with a line-clamp-1, -2 or -3 class and a <button type="button">; the button sets aria-expanded and aria-controls, shows the full text, reads "Show less" while it is open (i18n.showLess or data-show-less), and hides while the clamped text fits, checking again on resize, after web fonts load and on blur.
+Support: A .show-more holding text with a line-clamp-1, -2 or -3 class and a <button type="button">; the button sets aria-expanded and aria-controls, shows the full text, reads "Show less" while it is open (i18n.showLess or data-show-less), and hides while the clamped text fits, checking again on resize, after web fonts load and on blur.
 
 Web adaptation: The component unclamps with inline -webkit-line-clamp and line-clamp, because the utilities layer and prefixed clamp classes beat any component rule. A ResizeObserver on the text and document.fonts.ready run the fit check, scrollHeight against clientHeight with 1px for Firefox's rounding.
 
-Known boundary: Toggling, the fit check across widths, fractional line heights and window-size prefixes, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output is unverified. Find-in-page does not open clamped text, a font that starts loading after document.fonts.ready has settled is not caught until the next resize, and an icon-only button keeps its aria-label while open.
+Known boundary: Find-in-page does not open clamped text, a font that starts loading after document.fonts.ready has settled is not caught until the next resize, and an icon-only button keeps its aria-label while open.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#show-more).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#show-more).
 
 #### Contract
 

@@ -21,17 +21,11 @@ Example: A red dot for unread messages on the inbox icon is a badge. An avatar w
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-06, `llm.md#avatar`): Image, initials and icon avatars in three sizes, and overlapping groups with a surface ring and a count avatar.
+Support: Image, initials and icon avatars in three sizes, and overlapping groups with a surface ring and a count avatar.
 
 Web adaptation: An <img> or a <span> with role="img" and a name; initials scale with the size token.
 
-Known boundary: Sizes, the circle, the group overlap and named initials are checked in a browser; image loading failures, enlarged text and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#avatar).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#avatar).
 
 #### Contract
 

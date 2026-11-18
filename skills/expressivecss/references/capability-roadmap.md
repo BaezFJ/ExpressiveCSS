@@ -127,9 +127,13 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 
 Source review: needs-review, 2026-09-17. [src/sass/components/_navbar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_navbar.scss), [src/ts/components/appBar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/appBar.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/app-bars/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/app-bars/overview). Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native header/nav composition; AppBar owns scroll collapse and search expansion.
+[Specification (full specs unreviewed)](https://m3.material.io/components/app-bars/specs) · [Guidelines](https://m3.material.io/components/app-bars/guidelines)
+
+Web adaptation: Native header/nav composition; AppBar owns scroll collapse and search expansion. Documented support reviewed 2026-09-17 against `llm.md#navbar`.
+
+- Known boundary: Native zoom, screen-reader announcements, contrast themes and physical mobile keyboard behavior remain pending manual review.
 
 - verification: Native zoom, screen-reader announcements, contrast themes and physical mobile keyboard behavior remain pending manual review. Next: Run the App bar/search fixture in the accessibility manual-review checklist with the actual devices and assistive technology.
 
@@ -145,9 +149,9 @@ Web adaptation: Native header/nav composition; AppBar owns scroll collapse and s
 
 Source review: needs-review, 2026-09-12. [src/sass/components/_navigation-bar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_navigation-bar.scss).
 
-Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/navigation-bar/overview).
+Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/navigation-bar/overview). Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
 
-Web adaptation: Links navigate; the application marks the current destination.
+Web adaptation: Links navigate; the application marks the current destination. Documented support reviewed 2026-09-07 against `llm.md#navigation-bar`.
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
@@ -161,9 +165,11 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 Source review: needs-review, 2026-09-12. [src/sass/components/_navigation-rail.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_navigation-rail.scss), [src/ts/components/navigationRail.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/navigationRail.ts).
 
-Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/navigation-rail/overview).
+Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/navigation-rail/overview). Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
 
-Web adaptation: The compact expanded rail uses a scrim and dismissal behavior.
+[Specification (full specs unreviewed)](https://m3.material.io/components/navigation-rail/specs)
+
+Web adaptation: The compact expanded rail uses a scrim and dismissal behavior. Documented support reviewed 2026-09-07 against `llm.md#navigation-rail`.
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
@@ -177,9 +183,11 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 Source review: needs-review, 2026-09-17. [src/sass/components/_panes.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_panes.scss).
 
-Google relationship: pattern. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/foundations/layout/canonical-examples/overview).
+Google relationship: pattern. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/foundations/layout/canonical-examples/overview). Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: CSS viewport and container queries; the application chooses the active compact pane.
+Web adaptation: CSS viewport and container queries; the application chooses the active compact pane. Documented support reviewed 2026-09-17 against `llm.md#panes`.
+
+- Known boundary: Compact supporting layouts retain one-active-pane selection rather than automatic stacking. Native zoom, assistive technology and physical-device review remain pending.
 
 - integration: Compact supporting layouts retain one-active-pane selection rather than automatic stacking. Native zoom, assistive technology and physical-device review remain pending. Next: Keep selection application-owned and complete the Panes manual-review fixture before making accessibility-parity claims.
 
@@ -197,9 +205,11 @@ Web adaptation: CSS viewport and container queries; the application chooses the 
 
 Source review: source-reviewed, 2026-11-15. [src/sass/components/_scaffold.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_scaffold.scss).
 
-Google relationship: pattern. Upstream review: requirements-prose-reviewed (2026-11-15); [reviewed source](https://m3.material.io/foundations/layout/scaffold/overview).
+Google relationship: pattern. Upstream review: requirements-prose-reviewed (2026-11-15); [reviewed source](https://m3.material.io/foundations/layout/scaffold/overview). Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope.
+Web adaptation: CSS grid areas on a div inside body; the children keep their own landmarks, and the app bar's scrolled fill reads the pane's scroll through timeline-scope. Documented support reviewed 2026-11-15 against `llm.md#scaffold`.
+
+- Known boundary: Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding, and the status bar's row and compact hiding, and the floating pane's colors, corners and gaps, and the side sheet column; the safe-area insets are checked with rewritten env() values; spoken output, a real notch and a mobile browser's collapsing address bar remain unverified.
 
 - verification: Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding, and the status bar's row and compact hiding, and the floating pane's colors, corners and gaps, and the side sheet column; the safe-area insets are checked with rewritten env() values; spoken output, a real notch and a mobile browser's collapsing address bar remain unverified. Next: Move through a scaffold page by landmarks with a screen reader, and scroll the pane in a phone browser whose address bar collapses.
 
@@ -228,9 +238,11 @@ Web adaptation: CSS grid areas on a div inside body; the children keep their own
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_page-footer.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_page-footer.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Web page landmark styled with theme roles.
+Web adaptation: Web page landmark styled with theme roles. Documented support reviewed 2026-09-13 against `llm.md#footer`.
+
+- Known boundary: A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified.
 
 - verification: A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified. Next: Place a document footer outside main and sectioning elements; verify named legal navigation at enlarged text.
 
@@ -244,9 +256,13 @@ Web adaptation: Web page landmark styled with theme roles.
 
 Source review: needs-review, 2026-09-17. [src/sass/components/_tabs.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_tabs.scss), [src/ts/components/tabs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/tabs.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/tabs/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/tabs/overview). Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Links target panels; use the shipped runtime keyboard contract.
+[Specification (full specs unreviewed)](https://m3.material.io/components/tabs/specs) · [Guidelines](https://m3.material.io/components/tabs/guidelines)
+
+Web adaptation: Links target panels; use the shipped runtime keyboard contract. Documented support reviewed 2026-09-13 against `llm.md#tabs`.
+
+- Known boundary: Native links keep Tab and aria-current; Left, Right, Home and End move focus between them as a shortcut, without the selection model a tablist would announce.
 
 - integration: Native links keep Tab and aria-current; Left, Right, Home and End move focus between them as a shortcut, without the selection model a tablist would announce. Next: Retain native anchor semantics. Rendered selection, arrow focus, overflow geometry and teardown are covered; verify spoken current-state output and physical touch manually.
 
@@ -265,9 +281,11 @@ Web adaptation: Links target panels; use the shipped runtime keyboard contract.
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_breadcrumb.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_breadcrumb.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Labelled navigation with an ordered list and current-page link.
+Web adaptation: Labelled navigation with an ordered list and current-page link. Documented support reviewed 2026-09-13 against `llm.md#breadcrumbs`.
+
+- Known boundary: Named navigation and current-page markup are checked; CSS separator speech and long-path reflow remain unverified.
 
 - verification: Named navigation and current-page markup are checked; CSS separator speech and long-path reflow remain unverified. Next: Inspect assistive-technology output for separators and test translated paths without truncating essential context.
 
@@ -281,9 +299,11 @@ Web adaptation: Labelled navigation with an ordered list and current-page link.
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_pagination.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_pagination.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
 
-Web adaptation: CSS-only navigation; the application supplies destinations.
+Web adaptation: CSS-only navigation; the application supplies destinations. Documented support reviewed 2026-09-13 against `llm.md#pagination`.
+
+- Known boundary: aria-disabled and pointer-events alone cannot disable a link for keyboard users.
 
 - integration: aria-disabled and pointer-events alone cannot disable a link for keyboard users. Next: Use a non-link unavailable control, verify actual page destinations and preserve current-page state after updates.
 
@@ -297,9 +317,11 @@ Web adaptation: CSS-only navigation; the application supplies destinations.
 
 Source review: needs-review, 2026-10-06. [src/sass/components/_stepper.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_stepper.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: An <ol> with aria-current="step"; CSS alt text speaks the complete and invalid states from translatable tokens.
+Web adaptation: An <ol> with aria-current="step"; CSS alt text speaks the complete and invalid states from translatable tokens. Documented support reviewed 2026-10-06 against `llm.md#stepper`.
+
+- Known boundary: Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified.
 
 - verification: Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified. Next: Move through a checkout with a screen reader in each engine and confirm the step count, the current step and the completed state are announced once.
 
@@ -313,9 +335,13 @@ Web adaptation: An <ol> with aria-current="step"; CSS alt text speaks the comple
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_menu.scss), [src/ts/components/menu.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/menu.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/menus/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/menus/overview). Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native menu/li structure; Menu owns opening and keyboard behavior.
+[Specification (full specs unreviewed)](https://m3.material.io/components/menus/specs) · [Guidelines](https://m3.material.io/components/menus/guidelines)
+
+Web adaptation: Native menu/li structure; Menu owns opening and keyboard behavior. Documented support reviewed 2026-10-06 against `llm.md#menu`.
+
+- Known boundary: Closing focus exclusion, scoped nested keys, RTL flyout placement and representative item targets have browser checks. Spoken output and full visual parity remain unverified.
 
 - verification: Closing focus exclusion, scoped nested keys, RTL flyout placement and representative item targets have browser checks. Spoken output and full visual parity remain unverified. Next: Review spoken nested-menu context, translated labels and visual parity in the target application.
 
@@ -334,9 +360,11 @@ Web adaptation: Native menu/li structure; Menu owns opening and keyboard behavio
 
 Source review: needs-review, 2026-10-15. [src/sass/components/_mega-menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_mega-menu.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native popovers opened with popovertarget; the browser owns opening, light dismiss, Escape, focus order and the expanded state.
+Web adaptation: Native popovers opened with popovertarget; the browser owns opening, light dismiss, Escape, focus order and the expanded state. Documented support reviewed 2026-10-15 against `llm.md#mega-menu`.
+
+- Known boundary: Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified.
 
 - verification: Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified. Next: Open and close each panel with a screen reader in each engine and confirm the expanded state is announced.
 
@@ -350,9 +378,11 @@ Web adaptation: Native popovers opened with popovertarget; the browser owns open
 
 Source review: needs-review, 2026-10-15. [src/ts/components/menubar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/menubar.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Each item opens an ordinary Menu; the Menubar component adds the menubar and menuitem roles and the roving tab stop at runtime.
+Web adaptation: Each item opens an ordinary Menu; the Menubar component adds the menubar and menuitem roles and the roving tab stop at runtime. Documented support reviewed 2026-10-15 against `llm.md#menubar`.
+
+- Known boundary: Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified.
 
 - verification: Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified. Next: Operate the menubar with a screen reader in each engine and confirm menu and item announcements; check typeahead across the bar.
 
@@ -366,9 +396,11 @@ Web adaptation: Each item opens an ordinary Menu; the Menubar component adds the
 
 Source review: needs-review, 2026-09-17. [src/sass/components/_scrollspy.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_scrollspy.scss), [src/sass/components/_table_of_contents.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_table_of_contents.scss), [src/ts/components/scrollspy.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/scrollspy.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Web document navigation helper.
+Web adaptation: Web document navigation helper. Documented support reviewed 2026-09-17 against `llm.md#scrollspy`.
+
+- Known boundary: Independent TOCs must reuse one getActiveElement function per group. Screen-reader announcements, native zoom and physical-device checks remain pending.
 
 - verification: Offsets, independent TOCs, per-instance active classes, fallback, teardown and native anchors have rendered coverage. Spoken current-link state, native zoom, actual contrast themes and physical devices remain unverified. Next: Complete the ScrollSpy fixtures in the accessibility manual-review checklist with actual browsers, assistive technology and devices.
 
@@ -386,9 +418,11 @@ Web adaptation: Web document navigation helper.
 
 Source review: source-reviewed, 2026-10-06. [src/sass/components/_tree.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_tree.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native <details> branches and links; every row is a Tab stop and no tree role is promised.
+Web adaptation: Native <details> branches and links; every row is a Tab stop and no tree role is promised. Documented support reviewed 2026-10-06 against `llm.md#tree`.
+
+- Known boundary: Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified.
 
 - verification: Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified. Next: Navigate a deep tree with a keyboard and a screen reader in each engine; measure how many Tab stops a long tree costs and whether arrow-key navigation is needed.
 
@@ -402,9 +436,13 @@ Web adaptation: Native <details> branches and links; every row is a Tab stop and
 
 Source review: needs-review, 2026-09-12. [src/sass/components/_buttons.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_buttons.scss), [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_mixins.scss), [src/sass/abstracts/_variables.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_variables.scss).
 
-Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/buttons/overview).
+Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/buttons/overview). Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
 
-Web adaptation: Native buttons run commands; a.button links navigate.
+[Specification (full specs unreviewed)](https://m3.material.io/components/buttons/specs) · [Guidelines](https://m3.material.io/components/buttons/guidelines)
+
+Web adaptation: Native buttons run commands; a.button links navigate. Documented support reviewed 2026-09-07 against `llm.md#buttons`.
+
+- Known boundary: Standalone toggle buttons take their shape and colours from aria-pressed; the page switches aria-pressed, as the component ships no toggle script.
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
@@ -420,9 +458,14 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_icon-buttons.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_icon-buttons.scss), [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_mixins.scss), [src/sass/abstracts/_variables.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_variables.scss).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/icon-buttons/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/icon-buttons/overview). Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Accessible name belongs to the control; the glyph is decorative.
+[Specification (full specs unreviewed)](https://m3.material.io/components/icon-buttons/specs) · [Guidelines](https://m3.material.io/components/icon-buttons/guidelines)
+
+Web adaptation: Accessible name belongs to the control; the glyph is decorative. Documented support reviewed 2026-09-13 against `llm.md#icon-buttons`.
+
+- Known boundary: Elevated and text are not icon-button variants.
+- Known boundary: Existing group checks cover selected icon colors and press shapes, not all standalone target sizes and disabled states.
 
 - verification: Existing group checks cover selected icon colors and press shapes, not all standalone target sizes and disabled states. Next: Measure XS/S effective targets and test named default/toggle controls outside groups.
 
@@ -437,9 +480,13 @@ Web adaptation: Accessible name belongs to the control; the glyph is decorative.
 
 Source review: needs-review, 2026-09-18. [src/sass/components/_button-groups.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_button-groups.scss), [src/ts/components/buttonGroup.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/buttonGroup.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/button-groups/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/button-groups/overview). Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Runtime coordinates neighboring widths and selection; CSS handles connected shapes.
+[Specification (full specs unreviewed)](https://m3.material.io/components/button-groups/specs) · [Guidelines](https://m3.material.io/components/button-groups/guidelines)
+
+Web adaptation: Runtime coordinates neighboring widths and selection; CSS handles connected shapes. Documented support reviewed 2026-09-18 against `llm.md#button-groups`.
+
+- Known boundary: Native zoom, spoken output and physical-device behavior remain unverified.
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
@@ -459,9 +506,13 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 Source review: needs-review, 2026-09-18. [src/sass/components/_split-button.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_split-button.scss), [src/ts/components/menu.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/menu.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/split-button/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/split-button/overview). Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Reuses Menu; no separate split-button runtime.
+[Specification (full specs unreviewed)](https://m3.material.io/components/split-button/specs) · [Guidelines](https://m3.material.io/components/split-button/guidelines)
+
+Web adaptation: Reuses Menu; no separate split-button runtime. Documented support reviewed 2026-09-18 against `llm.md#split-button`.
+
+- Known boundary: Separate 48dp effective targets, native zoom, spoken output and physical-device behavior remain unverified.
 
 - verification: Pointer and keyboard activation, disabled controls, expanded state and Escape focus return have browser coverage; effective target size remains unverified. Next: Verify separate 48dp effective targets at the two smaller sizes.
 
@@ -475,9 +526,13 @@ Web adaptation: Reuses Menu; no separate split-button runtime.
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_buttons.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_buttons.scss), [src/sass/components/_fab-menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_fab-menu.scss), [src/ts/components/buttons.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/buttons.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/floating-action-button/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/floating-action-button/overview). Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Floating action behavior uses the documented FAB runtime.
+[Specification (full specs unreviewed)](https://m3.material.io/components/floating-action-button/specs) · [Guidelines](https://m3.material.io/components/floating-action-button/guidelines) · [Related Google component](https://m3.material.io/components/extended-fab/overview) · [Related Google component](https://m3.material.io/components/fab-menu/overview)
+
+Web adaptation: Floating action behavior uses the documented FAB runtime. Documented support reviewed 2026-09-13 against `llm.md#floating-action-button`.
+
+- Known boundary: Full visual parity and spoken assistive-technology output remain unverified.
 
 - verification: Full visual parity and spoken assistive-technology output remain unverified. Next: Review rendered variants and spoken labels before claiming full parity.
 
@@ -492,9 +547,11 @@ Web adaptation: Floating action behavior uses the documented FAB runtime.
 
 Source review: source-reviewed, 2026-10-25. [src/sass/components/_back-to-top.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_back-to-top.scss), [src/ts/components/backToTop.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/backToTop.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: An IntersectionObserver on an empty element at the threshold instead of a scroll listener. The hidden state is the inert attribute plus visibility: hidden, with a fade in and an immediate hide, so a script that starts after the first paint does not show the link fading out, and a page without the script never hides the link.
+Web adaptation: An IntersectionObserver on an empty element at the threshold instead of a scroll listener. The hidden state is the inert attribute plus visibility: hidden, with a fade in and an immediate hide, so a script that starts after the first paint does not show the link fading out, and a page without the script never hides the link. Documented support reviewed 2026-10-25 against `llm.md#back-to-top`.
+
+- Known boundary: The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched.
 
 - verification: The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched. Next: Activate the link with VoiceOver and NVDA and confirm focus lands on the main content; check it in forced colors.
 
@@ -509,9 +566,13 @@ Web adaptation: An IntersectionObserver on an empty element at the threshold ins
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_cards.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_cards.scss), [src/sass/components/_expanding-card.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_expanding-card.scss), [src/ts/components/cards.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/cards.ts), [src/ts/components/expandingCard.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/expandingCard.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/cards/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/cards/overview). Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native article anatomy; primary-action links preserve navigation semantics.
+[Specification (full specs unreviewed)](https://m3.material.io/components/cards/specs) · [Guidelines](https://m3.material.io/components/cards/guidelines)
+
+Web adaptation: Native article anatomy; primary-action links preserve navigation semantics. Documented support reviewed 2026-09-13 against `llm.md#cards`.
+
+- Known boundary: Existing card lifecycle and geometry evidence does not cover every selected variant, contrast and reflow state.
 
 - verification: Existing card lifecycle and geometry evidence does not cover every selected variant, contrast and reflow state. Next: Measure and keyboard-test the chosen variant with long content and nested controls.
 
@@ -528,9 +589,11 @@ Web adaptation: Native article anatomy; primary-action links preserve navigation
 
 Source review: needs-review, 2026-10-08. [src/sass/components/_aura.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_aura.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A wrapper whose pseudo-element draws a masked conic gradient; it adds nothing to the accessibility tree.
+Web adaptation: A wrapper whose pseudo-element draws a masked conic gradient; it adds nothing to the accessibility tree. Documented support reviewed 2026-10-08 against `llm.md#aura`.
+
+- Known boundary: The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified.
 
 - verification: The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified. Next: Check the Highlight ring in Windows forced colors and confirm with a screen reader that only the wrapped element is announced.
 
@@ -544,9 +607,13 @@ Web adaptation: A wrapper whose pseudo-element draws a masked conic gradient; it
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_list.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_list.scss).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/lists/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/lists/overview). Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native list semantics; visual selection alone does not justify aria-selected.
+[Specification (full specs unreviewed)](https://m3.material.io/components/lists/specs) · [Guidelines](https://m3.material.io/components/lists/guidelines)
+
+Web adaptation: Native list semantics; visual selection alone does not justify aria-selected. Documented support reviewed 2026-09-13 against `llm.md#lists`.
+
+- Known boundary: Lists of single link or button rows move focus with Up, Down, Home and End as a shortcut; rows stay Tab stops, and lists with several controls per row, selection lists and listbox semantics are not provided.
 
 - integration: Lists of single link or button rows move focus with Up, Down, Home and End as a shortcut; rows stay Tab stops, and lists with several controls per row, selection lists and listbox semantics are not provided. Next: Add a listbox only with a complete selection contract; test row control names and selection meaning.
 
@@ -562,9 +629,11 @@ Web adaptation: Native list semantics; visual selection alone does not justify a
 
 Source review: source-reviewed, 2026-10-06. [src/sass/components/_message.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_message.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Plain div parts on a CSS grid; the page owns role="log" on a live conversation.
+Web adaptation: Plain div parts on a CSS grid; the page owns role="log" on a live conversation. Documented support reviewed 2026-10-06 against `llm.md#message`.
+
+- Known boundary: Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified.
 
 - verification: Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified. Next: Append messages to a role="log" conversation and inspect assistive-technology output; test enlarged text and RTL.
 
@@ -578,9 +647,11 @@ Web adaptation: Plain div parts on a CSS grid; the page owns role="log" on a liv
 
 Source review: source-reviewed, 2026-10-08. [src/sass/components/_message-scroller.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_message-scroller.scss), [src/ts/components/messageScroller.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/messageScroller.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A native scroll container; the component sets scroll position, a spacer and the button's inert state. The page owns role="log" and aria-busy.
+Web adaptation: A native scroll container; the component sets scroll position, a spacer and the button's inert state. The page owns role="log" and aria-busy. Documented support reviewed 2026-10-08 against `llm.md#message-scroller`.
+
+- Known boundary: Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role="log" viewport, touch and scrollbar dragging, and spoken output remain unverified.
 
 - verification: Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role="log" viewport, touch and scrollbar dragging, and spoken output remain unverified. Next: Stream replies into a role="log" viewport with a screen reader in each engine, and check touch scrolling and scrollbar dragging on real devices.
 
@@ -596,9 +667,11 @@ Web adaptation: A native scroll container; the component sets scroll position, a
 
 Source review: source-reviewed, 2026-10-24. [src/sass/components/_pull-to-refresh.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_pull-to-refresh.scss), [src/ts/components/pullToRefresh.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/pullToRefresh.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-24); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-24); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The author's loading indicator carries the role and name; the script sets a class, two custom properties and aria-busy, and adds a visually hidden role="status" region because the indicator is hidden once the refresh ends.
+Web adaptation: Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The author's loading indicator carries the role and name; the script sets a class, two custom properties and aria-busy, and adds a visually hidden role="status" region because the indicator is hidden once the refresh ends. Documented support reviewed 2026-10-24 against `llm.md#pull-to-refresh`.
+
+- Known boundary: The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified. There is no pull from the bottom and no nesting.
 
 - verification: The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified. Next: Pull on Chrome and Firefox for Android and Safari on iOS and confirm the browser's own refresh does not run; read a refresh with a screen reader.
 
@@ -613,9 +686,11 @@ Web adaptation: Touch events with a non-passive touchmove, because a pointer dra
 
 Source review: source-reviewed, 2026-10-24. [src/sass/components/_swipe-actions.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_swipe-actions.scss), [src/ts/components/swipeActions.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/swipeActions.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-24); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-24); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The row slides by a translate on one custom property, and the actions wait past its inline end in a list clipped on the inline axis, so focus on a closed row's action scrolls nothing. The author names the toggle and the actions; the script keeps aria-expanded.
+Web adaptation: Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The row slides by a translate on one custom property, and the actions wait past its inline end in a list clipped on the inline axis, so focus on a closed row's action scrolls nothing. The author names the toggle and the actions; the script keeps aria-expanded. Documented support reviewed 2026-10-24 against `llm.md#swipe-actions`.
+
+- Known boundary: Swipe reveal, the slide limit, short, vertical, mouse, two-finger and cancelled drags, the toggle, focus on an action, Escape, an outside tap, closing after an action, one open row, the event and onToggle, right-to-left pages, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, flick velocity, pen input, spoken output and forced colors remain unverified. Actions only on the inline-end side, and no full swipe that runs an action.
 
 - verification: Swipe reveal, the slide limit, short, vertical, mouse, two-finger and cancelled drags, the toggle, focus on an action, Escape, an outside tap, closing after an action, one open row, the event and onToggle, right-to-left pages, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, flick velocity, pen input, spoken output and forced colors remain unverified. Next: Swipe on Chrome for Android and Safari on iOS and confirm the browser's back gesture and vertical scrolling still work; read a row's actions with a screen reader.
 
@@ -630,9 +705,11 @@ Web adaptation: Touch events with a non-passive touchmove, because a pointer dra
 
 Source review: source-reviewed, 2026-10-06. [src/sass/components/_accordion.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_accordion.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native <details> and <summary>; the browser owns the toggle, its keyboard support and its expanded state.
+Web adaptation: Native <details> and <summary>; the browser owns the toggle, its keyboard support and its expanded state. Documented support reviewed 2026-10-06 against `llm.md#accordion`.
+
+- Known boundary: Tile corners, the chevron turn, exclusive groups and the expanded state Chromium reports are checked in a browser; the open animation, enlarged text and spoken output remain unverified.
 
 - verification: Tile corners, the chevron turn, exclusive groups and the expanded state Chromium reports are checked in a browser; the open animation, enlarged text and spoken output remain unverified. Next: Toggle items with a screen reader in each engine and confirm the expanded state is announced; test enlarged text and reduced motion.
 
@@ -646,9 +723,11 @@ Web adaptation: Native <details> and <summary>; the browser owns the toggle, its
 
 Source review: needs-review, 2026-10-25. [src/ts/components/showMore.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/showMore.ts), [src/sass/components/_show-more.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_show-more.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The component unclamps with inline -webkit-line-clamp and line-clamp, because the utilities layer and prefixed clamp classes beat any component rule. A ResizeObserver on the text and document.fonts.ready run the fit check, scrollHeight against clientHeight with 1px for Firefox's rounding.
+Web adaptation: The component unclamps with inline -webkit-line-clamp and line-clamp, because the utilities layer and prefixed clamp classes beat any component rule. A ResizeObserver on the text and document.fonts.ready run the fit check, scrollHeight against clientHeight with 1px for Firefox's rounding. Documented support reviewed 2026-10-25 against `llm.md#show-more`.
+
+- Known boundary: Toggling, the fit check across widths, fractional line heights and window-size prefixes, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output is unverified. Find-in-page does not open clamped text, a font that starts loading after document.fonts.ready has settled is not caught until the next resize, and an icon-only button keeps its aria-label while open.
 
 - verification: Toggling, the fit check, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output with VoiceOver and NVDA is unverified. Next: Activate the button with VoiceOver and NVDA and check that the expanded state and label are announced.
 
@@ -664,9 +743,11 @@ Web adaptation: The component unclamps with inline -webkit-line-clamp and line-c
 
 Source review: needs-review, 2026-10-06. [src/sass/components/_data-table.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_data-table.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A plain div wraps a native table. Shared DataTables handlers own opt-in sorting, filtering, select-all and column operations; authors name controls and the scroll region, and keep native row and header semantics.
+Web adaptation: A plain div wraps a native table. Shared DataTables handlers own opt-in sorting, filtering, select-all and column operations; authors name controls and the scroll region, and keep native row and header semantics. Documented support reviewed 2026-10-27 against `llm.md#data-table`.
+
+- Known boundary: Table semantics, the sticky header, numeric alignment, the sort arrow and selected rows are checked in a browser; sort announcements, enlarged text and spoken output remain unverified.
 
 - verification: Table semantics, the sticky header, numeric alignment, the sort arrow and selected rows are checked in a browser; sort announcements, enlarged text and spoken output remain unverified. Next: Sort and select rows with a screen reader in each engine and confirm the sort state and selection are announced; test enlarged text and RTL.
 
@@ -681,9 +762,11 @@ Web adaptation: A plain div wraps a native table. Shared DataTables handlers own
 
 Source review: needs-review, 2026-10-06. [src/sass/components/_stat.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_stat.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A <dl> pairs each value with its label; the arrow is decoration and the text carries the direction.
+Web adaptation: A <dl> pairs each value with its label; the arrow is decoration and the text carries the direction. Documented support reviewed 2026-10-06 against `llm.md#stat`.
+
+- Known boundary: Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.
 
 - verification: Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified. Next: Read a stats row with a screen reader in each engine and confirm each label is announced with its value; test enlarged text at narrow widths.
 
@@ -697,9 +780,11 @@ Web adaptation: A <dl> pairs each value with its label; the arrow is decoration 
 
 Source review: source-reviewed, 2026-10-15. [src/sass/components/_description-list.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_description-list.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A native dl, dt and dd; the browser exposes the label-value pairing.
+Web adaptation: A native dl, dt and dd; the browser exposes the label-value pairing. Documented support reviewed 2026-10-15 against `llm.md#description-list`.
+
+- Known boundary: Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified.
 
 - verification: Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified. Next: Read a description list with a screen reader in each engine and confirm each value is announced with its label; test enlarged text.
 
@@ -713,9 +798,11 @@ Web adaptation: A native dl, dt and dd; the browser exposes the label-value pair
 
 Source review: needs-review, 2026-10-08. [src/sass/components/_kpi.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_kpi.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A <dl> pairs the value with its label inside a card <article>; the arrow is decoration, the text carries the direction and the sparkline's table is its text alternative.
+Web adaptation: A <dl> pairs the value with its label inside a card <article>; the arrow is decoration, the text carries the direction and the sparkline's table is its text alternative. Documented support reviewed 2026-10-08 against `llm.md#kpi`.
+
+- Known boundary: Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.
 
 - verification: Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified. Next: Read a KPI row with a screen reader in each engine and confirm the label, value, trend and sparkline caption are announced in order; test enlarged text at narrow widths.
 
@@ -729,9 +816,11 @@ Web adaptation: A <dl> pairs the value with its label inside a card <article>; t
 
 Source review: source-reviewed, 2026-10-08. [src/sass/components/_countdown.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_countdown.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The element's text is the accessible value; the digit strips are generated content with empty alternative text. A page script sets the property and the text together.
+Web adaptation: The element's text is the accessible value; the digit strips are generated content with empty alternative text. A page script sets the property and the text together. Documented support reviewed 2026-10-08 against `llm.md#countdown`.
+
+- Known boundary: Width, digit positions, the baseline, the roll transition, reduced motion and the accessibility tree text are checked in a browser; spoken output inside role="timer" and aria-live regions remains unverified.
 
 - verification: Width, digit positions, the baseline, the roll transition, reduced motion and the accessibility tree text are checked in a browser; spoken output inside role="timer" and aria-live regions remains unverified. Next: Run a ticking timer and a polite live count with a screen reader in each engine and confirm the timer stays quiet and the live count announces each value once.
 
@@ -745,9 +834,11 @@ Web adaptation: The element's text is the accessible value; the digit strips are
 
 Source review: needs-review, 2026-10-06. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_mixins.scss), [src/sass/components/_line-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_line-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lineChart.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip. Documented support reviewed 2026-10-06 against `llm.md#line-chart`.
+
+- Known boundary: Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified. The axis modifier provides round value labels; full visual parity remains unassessed.
 
 - verification: Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; test enlarged text.
 
@@ -764,9 +855,11 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 Source review: needs-review, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_mixins.scss), [src/sass/components/_column-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_column-chart.scss), [src/ts/components/columnChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/columnChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lineChart.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns are aria-hidden and the plot is one Tab stop with a polite live tooltip. Documented support reviewed 2026-10-07 against `llm.md#column-chart`.
+
+- Known boundary: Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. The axis modifier provides round value labels and range draws low-to-high columns; horizontal bars use the bar chart.
 
 - verification: Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
 
@@ -782,9 +875,11 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 Source review: needs-review, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_mixins.scss), [src/sass/components/_bar-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_bar-chart.scss), [src/ts/components/barChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/barChart.ts), [src/ts/components/columnChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/columnChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lineChart.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the bars and their values are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the bars and their values are aria-hidden and the plot is one Tab stop with a polite live tooltip. Documented support reviewed 2026-10-07 against `llm.md#bar-chart`.
+
+- Known boundary: Drawing, the hidden table, grouped, stacked and split geometry, values, gaps, negative values, the value range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no value axis labels.
 
 - verification: Drawing, the hidden table, grouped, stacked and split geometry, values, gaps, negative values, the value range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
 
@@ -800,9 +895,11 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 Source review: needs-review, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_mixins.scss), [src/sass/components/_pie-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_pie-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lineChart.ts), [src/ts/components/pieChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/pieChart.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the slices, values, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the slices, values, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip. Documented support reviewed 2026-10-07 against `llm.md#pie-chart`.
+
+- Known boundary: Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names and their leader lines, data-other grouping, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values have no slice. The .labels names only move up or down their side, so many thin slices near the top or bottom can run into the caption or legend unless data-other groups them.
 
 - verification: Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names and their leader lines, data-other grouping, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
 - feature: Rows past six reuse the colors, and .labels names only move up or down their side, so many thin slices at the top or bottom push names into the caption or legend unless data-other groups them. Next: Set data-other on pies with many small parts; lay names out in two dimensions if grouped pies still crowd.
@@ -819,9 +916,11 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 Source review: needs-review, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_mixins.scss), [src/sass/components/_heatmap-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_heatmap-chart.scss), [src/ts/components/heatmapChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/heatmapChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lineChart.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, labels and scale are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, labels and scale are aria-hidden and the plot is one Tab stop with a polite live tooltip. Documented support reviewed 2026-10-07 against `llm.md#heatmap-chart`.
+
+- Known boundary: Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified.
 
 - verification: Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
 
@@ -836,9 +935,11 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 Source review: needs-review, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_mixins.scss), [src/sass/components/_radar-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_radar-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lineChart.ts), [src/ts/components/radarChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/radarChart.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, shapes, labels and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, shapes, labels and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip. Documented support reviewed 2026-10-07 against `llm.md#radar-chart`.
+
+- Known boundary: Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. A gap breaks the outline; there are no ring value labels.
 
 - verification: Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
 - feature: Series past four reuse the colors. Next: Keep to three series, or compare more in a line or bar chart.
@@ -855,9 +956,11 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 Source review: needs-review, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_mixins.scss), [src/sass/components/_radial-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_radial-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lineChart.ts), [src/ts/components/radialChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/radialChart.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rings, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rings, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip. Documented support reviewed 2026-10-07 against `llm.md#radial-chart`.
+
+- Known boundary: Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, segments, gradient fills, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values leave only the track. The .labels names can run into a crowded middle total.
 
 - verification: Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, segments, gradient fills, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
 - feature: Rings past four reuse the colors. Next: Keep to four rings and use the legend for more.
@@ -874,9 +977,11 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 Source review: needs-review, 2026-10-07. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_mixins.scss), [src/sass/components/_mixed-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_mixed-chart.scss), [src/ts/components/columnChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/columnChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lineChart.ts), [src/ts/components/mixedChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/mixedChart.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-07); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns and SVG are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns and SVG are aria-hidden and the plot is one Tab stop with a polite live tooltip. Documented support reviewed 2026-10-07 against `llm.md#mixed-chart`.
+
+- Known boundary: Drawing, the hidden table, both scales, gaps, stacked columns, points, straight lines, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.
 
 - verification: Drawing, the hidden table, both scales, gaps, stacked columns, points, straight lines, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
 
@@ -891,9 +996,11 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 Source review: needs-review, 2026-10-24. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_mixins.scss), [src/sass/components/_scatter-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_scatter-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lineChart.ts), [src/ts/components/scatterChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/scatterChart.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-24); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-24); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip. Documented support reviewed 2026-10-24 against `llm.md#scatter-chart`.
+
+- Known boundary: Point placement in left-to-right and right-to-left pages, gaps, both axes, the tooltip, keyboard steps, the nearest point by pointer, update() motion, data-watch, the toggle legend and .bubble areas, gaps, tooltip, refit and size motion are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no trend lines, separate x columns per series or sizes per series.
 
 - verification: Point placement, gaps, both axes, the tooltip, keyboard steps, the pointer, update() motion, data-watch and the toggle legend are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
 
@@ -909,9 +1016,11 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 Source review: needs-review, 2026-10-25. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_mixins.scss), [src/sass/components/_funnel-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_funnel-chart.scss), [src/ts/components/funnelChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/funnelChart.ts), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lineChart.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the stages are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the stages are aria-hidden and the plot is one Tab stop with a polite live tooltip. Documented support reviewed 2026-10-25 against `llm.md#funnel-chart`.
+
+- Known boundary: Stage widths and order in left-to-right and right-to-left pages, gaps, labels, the tooltip and its percentages, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no tapered stages, colors per row, step-to-step conversion rates or horizontal funnels.
 
 - verification: Stage widths, gaps, labels, the tooltip, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
 
@@ -927,9 +1036,11 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 Source review: needs-review, 2026-10-25. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_mixins.scss), [src/sass/components/_sankey-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_sankey-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lineChart.ts), [src/ts/components/sankeyChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/sankeyChart.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG and node names are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG and node names are aria-hidden and the plot is one Tab stop with a polite live tooltip. Documented support reviewed 2026-10-25 against `llm.md#sankey-chart`.
+
+- Known boundary: Link and node sizes, columns, skipped rows, names, colors, right-to-left mirroring, keyboard steps, the link under the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Nodes are not reached by keyboard or pointer, and node order follows the table with no crossing reduction.
 
 - verification: Link and node sizes, columns, skipped rows, names, colors, right-to-left mirroring, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text.
 
@@ -944,9 +1055,11 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 Source review: needs-review, 2026-10-25. [src/sass/abstracts/_mixins.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/abstracts/_mixins.scss), [src/sass/components/_treemap-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_treemap-chart.scss), [src/ts/components/lineChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lineChart.ts), [src/ts/components/treemapChart.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/treemapChart.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rectangles are aria-hidden and the plot is one Tab stop with a polite live tooltip.
+Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rectangles are aria-hidden and the plot is one Tab stop with a polite live tooltip. Documented support reviewed 2026-10-25 against `llm.md#treemap-chart`.
+
+- Known boundary: Areas, the layout in left-to-right and right-to-left pages, gaps, colors, text fitting, keyboard steps, the rectangle under the pointer, the tooltip, update() and data-watch are checked in a browser, and the forced-colors edge is checked in the stylesheet; screen reader output and enlarged text remain unverified. There is one level only: no parent groups, legend, drill-down or animated update().
 
 - verification: Areas, layout, gaps, colors, text fitting, keyboard steps, the pointer, the tooltip, update() and data-watch are checked in a browser; screen reader output, forced colors in a browser and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text in a browser.
 
@@ -961,9 +1074,11 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 
 Source review: source-reviewed, 2026-10-06. [src/sass/components/_timeline.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_timeline.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: An <ol> of events with <time datetime>; the dots and line are decoration.
+Web adaptation: An <ol> of events with <time datetime>; the dots and line are decoration. Documented support reviewed 2026-10-06 against `llm.md#timeline`.
+
+- Known boundary: Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified.
 
 - verification: Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified. Next: Read a timeline with a screen reader in each engine and confirm the order and times are announced; test enlarged text.
 
@@ -977,9 +1092,12 @@ Web adaptation: An <ol> of events with <time datetime>; the dots and line are de
 
 Source review: source-reviewed, 2026-10-22. [src/sass/components/_calendar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_calendar.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A native table with a caption; the page renders the dates, navigation and events.
+Web adaptation: A native table with a caption; the page renders the dates, navigation and events. Documented support reviewed 2026-10-22 against `llm.md#calendar`.
+
+- Known boundary: Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified.
+- Known boundary: Events that overlap in time overlap on screen in the week and day views; the page splits them.
 
 - verification: Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified. Next: Read a month with a screen reader in each engine and confirm the day and weekday are announced with each event.
 
@@ -994,9 +1112,11 @@ Web adaptation: A native table with a caption; the page renders the dates, navig
 
 Source review: needs-review, 2026-09-18. [src/sass/components/_dialog.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_dialog.scss), [src/ts/behaviors/dialogs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/dialogs.ts).
 
-Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/dialogs/overview).
+Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/dialogs/overview). Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
 
-Web adaptation: Native dialog.showModal()/close(); shared dialog behavior is separate from AutoInit.
+[Specification (full specs unreviewed)](https://m3.material.io/components/dialogs/specs)
+
+Web adaptation: Native dialog.showModal()/close(); shared dialog behavior is separate from AutoInit. Documented support reviewed 2026-09-07 against `llm.md#dialogs`.
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
@@ -1010,9 +1130,13 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 Source review: needs-review, 2026-09-18. [src/sass/components/_bottom-sheet.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_bottom-sheet.scss), [src/sass/components/_dialog.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_dialog.scss), [src/ts/behaviors/dialogs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/dialogs.ts), [src/ts/behaviors/bottomSheets.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/bottomSheets.ts), [src/ts/behaviors/sheetDrag.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/sheetDrag.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/bottom-sheets/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/bottom-sheets/overview). Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.
+[Specification (full specs unreviewed)](https://m3.material.io/components/bottom-sheets/specs) · [Guidelines](https://m3.material.io/components/bottom-sheets/guidelines)
+
+Web adaptation: Native dialog.show()/showModal(); shared runtime handles dragging and dismissal. Documented support reviewed 2026-09-18 against `llm.md#bottom-sheet`.
+
+- Known boundary: An .expandable sheet has a partial and a full height and no others. Long-content scrolling and enlarged-text action access are checked; native zoom and physical touch remain unverified.
 
 - integration: An .expandable sheet switches between a partial and a full height by drag or handle; there are only those two heights, and an application that sets the height itself owns it. Interrupted-drag cleanup, long-content scrolling and enlarged-text action access have rendered coverage; application-owned height changes, native zoom and physical touch remain pending. Next: Use explicit close controls; verify application-owned height changes, native zoom and physical touch separately.
 
@@ -1029,9 +1153,13 @@ Web adaptation: Native dialog.show()/showModal(); shared runtime handles draggin
 
 Source review: needs-review, 2026-09-18. [src/sass/components/_side-sheet.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_side-sheet.scss), [src/sass/components/_dialog.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_dialog.scss), [src/ts/behaviors/dialogs.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/dialogs.ts), [src/ts/behaviors/sideSheets.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/sideSheets.ts), [src/ts/behaviors/sheetDrag.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/sheetDrag.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/side-sheets/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/side-sheets/overview). Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native dialog and shared drag/dismiss behavior.
+[Specification (full specs unreviewed)](https://m3.material.io/components/side-sheets/specs) · [Guidelines](https://m3.material.io/components/side-sheets/guidelines)
+
+Web adaptation: Native dialog and shared drag/dismiss behavior. Documented support reviewed 2026-09-17 against `llm.md#side-sheet`.
+
+- Known boundary: Rendered RTL docking, dragging and enlarged translated text are checked; native zoom, assistive technology and physical-device review remain pending.
 
 - verification: Browser checks cover logical aliases, RTL dragging, cancellation and enlarged translated text. Native zoom, spoken output and physical touch remain unverified. Next: Complete docs/agents/accessibility-manual-review.md on actual devices and assistive technology.
 
@@ -1048,9 +1176,14 @@ Web adaptation: Native dialog and shared drag/dismiss behavior.
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_drag-handle.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_drag-handle.scss).
 
-Google relationship: related. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/bottom-sheets/overview).
+Google relationship: related. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/bottom-sheets/overview). Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: The host element determines semantics; no general dragging engine.
+[Specification (full specs unreviewed)](https://m3.material.io/components/bottom-sheets/specs) · [Guidelines](https://m3.material.io/components/bottom-sheets/guidelines)
+
+Web adaptation: The host element determines semantics; no general dragging engine. Documented support reviewed 2026-09-13 against `llm.md#drag-handle`.
+
+- Known boundary: A grip outside supported sheets implements neither dragging nor keyboard or non-drag pointer alternatives.
+- Known boundary: Standalone grip styling supplies no drag, resize or reorder operation.
 
 - integration: Standalone grip styling supplies no drag, resize or reorder operation. Next: Provide a named operable control plus keyboard and non-drag pointer alternatives for the real operation.
 
@@ -1064,9 +1197,13 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_badges.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_badges.scss).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/badges/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/badges/overview). Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Expose counts through the enclosing control name when its icon is hidden.
+[Specification (full specs unreviewed)](https://m3.material.io/components/badges/specs) · [Guidelines](https://m3.material.io/components/badges/guidelines)
+
+Web adaptation: Expose counts through the enclosing control name when its icon is hidden. Documented support reviewed 2026-09-13 against `llm.md#badges`.
+
+- Known boundary: A named count fixture is checked; changing counts, clipping and spoken updates remain unverified.
 
 - verification: A named count fixture is checked; changing counts, clipping and spoken updates remain unverified. Next: Expose count meaning once, test large/localized counts and verify announcements only when the task needs them.
 
@@ -1080,9 +1217,11 @@ Web adaptation: Expose counts through the enclosing control name when its icon i
 
 Source review: needs-review, 2026-10-06. [src/sass/components/_avatar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_avatar.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: An <img> or a <span> with role="img" and a name; initials scale with the size token.
+Web adaptation: An <img> or a <span> with role="img" and a name; initials scale with the size token. Documented support reviewed 2026-10-06 against `llm.md#avatar`.
+
+- Known boundary: Sizes, the circle, the group overlap and named initials are checked in a browser; image loading failures, enlarged text and spoken output remain unverified.
 
 - verification: Sizes, the circle, the group overlap and named initials are checked in a browser; image loading failures, enlarged text and spoken output remain unverified. Next: Read a group of avatars with a screen reader and confirm each name and the count are announced once; test enlarged text and RTL.
 
@@ -1096,9 +1235,11 @@ Web adaptation: An <img> or a <span> with role="img" and a name; initials scale 
 
 Source review: needs-review, 2026-10-16. [src/sass/components/_org-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_org-chart.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-16); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-16); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native <details> managers and nested lists; every manager is a Tab stop and no tree role is promised.
+Web adaptation: Native <details> managers and nested lists; every manager is a Tab stop and no tree role is promised. Documented support reviewed 2026-10-16 against `llm.md#organization-chart`.
+
+- Known boundary: Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified.
 
 - verification: Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm each list's level and size and each manager's expanded state are announced; check forced colors and 200% text.
 
@@ -1112,9 +1253,13 @@ Web adaptation: Native <details> managers and nested lists; every manager is a T
 
 Source review: needs-review, 2026-09-12. [src/sass/components/_tooltip.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_tooltip.scss), [src/ts/components/tooltip.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/tooltip.ts).
 
-Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/tooltips/overview).
+Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/tooltips/overview). Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
 
-Web adaptation: The selected form determines ownership; CSS-only hover/focus is not runtime initialization.
+[Specification (full specs unreviewed)](https://m3.material.io/components/tooltips/specs)
+
+Web adaptation: The selected form determines ownership; CSS-only hover/focus is not runtime initialization. Documented support reviewed 2026-09-07 against `llm.md#tooltips`.
+
+- Known boundary: For hover/focus tooltips, verify dismissibility, hoverability, and persistence under WCAG SC 1.4.13, including its exceptions. Plain CSS bubbles disable pointer events and have no own Escape handler; aria-describedby alone does not verify these behaviors. Read the focused web checks.
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
@@ -1131,9 +1276,11 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 Source review: source-reviewed, 2026-10-06. [src/sass/components/_popover.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_popover.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The browser owns opening, light dismiss, Escape, focus return and the button's expanded state; CSS anchor positioning places the panel.
+Web adaptation: The browser owns opening, light dismiss, Escape, focus return and the button's expanded state; CSS anchor positioning places the panel. Documented support reviewed 2026-10-06 against `llm.md#popover`.
+
+- Known boundary: Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified.
 
 - verification: Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified. Next: Open a toggletip with a screen reader in each engine and confirm the expanded state and the panel content are reachable; check an engine without anchor positioning.
 
@@ -1147,9 +1294,11 @@ Web adaptation: The browser owns opening, light dismiss, Escape, focus return an
 
 Source review: source-reviewed, 2026-10-25. [src/ts/components/hoverCard.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/hoverCard.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Script timers decide when the card shows, and showPopover({ source }) makes the link its anchor and invoker, so the browser places it, puts it next in the Tab order and light-dismisses it. Interest invokers (interestfor) exist only in Chromium, so they are not used.
+Web adaptation: Script timers decide when the card shows, and showPopover({ source }) makes the link its anchor and invoker, so the browser places it, puts it next in the Tab order and light-dismisses it. Interest invokers (interestfor) exist only in Chromium, so they are not used. Documented support reviewed 2026-10-25 against `llm.md#hover-card`.
+
+- Known boundary: Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified. Touch shows no card, and the card's content is static markup.
 
 - verification: Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified. Next: Tab to a hover card link with VoiceOver and NVDA and confirm the details relationship is announced and the card is reachable.
 
@@ -1164,9 +1313,11 @@ Web adaptation: Script timers decide when the card shows, and showPopover({ sour
 
 Source review: needs-review, 2026-10-15. [src/ts/behaviors/tour.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/tour.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A manual native popover placed with CSS anchor positioning; the Tour behavior moves the anchor and focus.
+Web adaptation: A manual native popover placed with CSS anchor positioning; the Tour behavior moves the anchor and focus. Documented support reviewed 2026-10-15 against `llm.md#tour`.
+
+- Known boundary: Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified.
 
 - verification: Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified. Next: Take a tour with a screen reader in each engine and confirm each step is announced when it opens.
 
@@ -1180,9 +1331,13 @@ Web adaptation: A manual native popover placed with CSS anchor positioning; the 
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_snackbar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_snackbar.scss), [src/ts/components/snackbar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/snackbar.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/snackbar/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/snackbar/overview). Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Use the documented announcement and timeout behavior.
+[Specification (full specs unreviewed)](https://m3.material.io/components/snackbar/specs) · [Guidelines](https://m3.material.io/components/snackbar/guidelines)
+
+Web adaptation: Use the documented announcement and timeout behavior. Documented support reviewed 2026-09-13 against `llm.md#snackbar`.
+
+- Known boundary: Custom template actions require explicit persistence and a close control. Application keyboard reach controls and spoken live-region delivery need verification.
 
 - verification: Application keyboard reach controls, custom template actions and spoken live-region delivery need application-level verification. Next: Provide a visible notification-actions control, persistent inline equivalents for timed feedback, and verify screen-reader announcements in the target application.
 
@@ -1197,9 +1352,13 @@ Web adaptation: Use the documented announcement and timeout behavior.
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_progress.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_progress.scss).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/progress-indicators/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/progress-indicators/overview). Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Prefer native progress where applicable; supply accessible state for custom hosts.
+[Specification (full specs unreviewed)](https://m3.material.io/components/progress-indicators/specs) · [Guidelines](https://m3.material.io/components/progress-indicators/guidelines)
+
+Web adaptation: Prefer native progress where applicable; supply accessible state for custom hosts. Documented support reviewed 2026-09-13 against `llm.md#progress-indicators`.
+
+- Known boundary: Forced-colors rendering is checked in browser emulation; Windows high-contrast and spoken output still require manual review.
 
 - verification: Forced-colors rendering is checked in browser emulation; Windows high-contrast and spoken output still require manual review. Next: Verify native and custom indicators with Windows contrast themes and screen readers before claiming platform-wide support.
 
@@ -1215,9 +1374,13 @@ Web adaptation: Prefer native progress where applicable; supply accessible state
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_loading-indicator.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_loading-indicator.scss).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/loading-indicator/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/loading-indicator/overview). Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: CSS-only; the author supplies an accessible waiting message.
+[Specification (full specs unreviewed)](https://m3.material.io/components/loading-indicator/specs) · [Guidelines](https://m3.material.io/components/loading-indicator/guidelines)
+
+Web adaptation: CSS-only; the author supplies an accessible waiting message. Documented support reviewed 2026-09-13 against `llm.md#loading-indicator`.
+
+- Known boundary: The framework requires a named status while Google recommends progressbar; an indeterminate progressbar validly omits aria-valuenow.
 
 - integration: The framework requires a named status while Google recommends progressbar; an indeterminate progressbar validly omits aria-valuenow. Next: Record this current contract difference; test meaningful waiting text and spoken delivery. Choose a progress indicator initially when a transition to determinate progress is expected.
 
@@ -1231,9 +1394,11 @@ Web adaptation: CSS-only; the author supplies an accessible waiting message.
 
 Source review: source-reviewed, 2026-10-25. [src/sass/components/_loading-overlay.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_loading-overlay.scss), [src/ts/components/loadingOverlay.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/loadingOverlay.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The native inert attribute blocks pointer and keyboard input instead of script handlers. The page owns aria-busy, and the script follows it with a MutationObserver. Inert content leaves the accessibility tree, so the script adds a visually hidden role="status" region outside the region.
+Web adaptation: The native inert attribute blocks pointer and keyboard input instead of script handlers. The page owns aria-busy, and the script follows it with a MutationObserver. Inert content leaves the accessibility tree, so the script adds a visually hidden role="status" region outside the region. Documented support reviewed 2026-10-25 against `llm.md#loading-overlay`.
+
+- Known boundary: Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified. The scrim does not follow the content of a region that scrolls itself; the docs say to wrap the scroller.
 
 - verification: Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified. Next: Mark a region busy and clear it with VoiceOver and NVDA running, and view it under a Windows high-contrast theme.
 
@@ -1248,9 +1413,11 @@ Web adaptation: The native inert attribute blocks pointer and keyboard input ins
 
 Source review: needs-review, 2026-10-06. [src/sass/components/_skeleton.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_skeleton.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Empty decorative blocks; the page marks the loading region aria-busy and reports the wait through a status.
+Web adaptation: Empty decorative blocks; the page marks the loading region aria-busy and reports the wait through a status. Documented support reviewed 2026-10-06 against `llm.md#skeleton`.
+
+- Known boundary: The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified.
 
 - verification: The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified. Next: Load content into an aria-busy region with a screen reader and confirm the status is announced once and the skeletons are not; test forced colors.
 
@@ -1264,9 +1431,11 @@ Web adaptation: Empty decorative blocks; the page marks the loading region aria-
 
 Source review: source-reviewed, 2026-10-06. [src/sass/components/_empty-state.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_empty-state.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A plain div around authored heading, text and buttons; the page picks the heading level.
+Web adaptation: A plain div around authored heading, text and buttons; the page picks the heading level. Documented support reviewed 2026-10-06 against `llm.md#empty-state`.
+
+- Known boundary: Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified.
 
 - verification: Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified. Next: Empty a filtered list with a screen reader and confirm the change is announced; test enlarged text and narrow widths.
 
@@ -1280,9 +1449,11 @@ Web adaptation: A plain div around authored heading, text and buttons; the page 
 
 Source review: source-reviewed, 2026-10-15. [src/sass/components/_alert.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_alert.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A plain div around authored text and buttons; a changing alert puts role="status" or role="alert" on its text, never on the controls.
+Web adaptation: A plain div around authored text and buttons; a changing alert puts role="status" or role="alert" on its text, never on the controls. Documented support reviewed 2026-10-15 against `llm.md#alert`.
+
+- Known boundary: The layout, both tones, enlarged-text wrapping and the authored role are checked in a browser; live announcements and spoken output remain unverified.
 
 - verification: The layout, both tones, enlarged-text wrapping and the authored role are checked in a browser; live announcements and spoken output remain unverified. Next: Show and update an alert with a screen reader in each engine and confirm status and alert roles are announced once, without the button labels; test forced colors.
 
@@ -1297,9 +1468,13 @@ Web adaptation: A plain div around authored text and buttons; a changing alert p
 
 Source review: needs-review, 2026-09-17. [src/sass/components/_carousel.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_carousel.scss), [src/ts/components/carousel.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/carousel.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/carousel/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/carousel/overview). Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Runtime owns sizing and navigation; reduced motion removes parallax and morphing.
+[Specification (full specs unreviewed)](https://m3.material.io/components/carousel/specs) · [Guidelines](https://m3.material.io/components/carousel/guidelines)
+
+Web adaptation: Runtime owns sizing and navigation; reduced motion removes parallax and morphing. Documented support reviewed 2026-09-17 against `llm.md#carousel`.
+
+- Known boundary: Rendered navigation and application-owned pause controls have browser coverage; screen readers, native zoom and physical-device review remain pending.
 
 - verification: Rendered browser checks do not establish native zoom, spoken announcements or physical touch-device usability. Next: Review native zoom, screen readers and physical iOS/Android devices with the selected layout and pause control.
 
@@ -1316,9 +1491,11 @@ Web adaptation: Runtime owns sizing and navigation; reduced motion removes paral
 
 Source review: source-reviewed, 2026-10-15. [src/sass/components/_image-compare.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_image-compare.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A native range input covers the images invisibly; the ImageCompare behavior writes its value to the divider position.
+Web adaptation: A native range input covers the images invisibly; the ImageCompare behavior writes its value to the divider position. Documented support reviewed 2026-10-15 against `llm.md#image-compare`.
+
+- Known boundary: The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified.
 
 - verification: The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified. Next: Move the divider with a screen reader in each engine and confirm the value is announced.
 
@@ -1332,9 +1509,11 @@ Web adaptation: A native range input covers the images invisibly; the ImageCompa
 
 Source review: source-reviewed, 2026-10-08. [src/sass/components/_marquee.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_marquee.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A visual copy of the item list marked aria-hidden, with its links taken out of the tab order, so assistive technology and the keyboard meet each item once.
+Web adaptation: A visual copy of the item list marked aria-hidden, with its links taken out of the tab order, so assistive technology and the keyboard meet each item once. Documented support reviewed 2026-10-08 against `llm.md#marquee`.
+
+- Known boundary: The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified.
 
 - verification: The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified. Next: Listen to a marquee with a screen reader in each engine and confirm each item is read once; watch a long strip for a visible jump at the loop point.
 
@@ -1348,9 +1527,11 @@ Web adaptation: A visual copy of the item list marked aria-hidden, with its link
 
 Source review: needs-review, 2026-10-09. [src/sass/components/_confetti.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_confetti.scss), [src/ts/components/confetti.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/confetti.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A canvas drawn with requestAnimationFrame. The page canvas is an aria-hidden manual popover with pointer events off, so it draws above modal dialogs without blocking clicks. Reduced motion draws nothing.
+Web adaptation: A canvas drawn with requestAnimationFrame. The page canvas is an aria-hidden manual popover with pointer events off, so it draws above modal dialogs without blocking clicks. Reduced motion draws nothing. Documented support reviewed 2026-10-09 against `llm.md#confetti`.
+
+- Known boundary: The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified.
 
 - verification: The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified. Next: Watch a burst on a low-end phone and in forced colors, and confirm a screen reader announces nothing for it.
 
@@ -1364,9 +1545,11 @@ Web adaptation: A canvas drawn with requestAnimationFrame. The page canvas is an
 
 Source review: needs-review, 2026-10-09. [src/sass/components/_particles.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_particles.scss), [src/ts/components/particles.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/particles.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A canvas drawn with requestAnimationFrame, aria-hidden with pointer events off. The dot color comes from the canvas's CSS color, read each frame so theme changes apply. Reduced motion draws the dots once without motion.
+Web adaptation: A canvas drawn with requestAnimationFrame, aria-hidden with pointer events off. The dot color comes from the canvas's CSS color, read each frame so theme changes apply. Reduced motion draws the dots once without motion. Documented support reviewed 2026-10-09 against `llm.md#particles`.
+
+- Known boundary: The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified.
 
 - verification: The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified. Next: Watch a full-width hero of particles on a low-end phone and in forced colors, and check text contrast over the densest area.
 
@@ -1380,9 +1563,11 @@ Web adaptation: A canvas drawn with requestAnimationFrame, aria-hidden with poin
 
 Source review: needs-review, 2026-09-18. [src/sass/components/_lightbox.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_lightbox.scss), [src/ts/components/lightbox.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lightbox.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: ExpressiveCSS media behavior, not an upstream component contract.
+Web adaptation: ExpressiveCSS media behavior, not an upstream component contract. Documented support reviewed 2026-09-13 against `llm.md#lightbox`.
+
+- Known boundary: Enlargement and teardown are checked; modal containment, reduced motion and destruction during closing remain unverified.
 
 - verification: Native zoom, screen-reader announcements, actual Windows contrast themes and physical-device interaction remain unverified. Next: Complete the Lightbox manual-review fixture. Treat this as image enlargement, not a verified modal gallery.
 
@@ -1405,9 +1590,11 @@ Web adaptation: ExpressiveCSS media behavior, not an upstream component contract
 
 Source review: needs-review, 2026-10-09. [src/sass/components/_map.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_map.scss), [src/ts/components/mapView.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/mapView.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The page passes in the maplibre-gl module. Markers, popups and controls are authored HTML moved into MapLibre; routes, arcs and clusters are GeoJSON layers whose colors are read from theme tokens and redrawn when the theme changes.
+Web adaptation: The page passes in the maplibre-gl module. Markers, popups and controls are authored HTML moved into MapLibre; routes, arcs and clusters are GeoJSON layers whose colors are read from theme tokens and redrawn when the theme changes. Documented support reviewed 2026-10-09 against `llm.md#map`.
+
+- Known boundary: Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified.
 
 - verification: Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified. Next: Use the map with a screen reader and on a touch device, try locate and full screen with real permissions, drag a marker with the keyboard, and check forced colors.
 
@@ -1422,9 +1609,11 @@ Web adaptation: The page passes in the maplibre-gl module. Markers, popups and c
 
 Source review: needs-review, 2026-09-12. [src/sass/components/_toolbar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_toolbar.scss).
 
-Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/toolbars/overview).
+Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/toolbars/overview). Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
 
-Web adaptation: CSS-only commands; no automatic composite toolbar keyboard model.
+[Specification (full specs unreviewed)](https://m3.material.io/components/toolbars/specs)
+
+Web adaptation: CSS-only commands; no automatic composite toolbar keyboard model. Documented support reviewed 2026-09-07 against `llm.md#toolbars`.
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
@@ -1438,9 +1627,11 @@ No directly scoped browser check is mapped. This does not mean the component fai
 
 Source review: source-reviewed, 2026-11-14. [src/sass/components/_status-bar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_status-bar.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-11-14); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-11-14); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. In M3, status bar names the system bar, not a component. Full visual parity and spoken output unverified.
 
-Web adaptation: A <footer> or labelled <div> with one tab stop per item and no composite role; only the changing text item is a live region.
+Web adaptation: A <footer> or labelled <div> with one tab stop per item and no composite role; only the changing text item is a live region. Documented support reviewed 2026-11-14 against `llm.md#status-bar`.
+
+- Known boundary: Bar size, sticking, item targets, the end group, colors, priority hiding, wrapping, RTL, enlarged text, forced colors and blocked filled-button states are checked in a browser; spoken output and a real safe-area inset remain unverified.
 
 - verification: Bar size, sticking, item targets, the end group, colors, priority hiding, wrapping, RTL, enlarged text, forced colors and blocked filled-button states are checked in a browser; spoken output and a real safe-area inset remain unverified. Next: Tab through the bar with a screen reader and confirm each item's name and a single announcement of the status item's update; open the bar on a phone with a home indicator.
 
@@ -1455,9 +1646,13 @@ Web adaptation: A <footer> or labelled <div> with one tab stop per item and no c
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_search.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_search.scss).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/search/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/search/overview). Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Application toggles hidden for docked views or opens a native dialog for full-screen views; optional Autocomplete owns suggestions.
+[Specification (full specs unreviewed)](https://m3.material.io/components/search/specs) · [Guidelines](https://m3.material.io/components/search/guidelines)
+
+Web adaptation: Application toggles hidden for docked views or opens a native dialog for full-screen views; optional Autocomplete owns suggestions. Documented support reviewed 2026-09-13 against `llm.md#search`.
+
+- Known boundary: CSS does not supply search results announcements or modal focus ownership.
 
 - integration: CSS does not supply search results announcements or modal focus ownership. Next: Verify submitted-query retention, full-screen return focus and spoken results in the application.
 
@@ -1471,9 +1666,11 @@ Web adaptation: Application toggles hidden for docked views or opens a native di
 
 Source review: needs-review, 2026-10-06. [src/sass/components/_command-palette.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_command-palette.scss), [src/ts/components/commandPalette.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/commandPalette.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A native modal <dialog>; commands are links and buttons, and the component adds the combobox and listbox roles and the active option.
+Web adaptation: A native modal <dialog>; commands are links and buttons, and the component adds the combobox and listbox roles and the active option. Documented support reviewed 2026-10-06 against `llm.md#command-palette`.
+
+- Known boundary: The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified.
 
 - verification: The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified. Next: Run commands with a screen reader in each engine and confirm the active option and the empty message are announced; check that Ctrl+K does not clash with the screen reader or browser.
 
@@ -1487,9 +1684,13 @@ Web adaptation: A native modal <dialog>; commands are links and buttons, and the
 
 Source review: needs-review, 2026-09-13. [src/sass/components/forms/_fieldset.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_fieldset.scss).
 
-Google relationship: related. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/text-fields/overview).
+Google relationship: related. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/text-fields/overview). Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native fieldset/legend; related text-field tokens do not make this an M3 component.
+[Specification (full specs unreviewed)](https://m3.material.io/components/text-fields/specs) · [Guidelines](https://m3.material.io/components/text-fields/guidelines)
+
+Web adaptation: Native fieldset/legend; related text-field tokens do not make this an M3 component. Documented support reviewed 2026-09-13 against `llm.md#fieldsets`.
+
+- Known boundary: Named native groups and disabled descendants are checked; long legends and nested groups remain unverified.
 
 - verification: Named native groups and disabled descendants are checked; long legends and nested groups remain unverified. Next: Enlarge translated legends and verify readable group names without clipping.
 
@@ -1504,9 +1705,11 @@ Web adaptation: Native fieldset/legend; related text-field tokens do not make th
 
 Source review: needs-review, 2026-09-12. [src/sass/components/forms/_input-fields.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_input-fields.scss), [src/sass/components/forms/_file-input.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_file-input.scss), [src/ts/behaviors/forms.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/forms.ts), [src/ts/components/characterCounter.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/characterCounter.ts).
 
-Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/text-fields/overview).
+Google relationship: component. Upstream review: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/text-fields/overview). Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
 
-Web adaptation: Native input/textarea with explicit label and description relationships.
+[Specification (full specs unreviewed)](https://m3.material.io/components/text-fields/specs)
+
+Web adaptation: Native input/textarea with explicit label and description relationships. Documented support reviewed 2026-10-06 against `llm.md#text-inputs`.
 
 No gap identified within the stated scope; broader upstream parity remains unassessed.
 
@@ -1520,9 +1723,11 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 Source review: needs-review, 2026-10-25. [src/ts/components/inputMask.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/inputMask.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A capture-phase input listener rewrites the native value, so the form, constraint validation and FormData see what the field shows. Composing input is skipped and the field formats on compositionend, and a beforeinput listener turns a one-character delete next to a literal into a delete of the slot character across it.
+Web adaptation: A capture-phase input listener rewrites the native value, so the form, constraint validation and FormData see what the field shows. Composing input is skipped and the field formats on compositionend, and a beforeinput listener turns a one-character delete next to a literal into a delete of the slot character across it. Documented support reviewed 2026-10-25 against `llm.md#input-mask`.
+
+- Known boundary: Typing, inserted pastes, deletes across literals, composition in both event orders, saved and reset values, listener order, Keypad keys and destroy() are checked in a browser; real IMEs, Android keyboards, clipboard pastes and spoken output remain unverified, and undo after a formatted edit does nothing. The form submits only the formatted value, and masks cannot change with the value.
 
 - verification: Typing, inserted pastes, deletes across literals, composition in both event orders, saved and reset values, listener order, Keypad keys and destroy() are checked in a browser; real IMEs, Android keyboards, clipboard pastes and spoken output remain unverified. Next: Type into a masked field with a Japanese IME, Chinese pinyin and Gboard on Android, and read it with VoiceOver and NVDA.
 
@@ -1537,9 +1742,11 @@ Web adaptation: A capture-phase input listener rewrites the native value, so the
 
 Source review: needs-review, 2026-10-25. [src/ts/components/currencyInput.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/currencyInput.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The native value holds the formatted text, and a capture-phase formdata listener on the document swaps the field's entry for the plain number, so submits and new FormData(form) read a number while the field keeps its name. setCustomValidity reports text with no amount, so constraint validation and .validate show the message.
+Web adaptation: The native value holds the formatted text, and a capture-phase formdata listener on the document swaps the field's entry for the plain number, so submits and new FormData(form) read a number while the field keeps its name. setCustomValidity reports text with no amount, so constraint validation and .validate show the message. Documented support reviewed 2026-10-25 against `llm.md#currency-input`.
+
+- Known boundary: Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified. Formatting happens on blur only, and a form that repeats a currency field's name gets one entry for them.
 
 - verification: Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified. Next: Type an amount on iOS Safari and Android Chrome decimal keypads under lang="de", and read the field with VoiceOver and NVDA.
 
@@ -1554,9 +1761,11 @@ Web adaptation: The native value holds the formatted text, and a capture-phase f
 
 Source review: needs-review, 2026-10-08. [src/sass/components/_rich-text-editor.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_rich-text-editor.scss), [src/ts/components/richTextEditor.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/richTextEditor.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The page supplies Tiptap's Editor class and extensions; the component mounts it, names the contenteditable textbox from the textarea and keeps the textarea in sync. The toolbar is the docked toolbar.
+Web adaptation: The page supplies Tiptap's Editor class and extensions; the component mounts it, names the contenteditable textbox from the textarea and keeps the textarea in sync. The toolbar is the docked toolbar. Documented support reviewed 2026-10-08 against `llm.md#rich-text-editor`.
+
+- Known boundary: Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified.
 
 - verification: Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified. Next: Use the editor with a screen reader and an IME in each engine, paste from a word processor, and select text on touch devices.
 
@@ -1571,9 +1780,11 @@ Web adaptation: The page supplies Tiptap's Editor class and extensions; the comp
 
 Source review: needs-review, 2026-10-06. [src/sass/components/forms/_drop-zone.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_drop-zone.scss), [src/ts/behaviors/forms.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/forms.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The native input covers the label, so clicks, keys and drops are the browser's; the shared Forms behavior marks the drag and fills the list.
+Web adaptation: The native input covers the label, so clicks, keys and drops are the browser's; the shared Forms behavior marks the drag and fills the list. Documented support reviewed 2026-10-06 against `llm.md#drop-zone`.
+
+- Known boundary: Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified.
 
 - verification: Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified. Next: Drag files from the operating system onto the zone in each engine and confirm the selection and list update; check the list announcement with a screen reader.
 
@@ -1587,9 +1798,13 @@ Web adaptation: The native input covers the label, so clicks, keys and drops are
 
 Source review: needs-review, 2026-10-27. [src/sass/components/forms/_select.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_select.scss), [src/sass/components/_menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_menu.scss), [src/ts/components/select.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/select.ts), [src/ts/components/menu.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/menu.ts).
 
-Google relationship: related. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/menus/overview).
+Google relationship: related. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/menus/overview). Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native select enhanced by runtime; this is related to menu/text-field patterns.
+[Specification (full specs unreviewed)](https://m3.material.io/components/menus/specs) · [Guidelines](https://m3.material.io/components/menus/guidelines)
+
+Web adaptation: Native select enhanced by runtime; this is related to menu/text-field patterns. Documented support reviewed 2026-10-27 against `llm.md#select`.
+
+- Known boundary: Native zoom, screen-reader announcements, Windows contrast themes and physical-device form interaction remain unverified.
 
 - verification: Native zoom, screen-reader announcements, Windows contrast themes and physical-device form interaction remain unverified. Next: Complete the Select native-forms manual-review fixture and record actual browser, assistive technology and device results.
 
@@ -1616,9 +1831,11 @@ Web adaptation: Native select enhanced by runtime; this is related to menu/text-
 
 Source review: needs-review, 2026-10-25. [src/ts/components/treeSelect.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/treeSelect.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: TreeSelect extends FormSelect, so the native select keeps the form value, reset, validity and disabled state. The popup is a ul role="tree" inside the Menu surface, one list below the rows Menu styles, named as the field is. Search reuses the labelled dialog/search/status controls around that tree without a listbox wrapper.
+Web adaptation: TreeSelect extends FormSelect, so the native select keeps the form value, reset, validity and disabled state. The popup is a ul role="tree" inside the Menu surface, one list below the rows Menu styles, named as the field is. Search reuses the labelled dialog/search/status controls around that tree without a listbox wrapper. Documented support reviewed 2026-10-27 against `llm.md#tree-select`.
+
+- Known boundary: Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output, touch, native zoom and OS IME remain unverified. Leaf filtering, expansion restoration, native submission, reset/refresh, modal/shadow focus and forced-color scrolling are checked in all three engines. No choosable branch; the field shows leaf text, not ancestor paths. Multiple toggling, hidden selections, native two-value submission and distinct selected/focus paint are checked in all three engines.
 
 - verification: Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output and touch remain unverified. Next: Move through the tree and choose a leaf with VoiceOver and NVDA, and tap branches and leaves on iOS Safari and Android Chrome.
 
@@ -1633,9 +1850,11 @@ Web adaptation: TreeSelect extends FormSelect, so the native select keeps the fo
 
 Source review: source-reviewed, 2026-10-25. [src/ts/components/cascader.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/cascader.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: The author's nested lists stay hidden as the source. A manual popover opened with the input as its source uses CSS anchor positioning, and a form-associated expressive-cascader-control wraps the input and submits the path, so the browser handles reset, validity and disabled state.
+Web adaptation: The author's nested lists stay hidden as the source. A manual popover opened with the input as its source uses CSS anchor positioning, and a form-associated expressive-cascader-control wraps the input and submits the path, so the browser handles reset, validity and disabled state. Documented support reviewed 2026-10-25 against `llm.md#cascader`.
+
+- Known boundary: Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified. There is no search, type-ahead, multiple selection or lazy loading, and only a leaf commits.
 
 - verification: Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified. Next: Move through three columns and commit a leaf with NVDA in Firefox and VoiceOver in Safari.
 
@@ -1650,9 +1869,13 @@ Web adaptation: The author's nested lists stay hidden as the source. A manual po
 
 Source review: needs-review, 2026-09-13. [src/sass/components/forms/_checkboxes.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_checkboxes.scss).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/checkbox/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/checkbox/overview). Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native checkbox; indeterminate is set through the DOM property.
+[Specification (full specs unreviewed)](https://m3.material.io/components/checkbox/specs) · [Guidelines](https://m3.material.io/components/checkbox/guidelines)
+
+Web adaptation: Native checkbox; indeterminate is set through the DOM property. Documented support reviewed 2026-09-13 against `llm.md#checkboxes`.
+
+- Known boundary: Native state coverage does not verify parent aggregation or every target and forced-colors state.
 
 - verification: Native state coverage does not verify parent aggregation or every target and forced-colors state. Next: Test partial child selection, label activation, effective targets and forced-colors rendering.
 
@@ -1667,9 +1890,11 @@ Web adaptation: Native checkbox; indeterminate is set through the DOM property.
 
 Source review: needs-review, 2026-10-25. [src/sass/components/_transfer-list.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_transfer-list.scss), [src/ts/behaviors/transferList.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/transferList.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: A document-delegated behavior moves the rows and appends the chosen values in a formdata listener, so the checkboxes carry no name. The rows stay native checkboxes rather than a listbox, so Tab and Space work without an arrow-key contract.
+Web adaptation: A document-delegated behavior moves the rows and appends the chosen values in a formdata listener, so the checkboxes carry no name. The rows stay native checkboxes rather than a listbox, so Tab and Space work without an arrow-key contract. Documented support reviewed 2026-10-25 against `llm.md#transfer-list`.
+
+- Known boundary: The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser; spoken output and forced colors remain unverified.
 
 - verification: The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser; spoken output and forced colors remain unverified. Next: Move rows with NVDA in Firefox and VoiceOver in Safari and confirm each move is announced once; check the lists and icons in forced colors mode.
 
@@ -1685,9 +1910,13 @@ Web adaptation: A document-delegated behavior moves the rows and appends the cho
 
 Source review: needs-review, 2026-09-13. [src/sass/components/forms/_radio-buttons.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_radio-buttons.scss).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/radio-button/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/radio-button/overview). Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Shared name provides exclusivity; fieldset/legend names the group.
+[Specification (full specs unreviewed)](https://m3.material.io/components/radio-button/specs) · [Guidelines](https://m3.material.io/components/radio-button/guidelines)
+
+Web adaptation: Shared name provides exclusivity; fieldset/legend names the group. Documented support reviewed 2026-09-13 against `llm.md#radio-buttons`.
+
+- Known boundary: Native group selection is checked; initially-empty and disabled-option paths remain unmeasured.
 
 - verification: Native group selection is checked; initially-empty and disabled-option paths remain unmeasured. Next: Check both Tab directions and arrow wrapping with the actual default and disabled choices.
 
@@ -1701,9 +1930,11 @@ Web adaptation: Shared name provides exclusivity; fieldset/legend names the grou
 
 Source review: source-reviewed, 2026-10-06. [src/sass/components/forms/_rating.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_rating.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native radios keep keyboard, form and naming behavior; the display is a named role="img".
+Web adaptation: Native radios keep keyboard, form and naming behavior; the display is a named role="img". Documented support reviewed 2026-10-06 against `llm.md#rating`.
+
+- Known boundary: Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified.
 
 - verification: Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified. Next: Rate with a keyboard and a screen reader in each engine, including Safari, and confirm the focus ring follows the arrows and each star is announced.
 
@@ -1717,9 +1948,11 @@ Web adaptation: Native radios keep keyboard, form and naming behavior; the displ
 
 Source review: source-reviewed, 2026-10-18. [src/sass/components/forms/_color-swatches.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_color-swatches.scss).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-18); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-18); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native radios keep one Tab stop, arrow keys and form submission; each swatch is named by visually hidden text in its label.
+Web adaptation: Native radios keep one Tab stop, arrow keys and form submission; each swatch is named by visually hidden text in its label. Documented support reviewed 2026-10-18 against `llm.md#color-swatches`.
+
+- Known boundary: Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified.
 
 - verification: Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified. Next: Choose a swatch with a keyboard and a screen reader in Firefox and Safari, and confirm each color name and the checked state are announced; check 200% text.
 
@@ -1733,9 +1966,11 @@ Web adaptation: Native radios keep one Tab stop, arrow keys and form submission;
 
 Source review: needs-review, 2026-10-18. [src/sass/components/forms/_color-picker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_color-picker.scss), [src/ts/components/colorPicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/colorPicker.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-18); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-18); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Progressive enhancement of <input type="color">: without JavaScript the native picker remains, and the browser picker still opens from the input after enhancement.
+Web adaptation: Progressive enhancement of <input type="color">: without JavaScript the native picker remains, and the browser picker still opens from the input after enhancement. Documented support reviewed 2026-10-18 against `llm.md#color-picker`.
+
+- Known boundary: Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified.
 
 - verification: Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified. Next: Pick a color with a screen reader and with touch in each engine, and confirm the area valuetext and the hex field are announced; check forced colors and 200% text.
 
@@ -1749,9 +1984,13 @@ Web adaptation: Progressive enhancement of <input type="color">: without JavaScr
 
 Source review: needs-review, 2026-09-13. [src/sass/components/forms/_switches.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_switches.scss).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/switch/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/switch/overview). Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Input state owns selection and form value.
+[Specification (full specs unreviewed)](https://m3.material.io/components/switch/specs) · [Guidelines](https://m3.material.io/components/switch/guidelines)
+
+Web adaptation: Input state owns selection and form value. Documented support reviewed 2026-09-13 against `llm.md#switches`.
+
+- Known boundary: The styled native checkbox does not perform or announce a persisted setting change.
 
 - integration: The styled native checkbox does not perform or announce a persisted setting change. Next: Verify immediate application outcome and failure recovery with a stable label.
 
@@ -1765,9 +2004,13 @@ Web adaptation: Input state owns selection and form value.
 
 Source review: needs-review, 2026-09-17. [src/sass/components/forms/_slider.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_slider.scss), [src/ts/components/slider.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/slider.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/sliders/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/sliders/overview). Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Native range inputs with runtime value-label and range coordination.
+[Specification (full specs unreviewed)](https://m3.material.io/components/sliders/specs) · [Guidelines](https://m3.material.io/components/sliders/guidelines)
+
+Web adaptation: Native range inputs with runtime value-label and range coordination. Documented support reviewed 2026-09-17 against `llm.md#sliders`.
+
+- Known boundary: Native-handle alignment, paired interaction and emulated forced colors have browser coverage. Screen readers, physical touch devices and actual Windows contrast themes remain pending.
 
 - verification: Browser fixtures cover geometry, native keyboard and pointer interaction, numeric synchronization and emulated forced colors. Manual assistive-technology and device checks remain pending. Next: Review native zoom, screen readers, physical mobile devices and Windows contrast themes.
 
@@ -1785,9 +2028,13 @@ Web adaptation: Native range inputs with runtime value-label and range coordinat
 
 Source review: needs-review, 2026-09-13. [src/sass/components/_chips.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_chips.scss), [src/ts/components/chips.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/chips.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/chips/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/chips/overview). Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Element choice defines behavior; display chips are a framework extension.
+[Specification (full specs unreviewed)](https://m3.material.io/components/chips/specs) · [Guidelines](https://m3.material.io/components/chips/guidelines)
+
+Web adaptation: Element choice defines behavior; display chips are a framework extension. Documented support reviewed 2026-09-13 against `llm.md#chips`.
+
+- Known boundary: Rendered deletion, focus recovery and wrapped action/delete controls are checked. Full effective-target sizing, spoken output and physical-device behavior remain unverified.
 
 - verification: Deletion and focus recovery are browser-tested; full effective-target sizing, spoken output and physical devices remain unverified. Next: Review 48dp effective targets and test with assistive technology and physical touch devices.
 
@@ -1804,9 +2051,13 @@ Web adaptation: Element choice defines behavior; display chips are a framework e
 
 Source review: needs-review, 2026-09-13. [src/sass/components/forms/_input-fields.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_input-fields.scss), [src/sass/components/_menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_menu.scss), [src/ts/components/autocomplete.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/autocomplete.ts), [src/ts/components/menu.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/menu.ts).
 
-Google relationship: related. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/menus/overview).
+Google relationship: related. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/menus/overview). Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Runtime combobox behavior attached to a text field; no standalone upstream component claim.
+[Specification (full specs unreviewed)](https://m3.material.io/components/menus/specs) · [Guidelines](https://m3.material.io/components/menus/guidelines)
+
+Web adaptation: Runtime combobox behavior attached to a text field; no standalone upstream component claim. Documented support reviewed 2026-09-13 against `llm.md#autocomplete`.
+
+- Known boundary: Generated status-info does not announce new suggestion counts or asynchronous results.
 
 - feature: Version 0.10.0 exposes localized loading, result counts and multi-selection updates through a polite live region, and onSearch gets an AbortSignal that aborts a stale search. Spoken delivery remains unverified. Next: Check screen-reader delivery of the loading, count and selection announcements in each engine.
 
@@ -1822,9 +2073,13 @@ Web adaptation: Runtime combobox behavior attached to a text field; no standalon
 
 Source review: needs-review, 2026-09-17. [src/sass/components/_datepicker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_datepicker.scss), [src/sass/components/_docked-display.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_docked-display.scss), [src/ts/components/datepicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/datepicker.ts), [src/ts/components/select.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/select.ts), [src/ts/plugins/dockedDisplayPlugin.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/plugins/dockedDisplayPlugin.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/date-pickers/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/date-pickers/overview). Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.
+[Specification (full specs unreviewed)](https://m3.material.io/components/date-pickers/specs) · [Guidelines](https://m3.material.io/components/date-pickers/guidelines)
+
+Web adaptation: Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods. Documented support reviewed 2026-09-17 against `llm.md#date-picker`.
+
+- Known boundary: Calendar keyboard navigation and range/multiple selection lifecycle have browser coverage. Spoken calendar context, native zoom and physical devices remain unverified.
 
 - verification: Range-end typing and keyboard selection, multiple-date defaults, shrink/regrow/clear, form values and generated-input teardown have rendered coverage. Custom parsing, range constraints through typed input and spoken calendar context need further review. Next: Complete the manual picker checklist and separately verify custom parsing and typed range constraints. Do not infer complete accessibility parity.
 
@@ -1843,9 +2098,13 @@ Web adaptation: Default inline presentation with optional docked and modal displ
 
 Source review: needs-review, 2026-09-18. [src/sass/components/_timepicker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_timepicker.scss), [src/sass/components/_docked-display.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_docked-display.scss), [src/ts/components/timepicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/timepicker.ts), [src/ts/plugins/dockedDisplayPlugin.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/plugins/dockedDisplayPlugin.ts).
 
-Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/time-pickers/overview).
+Google relationship: component. Upstream review: requirements-prose-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components/time-pickers/overview). Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
 
-Web adaptation: Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.
+[Specification (full specs unreviewed)](https://m3.material.io/components/time-pickers/specs) · [Guidelines](https://m3.material.io/components/time-pickers/guidelines)
+
+Web adaptation: Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods. Documented support reviewed 2026-09-18 against `llm.md#time-picker`.
+
+- Known boundary: Named digital inputs as spin buttons, AM/PM state, input-event synchronization and the modal dialog have browser coverage. The dial itself takes pointer input only.
 
 - integration: The dial takes pointer input only. The hour and minute spin buttons set the same values from the keyboard, move the hand, and step hours round the day, switching AM and PM past 12, so a focusable dial would add a second Tab stop with nothing new. Next: Revisit a focusable dial only if testing shows readers need it beyond the spin buttons.
 
@@ -1863,9 +2122,11 @@ Web adaptation: Default inline presentation with optional docked and modal displ
 
 Source review: needs-review, 2026-10-11. [src/sass/components/_keypad.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_keypad.scss), [src/ts/components/keypad.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/keypad.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-11); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-11); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode="none" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so the keypad checks it on its own edits.
+Web adaptation: Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode="none" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so the keypad checks it on its own edits. Documented support reviewed 2026-10-11 against `llm.md#keypad-and-keyboard`.
+
+- Known boundary: Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. There is no caps lock, no symbol layer switching and no hardware key highlighting, and minlength does not apply to keypad edits; the page owns layouts beyond the keys it writes.
 
 - verification: Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. Next: Type a PIN and a message with a screen reader and on a touch device in each engine, and check forced colors and enlarged text.
 
@@ -1879,9 +2140,11 @@ Web adaptation: Keys are native buttons in a named group; edits go through the f
 
 Source review: needs-review, 2026-10-08. [src/sass/components/_questionnaire.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_questionnaire.scss), [src/ts/components/questionnaire.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/questionnaire.ts).
 
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components).
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
 
-Web adaptation: Each question is a native fieldset named by its legend; the browser's constraint validation checks answers, hidden questions use hidden, and without JavaScript the form shows every question and still submits.
+Web adaptation: Each question is a native fieldset named by its legend; the browser's constraint validation checks answers, hidden questions use hidden, and without JavaScript the form shows every question and still submits. Documented support reviewed 2026-10-08 against `llm.md#questionnaire`.
+
+- Known boundary: Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no answer keyboard shortcuts, no summary step and no saved progress; the page owns persistence and branching.
 
 - verification: Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Answer a questionnaire with a screen reader in each engine and confirm the question, its description, errors and the progress are announced; check forced colors and enlarged text.
 

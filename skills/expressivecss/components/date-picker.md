@@ -23,21 +23,11 @@ Example: A single date with no calendar-specific requirements can use a labeled 
 
 Relationship: component.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/date-pickers/overview).
-
-Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/date-pickers/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/date-pickers/guidelines).
-
-Support (2026-09-17, `llm.md#date-picker`): Inline single-date, range, and multiple-date calendar, with an optional modal dialog.
+Support: Inline single-date, range, and multiple-date calendar, with an optional modal dialog.
 
 Web adaptation: Default inline presentation with optional docked and modal display plugins; displayPlugin: 'modal' opens it in a dialog from the input. No open()/close() methods.
 
-Known boundary: Calendar keyboard navigation and range/multiple selection lifecycle have browser coverage. Spoken calendar context, native zoom and physical devices remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#date-picker).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#date-picker).
 
 #### Contract
 

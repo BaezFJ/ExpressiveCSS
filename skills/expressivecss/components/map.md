@@ -23,17 +23,11 @@ Example: A store locator shows each store as a marker button that opens its hour
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-09); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-09, `llm.md#map`): MapLibre map with themed OpenFreeMap styles, markers with labels, tooltips, popups and dragging, routes, arcs, clusters, and zoom, compass, locate and full screen controls.
+Support: MapLibre map with themed OpenFreeMap styles, markers with labels, tooltips, popups and dragging, routes, arcs, clusters, and zoom, compass, locate and full screen controls.
 
 Web adaptation: The page passes in the maplibre-gl module. Markers, popups and controls are authored HTML moved into MapLibre; routes, arcs and clusters are GeoJSON layers whose colors are read from theme tokens and redrawn when the theme changes.
 
-Known boundary: Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#map).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#map).
 
 #### Contract
 

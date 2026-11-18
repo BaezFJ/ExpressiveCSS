@@ -1328,8 +1328,10 @@ describe('the ExpressiveCSS agent skill', () => {
     // row at 50,469 bytes (+394); the buttons App behavior subsection (loading
     // feedback for a command that waits on a request) at 51,961 bytes (+1,492),
     // after two reviews added the timer, row and size-token wording; the scaffold row
-    // merged on top at 52,287 bytes (+326).
-    assert.ok(bytes <= 52287, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
+    // merged on top at 52,287 bytes (+326); the token-efficiency pass (parallel
+    // resolver and guide reads, the tool budget, audit provenance moved from guides
+    // to the capability roadmap, plain alternative slugs) at 52,009 bytes (-278).
+    assert.ok(bytes <= 52009, `basic-button reading uses ${bytes} bytes, above the reviewed budget`);
     assert.match(body, /full target-version documentation only for missing contract details, conflicts, or version uncertainty/i);
   });
 

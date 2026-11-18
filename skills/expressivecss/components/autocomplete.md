@@ -21,21 +21,13 @@ Public JavaScript exports: `Autocomplete`. See the [API index](../references/api
 
 Relationship: related. Related guidance is not a dedicated component specification.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/menus/overview).
-
-Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/menus/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/menus/guidelines).
-
-Support (2026-09-13, `llm.md#autocomplete`): Single and multi-select suggestions.
+Support: Single and multi-select suggestions.
 
 Web adaptation: Runtime combobox behavior attached to a text field; no standalone upstream component claim.
 
 Known boundary: Generated status-info does not announce new suggestion counts or asynchronous results.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#autocomplete).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#autocomplete).
 
 #### Contract
 

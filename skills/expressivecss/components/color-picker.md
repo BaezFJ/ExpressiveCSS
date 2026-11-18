@@ -23,17 +23,11 @@ Example: A theme builder where any brand color is allowed is a color picker. Eig
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-18); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-18, `llm.md#color-picker`): A saturation and brightness area as a keyboard slider, a hue range on the framework slider, a hex field and the native color input as form value and preview, with input, change and onChange events.
+Support: A saturation and brightness area as a keyboard slider, a hue range on the framework slider, a hex field and the native color input as form value and preview, with input, change and onChange events.
 
 Web adaptation: Progressive enhancement of <input type="color">: without JavaScript the native picker remains, and the browser picker still opens from the input after enhancement.
 
-Known boundary: Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#color-picker).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#color-picker).
 
 #### Contract
 

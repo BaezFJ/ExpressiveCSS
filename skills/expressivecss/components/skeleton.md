@@ -21,17 +21,11 @@ Example: A one-second spinner while a form saves is a loading indicator. Skeleto
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-06, `llm.md#skeleton`): Box, text line and circle shapes with a shimmer that reverses in RTL, stops under reduced motion and keeps an outline in forced colors.
+Support: Box, text line and circle shapes with a shimmer that reverses in RTL, stops under reduced motion and keeps an outline in forced colors.
 
 Web adaptation: Empty decorative blocks; the page marks the loading region aria-busy and reports the wait through a status.
 
-Known boundary: The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#skeleton).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#skeleton).
 
 #### Contract
 

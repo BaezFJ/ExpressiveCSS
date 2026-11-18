@@ -21,21 +21,13 @@ Example: A file upload reporting 42% needs determinate progress, not the morphin
 
 Relationship: component. Use for brief unknown waits, typically under five seconds. Do not replace progress that transitions from unknown to determinate, or circular progress within buttons.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/loading-indicator/overview).
-
-Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/loading-indicator/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/loading-indicator/guidelines).
-
-Support (2026-09-13, `llm.md#loading-indicator`): Uncontained and contained morphing loading indicator.
+Support: Uncontained and contained morphing loading indicator.
 
 Web adaptation: CSS-only; the author supplies an accessible waiting message.
 
 Known boundary: The framework requires a named status while Google recommends progressbar; an indeterminate progressbar validly omits aria-valuenow.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#loading-indicator).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#loading-indicator).
 
 #### Contract
 

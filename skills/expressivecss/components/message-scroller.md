@@ -23,17 +23,11 @@ Example: A support chat that streams replies needs a message scroller so the rep
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-08); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-08, `llm.md#message-scroller`): Following streamed output, release on scrolling up, a scroll-to-latest button, turn anchors with a peek of the previous message, prepend preservation, opening at the end, start or last turn, and jumping to a message by id.
+Support: Following streamed output, release on scrolling up, a scroll-to-latest button, turn anchors with a peek of the previous message, prepend preservation, opening at the end, start or last turn, and jumping to a message by id.
 
 Web adaptation: A native scroll container; the component sets scroll position, a spacer and the button's inert state. The page owns role="log" and aria-busy.
 
-Known boundary: Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role="log" viewport, touch and scrollbar dragging, and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#message-scroller).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#message-scroller).
 
 #### Contract
 

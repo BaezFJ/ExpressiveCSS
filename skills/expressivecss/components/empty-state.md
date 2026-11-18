@@ -21,17 +21,11 @@ Example: A failed save after pressing Save is feedback for a snackbar or the for
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-06, `llm.md#empty-state`): Centered icon in a tonal circle or an illustration, a heading, supporting text and a wrapping row of actions.
+Support: Centered icon in a tonal circle or an illustration, a heading, supporting text and a wrapping row of actions.
 
 Web adaptation: A plain div around authored heading, text and buttons; the page picks the heading level.
 
-Known boundary: Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#empty-state).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#empty-state).
 
 #### Contract
 

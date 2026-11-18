@@ -23,17 +23,13 @@ Example: Visits, signups, trials and paid accounts this month is a funnel chart.
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-25); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-25, `llm.md#funnel-chart`): Stages drawn from a figure's data table, one per row from the second column in table order, centered and as wide as their value against the largest, gaps and values of zero or less left without a stage, row labels at the inline start, a pointer and keyboard tooltip that adds each stage's percentage of the first row, update() width motion and data-watch.
+Support: Stages drawn from a figure's data table, one per row from the second column in table order, centered and as wide as their value against the largest, gaps and values of zero or less left without a stage, row labels at the inline start, a pointer and keyboard tooltip that adds each stage's percentage of the first row, update() width motion and data-watch.
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the stages are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Stage widths and order in left-to-right and right-to-left pages, gaps, labels, the tooltip and its percentages, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no tapered stages, colors per row, step-to-step conversion rates or horizontal funnels.
+Known boundary: There are no tapered stages, colors per row, step-to-step conversion rates or horizontal funnels.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#funnel-chart).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#funnel-chart).
 
 #### Contract
 

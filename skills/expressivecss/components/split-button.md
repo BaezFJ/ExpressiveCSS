@@ -21,21 +21,11 @@ Example: PDF/CSV format selection for a later Export action belongs in a select 
 
 Relationship: component.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/split-button/overview).
-
-Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/split-button/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/split-button/guidelines).
-
-Support (2026-09-18, `llm.md#split-button`): Leading action and trailing menu trigger with matching styles.
+Support: Leading action and trailing menu trigger with matching styles.
 
 Web adaptation: Reuses Menu; no separate split-button runtime.
 
-Known boundary: Separate 48dp effective targets, native zoom, spoken output and physical-device behavior remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#split-button).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#split-button).
 
 #### Contract
 

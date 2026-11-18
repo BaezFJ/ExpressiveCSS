@@ -21,17 +21,11 @@ Example: "Saved" after pressing Save is a snackbar. "You're offline; edits sync 
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory. Replaces the removed banner.
 
-Upstream: web-extension-inventory-reviewed (2026-10-15); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-15, `llm.md#alert`): A tonal container with an optional leading icon, a heading and text, an end-aligned actions row, a close button and a critical error-container tone.
+Support: A tonal container with an optional leading icon, a heading and text, an end-aligned actions row, a close button and a critical error-container tone.
 
 Web adaptation: A plain div around authored text and buttons; a changing alert puts role="status" or role="alert" on its text, never on the controls.
 
-Known boundary: The layout, both tones, enlarged-text wrapping and the authored role are checked in a browser; live announcements and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#alert).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#alert).
 
 #### Contract
 

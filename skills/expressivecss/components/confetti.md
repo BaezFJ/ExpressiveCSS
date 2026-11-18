@@ -23,17 +23,11 @@ Example: A checkout's "Order placed" screen can burst confetti once beside its c
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-09); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-09, `llm.md#confetti`): Bursts from a button's center over the page, inside an authored canvas, or from script, with count, angle, spread, speed, decay, gravity, drift, lifetime, origin, colors, square, circle and star shapes, and size options, theme colors by default and a promise that resolves when the burst ends.
+Support: Bursts from a button's center over the page, inside an authored canvas, or from script, with count, angle, spread, speed, decay, gravity, drift, lifetime, origin, colors, square, circle and star shapes, and size options, theme colors by default and a promise that resolves when the burst ends.
 
 Web adaptation: A canvas drawn with requestAnimationFrame. The page canvas is an aria-hidden manual popover with pointer events off, so it draws above modal dialogs without blocking clicks. Reduced motion draws nothing.
 
-Known boundary: The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#confetti).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#confetti).
 
 #### Contract
 

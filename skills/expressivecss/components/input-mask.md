@@ -23,17 +23,13 @@ Example: A US phone number field takes data-mask="(000) 000-0000" with inputmode
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-25); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-25, `llm.md#input-mask`): A data-mask pattern on a text, tel, search, url or password input, where 0 takes a digit, a a letter, * either and a backslash escapes a literal; typed, pasted, autofilled and composed text formatted with the caret after the edit, Backspace and Delete across literals, saved and reset values formatted, the formatted value submitted and validated, and formatting before the page's input listeners.
+Support: A data-mask pattern on a text, tel, search, url or password input, where 0 takes a digit, a a letter, * either and a backslash escapes a literal; typed, pasted, autofilled and composed text formatted with the caret after the edit, Backspace and Delete across literals, saved and reset values formatted, the formatted value submitted and validated, and formatting before the page's input listeners.
 
 Web adaptation: A capture-phase input listener rewrites the native value, so the form, constraint validation and FormData see what the field shows. Composing input is skipped and the field formats on compositionend, and a beforeinput listener turns a one-character delete next to a literal into a delete of the slot character across it.
 
-Known boundary: Typing, inserted pastes, deletes across literals, composition in both event orders, saved and reset values, listener order, Keypad keys and destroy() are checked in a browser; real IMEs, Android keyboards, clipboard pastes and spoken output remain unverified, and undo after a formatted edit does nothing. The form submits only the formatted value, and masks cannot change with the value.
+Known boundary: The form submits only the formatted value, and masks cannot change with the value.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#input-mask).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#input-mask).
 
 #### Contract
 

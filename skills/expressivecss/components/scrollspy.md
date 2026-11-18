@@ -23,17 +23,13 @@ Example: A settings screen with mutually exclusive panels needs tabs. Scrollspy 
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-09-13); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
-
-Support (2026-09-17, `llm.md#scrollspy`): Section tracking with per-section offsets and independent tables of contents grouped by getActiveElement callback identity.
+Support: Section tracking with per-section offsets and independent tables of contents grouped by getActiveElement callback identity.
 
 Web adaptation: Web document navigation helper.
 
-Known boundary: Independent TOCs must reuse one getActiveElement function per group. Screen-reader announcements, native zoom and physical-device checks remain pending.
+Known boundary: Independent TOCs must reuse one getActiveElement function per group.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#scrollspy).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#scrollspy).
 
 #### Contract
 

@@ -23,21 +23,11 @@ Example: A Home/Search/Profile row belongs in navigation, even if placed at the 
 
 Relationship: component. Google replaces baseline medium/large bars with flexible variants. ExpressiveCSS medium and large already mean medium-flexible and large-flexible; keep those classes.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/app-bars/overview).
-
-Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/app-bars/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/app-bars/guidelines).
-
-Support (2026-09-17, `llm.md#navbar`): Small, medium flexible, large flexible, and search app bars.
+Support: Small, medium flexible, large flexible, and search app bars.
 
 Web adaptation: Native header/nav composition; AppBar owns scroll collapse and search expansion.
 
-Known boundary: Native zoom, screen-reader announcements, contrast themes and physical mobile keyboard behavior remain pending manual review.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#app-bar).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#app-bar).
 
 #### Contract
 

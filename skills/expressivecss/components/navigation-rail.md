@@ -24,17 +24,11 @@ Public JavaScript exports: `NavigationRail`. See the [API index](../references/a
 
 Relationship: component. Google replaces the baseline rail with the collapsed rail and the drawer with the expanded rail. The documented collapsed, expanded and modal variants remain current. Retain a drawer only for compatibility, an explicit request or a verified target-version nesting gap.
 
-Upstream: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/navigation-rail/overview).
-
-Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
-
-[Specification link](https://m3.material.io/components/navigation-rail/specs); full specs unreviewed.
-
-Support (2026-09-07, `llm.md#navigation-rail`): Collapsed, expanded, and modal rails.
+Support: Collapsed, expanded, and modal rails.
 
 Web adaptation: The compact expanded rail uses a scrim and dismissal behavior.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#navigation-rail).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#navigation-rail).
 
 #### Contract
 

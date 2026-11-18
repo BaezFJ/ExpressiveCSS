@@ -23,17 +23,13 @@ Example: An inbox that fetches new mail on demand takes pull-to-refresh with a R
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-24); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-24, `llm.md#pull-to-refresh`): A touch pull from a scroll position of 0 past a threshold, a refresh button and refresh() method that start the same refresh, an expressive:refresh event and onRefresh callback whose detail takes waitUntil(), complete(), aria-busy while refreshing, a status region that announces the start and the finish with i18n strings, contained overscroll on the container and the page, and containers that scroll themselves or pull the page.
+Support: A touch pull from a scroll position of 0 past a threshold, a refresh button and refresh() method that start the same refresh, an expressive:refresh event and onRefresh callback whose detail takes waitUntil(), complete(), aria-busy while refreshing, a status region that announces the start and the finish with i18n strings, contained overscroll on the container and the page, and containers that scroll themselves or pull the page.
 
 Web adaptation: Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The author's loading indicator carries the role and name; the script sets a class, two custom properties and aria-busy, and adds a visually hidden role="status" region because the indicator is hidden once the refresh ends.
 
-Known boundary: The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified. There is no pull from the bottom and no nesting.
+Known boundary: There is no pull from the bottom and no nesting.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#pull-to-refresh).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#pull-to-refresh).
 
 #### Contract
 

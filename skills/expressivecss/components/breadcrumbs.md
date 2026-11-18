@@ -21,17 +21,11 @@ Example: Overview/Activity/Billing are peers, not ancestors. Use tabs for their 
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-09-13); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
-
-Support (2026-09-13, `llm.md#breadcrumbs`): Breadcrumb links and app-bar composition.
+Support: Breadcrumb links and app-bar composition.
 
 Web adaptation: Labelled navigation with an ordered list and current-page link.
 
-Known boundary: Named navigation and current-page markup are checked; CSS separator speech and long-path reflow remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#breadcrumbs).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#breadcrumbs).
 
 #### Contract
 

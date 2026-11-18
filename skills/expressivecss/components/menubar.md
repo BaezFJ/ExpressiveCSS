@@ -23,17 +23,11 @@ Example: File, Edit and View in a document editor are a menubar. One "More" butt
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-15); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-15, `llm.md#menubar`): A menubar of menu triggers with one tab stop, Left, Right, Home and End along the bar, Down to open, and Left and Right between open menus.
+Support: A menubar of menu triggers with one tab stop, Left, Right, Home and End along the bar, Down to open, and Left and Right between open menus.
 
 Web adaptation: Each item opens an ordinary Menu; the Menubar component adds the menubar and menuitem roles and the roving tab stop at runtime.
 
-Known boundary: Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#menubar).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#menubar).
 
 #### Contract
 

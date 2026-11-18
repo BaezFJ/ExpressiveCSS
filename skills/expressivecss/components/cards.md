@@ -23,21 +23,11 @@ Example: A hundred compact activity records need a list. Giving every row a card
 
 Relationship: component.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/cards/overview).
-
-Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/cards/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/cards/guidelines).
-
-Support (2026-09-13, `llm.md#cards`): Elevated, filled, outlined, horizontal, and directly actionable cards.
+Support: Elevated, filled, outlined, horizontal, and directly actionable cards.
 
 Web adaptation: Native article anatomy; primary-action links preserve navigation semantics.
 
-Known boundary: Existing card lifecycle and geometry evidence does not cover every selected variant, contrast and reflow state.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#cards).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#cards).
 
 #### Contract
 

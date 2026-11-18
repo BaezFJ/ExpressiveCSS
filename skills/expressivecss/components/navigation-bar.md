@@ -23,15 +23,11 @@ Example: Overview/Activity within an account page should not displace Home/Searc
 
 Relationship: component. Google replaces the baseline bar with the flexible bar. The documented stacked/horizontal navigation-bar layouts remain current; do not exclude the family by its name.
 
-Upstream: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/navigation-bar/overview).
-
-Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
-
-Support (2026-09-07, `llm.md#navigation-bar`): Stacked and horizontal destination layouts.
+Support: Stacked and horizontal destination layouts.
 
 Web adaptation: Links navigate; the application marks the current destination.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#navigation-bar).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#navigation-bar).
 
 #### Contract
 

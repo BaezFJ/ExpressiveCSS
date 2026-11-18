@@ -23,17 +23,11 @@ Example: Finding an order by customer name is search over content. A command pal
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-06, `llm.md#command-palette`): A modal dialog with a filtering combobox and listbox, group headings, keywords, an empty message, a Ctrl or Command shortcut and native commandfor opening.
+Support: A modal dialog with a filtering combobox and listbox, group headings, keywords, an empty message, a Ctrl or Command shortcut and native commandfor opening.
 
 Web adaptation: A native modal <dialog>; commands are links and buttons, and the component adds the combobox and listbox roles and the active option.
 
-Known boundary: The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#command-palette).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#command-palette).
 
 #### Contract
 

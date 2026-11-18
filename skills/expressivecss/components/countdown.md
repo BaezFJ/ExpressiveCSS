@@ -21,17 +21,11 @@ Example: Monthly revenue of $48,200 is a stat tile. A countdown only shows whole
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-08); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-08, `llm.md#countdown`): Digits from 0 to 999 that roll up or down when --md-comp-countdown-value changes, with zero padding to two or three digits and a reduced-motion fallback.
+Support: Digits from 0 to 999 that roll up or down when --md-comp-countdown-value changes, with zero padding to two or three digits and a reduced-motion fallback.
 
 Web adaptation: The element's text is the accessible value; the digit strips are generated content with empty alternative text. A page script sets the property and the text together.
 
-Known boundary: Width, digit positions, the baseline, the roll transition, reduced motion and the accessibility tree text are checked in a browser; spoken output inside role="timer" and aria-live regions remains unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#countdown).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#countdown).
 
 #### Contract
 

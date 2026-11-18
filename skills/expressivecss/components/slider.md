@@ -23,21 +23,11 @@ Example: An invoice amount needs a labeled number field with appropriate precisi
 
 Relationship: component.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/sliders/overview).
-
-Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/sliders/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/sliders/guidelines).
-
-Support (2026-09-17, `llm.md#sliders`): Standard, centered, range, horizontal/vertical, and five sizes.
+Support: Standard, centered, range, horizontal/vertical, and five sizes.
 
 Web adaptation: Native range inputs with runtime value-label and range coordination.
 
-Known boundary: Native-handle alignment, paired interaction and emulated forced colors have browser coverage. Screen readers, physical touch devices and actual Windows contrast themes remain pending.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#slider).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#slider).
 
 #### Contract
 

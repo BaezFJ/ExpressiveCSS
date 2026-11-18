@@ -21,17 +21,11 @@ Example: Account, Notifications and Privacy settings that people open in any ord
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-06, `llm.md#stepper`): Horizontal and vertical ordered lists with current, complete and invalid steps, supporting text, links back to finished steps and a content panel in vertical steps.
+Support: Horizontal and vertical ordered lists with current, complete and invalid steps, supporting text, links back to finished steps and a content panel in vertical steps.
 
 Web adaptation: An <ol> with aria-current="step"; CSS alt text speaks the complete and invalid states from translatable tokens.
 
-Known boundary: Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#stepper).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#stepper).
 
 #### Contract
 

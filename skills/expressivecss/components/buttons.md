@@ -23,21 +23,13 @@ Example: Use radios for saved form values; buttons run commands.
 
 Relationship: component. Google no longer recommends 24dp padding for small buttons; use the current 16dp inset. This is spacing guidance, not removal of a button style.
 
-Upstream: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/buttons/overview).
-
-Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
-
-[Specification link](https://m3.material.io/components/buttons/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/buttons/guidelines).
-
-Support (2026-09-07, `llm.md#buttons`): Filled, tonal, outlined, elevated, and text; xsmall through xlarge.
+Support: Filled, tonal, outlined, elevated, and text; xsmall through xlarge.
 
 Web adaptation: Native buttons run commands; a.button links navigate.
 
 Known boundary: Standalone toggle buttons take their shape and colours from aria-pressed; the page switches aria-pressed, as the component ships no toggle script.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#buttons).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#buttons).
 
 #### Contract
 

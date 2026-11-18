@@ -23,17 +23,11 @@ Example: A blog post body with headings and lists needs a rich text editor; a on
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-08); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-08, `llm.md#rich-text-editor`): A Tiptap editor mounted from a textarea, toolbar buttons that run Tiptap commands with JSON arguments, pressed and disabled button state, form submission through the textarea, label naming and read-only textareas.
+Support: A Tiptap editor mounted from a textarea, toolbar buttons that run Tiptap commands with JSON arguments, pressed and disabled button state, form submission through the textarea, label naming and read-only textareas.
 
 Web adaptation: The page supplies Tiptap's Editor class and extensions; the component mounts it, names the contenteditable textbox from the textarea and keeps the textarea in sync. The toolbar is the docked toolbar.
 
-Known boundary: Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#rich-text-editor).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#rich-text-editor).
 
 #### Contract
 

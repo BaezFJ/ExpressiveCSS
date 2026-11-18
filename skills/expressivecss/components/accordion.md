@@ -21,17 +21,11 @@ Example: Account, Billing and Security as three peer views of a settings page ar
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-06, `llm.md#accordion`): Joined tiles on native details and summary, exclusive groups through the name attribute, a leading icon, a turning chevron and an animated open where the engine supports it.
+Support: Joined tiles on native details and summary, exclusive groups through the name attribute, a leading icon, a turning chevron and an animated open where the engine supports it.
 
 Web adaptation: Native <details> and <summary>; the browser owns the toggle, its keyboard support and its expanded state.
 
-Known boundary: Tile corners, the chevron turn, exclusive groups and the expanded state Chromium reports are checked in a browser; the open animation, enlarged text and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#accordion).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#accordion).
 
 #### Contract
 

@@ -19,21 +19,13 @@ Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/componen
 
 Relationship: component.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/switch/overview).
-
-Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/switch/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/switch/guidelines).
-
-Support (2026-09-13, `llm.md#switches`): Native checkbox switches and disabled controls.
+Support: Native checkbox switches and disabled controls.
 
 Web adaptation: Input state owns selection and form value.
 
 Known boundary: The styled native checkbox does not perform or announce a persisted setting change.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#switches).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#switches).
 
 #### Contract
 

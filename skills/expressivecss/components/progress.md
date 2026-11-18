@@ -21,21 +21,11 @@ Example: A brief unknown refresh fits a loading indicator. An upload needs accur
 
 Relationship: component. Google replaces most short indeterminate circular waits with a loading indicator. Keep circular progress in buttons and for processes that become determinate; keep determinate and indeterminate linear progress. Deprecated baseline token sets do not deprecate these families.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/progress-indicators/overview).
-
-Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/progress-indicators/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/progress-indicators/guidelines).
-
-Support (2026-09-13, `llm.md#progress-indicators`): Linear and circular progress, determinate and indeterminate.
+Support: Linear and circular progress, determinate and indeterminate.
 
 Web adaptation: Prefer native progress where applicable; supply accessible state for custom hosts.
 
-Known boundary: Forced-colors rendering is checked in browser emulation; Windows high-contrast and spoken output still require manual review.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#progress).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#progress).
 
 #### Contract
 

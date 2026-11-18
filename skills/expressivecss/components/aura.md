@@ -21,17 +21,11 @@ Example: A pricing page with one recommended plan gets one aura on that plan's c
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-08); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-08, `llm.md#aura`): A turning light on a ring around one wrapped element, with dual, rainbow and glow styles, token color, width, corner and speed, a reversed turn in RTL, a static ring under reduced motion and a Highlight ring in forced colors.
+Support: A turning light on a ring around one wrapped element, with dual, rainbow and glow styles, token color, width, corner and speed, a reversed turn in RTL, a static ring under reduced motion and a Highlight ring in forced colors.
 
 Web adaptation: A wrapper whose pseudo-element draws a masked conic gradient; it adds nothing to the accessibility tree.
 
-Known boundary: The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#aura).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#aura).
 
 #### Contract
 

@@ -21,19 +21,13 @@ Example: A team schedule for October is a calendar. Choosing a delivery date in 
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-15); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-22, `llm.md#calendar`): A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize; week and day hourly grids with events placed by start and duration; a year of small months in as many columns as fit.
+Support: A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize; week and day hourly grids with events placed by start and duration; a year of small months in as many columns as fit.
 
 Web adaptation: A native table with a caption; the page renders the dates, navigation and events.
 
-Known boundary: Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified.
-
 Known boundary: Events that overlap in time overlap on screen in the week and day views; the page splits them.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#calendar).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#calendar).
 
 #### Contract
 

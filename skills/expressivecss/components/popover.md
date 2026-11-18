@@ -21,17 +21,11 @@ Example: A label for an icon button that shows on hover is a tooltip. A popover 
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-06, `llm.md#popover`): Native popover panels anchored below, above or beside their button with automatic flipping, rich-tooltip styling, an actions row and frosted glass.
+Support: Native popover panels anchored below, above or beside their button with automatic flipping, rich-tooltip styling, an actions row and frosted glass.
 
 Web adaptation: The browser owns opening, light dismiss, Escape, focus return and the button's expanded state; CSS anchor positioning places the panel.
 
-Known boundary: Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#popover).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#popover).
 
 #### Contract
 

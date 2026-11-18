@@ -23,17 +23,13 @@ Example: A café kiosk asks for a four-digit loyalty PIN with a keypad under a p
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-11); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-11, `llm.md#keypad-and-keyboard`): A three-column keypad of round keys with two-cell wide keys and a keyboard of rows sized from a column count with an optional number row, typing into the field named by aria-controls with value keys, Backspace, Enter, a one-shot Shift, data-key keys inside the field's wrapper, dial-pad letters, styled call keys, an onKey callback and a pressed shape morph.
+Support: A three-column keypad of round keys with two-cell wide keys and a keyboard of rows sized from a column count with an optional number row, typing into the field named by aria-controls with value keys, Backspace, Enter, a one-shot Shift, data-key keys inside the field's wrapper, dial-pad letters, styled call keys, an onKey callback and a pressed shape morph.
 
 Web adaptation: Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode="none" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so the keypad checks it on its own edits.
 
-Known boundary: Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. There is no caps lock, no symbol layer switching and no hardware key highlighting, and minlength does not apply to keypad edits; the page owns layouts beyond the keys it writes.
+Known boundary: There is no caps lock, no symbol layer switching and no hardware key highlighting, and minlength does not apply to keypad edits; the page owns layouts beyond the keys it writes.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#keypad).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#keypad).
 
 #### Contract
 

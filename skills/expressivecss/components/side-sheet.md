@@ -24,21 +24,11 @@ Public JavaScript exports: `SideSheets`. See the [API index](../references/api-i
 
 Relationship: component.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/side-sheets/overview).
-
-Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/side-sheets/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/side-sheets/guidelines).
-
-Support (2026-09-17, `llm.md#side-sheet`): Standard and modal side sheets.
+Support: Standard and modal side sheets.
 
 Web adaptation: Native dialog and shared drag/dismiss behavior.
 
-Known boundary: Rendered RTL docking, dragging and enlarged translated text are checked; native zoom, assistive technology and physical-device review remain pending.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#side-sheet).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#side-sheet).
 
 #### Contract
 
