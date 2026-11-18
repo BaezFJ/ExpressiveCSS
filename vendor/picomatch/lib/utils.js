@@ -3,7 +3,6 @@
 
 const {
   REGEX_BACKSLASH,
-  REGEX_REMOVE_BACKSLASH,
   REGEX_SPECIAL_CHARS,
   REGEX_SPECIAL_CHARS_GLOBAL
 } = require('./constants');
@@ -27,10 +26,59 @@ exports.isWindows = () => {
   return false;
 };
 
+// `.` in the old class regex did not match these, and neither does the scan.
+const matchesDot = ch => ch !== '\n' && ch !== '\r' && ch !== '\u2028' && ch !== '\u2029';
+
+// Upstream removed backslashes with /(?:\[.*?[^\\]\]|\\(?=.))/g. The lazy
+// `.*?` is polynomial on a long run of '['. This walks each character a
+// constant number of times and keeps the same results: a finished class is
+// copied whole, and a backslash is dropped only when the next character is
+// one that `.` would match.
+const matchCharClass = (str, open) => {
+  for (let i = open + 1; i < str.length; i++) {
+    const ch = str[i];
+    if (ch !== '\\' && str[i + 1] === ']') return { end: i + 2 };
+    if (!matchesDot(ch)) return { stopped: i };
+  }
+  return { stopped: str.length };
+};
+
+const pushUnescaped = (str, start, end, parts) => {
+  for (let i = start; i < end; i++) {
+    const next = str[i + 1];
+    if (str[i] === '\\' && next !== undefined && matchesDot(next)) continue;
+    parts.push(str[i]);
+  }
+  return end;
+};
+
 exports.removeBackslashes = str => {
-  return str.replace(REGEX_REMOVE_BACKSLASH, match => {
-    return match === '\\' ? '' : match;
-  });
+  const parts = [];
+  let i = 0;
+
+  while (i < str.length) {
+    if (str[i] === '[') {
+      const found = matchCharClass(str, i);
+      if (found.end !== undefined) {
+        parts.push(str.slice(i, found.end));
+        i = found.end;
+        continue;
+      }
+      i = pushUnescaped(str, i, found.stopped, parts);
+      continue;
+    }
+
+    const next = str[i + 1];
+    if (str[i] === '\\' && next !== undefined && matchesDot(next)) {
+      i += 1;
+      continue;
+    }
+
+    parts.push(str[i]);
+    i += 1;
+  }
+
+  return parts.join('');
 };
 
 exports.escapeLast = (input, char, lastIdx) => {

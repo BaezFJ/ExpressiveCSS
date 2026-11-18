@@ -25,6 +25,36 @@ test('development installs resolve every picomatch copy to the vendored patch', 
   assert.equal(require('picomatch/package.json').version, '4.0.8');
 });
 
+test('backslash removal stays linear and keeps a finished character class', () => {
+  const { removeBackslashes } = require('picomatch/lib/utils');
+  const cases = [
+    ['\\a', 'a'],
+    ['\\\\', '\\'],
+    ['a\\', 'a\\'],
+    ['\\\n', '\\\n'],
+    ['[a\\b]', '[a\\b]'],
+    ['[\\\\]', '[]'],
+    ['[a\\]', '[a]'],
+    ['\\[abc]', '[abc]'],
+    ['src/\\[id\\]/*.js', 'src/[id]/*.js'],
+    ['[foo\\\n[a]', '[foo\\\n[a]'],
+    ['a[\n]b\\c[d]', 'a[\n]bc[d]'],
+  ];
+  for (const [input, expected] of cases) {
+    assert.equal(removeBackslashes(input), expected, JSON.stringify(input));
+  }
+
+  const brackets = '['.repeat(20000);
+  const started = Date.now();
+  assert.equal(removeBackslashes(brackets), brackets);
+  assert.equal(removeBackslashes(`${brackets}a]`), `${brackets}a]`);
+  assert.ok(Date.now() - started < 100, 'stripping a long run of [ stayed bounded');
+
+  const scanned = picomatch.scan('src/\\[id\\]/*.js', { unescape: true });
+  assert.equal(scanned.base, 'src/[id]');
+  assert.equal(scanned.glob, '*.js');
+});
+
 test('repeated extglobs with a wildcard are literal and ordinary globs still match', () => {
   const started = Date.now();
   assert.equal(picomatch.isMatch('a'.repeat(28) + '!', '+(*a)'), false);
