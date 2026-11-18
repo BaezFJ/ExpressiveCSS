@@ -131,6 +131,17 @@ for (const [label, filename, source, rules, includes = []] of [
   ['class literals after a JS comment', 'view.tsx', "// don't retain 'p-5'\nconst view = <div className={wide ? 'p-2' : 'p-3'} />;", ['.p-2{', '.p-3{']],
   ['a dynamically imported API', 'ui.mjs', 'const { Snackbar: Notice } = await import("@expressivecss/expressive/modular"); new Notice({text: "Saved"});', ['.snackbar{']],
   ['a dynamic import in a template script', 'view.vue', '<script setup lang="ts">const ui = await import("@expressivecss/expressive/modular"); const notice = ui.Snackbar;</script>', ['.snackbar{']],
+  ['template scripts with attributed end tags', 'page.html', [
+    '<script type="module" data-label="a > b">',
+    'const label = "</script-preview>";',
+    'const { Snackbar } = await import("@expressivecss/expressive/modular");',
+    'new Snackbar({ text: label });',
+    '</ScRiPt\t\n bar><main class="p-2"></main>',
+    '<script type="module">',
+    'const { BottomSheets } = await import("@expressivecss/expressive/modular");',
+    'BottomSheets.Init();',
+    '</script/>',
+  ].join('\n'), ['.snackbar{', '.p-2{', 'dialog.bottom-sheet']],
   ['an image constructed by JavaScript', 'image.js', 'const img = new Image(); img.className = "responsive-img"; document.body.append(img);', ['img.responsive-img', 'img.responsive-img:not(.circle)']],
   ['a utility passed to a JSX component', 'photo.tsx', 'const photo = <Photo className="responsive-img" />;', ['img.responsive-img:not(.circle)']],
 ]) {

@@ -8,6 +8,9 @@ const words = /(?:^|[\s"'`,(}])\.?([\w-]+(?::[\w-]+)*)(?=$|[\s"'`,)]|\$\{)/g;
 const strings = /"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)'|`((?:\\.|[^`\\])*)`/gs;
 const expressionParts = new RegExp([strings.source, /\/\*.*?\*\/|\/\/[^\r\n]*|[{}()]/.source].join('|'), 'gs');
 const tags = /<([a-z][\w-]*)(?=[\s/>])((?:[^<>"']|"[^"]*"|'[^']*')*)/gi;
+// HTML accepts ignored attributes on end tags and permits ">" inside quoted values.
+const scriptTagEnd = /(?:[\t\n\f\r /](?:[^>"']|"[^"]*"|'[^']*')*)?>/;
+const templateScripts = new RegExp(`(<script${scriptTagEnd.source})(.*?)(</script${scriptTagEnd.source})`, 'gis');
 const attributes = /\s+([\w:-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|\{\s*(?:"([^"]*)"|'([^']*)'|(true|false|\d+))\s*\}|([^\s"'=<>`/{}]+)))?/g;
 const classAttributes = new Set(['class', 'classname', ':class', 'v-bind:class', 'class:list']);
 
@@ -177,7 +180,7 @@ export function collectUsage(tokens, source, file, mode = 'all') {
   if (!scriptFile.test(file) && !/\.s?css$/i.test(file)) {
     // A template can reference imports from its setup script or frontmatter.
     const scriptMode = mode === 'bundled' ? mode : 'all';
-    source = source.replace(/(<script\b[^>]*>)([\s\S]*?)(<\/script\s*>)/gi, (_, open, body, close) => {
+    source = source.replace(templateScripts, (_, open, body, close) => {
       const lang = /\blang\s*=\s*["']?(tsx?|jsx?)\b/i.exec(open)?.[1] ?? 'js';
       collectUsage(tokens, body, 'inline.' + lang, scriptMode);
       return open + close;
