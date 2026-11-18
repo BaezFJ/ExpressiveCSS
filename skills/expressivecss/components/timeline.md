@@ -21,17 +21,11 @@ Example: Cart, Shipping and Payment in a checkout are steps the user still has t
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-06, `llm.md#timeline`): Ordered events with times, headings and text, dots joined by a line and a leading icon variant.
+Support: Ordered events with times, headings and text, dots joined by a line and a leading icon variant.
 
 Web adaptation: An <ol> of events with <time datetime>; the dots and line are decoration.
 
-Known boundary: Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#timeline).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#timeline).
 
 #### Contract
 

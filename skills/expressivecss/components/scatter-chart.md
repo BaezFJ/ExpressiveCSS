@@ -23,17 +23,13 @@ Example: Weight against city and highway fuel economy for twenty cars is a scatt
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-24); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-24, `llm.md#scatter-chart`): Points drawn from a figure's data table, with a shared x column and one series per further column, gaps for cells that are not numbers, fixed ranges for both scales, round labels for both scales with .axis, a legend with .toggle, update() motion, data-watch, a pointer and keyboard tooltip that steps through points in table order, and .bubble sizes from the last column with areas proportional to its values.
+Support: Points drawn from a figure's data table, with a shared x column and one series per further column, gaps for cells that are not numbers, fixed ranges for both scales, round labels for both scales with .axis, a legend with .toggle, update() motion, data-watch, a pointer and keyboard tooltip that steps through points in table order, and .bubble sizes from the last column with areas proportional to its values.
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Point placement in left-to-right and right-to-left pages, gaps, both axes, the tooltip, keyboard steps, the nearest point by pointer, update() motion, data-watch, the toggle legend and .bubble areas, gaps, tooltip, refit and size motion are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no trend lines, separate x columns per series or sizes per series.
+Known boundary: There are no trend lines, separate x columns per series or sizes per series.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#scatter-chart).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#scatter-chart).
 
 #### Contract
 

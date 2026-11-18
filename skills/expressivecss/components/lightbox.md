@@ -23,17 +23,11 @@ Example: A payment confirmation needs a dialog, even if its design contains an i
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-09-13); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
-
-Support (2026-09-13, `llm.md#lightbox`): Enlarge-on-activation image and dismissal.
+Support: Enlarge-on-activation image and dismissal.
 
 Web adaptation: ExpressiveCSS media behavior, not an upstream component contract.
 
-Known boundary: Enlargement and teardown are checked; modal containment, reduced motion and destruction during closing remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#lightbox).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#lightbox).
 
 #### Contract
 

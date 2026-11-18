@@ -21,17 +21,11 @@ Example: Home/Search/Profile belong in navigation. A toolbar near a document can
 
 Relationship: component.
 
-Upstream: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/toolbars/overview).
-
-Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
-
-[Specification link](https://m3.material.io/components/toolbars/specs); full specs unreviewed.
-
-Support (2026-09-07, `llm.md#toolbars`): Floating/docked, standard/vibrant, vertical floating, and companion FAB.
+Support: Floating/docked, standard/vibrant, vertical floating, and companion FAB.
 
 Web adaptation: CSS-only commands; no automatic composite toolbar keyboard model.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#toolbars).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#toolbars).
 
 #### Contract
 

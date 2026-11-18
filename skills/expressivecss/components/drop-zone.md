@@ -21,17 +21,11 @@ Example: An optional attachment on a support form is a file input in the form. A
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-06, `llm.md#drop-zone`): A label-sized native file input with a dragover state and a list of chosen file names and locale-formatted sizes.
+Support: A label-sized native file input with a dragover state and a list of chosen file names and locale-formatted sizes.
 
 Web adaptation: The native input covers the label, so clicks, keys and drops are the browser's; the shared Forms behavior marks the drag and fills the list.
 
-Known boundary: Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#drop-zone).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#drop-zone).
 
 #### Contract
 

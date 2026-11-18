@@ -137,6 +137,7 @@ describe('ExpressiveCSS component decisions', () => {
 
   test('keeps upstream evidence distinct from documented support and web extensions', async () => {
     const llm = await readFile(new URL('../llm.md', import.meta.url), 'utf8');
+    const roadmapText = await readFile(new URL('../skills/expressivecss/references/capability-roadmap.md', import.meta.url), 'utf8');
     for (const component of data.components) {
       const mapping = component.materialGuidance;
       assert.ok(['component', 'pattern', 'related', 'none'].includes(mapping.relationship));
@@ -156,8 +157,13 @@ describe('ExpressiveCSS component decisions', () => {
       assert.ok(llm.includes(`${'#'.repeat(component.guideSource.headingLevel)} ${component.guideSource.heading}\n`));
       assert.ok(implementation.source.startsWith('llm.md#'));
       const guide = await readFile(new URL(`../skills/expressivecss/components/${component.slug}.md`, import.meta.url), 'utf8');
-      for (const evidence of [mapping.relationship, mapping.upstreamReview.scope, mapping.upstreamReview.source, implementation.documentedSupport, implementation.webAdaptation, ...implementation.limitations]) {
+      for (const evidence of [mapping.relationship, implementation.documentedSupport, implementation.webAdaptation]) {
         assert.ok(guide.includes(evidence), `${component.slug} dropped mapping evidence: ${evidence}`);
+      }
+      // Audit provenance lives in the component's capability roadmap section, linked from the guide.
+      const section = roadmapText.slice(roadmapText.indexOf(`<a id="${component.slug}"></a>`));
+      for (const evidence of [mapping.upstreamReview.scope, mapping.upstreamReview.source, ...implementation.limitations.map((limit) => limit.replace(/\[([^\]]+)\]\((?!https?:\/\/)[^)]+\)/gu, '$1'))]) {
+        assert.ok(section.includes(evidence), `${component.slug} dropped roadmap evidence: ${evidence}`);
       }
     }
     for (const slug of ['fieldsets', 'select', 'autocomplete', 'drag-handle']) assert.equal(bySlug.get(slug).materialGuidance.relationship, 'related');
@@ -216,6 +222,33 @@ describe('ExpressiveCSS component decisions', () => {
       }
       if (component.materialGuidance.status === 'material') assert.ok(guide.includes(component.materialGuidance.href));
     }
+  });
+
+  test('keeps audit provenance in the capability roadmap instead of every component guide', async () => {
+    const roadmap = await readFile(new URL('../skills/expressivecss/references/capability-roadmap.md', import.meta.url), 'utf8');
+    for (const component of data.components) {
+      const guide = await readFile(new URL(`../skills/expressivecss/components/${component.slug}.md`, import.meta.url), 'utf8');
+      const mapping = component.materialGuidance;
+      const section = roadmap.slice(roadmap.indexOf(`<a id="${component.slug}"></a>`));
+      assert.ok(guide.includes(`[capability evidence](../references/capability-roadmap.md#${component.slug})`), component.slug);
+      assert.ok(guide.includes(`Support: ${mapping.implementation.documentedSupport}`), component.slug);
+      if (mapping.upstreamReview.note) {
+        assert.ok(!guide.includes(mapping.upstreamReview.note), `${component.slug} repeats its upstream review note`);
+        assert.ok(section.includes(mapping.upstreamReview.note), `${component.slug} lost its upstream review note`);
+      }
+      for (const href of [mapping.specHref, mapping.guidelinesHref, ...(mapping.relatedHrefs ?? [])].filter(Boolean)) {
+        assert.ok(section.includes(`](${href})`), `${component.slug} lost ${href}`);
+      }
+      for (const limit of mapping.implementation.limitations) {
+        // The roadmap is portable, so guide-relative links become plain text there.
+        assert.ok(section.includes(`- Known boundary: ${limit.replace(/\[([^\]]+)\]\((?!https?:\/\/)[^)]+\)/gu, '$1')}`), `${component.slug} lost a known boundary`);
+      }
+    }
+    // Build rules survive the coverage filter; coverage-only reports stay in the roadmap.
+    const guide = (slug) => readFile(new URL(`../skills/expressivecss/components/${slug}.md`, import.meta.url), 'utf8');
+    assert.match(await guide('scrollspy'), /Known boundary: Independent TOCs must reuse one getActiveElement function per group\.\n/);
+    assert.match(await guide('buttons'), /Known boundary: Standalone toggle buttons/);
+    assert.doesNotMatch(await guide('app-bar'), /Known boundary:.*pending manual review/);
   });
 
   test('keeps each Critique criterion to one falsifiable observation', () => {

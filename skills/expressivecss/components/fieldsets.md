@@ -21,21 +21,11 @@ Example: A promotional feature block needs a section or card. Use a fieldset whe
 
 Relationship: related. Related guidance is not a dedicated component specification.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/text-fields/overview).
-
-Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/text-fields/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/text-fields/guidelines).
-
-Support (2026-09-13, `llm.md#fieldsets`): Outlined, filled, and rounded form groups.
+Support: Outlined, filled, and rounded form groups.
 
 Web adaptation: Native fieldset/legend; related text-field tokens do not make this an M3 component.
 
-Known boundary: Named native groups and disabled descendants are checked; long legends and nested groups remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#fieldsets).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#fieldsets).
 
 #### Contract
 

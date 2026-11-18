@@ -25,25 +25,11 @@ Example: Speed dials have been removed. Replace legacy fab or fixed-action-btn w
 
 Relationship: component. Google no longer recommends small FABs, baseline extended FABs or surface-colored FABs. The 40dp FAB and sizeless extend variant are removed. Use circle extra for the 56dp FAB, or its medium and large sizes. Extended FABs require extend small, extend medium or extend large; the small extended FAB remains recommended. Use primary/secondary/tertiary container roles instead of surface colors. Use fab-menu for labelled related actions; speed-dial APIs are removed.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/floating-action-button/overview).
-
-Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/floating-action-button/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/floating-action-button/guidelines).
-
-[Related Google component](https://m3.material.io/components/extended-fab/overview).
-
-[Related Google component](https://m3.material.io/components/fab-menu/overview).
-
-Support (2026-09-13, `llm.md#floating-action-button`): FAB sizes, extended FABs, and menus of related actions.
+Support: FAB sizes, extended FABs, and menus of related actions.
 
 Web adaptation: Floating action behavior uses the documented FAB runtime.
 
-Known boundary: Full visual parity and spoken assistive-technology output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#fab).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#fab).
 
 #### Contract
 

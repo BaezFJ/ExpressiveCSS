@@ -21,17 +21,11 @@ Example: Twelve people in four teams under a CIO are an org chart. Three hundred
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-16); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-16, `llm.md#organization-chart`): Nested lists of native disclosures drawn as cards under their manager, with connector lines, a role band, an avatar and a name, profile links on cards without reports, mirrored order in RTL and sideways scrolling when wide.
+Support: Nested lists of native disclosures drawn as cards under their manager, with connector lines, a role band, an avatar and a name, profile links on cards without reports, mirrored order in RTL and sideways scrolling when wide.
 
 Web adaptation: Native <details> managers and nested lists; every manager is a Tab stop and no tree role is promised.
 
-Known boundary: Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#org-chart).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#org-chart).
 
 #### Contract
 

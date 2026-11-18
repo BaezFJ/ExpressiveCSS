@@ -21,21 +21,11 @@ Public JavaScript exports: `FormSelect`. See the [API index](../references/api-i
 
 Relationship: related. Related guidance is not a dedicated component specification.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/menus/overview).
-
-Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/menus/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/menus/guidelines).
-
-Support (2026-10-27, `llm.md#select`): Single/multiple selection, optgroups, browser-default fallback, and opt-in single and multiple select search with a separate popup field and native form values.
+Support: Single/multiple selection, optgroups, browser-default fallback, and opt-in single and multiple select search with a separate popup field and native form values.
 
 Web adaptation: Native select enhanced by runtime; this is related to menu/text-field patterns.
 
-Known boundary: Native zoom, screen-reader announcements, Windows contrast themes and physical-device form interaction remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#select).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#select).
 
 #### Contract
 

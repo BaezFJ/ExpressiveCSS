@@ -21,17 +21,11 @@ Example: Three settings pages under one heading are a list or a navigation rail.
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-06, `llm.md#tree`): Nested lists of native disclosures and links with guide lines, turning chevrons in LTR and RTL, leading icons and an aria-current row.
+Support: Nested lists of native disclosures and links with guide lines, turning chevrons in LTR and RTL, leading icons and an aria-current row.
 
 Web adaptation: Native <details> branches and links; every row is a Tab stop and no tree role is promised.
 
-Known boundary: Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#tree).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#tree).
 
 #### Contract
 

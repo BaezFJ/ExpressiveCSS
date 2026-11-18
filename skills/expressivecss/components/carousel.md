@@ -23,21 +23,11 @@ Example: A transaction history must support scanning rows and values. Use a list
 
 Relationship: component.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/carousel/overview).
-
-Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/carousel/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/carousel/guidelines).
-
-Support (2026-09-17, `llm.md#carousel`): Adaptive visual collections with documented layout variants.
+Support: Adaptive visual collections with documented layout variants.
 
 Web adaptation: Runtime owns sizing and navigation; reduced motion removes parallax and morphing.
 
-Known boundary: Rendered navigation and application-owned pause controls have browser coverage; screen readers, native zoom and physical-device review remain pending.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#carousel).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#carousel).
 
 #### Contract
 

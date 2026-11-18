@@ -23,17 +23,13 @@ Example: Visitors from five traffic sources, longest first, is a bar chart with 
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-07); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-07, `llm.md#bar-chart`): Horizontal bars drawn from zero from a figure's data table, grouped by row or stacked, with split, track, values and sparkline modifiers, negative values, gaps, a fixed value range, row labels, round value axis labels with .axis, a legend, and a pointer and keyboard tooltip with a highlight band.
+Support: Horizontal bars drawn from zero from a figure's data table, grouped by row or stacked, with split, track, values and sparkline modifiers, negative values, gaps, a fixed value range, row labels, round value axis labels with .axis, a legend, and a pointer and keyboard tooltip with a highlight band.
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the bars and their values are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Drawing, the hidden table, grouped, stacked and split geometry, values, gaps, negative values, the value range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no value axis labels.
+Known boundary: There are no value axis labels.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#bar-chart).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#bar-chart).
 
 #### Contract
 

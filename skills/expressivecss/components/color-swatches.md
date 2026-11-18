@@ -21,17 +21,11 @@ Example: Eight label colors for a calendar are color swatches. Any brand color a
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-18); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-18, `llm.md#color-swatches`): A fieldset of native radios drawn as round chips of their colors, a ring around the checked one, the shared focus ring, a 48px target and an optional native color input for a custom value.
+Support: A fieldset of native radios drawn as round chips of their colors, a ring around the checked one, the shared focus ring, a 48px target and an optional native color input for a custom value.
 
 Web adaptation: Native radios keep one Tab stop, arrow keys and form submission; each swatch is named by visually hidden text in its label.
 
-Known boundary: Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#color-swatches).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#color-swatches).
 
 #### Contract
 

@@ -23,17 +23,13 @@ Example: Energy from solar, wind and gas through the grid to homes and industry 
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-25); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-25, `llm.md#sankey-chart`): Nodes and links drawn from a figure's data table of source, target and value columns, with nodes in columns by their longest path from a source, stacked in the order they first appear, links and nodes on one scale, rows skipped for values that are not positive, missing names, self links and cycles, node names and colors, right-to-left mirroring, update() motion, data-watch, and a pointer and keyboard tooltip that steps through links in table order.
+Support: Nodes and links drawn from a figure's data table of source, target and value columns, with nodes in columns by their longest path from a source, stacked in the order they first appear, links and nodes on one scale, rows skipped for values that are not positive, missing names, self links and cycles, node names and colors, right-to-left mirroring, update() motion, data-watch, and a pointer and keyboard tooltip that steps through links in table order.
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG and node names are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Link and node sizes, columns, skipped rows, names, colors, right-to-left mirroring, keyboard steps, the link under the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Nodes are not reached by keyboard or pointer, and node order follows the table with no crossing reduction.
+Known boundary: Nodes are not reached by keyboard or pointer, and node order follows the table with no crossing reduction.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#sankey-chart).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#sankey-chart).
 
 #### Contract
 

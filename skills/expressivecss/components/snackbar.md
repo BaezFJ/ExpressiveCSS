@@ -23,21 +23,13 @@ Example: A successful save can use a snackbar. Offline status that still allows 
 
 Relationship: component.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/snackbar/overview).
-
-Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/snackbar/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/snackbar/guidelines).
-
-Support (2026-09-13, `llm.md#snackbar`): Timed text feedback or persistent actionable messages, with optional close control and focused Escape dismissal.
+Support: Timed text feedback or persistent actionable messages, with optional close control and focused Escape dismissal.
 
 Web adaptation: Use the documented announcement and timeout behavior.
 
-Known boundary: Custom template actions require explicit persistence and a close control. Application keyboard reach controls and spoken live-region delivery need verification.
+Known boundary: Custom template actions require explicit persistence and a close control.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#snackbar).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#snackbar).
 
 #### Contract
 

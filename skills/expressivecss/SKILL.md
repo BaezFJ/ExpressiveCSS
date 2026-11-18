@@ -17,7 +17,7 @@ ExpressiveCSS builds Material Design 3 interfaces from semantic HTML. Metadata `
 
 ## Staged guide routing
 
-Classify the task and runtime ownership first, and run the [version resolver](#authority-by-question-and-version) on the target project before opening any guide, even when the prompt does not ask for it. When you report guides, list the ones you opened, not ones you only saw linked.
+Classify the task and runtime ownership first. Then, in one turn of parallel tool calls, run the [version resolver](#authority-by-question-and-version) on the target project and open every must-read guide; run the resolver even when the prompt does not ask for it. Its result decides which source wins, not which guides you need. When you report guides, list the ones you opened, not ones you only saw linked.
 
 Guide names map to [Install](./expressivecss-install/SKILL.md), [Design](./expressivecss-design/SKILL.md), [Usage](./expressivecss-usage/SKILL.md), [Theming](./expressivecss-theming/SKILL.md), [Runtime](./expressivecss-runtime/SKILL.md), [Accessibility](./expressivecss-accessibility/SKILL.md), [Charts](./expressivecss-charts/SKILL.md), [Layout](./expressivecss-layout/SKILL.md), [Dashboard](./expressivecss-dashboard/SKILL.md), and [component guides](./components/).
 
@@ -45,9 +45,16 @@ Combine overlapping routes, and say why a route widens:
 - For contrast or forced-colors investigations, even token-only ones, add Accessibility.
 - For a review too large for one context, read [delegation](./references/delegation.md).
 
+## Tool and token budget
+
+- Batch calls that do not depend on each other into one turn. Read each file once and reuse what is already in context.
+- In large references, such as the capability roadmap or review matrix, search for the heading or ID and read only that section.
+- Run bundled scripts without reading their source. Fetch website or repository docs only when bundled guidance is unsafe or silent.
+- Edit with targeted replacements. Verify once at the end: one lint command over every touched file, and one working browser route.
+
 ## Component guides
 
-The generated [component decision index](./references/component-decisions.md) owns the complete component inventory, selection boundaries, alternatives, runtime ownership and guide links. The [API index](./references/api-index.md) maps JavaScript exports and Sass partials to guides. Component guides include adaptive decisions, Material links and rules from `semantics.json`. Apply static rules to markup, check runtime-generated state, and cite rule IDs in reviews.
+The generated [component decision index](./references/component-decisions.md) owns the complete component inventory, selection boundaries, alternatives, runtime ownership and guide links. The [API index](./references/api-index.md) maps JavaScript exports and Sass partials to guides. Component guides include adaptive decisions and rules from `semantics.json`. Apply static rules to markup, check runtime-generated state, and cite rule IDs in reviews.
 
 For support gaps, read only the component's `## <Title>` section of the large [capability roadmap](./references/capability-roadmap.md). For Material conformance, use the [review reference](./expressivecss-design/references/material-conformance.md). Evidence about part of a component never proves full parity.
 
@@ -55,7 +62,7 @@ For clipboard, theme controls, pane resizing, expanding cards or scripted confir
 
 ## Component discovery protocol
 
-1. Identify the user's job, behavior, content, and reachable window classes. When no component is named, pick one with the chooser in the [design rules](./references/design-rules.md), then read the index entry.
+1. Identify the user's job, behavior, content, and reachable window classes. When the user names a component, open `components/<slug>.md` directly. When no component is named, pick one with the chooser in the [design rules](./references/design-rules.md), then read the index entry: search the index for the job's terms rather than reading the whole table.
 2. Compare use when, avoid when, alternatives, and runtime ownership. For an unambiguous component, read only its selected guide. When selection remains uncertain, read all plausible candidate guides before choosing; names and appearance alone do not prove fit.
 3. Apply the selected guide's adaptive decisions and define the next narrower layout. Choose the smallest component or combination that fully meets the job.
 4. Copy the documented host, children, relationships, classes, and initialization mode. Apply the guide's semantic rules.
@@ -69,7 +76,7 @@ Resolve the installed version once per task before contract-dependent work. Repe
 node "<skill-directory>/scripts/resolve-version.mjs" --project-root "<project>"
 ```
 
-Run it without reading its source. It trusts, in order, framework source, the installed package, the lockfile, then the manifest range; `--contract-version` overrides the version it compares against. A range is not an installed version. Conflicting or unreadable evidence stays unresolved; report the candidate and its diagnostics.
+It trusts, in order, framework source, the installed package, the lockfile, then the manifest range; `--contract-version` overrides the version it compares against. A range is not an installed version. Conflicting or unreadable evidence stays unresolved; report the candidate and its diagnostics.
 
 - On `match`, use bundled matching guidance when the output's `bundledContractSafe` is true; otherwise use installed sources or the matching tag. A bundled match does not verify the public website; trust the site only when `currentDocsSafe` is true.
 - On `mismatch`, read the installed package and the matching tag or commit. Without matching guidance, mark only the checks that depend on it `Blocked`.
@@ -109,7 +116,7 @@ Qualify tool names with the README's server key, as in `expressivecss-mcp:<tool>
 | `component_syntax_expert` | Retrieve candidate syntax and contract details. |
 | `quality_inspector` | Run static checks and declared verification commands. |
 
-Without an MCP client, run `npx --package @expressivecss/mcp-server expressivecss-lint <files>` on every markup file you touched before finishing; it runs the same static checks and exits 1 on findings. Run it from the project root with relative paths; it skips files outside its working directory. A consuming project can wire `expressivecss-lint --hook` as a Claude Code `PostToolUse` hook so the checks run on every edit (see the MCP package README).
+Without an MCP client, run `npx --package @expressivecss/mcp-server expressivecss-lint <files>` once before finishing, listing every markup file you touched; it runs the same static checks and exits 1 on findings. Run it from the project root with relative paths; it skips files outside its working directory. `expressivecss-lint --hook` can run it as a Claude Code `PostToolUse` hook; see the MCP README.
 
 An MCP pass covers only `checksPerformed` and the sources it names. It does not establish browser, visual, or accessibility conformance. Report its `uncheckedAreas`, `coverageStatus`, and `blockedChecks`. A contract mismatch blocks dependent claims until matching evidence exists.
 

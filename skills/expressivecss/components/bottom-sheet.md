@@ -23,21 +23,13 @@ Public JavaScript exports: `BottomSheets`. See the [API index](../references/api
 
 Relationship: component.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/bottom-sheets/overview).
-
-Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/bottom-sheets/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/bottom-sheets/guidelines).
-
-Support (2026-09-18, `llm.md#bottom-sheet`): Standard and modal bottom sheets, with partial and full heights for .expandable sheets.
+Support: Standard and modal bottom sheets, with partial and full heights for .expandable sheets.
 
 Web adaptation: Native dialog.show()/showModal(); shared runtime handles dragging and dismissal.
 
-Known boundary: An .expandable sheet has a partial and a full height and no others. Long-content scrolling and enlarged-text action access are checked; native zoom and physical touch remain unverified.
+Known boundary: An .expandable sheet has a partial and a full height and no others.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#bottom-sheet).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#bottom-sheet).
 
 #### Contract
 

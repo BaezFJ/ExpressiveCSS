@@ -3,6 +3,7 @@ import { hash } from 'node:crypto';
 import path from 'node:path';
 import { readdir } from 'node:fs/promises';
 import { readBoundedRegularFile } from './bounded-file.mjs';
+import { stripRelativeLinks } from './markdown-sections.mjs';
 
 export const sha256 = (bytes) => hash('sha256', bytes);
 export const CAPABILITY_INPUT_DIRECTORIES = ['src', 'tests', 'dist', 'skills/expressivecss/assets/examples', 'scripts'];
@@ -93,6 +94,14 @@ export async function buildCapabilityRoadmap(data, root) {
       sourceReview: sourcesCurrent ? 'source-reviewed' : 'needs-review', reviewedOn: review.reviewedOn,
       scope: entry.materialGuidance.implementation.documentedSupport, adaptation: entry.materialGuidance.implementation.webAdaptation,
       upstream: entry.materialGuidance.upstreamReview, relationship: entry.materialGuidance.relationship,
+      // Provenance that component guides link to here instead of repeating on every build read.
+      limitations: entry.materialGuidance.implementation.limitations ?? [],
+      supportSource: entry.materialGuidance.implementation.source ?? null, supportReviewedOn: entry.materialGuidance.implementation.reviewedOn ?? null,
+      googleLinks: [
+        ...(entry.materialGuidance.specHref ? [{ label: 'Specification (full specs unreviewed)', href: entry.materialGuidance.specHref }] : []),
+        ...(entry.materialGuidance.guidelinesHref ? [{ label: 'Guidelines', href: entry.materialGuidance.guidelinesHref }] : []),
+        ...(entry.materialGuidance.relatedHrefs ?? []).map((href) => ({ label: 'Related Google component', href })),
+      ],
       sources: review.sources, gaps: review.gaps, browserChecks: checks,
       browserEvidence: checks.length === 0 ? 'no-mapped-checks' : checks.every((check) => check.state === 'recorded-passed') ? 'recorded-scoped-pass' : checks.some((check) => check.state === 'stale') ? 'needs-rerun' : 'incomplete',
       recheckWhen: ['A reviewed source changes', 'A mapped test or its recorded inputs change', 'Google revises the linked guidance or before claiming a new release matches it'],
@@ -115,8 +124,10 @@ export function renderCapabilityRoadmap(roadmap) {
     `<a id="${entry.slug}"></a>\n\n## ${entry.title}`,
     `**${entry.support} within the stated scope.** ${entry.scope}`,
     `Source review: ${entry.sourceReview}, ${entry.reviewedOn}. ${entry.sources.map((source) => link(source.path)).join(', ')}.`,
-    `Google relationship: ${entry.relationship}. Upstream review: ${entry.upstream.scope} (${entry.upstream.reviewedOn}); [reviewed source](${entry.upstream.source}).`,
-    `Web adaptation: ${entry.adaptation}`,
+    `Google relationship: ${entry.relationship}. Upstream review: ${entry.upstream.scope} (${entry.upstream.reviewedOn}); [reviewed source](${entry.upstream.source}).${entry.upstream.note ? ` ${entry.upstream.note}` : ''}`,
+    ...(entry.googleLinks?.length ? [entry.googleLinks.map(({ label, href }) => `[${label}](${href})`).join(' · ')] : []),
+    `Web adaptation: ${entry.adaptation}${entry.supportSource ? ` Documented support reviewed ${entry.supportReviewedOn} against \`${entry.supportSource}\`.` : ''}`,
+    ...(entry.limitations?.length ? [entry.limitations.map((limit) => `- Known boundary: ${stripRelativeLinks(limit)}`).join('\n')] : []),
     entry.gaps.length ? entry.gaps.map((gap) => `- ${gap.kind}: ${gap.description} Next: ${gap.nextStep}`).join('\n') : 'No gap identified within the stated scope; broader upstream parity remains unassessed.',
     entry.browserChecks.length ? entry.browserChecks.map((check) => `- ${check.state}: ${link(check.file)}: \`${check.name}\`. ${check.scope}`).join('\n') : 'No directly scoped browser check is mapped. This does not mean the component fails or has no unit tests.',
   ].join('\n\n'));

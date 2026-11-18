@@ -23,17 +23,13 @@ Example: Signups per plan for each month of a half year is a grouped column char
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-07); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-07, `llm.md#column-chart`): Columns drawn from zero from a figure's data table, grouped by row or stacked, with fade, track and sparkline modifiers, negative values, gaps, a fixed y range, x labels, round y axis labels with .axis, a legend, and a pointer and keyboard tooltip with a highlight band.
+Support: Columns drawn from zero from a figure's data table, grouped by row or stacked, with fade, track and sparkline modifiers, negative values, gaps, a fixed y range, x labels, round y axis labels with .axis, a legend, and a pointer and keyboard tooltip with a highlight band.
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. The axis modifier provides round value labels and range draws low-to-high columns; horizontal bars use the bar chart.
+Known boundary: The axis modifier provides round value labels and range draws low-to-high columns; horizontal bars use the bar chart.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#column-chart).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#column-chart).
 
 #### Contract
 

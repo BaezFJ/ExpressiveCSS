@@ -23,17 +23,11 @@ Example: Three new features after an update are a tour. One unexplained icon is 
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-15); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-15, `llm.md#tour`): One step at a time beside its target, a highlight ring, Back, Next and Done, progress text, skipped missing targets, Escape and focus return.
+Support: One step at a time beside its target, a highlight ring, Back, Next and Done, progress text, skipped missing targets, Escape and focus return.
 
 Web adaptation: A manual native popover placed with CSS anchor positioning; the Tour behavior moves the anchor and focus.
 
-Known boundary: Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#tour).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#tour).
 
 #### Contract
 

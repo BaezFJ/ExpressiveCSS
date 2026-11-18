@@ -21,17 +21,13 @@ Example: A long article with Introduction/Methods/Results needs section links, o
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-09-13); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
-
-Support (2026-09-13, `llm.md#pagination`): Page links, active page, and unavailable previous/next items.
+Support: Page links, active page, and unavailable previous/next items.
 
 Web adaptation: CSS-only navigation; the application supplies destinations.
 
 Known boundary: aria-disabled and pointer-events alone cannot disable a link for keyboard users.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#pagination).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#pagination).
 
 #### Contract
 

@@ -21,17 +21,11 @@ Example: A docs site with Products, Solutions and Resources sections uses a mega
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-15); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-15, `llm.md#mega-menu`): Links and disclosure buttons in a row, wide panels of grouped links below the bar, a turning chevron and current-page state.
+Support: Links and disclosure buttons in a row, wide panels of grouped links below the bar, a turning chevron and current-page state.
 
 Web adaptation: Native popovers opened with popovertarget; the browser owns opening, light dismiss, Escape, focus order and the expanded state.
 
-Known boundary: Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#mega-menu).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#mega-menu).
 
 #### Contract
 

@@ -21,17 +21,11 @@ Public JavaScript exports: `CharacterCounter`, `Forms`. See the [API index](../r
 
 Relationship: component.
 
-Upstream: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/text-fields/overview).
-
-Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
-
-[Specification link](https://m3.material.io/components/text-fields/specs); full specs unreviewed.
-
-Support (2026-10-06, `llm.md#text-inputs`): Filled and outlined fields, supporting text, error states, trailing icon buttons, a password visibility toggle and one-time code cells.
+Support: Filled and outlined fields, supporting text, error states, trailing icon buttons, a password visibility toggle and one-time code cells.
 
 Web adaptation: Native input/textarea with explicit label and description relationships.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#text-fields).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#text-fields).
 
 #### Contract
 

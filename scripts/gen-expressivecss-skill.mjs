@@ -143,11 +143,11 @@ function renderDecisionIndex(data) {
   const cell = (value) => String(value).replaceAll('|', '\\|').replaceAll('\n', ' ');
   const rows = data.components.map((component) => {
     const alternatives = component.alternatives.length
-      ? component.alternatives.map((slug) => `\`${slug}\``).join(', ')
+      ? component.alternatives.join(', ')
       : 'Compare plausible candidates';
     return `| [${cell(component.title)}](${component.guide}) | ${cell(component.useWhen.join('; '))} | ${cell(component.avoidWhen.join('; '))} | ${cell(alternatives)} | ${cell(component.runtime)} |`;
   });
-  return `${GENERATED_MARKER}\n\n# ExpressiveCSS component decisions\n\nPick the row that matches the job and read its guide. Compare alternatives only when the fit is ambiguous.\n\n| Component | Use when | Avoid when | Alternatives | Runtime |\n| --- | --- | --- | --- | --- |\n${rows.join('\n')}\n`;
+  return `${GENERATED_MARKER}\n\n# ExpressiveCSS component decisions\n\nSearch for the job's terms, then read the matching row's guide. Compare alternatives (component slugs) only when the fit is ambiguous.\n\n| Component | Use when | Avoid when | Alternatives | Runtime |\n| --- | --- | --- | --- | --- |\n${rows.join('\n')}\n`;
 }
 
 function renderDesignRules(guidelines) {
@@ -316,21 +316,27 @@ function renderSelection(component, page) {
   return `#### Selection and adaptation\n\nRuntime ownership: \`${component.runtime}\`. ${material}\n\n${exports}${selectionExample}${adaptive ? `${adaptive}\n\n` : ''}`;
 }
 
+// Sentences that only report verification coverage ("checked in a browser", "remain unverified").
+// They matter to an audit, which reads the roadmap, not to the markup an agent writes.
+const COVERAGE_ONLY = /unverified|unassessed|not verified|pending|manual review|need verification|\b(?:is|are) checked\b|browser (?:checks?|coverage)|\bchecks? cover|does not cover every|coverage does not verify/iu;
+function buildBoundaries(limitations) {
+  return limitations
+    .map((limit) => limit.split(/(?<=\.)\s+(?=[A-Z])/u).filter((sentence) => !COVERAGE_ONLY.test(sentence)).join(' '))
+    .filter(Boolean);
+}
+
+// Keep only what changes the markup an agent writes. Review dates, upstream scope notes and
+// Google specification links are audit provenance; the capability roadmap entry carries them,
+// so building a component does not pay for them on every guide read.
 function renderMaterialMapping(component) {
   const mapping = component.materialGuidance;
   const implementation = mapping.implementation;
-  const upstream = mapping.upstreamReview;
   return [
     `Relationship: ${mapping.relationship}. ${mapping.reason ?? ''}`.trim(),
-    `Upstream: ${upstream.scope}${upstream.reviewedOn ? ` (${upstream.reviewedOn})` : ''}; [evidence](${upstream.source}).`,
-    ...(upstream.note ? [upstream.note] : []),
-    ...(mapping.specHref ? [`[Specification link](${mapping.specHref}); full specs unreviewed.`] : []),
-    ...(mapping.guidelinesHref ? [`[Google guidelines](${mapping.guidelinesHref}).`] : []),
-    ...(mapping.relatedHrefs ?? []).map((href) => `[Related Google component](${href}).`),
-    `Support (${implementation.reviewedOn}, \`${implementation.source}\`): ${implementation.documentedSupport}`,
+    `Support: ${implementation.documentedSupport}`,
     `Web adaptation: ${implementation.webAdaptation}`,
-    ...implementation.limitations.map((limit) => `Known boundary: ${limit}`),
-    `Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#${component.slug}).`,
+    ...buildBoundaries(implementation.limitations).map((limit) => `Known boundary: ${limit}`),
+    `Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#${component.slug}).`,
   ].join('\n\n');
 }
 

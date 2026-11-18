@@ -23,17 +23,13 @@ Example: An author name in an article previews the author's profile in a hover c
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-25); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-25, `llm.md#hover-card`): A link with hover-card-trigger whose aria-details names a .popover with popover="hint"; the card shows against the link after enterDelay of hover or keyboard focus, stays while the pointer or focus is on the link or card, hides after exitDelay or at once on Escape with focus back on the link, and a tap or click follows the link.
+Support: A link with hover-card-trigger whose aria-details names a .popover with popover="hint"; the card shows against the link after enterDelay of hover or keyboard focus, stays while the pointer or focus is on the link or card, hides after exitDelay or at once on Escape with focus back on the link, and a tap or click follows the link.
 
 Web adaptation: Script timers decide when the card shows, and showPopover({ source }) makes the link its anchor and invoker, so the browser places it, puts it next in the Tab order and light-dismisses it. Interest invokers (interestfor) exist only in Chromium, so they are not used.
 
-Known boundary: Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified. Touch shows no card, and the card's content is static markup.
+Known boundary: Touch shows no card, and the card's content is static markup.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#hover-card).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#hover-card).
 
 #### Contract
 

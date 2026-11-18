@@ -23,17 +23,11 @@ Example: Saving successfully should not force dismissal of a dialog. Use a snack
 
 Relationship: component.
 
-Upstream: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/dialogs/overview).
-
-Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
-
-[Specification link](https://m3.material.io/components/dialogs/specs); full specs unreviewed.
-
-Support (2026-09-07, `llm.md#dialogs`): Basic and full-screen dialogs.
+Support: Basic and full-screen dialogs.
 
 Web adaptation: Native dialog.showModal()/close(); shared dialog behavior is separate from AutoInit.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#dialogs).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#dialogs).
 
 #### Contract
 

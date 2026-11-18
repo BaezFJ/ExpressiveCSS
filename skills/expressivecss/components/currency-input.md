@@ -23,17 +23,13 @@ Example: A price field in a German shop takes data-currency="EUR" with inputmode
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-25); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-25, `llm.md#currency-input`): A data-currency ISO 4217 code on a text input; the amount shown with Intl.NumberFormat in the nearest lang and that currency on blur, the plain number in the locale's decimal mark on focus, typed and pasted amounts read in either decimal mark, a validity message for text with no digit that i18n can replace, saved and reset values formatted, a value property, and the plain number in the form data.
+Support: A data-currency ISO 4217 code on a text input; the amount shown with Intl.NumberFormat in the nearest lang and that currency on blur, the plain number in the locale's decimal mark on focus, typed and pasted amounts read in either decimal mark, a validity message for text with no digit that i18n can replace, saved and reset values formatted, a value property, and the plain number in the form data.
 
 Web adaptation: The native value holds the formatted text, and a capture-phase formdata listener on the document swaps the field's entry for the plain number, so submits and new FormData(form) read a number while the field keeps its name. setCustomValidity reports text with no amount, so constraint validation and .validate show the message.
 
-Known boundary: Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified. Formatting happens on blur only, and a form that repeats a currency field's name gets one entry for them.
+Known boundary: Formatting happens on blur only, and a form that repeats a currency field's name gets one entry for them.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#currency-input).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#currency-input).
 
 #### Contract
 

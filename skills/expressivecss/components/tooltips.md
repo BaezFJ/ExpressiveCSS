@@ -21,19 +21,13 @@ Public JavaScript exports: `Tooltip`. See the [API index](../references/api-inde
 
 Relationship: component.
 
-Upstream: overview-specs-guidelines-accessibility-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/tooltips/overview).
-
-Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings.
-
-[Specification link](https://m3.material.io/components/tooltips/specs); full specs unreviewed.
-
-Support (2026-09-07, `llm.md#tooltips`): Plain and rich tooltips; CSS child and runtime-generated forms.
+Support: Plain and rich tooltips; CSS child and runtime-generated forms.
 
 Web adaptation: The selected form determines ownership; CSS-only hover/focus is not runtime initialization.
 
 Known boundary: For hover/focus tooltips, verify dismissibility, hoverability, and persistence under WCAG SC 1.4.13, including its exceptions. Plain CSS bubbles disable pointer events and have no own Escape handler; aria-describedby alone does not verify these behaviors. Read the [focused web checks](../expressivecss-accessibility/references/web-checks.md#content-on-hover-or-focus).
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#tooltips).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#tooltips).
 
 #### Contract
 

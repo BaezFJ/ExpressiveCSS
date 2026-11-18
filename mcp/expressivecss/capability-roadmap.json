@@ -45,6 +45,21 @@
         "requirements": "Choose small, flexible medium/large or search app bars for the title and screen actions. Preserve meaningful headings, named actions and reachable controls through scrolling and collapse."
       },
       "relationship": "component",
+      "limitations": [
+        "Native zoom, screen-reader announcements, contrast themes and physical mobile keyboard behavior remain pending manual review."
+      ],
+      "supportSource": "llm.md#navbar",
+      "supportReviewedOn": "2026-09-17",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/app-bars/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/app-bars/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_navbar.scss",
@@ -112,6 +127,10 @@
         ]
       },
       "relationship": "component",
+      "limitations": [],
+      "supportSource": "llm.md#navigation-bar",
+      "supportReviewedOn": "2026-09-07",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_navigation-bar.scss",
@@ -150,6 +169,15 @@
         ]
       },
       "relationship": "component",
+      "limitations": [],
+      "supportSource": "llm.md#navigation-rail",
+      "supportReviewedOn": "2026-09-07",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/navigation-rail/specs"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_navigation-rail.scss",
@@ -202,6 +230,12 @@
         "requirements": "List-detail uses one pane on compact windows, usually one on medium and two on expanded windows. Supporting content stacks below primary content on compact and medium windows, then sits alongside it on expanded windows. Preserve selection and scroll state."
       },
       "relationship": "pattern",
+      "limitations": [
+        "Compact supporting layouts retain one-active-pane selection rather than automatic stacking. Native zoom, assistive technology and physical-device review remain pending."
+      ],
+      "supportSource": "llm.md#panes",
+      "supportReviewedOn": "2026-09-17",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_panes.scss",
@@ -281,6 +315,12 @@
         "requirements": "Bars frame the top of the window, rails sit in the leading and trailing regions beside the panes, and panes hold the content. Keep navigation separate from contextual actions, one main landmark, and content clear of bars and rails."
       },
       "relationship": "pattern",
+      "limitations": [
+        "Region placement, pane-only scrolling, the rail's fill and expansion, the trailing toolbar's position, panes inside main, RTL, the app bar's pane-scroll fill, enlarged text, print, keyboard scrolling and landmark order are checked in a browser, and so are the compact layout's document scrolling, pinned bars, hidden rail and 600px boundary, and the floating compact toolbar's row, placement, tooltips and scroll padding, and the status bar's row and compact hiding, and the floating pane's colors, corners and gaps, and the side sheet column; the safe-area insets are checked with rewritten env() values; spoken output, a real notch and a mobile browser's collapsing address bar remain unverified."
+      ],
+      "supportSource": "llm.md#scaffold",
+      "supportReviewedOn": "2026-11-15",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_scaffold.scss",
@@ -421,6 +461,12 @@
         "requirements": "Use a document footer landmark where appropriate, name distinct navigation groups and preserve meaningful links, reading order and reflow."
       },
       "relationship": "none",
+      "limitations": [
+        "A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified."
+      ],
+      "supportSource": "llm.md#footer",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_page-footer.scss",
@@ -478,6 +524,21 @@
         "requirements": "Use primary or secondary tabs for related content, with consistent labels and icons, selected state and reachable overflow. Google describes arrow navigation; native anchor navigation is a distinct web adaptation."
       },
       "relationship": "component",
+      "limitations": [
+        "Native links keep Tab and aria-current; Left, Right, Home and End move focus between them as a shortcut, without the selection model a tablist would announce."
+      ],
+      "supportSource": "llm.md#tabs",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/tabs/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/tabs/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_tabs.scss",
@@ -562,6 +623,12 @@
         "requirements": "Use named hierarchy navigation with real ancestor links and a current-page state. It communicates location, not peer categories."
       },
       "relationship": "none",
+      "limitations": [
+        "Named navigation and current-page markup are checked; CSS separator speech and long-path reflow remain unverified."
+      ],
+      "supportSource": "llm.md#breadcrumbs",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_breadcrumb.scss",
@@ -612,6 +679,12 @@
         "requirements": "Name result-page navigation and previous/next actions. Expose the current page and make unavailable actions genuinely unavailable to keyboard users."
       },
       "relationship": "none",
+      "limitations": [
+        "aria-disabled and pointer-events alone cannot disable a link for keyboard users."
+      ],
+      "supportSource": "llm.md#pagination",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_pagination.scss",
@@ -662,6 +735,12 @@
         "requirements": "Keep the steps in an ordered list, mark exactly one current step, convey complete and error states in text as well as color, and keep labels translatable."
       },
       "relationship": "none",
+      "limitations": [
+        "Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified."
+      ],
+      "supportSource": "llm.md#stepper",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_stepper.scss",
@@ -720,6 +799,21 @@
         "requirements": "Choose the current standard, vibrant or grouped menu for a set of choices. Verify 48dp actionable targets, unclipped placement, first-item focus, arrows, typeahead, Escape and submenu navigation. A menu item should not contain multiple independent controls."
       },
       "relationship": "component",
+      "limitations": [
+        "Closing focus exclusion, scoped nested keys, RTL flyout placement and representative item targets have browser checks. Spoken output and full visual parity remain unverified."
+      ],
+      "supportSource": "llm.md#menu",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/menus/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/menus/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_menu.scss",
@@ -804,6 +898,12 @@
         "requirements": "Keep the top items as links and disclosure buttons in a named nav, expose the expanded state, keep the panel next in the focus order, close on Escape and do not claim menu roles."
       },
       "relationship": "none",
+      "limitations": [
+        "Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified."
+      ],
+      "supportSource": "llm.md#mega-menu",
+      "supportReviewedOn": "2026-10-15",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_mega-menu.scss",
@@ -854,6 +954,12 @@
         "requirements": "Name the menubar, give it one tab stop, move between items with Left and Right, open a menu with Down, Enter or Space, move between open menus with Left and Right, and close with Escape back to the bar."
       },
       "relationship": "none",
+      "limitations": [
+        "Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified."
+      ],
+      "supportSource": "llm.md#menubar",
+      "supportReviewedOn": "2026-10-15",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/ts/components/menubar.ts",
@@ -904,6 +1010,12 @@
         "requirements": "Use named in-page navigation, real fragment links, stable heading IDs and current-section state. Account for sticky offsets and reduced-motion preferences."
       },
       "relationship": "none",
+      "limitations": [
+        "Independent TOCs must reuse one getActiveElement function per group. Screen-reader announcements, native zoom and physical-device checks remain pending."
+      ],
+      "supportSource": "llm.md#scrollspy",
+      "supportReviewedOn": "2026-09-17",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_scrollspy.scss",
@@ -986,6 +1098,12 @@
         "requirements": "Expose each branch's expanded state, mark the current item, keep every row reachable by keyboard and avoid a tree role without its arrow-key contract."
       },
       "relationship": "none",
+      "limitations": [
+        "Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#tree",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_tree.scss",
@@ -1037,6 +1155,21 @@
         ]
       },
       "relationship": "component",
+      "limitations": [
+        "Standalone toggle buttons take their shape and colours from aria-pressed; the page switches aria-pressed, as the component ships no toggle script."
+      ],
+      "supportSource": "llm.md#buttons",
+      "supportReviewedOn": "2026-09-07",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/buttons/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/buttons/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_buttons.scss",
@@ -1110,6 +1243,22 @@
         "requirements": "Distinguish default and toggle controls, sizes, shapes and widths. Name each action and expose toggle state. Verify 48dp effective targets even for visually smaller sizes, and sufficient icon contrast."
       },
       "relationship": "component",
+      "limitations": [
+        "Elevated and text are not icon-button variants.",
+        "Existing group checks cover selected icon colors and press shapes, not all standalone target sizes and disabled states."
+      ],
+      "supportSource": "llm.md#icon-buttons",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/icon-buttons/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/icon-buttons/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_icon-buttons.scss",
@@ -1183,6 +1332,21 @@
         "requirements": "Choose standard or connected groups and optional, required, single or multiple selection deliberately. Verify press growth, shapes, 48dp targets and reachable unwrapped content. Google describes Tab between buttons, with no focus on the group itself."
       },
       "relationship": "component",
+      "limitations": [
+        "Native zoom, spoken output and physical-device behavior remain unverified."
+      ],
+      "supportSource": "llm.md#button-groups",
+      "supportReviewedOn": "2026-09-18",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/button-groups/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/button-groups/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_button-groups.scss",
@@ -1275,6 +1439,21 @@
         "requirements": "Keep the leading default action distinct from the trailing additional-choices menu. Name both controls, expose the trailing expanded state, return focus after dismissal and verify separate 48dp effective targets."
       },
       "relationship": "component",
+      "limitations": [
+        "Separate 48dp effective targets, native zoom, spoken output and physical-device behavior remain unverified."
+      ],
+      "supportSource": "llm.md#split-button",
+      "supportReviewedOn": "2026-09-18",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/split-button/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/split-button/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_split-button.scss",
@@ -1346,6 +1525,29 @@
         "requirements": "Use one primary, non-destructive action. Current guidance discourages the small FAB. Extended FABs have visible labels; FAB menus contain two to six labelled actions and must not hide focused controls."
       },
       "relationship": "component",
+      "limitations": [
+        "Full visual parity and spoken assistive-technology output remain unverified."
+      ],
+      "supportSource": "llm.md#floating-action-button",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/floating-action-button/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/floating-action-button/guidelines"
+        },
+        {
+          "label": "Related Google component",
+          "href": "https://m3.material.io/components/extended-fab/overview"
+        },
+        {
+          "label": "Related Google component",
+          "href": "https://m3.material.io/components/fab-menu/overview"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_buttons.scss",
@@ -1410,6 +1612,12 @@
         "requirements": "Keep the control out of reach while it is hidden, move focus to the top of the content along with the scroll, honor reduced motion, and keep the link working without the script."
       },
       "relationship": "none",
+      "limitations": [
+        "The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched."
+      ],
+      "supportSource": "llm.md#back-to-top",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_back-to-top.scss",
@@ -1477,6 +1685,21 @@
         "requirements": "Group one related subject in an elevated, filled or outlined card. A whole-card primary action must not contain other actions. Avoid unnecessary containment and internal scrolling; provide alternatives to drag and swipe gestures."
       },
       "relationship": "component",
+      "limitations": [
+        "Existing card lifecycle and geometry evidence does not cover every selected variant, contrast and reflow state."
+      ],
+      "supportSource": "llm.md#cards",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/cards/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/cards/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_cards.scss",
@@ -1557,6 +1780,12 @@
         "requirements": "Keep the light decorative and out of the accessibility tree, state the element's importance in text, and stop motion when reduced motion is requested."
       },
       "relationship": "none",
+      "limitations": [
+        "The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#aura",
+      "supportReviewedOn": "2026-10-08",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_aura.scss",
@@ -1615,6 +1844,21 @@
         "requirements": "Choose ordinary content, actionable rows or selection explicitly. Use consistent slots and alignment, 48dp targets and a selection cue beyond color. Google describes composite arrow navigation for actionable lists and listbox/option semantics for web selection; these do not apply automatically to ordinary lists."
       },
       "relationship": "component",
+      "limitations": [
+        "Lists of single link or button rows move focus with Up, Down, Home and End as a shortcut; rows stay Tab stops, and lists with several controls per row, selection lists and listbox semantics are not provided."
+      ],
+      "supportSource": "llm.md#lists",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/lists/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/lists/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_list.scss",
@@ -1677,6 +1921,12 @@
         "requirements": "Identify each sender, keep reading order equal to conversation order, name icon-only message actions and announce appended messages through a log region."
       },
       "relationship": "none",
+      "limitations": [
+        "Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#message",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_message.scss",
@@ -1727,6 +1977,12 @@
         "requirements": "Keep the reader's place unless they are at the live edge, let them stop following at any time, name the focusable viewport and announce appended messages through a log region."
       },
       "relationship": "none",
+      "limitations": [
+        "Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role=\"log\" viewport, touch and scrollbar dragging, and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#message-scroller",
+      "supportReviewedOn": "2026-10-08",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_message-scroller.scss",
@@ -1793,6 +2049,12 @@
         "requirements": "Offer a control that refreshes without the gesture, keep the native browser pull from running as well, report the busy state, and do not take scrolling away from a drag that is not a pull."
       },
       "relationship": "none",
+      "limitations": [
+        "The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified. There is no pull from the bottom and no nesting."
+      ],
+      "supportSource": "llm.md#pull-to-refresh",
+      "supportReviewedOn": "2026-10-24",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_pull-to-refresh.scss",
@@ -1853,6 +2115,12 @@
         "requirements": "Offer a single-pointer and keyboard path to every action a swipe reveals (WCAG 2.5.1), keep the actions named and reachable while the row is closed, run nothing on the gesture alone, and do not take scrolling away from a drag that is not a swipe."
       },
       "relationship": "none",
+      "limitations": [
+        "Swipe reveal, the slide limit, short, vertical, mouse, two-finger and cancelled drags, the toggle, focus on an action, Escape, an outside tap, closing after an action, one open row, the event and onToggle, right-to-left pages, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, flick velocity, pen input, spoken output and forced colors remain unverified. Actions only on the inline-end side, and no full swipe that runs an action."
+      ],
+      "supportSource": "llm.md#swipe-actions",
+      "supportReviewedOn": "2026-10-24",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_swipe-actions.scss",
@@ -1913,6 +2181,12 @@
         "requirements": "Expose each header as a button with its expanded state, keep controls out of the header, keep the reading order equal to the visual order and respect reduced motion."
       },
       "relationship": "none",
+      "limitations": [
+        "Tile corners, the chevron turn, exclusive groups and the expanded state Chromium reports are checked in a browser; the open animation, enlarged text and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#accordion",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_accordion.scss",
@@ -1963,6 +2237,12 @@
         "requirements": "Keep the control a native button named by visible text, report its expanded state, point it at the text it controls, and hide it from sight and the tab order when there is nothing more to show."
       },
       "relationship": "none",
+      "limitations": [
+        "Toggling, the fit check across widths, fractional line heights and window-size prefixes, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output is unverified. Find-in-page does not open clamped text, a font that starts loading after document.fonts.ready has settled is not caught until the next resize, and an icon-only button keeps its aria-label while open."
+      ],
+      "supportSource": "llm.md#show-more",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/ts/components/showMore.ts",
@@ -2029,6 +2309,12 @@
         "requirements": "Keep native table semantics with column and row headers, expose sort state on the header cell, name selection checkboxes after their rows and make a scrolling region reachable and named."
       },
       "relationship": "none",
+      "limitations": [
+        "Table semantics, the sticky header, numeric alignment, the sort arrow and selected rows are checked in a browser; sort announcements, enlarged text and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#data-table",
+      "supportReviewedOn": "2026-10-27",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_data-table.scss",
@@ -2085,6 +2371,12 @@
         "requirements": "Pair every value with its label, state the direction and comparison of a change in text and keep long values from overflowing their tile."
       },
       "relationship": "none",
+      "limitations": [
+        "Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#stat",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_stat.scss",
@@ -2135,6 +2427,12 @@
         "requirements": "Keep the native dl so each value stays paired with its label, keep the reading order label before value and let long values wrap."
       },
       "relationship": "none",
+      "limitations": [
+        "Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#description-list",
+      "supportReviewedOn": "2026-10-15",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_description-list.scss",
@@ -2185,6 +2483,12 @@
         "requirements": "Pair the value with its label, state the direction and unit of a change in text, caption the sparkline and name the action after the figure."
       },
       "relationship": "none",
+      "limitations": [
+        "Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#kpi",
+      "supportReviewedOn": "2026-10-08",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_kpi.scss",
@@ -2235,6 +2539,12 @@
         "requirements": "Keep the number in the element's text for assistive technology, avoid announcing every tick and stop the motion when the user asks for reduced motion."
       },
       "relationship": "none",
+      "limitations": [
+        "Width, digit positions, the baseline, the roll transition, reduced motion and the accessibility tree text are checked in a browser; spoken output inside role=\"timer\" and aria-live regions remains unverified."
+      ],
+      "supportSource": "llm.md#countdown",
+      "supportReviewedOn": "2026-10-08",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_countdown.scss",
@@ -2285,6 +2595,12 @@
         "requirements": "Keep the data available as text, name the chart, keep series distinguishable and let a keyboard reach every value the pointer can."
       },
       "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified. The axis modifier provides round value labels; full visual parity remains unassessed."
+      ],
+      "supportSource": "llm.md#line-chart",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/abstracts/_mixins.scss",
@@ -2361,6 +2677,12 @@
         "requirements": "Keep the data available as text, name the chart, start columns at zero, keep series distinguishable and let a keyboard reach every value the pointer can."
       },
       "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. The axis modifier provides round value labels and range draws low-to-high columns; horizontal bars use the bar chart."
+      ],
+      "supportSource": "llm.md#column-chart",
+      "supportReviewedOn": "2026-10-07",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/abstracts/_mixins.scss",
@@ -2435,6 +2757,12 @@
         "requirements": "Keep the data available as text, name the chart, start bars at zero, keep series distinguishable and let a keyboard reach every value the pointer can."
       },
       "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, grouped, stacked and split geometry, values, gaps, negative values, the value range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no value axis labels."
+      ],
+      "supportSource": "llm.md#bar-chart",
+      "supportReviewedOn": "2026-10-07",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/abstracts/_mixins.scss",
@@ -2513,6 +2841,12 @@
         "requirements": "Keep the data available as text, name the chart, keep slices distinguishable and their shares readable, and let a keyboard reach every slice the pointer can."
       },
       "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names and their leader lines, data-other grouping, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values have no slice. The .labels names only move up or down their side, so many thin slices near the top or bottom can run into the caption or legend unless data-other groups them."
+      ],
+      "supportSource": "llm.md#pie-chart",
+      "supportReviewedOn": "2026-10-07",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/abstracts/_mixins.scss",
@@ -2592,6 +2926,12 @@
         "requirements": "Keep the data available as text, name the chart, keep values readable without telling shades apart, and let a keyboard reach every cell the pointer can."
       },
       "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified."
+      ],
+      "supportSource": "llm.md#heatmap-chart",
+      "supportReviewedOn": "2026-10-07",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/abstracts/_mixins.scss",
@@ -2660,6 +3000,12 @@
         "requirements": "Keep the data available as text, name the chart, keep series distinguishable and every spoke labelled, and let a keyboard reach every row the pointer can."
       },
       "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. A gap breaks the outline; there are no ring value labels."
+      ],
+      "supportSource": "llm.md#radar-chart",
+      "supportReviewedOn": "2026-10-07",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/abstracts/_mixins.scss",
@@ -2739,6 +3085,12 @@
         "requirements": "Keep the data available as text, name the chart, keep rings distinguishable and their values readable, and let a keyboard reach every ring the pointer can."
       },
       "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, segments, gradient fills, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values leave only the track. The .labels names can run into a crowded middle total."
+      ],
+      "supportSource": "llm.md#radial-chart",
+      "supportReviewedOn": "2026-10-07",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/abstracts/_mixins.scss",
@@ -2818,6 +3170,12 @@
         "requirements": "Keep the data available as text, name the chart, keep series distinguishable without color alone, state each scale's units, and let a keyboard reach every row the pointer can."
       },
       "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, both scales, gaps, stacked columns, points, straight lines, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified."
+      ],
+      "supportSource": "llm.md#mixed-chart",
+      "supportReviewedOn": "2026-10-07",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/abstracts/_mixins.scss",
@@ -2890,6 +3248,12 @@
         "requirements": "Keep the data available as text, name the chart, keep series distinguishable, state each scale's units, and let a keyboard reach every point the pointer can."
       },
       "relationship": "none",
+      "limitations": [
+        "Point placement in left-to-right and right-to-left pages, gaps, both axes, the tooltip, keyboard steps, the nearest point by pointer, update() motion, data-watch, the toggle legend and .bubble areas, gaps, tooltip, refit and size motion are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no trend lines, separate x columns per series or sizes per series."
+      ],
+      "supportSource": "llm.md#scatter-chart",
+      "supportReviewedOn": "2026-10-24",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/abstracts/_mixins.scss",
@@ -2964,6 +3328,12 @@
         "requirements": "Keep the data available as text, name the chart, label each stage, and let a keyboard reach every row the pointer can."
       },
       "relationship": "none",
+      "limitations": [
+        "Stage widths and order in left-to-right and right-to-left pages, gaps, labels, the tooltip and its percentages, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no tapered stages, colors per row, step-to-step conversion rates or horizontal funnels."
+      ],
+      "supportSource": "llm.md#funnel-chart",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/abstracts/_mixins.scss",
@@ -3038,6 +3408,12 @@
         "requirements": "Keep the flows available as text, name the chart, keep nodes distinguishable, name each node on the chart, and let a keyboard reach every link the pointer can."
       },
       "relationship": "none",
+      "limitations": [
+        "Link and node sizes, columns, skipped rows, names, colors, right-to-left mirroring, keyboard steps, the link under the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Nodes are not reached by keyboard or pointer, and node order follows the table with no crossing reduction."
+      ],
+      "supportSource": "llm.md#sankey-chart",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/abstracts/_mixins.scss",
@@ -3106,6 +3482,12 @@
         "requirements": "Keep the data available as text, name the chart, keep each part identifiable without relying on color alone, and let a keyboard reach every part the pointer can."
       },
       "relationship": "none",
+      "limitations": [
+        "Areas, the layout in left-to-right and right-to-left pages, gaps, colors, text fitting, keyboard steps, the rectangle under the pointer, the tooltip, update() and data-watch are checked in a browser, and the forced-colors edge is checked in the stylesheet; screen reader output and enlarged text remain unverified. There is one level only: no parent groups, legend, drill-down or animated update()."
+      ],
+      "supportSource": "llm.md#treemap-chart",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/abstracts/_mixins.scss",
@@ -3174,6 +3556,12 @@
         "requirements": "Keep events in an ordered list in the order shown, give each a machine-readable time and hide decorative markers and icons."
       },
       "relationship": "none",
+      "limitations": [
+        "Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#timeline",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_timeline.scss",
@@ -3224,6 +3612,13 @@
         "requirements": "Name the month in a caption, keep weekday column headers, mark today in text as well as color, and keep each event a reachable link or text."
       },
       "relationship": "none",
+      "limitations": [
+        "Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified.",
+        "Events that overlap in time overlap on screen in the week and day views; the page splits them."
+      ],
+      "supportSource": "llm.md#calendar",
+      "supportReviewedOn": "2026-10-22",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_calendar.scss",
@@ -3275,6 +3670,15 @@
         "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
       },
       "relationship": "component",
+      "limitations": [],
+      "supportSource": "llm.md#dialogs",
+      "supportReviewedOn": "2026-09-07",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/dialogs/specs"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_dialog.scss",
@@ -3324,6 +3728,21 @@
         "requirements": "Distinguish standard and modal sheets. Keep overflowing content scrollable, close actions reachable and height changes available without dragging. Verify the selected width and margin configuration against Google measurements."
       },
       "relationship": "component",
+      "limitations": [
+        "An .expandable sheet has a partial and a full height and no others. Long-content scrolling and enlarged-text action access are checked; native zoom and physical touch remain unverified."
+      ],
+      "supportSource": "llm.md#bottom-sheet",
+      "supportReviewedOn": "2026-09-18",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/bottom-sheets/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/bottom-sheets/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_bottom-sheet.scss",
@@ -3416,6 +3835,21 @@
         "requirements": "Use standard or modal sheets for optional supporting content. Mirror the trailing edge in RTL, avoid horizontal scrolling and provide an accessible close action separate from dragging."
       },
       "relationship": "component",
+      "limitations": [
+        "Rendered RTL docking, dragging and enlarged translated text are checked; native zoom, assistive technology and physical-device review remain pending."
+      ],
+      "supportSource": "llm.md#side-sheet",
+      "supportReviewedOn": "2026-09-17",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/side-sheets/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/side-sheets/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_side-sheet.scss",
@@ -3505,6 +3939,22 @@
         "requirements": "A decorative grip is not an operable control. Bottom-sheet guidance describes activation to cycle available heights; provide keyboard and non-drag pointer alternatives for any real drag operation."
       },
       "relationship": "related",
+      "limitations": [
+        "A grip outside supported sheets implements neither dragging nor keyboard or non-drag pointer alternatives.",
+        "Standalone grip styling supplies no drag, resize or reorder operation."
+      ],
+      "supportSource": "llm.md#drag-handle",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/bottom-sheets/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/bottom-sheets/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_drag-handle.scss",
@@ -3555,6 +4005,21 @@
         "requirements": "Use a 6dp small badge or a 16dp large badge, with short counts anchored at the trailing icon edge. Expose the badge meaning once alongside its destination. Google badge contrast guidance does not replace WCAG text-contrast requirements."
       },
       "relationship": "component",
+      "limitations": [
+        "A named count fixture is checked; changing counts, clipping and spoken updates remain unverified."
+      ],
+      "supportSource": "llm.md#badges",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/badges/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/badges/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_badges.scss",
@@ -3605,6 +4070,12 @@
         "requirements": "Name each person once through alt text or role=\"img\" with a label, hide avatars beside a visible name and keep group counts understandable without the picture."
       },
       "relationship": "none",
+      "limitations": [
+        "Sizes, the circle, the group overlap and named initials are checked in a browser; image loading failures, enlarged text and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#avatar",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_avatar.scss",
@@ -3655,6 +4126,12 @@
         "requirements": "Carry the hierarchy in nested lists, expose each manager's expanded state, keep every manager reachable by keyboard, keep the drawn lines silent and avoid a tree role without its arrow-key contract."
       },
       "relationship": "none",
+      "limitations": [
+        "Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified."
+      ],
+      "supportSource": "llm.md#organization-chart",
+      "supportReviewedOn": "2026-10-16",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_org-chart.scss",
@@ -3700,6 +4177,17 @@
         "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
       },
       "relationship": "component",
+      "limitations": [
+        "For hover/focus tooltips, verify dismissibility, hoverability, and persistence under WCAG SC 1.4.13, including its exceptions. Plain CSS bubbles disable pointer events and have no own Escape handler; aria-describedby alone does not verify these behaviors. Read the [focused web checks](../expressivecss-accessibility/references/web-checks.md#content-on-hover-or-focus)."
+      ],
+      "supportSource": "llm.md#tooltips",
+      "supportReviewedOn": "2026-09-07",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/tooltips/specs"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_tooltip.scss",
@@ -3766,6 +4254,12 @@
         "requirements": "Open on press rather than hover, report the expanded state on the button, return focus on dismissal, keep the panel next in reading order and keep it within the viewport."
       },
       "relationship": "none",
+      "limitations": [
+        "Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified."
+      ],
+      "supportSource": "llm.md#popover",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_popover.scss",
@@ -3816,6 +4310,12 @@
         "requirements": "Show the card on hover and keyboard focus after a delay, keep it open while the pointer or focus is on the link or the card, hide it on Escape with focus back on the link, leave the link's click alone and relate the card to the link with aria-details."
       },
       "relationship": "none",
+      "limitations": [
+        "Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified. Touch shows no card, and the card's content is static markup."
+      ],
+      "supportSource": "llm.md#hover-card",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/ts/components/hoverCard.ts",
@@ -3872,6 +4372,12 @@
         "requirements": "Let the user start, skip and end the tour, name the card by the step heading, move focus to it and back afterwards, and skip steps whose target is not shown."
       },
       "relationship": "none",
+      "limitations": [
+        "Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified."
+      ],
+      "supportSource": "llm.md#tour",
+      "supportReviewedOn": "2026-10-15",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/ts/behaviors/tour.ts",
@@ -3928,6 +4434,21 @@
         "requirements": "Show one snackbar at a time without autofocus or a focus trap. Actionable snackbars persist until acted on or dismissed. Timed web feedback needs an equivalent persistent inline message. Document a keyboard route to actions, support Escape when focused and restore logical focus."
       },
       "relationship": "component",
+      "limitations": [
+        "Custom template actions require explicit persistence and a close control. Application keyboard reach controls and spoken live-region delivery need verification."
+      ],
+      "supportSource": "llm.md#snackbar",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/snackbar/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/snackbar/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_snackbar.scss",
@@ -3997,6 +4518,21 @@
         "requirements": "Report accurate determinate values and omit values for unknown progress. Keep the same process recognizable when its state changes. Mirror linear progress in RTL and provide an end stop when track contrast needs it. Loading indicators cover many short waits; circular progress remains useful in buttons and processes that become determinate."
       },
       "relationship": "component",
+      "limitations": [
+        "Forced-colors rendering is checked in browser emulation; Windows high-contrast and spoken output still require manual review."
+      ],
+      "supportSource": "llm.md#progress-indicators",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/progress-indicators/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/progress-indicators/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_progress.scss",
@@ -4067,6 +4603,21 @@
         "requirements": "Use for an actual short wait with unknown progress, usually 200ms to five seconds. Do not use for a process that will become determinate. Google specifies a descriptive progressbar role and sufficient shape contrast; a refresh gesture still needs an alternative."
       },
       "relationship": "component",
+      "limitations": [
+        "The framework requires a named status while Google recommends progressbar; an indeterminate progressbar validly omits aria-valuenow."
+      ],
+      "supportSource": "llm.md#loading-indicator",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/loading-indicator/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/loading-indicator/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_loading-indicator.scss",
@@ -4117,6 +4668,12 @@
         "requirements": "Block input to the busy region only, report the busy state and its end to assistive technology, keep focus from being lost for good, and keep the content visibly unavailable in forced colors."
       },
       "relationship": "none",
+      "limitations": [
+        "Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified. The scrim does not follow the content of a region that scrolls itself; the docs say to wrap the scroller."
+      ],
+      "supportSource": "llm.md#loading-overlay",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_loading-overlay.scss",
@@ -4177,6 +4734,12 @@
         "requirements": "Keep placeholders out of the accessibility tree, report the wait through a status, clear aria-busy when content arrives and stop motion when reduced motion is requested."
       },
       "relationship": "none",
+      "limitations": [
+        "The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#skeleton",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_skeleton.scss",
@@ -4227,6 +4790,12 @@
         "requirements": "State what is empty and what to do next in text, keep the heading in the page outline, hide decorative icons and images and announce results that change after a search."
       },
       "relationship": "none",
+      "limitations": [
+        "Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#empty-state",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_empty-state.scss",
@@ -4277,6 +4846,12 @@
         "requirements": "Keep the message in the reading order next to what it describes, convey tone in text as well as color, keep controls out of any live region and return focus when an alert is dismissed."
       },
       "relationship": "none",
+      "limitations": [
+        "The layout, both tones, enlarged-text wrapping and the authored role are checked in a browser; live announcements and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#alert",
+      "supportReviewedOn": "2026-10-15",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_alert.scss",
@@ -4341,6 +4916,21 @@
         "requirements": "Choose a supported layout for the content. On scrolling pages provide a route to all items. Name the container and item positions, provide keyboard and non-drag navigation, keep controls clear of content and provide pause controls for autoplay. Reduced motion removes parallax and equalizes item widths."
       },
       "relationship": "component",
+      "limitations": [
+        "Rendered navigation and application-owned pause controls have browser coverage; screen readers, native zoom and physical-device review remain pending."
+      ],
+      "supportSource": "llm.md#carousel",
+      "supportReviewedOn": "2026-09-17",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/carousel/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/carousel/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_carousel.scss",
@@ -4413,6 +5003,12 @@
         "requirements": "Give both images alt text that says which is which, name the range, and keep it operable by keyboard and pointer."
       },
       "relationship": "none",
+      "limitations": [
+        "The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified."
+      ],
+      "supportSource": "llm.md#image-compare",
+      "supportReviewedOn": "2026-10-15",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_image-compare.scss",
@@ -4463,6 +5059,12 @@
         "requirements": "Hide the copy from assistive technology, keep each link reachable once, pause on hover and focus, offer a pause control for long-running motion and stop it when reduced motion is requested."
       },
       "relationship": "none",
+      "limitations": [
+        "The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified."
+      ],
+      "supportSource": "llm.md#marquee",
+      "supportReviewedOn": "2026-10-08",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_marquee.scss",
@@ -4513,6 +5115,12 @@
         "requirements": "Keep the effect decorative and out of the accessibility tree, never block input, state the outcome in text and draw nothing when reduced motion is requested."
       },
       "relationship": "none",
+      "limitations": [
+        "The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified."
+      ],
+      "supportSource": "llm.md#confetti",
+      "supportReviewedOn": "2026-10-09",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_confetti.scss",
@@ -4567,6 +5175,12 @@
         "requirements": "Keep the effect decorative and out of the accessibility tree, never block input, keep text over it readable and stop motion when reduced motion is requested."
       },
       "relationship": "none",
+      "limitations": [
+        "The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified."
+      ],
+      "supportSource": "llm.md#particles",
+      "supportReviewedOn": "2026-10-09",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_particles.scss",
@@ -4621,6 +5235,12 @@
         "requirements": "Provide a named keyboard-operable enlargement trigger, Escape and an accessible close route, logical focus and reduced motion. Image enlargement is not automatically a modal gallery."
       },
       "relationship": "none",
+      "limitations": [
+        "Enlargement and teardown are checked; modal containment, reduced motion and destruction during closing remain unverified."
+      ],
+      "supportSource": "llm.md#lightbox",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_lightbox.scss",
@@ -4729,6 +5349,12 @@
         "requirements": "Name the map region, make interactive markers named buttons, return focus when a popup closes, keep tile attribution visible and give the same information in text."
       },
       "relationship": "none",
+      "limitations": [
+        "Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified."
+      ],
+      "supportSource": "llm.md#map",
+      "supportReviewedOn": "2026-10-09",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_map.scss",
@@ -4784,6 +5410,15 @@
         "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
       },
       "relationship": "component",
+      "limitations": [],
+      "supportSource": "llm.md#toolbars",
+      "supportReviewedOn": "2026-09-07",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/toolbars/specs"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_toolbar.scss",
@@ -4821,6 +5456,12 @@
         "requirements": "Give every item a tab stop and a name, keep live announcements to the changing text item, state in text what an item color means and keep targets at least 24px."
       },
       "relationship": "none",
+      "limitations": [
+        "Bar size, sticking, item targets, the end group, colors, priority hiding, wrapping, RTL, enlarged text, forced colors and blocked filled-button states are checked in a browser; spoken output and a real safe-area inset remain unverified."
+      ],
+      "supportSource": "llm.md#status-bar",
+      "supportReviewedOn": "2026-11-14",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_status-bar.scss",
@@ -4885,6 +5526,21 @@
         "requirements": "Prefer the contained Expressive style. Adapt compact full-screen and wider docked search to available space, preserve the submitted query and make suggestions reachable and announced."
       },
       "relationship": "component",
+      "limitations": [
+        "CSS does not supply search results announcements or modal focus ownership."
+      ],
+      "supportSource": "llm.md#search",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/search/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/search/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_search.scss",
@@ -4935,6 +5591,12 @@
         "requirements": "Keep focus in the input while the active option moves, report it with aria-activedescendant, announce when nothing matches, return focus on close and let users turn the shortcut off."
       },
       "relationship": "none",
+      "limitations": [
+        "The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified."
+      ],
+      "supportSource": "llm.md#command-palette",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_command-palette.scss",
@@ -4994,6 +5656,21 @@
         "requirements": "Use native fieldset and legend to name related form controls. Text-field labels and errors remain relevant, but Google has no dedicated fieldset specification."
       },
       "relationship": "related",
+      "limitations": [
+        "Named native groups and disabled descendants are checked; long legends and nested groups remain unverified."
+      ],
+      "supportSource": "llm.md#fieldsets",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/text-fields/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/text-fields/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/forms/_fieldset.scss",
@@ -5045,6 +5722,15 @@
         "note": "Rendered prose reviewed; collapsed token tables, image-only measurements, runtime and full parity unverified. See the design priority component review for requirement-level findings."
       },
       "relationship": "component",
+      "limitations": [],
+      "supportSource": "llm.md#text-inputs",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/text-fields/specs"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/forms/_input-fields.scss",
@@ -5101,6 +5787,12 @@
         "requirements": "Keep the field a labelled native input, show the expected format in visible text, leave IME composition alone until it ends, keep the caret where the person is editing, and submit and validate the value the person sees."
       },
       "relationship": "none",
+      "limitations": [
+        "Typing, inserted pastes, deletes across literals, composition in both event orders, saved and reset values, listener order, Keypad keys and destroy() are checked in a browser; real IMEs, Android keyboards, clipboard pastes and spoken output remain unverified, and undo after a formatted edit does nothing. The form submits only the formatted value, and masks cannot change with the value."
+      ],
+      "supportSource": "llm.md#input-mask",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/ts/components/inputMask.ts",
@@ -5157,6 +5849,12 @@
         "requirements": "Keep the field a labelled native input that names the currency, show the amount in the reader's locale, let people edit a plain number, report text that holds no amount as invalid, and submit a number a server can read whatever the locale."
       },
       "relationship": "none",
+      "limitations": [
+        "Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified. Formatting happens on blur only, and a form that repeats a currency field's name gets one entry for them."
+      ],
+      "supportSource": "llm.md#currency-input",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/ts/components/currencyInput.ts",
@@ -5213,6 +5911,12 @@
         "requirements": "Name the editable area, expose formatting state on toggle buttons, keep the toolbar reachable by keyboard and submit the content with its form."
       },
       "relationship": "none",
+      "limitations": [
+        "Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified."
+      ],
+      "supportSource": "llm.md#rich-text-editor",
+      "supportReviewedOn": "2026-10-08",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_rich-text-editor.scss",
@@ -5273,6 +5977,12 @@
         "requirements": "Keep a native, labelled file input reachable by keyboard, show drag feedback that is not color alone, list chosen files in text and validate type and size where the files are used."
       },
       "relationship": "none",
+      "limitations": [
+        "Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#drop-zone",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/forms/_drop-zone.scss",
@@ -5337,6 +6047,21 @@
         "requirements": "Google menu guidance includes select and text-field dropdown menus. Single selection replaces the previous value; multiple selection remains open. Preserve field labels and associated errors."
       },
       "relationship": "related",
+      "limitations": [
+        "Native zoom, screen-reader announcements, Windows contrast themes and physical-device form interaction remain unverified."
+      ],
+      "supportSource": "llm.md#select",
+      "supportReviewedOn": "2026-10-27",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/menus/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/menus/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/forms/_select.scss",
@@ -5477,6 +6202,12 @@
         "requirements": "Keep a labelled native select as the form control, expose the hierarchy as an ARIA tree with its keyboard contract, let people choose only a leaf, and submit that leaf's value whatever the nesting."
       },
       "relationship": "none",
+      "limitations": [
+        "Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output, touch, native zoom and OS IME remain unverified. Leaf filtering, expansion restoration, native submission, reset/refresh, modal/shadow focus and forced-color scrolling are checked in all three engines. No choosable branch; the field shows leaf text, not ancestor paths. Multiple toggling, hidden selections, native two-value submission and distinct selected/focus paint are checked in all three engines."
+      ],
+      "supportSource": "llm.md#tree-select",
+      "supportReviewedOn": "2026-10-27",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/ts/components/treeSelect.ts",
@@ -5533,6 +6264,12 @@
         "requirements": "Keep the field a labelled input that reads as a combobox, name every column, show which options form the open path, reach every option from the keyboard in both directions, close without committing on Escape, and submit every level of the path."
       },
       "relationship": "none",
+      "limitations": [
+        "Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified. There is no search, type-ahead, multiple selection or lazy loading, and only a leaf commits."
+      ],
+      "supportSource": "llm.md#cascader",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/ts/components/cascader.ts",
@@ -5597,6 +6334,21 @@
         "requirements": "Use labelled independent multi-select options with a 48dp effective target. An indeterminate parent reflects partial child selection. The Google accessibility table contains chip-specific shortcuts; native checkbox behavior uses Space."
       },
       "relationship": "component",
+      "limitations": [
+        "Native state coverage does not verify parent aggregation or every target and forced-colors state."
+      ],
+      "supportSource": "llm.md#checkboxes",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/checkbox/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/checkbox/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/forms/_checkboxes.scss",
@@ -5653,6 +6405,12 @@
         "requirements": "Name both lists, keep every row and button reachable by keyboard, announce each move, keep focus on the pressed button, and submit the chosen options in a stable order."
       },
       "relationship": "none",
+      "limitations": [
+        "The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser; spoken output and forced colors remain unverified."
+      ],
+      "supportSource": "llm.md#transfer-list",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_transfer-list.scss",
@@ -5727,6 +6485,21 @@
         "requirements": "Use a named group of exclusive options with 48dp targets and native arrow navigation. Guidelines favor a default; the accessibility page also discusses an initially empty group. Choose the initial state for the task."
       },
       "relationship": "component",
+      "limitations": [
+        "Native group selection is checked; initially-empty and disabled-option paths remain unmeasured."
+      ],
+      "supportSource": "llm.md#radio-buttons",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/radio-button/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/radio-button/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/forms/_radio-buttons.scss",
@@ -5777,6 +6550,12 @@
         "requirements": "Keep a native radio group with a legend and a name for every star, show focus, fill by more than color where possible and name a read-only display with its value."
       },
       "relationship": "none",
+      "limitations": [
+        "Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified."
+      ],
+      "supportSource": "llm.md#rating",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/forms/_rating.scss",
@@ -5827,6 +6606,12 @@
         "requirements": "Keep a native radio group with a legend and a name for every swatch, mark the choice by shape as well as color, show focus and keep the swatch colors under forced colors."
       },
       "relationship": "none",
+      "limitations": [
+        "Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified."
+      ],
+      "supportSource": "llm.md#color-swatches",
+      "supportReviewedOn": "2026-10-18",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/forms/_color-swatches.scss",
@@ -5877,6 +6662,12 @@
         "requirements": "Keep a native color input as the value, name the group and each control, make every axis reachable by keyboard with its value announced, keep the colors under forced colors and keep Enter in the hex field from submitting the form."
       },
       "relationship": "none",
+      "limitations": [
+        "Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified."
+      ],
+      "supportSource": "llm.md#color-picker",
+      "supportReviewedOn": "2026-10-18",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/forms/_color-picker.scss",
@@ -5939,6 +6730,21 @@
         "requirements": "Use a switch for an immediate binary setting with a stable label and a 48dp effective target. Preserve native checkbox keyboard behavior and verify that the setting actually changes."
       },
       "relationship": "component",
+      "limitations": [
+        "The styled native checkbox does not perform or announce a persisted setting change."
+      ],
+      "supportSource": "llm.md#switches",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/switch/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/switch/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/forms/_switches.scss",
@@ -5997,6 +6803,21 @@
         "requirements": "Choose standard, centered or range selection and an appropriate track size. Verify immediate values, arrows, Home/End, stops and orientation. Provide synchronized numeric entry when precise values matter."
       },
       "relationship": "component",
+      "limitations": [
+        "Native-handle alignment, paired interaction and emulated forced colors have browser coverage. Screen readers, physical touch devices and actual Windows contrast themes remain pending."
+      ],
+      "supportSource": "llm.md#sliders",
+      "supportReviewedOn": "2026-09-17",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/sliders/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/sliders/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/forms/_slider.scss",
@@ -6083,6 +6904,21 @@
         "requirements": "Distinguish assist, filter, input and suggestion chips. Verify a 48dp effective target around the 32dp visual chip, separate named removal controls, overflow and focus after deletion."
       },
       "relationship": "component",
+      "limitations": [
+        "Rendered deletion, focus recovery and wrapped action/delete controls are checked. Full effective-target sizing, spoken output and physical-device behavior remain unverified."
+      ],
+      "supportSource": "llm.md#chips",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/chips/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/chips/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_chips.scss",
@@ -6166,6 +7002,21 @@
         "requirements": "Provide a labelled text field, reachable suggestions and clear selection state. Announce new results when suggestions update; filtering and selection must preserve the intended value."
       },
       "relationship": "related",
+      "limitations": [
+        "Generated status-info does not announce new suggestion counts or asynchronous results."
+      ],
+      "supportSource": "llm.md#autocomplete",
+      "supportReviewedOn": "2026-09-13",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/menus/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/menus/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/forms/_input-fields.scss",
@@ -6245,6 +7096,21 @@
         "requirements": "Distinguish docked, modal, input and range variants. Provide manual entry and a date-format description. Calendar navigation includes arrows, Home/End, Page Up/Down and modified month/year movement."
       },
       "relationship": "component",
+      "limitations": [
+        "Calendar keyboard navigation and range/multiple selection lifecycle have browser coverage. Spoken calendar context, native zoom and physical devices remain unverified."
+      ],
+      "supportSource": "llm.md#date-picker",
+      "supportReviewedOn": "2026-09-17",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/date-pickers/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/date-pickers/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_datepicker.scss",
@@ -6349,6 +7215,21 @@
         "requirements": "Provide named hour and minute inputs, manual entry, 12/24-hour handling and named AM/PM selection state. Keep an input alternative when the dial is unsuitable for available space."
       },
       "relationship": "component",
+      "limitations": [
+        "Named digital inputs as spin buttons, AM/PM state, input-event synchronization and the modal dialog have browser coverage. The dial itself takes pointer input only."
+      ],
+      "supportSource": "llm.md#time-picker",
+      "supportReviewedOn": "2026-09-18",
+      "googleLinks": [
+        {
+          "label": "Specification (full specs unreviewed)",
+          "href": "https://m3.material.io/components/time-pickers/specs"
+        },
+        {
+          "label": "Guidelines",
+          "href": "https://m3.material.io/components/time-pickers/guidelines"
+        }
+      ],
       "sources": [
         {
           "path": "src/sass/components/_timepicker.scss",
@@ -6435,6 +7316,12 @@
         "requirements": "Name the group and every icon key, keep keys from submitting the form, keep the field labelled and usable from a hardware keyboard, and keep keys at a usable target size."
       },
       "relationship": "none",
+      "limitations": [
+        "Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. There is no caps lock, no symbol layer switching and no hardware key highlighting, and minlength does not apply to keypad edits; the page owns layouts beyond the keys it writes."
+      ],
+      "supportSource": "llm.md#keypad-and-keyboard",
+      "supportReviewedOn": "2026-10-11",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_keypad.scss",
@@ -6489,6 +7376,12 @@
         "requirements": "Name each question with a legend, show one error per question next to it and move focus to the control to fix, keep hidden questions out of the tab order, let optional questions be skipped and keep the form usable without JavaScript."
       },
       "relationship": "none",
+      "limitations": [
+        "Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no answer keyboard shortcuts, no summary step and no saved progress; the page owns persistence and branching."
+      ],
+      "supportSource": "llm.md#questionnaire",
+      "supportReviewedOn": "2026-10-08",
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_questionnaire.scss",
@@ -6543,6 +7436,10 @@
         "scope": "android-foundation-reviewed; full web specification unassessed"
       },
       "relationship": "foundation",
+      "limitations": [],
+      "supportSource": null,
+      "supportReviewedOn": null,
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/tokens/_reference.scss",
@@ -6611,6 +7508,10 @@
         "scope": "android-foundation-reviewed; full web specification unassessed"
       },
       "relationship": "foundation",
+      "limitations": [],
+      "supportSource": null,
+      "supportReviewedOn": null,
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_buttons.scss",
@@ -6675,6 +7576,10 @@
         "scope": "android-foundation-reviewed; full web specification unassessed"
       },
       "relationship": "foundation",
+      "limitations": [],
+      "supportSource": null,
+      "supportReviewedOn": null,
+      "googleLinks": [],
       "sources": [
         {
           "path": "src/sass/components/_button-groups.scss",

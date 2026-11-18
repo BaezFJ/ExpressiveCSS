@@ -25,17 +25,13 @@ Example: A contact directory with no detail view needs a list. Use list-detail p
 
 Relationship: pattern. Canonical layout pattern, not a standalone component.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/foundations/layout/canonical-examples/overview).
-
-Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
-
-Support (2026-09-17, `llm.md#panes`): List-detail, supporting pane, and equal panes.
+Support: List-detail, supporting pane, and equal panes.
 
 Web adaptation: CSS viewport and container queries; the application chooses the active compact pane.
 
-Known boundary: Compact supporting layouts retain one-active-pane selection rather than automatic stacking. Native zoom, assistive technology and physical-device review remain pending.
+Known boundary: Compact supporting layouts retain one-active-pane selection rather than automatic stacking.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#panes).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#panes).
 
 #### Contract
 

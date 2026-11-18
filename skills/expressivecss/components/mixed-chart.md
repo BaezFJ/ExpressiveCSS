@@ -23,17 +23,11 @@ Example: Monthly revenue as columns with a dashed target line, or ad spend with 
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-07); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-07, `llm.md#mixed-chart`): Columns, smooth lines and areas drawn per series from a figure's data table by header class, with dashed lines, a second scale for end series with its own fixed range, x labels, round labels for both scales with .axis, aligned to shared grid lines, a legend, a sparkline modifier, and a pointer and keyboard tooltip with points on the lines.
+Support: Columns, smooth lines and areas drawn per series from a figure's data table by header class, with dashed lines, a second scale for end series with its own fixed range, x labels, round labels for both scales with .axis, aligned to shared grid lines, a legend, a sparkline modifier, and a pointer and keyboard tooltip with points on the lines.
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns and SVG are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Drawing, the hidden table, both scales, gaps, stacked columns, points, straight lines, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#mixed-chart).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#mixed-chart).
 
 #### Contract
 

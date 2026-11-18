@@ -23,17 +23,11 @@ Example: Monthly revenue against last year and a target is a line chart with thr
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-06); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-06, `llm.md#line-chart`): Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, round y axis labels with .axis, a legend, and a pointer and keyboard tooltip.
+Support: Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, round y axis labels with .axis, a legend, and a pointer and keyboard tooltip.
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified. The axis modifier provides round value labels; full visual parity remains unassessed.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#line-chart).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#line-chart).
 
 #### Contract
 

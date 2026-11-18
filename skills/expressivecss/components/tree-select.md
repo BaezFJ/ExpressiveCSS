@@ -23,17 +23,13 @@ Example: A destination field with continents, countries and cities takes a data-
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-25); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-27, `llm.md#tree-select`): A native select[data-tree] whose flat options name their parent's value in data-parent; a role="tree" popup with the ARIA tree keyboard contract over visible, enabled rows, mirrored under RTL; single or native multiple independent leaf choices, with branches normalized out of multiple selection; branch options disabled while it runs; optional single/multiple leaf search retaining ancestor paths and restoring pre-query expansion; refresh() preserving the query, expansion baseline and focus.
+Support: A native select[data-tree] whose flat options name their parent's value in data-parent; a role="tree" popup with the ARIA tree keyboard contract over visible, enabled rows, mirrored under RTL; single or native multiple independent leaf choices, with branches normalized out of multiple selection; branch options disabled while it runs; optional single/multiple leaf search retaining ancestor paths and restoring pre-query expansion; refresh() preserving the query, expansion baseline and focus.
 
 Web adaptation: TreeSelect extends FormSelect, so the native select keeps the form value, reset, validity and disabled state. The popup is a ul role="tree" inside the Menu surface, one list below the rows Menu styles, named as the field is. Search reuses the labelled dialog/search/status controls around that tree without a listbox wrapper.
 
-Known boundary: Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output, touch, native zoom and OS IME remain unverified. Leaf filtering, expansion restoration, native submission, reset/refresh, modal/shadow focus and forced-color scrolling are checked in all three engines. No choosable branch; the field shows leaf text, not ancestor paths. Multiple toggling, hidden selections, native two-value submission and distinct selected/focus paint are checked in all three engines.
+Known boundary: No choosable branch; the field shows leaf text, not ancestor paths.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#tree-select).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#tree-select).
 
 #### Contract
 

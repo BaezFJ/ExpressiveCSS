@@ -21,17 +21,11 @@ Example: Revenue, orders and churn across the top of a sales dashboard, each wit
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-08); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-08, `llm.md#kpi`): A card with a labelled value in a description list, a trend chip with up, down and negative states, a tonal icon, a corner action, a sparkline, a progress bar and a footer.
+Support: A card with a labelled value in a description list, a trend chip with up, down and negative states, a tonal icon, a corner action, a sparkline, a progress bar and a footer.
 
 Web adaptation: A <dl> pairs the value with its label inside a card <article>; the arrow is decoration, the text carries the direction and the sparkline's table is its text alternative.
 
-Known boundary: Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#kpi).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#kpi).
 
 #### Contract
 

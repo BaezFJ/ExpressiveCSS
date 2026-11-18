@@ -19,21 +19,13 @@ Runtime ownership: `css-only`. [Google guidance](https://m3.material.io/componen
 
 Relationship: component.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/search/overview).
-
-Requirements and boundaries: design reference inputs-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/search/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/search/guidelines).
-
-Support (2026-09-13, `llm.md#search`): Search bar and expanded search view.
+Support: Search bar and expanded search view.
 
 Web adaptation: Application toggles hidden for docked views or opens a native dialog for full-screen views; optional Autocomplete owns suggestions.
 
 Known boundary: CSS does not supply search results announcements or modal focus ownership.
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#search).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#search).
 
 #### Contract
 

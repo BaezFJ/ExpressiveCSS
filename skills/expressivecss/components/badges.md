@@ -21,21 +21,11 @@ Example: An unread count belongs on the inbox icon as a badge. A selectable Unre
 
 Relationship: component.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/badges/overview).
-
-Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/badges/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/badges/guidelines).
-
-Support (2026-09-13, `llm.md#badges`): Small dot and large count badges.
+Support: Small dot and large count badges.
 
 Web adaptation: Expose counts through the enclosing control name when its icon is hidden.
 
-Known boundary: A named count fixture is checked; changing counts, clipping and spoken updates remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#badges).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#badges).
 
 #### Contract
 

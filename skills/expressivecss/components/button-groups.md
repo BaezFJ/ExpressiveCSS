@@ -23,21 +23,11 @@ Example: Standard groups fit Cut/Copy/Paste commands; connected groups fit toggl
 
 Relationship: component. Google recommends the connected button group instead of segmented buttons. Match toggle state, required selection and persistence explicitly; native form submission is not supplied by aria-pressed.
 
-Upstream: requirements-prose-reviewed (2026-09-13); [evidence](https://m3.material.io/components/button-groups/overview).
-
-Requirements and boundaries: design reference layout-material-review. Full visual parity and spoken output unverified.
-
-[Specification link](https://m3.material.io/components/button-groups/specs); full specs unreviewed.
-
-[Google guidelines](https://m3.material.io/components/button-groups/guidelines).
-
-Support (2026-09-18, `llm.md#button-groups`): Standard and connected groups; commands and opt-in selection.
+Support: Standard and connected groups; commands and opt-in selection.
 
 Web adaptation: Runtime coordinates neighboring widths and selection; CSS handles connected shapes.
 
-Known boundary: Native zoom, spoken output and physical-device behavior remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#button-groups).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#button-groups).
 
 #### Contract
 

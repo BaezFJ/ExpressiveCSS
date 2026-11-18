@@ -23,17 +23,11 @@ Example: A photo before and after retouching is an image compare. Five product p
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-15); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-15, `llm.md#image-compare`): Two stacked images, a divider and handle driven by a native range input, keyboard and pointer control, RTL and a focus ring.
+Support: Two stacked images, a divider and handle driven by a native range input, keyboard and pointer control, RTL and a focus ring.
 
 Web adaptation: A native range input covers the images invisibly; the ImageCompare behavior writes its value to the divider position.
 
-Known boundary: The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#image-compare).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#image-compare).
 
 #### Contract
 

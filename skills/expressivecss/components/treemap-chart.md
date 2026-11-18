@@ -23,17 +23,13 @@ Example: A budget split across twelve teams is a treemap chart. Revenue split ac
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-25); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-25, `llm.md#treemap-chart`): Rectangles drawn from a figure's data table, one per row of the first value column with its area in proportion to the total, in a squarified layout that mirrors in right-to-left pages, with names and cells written in rectangles that hold them, no rectangle for cells that are not positive numbers, six colors, update(), data-watch, and a pointer and keyboard tooltip with each row's share that steps through rows in table order.
+Support: Rectangles drawn from a figure's data table, one per row of the first value column with its area in proportion to the total, in a squarified layout that mirrors in right-to-left pages, with names and cells written in rectangles that hold them, no rectangle for cells that are not positive numbers, six colors, update(), data-watch, and a pointer and keyboard tooltip with each row's share that steps through rows in table order.
 
 Web adaptation: The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rectangles are aria-hidden and the plot is one Tab stop with a polite live tooltip.
 
-Known boundary: Areas, the layout in left-to-right and right-to-left pages, gaps, colors, text fitting, keyboard steps, the rectangle under the pointer, the tooltip, update() and data-watch are checked in a browser, and the forced-colors edge is checked in the stylesheet; screen reader output and enlarged text remain unverified. There is one level only: no parent groups, legend, drill-down or animated update().
+Known boundary: There is one level only: no parent groups, legend, drill-down or animated update().
 
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#treemap-chart).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#treemap-chart).
 
 #### Contract
 

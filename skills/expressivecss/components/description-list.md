@@ -21,17 +21,11 @@ Example: An order page shows Status, Ship to and Total for one order as a descri
 
 Relationship: none. Web extension; no dedicated entry was observed in the reviewed current M3 component inventory.
 
-Upstream: web-extension-inventory-reviewed (2026-10-15); [evidence](https://m3.material.io/components).
-
-Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Support (2026-10-15, `llm.md#description-list`): Label and value columns with a divider per pair, a compact stacked layout, div-wrapped groups and several values per label.
+Support: Label and value columns with a divider per pair, a compact stacked layout, div-wrapped groups and several values per label.
 
 Web adaptation: A native dl, dt and dd; the browser exposes the label-value pairing.
 
-Known boundary: Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified.
-
-Full parity remains unassessed. [Capability evidence](../references/capability-roadmap.md#description-list).
+Full parity remains unassessed. Review provenance and specification links: [capability evidence](../references/capability-roadmap.md#description-list).
 
 #### Contract
 
