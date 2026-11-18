@@ -1,4 +1,6 @@
 import { decodeHTMLAttribute } from 'entities';
+import { traverseFast } from '@babel/types';
+import { collectModuleAPIs, memberName, parseScript, scriptFile, stringValue } from './javascript.mjs';
 
 // Templates need not be valid HTML or JavaScript. Collect literal evidence
 // across files without evaluating templates, configuration or application code.
@@ -72,7 +74,7 @@ function namedAPIs(tokens, names) {
   }
 }
 
-export function collectAPIReferences(tokens, source, scanImports = true) {
+function collectTemplateAPIs(tokens, source, scanImports = true) {
   const namespaces = new Set(['Expressive']);
   if (scanImports) {
     const named = /(?:import|export)\s*\{([^}]+)\}\s*from\s*["']@expressivecss\/expressive(?:\/modular)?["']/g;
@@ -98,7 +100,7 @@ function createdElements(tokens, source) {
   for (const [, name, , value] of source.matchAll(/\.(id|type|role)\s*=\s*(?:(["'])([\w-]+)\2)?/g)) attribute(tokens, name, value);
 }
 
-export function collectUsage(tokens, source) {
+function collectTemplate(tokens, source) {
   markup(tokens, source);
   createdElements(tokens, source);
   boundClassKeys(tokens, source);
@@ -107,6 +109,87 @@ export function collectUsage(tokens, source) {
     addWords(tokens, literal);
     if (literal.includes('<')) markup(tokens, literal);
   }
+}
+
+function objectClasses(tokens, expression) {
+  traverseFast(expression, node => {
+    if (node.type !== 'ObjectProperty') return;
+    const key = stringValue(node.key) ?? (!node.computed && node.key.name);
+    if (key) addWords(tokens, key);
+  });
+}
+
+function collectScript(tokens, tree, mode) {
+  collectModuleAPIs(tokens, tree, mode);
+  traverseFast(tree, node => {
+    switch (node.type) {
+      case 'JSXOpeningElement':
+        if (typeof node.name.name === 'string') tokens.add(`<${node.name.name.toLowerCase()}`);
+        break;
+      case 'JSXAttribute': {
+        const name = node.name.namespace ? `${node.name.namespace.name}:${node.name.name.name}` : node.name.name;
+        const expr = node.value?.expression ?? node.value;
+        const literal = stringValue(expr) ?? expr?.value;
+        attribute(tokens, name, literal == null ? undefined : String(literal));
+        if (classAttributes.has(name.toLowerCase())) objectClasses(tokens, expr);
+        if (node.value?.type === 'StringLiteral') return traverseFast.skip;
+        break;
+      }
+      case 'StringLiteral':
+        addWords(tokens, node.value);
+        if (node.value.includes('<')) markup(tokens, node.value);
+        break;
+      case 'TemplateElement':
+        addWords(tokens, node.value.cooked ?? node.value.raw);
+        break;
+      case 'TemplateLiteral':
+        if (node.quasis.some(part => part.value.raw.includes('<'))) markup(tokens, node.quasis.map(part => part.value.cooked ?? part.value.raw).join(' '));
+        break;
+      case 'NewExpression':
+        if ((node.callee.name ?? memberName(node.callee)) === 'Image') tokens.add('<img');
+        break;
+      case 'CallExpression':
+      case 'OptionalCallExpression': {
+        const name = node.callee.name ?? memberName(node.callee);
+        const first = stringValue(node.arguments[0]);
+        if (first && ['createElement', 'jsx', 'jsxs'].includes(name)) tokens.add(`<${first}`);
+        if (first && name === 'setAttribute') attribute(tokens, first, stringValue(node.arguments[1]));
+        if (['clsx', 'classNames', 'classnames'].includes(name)) node.arguments.forEach(arg => objectClasses(tokens, arg));
+        break;
+      }
+      case 'AssignmentExpression': {
+        const name = memberName(node.left);
+        if (['id', 'type', 'role'].includes(name)) attribute(tokens, name, stringValue(node.right));
+        break;
+      }
+    }
+  });
+}
+
+export function collectUsage(tokens, source, file, mode = 'all') {
+  if (scriptFile.test(file)) {
+    let tree;
+    try { tree = parseScript(source, file); }
+    catch (error) { if (error.code !== 'BABEL_PARSER_SYNTAX_ERROR') throw error; }
+    if (tree) return collectScript(tokens, tree, mode);
+  }
+  // Parse script islands independently of their surrounding template language.
+  if (!scriptFile.test(file) && !/\.s?css$/i.test(file)) {
+    // A template can reference imports from its setup script or frontmatter.
+    const scriptMode = mode === 'bundled' ? mode : 'all';
+    source = source.replace(/(<script\b[^>]*>)([\s\S]*?)(<\/script\s*>)/gi, (_, open, body, close) => {
+      const lang = /\blang\s*=\s*["']?(tsx?|jsx?)\b/i.exec(open)?.[1] ?? 'js';
+      collectUsage(tokens, body, 'inline.' + lang, scriptMode);
+      return open + close;
+    });
+    if (/\.astro$/i.test(file)) source = source.replace(/^---[^\S\n]*\n([\s\S]*?)\n---(?=\s|$)/, (_, body) => {
+      collectUsage(tokens, body, 'frontmatter.ts', scriptMode);
+      return '';
+    });
+  }
+  // Mixed templates and incomplete script fragments still provide literal markup.
+  collectTemplate(tokens, source);
+  collectTemplateAPIs(tokens, source, mode !== 'bundled');
 }
 
 function matches(rule, tokens, classes) {

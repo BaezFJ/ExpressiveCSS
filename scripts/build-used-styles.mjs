@@ -93,7 +93,12 @@ function utility(node) {
     const open = node.source.input.css.slice(node.source.start.offset, node.nodes[0].source.start.offset);
     return { open, rules: node.nodes.map(utility) };
   }
-  return { ...selection(node.type === 'rule' ? matchesFor(node.selector) : []), span: [node.source.start.offset, node.source.end.offset] };
+  const selectors = node.type === 'rule' ? matchesFor(node.selector) : [];
+  // A component can forward a utility class to an element created outside the
+  // scanned template. The emitted selector still enforces its element qualifier.
+  const when = selectors.map(set => set.some(token => !token.startsWith('<') && !token.startsWith('['))
+    ? set.filter(token => !token.startsWith('<')) : set);
+  return { ...selection(when), span: [node.source.start.offset, node.source.end.offset] };
 }
 
 function layerUtilityRules(rules) {
@@ -141,8 +146,9 @@ async function runtimeStyles(vocabulary) {
     const chunk = definingChunks.get(modular[name]);
     if (!chunk) throw new Error(`Missing the JavaScript chunk for ${name}`);
     apis[name].chunk = chunk;
-    const tokens = new Set();
-    collectUsage(tokens, file.text);
+    // Dialogs.confirm passes these tags to textElement(), which constructs the DOM.
+    const tokens = new Set(name === 'Dialogs' ? ['<button', '<p', '<h2'] : []);
+    collectUsage(tokens, file.text, file.path, 'bundled');
     apis[name].tokens = [...tokens].filter(token => vocabulary.has(token)).sort();
   }
   return apis;

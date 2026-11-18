@@ -127,6 +127,12 @@ for (const [label, filename, source, rules, includes = []] of [
   ['browser-global APIs', 'ui.js', 'new window.Expressive.Snackbar({ text: "Saved" });', ['.snackbar{']],
   ['CommonJS API references', 'ui.cjs', 'const { BottomSheets: Sheets } = require("@expressivecss/expressive"); Sheets.Init();', ['dialog.bottom-sheet']],
   ['explicit compound utilities', 'view.html', '<main id="cms"></main>', ['img.responsive-img'], ['--include', 'responsive-img']],
+  ['attributes after a JSX arrow function', 'view.tsx', 'const volume = <input onChange={() => save()} type="range" />;', ['input[type=range]']],
+  ['class literals after a JS comment', 'view.tsx', "// don't retain 'p-5'\nconst view = <div className={wide ? 'p-2' : 'p-3'} />;", ['.p-2{', '.p-3{']],
+  ['a dynamically imported API', 'ui.mjs', 'const { Snackbar: Notice } = await import("@expressivecss/expressive/modular"); new Notice({text: "Saved"});', ['.snackbar{']],
+  ['a dynamic import in a template script', 'view.vue', '<script setup lang="ts">const ui = await import("@expressivecss/expressive/modular"); const notice = ui.Snackbar;</script>', ['.snackbar{']],
+  ['an image constructed by JavaScript', 'image.js', 'const img = new Image(); img.className = "responsive-img"; document.body.append(img);', ['img.responsive-img', 'img.responsive-img:not(.circle)']],
+  ['a utility passed to a JSX component', 'photo.tsx', 'const photo = <Photo className="responsive-img" />;', ['img.responsive-img:not(.circle)']],
 ]) {
   test(`CSS-only builds retain styles for ${label}`, t => {
     const app = consumer(t);
@@ -174,6 +180,138 @@ test('the bundled CommonJS root retains styles for its document behaviors', t =>
   succeeds(cli(app, '--entry', 'ui.cjs'));
   const css = readFileSync(join(app, 'public/expressive/css/expressive.css'), 'utf8');
   assert.ok(css.includes('dialog.bottom-sheet'));
+});
+
+test('explicit symlink inputs are scanned and protected from output collisions', t => {
+  const app = consumer(t);
+  mkdirSync(join(app, 'views'));
+  writeFileSync(join(app, 'views/page.html'), '<article class="p-2"></article>');
+  symlinkSync(join(app, 'views'), join(app, 'shared-views'), 'junction');
+  symlinkSync(join(app, 'views/page.html'), join(app, 'shared.html'));
+  succeeds(cli(app, 'shared-views'));
+  assert.ok(readFileSync(join(app, 'public/expressive/css/expressive.css'), 'utf8').includes('.p-2{'));
+  succeeds(cli(app, 'shared.html', '--check'));
+
+  mkdirSync(join(app, 'public/js'));
+  const authored = 'export const original = "hand-written";';
+  writeFileSync(join(app, 'public/js/app.js'), authored);
+  symlinkSync(join(app, 'public/js/app.js'), join(app, 'shared.js'));
+  writeFileSync(join(app, 'boot.js'), 'export const ready = true;');
+  for (const flags of [['--check'], []]) {
+    const result = cli(app, 'shared.js', '--entry', 'boot.js', '--out-dir', 'public', ...flags);
+    assert.equal(result.status, 1);
+    assert.match(result.stderr, /input.*output|overwrite.*input/i);
+    assert.equal(readFileSync(join(app, 'shared.js'), 'utf8'), authored);
+    assert.ok(!existsSync(join(app, 'public/fonts')));
+  }
+});
+
+test('a bundled view keeps class-helper keys from its original source', async t => {
+  const app = consumer(t);
+  writeFileSync(join(app, 'page.html'), '<main></main>');
+  writeFileSync(join(app, 'ui.js'), 'export { layout } from "./view.js";');
+  writeFileSync(join(app, 'view.js'), `function clsx(classes) { return Object.keys(classes).filter(key => classes[key]).join(' '); }
+    export const layout = expanded => clsx({accordion: expanded});`);
+  succeeds(cli(app, 'page.html', '--entry', 'ui.js'));
+  const output = join(app, 'public/expressive');
+  assert.equal((await import(pathToFileURL(join(output, 'js/app.js')))).layout(true), 'accordion');
+  assert.ok(readFileSync(join(output, 'css/expressive.css'), 'utf8').includes('.accordion{'));
+});
+
+test('a separately loaded module keeps the APIs it uses alongside a bundled entry', t => {
+  const app = consumer(t);
+  writeFileSync(join(app, 'page.html'), '<script type="module" src="./notices.js"></script>');
+  writeFileSync(join(app, 'notices.js'), 'import { Snackbar as Notice, SideSheets } from "@expressivecss/expressive/modular"; new Notice({text:"Saved"});');
+  writeFileSync(join(app, 'boot.js'), 'export const ready = true;');
+  succeeds(cli(app, 'page.html', 'notices.js', '--entry', 'boot.js'));
+  const css = readFileSync(join(app, 'public/expressive/css/expressive.css'), 'utf8');
+  assert.ok(css.includes('.snackbar{'));
+  assert.ok(!css.includes('dialog.side-sheet'));
+});
+
+test('a programmatic confirmation dialog retains its generated action button styles', t => {
+  const app = consumer(t);
+  writeFileSync(join(app, 'ui.js'), 'import { Dialogs } from "@expressivecss/expressive/modular"; export const ask = () => Dialogs.confirm({text:"Continue?"});');
+  for (const args of [['ui.js'], ['--entry', 'ui.js']]) {
+    succeeds(cli(app, ...args));
+    const css = readFileSync(join(app, 'public/expressive/css/expressive.css'), 'utf8');
+    assert.ok(css.includes('--md-comp-filled-button-container-shape:'));
+    assert.ok(!css.includes('.accordion{'));
+  }
+});
+
+test('hashbang bundles report as stale and are removed on a CSS-only build', t => {
+  const app = consumer(t);
+  writeFileSync(join(app, 'page.html'), '<main></main>');
+  writeFileSync(join(app, 'boot.js'), '#!/usr/bin/env node\nexport const ready = true;');
+  const output = join(app, 'public/expressive/js/app.js');
+  succeeds(cli(app, 'page.html', '--entry', 'boot.js'));
+  assert.ok(readFileSync(output, 'utf8').startsWith('#!'));
+  const check = cli(app, 'page.html', '--check');
+  assert.equal(check.status, 1);
+  assert.match(check.stderr, /app\.js/);
+  assert.ok(existsSync(output));
+  succeeds(cli(app, 'page.html'));
+  assert.ok(!existsSync(output));
+  writeFileSync(output, '#!/usr/bin/env node\nconsole.log("authored");');
+  succeeds(cli(app, 'page.html', '--check'));
+  assert.ok(existsSync(output));
+});
+
+test('static module-relative URLs resolve from the built entry and track asset changes', async t => {
+  const app = consumer(t);
+  mkdirSync(join(app, 'src'));
+  writeFileSync(join(app, 'index.html'), '<main></main>');
+  writeFileSync(join(app, 'boot.js'), 'export * from "./src/photo.ts";');
+  const source = join(app, 'src/mark one.svg');
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg"/>';
+  writeFileSync(source, svg);
+  writeFileSync(join(app, 'src/photo.ts'), [
+    '// new URL("./missing.svg", import.meta.url)',
+    'export const logo: URL = new URL("./mark%20one.svg?v=2#icon", import.meta.url);',
+    'export const server = new URL("/static.svg", import.meta.url);',
+    'export const text = "new URL(\'./ignored.svg\', import.meta.url)";',
+    'export const custom = (URL: any) => new URL("./custom", import.meta.url);',
+  ].join('\n'));
+  const args = ['index.html', '--entry', 'boot.js'];
+  succeeds(cli(app, ...args));
+  const output = join(app, 'public/expressive');
+  const js = join(output, 'js/app.js');
+  const { logo, server, custom } = await import(pathToFileURL(js));
+  assert.equal(logo.search + logo.hash, '?v=2#icon');
+  assert.equal(server.pathname, '/static.svg');
+  assert.equal(custom(class { constructor(path) { this.path = path; } }).path, './custom');
+  const copy = fileURLToPath(logo);
+  assert.ok(copy.startsWith(output), copy);
+  assert.equal(readFileSync(copy, 'utf8'), svg);
+  succeeds(cli(app, ...args, '--check'));
+  writeFileSync(source, '<svg/>');
+  assert.equal(cli(app, ...args, '--check').status, 1);
+  assert.equal(readFileSync(copy, 'utf8'), svg);
+  succeeds(cli(app, ...args));
+  succeeds(cli(app, ...args, '--check'));
+  const updated = (await import(pathToFileURL(js).href + '?rebuilt')).logo;
+  assert.equal(readFileSync(updated, 'utf8'), '<svg/>');
+  if (updated.pathname !== logo.pathname) assert.ok(!existsSync(copy));
+  writeFileSync(join(output, 'assets/keep.txt'), 'authored');
+  succeeds(cli(app, 'index.html'));
+  assert.ok(!existsSync(fileURLToPath(updated)));
+  assert.equal(readFileSync(join(output, 'assets/keep.txt'), 'utf8'), 'authored');
+});
+
+test('an edited asset inventory cannot remove an unrelated application file', t => {
+  const app = consumer(t);
+  writeFileSync(join(app, 'page.html'), '<main></main>');
+  writeFileSync(join(app, 'ui.js'), 'export const icon = new URL("./mark.svg", import.meta.url);');
+  writeFileSync(join(app, 'mark.svg'), '<svg/>');
+  succeeds(cli(app, 'page.html', '--entry', 'ui.js'));
+  const output = join(app, 'public/expressive');
+  writeFileSync(join(output, 'keep.txt'), 'authored');
+  const manifest = join(output, 'assets/expressive-build.json');
+  writeFileSync(manifest, JSON.stringify({ generatedBy: 'expressive-build', assets: ['assets/../keep.txt'] }));
+  assert.equal(cli(app, 'page.html').status, 1);
+  assert.equal(readFileSync(join(output, 'keep.txt'), 'utf8'), 'authored');
+  assert.ok(existsSync(join(output, 'js/app.js')));
 });
 
 test('bundled application styles follow imports and participate in --check and cleanup', async t => {
