@@ -152,7 +152,7 @@
     "@tiptap/starter-kit": "^3.31.4",
     "alpinejs": "^3.17.5",
     "astro": "^7.2.8",
-    "css-what": "^7.0.0",
+    "css-what": "^8.0.0",
     "esbuild": "^0.28.2",
     "fallow": "^3.33.1",
     "jsdom": "^31.0.0",
