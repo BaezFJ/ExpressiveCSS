@@ -129,7 +129,7 @@
     "not dead"
   ],
   "dependencies": {
-    "@babel/parser": "^7.29.9",
+    "@babel/parser": "^8.1.2",
     "@babel/types": "^7.29.8",
     "entities": "^4.5.0"
   },
