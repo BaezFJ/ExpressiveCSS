@@ -131,7 +131,7 @@
   "dependencies": {
     "@babel/parser": "^7.29.9",
     "@babel/types": "^7.29.8",
-    "entities": "^4.5.0"
+    "entities": "^9.0.0"
   },
   "overrides": {
     "picomatch": "$picomatch"
