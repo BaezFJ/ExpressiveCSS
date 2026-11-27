@@ -206,7 +206,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5
+      - uses: actions/dependency-review-action@bbc44d14a204704ccc493733616cd1e93a0321ec # v5
         if: github.event_name == 'pull_request'
         with:
           fail-on-severity: high
@@ -230,11 +230,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - uses: github/codeql-action/init@1fc58d04a4d4374f921bdac573c3811c240f9c26 # v4
+      - uses: github/codeql-action/init@1bd86f2fdb4b86187fa4059f16f31a3202acc9ea # v4
         with:
           languages: ${{ matrix.language }}
           build-mode: none
-      - uses: github/codeql-action/analyze@1fc58d04a4d4374f921bdac573c3811c240f9c26 # v4
+      - uses: github/codeql-action/analyze@1bd86f2fdb4b86187fa4059f16f31a3202acc9ea # v4
         with:
           category: /language:${{ matrix.language }}
 
