@@ -33,7 +33,7 @@ Guide names map to [Install](./expressivecss-install/SKILL.md), [Design](./expre
 | Narrow runtime lifecycle repair | Runtime, selected component guides | Install, Design, Usage, Theming, Accessibility |
 | New surface, Refine, or Redesign | Design, Usage, Theming, Accessibility, selected component guides | Install |
 | Charts, sparklines, or KPI dashboards | Charts, Usage, Accessibility, selected chart guides | Install, Runtime |
-| Page layout, app shell, or breakpoint behavior | Layout, Usage, Accessibility, selected component guides | Install, Runtime |
+| Page layout, app shell, desktop or breakpoints | Layout, Usage, Accessibility, selected component guides | Install, Runtime |
 | Dashboard or reporting page | Dashboard, Charts, Design, Usage, Theming, Accessibility, selected component guides | Install |
 
 Combine overlapping routes, and say why a route widens:

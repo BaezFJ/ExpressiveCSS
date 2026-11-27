@@ -1,6 +1,6 @@
 ---
 name: expressivecss-layout
-description: "Plans and reviews ExpressiveCSS layouts and app shells. Use for breakpoints, canonical layouts, panes, navigation, grid spacing or RTL adaptation. Single-component styling uses its component guide."
+description: "Plans and reviews ExpressiveCSS layouts and app shells. Use for breakpoints, canonical layouts, panes, navigation, grid spacing, RTL adaptation, or desktop windows with pointer and keyboard input. Single-component styling uses its component guide."
 ---
 
 # ExpressiveCSS layout
@@ -17,6 +17,7 @@ Read each reference only when its condition applies.
 | [Canonical layouts](./references/canonical-layouts.md) | Building a feed, list-detail or supporting pane layout, or a layered pane |
 | [Breakpoints](./references/breakpoints.md) | Deciding what to reveal, divide, resize, reposition or swap at the next width |
 | [Grids and spacing](./references/grids-and-spacing.md) | Aligning content, choosing spacing between groups, or adding a dense view |
+| [Desktop](./references/desktop.md) | Scaling a mobile layout to desktop, or supporting drag and drop, zoom, refresh, multiple selection, context menus, hover actions or keyboard shortcuts |
 
 ## What a layout has to do
 

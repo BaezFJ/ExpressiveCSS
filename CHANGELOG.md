@@ -5,6 +5,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- The agent skill's layout guide gains a desktop reference, mapped from
+  Material's desktop guidance onto ExpressiveCSS. It covers panes and a capped
+  single pane on wide windows, the switch to a navigation rail, and replacing
+  bottom sheets with menus, side sheets or dialogs. It also covers a
+  single-click control for each drag, zoom and refresh gesture, keyboard
+  shortcuts, multiple selection, and hover and focus states.
+
 ## [0.20.0] - 2026-11-18
 
 This release adds `ScrollArea` for an optional themed scrollbar and the
