@@ -52,7 +52,7 @@ try {
       // Versioned on its own: the strict peer install above fails unless this range includes the checkout's core.
       assert.ok(manifest.peerDependencies?.['@expressivecss/expressive'], 'Extras must declare its core peer');
       for (const file of ['dist/types/index.d.ts', 'dist/types/modular.d.ts', 'dist/js/extras.mjs', 'dist/js/modular.mjs',
-        'dist/js/extras.cjs', 'dist/js/extras.js', 'dist/js/extras.min.js', 'dist/css/extras.css', 'dist/css/extras.min.css',
+        'dist/js/extras.cjs', 'dist/js/extras.js', 'dist/js/extras.min.js', 'dist/css/extras.css', 'dist/css/extras.min.css', 'dist/cli/styles.json',
         'src/sass/extras.scss', 'README.md', 'CHANGELOG.md']) {
         assert.ok(readFileSync(join(installed, file)).length, `Missing or empty ${file}`);
       }

@@ -383,7 +383,8 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Reviewed the charts moved from core, registered with core's AutoInit: 16,457 gzip bytes.
   // Reviewed the interactive components, Tour and ImageCompare moved from core, with Menu read from core's modular entry: 35,318 gzip bytes (+18,861).
   // Reviewed the form extras, TransferList and DropZone moved from core, with FormSelect and Forms read from core's modular entry: 50,805 gzip bytes (+15,487).
-  assert.ok(sizes(extrasJs).gzip <= 50805, `Extras JavaScript gzip: ${sizes(extrasJs).gzip}`);
+  // Reviewed the AutoInit table moving to its own module for the CLI style index: 50,811 gzip bytes (+6).
+  assert.ok(sizes(extrasJs).gzip <= 50811, `Extras JavaScript gzip: ${sizes(extrasJs).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).

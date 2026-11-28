@@ -57,6 +57,12 @@ import '@expressivecss/expressive/css';
 import '@expressivecss/extras/css';
 ```
 
+## Smaller builds
+
+With both packages installed, core's `expressive-build` CLI writes the extras
+styles your application uses to `css/extras.css`, beside `css/expressive.css`.
+Load it after the core stylesheet.
+
 ## Sass
 
 The extras partials use core's Sass helpers. Put core's Sass folder on the

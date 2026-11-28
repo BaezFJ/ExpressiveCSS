@@ -54,7 +54,8 @@ npx expressive-build index.html src --entry src/ui.ts
 ```
 
 This writes the selected CSS, bundled browser entry and fonts to
-`public/expressive/`. Omit `--entry` for CSS alone. Add `--check` to verify
+`public/expressive/`, plus `css/extras.css` when `@expressivecss/extras` is
+installed. Omit `--entry` for CSS alone. Add `--check` to verify
 committed assets in a pre-commit hook. See [Smaller builds](docs/guides/smaller-builds.md).
 
 ## Guides

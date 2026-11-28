@@ -35,3 +35,5 @@ changelog has the migration steps.
   `@expressivecss/expressive/core` and `@expressivecss/expressive/modular`, so
   it shares core's classes and `AutoInit` table. The CommonJS build requires
   core's CommonJS bundle and uses its `core` export the same way.
+- `dist/cli/styles.json`, the usage index core's `expressive-build` reads to
+  write only the extras styles an application uses to `css/extras.css`.

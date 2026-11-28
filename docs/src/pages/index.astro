@@ -337,7 +337,9 @@ my-site/
     <Code code={`npm install -D esbuild
 npx expressive-build index.html src --entry src/ui.ts`} />
     <p>Serve <code>public/expressive/css/expressive.css</code> and
-      <code>public/expressive/js/app.js</code> (a module). If the entry imports application CSS,
+      <code>public/expressive/js/app.js</code> (a module), and
+      <code>public/expressive/css/extras.css</code> after it when the application has
+      <code>@expressivecss/extras</code> installed. If the entry imports application CSS,
       load <code>public/expressive/css/app.css</code> after the framework stylesheet. Omit <code>--entry</code>
       for CSS alone, or append <code>--check</code> in a pre-commit hook to detect
       stale files. Use <code>--include</code> for class names supplied at runtime.</p>

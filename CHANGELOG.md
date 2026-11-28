@@ -118,6 +118,11 @@ What moved:
 - `AutoInit.register(name, { component, selector })` adds a component to
   AutoInit. AutoInit and watch mode start and destroy it like a built-in.
 
+- `expressive-build` writes the `@expressivecss/extras` styles an application
+  uses to `css/extras.css` when extras is installed. It reads imports from
+  `@expressivecss/extras` and the `ExpressiveExtras` global, and `--include`
+  accepts extras partials.
+
 - `@expressivecss/extras` 0.21.0, the new package for the components listed
   under Migration. Its `DropZone` behavior holds the drop zone's file rules,
   file list and drag marking, which used to live in `Forms`.

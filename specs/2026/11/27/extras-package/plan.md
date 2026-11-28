@@ -48,7 +48,3 @@ Behaviors that move: `Tour`, `TransferList`, `ImageCompare`, and `Sortable` unle
 7. **Release:**
    - `release.mjs`, the CI and release workflows, `RELEASING.md`
    - the 0.21.0 bump and the CHANGELOG migration note
-
-## Out of scope
-
-- `expressive-build` (the CLI) selecting extras styles and chunks. Extras CSS is included whole for now.

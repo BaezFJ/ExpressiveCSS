@@ -47,7 +47,8 @@
     "./css": "./dist/css/extras.css",
     "./css/min": "./dist/css/extras.min.css",
     "./scss": "./src/sass/extras.scss",
-    "./scss/*": "./src/sass/*"
+    "./scss/*": "./src/sass/*",
+    "./package.json": "./package.json"
   },
   "files": [
     "dist",

@@ -34,6 +34,16 @@ generated files with:
 <script type="module" src="/expressive/js/app.js"></script>
 ```
 
+When the application has `@expressivecss/extras` installed, the build also
+writes the extras components it uses to `css/extras.css`. Load it after
+`expressive.css`. The scan recognizes imports from `@expressivecss/extras`
+and the `ExpressiveExtras` global, and `--include` accepts extras partials such
+as `components/marquee`.
+
+```html
+<link rel="stylesheet" href="/expressive/css/extras.css">
+```
+
 If the entry imports application CSS, load its stylesheet after the framework
 stylesheet. For example, `import './styles.css'` produces this additional file.
 
