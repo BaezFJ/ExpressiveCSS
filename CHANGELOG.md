@@ -14,6 +14,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   single-click control for each drag, zoom and refresh gesture, keyboard
   shortcuts, multiple selection, and hover and focus states.
 
+- The layout guide also gains a parts and adaptive design reference. It names
+  the window, grid, bars, rails, panes, containment, drag handles and rulers,
+  keeps all content in panes, and adapts panes and components to people,
+  devices and window changes.
+
 ## [0.20.0] - 2026-11-18
 
 This release adds `ScrollArea` for an optional themed scrollbar and the
