@@ -349,6 +349,22 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(adaptive, /\*\*Resizing\.\*\*[\s\S]*\*\*Showing and hiding\.\*\*[\s\S]*\*\*Presentation changes\.\*\*/);
   });
 
+  test('keeps the canonical layouts on Material feed, list-detail and supporting pane guidance', () => {
+    const url = new URL('expressivecss-layout/references/canonical-layouts.md', skillDirectory);
+    const canonical = readFileSync(url, 'utf8');
+    for (const [, target] of canonical.matchAll(/\]\((\.{1,2}\/[^)#\s]+)/g)) {
+      assert.ok(existsSync(new URL(target, url)), `canonical layouts reference links to missing ${target}`);
+    }
+    for (const heading of ['Feed', 'List-detail', 'Supporting pane', 'Custom and layered layouts']) {
+      assert.match(canonical, new RegExp(`^## ${heading}$`, 'm'), `canonical layouts reference omits ${heading}`);
+    }
+    assert.match(canonical, /\| Compact or medium \| Below the focus pane \| Flexible \|/);
+    assert.match(canonical, /\| Expanded and wider \| Leading or trailing side \| Fixed, 360px \|/);
+    assert.match(canonical, /grid-template-columns: minmax\(0, 1fr\) 360px/);
+    assert.match(canonical, /On a foldable, the same rules apply/);
+    assert.match(canonical, /Back button: only in the single-pane detail view/);
+  });
+
   test('gives every Material breakpoint its panes, navigation and widths', () => {
     const url = new URL('expressivecss-layout/references/breakpoints.md', skillDirectory);
     const breakpoints = readFileSync(url, 'utf8');

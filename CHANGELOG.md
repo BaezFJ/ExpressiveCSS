@@ -33,6 +33,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   412px fixed pane override for large windows, and splits a two-pane medium
   layout 50/50.
 
+- The canonical layouts reference follows Material's current examples. It
+  adds the supporting pane's placement and fixed 360px width with a stacking
+  grid rule, list-detail behavior when a foldable opens or closes, and the
+  ExpressiveCSS templates as the web code starting points.
+
 ## [0.20.0] - 2026-11-18
 
 This release adds `ScrollArea` for an optional themed scrollbar and the
