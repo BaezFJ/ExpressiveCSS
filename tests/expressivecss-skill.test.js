@@ -349,6 +349,23 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(adaptive, /\*\*Resizing\.\*\*[\s\S]*\*\*Showing and hiding\.\*\*[\s\S]*\*\*Presentation changes\.\*\*/);
   });
 
+  test('gives every Material breakpoint its panes, navigation and widths', () => {
+    const url = new URL('expressivecss-layout/references/breakpoints.md', skillDirectory);
+    const breakpoints = readFileSync(url, 'utf8');
+    for (const [, target] of breakpoints.matchAll(/\]\((\.{1,2}\/[^)#\s]+)/g)) {
+      assert.ok(existsSync(new URL(target, url)), `breakpoints reference links to missing ${target}`);
+    }
+    for (const name of ['Compact', 'Medium', 'Expanded', 'Large', 'Extra-large']) {
+      assert.match(breakpoints, new RegExp(`^\\| ${name} \\|`, 'm'), `breakpoint table omits ${name}`);
+    }
+    assert.match(breakpoints, /^## Breakpoint by breakpoint$/m);
+    assert.match(breakpoints, /`\.m6` and `\.m6`/);
+    assert.match(breakpoints, /navigation bar with two/);
+    assert.match(breakpoints, /--md-comp-pane-list-width: 412px/);
+    assert.match(breakpoints, /top quarter of the screen is hard to reach/);
+    assert.doesNotMatch(breakpoints, /`\.m4` and `\.m8`/);
+  });
+
   test('maps Material grids, spacing, density and dp onto the web', () => {
     const url = new URL('expressivecss-layout/references/grids-and-spacing.md', skillDirectory);
     const grids = readFileSync(url, 'utf8');

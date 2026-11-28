@@ -28,6 +28,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   spacing that adapts to breakpoints and density settings, and explains why a
   Material dp value reads as the same number of CSS pixels on the web.
 
+- The breakpoints reference follows Material's current breakpoint pages. It
+  adds per-breakpoint navigation, pane widths, margins and reachability, a
+  412px fixed pane override for large windows, and splits a two-pane medium
+  layout 50/50.
+
 ## [0.20.0] - 2026-11-18
 
 This release adds `ScrollArea` for an optional themed scrollbar and the

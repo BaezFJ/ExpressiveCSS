@@ -1,11 +1,12 @@
 # Breakpoints
 
-Read this when a layout has to change between widths: choosing panes and components per breakpoint, or deciding what to reveal, divide, resize, reposition or swap at the next size. Material's [breakpoints guidance](https://m3.material.io/foundations/layout/breakpoints/overview), reviewed 2026-10-13, sets the design intent. The selected component guides define what ExpressiveCSS ships. The widths, grid prefixes and Sass mixins are in the [layout guide](../SKILL.md#breakpoints).
+Read this when a layout has to change between widths: choosing panes and components per breakpoint, or deciding what to reveal, divide, resize, reposition or swap at the next size. Material's [breakpoints guidance](https://m3.material.io/foundations/layout/breakpoints/overview), last reviewed 2026-11-27, sets the design intent. Material's breakpoints apply to Android and the web; read their dp widths as CSS pixels. The selected component guides define what ExpressiveCSS ships. The widths, grid prefixes and Sass mixins are in the [layout guide](../SKILL.md#breakpoints).
 
 ## Contents
 
 - Design for windows, not devices
 - What each breakpoint gets
+- Breakpoint by breakpoint
 - Five questions for the next breakpoint
 - Review checklist
 
@@ -34,17 +35,31 @@ Material recommends different components for the same job at different sizes:
 | Breakpoint | Panes | Navigation | Communication | Supplemental actions |
 | --- | --- | --- | --- | --- |
 | Compact | 1 | Navigation bar; modal expanded rail for more destinations | Basic or full-screen dialog | Bottom sheet |
-| Medium | 1 (recommended) or 2 | Navigation bar or collapsed rail; modal expanded rail | Basic dialog | Menu |
+| Medium | 1 (recommended) or 2 | Collapsed rail with one pane, navigation bar with two; modal expanded rail | Basic dialog | Menu |
 | Expanded | 1 or 2 (recommended) | Collapsed rail, or a modal or standard expanded rail | Basic dialog | Menu |
-| Large | 1 or 2 (recommended) | Modal or standard expanded rail | Basic dialog | Menu |
-| Extra-large | 1 to 3 (recommended) | Modal or standard expanded rail | Basic dialog | Menu |
+| Large | 1 or 2 (recommended) | Collapsed or expanded rail, by the amount of content | Basic dialog | Menu |
+| Extra-large | 1 to 3 (recommended) | Expanded rail fits best; collapse it when the panes need room | Basic dialog | Menu |
 
 In ExpressiveCSS terms:
 
 - Navigation bar is `nav.navigation-bar` ([guide](../../components/navigation-bar.md)). Navigation rail is `nav.navigation-rail`, collapsed by default; add `expanded` for the expanded rail and `modal` to keep the overlay at every width ([guide](../../components/navigation-rail.md)). An expanded rail is already modal on compact windows.
 - A `<dialog>` is a basic dialog and `dialog.max` is full screen ([guide](../../components/dialogs.md)). Use [bottom sheet](../../components/bottom-sheet.md) on compact and [menu](../../components/menu.md) from medium.
-- `.panes` shows one pane below 840px and puts panes side by side from 840px ([guide](../../components/panes.md)). A two-pane medium layout therefore needs grid spans such as `.m4` and `.m8`, not the pane pattern.
+- `.panes` shows one pane below 840px and puts panes side by side from 840px ([guide](../../components/panes.md)). A two-pane medium layout therefore needs grid spans, `.m6` and `.m6` for Material's 50% panes, not the pane pattern.
 - The [design rules](../../references/design-rules.md) sections 1.2 and 1.4 hold an older copy of this table and the destination-count rules. Where the tables differ, this one is the newer review.
+
+## Breakpoint by breakpoint
+
+Material's page for each breakpoint adds these details. The pane margins and spacer already match: `.panes` uses 16px margins below 600px and 24px margins and a 24px spacer from 600px.
+
+**Compact (below 600px).** One pane with 16px margins. Put navigation near the bottom edge, where thumbs reach it: a navigation bar, or a modal expanded rail for more destinations.
+
+**Medium (600 to 839px).** One pane is recommended because the width is limited. Use a navigation rail beside a single pane, and a navigation bar with two panes, so the panes keep the full window width. Two panes suit only low-density content, such as settings, and each takes 50% of the window; avoid custom widths. A drag handle can expand either pane to the full width, with the keyboard and non-drag controls the [scaffold reference](../../expressivecss-design/references/scaffold.md#define-scrolling-and-optional-resizing) requires. On a landscape tablet or unfolded foldable the top quarter of the screen is hard to reach, and the very bottom edge is hard for some hands, so keep frequent and essential controls out of both.
+
+**Expanded (840 to 1199px).** Two panes are often best; keep one pane for dense content or media, such as video. Use a collapsed or expanded rail. Put sorting, filtering and secondary navigation inside the pane, with [tabs](../../components/tabs.md) or similar components, not in the rail. A fixed pane is 360px by default, which is the `--md-comp-pane-list-width` and `--md-comp-pane-supporting-width` default. A split pane keeps its spacer centered in the window; do not assume an equal `.panes` split does that beside a rail, as the scaffold reference explains.
+
+**Large (1200 to 1599px) and extra-large (1600px and wider).** These matter most for laptop and desktop web layouts, and some products do not need them; decide from the platform and its users. Two panes are often best, and a single pane suits only dense content or media. Choose a collapsed or expanded rail by the amount of content. The expanded rail fits best at extra-large; collapse it when the panes need room or on pages deeper in the hierarchy. Material's fixed pane grows to 412px here, but ExpressiveCSS keeps 360px; to follow Material, set `--md-comp-pane-list-width: 412px` on the pane container inside a `(min-width: 1200px)` query in a stylesheet loaded after ExpressiveCSS. A split pane keeps its spacer centered even beside an expanded rail. Extra-large can add a standard [side sheet](../../components/side-sheet.md) as a third pane, never more. Watch line length on these widths.
+
+On compact through expanded, the rail can hide on secondary destinations as long as a back button returns to the primary destination. Every breakpoint must hand over to the next one live, without a reload, because the window changes without navigation: a foldable folds or unfolds, a device rotates, split screen or multi-window mode starts or ends, or a free-form browser window is resized.
 
 ## Five questions for the next breakpoint
 
@@ -82,7 +97,7 @@ Decide how internal elements anchor as their container grows. Tabs can stay cent
 
 ### 5. What should be swapped?
 
-Swap components with the same function when the ergonomics change: a navigation bar on compact becomes a navigation rail on medium or expanded, and a collapsed rail becomes an expanded rail on large and extra-large. A bottom sheet of actions becomes a menu, and a full-screen dialog becomes a basic dialog.
+Swap components with the same function when the ergonomics change: a navigation bar on compact becomes a navigation rail on medium or expanded, a modal expanded rail on compact and medium becomes a standard expanded rail from expanded, and a collapsed rail becomes an expanded rail on large and extra-large. A bottom sheet of actions becomes a menu, and a full-screen dialog becomes a basic dialog.
 
 Swap only when both components do the same job and the swap serves a functional or ergonomic purpose. Do not swap a button for a chip or a button for a menu, and think twice before turning list items into cards, because each change alters how people act on the content.
 
@@ -91,7 +106,8 @@ When both components exist in the markup, hide the inactive one with the hide cl
 ## Review checklist
 
 - Each product view has a layout for every breakpoint its users reach, and no layout depends on a device name.
-- The pane count matches the table above, with any two-pane medium layout limited to low-density content.
+- The pane count matches the table above, with any two-pane medium layout limited to low-density content, split 50/50 and paired with a navigation bar.
+- Fixed panes are 360px at expanded and, where the product follows Material, 412px from large; a split pane keeps its spacer centered.
 - Each swap pairs components with the same function, and only one set of primary destinations is visible and focusable at each width.
 - Body text stays near 40 to 60 characters per line at every breakpoint.
 - Selection, scroll position and unsaved input survive crossing a breakpoint, including a rotation or window resize.
