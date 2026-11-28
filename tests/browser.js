@@ -1,7 +1,7 @@
 // One browser per engine per test file. Launching dominated browser-test time,
 // Firefox's most of all, so tests lease the file's browser instead. A lease
 // opens pages and contexts like a Browser, and its close() closes only those.
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { after, test } from 'node:test';
 import { chromium, firefox, webkit } from 'playwright';
 
@@ -41,13 +41,51 @@ function launch(type) {
   return launched.get(type);
 }
 
+const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
+const extras = { js: read('extras/dist/js/extras.js'), css: read('extras/dist/css/extras.css') };
+
+// Runs in the page. When an inline core script (setContent or addScriptTag
+// content) assigns `Expressive`, the extras bundle runs at once, as if
+// extras.js were the next script, and its sheet follows the core script. So a
+// test page can use extras components with only the core script and sheet.
+// A page that loads expressive.js from a URL is an application that chooses
+// its own scripts, and is left alone.
+function loadExtrasAfterCore({ js, css }) {
+  let core;
+  Object.defineProperty(window, 'Expressive', {
+    configurable: true,
+    enumerable: true,
+    get: () => core,
+    set(value) {
+      core = value;
+      if (window.ExpressiveExtras || !value?.core || document.currentScript?.src) return;
+      try {
+        (0, eval)(js);
+      } catch (error) {
+        console.error('Could not load the extras bundle', error);
+        return;
+      }
+      const style = document.createElement('style');
+      style.textContent = css;
+      if (document.currentScript) document.currentScript.after(style);
+      else (document.head ?? document.documentElement).append(style);
+    },
+  });
+}
+
 export async function leaseBrowser(type) {
   const browser = await launch(type);
   const contexts = new Set();
-  const track = (context) => { contexts.add(context); return context; };
+  const newContext = async (options) => {
+    const context = await browser.newContext(options);
+    contexts.add(context);
+    await context.addInitScript(loadExtrasAfterCore, extras);
+    return context;
+  };
   return {
-    newContext: async (options) => track(await browser.newContext(options)),
-    newPage: async (options) => { const page = await browser.newPage(options); track(page.context()); return page; },
+    newContext,
+    // Its own context, as browser.newPage() makes, so the init script also covers the first document.
+    newPage: async (options) => (await newContext(options)).newPage(),
     version: () => browser.version(),
     close: async () => { await Promise.all([...contexts].map((context) => context.close())); },
   };

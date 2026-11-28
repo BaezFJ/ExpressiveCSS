@@ -9,7 +9,7 @@ Component ID: `pagination`
 
 Contract: ExpressiveCSS 0.20.0
 
-Contract SHA-256: `25c1c27cf5f1c0af361eb36e2484901c97f05f8633e1703b67742c669d7d677c`
+Contract SHA-256: `c2542c7f2b2891760726b3ab8c4de76815dcb8da269f86616a88e11825d2aba1`
 
 #### Selection and adaptation
 

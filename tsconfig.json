@@ -27,9 +27,13 @@
     "allowImportingTsExtensions": true,
     "esModuleInterop": true,
     "sourceMap": true,
-    "noEmit": true
+    "noEmit": true,
+
+    // extras/ imports core only through its package subpath; check it against
+    // this checkout's source. extras/tsconfig.build.json maps it to the emitted types.
+    "paths": { "@expressivecss/expressive/core": ["./src/ts/core.ts"] }
   },
   // docs/src carries the Astro documentation site's shared page catalogue (ADR 0003).
   // Not in tsconfig.build.json: it is site source, not part of the package.
-  "include": ["src/ts", "docs/src"]
+  "include": ["src/ts", "extras/src/ts", "docs/src"]
 }

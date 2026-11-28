@@ -32,7 +32,9 @@ stop();`} />
     <p>The <code>version</code> string is the framework package version.
       Type-only exports disappear at runtime. Import option and data types by name from the
       public entries, such as <code>MenuOptions</code>, <code>AutoInitOptions</code> and <code>ConfirmOptions</code>.</p>
-    <p>Internal <code>core</code> helpers, <code>Utils</code>, <code>Component</code>,
+    <p><code>@expressivecss/expressive/core</code> exports <code>Component</code>, <code>Utils</code>,
+      <code>AutoInit</code> and the helpers that extension packages such as <code>@expressivecss/extras</code>
+      build on, with the same instances as the main entry. The IIFE script exposes them on <code>Expressive.core</code>.
       <code>ModalDisplayPlugin</code> and <code>DockedDisplayPlugin</code> have no package export.
       Use the component APIs below instead of importing files from the build's internal chunks.</p>
   </Section>

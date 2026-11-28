@@ -177,14 +177,15 @@ async function contractManifest(provenance) {
 
 const { NAV, PAGES } = await import('../docs/src/data/nav.ts');
 
-const COMPONENT_GROUPS = new Set(['Structure', 'Components', 'Forms']);
+// Additional components keep their decision entries here until the extras skill takes them.
+const COMPONENT_GROUPS = new Set(['Structure', 'Components', 'Forms', 'Additional components']);
 const cataloguePages = NAV
   .filter((group) => COMPONENT_GROUPS.has(group.label))
   .flatMap((group) => group.pages.map((page) => page.id));
 const decisionPages = decisionData.components.map((component) => component.guideSource.pageId);
 if (JSON.stringify(decisionPages) !== JSON.stringify(cataloguePages)) {
   throw new Error(
-    'The skill component map must match the Structure, Components, and Forms documentation catalogue in order.',
+    'The skill component map must match the Structure, Components, Forms, and Additional components documentation catalogue in order.',
   );
 }
 const decisionComponentsByPage = new Map(

@@ -163,6 +163,7 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
 | --- | --- |
 | `@expressivecss/expressive` | JavaScript module and TypeScript declarations |
 | `@expressivecss/expressive/modular` | ESM exports and types without import-time initialization |
+| `@expressivecss/expressive/core` | `Component`, `Utils`, `AutoInit` and helpers for extension packages; `Expressive.core` in the IIFE |
 | `@expressivecss/expressive/css` | Expanded compiled stylesheet |
 | `@expressivecss/expressive/css/min` | Minified compiled stylesheet |
 | `@expressivecss/expressive/fonts/*` | Self-hosted woff2 files |
@@ -442,6 +443,8 @@ The main bundle exports:
 - `Slider` and `ScrollSpy`
 - `FormSelect`, `NavigationRail`, and `Tabs`
 - `Timepicker`, `Snackbar`, and `Tooltip`
+
+Extension packages such as `@expressivecss/extras` import `Component`, `Utils` and `AutoInit` from `@expressivecss/expressive/core`, or read `Expressive.core` in the IIFE, and add components with `AutoInit.register(name, { component, selector })`.
 
 ---
 
@@ -6838,6 +6841,21 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Menubar` | `.menubar` |
 
 Snackbar, CharacterCounter, and Slider stay out of this table. Slider still starts itself when the bundle loads. Forms, Chips, Cards, ExpandingCard, Dialogs, BottomSheets, and SideSheets also run an import-time `Init()`. Chips, Cards, and ExpandingCard appear in the table as well so a later `AutoInit()` can pick up elements added after load.
+
+### Registering components
+
+`AutoInit.register(name, entry)` adds a component to the table, after the built-in ones. `AutoInit()` and watch mode then start and destroy it like a built-in: they skip `no-autoinit` elements and read its options from `data-<name>-options` and from the `AutoInit()` options under `name`. The entry takes the component class, the `selector` it claims and an optional `filter` function. Extension packages such as `@expressivecss/extras` call it when they load. It throws when the name is taken or the selector is not valid.
+
+```js
+import { AutoInit, Component } from '@expressivecss/expressive/core';
+
+class Ticker extends Component {
+  static key = 'Expressive_Ticker';
+  static get defaults() { return { interval: 1000 }; }
+}
+
+AutoInit.register('Ticker', { component: Ticker, selector: '.ticker' });
+```
 
 ### Ignoring elements
 

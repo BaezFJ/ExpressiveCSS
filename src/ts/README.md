@@ -3,6 +3,8 @@
 ```
 index.ts        public entry: re-exports, version, import-time side effects
 modular.ts      optional public entry: exports only, explicit initialization
+core.ts         extension API for @expressivecss/extras (`@expressivecss/expressive/core`)
+iife.ts         IIFE entry: index.ts plus `core`, as `Expressive.core`
 core/           Component base class, Utils, the shared form-associated control
 components/     per-element widgets, + index.ts (barrel) and registry.ts
 behaviors/      document-level enhancers (Forms, Dialogs) - no per-element instances
@@ -11,6 +13,11 @@ plugins/        helpers that are not Components (DockedDisplayPlugin)
 
 Imports point one way: `components/` and `behaviors/` reach into `core/`, never
 the reverse. Cross-component imports (`./menu` from `select.ts`) are fine.
+
+An extension package adds its components to AutoInit with
+`AutoInit.register(name, { component, selector })`. `@expressivecss/extras`
+imports only `@expressivecss/expressive/core`, so `core.ts` exports exactly what
+its modules use.
 
 ## Adding a component
 

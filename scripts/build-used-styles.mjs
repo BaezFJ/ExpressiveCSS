@@ -112,8 +112,9 @@ async function apiCatalogue() {
   // Build the same TS catalogue the docs use, including on Node versions
   // without native TypeScript loading.
   const { outputFiles } = await build({ entryPoints: ['docs/src/data/nav.ts'], format: 'esm', write: false });
-  const { PAGES } = await import(`data:text/javascript;base64,${Buffer.from(outputFiles[0].contents).toString('base64')}`);
-  return Object.fromEntries(PAGES.flatMap(page => (page.exports ?? []).map(name => {
+  const { PAGES, isExtrasPage } = await import(`data:text/javascript;base64,${Buffer.from(outputFiles[0].contents).toString('base64')}`);
+  // The index covers core only: extras pages document @expressivecss/extras exports and styles.
+  return Object.fromEntries(PAGES.filter(page => !isExtrasPage(page.id)).flatMap(page => (page.exports ?? []).map(name => {
     const selector = AUTO_INIT_COMPONENTS[name]?.selector;
     const styles = (page.styles ?? []).filter(path => path.startsWith('components/')).map(path => path.slice(11));
     return [name, { ...selection(selector ? matchesFor(selector) : []), styles }];

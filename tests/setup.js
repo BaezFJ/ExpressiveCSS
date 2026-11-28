@@ -7,6 +7,7 @@
 // here runs once per test process; tests call resetBody() between cases.
 
 import { JSDOM } from 'jsdom';
+import './extras.js';
 
 const dom = new JSDOM('<!doctype html><html><head></head><body></body></html>', {
   url: 'http://localhost/',
@@ -141,4 +142,6 @@ export function fire(el, type, EventCtor = window.MouseEvent) {
 
 // Import the shipped bundle, not the sources: this is what consumers get.
 export const Expressive = await import('../dist/js/expressive.mjs');
+// After core, as a page loads them: extras registers its components with core's AutoInit.
+export const ExpressiveExtras = await import('../extras/dist/js/extras.mjs');
 export { window };

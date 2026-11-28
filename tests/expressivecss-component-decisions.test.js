@@ -399,6 +399,11 @@ describe('Material capability roadmap', () => {
       }
       fixture.capabilityBrowserEvidence = { collector: 'scripts/record-capability-evidence.mjs', recordedOn: '2026-09-07', engine: 'chromium', status: 'passed', reportSha256: sha256('report'), directories, inputs, results: [{ file: 'tests/check.test.js', name: 'scoped assertion', status: 'passed' }] };
       assert.equal((await first()).browserEvidence, 'recorded-scoped-pass');
+      // Evidence recorded before the last input directory was added is stale, not invalid.
+      const { directories: recorded } = fixture.capabilityBrowserEvidence;
+      fixture.capabilityBrowserEvidence.directories = recorded.slice(0, -1);
+      assert.equal((await first()).browserEvidence, 'needs-rerun');
+      fixture.capabilityBrowserEvidence.directories = recorded;
       fixture.capabilityBrowserEvidence.results[0].status = 'failed';
       assert.equal((await first()).browserChecks[0].state, 'recorded-failed');
       fixture.capabilityBrowserEvidence.results[0].status = 'skipped';

@@ -36,10 +36,12 @@ export interface DocsPage {
 export interface DocsGroup {
   label: string;
   icon: string;
+  /** Set when the group's pages document a separate package rather than core. */
+  package?: "extras";
   pages: DocsPage[];
 }
 
-export const NAV: DocsGroup[] = [
+const GROUPS: DocsGroup[] = [
   {
     label: "Start",
     icon: "home",
@@ -1137,7 +1139,23 @@ export const NAV: DocsGroup[] = [
       },
     ],
   },
+  {
+    // @expressivecss/extras: components beyond the Material 3 set. Their pages
+    // also load the extras CSS and JS, and their `exports` and `styles` come
+    // from extras/src.
+    label: "Additional components",
+    icon: "extension",
+    package: "extras",
+    pages: [],
+  },
 ];
+
+/** The navigation groups, leaving out any that has no pages yet. */
+export const NAV: DocsGroup[] = GROUPS.filter((group) => group.pages.length);
 
 /** Every canonical page, in navigation order. */
 export const PAGES: DocsPage[] = NAV.flatMap((group) => group.pages);
+
+/** Whether page `id` documents @expressivecss/extras rather than core. */
+export const isExtrasPage = (id: string): boolean =>
+  NAV.some((group) => group.package === "extras" && group.pages.some((page) => page.id === id));

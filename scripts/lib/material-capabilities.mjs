@@ -6,9 +6,9 @@ import { readBoundedRegularFile } from './bounded-file.mjs';
 import { stripRelativeLinks } from './markdown-sections.mjs';
 
 export const sha256 = (bytes) => hash('sha256', bytes);
-export const CAPABILITY_INPUT_DIRECTORIES = ['src', 'tests', 'dist', 'skills/expressivecss/assets/examples', 'scripts'];
+export const CAPABILITY_INPUT_DIRECTORIES = ['src', 'tests', 'dist', 'skills/expressivecss/assets/examples', 'scripts', 'extras'];
 export const capabilityEntries = (data) => [...data.components, ...(data.foundations ?? [])];
-const safePath = (value) => typeof value === 'string' && /^(src|tests|scripts|skills|dist)\/[\w./-]+$|^(?:package(?:-lock)?|semantics)\.json$/u.test(value) && !value.split('/').includes('..');
+const safePath = (value) => typeof value === 'string' && /^(src|tests|scripts|skills|dist|extras)\/[\w./-]+$|^(?:package(?:-lock)?|semantics)\.json$/u.test(value) && !value.split('/').includes('..');
 const hashValue = (value) => typeof value === 'string' && /^[a-f0-9]{64}$/u.test(value);
 
 // Compare segment by segment so the order matches a depth-first walk sorted by name.
@@ -57,8 +57,9 @@ export function validateCapabilities(data) {
     assert.ok(['passed', 'failed', 'blocked'].includes(evidence.status) && hashValue(evidence.reportSha256));
     assert.ok(Array.isArray(evidence.inputs) && evidence.inputs.length > 0 && evidence.inputs.length <= 2000);
     assert.equal(new Set(evidence.inputs.map((input) => input.path)).size, evidence.inputs.length);
-    assert.deepEqual(evidence.directories?.map((entry) => entry.path), CAPABILITY_INPUT_DIRECTORIES);
-    for (const directory of evidence.directories) assert.ok(hashValue(directory.sha256));
+    // Evidence recorded before a directory joined the inputs stays valid; it is only stale.
+    assert.ok(Array.isArray(evidence.directories));
+    for (const directory of evidence.directories) assert.ok(CAPABILITY_INPUT_DIRECTORIES.includes(directory.path) && hashValue(directory.sha256));
     for (const input of evidence.inputs) assert.ok(safePath(input.path) && hashValue(input.sha256), 'Invalid browser input pin');
     assert.ok(Array.isArray(evidence.results) && evidence.results.length <= 1000);
     assert.equal(new Set(evidence.results.map((result) => `${result.file}:${result.name}`)).size, evidence.results.length);
@@ -76,7 +77,8 @@ export async function buildCapabilityRoadmap(data, root) {
   };
   const matches = async (pins) => (await Promise.all(pins.map(async (pin) => await currentHash(pin.path) === pin.sha256))).every(Boolean);
   const evidence = data.capabilityBrowserEvidence;
-  const directoriesCurrent = evidence ? (await Promise.all(evidence.directories.map(async (directory) =>
+  const sameDirectories = evidence && JSON.stringify(evidence.directories.map((directory) => directory.path)) === JSON.stringify(CAPABILITY_INPUT_DIRECTORIES);
+  const directoriesCurrent = sameDirectories ? (await Promise.all(evidence.directories.map(async (directory) =>
     await pinDirectory(root, directory.path).then((pins) => sha256(JSON.stringify(pins))).catch(() => null) === directory.sha256))).every(Boolean) : false;
   const browserInputsCurrent = Boolean(evidence && directoriesCurrent && await matches(evidence.inputs));
   const inventory = await pinDirectory(root, 'src').then((pins) => sha256(JSON.stringify(pins))).catch(() => null);

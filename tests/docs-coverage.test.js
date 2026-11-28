@@ -2,7 +2,10 @@ import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync } from 'node:fs';
 import * as api from '../dist/js/modular.mjs';
-import { PAGES } from '../docs/src/data/nav.ts';
+import './extras.js';
+import { PAGES, isExtrasPage } from '../docs/src/data/nav.ts';
+
+const extras = await import('../extras/dist/js/modular.mjs');
 
 const read = path => readFileSync(new URL(`../${path}`, import.meta.url), 'utf8');
 const sourceFor = page => read(`docs/src/pages/${page.route === '/' ? 'index' : page.route.slice(1, -5)}.astro`);
@@ -11,7 +14,11 @@ describe('documentation coverage', () => {
   test('every runtime export has exactly one guide in the shared catalogue', () => {
     const names = PAGES.flatMap(page => page.exports ?? []);
     assert.equal(new Set(names).size, names.length, 'an export has multiple owner pages');
-    assert.deepEqual([...names].sort(), Object.keys(api).sort());
+    // Pages in the extras group own @expressivecss/extras exports; the core
+    // `version` guide also covers the version extras reports.
+    const owned = (inExtras) => PAGES.filter(page => isExtrasPage(page.id) === inExtras).flatMap(page => page.exports ?? []);
+    assert.deepEqual(owned(false).sort(), Object.keys(api).sort());
+    assert.deepEqual(owned(true).sort(), Object.keys(extras).filter(name => name !== 'version').sort());
     for (const page of PAGES.filter(page => page.exports?.length)) {
       const source = sourceFor(page);
       for (const name of page.exports) {
@@ -32,7 +39,7 @@ describe('documentation coverage', () => {
             if (value && typeof value === 'object' && !Array.isArray(value)) check(value, `${path}.${key}`);
           }
         };
-        check(api[name]?.defaults ?? {}, name);
+        check((api[name] ?? extras[name])?.defaults ?? {}, name);
       }
     }
     assert.deepEqual(missing, [], `Undocumented options:\n${missing.join('\n')}`);
@@ -53,8 +60,9 @@ describe('documentation coverage', () => {
 
   test('every component, utility, base and token partial has one guide', () => {
     const expected = [];
-    for (const folder of ['components', 'utilities', 'base', 'tokens']) {
-      const dir = new URL(`../src/sass/${folder}/`, import.meta.url);
+    // Extras partials keep the components/ path they had in core.
+    for (const [root, folder] of [['src/sass', 'components'], ['extras/src/sass', 'components'], ['src/sass', 'utilities'], ['src/sass', 'base'], ['src/sass', 'tokens']]) {
+      const dir = new URL(`../${root}/${folder}/`, import.meta.url);
       for (const file of readdirSync(dir, { recursive: true })) {
         if (!file.endsWith('.scss') || file.endsWith('_index.scss')) continue;
         expected.push(`${folder}/${file.replaceAll('\\', '/').replace(/(^|\/)_(?=[^/]+$)/, '$1').slice(0, -5)}`);

@@ -7,6 +7,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- `@expressivecss/expressive/core` exports `Component`, `Utils`, `AutoInit`
+  and the helpers that extension packages build on. The IIFE exposes the same
+  names as `Expressive.core`.
+
+- `AutoInit.register(name, { component, selector })` adds a component to
+  AutoInit. AutoInit and watch mode start and destroy it like a built-in.
+
 - The agent skill's layout guide gains a desktop reference, mapped from
   Material's desktop guidance onto ExpressiveCSS. It covers panes and a capped
   single pane on wide windows, the switch to a navigation rail, and replacing

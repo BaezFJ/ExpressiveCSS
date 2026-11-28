@@ -36,6 +36,7 @@
     "./dist/js/expressive.cjs",
     "./dist/js/expressive.js",
     "./dist/js/expressive.min.js",
+    "./src/ts/index.ts",
     "*.css",
     "*.scss"
   ],
@@ -55,6 +56,10 @@
       "types": "./dist/types/modular.d.ts",
       "import": "./dist/js/modular.mjs"
     },
+    "./core": {
+      "types": "./dist/types/core.d.ts",
+      "import": "./dist/js/core.mjs"
+    },
     "./scss/custom": "./src/sass/custom.scss"
   },
   "files": [
@@ -68,18 +73,18 @@
   },
   "scripts": {
     "prepack": "npm run build",
-    "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
+    "clean": "node -e \"for (const dir of ['dist', 'extras/dist']) require('fs').rmSync(dir, { recursive: true, force: true })\"",
     "build": "run-s clean build:css build:js build:types build:used:index",
     "build:fonts": "node scripts/copy-fonts.mjs",
     "build:css": "run-s build:fonts build:css:expanded build:css:min",
-    "build:css:expanded": "sass src/sass/expressive.scss dist/css/expressive.css --style=expanded --source-map --load-path=src/sass",
-    "build:css:min": "sass src/sass/expressive.scss dist/css/expressive.min.css --style=compressed --source-map --load-path=src/sass",
+    "build:css:expanded": "sass src/sass/expressive.scss:dist/css/expressive.css extras/src/sass/extras.scss:extras/dist/css/extras.css --style=expanded --source-map --load-path=src/sass",
+    "build:css:min": "sass src/sass/expressive.scss:dist/css/expressive.min.css extras/src/sass/extras.scss:extras/dist/css/extras.min.css --style=compressed --source-map --load-path=src/sass",
     "build:js": "node scripts/build-js.mjs",
     "build:js:esm": "node scripts/build-esm.mjs",
     "build:js:cjs": "esbuild src/ts/index.ts --bundle --format=cjs --target=es2020 --outfile=dist/js/expressive.cjs --sourcemap",
-    "build:js:iife": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.js --sourcemap",
-    "build:js:iife-min": "esbuild src/ts/index.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.min.js --minify --sourcemap",
-    "build:types": "tsc -p tsconfig.build.json",
+    "build:js:iife": "esbuild src/ts/iife.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.js --sourcemap",
+    "build:js:iife-min": "esbuild src/ts/iife.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.min.js --minify --sourcemap",
+    "build:types": "tsc -p tsconfig.build.json && tsc -p extras/tsconfig.build.json",
     "build:skill": "node scripts/gen-expressivecss-skill.mjs",
     "build:semantics": "node scripts/gen-semantics.mjs",
     "eval:finished-app-undo": "node scripts/finished-app-delete-undo.mjs",
@@ -107,7 +112,7 @@
     "test:visual": "node visual/run.mjs",
     "test:visual:report": "playwright show-report visual/report",
     "watch": "run-p watch:css watch:js",
-    "watch:css": "sass --watch src/sass/expressive.scss:dist/css/expressive.css --style=expanded --source-map --load-path=src/sass",
+    "watch:css": "sass --watch src/sass/expressive.scss:dist/css/expressive.css extras/src/sass/extras.scss:extras/dist/css/extras.css --style=expanded --source-map --load-path=src/sass",
     "watch:js": "node scripts/build-js.mjs --watch",
     "check:generated": "node scripts/gen-semantics.mjs --check && node scripts/gen-expressivecss-skill.mjs --check",
     "verify": "run-s build typecheck test:run check:generated docs:build:astro docs:verify",

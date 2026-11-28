@@ -133,6 +133,9 @@ export type AutoInitOptions = {
   [K in keyof Registry]?: Partial<
     InstanceType<Registry[K]["component"]>["options"]
   >;
+} & {
+  /** Options for a component added with `AutoInit.register`, under its name. */
+  [name: string]: object | undefined;
 };
 
 /**
@@ -235,10 +238,12 @@ function markupOptions(el: Element, name: string, defaults: object) {
 
 // Each component's static `init` is overloaded; indexing the table widens it
 // to a union TypeScript cannot call, so widen it once, here, to the shape the
-// table satisfies.
-const entry = (name: keyof Registry): AutoInitEntry => AUTO_INIT_COMPONENTS[name];
-const NAMES = Object.keys(AUTO_INIT_COMPONENTS) as (keyof Registry)[];
-const WATCH_SELECTOR = `:is(${NAMES.map((name) => entry(name).selector).join(",")}):not(.no-autoinit)`;
+// table satisfies. Components added with `AutoInit.register` follow the
+// built-in ones, in the order they were added.
+const ENTRIES = new Map<string, AutoInitEntry>(Object.entries(AUTO_INIT_COMPONENTS));
+const entry = (name: string): AutoInitEntry => ENTRIES.get(name);
+const watchSelector = () => `:is(${[...ENTRIES.values()].map(({ selector }) => selector).join(",")}):not(.no-autoinit)`;
+let WATCH_SELECTOR = watchSelector();
 
 /**
  * Starts component `name` on one element, with its markup options under
@@ -246,7 +251,7 @@ const WATCH_SELECTOR = `:is(${NAMES.map((name) => entry(name).selector).join(","
  * released, so one bad element neither stops the rest of the pass nor keeps
  * a later pass from trying again.
  */
-function initElement(name: keyof Registry, el: Element, options: object = {}) {
+function initElement(name: string, el: Element, options: object = {}) {
   const { component } = entry(name);
   try {
     component.init(el, { ...markupOptions(el, name, component.defaults), ...options });
@@ -261,7 +266,7 @@ function initElement(name: keyof Registry, el: Element, options: object = {}) {
  * as a half-built instance's can, is logged and the base teardown runs anyway,
  * so the listeners go and the element is free for a new instance.
  */
-function stopElement(name: keyof Registry, el: Element) {
+function stopElement(name: string, el: Element) {
   const instance = entry(name).component.getInstance(el);
   try {
     instance?.destroy();
@@ -278,7 +283,7 @@ function stopElement(name: keyof Registry, el: Element) {
  * alternative only, which would break the opt-out for any comma-separated
  * entry (Cards is the first).
  */
-function claimed(name: keyof Registry, root: ParentNode, self = false): Element[] {
+function claimed(name: string, root: ParentNode, self = false): Element[] {
   const { selector, filter = () => true } = entry(name);
   const query = `:is(${selector}):not(.no-autoinit)`;
   const own = self && (root as Element).matches(query) ? [root as Element] : [];
@@ -288,7 +293,7 @@ function claimed(name: keyof Registry, root: ParentNode, self = false): Element[
 /** Starts the components an added element and its descendants claim, leaving existing instances alone. */
 function startAdded(node: Node, options?: Partial<AutoInitOptions>) {
   if (!hasClaims(node)) return;
-  for (const name of NAMES) {
+  for (const name of ENTRIES.keys()) {
     claimed(name, node, true).forEach((el) => entry(name).component.getInstance(el) || initElement(name, el, options?.[name]));
   }
 }
@@ -308,7 +313,7 @@ function hasClaims(node: Node): node is Element {
  */
 function stopRemoved(node: Node) {
   if (node.isConnected || !hasClaims(node)) return;
-  for (const name of NAMES) {
+  for (const name of ENTRIES.keys()) {
     claimed(name, node, true).forEach((el) => stopElement(name, el));
   }
 }
@@ -344,8 +349,23 @@ export function AutoInit(
   options?: Partial<AutoInitOptions>,
   settings: { watch?: boolean } = {},
 ): () => void {
-  for (const name of NAMES) {
+  for (const name of ENTRIES.keys()) {
     claimed(name, context).forEach((el) => initElement(name, el, options?.[name]));
   }
   return settings.watch ? watch(context, options) : () => {};
 }
+
+/**
+ * Adds component `name` to AutoInit, after the built-in components. AutoInit()
+ * and watch mode then start and destroy it like a built-in, skip `.no-autoinit`
+ * elements, and read its options from `data-<name>-options`. Extension packages
+ * such as `@expressivecss/extras` call this when they load.
+ * @throws When `name` is already taken or `selector` is not a valid selector.
+ */
+AutoInit.register = (name: string, value: AutoInitEntry): void => {
+  if (ENTRIES.has(name)) throw new Error(`AutoInit already has a component named "${name}".`);
+  // Throws now on a selector that would otherwise break every later scan.
+  globalThis.document?.createDocumentFragment().querySelector(value.selector);
+  ENTRIES.set(name, value);
+  WATCH_SELECTOR = watchSelector();
+};

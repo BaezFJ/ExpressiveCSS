@@ -12,6 +12,7 @@ const S = defineSections([
   { id: "markup-options", label: "Options in markup" },
   { id: "watch", label: "Markup added later" },
   { id: "components", label: "Components" },
+  { id: "register", label: "Registering components" },
   { id: "ignoring", label: "Ignoring elements" },
   { id: "events", label: "Events" },
   { id: "alpine", label: "Alpine.js" },
@@ -275,6 +276,27 @@ function unmount() {
         <p>The <a href="/javascript.html#behaviors">JavaScript API</a> lists every import-time behavior,
           including Copy, Theme, PaneResize, ImageCompare, Tour, Sortable, Lists, DataTables and TransferList,
           and explains setup with the modular entry.</p>
+  </Section>
+  <Section {...S.register}>
+        <p>
+          <code>AutoInit.register(name, entry)</code> adds a component to the table, after the built-in
+          ones. <code>AutoInit()</code> and watch mode then start and destroy it like a built-in: they skip
+          <code>no-autoinit</code> elements and read its options from <code>data-<em>name</em>-options</code>
+          and from the <code>AutoInit()</code> options under <code>name</code>. The entry takes the component
+          class, the <code>selector</code> it claims and an optional <code>filter</code> function. Extension
+          packages such as <code>@expressivecss/extras</code> call it when they load. It throws when the name
+          is taken or the selector is not valid.
+        </p>
+<Code code={`
+import { AutoInit, Component } from '@expressivecss/expressive/core';
+
+class Ticker extends Component {
+  static key = 'Expressive_Ticker';
+  static get defaults() { return { interval: 1000 }; }
+}
+
+AutoInit.register('Ticker', { component: Ticker, selector: '.ticker' });
+`} />
   </Section>
   <Section {...S.ignoring}>
         <p>

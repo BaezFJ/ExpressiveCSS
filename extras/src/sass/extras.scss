@@ -1,0 +1,13 @@
+@charset "UTF-8";
+
+// The @expressivecss/extras stylesheet. Load it after expressive.css. Compile
+// with core's src/sass on the load path, so `@use "abstracts" as *` in a
+// partial reaches core's abstracts, which emit no CSS.
+@use "sass:meta";
+
+// Core's layer order, restated so a sheet that loads first cannot reorder it.
+@layer tokens, base, components, utilities;
+
+@layer components {
+  @include meta.load-css("components");
+}
