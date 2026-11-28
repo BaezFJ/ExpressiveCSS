@@ -181,7 +181,7 @@ do not reach for the pairing as a way to keep specificity flat.
 `tests/shadow-dom.test.js` fails any rule that skips the pairing; the commitment
 behind it is `adr/0002-shadow-only-stylesheet-adoption.md`. That commitment
 covers everything *inside* the shadow root, portals included: the six places that
-create an element at runtime (Tooltip, Snackbar, Lightbox's caption, the drawer's
+create an element at runtime (Tooltip, Snackbar, extras' Lightbox caption, the drawer's
 drag target, and the Datepicker's two menus) route through `Utils.portalRoot()`
 and append into the originating shadow root, so no document-level copy is needed.
 The cost is that they no longer escape an ancestor's `overflow` or stacking
@@ -257,7 +257,7 @@ job is to be unconditional (`.hide`, `.m-3`) keep it.
 
 A few rules in `components/` still use `!important`: reduced-motion resets,
 `.scale-transition` (it must replace the transition of whatever component it
-is added to), the map's overrides of MapLibre's own `!important` styles, and
+is added to), the extras map's overrides of MapLibre's own `!important` styles, and
 the print rules that hide navigation, snackbars, tooltips and the FAB menu.
 None of them is for JS-driven geometry. Tap target, the circular progress
 indicator and `.expressive-textarea` padding no longer need the flag.

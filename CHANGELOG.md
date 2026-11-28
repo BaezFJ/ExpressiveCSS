@@ -14,6 +14,13 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - `AutoInit.register(name, { component, selector })` adds a component to
   AutoInit. AutoInit and watch mode start and destroy it like a built-in.
 
+- A new `expressivecss-extras` agent skill covers `@expressivecss/extras`: its
+  install and load order, generated guides for every extras component, and
+  the charts guide, which moves there from the `expressivecss` skill. The
+  `expressivecss` skill now lists core components only and routes other work
+  to it. `m3-guidelines.md` lists the extras by category and adds the Not
+  shipped list, and `llm.md` marks each extras section with its package.
+
 - The agent skill's layout guide gains a desktop reference, mapped from
   Material's desktop guidance onto ExpressiveCSS. It covers panes and a capped
   single pane on wide windows, the switch to a navigation rail, and replacing

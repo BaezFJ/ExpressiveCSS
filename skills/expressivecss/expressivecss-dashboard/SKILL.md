@@ -7,14 +7,16 @@ description: "Builds and reviews ExpressiveCSS dashboards and reporting pages. U
 
 Use this guide to build or review a page that shows how something is doing: an analytics overview, an operations console, a sales or finance report, an admin home. It narrows the [design guide](../expressivecss-design/SKILL.md) workflow to dashboard decisions so the result reads like a Material 3 product such as Google Analytics or Search Console. A single chart or table fix goes to the component guide, setup to Install, and token-only theming to Theming.
 
+Charts, KPI cards, stat tiles, skeletons and empty states ship in `@expressivecss/extras`, not core. Install it and load its CSS and JS after core as the sibling `expressivecss-extras` skill describes (`../expressivecss-extras/SKILL.md` from the skills directory); the reference page already loads both. Its guides are named `expressivecss-extras/...` below.
+
 ## Start from the reference
 
 For a new dashboard or substantial recomposition, read [analytics-overview.html](./assets/analytics-overview.html) before choosing markup. For a narrow change, inspect the existing page and relevant component guides. The reference is a static, browser-checked page with a shell, scope controls, filter chips, key figures, a trend card, activity, breakdowns, an insight, a sortable table and a heatmap. Borrow relevant structure and styling while preserving the project's shell, asset loading, data handling and component ownership. Copy its sort handler only when the application has no existing sorting owner; use the framework's `data-sort` behavior where it fits. Choose components and charts from the user's task and data.
 
 Then read, as each becomes relevant:
 
-- the [charts guide](../expressivecss-charts/SKILL.md) before adding any chart. It owns chart choice, the table contract, number parsing, honest scales, chart tokens, sparklines and redrawing. This guide adds only dashboard rules.
-- the component guide for each component you place, before writing its markup. The reference page shows one arrangement; each guide holds its component's required structure and rules: [stat](../components/stat.md), [data table](../components/data-table.md), [cards](../components/cards.md), [chips](../components/chips.md), [select](../components/select.md), [menu](../components/menu.md), [skeleton](../components/skeleton.md), [empty state](../components/empty-state.md), [navigation rail](../components/navigation-rail.md), [navigation bar](../components/navigation-bar.md), and each selected chart.
+- the charts guide (`expressivecss-extras/expressivecss-charts/SKILL.md`) before adding any chart. It owns chart choice, the table contract, number parsing, honest scales, chart tokens, sparklines and redrawing. This guide adds only dashboard rules.
+- the component guide for each component you place, before writing its markup. The reference page shows one arrangement; each guide holds its component's required structure and rules: stat (`expressivecss-extras/components/stat.md`), [data table](../components/data-table.md), [cards](../components/cards.md), [chips](../components/chips.md), [select](../components/select.md), [menu](../components/menu.md), skeleton and empty state (`expressivecss-extras/components/`), [navigation rail](../components/navigation-rail.md), [navigation bar](../components/navigation-bar.md), and each selected chart.
 - [dashboard recipes](./references/recipes.md) when the page is an operations, sales, finance or admin dashboard, or to pick a card and table density.
 
 ## Workflow
@@ -113,14 +115,14 @@ Write numbers the way a careful analyst would:
 - Use the locale's grouping (`12,480`), and abbreviate only past five digits (`1.2M`, `48.2K`). Keep one decimal at most.
 - Give every change its direction, size and baseline in text: `+8.2% vs previous 28 days`.
 - Use percentage points for changes in a rate: `+0.4 points`, not `+0.4%`.
-- Mark bad news with `negative` as the [stat guide](../components/stat.md) describes, whatever the direction. Fewer cancellations is `down` without `negative`.
+- Mark bad news with `negative` as the stat guide (`expressivecss-extras/components/stat.md`) describes, whatever the direction. Fewer cancellations is `down` without `negative`.
 - Name the unit in the card subtitle or column header, such as "Active members per day" or "Revenue ($K)".
 
 Titles are sentence case and say what the reader learns: "Where sign-ups come from", not "Acquisition chart". An insight title states the finding: "Saturday events fill fastest".
 
 ## 5. Charts on a dashboard
 
-Choose and build each chart with the [charts guide](../expressivecss-charts/SKILL.md). On a dashboard, also:
+Choose and build each chart with the charts guide (`expressivecss-extras/expressivecss-charts/SKILL.md`). On a dashboard, also:
 
 - Give the widest card to the headline trend, usually a `line-chart` with the comparison period or target in a `th.dashed` column.
 - Ask one question per chart. A card that needs two charts is two cards, or a `display-medium` figure with a `sparkline` under it.
@@ -175,7 +177,7 @@ Render the page and look at it, following [the design guide's review steps](../e
 - Loading, empty and error states exist for each data card the feature can reach.
 - Light and dark schemes hold at 390px, 840px and 1440px, with no horizontal overflow.
 - `AutoInit()` runs once and the console has no errors.
-- The root skill's [static checks](../SKILL.md#optional-mcp-acceleration) pass on every markup file you touched. Linter releases older than the fix for `legacy-card-content` flag the `--md-comp-card-content-padding` token by mistake; treat that one finding as a false positive.
+- The core skill's [static checks](../SKILL.md#optional-mcp-acceleration) pass on every markup file you touched. Linter releases older than the fix for `legacy-card-content` flag the `--md-comp-card-content-padding` token by mistake; treat that one finding as a false positive.
 
 For a dashboard with many cards, the review splits well across subagents following the [delegation reference](../references/delegation.md). Useful independent scopes are the number audit (every figure, change and total checked against the source data, using section 4), the rendered review across schemes and widths, and the per-card state review. Add this guide to each brief, and have reviewers name the card in each finding's location. A small dashboard does not need subagents.
 

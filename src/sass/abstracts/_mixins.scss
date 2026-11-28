@@ -221,7 +221,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   }
 }
 
-// The 18dp up arrow on a pseudo-element: Stat and KPI change lines, data
+// The 18dp up arrow on a pseudo-element: extras Stat and KPI change lines, data
 // table sort buttons. Rotate it 180deg for down.
 @mixin trend-arrow {
   content: "";
@@ -256,8 +256,8 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   @include typescale("title-large");
 }
 
-// The states of a text action with no button chrome of its own: a mega menu
-// or menubar item, a rail panel link, a tree or cascader row. An on-surface
+// The states of a text action with no button chrome of its own: an extras
+// mega menu or menubar item, a rail panel link, an extras tree or cascader row. An on-surface
 // hover layer and, given `$selected` (a compound such as `[aria-current]`), a
 // selected fill with a Highlight outline under forced colors. Hover comes
 // first: the two have equal specificity, so the selected fill wins on hover.
@@ -328,7 +328,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
 // A tree branch's chevron, drawn as the row's ::before: it points to the end
 // edge while closed. The row turns it with `transform: none` once the branch
 // opens, and with rotate(90deg) under :dir(rtl). .tree and the tree select
-// share it.
+// (both in extras) share it.
 
 @mixin tree-chevron {
   content: "";
@@ -348,7 +348,7 @@ $_state-layers: ("hover", "focus", "pressed", "dragged");
   }
 }
 
-// A fieldset of round, labeled choices (color swatches, rating): no fieldset
+// A fieldset of round, labeled choices (extras color swatches, rating): no fieldset
 // chrome, a body-medium legend, and labels whose 4px of padding makes the
 // 48px target. $control is the input the label's focus and disabled states
 // follow.

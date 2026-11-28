@@ -68,6 +68,13 @@ committed assets in a pre-commit hook. See [Smaller builds](docs/guides/smaller-
 - [Working on ExpressiveCSS](docs/guides/development.md): npm commands, tests,
   and where things live in the repository
 
+## Additional components
+
+Components outside the Material 3 component set, such as charts, timeline,
+command palette, rich text editor, map and tour, ship in a separate package,
+`@expressivecss/extras`. Install it next to core and load it after core; see
+[extras/README.md](extras/README.md).
+
 ## MCP server for AI tools
 
 `mcp/expressivecss/` holds a local MCP server that walks an AI assistant from

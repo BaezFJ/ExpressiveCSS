@@ -730,12 +730,15 @@ describe('ExpressiveCSS version resolution', () => {
   });
 
   test('generated component guides carry deterministic contract provenance', async () => {
-    const directory = new URL('../skills/expressivecss/components/', import.meta.url);
-    const names = (await readdir(directory)).filter((name) => name.endsWith('.md'));
-    assert.equal(names.length, 101);
+    // Core and extras guides come from the same contract.
+    const directories = ['expressivecss', 'expressivecss-extras'].map((skill) => new URL(`../skills/${skill}/components/`, import.meta.url));
+    const guides = (await Promise.all(directories.map(async (directory) => (await readdir(directory))
+      .filter((name) => name.endsWith('.md')).map((name) => new URL(name, directory))))).flat();
+    assert.equal(guides.length, 101);
     const hashes = new Set();
-    for (const name of names) {
-      const guide = await readFile(new URL(name, directory), 'utf8');
+    for (const url of guides) {
+      const name = url.pathname.split('/').at(-1);
+      const guide = await readFile(url, 'utf8');
       assert.ok(guide.includes(`Contract: ExpressiveCSS ${frameworkVersion}\n`));
       const hash = guide.match(/Contract SHA-256: `([a-f0-9]{64})`/)?.[1];
       assert.ok(hash, `${name} has no contract hash`);
@@ -802,6 +805,9 @@ describe('ExpressiveCSS version resolution', () => {
       'skills/expressivecss/references/capability-roadmap.json',
       'skills/expressivecss/components/app-bar.md',
       'skills/expressivecss/components/time-picker.md',
+      'skills/expressivecss-extras/components/line-chart.md',
+      'skills/expressivecss-extras/references/component-decisions.md',
+      'skills/expressivecss-extras/references/api-index.md',
       'skills/expressivecss/scripts/resolve-version.mjs',
       'skills/expressivecss/scripts/verify-consumer.mjs',
       'skills/expressivecss/scripts/consumer-browser.mjs',

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Guides for `@expressivecss/extras` components carry `package` and
+  `install` fields in `component-guides.json`, in `component_syntax_expert`
+  and `creative_director` results, and in component guide resources. The
+  `component_catalog` listing leaves them out to stay within the default
+  response budget.
+
 ## 0.6.1 - 2026-11-18
 
 - Bundled guidance matches ExpressiveCSS 0.20.0, including `ScrollArea`,

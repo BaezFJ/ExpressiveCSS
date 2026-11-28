@@ -262,7 +262,7 @@ Material Symbols, outlined by default. The compiled sheet ships the variable fon
 | Many homogeneous rows to find and act on | **List** |
 | Related form fields | **Fieldset** |
 | Image-first browse | **Carousel** |
-| Site-wide links after the page | **Footer** (`<footer>`), not a navigation bar |
+| Site-wide links after the page | **Footer** (`<footer>`), not a navigation bar (@expressivecss/extras) |
 
 ---
 
@@ -501,7 +501,7 @@ Covered in [§1.3](#13-canonical-pane-layouts). Semantic aliases: `.list-pane`, 
 
 ## 4.11 Footer
 
-**M3:** Not a mobile app-bar equivalent. **ExpressiveCSS:** `<footer>` for site chrome.
+**M3:** Not a mobile app-bar equivalent. **ExpressiveCSS:** `<footer>` for site chrome, from `@expressivecss/extras` (see section 10).
 
 **Use when** a marketing or docs page needs site maps, legal, or secondary links after the content.
 
@@ -1154,12 +1154,29 @@ Covered in [§2.6](#26-icons). Decorative icons next to text can be `aria-hidden
 
 # 10. Framework extras that are not Material 3 components
 
-These exist in ExpressiveCSS. Do not use them as if they were M3 building blocks, and do not substitute them for the components above.
+These components are not on Material 3's component list, so they ship in a separate package, `@expressivecss/extras`, not in core. Do not use them as if they were M3 building blocks, and do not substitute them for the components above.
 
-| Extra | What it is | Don't use it as |
-| --- | --- | --- |
-| Lightbox (`.lightboxed`) | Media overlay (renamed from Materialbox) | A dialog, a gallery carousel, or a side sheet |
-| Media slider | Crossfading captions | An M3 carousel |
+| Category | Extras |
+| --- | --- |
+| Navigation and structure | Footer, stepper, mega menu, menubar, tree, scrollspy and table of contents, back to top |
+| Data display | Stat, KPI, description list, countdown, timeline, calendar, organization chart |
+| Charts | Line, column, bar, pie, heatmap, radar, radial, mixed, scatter, funnel, Sankey, treemap |
+| Chat and touch | Message, message scroller, pull-to-refresh, swipe actions, show more |
+| Overlays and loading | Popover, hover card, tour, loading overlay, skeleton, empty state |
+| Media and effects | Lightbox (`.lightboxed`; not a dialog, carousel or side sheet), image compare, marquee, aura, confetti, particles, map |
+| Input | Command palette, input mask, currency input, rich text editor, drop zone, tree select, cascader, transfer list, rating, color swatches, color picker, keypad, questionnaire |
+
+Install `@expressivecss/extras` next to `@expressivecss/expressive` at the same minor version. Load core's CSS and JS first, then `extras.min.css` and `extras.min.js` (IIFE global `ExpressiveExtras`), or `import '@expressivecss/extras'` after core in a bundler. Core `Expressive.AutoInit()` then starts the extras components too. Data table, breadcrumbs, pagination, avatar, alert, accordion and status bar are not M3 components either, but they stay in core.
+
+## Not shipped
+
+These Material 3 components have no ExpressiveCSS implementation. Use the substitute; do not build a look-alike.
+
+| Material 3 component | Use instead |
+| --- | --- |
+| Navigation drawer | Expanded navigation rail (`.navigation-rail.expanded`); M3 Expressive prefers it |
+| Segmented button | Connected button group (`.button-group.connected` with `data-selection`); M3 Expressive replaces segmented buttons with it |
+| Bottom app bar | Docked toolbar (`div.toolbar.docked`) |
 
 ---
 
@@ -1209,7 +1226,7 @@ Generate these skeletons unless the user asks otherwise. Fill in real destinatio
 - App bar with title + text destinations in a `<menu>` from `large` up; compact navigation bar or modal expanded rail below that.
 - `main.container` + 12-column grid.
 - Cards for features, lists for indexes, breadcrumbs on nested docs.
-- Site `<footer>` (not a navigation bar) for legal and site maps.
+- Site `<footer>` (not a navigation bar, @expressivecss/extras) for legal and site maps.
 
 ---
 

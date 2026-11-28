@@ -64,8 +64,9 @@ const options = JSON.parse((await client.readResource({ uri })).contents[0].text
 
 Every read has `schemaVersion: 1`, `slug`, `title`, `docs` (the
 documentation page), `repositorySource` (the page's source file),
-`contractVersion`, `sourceHash` and `guideSource: "bundled"`. A whole-guide
-read adds all five sections. A section read adds `section` and that one
+`contractVersion`, `sourceHash` and `guideSource: "bundled"`. A guide for an
+`@expressivecss/extras` component also has `package` and `install`, because
+core does not ship it. A whole-guide read adds all five sections. A section read adds `section` and that one
 section:
 
 - `contract` is the full Contract text. Resources do not apply the tool's

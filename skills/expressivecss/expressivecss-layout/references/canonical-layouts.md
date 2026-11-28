@@ -74,7 +74,7 @@ ExpressiveCSS `.panes.list-detail` has a 360px list pane and a flexible detail p
 
 The window can change while someone is using the page: rotating, unfolding, resizing, or entering multi-window mode.
 
-- No item selected: one pane shows the list. Two panes show the list and an empty or placeholder detail, such as an [empty state](../../components/empty-state.md). For multi-select, keep showing the most recently used pane when the layout drops to one pane.
+- No item selected: one pane shows the list. Two panes show the list and an empty or placeholder detail, such as an [empty state](../../../expressivecss-extras/components/empty-state.md). For multi-select, keep showing the most recently used pane when the layout drops to one pane.
 - Item selected, one pane to two: show both, with the selected item's detail visible.
 - Item selected, two panes to one: usually show the detail, with its header and back button. If selection does not navigate, as in multi-select, show the list with the item still selected. If the single-pane layout was showing the list before, return to the list.
 - On a foldable, the same rules apply: opening it with no selection shows the list and an empty detail, opening it with a selection shows that item's detail, and closing it with a selection shows the detail in the single pane.

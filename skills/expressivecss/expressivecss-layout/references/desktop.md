@@ -51,11 +51,11 @@ Each gesture needs a control that does the same thing with one click or tap. WCA
 
 | Gesture | Single-click alternative | In ExpressiveCSS |
 | --- | --- | --- |
-| Drag and drop to add a file | An add button or a file picker | [Drop zone](../../components/drop-zone.md) is a native file input covering its label, so a click or the keyboard opens the picker |
+| Drag and drop to add a file | An add button or a file picker | [Drop zone](../../../expressivecss-extras/components/drop-zone.md) is a native file input covering its label, so a click or the keyboard opens the picker |
 | Drag to reorder or move | Move up and down buttons, or a Move to menu | [Drag handle](../../components/drag-handle.md) is styling only; the page supplies the operation and its alternatives |
-| Pinch or wheel zoom | Zoom in and zoom out icon buttons | [Map](../../components/map.md) documents `zoom-in` and `zoom-out` controls |
-| Pull to refresh, or Ctrl+R / Cmd+R | A visible Refresh button | [Pull-to-refresh](../../components/pull-to-refresh.md) requires a `button[data-refresh]` |
-| Swipe or long press for row actions | An overflow icon button that opens a menu | [Swipe actions](../../components/swipe-actions.md) have a `[data-swipe-toggle]` button |
+| Pinch or wheel zoom | Zoom in and zoom out icon buttons | [Map](../../../expressivecss-extras/components/map.md) documents `zoom-in` and `zoom-out` controls |
+| Pull to refresh, or Ctrl+R / Cmd+R | A visible Refresh button | [Pull-to-refresh](../../../expressivecss-extras/components/pull-to-refresh.md) requires a `button[data-refresh]` |
+| Swipe or long press for row actions | An overflow icon button that opens a menu | [Swipe actions](../../../expressivecss-extras/components/swipe-actions.md) have a `[data-swipe-toggle]` button |
 
 On the web, Ctrl+R and Cmd+R reload the browser page. Do not intercept them; the in-app Refresh button is the desktop path for refreshing content.
 
@@ -94,7 +94,7 @@ The [data table](../../components/data-table.md) documents per-row checkbox sele
 
 ### Keyboard shortcuts
 
-- Use Command on Apple platforms and Ctrl elsewhere. The [command palette](../../components/command-palette.md) toggles with Ctrl+K or Cmd+K and leaves alone any key event the page already handled. Do the same: return early when `event.defaultPrevented` is set or focus is in an editable field.
+- Use Command on Apple platforms and Ctrl elsewhere. The [command palette](../../../expressivecss-extras/components/command-palette.md) toggles with Ctrl+K or Cmd+K and leaves alone any key event the page already handled. Do the same: return early when `event.defaultPrevented` is set or focus is in an editable field.
 - Do not take over browser or assistive technology shortcuts, such as reload, new tab, close tab, address bar or find.
 - A single-character shortcut without a modifier needs a way to turn it off or remap it, or must work only while its component has focus ([WCAG 2.1.4](https://www.w3.org/WAI/WCAG22/Understanding/character-key-shortcuts.html)).
 - Make shortcuts discoverable. Show them as `<kbd>` in menu items, list rows, tooltips or the command palette, and describe the control's shortcut with `aria-keyshortcuts`.

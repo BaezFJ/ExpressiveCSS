@@ -3,7 +3,7 @@ import { restoreAttribute } from './utils';
 /**
  * A form-associated element that wraps a text input and submits for it, so
  * the browser handles the field's values, reset, validity and disabled state.
- * Chips and Cascader each define one under their own tag.
+ * Chips and the extras Cascader each define one under their own tag.
  */
 export interface FormControl extends HTMLElement {
   readonly internals: ElementInternals;

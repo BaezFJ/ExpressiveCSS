@@ -625,7 +625,11 @@ async function verifyComponentResources(catalogueToolPayload, consumerRoots) {
         contractVersion: catalogue.payload.contractVersion,
         sourceHash: catalogue.payload.sourceHash,
         guideSource: 'bundled',
+        ...(guide.package ? { package: guide.package, install: guide.install } : {}),
       };
+      // Extras guides name their package in every per-guide response.
+      assert.equal(found.package, guide.package);
+      assert.equal(found.install, guide.install);
       const fields = { contract, syntax: found.syntax, rules: found.rules, options, methods };
       const uri = `${base}/${guide.slug}`;
       const whole = await read(uri);

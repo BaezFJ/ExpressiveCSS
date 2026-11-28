@@ -792,6 +792,11 @@ function parseGuide(file, content) {
   };
 }
 
+// Extras guides carry their package and install note so agents do not assume core ships them.
+function packageFields(guide) {
+  return guide.package ? { package: guide.package, install: guide.install } : {};
+}
+
 function sameFileIdentity(left, right) {
   return left.dev === right.dev && left.ino === right.ino;
 }
@@ -895,7 +900,7 @@ async function loadGuideCatalog(projectRoot) {
     const bundledContract = JSON.parse(bundledContractRead.text);
     const components = new Map();
     for (const entry of bundled.guides) {
-      const guide = parseGuide(entry.file, entry.content);
+      const guide = { ...parseGuide(entry.file, entry.content), ...packageFields(entry) };
       components.set(guide.slug, guide);
     }
     bundledGuideCache = {
@@ -1377,6 +1382,7 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
       docs: guide.sourceUrl,
       selectionSource: 'decision-catalog',
       confidence: 'primary',
+      ...packageFields(guide),
       aliases,
       useWhen: decision.useWhen ?? [],
       avoidWhen: decision.avoidWhen ?? [],
@@ -1404,6 +1410,7 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
       docs: guide.sourceUrl,
       selectionSource: 'fuzzy-fallback',
       confidence: 'fallback',
+      ...packageFields(guide),
       aliases: decision?.aliases ?? [],
       useWhen: decision?.useWhen ?? [],
       avoidWhen: decision?.avoidWhen ?? [],
@@ -1571,6 +1578,7 @@ function summarizeGuide(guide, { sections, detail, includeCapabilities }) {
     title: guide.title,
     source: guide.sourceUrl,
     docs: guide.astroSource,
+    ...packageFields(guide),
     ...(detail === 'detailed' ? {
       contract: clampText(guide.contract, 900),
       syntax: {
@@ -2734,6 +2742,7 @@ function bundledResources(catalog, catalogUri, catalogSnapshot) {
       title: guide.title,
       docs: guide.sourceUrl,
       repositorySource: guide.astroSource,
+      ...packageFields(guide),
       contractVersion: catalog.frameworkVersion,
       sourceHash: catalog.sourceHash,
       guideSource: catalog.guideSource,

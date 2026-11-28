@@ -132,7 +132,7 @@ would drop the read-it-off-the-element access that key provides.
   opened by hover), and keep disabled items focusable but inert.
 - **FAB menus use .fab-menu.** JS owns expanded state, click activation, Escape,
   outside dismissal and focus recovery. Hidden actions are inert. Motion is CSS.
-- **ScrollSpy is IntersectionObserver.** No window scroll listener and
+- **ScrollSpy (now in `extras/src/ts`) is IntersectionObserver.** No window scroll listener and
   no click hijack. Offset is `scroll-margin-block-start` /
   `--md-comp-scrollspy-offset`. Default link lookup compares `href`
   attributes — do not interpolate the section id into a selector.

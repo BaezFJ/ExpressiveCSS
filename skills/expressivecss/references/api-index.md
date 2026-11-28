@@ -44,44 +44,6 @@ Import names from `@expressivecss/expressive`, or from `@expressivecss/expressiv
 | `Autocomplete` | [Autocomplete](../components/autocomplete.md) | [Autocomplete](https://www.expressivecss.com/autocomplete.html.md) |
 | `Datepicker` | [Date picker](../components/date-picker.md) | [Date picker](https://www.expressivecss.com/datepicker.html.md) |
 | `Timepicker` | [Time picker](../components/time-picker.md) | [Time picker](https://www.expressivecss.com/timepicker.html.md) |
-| `Menubar` | [Menubar](../components/menubar.md) | [Menubar](https://www.expressivecss.com/menubar.html.md) |
-| `ScrollSpy` | [Scrollspy](../components/scrollspy.md) | [Scrollspy](https://www.expressivecss.com/scrollspy.html.md) |
-| `BackToTop` | [Back to top](../components/back-to-top.md) | [Back to top](https://www.expressivecss.com/back-to-top.html.md) |
-| `MessageScroller` | [Message scroller](../components/message-scroller.md) | [Message scroller](https://www.expressivecss.com/message-scroller.html.md) |
-| `PullToRefresh` | [Pull-to-refresh](../components/pull-to-refresh.md) | [Pull-to-refresh](https://www.expressivecss.com/pull-to-refresh.html.md) |
-| `SwipeActions` | [Swipe actions](../components/swipe-actions.md) | [Swipe actions](https://www.expressivecss.com/swipe-actions.html.md) |
-| `ShowMore` | [Show more](../components/show-more.md) | [Show more](https://www.expressivecss.com/show-more.html.md) |
-| `LineChart` | [Line chart](../components/line-chart.md) | [Line chart](https://www.expressivecss.com/line-chart.html.md) |
-| `ColumnChart` | [Column chart](../components/column-chart.md) | [Column chart](https://www.expressivecss.com/column-chart.html.md) |
-| `BarChart` | [Bar chart](../components/bar-chart.md) | [Bar chart](https://www.expressivecss.com/bar-chart.html.md) |
-| `PieChart` | [Pie chart](../components/pie-chart.md) | [Pie chart](https://www.expressivecss.com/pie-chart.html.md) |
-| `HeatmapChart` | [Heatmap chart](../components/heatmap-chart.md) | [Heatmap chart](https://www.expressivecss.com/heatmap-chart.html.md) |
-| `RadarChart` | [Radar chart](../components/radar-chart.md) | [Radar chart](https://www.expressivecss.com/radar-chart.html.md) |
-| `RadialChart` | [Radial chart](../components/radial-chart.md) | [Radial chart](https://www.expressivecss.com/radial-chart.html.md) |
-| `MixedChart` | [Mixed chart](../components/mixed-chart.md) | [Mixed chart](https://www.expressivecss.com/mixed-chart.html.md) |
-| `ScatterChart` | [Scatter chart](../components/scatter-chart.md) | [Scatter chart](https://www.expressivecss.com/scatter-chart.html.md) |
-| `FunnelChart` | [Funnel chart](../components/funnel-chart.md) | [Funnel chart](https://www.expressivecss.com/funnel-chart.html.md) |
-| `SankeyChart` | [Sankey chart](../components/sankey-chart.md) | [Sankey chart](https://www.expressivecss.com/sankey-chart.html.md) |
-| `TreemapChart` | [Treemap chart](../components/treemap-chart.md) | [Treemap chart](https://www.expressivecss.com/treemap-chart.html.md) |
-| `HoverCard` | [Hover card](../components/hover-card.md) | [Hover card](https://www.expressivecss.com/hover-card.html.md) |
-| `Tour` | [Tour](../components/tour.md) | [Tour](https://www.expressivecss.com/tour.html.md) |
-| `LoadingOverlay` | [Loading overlay](../components/loading-overlay.md) | [Loading overlay](https://www.expressivecss.com/loading-overlay.html.md) |
-| `ImageCompare` | [Image compare](../components/image-compare.md) | [Image compare](https://www.expressivecss.com/image-compare.html.md) |
-| `Confetti` | [Confetti](../components/confetti.md) | [Confetti](https://www.expressivecss.com/confetti.html.md) |
-| `Particles` | [Particles](../components/particles.md) | [Particles](https://www.expressivecss.com/particles.html.md) |
-| `Lightbox` | [Lightbox](../components/lightbox.md) | [Lightbox](https://www.expressivecss.com/media.html.md) |
-| `MapView` | [Map](../components/map.md) | [Map](https://www.expressivecss.com/map.html.md) |
-| `CommandPalette` | [Command palette](../components/command-palette.md) | [Command palette](https://www.expressivecss.com/command-palette.html.md) |
-| `InputMask` | [Input mask](../components/input-mask.md) | [Input mask](https://www.expressivecss.com/input-mask.html.md) |
-| `CurrencyInput` | [Currency input](../components/currency-input.md) | [Currency input](https://www.expressivecss.com/currency-input.html.md) |
-| `RichTextEditor` | [Rich text editor](../components/rich-text-editor.md) | [Rich text editor](https://www.expressivecss.com/rich-text-editor.html.md) |
-| `DropZone` | [Drop zone](../components/drop-zone.md) | [Drop zone](https://www.expressivecss.com/drop-zone.html.md) |
-| `TreeSelect` | [Tree select](../components/tree-select.md) | [Tree select](https://www.expressivecss.com/tree-select.html.md) |
-| `Cascader` | [Cascader](../components/cascader.md) | [Cascader](https://www.expressivecss.com/cascader.html.md) |
-| `TransferList` | [Transfer list](../components/transfer-list.md) | [Transfer list](https://www.expressivecss.com/transfer-list.html.md) |
-| `ColorPicker` | [Color picker](../components/color-picker.md) | [Color picker](https://www.expressivecss.com/color-picker.html.md) |
-| `Keypad` | [Keypad and Keyboard](../components/keypad.md) | [Keypad](https://www.expressivecss.com/keypad.html.md) |
-| `Questionnaire` | [Questionnaire](../components/questionnaire.md) | [Questionnaire](https://www.expressivecss.com/questionnaire.html.md) |
 
 ## Sass functions and mixins
 
@@ -169,58 +131,3 @@ Paths are relative to `src/sass`, without the underscore or extension. The catal
 | `components/docked-display` | [Date picker](https://www.expressivecss.com/datepicker.html.md) |
 | `components/modal-display` | [Time picker](https://www.expressivecss.com/timepicker.html.md) |
 | `components/timepicker` | [Time picker](https://www.expressivecss.com/timepicker.html.md) |
-| `components/page-footer` | [Footer](https://www.expressivecss.com/footer.html.md) |
-| `components/stepper` | [Stepper](https://www.expressivecss.com/stepper.html.md) |
-| `components/mega-menu` | [Mega menu](https://www.expressivecss.com/mega-menu.html.md) |
-| `components/tree` | [Tree](https://www.expressivecss.com/tree.html.md) |
-| `components/menubar` | [Menubar](https://www.expressivecss.com/menubar.html.md) |
-| `components/scrollspy` | [Scrollspy](https://www.expressivecss.com/scrollspy.html.md) |
-| `components/table_of_contents` | [Scrollspy](https://www.expressivecss.com/scrollspy.html.md) |
-| `components/back-to-top` | [Back to top](https://www.expressivecss.com/back-to-top.html.md) |
-| `components/aura` | [Aura](https://www.expressivecss.com/aura.html.md) |
-| `components/message` | [Message](https://www.expressivecss.com/message.html.md) |
-| `components/message-scroller` | [Message scroller](https://www.expressivecss.com/message-scroller.html.md) |
-| `components/pull-to-refresh` | [Pull-to-refresh](https://www.expressivecss.com/pull-to-refresh.html.md) |
-| `components/swipe-actions` | [Swipe actions](https://www.expressivecss.com/swipe-actions.html.md) |
-| `components/show-more` | [Show more](https://www.expressivecss.com/show-more.html.md) |
-| `components/stat` | [Stat](https://www.expressivecss.com/stat.html.md) |
-| `components/description-list` | [Description list](https://www.expressivecss.com/description-list.html.md) |
-| `components/kpi` | [KPI](https://www.expressivecss.com/kpi.html.md) |
-| `components/countdown` | [Countdown](https://www.expressivecss.com/countdown.html.md) |
-| `components/timeline` | [Timeline](https://www.expressivecss.com/timeline.html.md) |
-| `components/calendar` | [Calendar](https://www.expressivecss.com/calendar.html.md) |
-| `components/line-chart` | [Line chart](https://www.expressivecss.com/line-chart.html.md) |
-| `components/column-chart` | [Column chart](https://www.expressivecss.com/column-chart.html.md) |
-| `components/bar-chart` | [Bar chart](https://www.expressivecss.com/bar-chart.html.md) |
-| `components/pie-chart` | [Pie chart](https://www.expressivecss.com/pie-chart.html.md) |
-| `components/heatmap-chart` | [Heatmap chart](https://www.expressivecss.com/heatmap-chart.html.md) |
-| `components/radar-chart` | [Radar chart](https://www.expressivecss.com/radar-chart.html.md) |
-| `components/radial-chart` | [Radial chart](https://www.expressivecss.com/radial-chart.html.md) |
-| `components/mixed-chart` | [Mixed chart](https://www.expressivecss.com/mixed-chart.html.md) |
-| `components/scatter-chart` | [Scatter chart](https://www.expressivecss.com/scatter-chart.html.md) |
-| `components/funnel-chart` | [Funnel chart](https://www.expressivecss.com/funnel-chart.html.md) |
-| `components/sankey-chart` | [Sankey chart](https://www.expressivecss.com/sankey-chart.html.md) |
-| `components/treemap-chart` | [Treemap chart](https://www.expressivecss.com/treemap-chart.html.md) |
-| `components/org-chart` | [Organization chart](https://www.expressivecss.com/org-chart.html.md) |
-| `components/popover` | [Popover](https://www.expressivecss.com/popover.html.md) |
-| `components/skeleton` | [Skeleton](https://www.expressivecss.com/skeleton.html.md) |
-| `components/empty-state` | [Empty state](https://www.expressivecss.com/empty-state.html.md) |
-| `components/tour` | [Tour](https://www.expressivecss.com/tour.html.md) |
-| `components/loading-overlay` | [Loading overlay](https://www.expressivecss.com/loading-overlay.html.md) |
-| `components/marquee` | [Marquee](https://www.expressivecss.com/marquee.html.md) |
-| `components/image-compare` | [Image compare](https://www.expressivecss.com/image-compare.html.md) |
-| `components/confetti` | [Confetti](https://www.expressivecss.com/confetti.html.md) |
-| `components/particles` | [Particles](https://www.expressivecss.com/particles.html.md) |
-| `components/lightbox` | [Lightbox](https://www.expressivecss.com/media.html.md) |
-| `components/map` | [Map](https://www.expressivecss.com/map.html.md) |
-| `components/command-palette` | [Command palette](https://www.expressivecss.com/command-palette.html.md) |
-| `components/rich-text-editor` | [Rich text editor](https://www.expressivecss.com/rich-text-editor.html.md) |
-| `components/forms/drop-zone` | [Drop zone](https://www.expressivecss.com/drop-zone.html.md) |
-| `components/tree-select` | [Tree select](https://www.expressivecss.com/tree-select.html.md) |
-| `components/cascader` | [Cascader](https://www.expressivecss.com/cascader.html.md) |
-| `components/transfer-list` | [Transfer list](https://www.expressivecss.com/transfer-list.html.md) |
-| `components/rating` | [Rating](https://www.expressivecss.com/rating.html.md) |
-| `components/color-swatches` | [Color swatches](https://www.expressivecss.com/color-swatches.html.md) |
-| `components/forms/color-picker` | [Color picker](https://www.expressivecss.com/color-picker.html.md) |
-| `components/keypad` | [Keypad](https://www.expressivecss.com/keypad.html.md) |
-| `components/questionnaire` | [Questionnaire](https://www.expressivecss.com/questionnaire.html.md) |
