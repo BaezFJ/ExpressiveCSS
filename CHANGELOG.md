@@ -24,6 +24,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   and floating panes adapt across breakpoints, and focus rules for co-planar,
   floating and docked panes.
 
+- The grids and spacing reference follows Material's current pages. It adds
+  spacing that adapts to breakpoints and density settings, and explains why a
+  Material dp value reads as the same number of CSS pixels on the web.
+
 ## [0.20.0] - 2026-11-18
 
 This release adds `ScrollArea` for an optional themed scrollbar and the

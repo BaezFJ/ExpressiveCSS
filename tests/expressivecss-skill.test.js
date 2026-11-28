@@ -349,6 +349,21 @@ describe('the ExpressiveCSS agent skill', () => {
     assert.match(adaptive, /\*\*Resizing\.\*\*[\s\S]*\*\*Showing and hiding\.\*\*[\s\S]*\*\*Presentation changes\.\*\*/);
   });
 
+  test('maps Material grids, spacing, density and dp onto the web', () => {
+    const url = new URL('expressivecss-layout/references/grids-and-spacing.md', skillDirectory);
+    const grids = readFileSync(url, 'utf8');
+    for (const [, target] of grids.matchAll(/\]\((\.{1,2}\/[^)#\s]+)/g)) {
+      assert.ok(existsSync(new URL(target, url)), `grids and spacing reference links to missing ${target}`);
+    }
+    for (const heading of ['Grids', 'Rulers and alignment', 'Spacing', 'Density', 'Pixel density and dp']) {
+      assert.match(grids, new RegExp(`^## ${heading}$`, 'm'), `grids and spacing reference omits ${heading}`);
+    }
+    assert.match(grids, /spacing system adapts to breakpoints and density settings/);
+    assert.match(grids, /48 by 48 CSS pixels/);
+    assert.match(grids, /Make density opt-in/);
+    assert.match(grids, /Read a Material dp value as the same number of CSS pixels/);
+  });
+
   test('keeps the scaffold reference on Material pane adaptation, resizing and focus', () => {
     const url = new URL('expressivecss-design/references/scaffold.md', skillDirectory);
     const scaffold = readFileSync(url, 'utf8');

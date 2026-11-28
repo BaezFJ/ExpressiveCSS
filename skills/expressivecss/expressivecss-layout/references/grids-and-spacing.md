@@ -1,6 +1,6 @@
 # Grids and spacing
 
-Read this when placing regions and content on the grid, aligning content across pages, choosing spacing between elements, or adding a dense view. Material's [grids and spacing guidance](https://m3.material.io/foundations/layout/grids-spacing/overview), reviewed 2026-10-13, sets the design intent. The [grid reference](../../expressivecss-usage/references/grid.md) and [helpers reference](../../expressivecss-usage/references/helpers.md) define the shipped classes.
+Read this when placing regions and content on the grid, aligning content across pages, choosing spacing between elements, or adding a dense view. Material's [grids and spacing guidance](https://m3.material.io/foundations/layout/grids-spacing/overview), last reviewed 2026-11-27, sets the design intent. The [grid reference](../../expressivecss-usage/references/grid.md) and [helpers reference](../../expressivecss-usage/references/helpers.md) define the shipped classes.
 
 ## Contents
 
@@ -8,11 +8,12 @@ Read this when placing regions and content on the grid, aligning content across 
 - Rulers and alignment
 - Spacing
 - Density
+- Pixel density and dp
 - Review checklist
 
 ## Grids
 
-Material lays out every breakpoint on a column grid. Rails and panes sit on it, and its column count, column width and spacing grow with the window. Fewer columns on compact keep the layout focused; more columns on wider windows, such as an unfolded foldable, allow a richer layout.
+Material lays out every breakpoint on a column grid. Rails and panes sit on it, and its column count, column width and spacing grow with the window. Fewer columns on compact keep the layout focused; more columns on wider windows, such as an unfolded foldable, show more content or controls. The column structure and spacing values also give a product's layout its personality, from tight and focused to open and calm.
 
 | Breakpoint | Material columns | ExpressiveCSS equivalent |
 | --- | --- | --- |
@@ -37,7 +38,7 @@ Rulers are global alignment lines that keep content and components lined up and 
 | Margin | Where content starts from the window edge | `.container` width or the pane margins (16px compact, 24px from medium) |
 | Bar and safety | Keep actionable content clear of the status bar, browser chrome and gesture area | `env(safe-area-inset-*)`; the navigation bar, toolbar and snackbar already pad for the bottom inset |
 | Title | Aligns the screen title and the icons and actions in the app bar | The [app bar](../../components/app-bar.md) layout; match the content's start edge to the title |
-| Content | The first content ruler anchors major blocks such as a hero image, headline or carousel; later rulers mark where supporting text or actions start | Start each block on the same grid track on every page of the product |
+| Content | The first content ruler anchors major blocks such as a hero image, headline or carousel; later rulers mark where supporting text or actions start | Start each block on the same grid track on every page of the product; realigning primary content to one content ruler builds hierarchy and visual rhythm |
 | Rail | The edge of the rail region | The navigation rail's inline end |
 
 The margin ruler can move inward or outward. A wider margin adds negative space and calm; a narrower margin fits more content. Content can also break the margin on purpose for immersion: a photo grid can run full width while search keeps the standard margin. In ExpressiveCSS, put the full-width block outside `.container`, or use `.container.max`, and keep the controls inside the normal container.
@@ -47,6 +48,8 @@ The margin ruler can move inward or outward. A wider margin adds negative space 
 Spacing groups content, directs attention and sets the product's tone. Denser spacing feels focused and serious; open spacing feels calm. Desktop layouts can use more generous spacing than mobile ones.
 
 Use the spacing scale instead of one-off values: `.m*`, `.p*` and `.gap-*` from 0 to 6, with zero at 0 and the nonzero values from 0.25rem to 3rem, and `.g-0` to `.g-5` on a `.row`. Set independent column and row gaps with `.gap-x-*` and `.gap-y-*`. Both accept all four window-size prefixes. For example, `gap-4 medium:gap-x-2` retains a `1rem` row gap while reducing the column gap to `0.5rem` from 600px. See the [helper reference](../../expressivecss-usage/references/helpers.md#spacing-grammar) for scale and shorthand precedence. Prefer the logical forms `.ms-*`, `.me-*`, `.ps-*` and `.pe-*` so spacing mirrors in RTL.
+
+Material's spacing system adapts to breakpoints and density settings. ExpressiveCSS ships no spacing tokens, so adapt with the prefixed helpers, such as a larger gap from `expanded:`, and with the smaller gaps of a dense view, as [Density](#density) describes.
 
 ### Group related content
 
@@ -66,7 +69,7 @@ Give the most important content and actions the most space and the brightest sur
 
 ## Density
 
-Information density is how much content fits on the screen. Increase it only where people need to scan or compare a lot of information, such as data tables, long lists, long forms, finance views and dashboards. Lower density suits pages built around a focused message, imagery, or simple navigation. Not every layout needs a density option, and some people do not benefit from one.
+Information density is how much content fits on the screen. Increase it only where people need to scan or compare a lot of information, such as data tables, long lists, long forms, news, finance portals and dashboards. Lower density suits pages built around a focused message, imagery, or simple navigation. Not every layout needs a density option, and some people do not benefit from one.
 
 There are two ways to raise density, and they can be combined:
 
@@ -81,10 +84,17 @@ Rules for any dense view:
 - Do not change text size when a component gets denser, and keep its content centered in the container.
 - Do not make focused-task or alerting components denser: menus, snackbars and dialogs keep their default size.
 
+## Pixel density and dp
+
+Pixel density is the number of physical pixels per inch. The same pixel size looks larger on a low-density screen and smaller on a high-density one. Material sizes everything in density-independent pixels (dp): one dp is one physical pixel on a 160 dpi screen, and `dp = pixels × 160 / screen density`.
+
+CSS pixels are already density-independent, because the browser multiplies them by `devicePixelRatio` to reach physical pixels. Read a Material dp value as the same number of CSS pixels, such as a 48dp target as 48px, and never multiply by the device's ratio. Browser zoom changes `devicePixelRatio`, which is why breakpoints and targets follow CSS pixels. Give raster images `srcset` candidates so high-density screens stay sharp; icons and SVG scale on their own.
+
 ## Review checklist
 
 - Bars and rails are placed first, panes second, and pane content uses its own `.row`.
 - Content blocks start on the same grid track and margin on every page; any full-width block is a deliberate exception.
 - Spacing inside a group is smaller than spacing between groups, and every value comes from the spacing scale.
 - Similar items share size, spacing and leading alignment, and actions sit next to the content they affect.
+- Material dp values are read as CSS pixels, and raster images have high-density sources.
 - Dense views are opt-in, keep 48px targets and unchanged text size, and leave menus, snackbars and dialogs at default density.
