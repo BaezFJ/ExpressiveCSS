@@ -36,7 +36,8 @@ What to do:
   `@expressivecss/extras`, not `@expressivecss/expressive`. Importing
   `@expressivecss/extras` registers its components with core's `AutoInit` and
   starts the extras behaviors. `@expressivecss/extras/modular` exports the same
-  names with no side effects. Extras has no CommonJS build.
+  names with no side effects. `require('@expressivecss/extras')` loads the
+  CommonJS build, which uses core's CommonJS bundle.
 - `Forms` no longer handles drop zones. Call
   `DropZone.validateField(input)` instead of `Forms.validateField(input)` for a
   `.drop-zone` file input with `data-validate-types`, `data-max-size` or
@@ -112,7 +113,7 @@ What moved:
 
 - `@expressivecss/expressive/core` exports `Component`, `Utils`, `AutoInit`
   and the helpers that extension packages build on. The IIFE exposes the same
-  names as `Expressive.core`.
+  names as `Expressive.core`, and the CommonJS bundle as its `core` export.
 
 - `AutoInit.register(name, { component, selector })` adds a component to
   AutoInit. AutoInit and watch mode start and destroy it like a built-in.

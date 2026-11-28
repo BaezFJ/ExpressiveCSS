@@ -27,7 +27,7 @@ Behaviors that move: `Tour`, `TransferList`, `ImageCompare`, and `Sortable` unle
   - TypeScript lives in `extras/src/ts/`, with `index.ts` (side effects: register and Init behaviors) and `modular.ts`.
   - Sass lives in `extras/src/sass/`, with `extras.scss`, `components/_index.scss` and `abstracts/_charts.scss` (the chart mixins taken out of core).
 - **Extras imports core.** TypeScript uses `@expressivecss/expressive/core`, which is external in every extras build. The IIFE build maps it to `globalThis.Expressive.core`. Sass uses `@use "abstracts" as *` through a load path to core's `src/sass`.
-- **Build output** goes to `extras/dist/`: `js/extras.mjs` with chunks, `js/extras.js` and `js/extras.min.js` (IIFE global `ExpressiveExtras`), `css/extras.css` and `.min.css`, and types. The root `npm run build` builds it. Extras ships no CommonJS, because a separate CJS bundle cannot share core's state.
+- **Build output** goes to `extras/dist/`: `js/extras.mjs` with chunks, `js/extras.js` and `js/extras.min.js` (IIFE global `ExpressiveExtras`), `css/extras.css` and `.min.css`, and types. The root `npm run build` builds it. `js/extras.cjs` requires core's CommonJS bundle and reads its `core` export, so the two share state.
 - **Tests** stay in `tests/`. Helpers load the extras bundle after core.
 
 ## Phases (each ends green and committed)
@@ -52,4 +52,3 @@ Behaviors that move: `Tour`, `TransferList`, `ImageCompare`, and `Sortable` unle
 ## Out of scope
 
 - `expressive-build` (the CLI) selecting extras styles and chunks. Extras CSS is included whole for now.
-- CommonJS output for extras.

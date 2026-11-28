@@ -49,7 +49,8 @@ Importing `@expressivecss/extras` registers its components with core's
 import from `@expressivecss/extras/modular` instead, which has no side effects.
 Extras imports core through `@expressivecss/expressive/core` and
 `@expressivecss/expressive/modular` (for `Menu`, `FormSelect` and `Forms`), so both packages share one
-copy of core. There is no CommonJS build.
+copy of core. `require('@expressivecss/extras')` works the same way: the CommonJS
+build requires `@expressivecss/expressive` and uses its `core` export.
 
 ```js
 import '@expressivecss/expressive/css';

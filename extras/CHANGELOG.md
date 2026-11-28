@@ -28,8 +28,10 @@ changelog has the migration steps.
   footer and the drop zone.
 - Builds: `dist/js/extras.mjs` (registers the components with core's
   `AutoInit` and starts the behaviors), `dist/js/modular.mjs` (no side
-  effects), `dist/js/extras.js` and `extras.min.js` (IIFE global
+  effects), `dist/js/extras.cjs` (CommonJS), `dist/js/extras.js` and
+  `extras.min.js` (IIFE global
   `ExpressiveExtras`), `dist/css/extras.css` and `extras.min.css`, types, and
   the Sass source. Extras imports core through
   `@expressivecss/expressive/core` and `@expressivecss/expressive/modular`, so
-  it shares core's classes and `AutoInit` table. There is no CommonJS build.
+  it shares core's classes and `AutoInit` table. The CommonJS build requires
+  core's CommonJS bundle and uses its `core` export the same way.

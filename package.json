@@ -81,7 +81,7 @@
     "build:css:min": "sass src/sass/expressive.scss:dist/css/expressive.min.css extras/src/sass/extras.scss:extras/dist/css/extras.min.css --style=compressed --source-map --load-path=src/sass",
     "build:js": "node scripts/build-js.mjs",
     "build:js:esm": "node scripts/build-esm.mjs",
-    "build:js:cjs": "esbuild src/ts/index.ts --bundle --format=cjs --target=es2020 --outfile=dist/js/expressive.cjs --sourcemap",
+    "build:js:cjs": "esbuild src/ts/iife.ts --bundle --format=cjs --target=es2020 --outfile=dist/js/expressive.cjs --sourcemap",
     "build:js:iife": "esbuild src/ts/iife.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.js --sourcemap",
     "build:js:iife-min": "esbuild src/ts/iife.ts --bundle --format=iife --global-name=Expressive --target=es2020 --outfile=dist/js/expressive.min.js --minify --sourcemap",
     "build:types": "tsc -p tsconfig.build.json && tsc -p extras/tsconfig.build.json",

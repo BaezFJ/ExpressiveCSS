@@ -52,16 +52,19 @@ try {
       // Versioned on its own: the strict peer install above fails unless this range includes the checkout's core.
       assert.ok(manifest.peerDependencies?.['@expressivecss/expressive'], 'Extras must declare its core peer');
       for (const file of ['dist/types/index.d.ts', 'dist/types/modular.d.ts', 'dist/js/extras.mjs', 'dist/js/modular.mjs',
-        'dist/js/extras.js', 'dist/js/extras.min.js', 'dist/css/extras.css', 'dist/css/extras.min.css',
+        'dist/js/extras.cjs', 'dist/js/extras.js', 'dist/js/extras.min.js', 'dist/css/extras.css', 'dist/css/extras.min.css',
         'src/sass/extras.scss', 'README.md', 'CHANGELOG.md']) {
         assert.ok(readFileSync(join(installed, file)).length, `Missing or empty ${file}`);
       }
       // Extras reuses the installed core and never ships a copy of it.
-      for (const file of readdirSync(join(installed, 'dist/js'), { recursive: true }).filter((file) => /\.m?js$/.test(file))) {
+      for (const file of readdirSync(join(installed, 'dist/js'), { recursive: true }).filter((file) => /\.[mc]?js$/.test(file))) {
         assert.doesNotMatch(readFileSync(join(installed, 'dist/js', file), 'utf8'), /class Component\b|function AutoInit\b/, file);
       }
       writeFileSync(join(target, 'consumer.mjs'), `import * as extras from '${manifest.name}';\nimport * as modular from '${manifest.name}/modular';\nimport assert from 'node:assert/strict';\nassert.equal(extras.version, '${manifest.version}');\nassert.equal(modular.version, extras.version);\n`);
       run('node', ['consumer.mjs'], target);
+      // CommonJS consumers get the same core instance through core's require entry.
+      writeFileSync(join(target, 'consumer.cjs'), `const extras = require('${manifest.name}');\nconst core = require('@expressivecss/expressive').core;\nconst assert = require('node:assert/strict');\nassert.equal(extras.version, '${manifest.version}');\nassert.ok(extras.LineChart.prototype instanceof core.Component);\n`);
+      run('node', ['consumer.cjs'], target);
       const coreSass = join(target, 'node_modules/@expressivecss/expressive/src/sass');
       assert.doesNotMatch(compile(join(installed, 'src/sass/extras.scss'), { loadPaths: [coreSass] }).css, /--md-sys-[\w-]+\s*:/);
       const dom = new JSDOM('<!doctype html><html><body></body></html>', {

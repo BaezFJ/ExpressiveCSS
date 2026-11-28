@@ -21,11 +21,13 @@
     "expressivecss"
   ],
   "type": "module",
+  "main": "./dist/js/extras.cjs",
   "types": "./dist/types/index.d.ts",
   "unpkg": "./dist/js/extras.min.js",
   "jsdelivr": "./dist/js/extras.min.js",
   "sideEffects": [
     "./dist/js/extras.mjs",
+    "./dist/js/extras.cjs",
     "./dist/js/extras.js",
     "./dist/js/extras.min.js",
     "*.css",
@@ -35,6 +37,7 @@
     ".": {
       "types": "./dist/types/index.d.ts",
       "import": "./dist/js/extras.mjs",
+      "require": "./dist/js/extras.cjs",
       "default": "./dist/js/extras.mjs"
     },
     "./modular": {
