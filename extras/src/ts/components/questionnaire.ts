@@ -1,5 +1,4 @@
-import { Utils, toggleIdRef } from '../core/utils';
-import { Component, BaseOptions } from '../core/component';
+import { Component, Utils, toggleIdRef, type BaseOptions } from '@expressivecss/expressive/core';
 
 export interface QuestionnaireOptions extends BaseOptions {
   /**

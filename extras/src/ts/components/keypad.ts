@@ -1,5 +1,4 @@
-import { Component, BaseOptions } from '../core/component';
-import { Utils } from '../core/utils';
+import { Component, Utils, type BaseOptions } from '@expressivecss/expressive/core';
 
 // BusyButtons' selector. Implicit submission clicks the form's default button,
 // its first submit button wherever the markup puts it, so that is the one to check.

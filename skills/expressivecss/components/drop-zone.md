@@ -9,11 +9,13 @@ Component ID: `drop-zone`
 
 Contract: ExpressiveCSS 0.20.0
 
-Contract SHA-256: `dfb461fb921c4edf4d7713e16dad7f4afc50d0317f65d8903edc6e69f06bf950`
+Contract SHA-256: `973f4b1a3ceaac5ce31b09d08893eb5c8a72f371da5ab15c1bf3978786a8d4a2`
 
 #### Selection and adaptation
 
 Runtime ownership: `shared-runtime`. No dedicated entry in the reviewed Google component inventory.
+
+Public JavaScript exports: `DropZone`. See the [API index](../references/api-index.md).
 
 Example: An optional attachment on a support form is a file input in the form. A drop zone would give one small field the weight of the whole page.
 
@@ -31,7 +33,7 @@ Full parity remains unassessed. Review provenance and specification links: [capa
 
 A large target for choosing or dropping files, with an optional list and independent type, size and count limits.
 
-A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input covers the label, so clicking, keyboard input and file dropping reach the native control. Forms marks dragover and lists each selected file's name and localized size. The root bundle installs Forms on load; modular consumers call `Forms.Init()`. Document-level input/change handling also supports dynamically inserted zones and open shadow roots.
+A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input covers the label, so clicking, keyboard input and file dropping reach the native control. The `DropZone` behavior from `@expressivecss/extras` marks dragover and lists each selected file's name and localized size; `DropZone.listFiles(zone, input)` rebuilds the list. Importing `@expressivecss/extras` installs it on load; modular consumers call `DropZone.Init()`. Document-level input/change handling also supports dynamically inserted zones and open shadow roots.
 
 A dropped file replaces the selection; add multiple to take several files. `accept` alone is a picker hint. Add data-validate-types for type checks, data-max-size for a per-file byte limit or data-max-files for a count limit. Unmarked zones retain their existing behavior. Reset clears lists after dispatch/default handling; cancellation preserves the current view, and a newer selection keeps its state.
 

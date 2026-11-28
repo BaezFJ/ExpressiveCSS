@@ -41,10 +41,23 @@ const AUTO_INIT: Record<string, Parameters<typeof AutoInit.register>[1]> = {
   HoverCard: { component: Components.HoverCard, selector: ".hover-card-trigger" },
   // After core's Menu, so the bar's own menu options replace AutoInit's defaults.
   Menubar: { component: Components.Menubar, selector: ".menubar" },
+  Keypad: { component: Components.Keypad, selector: ".keypad, .keyboard" },
+  ColorPicker: { component: Components.ColorPicker, selector: ".color-picker" },
+  Questionnaire: { component: Components.Questionnaire, selector: "form.questionnaire" },
+  // Only the input types with a caret: setSelectionRange() throws on the rest.
+  InputMask: {
+    component: Components.InputMask,
+    selector: 'input[data-mask]:is(:not([type]), [type="text" i], [type="tel" i], [type="search" i], [type="url" i], [type="password" i])',
+  },
+  // Only a text input can hold the formatted amount.
+  CurrencyInput: { component: Components.CurrencyInput, selector: 'input[data-currency]:is(:not([type]), [type="text" i])' },
+  // Core's FormSelect leaves select[data-tree] to this entry.
+  TreeSelect: { component: Components.TreeSelect, selector: "select[data-tree]" },
+  Cascader: { component: Components.Cascader, selector: ".cascader" },
 };
 
 /** Document behaviors started at import, one line each, in start order. */
-const BEHAVIORS: { Init(): void }[] = [Components.ImageCompare, Components.Tour];
+const BEHAVIORS: { Init(): void }[] = [Components.ImageCompare, Components.Tour, Components.TransferList, Components.DropZone];
 
 for (const [name, entry] of Object.entries(AUTO_INIT)) AutoInit.register(name, entry);
 for (const behavior of BEHAVIORS) behavior.Init();

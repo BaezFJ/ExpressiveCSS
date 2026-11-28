@@ -1,4 +1,4 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
 
 // Questionnaire. A <form class="questionnaire"> asks one question at a time.
 // Each <fieldset> child is a question: its <legend> is the prompt, a <p> is

@@ -1,5 +1,4 @@
-import { Utils, afterFormReset } from '../core/utils';
-import { Component, BaseOptions, InitElement, InitElements } from '../core/component';
+import { Component, Utils, afterFormReset, type BaseOptions, type InitElement, type InitElements } from '@expressivecss/expressive/core';
 
 /**
  * The parts of a Tiptap `Editor` this component uses. Declared here so the

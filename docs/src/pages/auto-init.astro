@@ -223,18 +223,11 @@ function unmount() {
             <tr><td><code>ExpandingCard</code></td><td><code>article.expanding-card:has(&gt; dialog.expanding-card-dialog)</code></td></tr>
             <tr><td><code>Carousel</code></td><td><code>.carousel</code></td></tr>
             <tr><td><code>Chips</code></td><td><code>.chips</code></td></tr>
-            <tr><td><code>Keypad</code></td><td><code>.keypad, .keyboard</code></td></tr>
-            <tr><td><code>ColorPicker</code></td><td><code>.color-picker</code></td></tr>
-            <tr><td><code>Questionnaire</code></td><td><code>form.questionnaire</code></td></tr>
             <tr><td><code>Datepicker</code></td><td><code>.date-picker</code></td></tr>
             <tr><td><code>Menu</code></td><td><code>.menu-trigger</code></td></tr>
-            <tr><td><code>InputMask</code></td><td><code>input[data-mask]</code> of type text, tel, search, url or password</td></tr>
-            <tr><td><code>CurrencyInput</code></td><td><code>input[data-currency]</code> of type text</td></tr>
             <tr><td><code>NavigationRail</code></td><td><code>.navigation-rail</code></td></tr>
             <tr><td><code>ScrollArea</code></td><td><code>.scroll-area.custom</code></td></tr>
             <tr><td><code>FormSelect</code></td><td><code>select</code> without <code>data-tree</code></td></tr>
-            <tr><td><code>TreeSelect</code></td><td><code>select[data-tree]</code></td></tr>
-            <tr><td><code>Cascader</code></td><td><code>.cascader</code></td></tr>
             <tr><td><code>Tabs</code></td><td><code>.tabs</code></td></tr>
             <tr><td><code>Timepicker</code></td><td><code>.time-picker</code></td></tr>
             <tr><td><code>Tooltip</code></td><td><code>.tooltipped</code></td></tr>
@@ -264,6 +257,13 @@ function unmount() {
             <tr><td><code>BackToTop</code></td><td><code>.back-to-top</code>, from <code>@expressivecss/extras</code></td></tr>
             <tr><td><code>HoverCard</code></td><td><code>.hover-card-trigger</code>, from <code>@expressivecss/extras</code></td></tr>
             <tr><td><code>Menubar</code></td><td><code>.menubar</code>, from <code>@expressivecss/extras</code></td></tr>
+            <tr><td><code>Keypad</code></td><td><code>.keypad, .keyboard</code>, from <code>@expressivecss/extras</code></td></tr>
+            <tr><td><code>ColorPicker</code></td><td><code>.color-picker</code>, from <code>@expressivecss/extras</code></td></tr>
+            <tr><td><code>Questionnaire</code></td><td><code>form.questionnaire</code>, from <code>@expressivecss/extras</code></td></tr>
+            <tr><td><code>InputMask</code></td><td><code>input[data-mask]</code> of type text, tel, search, url or password, from <code>@expressivecss/extras</code></td></tr>
+            <tr><td><code>CurrencyInput</code></td><td><code>input[data-currency]</code> of type text, from <code>@expressivecss/extras</code></td></tr>
+            <tr><td><code>TreeSelect</code></td><td><code>select[data-tree]</code>, from <code>@expressivecss/extras</code></td></tr>
+            <tr><td><code>Cascader</code></td><td><code>.cascader</code>, from <code>@expressivecss/extras</code></td></tr>
           </tbody>
         </table>
         </div>
@@ -274,9 +274,9 @@ function unmount() {
           later <code>AutoInit()</code> can pick up elements added after load.
         </p>
         <p>The <a href="/javascript.html#behaviors">JavaScript API</a> lists every import-time behavior,
-          including Copy, Theme, PaneResize, Sortable, Lists, DataTables and TransferList,
+          including Copy, Theme, PaneResize, Sortable, Lists and DataTables,
           and explains setup with the modular entry. Importing <code>@expressivecss/extras</code> starts
-          ImageCompare and Tour.</p>
+          ImageCompare, Tour, TransferList and DropZone.</p>
   </Section>
   <Section {...S.register}>
         <p>

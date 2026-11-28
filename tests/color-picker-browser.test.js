@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { engines } from './browser.js';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -18,12 +18,12 @@ const markup = `<!doctype html><html lang="en" dir="rtl"><head><style>${css}</st
   const input = document.querySelector('[name="accent"]');
   input.addEventListener('input', () => log.push('input ' + input.value));
   input.addEventListener('change', () => log.push('change ' + input.value));
-  window.picker = Expressive.ColorPicker.init(document.getElementById('picker'), { onChange: (v) => log.push('onChange ' + v) });
+  window.picker = ExpressiveExtras.ColorPicker.init(document.getElementById('picker'), { onChange: (v) => log.push('onChange ' + v) });
 </script></body></html>`;
 
 for (const [name, engine, test] of engines) {
   test(`${name}: color picker drives the native input from the area, hue and hex field`, { timeout: 30000 }, async (t) => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
       await page.setContent(markup);
@@ -105,7 +105,7 @@ for (const [name, engine, test] of engines) {
 
 for (const [name, engine, test] of engines) {
   test(`${name}: color picker takes its accessible names from i18n`, { timeout: 30000 }, async () => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
       await page.setContent(markup);
@@ -118,7 +118,7 @@ for (const [name, engine, test] of engines) {
       assert.deepEqual(await labels(), ['Saturation and brightness', 'Saturation 100%, brightness 100%', 'Hue', 'Hex color']);
       await page.evaluate(() => {
         picker.destroy();
-        window.picker = Expressive.ColorPicker.init(document.getElementById('picker'), {
+        window.picker = ExpressiveExtras.ColorPicker.init(document.getElementById('picker'), {
           i18n: { area: 'Saturación y brillo', value: (s, v) => `Saturación ${s}%, brillo ${v}%`, hue: 'Tono', hex: 'Color hexadecimal' }
         });
       });

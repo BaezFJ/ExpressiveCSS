@@ -4,7 +4,7 @@
 
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { Expressive, resetBody, window } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, window } from './setup.js';
 
 const sleep = (ms = 10) => new Promise((resolve) => setTimeout(resolve, ms));
 const type = (input, value) => {
@@ -262,7 +262,7 @@ describe('Form values', () => {
       '<div class="field"><input id="c" maxlength="5" value="ab"></div></form>';
     const color = document.querySelector('#p input');
     const text = document.getElementById('c');
-    const picker = Expressive.ColorPicker.init(document.getElementById('p'));
+    const picker = ExpressiveExtras.ColorPicker.init(document.getElementById('p'));
     const counter = Expressive.CharacterCounter.init(text);
     try {
       color.value = '#0000ff';
@@ -325,7 +325,7 @@ describe('Form values', () => {
       <footer><button type="button" value="next">Next</button><button type="submit">Send</button></footer>
     </form>`;
     document.body.innerHTML = markup('user-a');
-    let survey = Expressive.Questionnaire.init(document.querySelector('form'));
+    let survey = ExpressiveExtras.Questionnaire.init(document.querySelector('form'));
     const form = document.querySelector('form');
     form.elements.email.value = 'a@example.test';
     form.elements.password.value = 'dummy-secret';
@@ -334,7 +334,7 @@ describe('Form values', () => {
     assert.deepEqual(JSON.parse(localStorage.getItem('questionnaire:signup')).answers, ['a@example.test']);
 
     document.body.innerHTML = markup('user-b');
-    survey = Expressive.Questionnaire.init(document.querySelector('form'));
+    survey = ExpressiveExtras.Questionnaire.init(document.querySelector('form'));
     try {
       const restored = document.querySelector('form').elements;
       assert.equal(restored.email.value, 'a@example.test');
@@ -356,7 +356,7 @@ describe('Form values', () => {
       </footer>
     </form>`;
     const form = document.querySelector('form');
-    const survey = Expressive.Questionnaire.getInstance(form) ?? Expressive.Questionnaire.init(form);
+    const survey = ExpressiveExtras.Questionnaire.getInstance(form) ?? ExpressiveExtras.Questionnaire.init(form);
     const [first] = form.querySelectorAll('fieldset');
     try {
       first.querySelector('input').value = 'abc';

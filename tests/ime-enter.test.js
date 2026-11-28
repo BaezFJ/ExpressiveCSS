@@ -6,7 +6,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Expressive, resetBody, window } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, window } from './setup.js';
 
 const enter = (target, init = {}) => {
   const e = new window.KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true, ...init });
@@ -34,7 +34,7 @@ const fields = {
   },
   'color picker hex field': () => {
     document.body.innerHTML = '<div class="color-picker" id="p"><input type="color" value="#ff0000" aria-label="Accent"></div>';
-    const instance = Expressive.ColorPicker.init(document.getElementById('p'));
+    const instance = ExpressiveExtras.ColorPicker.init(document.getElementById('p'));
     return { field: document.querySelector('#p .color-picker-hex'), instance };
   },
   'autocomplete with an active option': () => {

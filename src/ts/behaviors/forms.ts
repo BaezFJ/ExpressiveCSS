@@ -1,50 +1,18 @@
 import { Utils, toggleIdRef } from '../core/utils';
 
-const FILE_RULES = '.drop-zone input[type="file"]:is([data-validate-types], [data-max-size], [data-max-files])';
-
-interface FileFailure {
-  rejected: File[];
-  reason: 'type' | 'size' | 'count';
-  message: string;
-}
-
-function fileLimit(input: HTMLInputElement, attribute: string) {
-  const value = (input.getAttribute(attribute) || '').trim();
-  if (!/^\d+$/.test(value)) return 0;
-  const limit = Number(value);
-  return Number.isSafeInteger(limit) ? limit : 0;
-}
-
-function fileSpecifier(value: string) {
-  if (value.endsWith('/*')) return /^(image|audio|video)\/\*$/.test(value);
-  return /^\.[^\s/\\]+$/.test(value) ||
-    /^[!#$%&'*+.^_`|~0-9a-z-]+\/[!#$%&'*+.^_`|~0-9a-z-]+$/.test(value);
-}
-
-function fileMatches(file: File, specifier: string) {
-  if (specifier.startsWith('.')) return file.name.toLowerCase().endsWith(specifier);
-  if (specifier.endsWith('/*')) return file.type.toLowerCase().startsWith(specifier.slice(0, -1));
-  return file.type.toLowerCase() === specifier;
-}
-
 export class Forms {
   /**
    * Validates a `.validate` field: marks it `invalid` and `aria-invalid`
    * when it fails its constraints or `data-length`, and clears both when it
    * passes. An empty optional field never fails. The field is described by
    * its `[data-error]` supporting text, so the error the CSS shows there is
-   * read with it.
-   * Marked drop-zone file inputs also validate type/size rules and synchronize their
-   * native custom validity and zone-level error text, without emitting events.
+   * read with it. A drop zone's file rules are DropZone's, in
+   * `@expressivecss/extras`.
    * @param textfield
    */
   static validateField(textfield: HTMLInputElement) {
     if (!textfield) {
       console.error('No text field element found');
-      return;
-    }
-    if (Forms._validatedFile(textfield)) {
-      Forms._validateFiles(textfield);
       return;
     }
     if (!textfield.classList.contains('validate')) return;
@@ -121,141 +89,6 @@ export class Forms {
   private static _initialized = false;
   /** Textareas and file inputs already given their listeners, so a second Init adds none. */
   private static _wired = new WeakSet<Element>();
-  private static _fileErrors = new WeakMap<HTMLInputElement, string>();
-  private static _fileSelections = new WeakMap<HTMLInputElement, { files: File[]; constraints: string }>();
-
-  private static _validatedFile(input: HTMLInputElement) {
-    return input.matches(FILE_RULES) || Forms._fileErrors.has(input);
-  }
-
-  private static _rejectedTypes(input: HTMLInputElement) {
-    const accepted = input.accept.split(',').map((value) => value.trim().toLowerCase()).filter(fileSpecifier);
-    if (!accepted.length) return [];
-    return Array.from(input.files ?? []).filter((file) => !accepted.some((specifier) => fileMatches(file, specifier)));
-  }
-
-  private static _validateFiles(input: HTMLInputElement) {
-    if (input.matches(':disabled')) return;
-    Forms._bindShadowForm(input);
-    const failure = Forms._checkFiles(input);
-    Forms._showFileError(input, failure?.message ?? input.validationMessage);
-    return failure;
-  }
-
-  private static _checkFiles(input: HTMLInputElement) {
-    Forms._clearFileError(input);
-    if (!input.matches(FILE_RULES)) {
-      Forms._fileErrors.delete(input);
-      return;
-    }
-    Forms._fileErrors.set(input, '');
-    const failure = Forms._fileFailure(input);
-    if (failure) Forms._setFileError(input, failure.message);
-    return failure;
-  }
-
-  private static _fileFailure(input: HTMLInputElement) {
-    return Forms._typeFailure(input) ?? Forms._sizeFailure(input) ?? Forms._countFailure(input);
-  }
-
-  private static _typeFailure(input: HTMLInputElement): FileFailure | undefined {
-    if (!input.hasAttribute('data-validate-types')) return;
-    const rejected = Forms._rejectedTypes(input);
-    if (rejected.length) return { rejected, reason: 'type', message: Forms._fileTypeMessage(input) };
-  }
-
-  private static _sizeFailure(input: HTMLInputElement): FileFailure | undefined {
-    const limit = fileLimit(input, 'data-max-size');
-    if (!limit) return;
-    const rejected = Array.from(input.files ?? []).filter((file) => file.size > limit);
-    if (!rejected.length) return;
-    return { rejected, reason: 'size', message: Forms._fileSizeMessage(input, limit) };
-  }
-
-  private static _fileSizeMessage(input: HTMLInputElement, limit: number) {
-    return Forms._fileError(input)?.getAttribute('data-error-size')?.trim() || `Maximum file size: ${limit} bytes.`;
-  }
-
-  private static _countFailure(input: HTMLInputElement): FileFailure | undefined {
-    const limit = fileLimit(input, 'data-max-files');
-    if (!limit) return;
-    const rejected = Array.from(input.files ?? []);
-    if (rejected.length > limit) return { rejected, reason: 'count', message: Forms._fileCountMessage(input, limit) };
-  }
-
-  private static _fileCountMessage(input: HTMLInputElement, limit: number) {
-    return Forms._fileError(input)?.getAttribute('data-error-count')?.trim() || `Maximum file count: ${limit}.`;
-  }
-
-  private static _clearFileError(input: HTMLInputElement) {
-    const owned = Forms._fileErrors.get(input);
-    if (owned && owned === input.validationMessage) input.setCustomValidity('');
-  }
-
-  private static _setFileError(input: HTMLInputElement, message: string) {
-    if (input.validity.customError) return;
-    input.setCustomValidity(message);
-    Forms._fileErrors.set(input, message);
-  }
-
-  private static _fileTypeMessage(input: HTMLInputElement) {
-    const error = Forms._fileError(input);
-    return error?.getAttribute('data-error')?.trim() || `Choose files matching: ${input.accept}.`;
-  }
-
-  private static _fileError(input: HTMLInputElement) {
-    return Array.from(input.closest('.drop-zone')?.children ?? [])
-      .find((child) => child.hasAttribute('data-error')) as HTMLElement | undefined;
-  }
-
-  private static _showFileError(input: HTMLInputElement, message: string) {
-    Forms._markInvalid(input, !input.validity.valid);
-    const error = Forms._fileError(input);
-    if (!error) return;
-    toggleIdRef(input, 'aria-describedby', Forms._idOf(error), true);
-    error.textContent = message;
-    error.hidden = !message;
-  }
-
-  private static _onFileInput = (event: Event) => {
-    const input = Utils.closestInPath<HTMLInputElement>(event, '.drop-zone input[type="file"]');
-    if (!input) return;
-    if (input.matches(':disabled')) return;
-    Forms._updateDropZone(input);
-  };
-
-  private static _updateDropZone(input: HTMLInputElement) {
-    Forms._bindShadowForm(input);
-    const zone = input.closest('.drop-zone');
-    const files = Array.from(input.files ?? []);
-    const failure = Forms._validateDropZone(input);
-    Forms.listDropZoneFiles(zone, input);
-    Forms._reportFileRejection(input, files, failure);
-  }
-
-  private static _validateDropZone(input: HTMLInputElement) {
-    if (Forms._validatedFile(input)) return Forms._validateFiles(input);
-    Forms.validateField(input);
-  }
-
-  private static _reportFileRejection(input: HTMLInputElement, files: File[], failure?: FileFailure) {
-    if (!input.matches(FILE_RULES)) {
-      Forms._fileSelections.delete(input);
-      return;
-    }
-    if (!Forms._newFileSelection(input, files)) return;
-    if (!failure) return;
-    Utils.emit(input.closest('.drop-zone'), 'reject', { input, files: files.slice(), rejected: failure.rejected.slice(), reason: failure.reason });
-  }
-
-  private static _newFileSelection(input: HTMLInputElement, files: File[]) {
-    const constraints = JSON.stringify([input.hasAttribute('data-validate-types'), input.accept, fileLimit(input, 'data-max-size'), fileLimit(input, 'data-max-files')]);
-    const previous = Forms._fileSelections.get(input);
-    Forms._fileSelections.set(input, { files, constraints });
-    return !previous || previous.constraints !== constraints || previous.files.length !== files.length ||
-      !previous.files.every((file, index) => file === files[index]);
-  }
-
   // Submit and reset do not leave a shadow root, so the document never hears
   // them. Adding the same listener again does nothing.
   private static _bindShadowForm(input: HTMLInputElement) {
@@ -263,32 +96,8 @@ export class Forms {
     for (const type of ['submit', 'reset']) input.form?.addEventListener(type, Forms.resetFormExtras, true);
   }
 
-  private static _resetFileInput(input: HTMLInputElement) {
-    if (input.files?.length) return;
-    Forms._fileSelections.delete(input);
-    Forms._resetFileList(input);
-    Forms._resetFileValidity(input);
-  }
-
-  private static _resetFileList(input: HTMLInputElement) {
-    const zone = input.closest('.drop-zone');
-    if (!zone) return;
-    Forms.listDropZoneFiles(zone, input);
-    zone.classList.remove('dragover');
-  }
-
-  private static _resetFileValidity(input: HTMLInputElement) {
-    if (input.matches(':disabled')) return;
-    if (!Forms._validatedFile(input)) return;
-    Forms._clearFileError(input);
-    Forms._fileErrors.delete(input);
-    Forms._showFileError(input, input.validationMessage);
-  }
-
   private static _afterReset(form: HTMLFormElement) {
     const fields = Array.from(form.elements);
-    fields.filter((field): field is HTMLInputElement =>
-      field instanceof HTMLInputElement && field.type === 'file').forEach(Forms._resetFileInput);
     fields.filter((field) => field.classList.contains('validate'))
       .forEach((field: HTMLInputElement) => Forms._markInvalid(field, false));
     fields.filter((field) => field.classList.contains('expressive-textarea')).forEach(Forms.textareaAutoResize);
@@ -306,14 +115,11 @@ export class Forms {
     if (Forms._initialized) return;
     Forms._initialized = true;
     Utils.onDocumentReady(() => {
-      document.addEventListener('input', Forms._onFileInput);
       document.addEventListener('change', (e: Event) => {
         const target = Utils.eventTarget(e);
         if (!(target instanceof HTMLInputElement)) return;
-        if (target.matches('.drop-zone input[type="file"]')) {
-          Forms._onFileInput(e);
-          return;
-        }
+        // DropZone, in @expressivecss/extras, validates these with their file rules.
+        if (target.matches('.drop-zone input[type="file"]')) return;
         // The sibling-label loop that used to live here compared
         // `tagName == 'label'` (tagName is uppercase) so it never matched,
         // and no rule in the Sass styles `label.active` anyway - the
@@ -329,9 +135,6 @@ export class Forms {
       document.addEventListener('submit', Forms.summarizeErrors, true);
       document.addEventListener('click', Forms.focusSummaryField);
       document.addEventListener('reset', Forms.resetFormExtras, true);
-      for (const type of ['dragenter', 'dragover', 'dragleave', 'drop']) {
-        document.addEventListener(type, Forms.markDropZone);
-      }
 
       document.querySelectorAll('.expressive-textarea').forEach((textArea: HTMLTextAreaElement) => {
         Forms.InitTextarea(textArea);
@@ -388,7 +191,7 @@ export class Forms {
    * A revealed password goes back to type="password" when its form is
    * submitted or reset, so it is never sent or autofilled as plain text and
    * a reset field does not stay revealed. Reset fires no input or change
-   * event, so a reset form also drops its file lists, `.validate` errors and
+   * event, so a reset form also drops its `.validate` errors and
    * error summary, and fits each auto-resizing textarea to its restored text.
    * That cleanup waits for the native reset and respects later cancellation.
    */
@@ -473,43 +276,6 @@ export class Forms {
     if (!field) return;
     e.preventDefault();
     field.focus();
-  }
-
-  /**
-   * The native file input covers its .drop-zone, so the browser already takes
-   * a dropped file. This only shows the drag: the input is the topmost
-   * element, so every drag event over the zone targets it and leaving it is
-   * leaving the zone.
-   */
-  static markDropZone(e: DragEvent) {
-    const input = Utils.eventTarget(e);
-    if (!(input instanceof HTMLInputElement) || input.type !== 'file') return;
-    const zone = input.closest('.drop-zone');
-    if (!zone) return;
-    const over = e.type === 'dragenter' || e.type === 'dragover';
-    zone.classList.toggle('dragover', over && !input.disabled);
-  }
-
-  /** Lists the chosen files, name and size, in the zone's .drop-zone-files. */
-  static listDropZoneFiles(zone: Element, input: HTMLInputElement) {
-    const list = Array.from(zone.querySelectorAll('.drop-zone-files')).find((list) => list.closest('.drop-zone') === zone);
-    if (!list) return;
-    const size = (bytes: number) => {
-      const [value, unit] =
-        bytes >= 1e6 ? [bytes / 1e6, 'megabyte'] : bytes >= 1e3 ? [bytes / 1e3, 'kilobyte'] : [bytes, 'byte'];
-      return new Intl.NumberFormat(undefined, { style: 'unit', unit, maximumFractionDigits: 1 }).format(value);
-    };
-    list.replaceChildren(
-      ...Array.from(input.files ?? [], (file) => {
-        const item = document.createElement('li');
-        const name = document.createElement('span');
-        const meta = document.createElement('span');
-        name.textContent = file.name;
-        meta.textContent = size(file.size);
-        item.append(name, meta);
-        return item;
-      })
-    );
   }
 
   static InitTextarea(textarea: HTMLTextAreaElement) {

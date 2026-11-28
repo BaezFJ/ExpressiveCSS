@@ -1,5 +1,4 @@
-import { Component, BaseOptions } from '../core/component';
-import { Utils, afterFormReset, formEventScope } from '../core/utils';
+import { Component, Utils, afterFormReset, formEventScope, type BaseOptions } from '@expressivecss/expressive/core';
 
 export interface CurrencyInputOptions extends BaseOptions {
   /** `invalid` is the validity message for text that holds no amount. */

@@ -44,7 +44,7 @@ test("the IIFE exposes the same namespace as Expressive.core", () => {
   });
   const iife = readFileSync(new URL("../dist/js/expressive.js", import.meta.url), "utf8");
   // Re-exporting index.ts must not let the bundler drop its import-time Init() calls.
-  for (const behavior of ["Forms", "Dialogs", "Lists", "TransferList"]) assert.match(iife, new RegExp(`${behavior}\\.Init\\(\\);`));
+  for (const behavior of ["Forms", "Dialogs", "Lists", "DataTables"]) assert.match(iife, new RegExp(`${behavior}\\.Init\\(\\);`));
   try {
     dom.window.eval(iife);
     const global = dom.window.Expressive;

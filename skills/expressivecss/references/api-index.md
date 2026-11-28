@@ -38,21 +38,12 @@ Import names from `@expressivecss/expressive`, or from `@expressivecss/expressiv
 | `Carousel` | [Carousel](../components/carousel.md) | [Carousel](https://www.expressivecss.com/carousel.html.md) |
 | `CharacterCounter` | [Text fields](../components/text-fields.md) | [Text fields](https://www.expressivecss.com/text-inputs.html.md) |
 | `Forms` | [Text fields](../components/text-fields.md) | [Text fields](https://www.expressivecss.com/text-inputs.html.md) |
-| `InputMask` | [Input mask](../components/input-mask.md) | [Input mask](https://www.expressivecss.com/input-mask.html.md) |
-| `CurrencyInput` | [Currency input](../components/currency-input.md) | [Currency input](https://www.expressivecss.com/currency-input.html.md) |
-| `RichTextEditor` | [Rich text editor](../components/rich-text-editor.md) | [Rich text editor](https://www.expressivecss.com/rich-text-editor.html.md) |
 | `FormSelect` | [Select](../components/select.md) | [Select](https://www.expressivecss.com/select.html.md) |
-| `TreeSelect` | [Tree select](../components/tree-select.md) | [Tree select](https://www.expressivecss.com/tree-select.html.md) |
-| `Cascader` | [Cascader](../components/cascader.md) | [Cascader](https://www.expressivecss.com/cascader.html.md) |
-| `TransferList` | [Transfer list](../components/transfer-list.md) | [Transfer list](https://www.expressivecss.com/transfer-list.html.md) |
-| `ColorPicker` | [Color picker](../components/color-picker.md) | [Color picker](https://www.expressivecss.com/color-picker.html.md) |
 | `Slider` | [Slider](../components/slider.md) | [Slider](https://www.expressivecss.com/slider.html.md) |
 | `Chips` | [Chips](../components/chips.md) | [Chips](https://www.expressivecss.com/chips.html.md) |
 | `Autocomplete` | [Autocomplete](../components/autocomplete.md) | [Autocomplete](https://www.expressivecss.com/autocomplete.html.md) |
 | `Datepicker` | [Date picker](../components/date-picker.md) | [Date picker](https://www.expressivecss.com/datepicker.html.md) |
 | `Timepicker` | [Time picker](../components/time-picker.md) | [Time picker](https://www.expressivecss.com/timepicker.html.md) |
-| `Keypad` | [Keypad and Keyboard](../components/keypad.md) | [Keypad](https://www.expressivecss.com/keypad.html.md) |
-| `Questionnaire` | [Questionnaire](../components/questionnaire.md) | [Questionnaire](https://www.expressivecss.com/questionnaire.html.md) |
 | `Menubar` | [Menubar](../components/menubar.md) | [Menubar](https://www.expressivecss.com/menubar.html.md) |
 | `ScrollSpy` | [Scrollspy](../components/scrollspy.md) | [Scrollspy](https://www.expressivecss.com/scrollspy.html.md) |
 | `BackToTop` | [Back to top](../components/back-to-top.md) | [Back to top](https://www.expressivecss.com/back-to-top.html.md) |
@@ -81,6 +72,16 @@ Import names from `@expressivecss/expressive`, or from `@expressivecss/expressiv
 | `Lightbox` | [Lightbox](../components/lightbox.md) | [Lightbox](https://www.expressivecss.com/media.html.md) |
 | `MapView` | [Map](../components/map.md) | [Map](https://www.expressivecss.com/map.html.md) |
 | `CommandPalette` | [Command palette](../components/command-palette.md) | [Command palette](https://www.expressivecss.com/command-palette.html.md) |
+| `InputMask` | [Input mask](../components/input-mask.md) | [Input mask](https://www.expressivecss.com/input-mask.html.md) |
+| `CurrencyInput` | [Currency input](../components/currency-input.md) | [Currency input](https://www.expressivecss.com/currency-input.html.md) |
+| `RichTextEditor` | [Rich text editor](../components/rich-text-editor.md) | [Rich text editor](https://www.expressivecss.com/rich-text-editor.html.md) |
+| `DropZone` | [Drop zone](../components/drop-zone.md) | [Drop zone](https://www.expressivecss.com/drop-zone.html.md) |
+| `TreeSelect` | [Tree select](../components/tree-select.md) | [Tree select](https://www.expressivecss.com/tree-select.html.md) |
+| `Cascader` | [Cascader](../components/cascader.md) | [Cascader](https://www.expressivecss.com/cascader.html.md) |
+| `TransferList` | [Transfer list](../components/transfer-list.md) | [Transfer list](https://www.expressivecss.com/transfer-list.html.md) |
+| `ColorPicker` | [Color picker](../components/color-picker.md) | [Color picker](https://www.expressivecss.com/color-picker.html.md) |
+| `Keypad` | [Keypad and Keyboard](../components/keypad.md) | [Keypad](https://www.expressivecss.com/keypad.html.md) |
+| `Questionnaire` | [Questionnaire](../components/questionnaire.md) | [Questionnaire](https://www.expressivecss.com/questionnaire.html.md) |
 
 ## Sass functions and mixins
 
@@ -158,14 +159,9 @@ Paths are relative to `src/sass`, without the underscore or extension. The catal
 | `components/forms/fieldset` | [Fieldsets](https://www.expressivecss.com/fieldsets.html.md) |
 | `components/forms/file-input` | [Text fields](https://www.expressivecss.com/text-inputs.html.md) |
 | `components/forms/input-fields` | [Text fields](https://www.expressivecss.com/text-inputs.html.md) |
-| `components/rich-text-editor` | [Rich text editor](https://www.expressivecss.com/rich-text-editor.html.md) |
-| `components/forms/drop-zone` | [Drop zone](https://www.expressivecss.com/drop-zone.html.md) |
 | `components/forms/select` | [Select](https://www.expressivecss.com/select.html.md) |
-| `components/cascader` | [Cascader](https://www.expressivecss.com/cascader.html.md) |
 | `components/forms/checkboxes` | [Checkboxes](https://www.expressivecss.com/checkboxes.html.md) |
-| `components/transfer-list` | [Transfer list](https://www.expressivecss.com/transfer-list.html.md) |
 | `components/forms/radio-buttons` | [Radio](https://www.expressivecss.com/radio-buttons.html.md) |
-| `components/forms/color-picker` | [Color picker](https://www.expressivecss.com/color-picker.html.md) |
 | `components/forms/switches` | [Switches](https://www.expressivecss.com/switches.html.md) |
 | `components/forms/slider` | [Slider](https://www.expressivecss.com/slider.html.md) |
 | `components/chips` | [Chips](https://www.expressivecss.com/chips.html.md) |
@@ -173,8 +169,6 @@ Paths are relative to `src/sass`, without the underscore or extension. The catal
 | `components/docked-display` | [Date picker](https://www.expressivecss.com/datepicker.html.md) |
 | `components/modal-display` | [Time picker](https://www.expressivecss.com/timepicker.html.md) |
 | `components/timepicker` | [Time picker](https://www.expressivecss.com/timepicker.html.md) |
-| `components/keypad` | [Keypad](https://www.expressivecss.com/keypad.html.md) |
-| `components/questionnaire` | [Questionnaire](https://www.expressivecss.com/questionnaire.html.md) |
 | `components/page-footer` | [Footer](https://www.expressivecss.com/footer.html.md) |
 | `components/stepper` | [Stepper](https://www.expressivecss.com/stepper.html.md) |
 | `components/mega-menu` | [Mega menu](https://www.expressivecss.com/mega-menu.html.md) |
@@ -220,5 +214,13 @@ Paths are relative to `src/sass`, without the underscore or extension. The catal
 | `components/lightbox` | [Lightbox](https://www.expressivecss.com/media.html.md) |
 | `components/map` | [Map](https://www.expressivecss.com/map.html.md) |
 | `components/command-palette` | [Command palette](https://www.expressivecss.com/command-palette.html.md) |
+| `components/rich-text-editor` | [Rich text editor](https://www.expressivecss.com/rich-text-editor.html.md) |
+| `components/forms/drop-zone` | [Drop zone](https://www.expressivecss.com/drop-zone.html.md) |
+| `components/tree-select` | [Tree select](https://www.expressivecss.com/tree-select.html.md) |
+| `components/cascader` | [Cascader](https://www.expressivecss.com/cascader.html.md) |
+| `components/transfer-list` | [Transfer list](https://www.expressivecss.com/transfer-list.html.md) |
 | `components/rating` | [Rating](https://www.expressivecss.com/rating.html.md) |
 | `components/color-swatches` | [Color swatches](https://www.expressivecss.com/color-swatches.html.md) |
+| `components/forms/color-picker` | [Color picker](https://www.expressivecss.com/color-picker.html.md) |
+| `components/keypad` | [Keypad](https://www.expressivecss.com/keypad.html.md) |
+| `components/questionnaire` | [Questionnaire](https://www.expressivecss.com/questionnaire.html.md) |

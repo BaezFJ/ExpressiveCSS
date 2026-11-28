@@ -184,7 +184,7 @@ const S = defineSections([
       fieldset and refreshing closes it. Existing menu callbacks and
       <code>autoFocus: false</code> work as on a select.</p>
 <Code code={`
-Expressive.TreeSelect.init(select, {
+ExpressiveExtras.TreeSelect.init(select, {
   searchable: true,
   i18n: { searchLabel: 'Find a leaf', noResults: 'No matching leaves' }
 });
@@ -220,7 +220,7 @@ Expressive.TreeSelect.init(select, {
           <code>refresh()</code> after changing the options; open branches stay open.
         </p>
 <Code code={`
-const place = Expressive.TreeSelect.getInstance(document.getElementById('place'));
+const place = ExpressiveExtras.TreeSelect.getInstance(document.getElementById('place'));
 place.refresh();            // rebuild after adding, removing or changing options
 place.getSelectedValues();  // ['paris']
 place.destroy();            // restores the branch options and the native select

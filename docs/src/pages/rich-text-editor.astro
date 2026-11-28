@@ -106,7 +106,7 @@ const actions = [
 <Code code={`
 import { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
-import { RichTextEditor } from '@expressivecss/expressive';
+import { RichTextEditor } from '@expressivecss/extras';
 
 RichTextEditor.init(document.querySelector('.rich-text-editor'), {
   Editor,
@@ -159,7 +159,7 @@ RichTextEditor.init(document.querySelector('.rich-text-editor'), {
   </Section>
   <Section {...S.methods}>
 <Code code={`
-const instance = Expressive.RichTextEditor.getInstance(document.querySelector('.rich-text-editor'));
+const instance = ExpressiveExtras.RichTextEditor.getInstance(document.querySelector('.rich-text-editor'));
 instance.editor.commands.setContent('<p>Replaced</p>'); // the Tiptap editor
 instance.destroy(); // removes the editor and shows the textarea again
 `} />
@@ -176,6 +176,6 @@ instance.destroy(); // removes the editor and shows the textarea again
 import { Editor } from 'https://esm.sh/@tiptap/core@3.31.4';
 import StarterKit from 'https://esm.sh/@tiptap/starter-kit@3.31.4?deps=@tiptap/core@3.31.4,@tiptap/pm@3.31.4';
 
-Expressive.RichTextEditor.init(document.getElementById('demo-editor'), { Editor, extensions: [StarterKit] });
+ExpressiveExtras.RichTextEditor.init(document.getElementById('demo-editor'), { Editor, extensions: [StarterKit] });
 </script>
 </DocsLayout>

@@ -139,14 +139,14 @@ for (const [name, engine, test] of engines) {
       assert.deepEqual(await page.evaluate(() => window.submitted), [], 'an unanswered question blocks submit');
 
       await page.locator('#q1 input[value=search]').check();
-      await page.evaluate(() => window.Expressive.Questionnaire.getInstance(document.getElementById('survey')).goTo(3));
+      await page.evaluate(() => window.ExpressiveExtras.Questionnaire.getInstance(document.getElementById('survey')).goTo(3));
       await page.locator('#notes').fill('Thanks');
       await click('Submit');
       assert.deepEqual(await page.evaluate(() => window.submitted), [
         { direction: 'search', platforms: ['mobile'], name: '', notes: 'Thanks', phone: null }
       ]);
 
-      await page.evaluate(() => window.Expressive.Questionnaire.getInstance(document.getElementById('survey')).destroy());
+      await page.evaluate(() => window.ExpressiveExtras.Questionnaire.getInstance(document.getElementById('survey')).destroy());
       s = await page.evaluate(() => {
         const form = document.getElementById('survey');
         return {
@@ -207,7 +207,7 @@ for (const [name, engine, test] of engines) {
       });
       const shown = () => page.locator('#survey > fieldset').evaluateAll((els) => els.filter((el) => !el.hidden).map((el) => el.id));
       const focus = () => page.evaluate(() => document.activeElement.id || document.activeElement.value);
-      const instance = 'window.Expressive.Questionnaire.getInstance(document.getElementById("survey"))';
+      const instance = 'window.ExpressiveExtras.Questionnaire.getInstance(document.getElementById("survey"))';
 
       await page.locator('#survey footer > button', { hasText: 'Next' }).click();
       assert.deepEqual(await shown(), ['q1'], 'a checked disabled checkbox does not answer a data-required group');
@@ -258,7 +258,7 @@ const extras = `<!doctype html><html lang="en"><head><style>${css}</style></head
 
 for (const [name, engine, test] of engines) {
   test(`${name}: questionnaire shortcuts, review step and saved progress`, { timeout: 30000 }, async (t) => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
       // localStorage needs a real origin.
@@ -268,7 +268,7 @@ for (const [name, engine, test] of engines) {
       await page.evaluate(() => {
         localStorage.clear();
         document.addEventListener('submit', (e) => e.preventDefault());
-        Expressive.Questionnaire.init(document.querySelector('#extra'));
+        ExpressiveExtras.Questionnaire.init(document.querySelector('#extra'));
       });
       const shown = () => page.evaluate(() => ({
         question: [...document.querySelectorAll('#extra > fieldset')].findIndex((item) => !item.hidden),
@@ -297,7 +297,7 @@ for (const [name, engine, test] of engines) {
       assert.equal(await page.locator('#extra input[value="home"]').isChecked(), true, 'a digit toggles a checkbox');
 
       // Saved answers and the question they reached come back with the page.
-      await page.evaluate(() => Expressive.Questionnaire.getInstance(document.querySelector('#extra')).next());
+      await page.evaluate(() => ExpressiveExtras.Questionnaire.getInstance(document.querySelector('#extra')).next());
       await page.locator('#extra input[name="note"]').fill('fast');
       await page.locator('#extra input[name="note"]').press('a');
       assert.equal(await page.locator('#extra input[name="note"]').inputValue(), 'fasta', 'letters typed into a text field type');
@@ -305,7 +305,7 @@ for (const [name, engine, test] of engines) {
       await page.addScriptTag({ content: js });
       await page.evaluate(() => {
         document.addEventListener('submit', (e) => e.preventDefault());
-        Expressive.Questionnaire.init(document.querySelector('#extra'));
+        ExpressiveExtras.Questionnaire.init(document.querySelector('#extra'));
       });
       assert.deepEqual(await page.evaluate(() => [
         document.querySelector('#extra input[value="other"]').checked,
@@ -332,15 +332,15 @@ for (const [name, engine, test] of engines) {
       // Edit goes back to the question; Back from the review goes to the last one.
       await page.locator('.questionnaire-summary button').nth(0).click();
       assert.equal((await shown()).question, 0);
-      await page.evaluate(() => Expressive.Questionnaire.getInstance(document.querySelector('#extra')).review());
+      await page.evaluate(() => ExpressiveExtras.Questionnaire.getInstance(document.querySelector('#extra')).review());
       await page.locator('#extra footer [value="previous"]').click();
       assert.equal((await shown()).question, 2);
 
       // Submitting forgets the saved answers.
-      await page.evaluate(() => Expressive.Questionnaire.getInstance(document.querySelector('#extra')).review());
+      await page.evaluate(() => ExpressiveExtras.Questionnaire.getInstance(document.querySelector('#extra')).review());
       await page.locator('#extra footer [type="submit"]').click();
       assert.equal(await page.evaluate(() => localStorage.getItem('questionnaire:survey')), null);
-      await page.evaluate(() => Expressive.Questionnaire.getInstance(document.querySelector('#extra')).destroy());
+      await page.evaluate(() => ExpressiveExtras.Questionnaire.getInstance(document.querySelector('#extra')).destroy());
       assert.equal(await page.locator('.questionnaire-summary').count(), 0, 'destroy removes the review step');
     } finally {
       await browser.close();
@@ -350,7 +350,7 @@ for (const [name, engine, test] of engines) {
 
 for (const [name, engine, test] of engines) {
   test(`${name}: questionnaire restores answers safely and wakes conditional questions`, { timeout: 30000 }, async (t) => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
       const body = `<!doctype html><html lang="en"><head><style>${css}</style></head><body>
@@ -377,7 +377,7 @@ for (const [name, engine, test] of engines) {
       });
       const restored = await page.evaluate(() => {
         try {
-          const q = Expressive.Questionnaire.init(document.querySelector('#branch'));
+          const q = ExpressiveExtras.Questionnaire.init(document.querySelector('#branch'));
           return { ok: true, size: document.querySelector('[name=size]').value, enabled: !document.querySelector('#size').disabled, index: q.index, count: q.items.length };
         } catch (error) {
           return { ok: false, error: error.message };

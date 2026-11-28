@@ -110,7 +110,7 @@ const S = defineSections([
           <code>.cascader</code>.
         </p>
 <Code code={`
-const place = Expressive.Cascader.getInstance(document.querySelector('.cascader'));
+const place = ExpressiveExtras.Cascader.getInstance(document.querySelector('.cascader'));
 place.value;     // ['us', 'ca', 'sf'], or [] before a path is chosen
 place.open();    // opens the columns at the chosen path
 place.close();

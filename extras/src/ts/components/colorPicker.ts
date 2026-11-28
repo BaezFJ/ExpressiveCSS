@@ -1,5 +1,4 @@
-import { Component, BaseOptions } from '../core/component';
-import { Utils, afterFormReset, controllerFor } from '../core/utils';
+import { Component, Utils, afterFormReset, controllerFor, type BaseOptions } from '@expressivecss/expressive/core';
 
 export interface ColorPickerI18n {
   /** The name of the saturation and brightness area. */

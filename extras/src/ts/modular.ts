@@ -30,6 +30,16 @@ export { Menubar } from './components/menubar';
 export { ScrollSpy } from './components/scrollspy';
 export { ImageCompare } from './behaviors/imageCompare';
 export { Tour } from './behaviors/tour';
+export { InputMask } from './components/inputMask';
+export { CurrencyInput } from './components/currencyInput';
+export { RichTextEditor } from './components/richTextEditor';
+export { TreeSelect } from './components/treeSelect';
+export { Cascader } from './components/cascader';
+export { ColorPicker } from './components/colorPicker';
+export { Keypad } from './components/keypad';
+export { Questionnaire } from './components/questionnaire';
+export { TransferList } from './behaviors/transferList';
+export { DropZone } from './behaviors/dropZone';
 
 export const version = '0.21.0';
 
@@ -59,3 +69,11 @@ export type * from './components/mapView';
 export type * from './components/commandPalette';
 export type * from './components/menubar';
 export type * from './components/scrollspy';
+export type * from './components/inputMask';
+export type * from './components/currencyInput';
+export type * from './components/richTextEditor';
+export type * from './components/treeSelect';
+export type * from './components/cascader';
+export type * from './components/colorPicker';
+export type * from './components/keypad';
+export type * from './components/questionnaire';

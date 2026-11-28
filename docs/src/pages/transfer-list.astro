@@ -134,12 +134,12 @@ const row = (name: string) => name.toLowerCase();
           <code>expressive:transfer</code> event whose <code>detail</code> is
           <code>{"{ rows, from, to }"}</code>: the moved rows in their new order, then the
           two lists. A polite live region after the container announces the move.
-          <code>Expressive.TransferList.i18n.moved</code> holds its text,
+          <code>ExpressiveExtras.TransferList.i18n.moved</code> holds its text,
           <code>Moved {"{count}"} to {"{list}"}</code> by default, where
           <code>{"{list}"}</code> is the destination list's name.
         </p>
 <Code code={`
-Expressive.TransferList.i18n.moved = '{count} moved to {list}';
+ExpressiveExtras.TransferList.i18n.moved = '{count} moved to {list}';
 
 document.addEventListener('expressive:transfer', (event) => {
   const { rows, to } = event.detail;
@@ -147,7 +147,7 @@ document.addEventListener('expressive:transfer', (event) => {
 });
 `} />
         <p>
-          The root bundle starts the behavior on load. With the modular entry, call
+          Importing <code>@expressivecss/extras</code> starts the behavior on load. With its modular entry, call
           <code>TransferList.Init()</code> once. The listeners are on the document, so a
           transfer list added later needs no call.
         </p>

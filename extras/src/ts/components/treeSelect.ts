@@ -1,5 +1,5 @@
-import { Utils, logicalKey } from '../core/utils';
-import { FormSelect, FormSelectOptions } from './select';
+import { Utils, logicalKey } from '@expressivecss/expressive/core';
+import { FormSelect, type FormSelectOptions } from '@expressivecss/expressive/modular';
 
 // Tree select. A native <select data-tree> whose options name their parent's
 // value in data-parent. The native select still owns the form value, reset,

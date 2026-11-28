@@ -17,3 +17,9 @@
   scrollspy with the table of contents, plus the `Tour` and `ImageCompare`
   behaviors. Extras imports core's `Menu` from
   `@expressivecss/expressive/modular`, which it leaves external.
+- The form extras that moved from core: input mask, currency input, rich
+  text editor, tree select, cascader, color picker, keypad, questionnaire and
+  the `TransferList` behavior, plus the drop zone with a new `DropZone`
+  behavior that holds the file rules, file list and drag marking core's
+  `Forms` used to. `TreeSelect` extends core's `FormSelect`, and `DropZone`
+  hands other inputs to core's `Forms`, both read from the modular entry.

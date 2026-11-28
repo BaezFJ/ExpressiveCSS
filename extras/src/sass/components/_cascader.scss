@@ -1,4 +1,4 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
 
 // Cascader. A .field holding a text input, its label and a ul.cascader-options
 // of nested lists, one <li data-value> per option. The script builds the

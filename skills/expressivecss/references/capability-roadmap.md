@@ -49,25 +49,15 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Search](#search) | unassessed | needs-review | needs-rerun | 1 |
 | [Fieldsets](#fieldsets) | unassessed | needs-review | needs-rerun | 0 |
 | [Text fields](#text-fields) | unassessed | needs-review | needs-rerun | 0 |
-| [Input mask](#input-mask) | unassessed | needs-review | incomplete | 0 |
-| [Currency input](#currency-input) | unassessed | needs-review | incomplete | 0 |
-| [Rich text editor](#rich-text-editor) | unassessed | needs-review | needs-rerun | 0 |
-| [Drop zone](#drop-zone) | unassessed | needs-review | needs-rerun | 0 |
 | [Select](#select) | unassessed | needs-review | needs-rerun | 0 |
-| [Tree select](#tree-select) | unassessed | needs-review | incomplete | 0 |
-| [Cascader](#cascader) | implemented | source-reviewed | incomplete | 0 |
 | [Checkboxes](#checkboxes) | unassessed | needs-review | needs-rerun | 0 |
-| [Transfer list](#transfer-list) | unassessed | needs-review | incomplete | 0 |
 | [Radio buttons](#radio-buttons) | unassessed | needs-review | needs-rerun | 0 |
-| [Color picker](#color-picker) | unassessed | needs-review | incomplete | 0 |
 | [Switches](#switches) | unassessed | needs-review | needs-rerun | 1 |
 | [Slider](#slider) | unassessed | needs-review | needs-rerun | 0 |
 | [Chips](#chips) | unassessed | needs-review | needs-rerun | 0 |
 | [Autocomplete](#autocomplete) | unassessed | needs-review | needs-rerun | 1 |
 | [Date picker](#date-picker) | unassessed | needs-review | needs-rerun | 0 |
 | [Time picker](#time-picker) | unassessed | needs-review | needs-rerun | 1 |
-| [Keypad and Keyboard](#keypad) | unassessed | needs-review | incomplete | 0 |
-| [Questionnaire](#questionnaire) | unassessed | needs-review | needs-rerun | 0 |
 | [Footer](#footer) | unassessed | needs-review | needs-rerun | 0 |
 | [Stepper](#stepper) | unassessed | needs-review | needs-rerun | 0 |
 | [Mega menu](#mega-menu) | unassessed | needs-review | incomplete | 0 |
@@ -113,8 +103,18 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Lightbox](#lightbox) | unassessed | needs-review | needs-rerun | 0 |
 | [Map](#map) | unassessed | needs-review | needs-rerun | 0 |
 | [Command palette](#command-palette) | unassessed | needs-review | needs-rerun | 0 |
+| [Input mask](#input-mask) | unassessed | needs-review | incomplete | 0 |
+| [Currency input](#currency-input) | unassessed | needs-review | incomplete | 0 |
+| [Rich text editor](#rich-text-editor) | unassessed | needs-review | needs-rerun | 0 |
+| [Drop zone](#drop-zone) | unassessed | needs-review | needs-rerun | 0 |
+| [Tree select](#tree-select) | unassessed | needs-review | incomplete | 0 |
+| [Cascader](#cascader) | unassessed | needs-review | incomplete | 0 |
+| [Transfer list](#transfer-list) | unassessed | needs-review | incomplete | 0 |
 | [Rating](#rating) | unassessed | needs-review | needs-rerun | 0 |
 | [Color swatches](#color-swatches) | unassessed | needs-review | incomplete | 0 |
+| [Color picker](#color-picker) | unassessed | needs-review | incomplete | 0 |
+| [Keypad and Keyboard](#keypad) | unassessed | needs-review | incomplete | 0 |
+| [Questionnaire](#questionnaire) | unassessed | needs-review | needs-rerun | 0 |
 | [Typography](#typography) | unassessed | needs-review | needs-rerun | 1 |
 | [Shape](#shape) | unassessed | needs-review | needs-rerun | 1 |
 | [Motion](#motion) | unassessed | needs-review | needs-rerun | 1 |
@@ -856,81 +856,6 @@ No gap identified within the stated scope; broader upstream parity remains unass
 
 - stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-examples-browser.test.js): `complete editor example preserves both treatments and its task path`. Example-only input, group toggle, preview/focus, save and bfcache-style remount behavior, themed treatments.
 
-<a id="input-mask"></a>
-
-## Input mask
-
-**unassessed within the stated scope.** A data-mask pattern on a text, tel, search, url or password input, where 0 takes a digit, a a letter, * either and a backslash escapes a literal; typed, pasted, autofilled and composed text formatted with the caret after the edit, Backspace and Delete across literals, saved and reset values formatted, the formatted value submitted and validated, and formatting before the page's input listeners.
-
-Source review: needs-review, 2026-10-25. [src/ts/components/inputMask.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/inputMask.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A capture-phase input listener rewrites the native value, so the form, constraint validation and FormData see what the field shows. Composing input is skipped and the field formats on compositionend, and a beforeinput listener turns a one-character delete next to a literal into a delete of the slot character across it. Documented support reviewed 2026-10-25 against `llm.md#input-mask`.
-
-- Known boundary: Typing, inserted pastes, deletes across literals, composition in both event orders, saved and reset values, listener order, Keypad keys and destroy() are checked in a browser; real IMEs, Android keyboards, clipboard pastes and spoken output remain unverified, and undo after a formatted edit does nothing. The form submits only the formatted value, and masks cannot change with the value.
-
-- verification: Typing, inserted pastes, deletes across literals, composition in both event orders, saved and reset values, listener order, Keypad keys and destroy() are checked in a browser; real IMEs, Android keyboards, clipboard pastes and spoken output remain unverified. Next: Type into a masked field with a Japanese IME, Chinese pinyin and Gboard on Android, and read it with VoiceOver and NVDA.
-
-- not-recorded: [tests/input-mask-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/input-mask-browser.test.js): `chromium: typed and pasted digits take the mask's pattern, and the form submits it`. Real keyboard typing and an insertText paste formatted with the caret after the last digit, and the formatted value in FormData and the submit event.
-- not-recorded: [tests/input-mask-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/input-mask-browser.test.js): `chromium: the field waits for a composition to end, in either event order`. Composition dispatched with the last input before and after compositionend, and a CDP composition of full-width digits.
-
-<a id="currency-input"></a>
-
-## Currency input
-
-**unassessed within the stated scope.** A data-currency ISO 4217 code on a text input; the amount shown with Intl.NumberFormat in the nearest lang and that currency on blur, the plain number in the locale's decimal mark on focus, typed and pasted amounts read in either decimal mark, a validity message for text with no digit that i18n can replace, saved and reset values formatted, a value property, and the plain number in the form data.
-
-Source review: needs-review, 2026-10-25. [src/ts/components/currencyInput.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/currencyInput.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: The native value holds the formatted text, and a capture-phase formdata listener on the document swaps the field's entry for the plain number, so submits and new FormData(form) read a number while the field keeps its name. setCustomValidity reports text with no amount, so constraint validation and .validate show the message. Documented support reviewed 2026-10-25 against `llm.md#currency-input`.
-
-- Known boundary: Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified. Formatting happens on blur only, and a form that repeats a currency field's name gets one entry for them.
-
-- verification: Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified. Next: Type an amount on iOS Safari and Android Chrome decimal keypads under lang="de", and read the field with VoiceOver and NVDA.
-
-- not-recorded: [tests/currency-input-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/currency-input-browser.test.js): `chromium: a typed amount shows in the locale and currency after blur, and the form gets the number`. Real keyboard typing under lang="de" with euros formatted on blur, and the plain number in FormData and the submit event.
-- not-recorded: [tests/currency-input-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/currency-input-browser.test.js): `chromium: text that holds no amount stays as typed and marks the field invalid until it does`. Text with no digit kept, the validity message and aria-invalid set, cleared once the field holds an amount, and the message replaced through data-currency-input-options.
-
-<a id="rich-text-editor"></a>
-
-## Rich text editor
-
-**unassessed within the stated scope.** A Tiptap editor mounted from a textarea, toolbar buttons that run Tiptap commands with JSON arguments, pressed and disabled button state, form submission through the textarea, label naming and read-only textareas.
-
-Source review: needs-review, 2026-10-08. [src/sass/components/_rich-text-editor.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_rich-text-editor.scss), [src/ts/components/richTextEditor.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/richTextEditor.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: The page supplies Tiptap's Editor class and extensions; the component mounts it, names the contenteditable textbox from the textarea and keeps the textarea in sync. The toolbar is the docked toolbar. Documented support reviewed 2026-10-08 against `llm.md#rich-text-editor`.
-
-- Known boundary: Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified.
-
-- verification: Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified. Next: Use the editor with a screen reader and an IME in each engine, paste from a word processor, and select text on touch devices.
-
-- stale: [tests/rich-text-editor-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/rich-text-editor-browser.test.js): `chromium: rich text editor formats text, reflects state and keeps the textarea in sync`. Hidden textarea, textbox role and name from the label, starting HTML, label click focus, bold and heading commands with aria-pressed and .active, undo disabled state, textarea value and input event, empty value, and destroy. No spoken-output assertion.
-- stale: [tests/rich-text-editor-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/rich-text-editor-browser.test.js): `chromium: rich text editor follows a disabled textarea`. A disabled textarea makes the editor read-only and disables every toolbar button.
-
-<a id="drop-zone"></a>
-
-## Drop zone
-
-**unassessed within the stated scope.** A label-sized native file input with a dragover state and a list of chosen file names and locale-formatted sizes.
-
-Source review: needs-review, 2026-10-06. [src/sass/components/forms/_drop-zone.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_drop-zone.scss), [src/ts/behaviors/forms.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/forms.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: The native input covers the label, so clicks, keys and drops are the browser's; the shared Forms behavior marks the drag and fills the list. Documented support reviewed 2026-10-06 against `llm.md#drop-zone`.
-
-- Known boundary: Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified.
-
-- verification: Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified. Next: Drag files from the operating system onto the zone in each engine and confirm the selection and list update; check the list announcement with a screen reader.
-
-- stale: [tests/drop-zone-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/drop-zone-browser.test.js): `chromium: drop zone covers its label with the file input, marks a drag and lists chosen files`. Input covering the label, label naming the input, dragover set and cleared by dragenter, dragleave and drop, listed names and sizes, list cleared on an empty selection and keyboard focus ring. No spoken-output assertion.
-
 <a id="select"></a>
 
 ## Select
@@ -964,44 +889,6 @@ Web adaptation: Native select enhanced by runtime; this is related to menu/text-
 - not-recorded: [tests/select-search-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/select-search-browser.test.js): `chromium: searchable select multiple picks across queries, keeps the query and focus, and submits every value`. Multiple-select search: keyboard, box and row picks across queries, retained query and row focus, checkbox state, Escape, Tab exit and native FormData with every chosen value. Equivalent Firefox and WebKit cases run in the same file.
 - not-recorded: [tests/select-search-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/select-search-browser.test.js): `chromium: searchable select multiple picks within an open shadow root and dismisses outside without losing picks`. Multiple-select search inside an open shadow root, pointer picks and outside dismissal that clears the query and keeps selections. Equivalent Firefox and WebKit cases run in the same file.
 
-<a id="tree-select"></a>
-
-## Tree select
-
-**unassessed within the stated scope.** A native select[data-tree] whose flat options name their parent's value in data-parent; a role="tree" popup with the ARIA tree keyboard contract over visible, enabled rows, mirrored under RTL; single or native multiple independent leaf choices, with branches normalized out of multiple selection; branch options disabled while it runs; optional single/multiple leaf search retaining ancestor paths and restoring pre-query expansion; refresh() preserving the query, expansion baseline and focus.
-
-Source review: needs-review, 2026-10-25. [src/ts/components/treeSelect.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/treeSelect.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: TreeSelect extends FormSelect, so the native select keeps the form value, reset, validity and disabled state. The popup is a ul role="tree" inside the Menu surface, one list below the rows Menu styles, named as the field is. Search reuses the labelled dialog/search/status controls around that tree without a listbox wrapper. Documented support reviewed 2026-10-27 against `llm.md#tree-select`.
-
-- Known boundary: Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output, touch, native zoom and OS IME remain unverified. Leaf filtering, expansion restoration, native submission, reset/refresh, modal/shadow focus and forced-color scrolling are checked in all three engines. No choosable branch; the field shows leaf text, not ancestor paths. Multiple toggling, hidden selections, native two-value submission and distinct selected/focus paint are checked in all three engines.
-
-- verification: Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output and touch remain unverified. Next: Move through the tree and choose a leaf with VoiceOver and NVDA, and tap branches and leaves on iOS Safari and Android Chrome.
-
-- not-recorded: [tests/tree-select-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/tree-select-browser.test.js): `chromium: ArrowRight expands a branch, Enter chooses a leaf, and the form submits its value`. Opening with Enter, expanding two branches with ArrowRight, choosing a leaf with Enter, and its value in FormData and the submit event.
-- not-recorded: [tests/tree-select-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/tree-select-browser.test.js): `chromium: rtl: the arrows, Home, End and * follow the tree pattern over visible, enabled rows`. Opening, entering, closing and leaving branches with the mirrored arrows, Home, End and *, skipping a disabled placeholder and leaf without wrapping.
-
-<a id="cascader"></a>
-
-## Cascader
-
-**implemented within the stated scope.** Nested lists with data-value read into listbox columns in a popover anchored to a read-only combobox input; click and keyboard navigation with arrows, Home, End, Enter, Space, Escape and Tab, swapped under rtl; leaf-only commits shown as joined labels with input and change events; one form entry per level through a form-associated control; data-selected starting path, reset, required with i18n.required, aria-invalid and disabled state.
-
-Source review: source-reviewed, 2026-10-25. [src/ts/components/cascader.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/cascader.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: The author's nested lists stay hidden as the source. A manual popover opened with the input as its source uses CSS anchor positioning, and a form-associated expressive-cascader-control wraps the input and submits the path, so the browser handles reset, validity and disabled state. Documented support reviewed 2026-10-25 against `llm.md#cascader`.
-
-- Known boundary: Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified. There is no search, type-ahead, multiple selection or lazy loading, and only a leaf commits.
-
-- verification: Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified. Next: Move through three columns and commit a leaf with NVDA in Firefox and VoiceOver in Safari.
-
-- not-recorded: [tests/cascader-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/cascader-browser.test.js): `chromium: the roadmap check: choosing an option in each of three columns submits the three values as one path`. Clicks through three columns, the joined labels in the input, and the three values in FormData and the submit event, through the wrapping control.
-- not-recorded: [tests/cascader-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/cascader-browser.test.js): `chromium: the keyboard opens the field, moves through the columns, commits a leaf and closes`. Each opening key, arrows without wrapping, Home and End, the next and previous column, Escape, Tab and Shift+Tab closing without committing, and Space committing a leaf.
-
 <a id="checkboxes"></a>
 
 ## Checkboxes
@@ -1023,26 +910,6 @@ Web adaptation: Native checkbox; indeterminate is set through the DOM property. 
 - stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-examples-browser.test.js): `complete settings example preserves both treatments and its task path`. Example-only responsive layout, targets, keyboard settings and save behavior, themed treatments; no component-wide parity.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
 
-<a id="transfer-list"></a>
-
-## Transfer list
-
-**unassessed within the stated scope.** Two .list groups of labelled checkbox rows with add, add-all, remove and remove-all buttons between them, chosen rows kept in the order they arrived, rows returned to their original slots, the chosen values submitted under data-name in order, form reset, a polite announcement, an expressive:transfer event, and a layout that follows the page direction and stacks below the medium window size.
-
-Source review: needs-review, 2026-10-25. [src/sass/components/_transfer-list.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_transfer-list.scss), [src/ts/behaviors/transferList.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/transferList.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A document-delegated behavior moves the rows and appends the chosen values in a formdata listener, so the checkboxes carry no name. The rows stay native checkboxes rather than a listbox, so Tab and Space work without an arrow-key contract. Documented support reviewed 2026-10-25 against `llm.md#transfer-list`.
-
-- Known boundary: The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser; spoken output and forced colors remain unverified.
-
-- verification: The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser; spoken output and forced colors remain unverified. Next: Move rows with NVDA in Firefox and VoiceOver in Safari and confirm each move is announced once; check the lists and icons in forced colors mode.
-
-- not-recorded: [tests/transfer-list-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/transfer-list-browser.test.js): `chromium: moving two options to the chosen list puts both in the form data, in order`. Two checked rows moved one at a time arrive unchecked, and new FormData and a real submit both hold their values in the order they were moved.
-- not-recorded: [tests/transfer-list-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/transfer-list-browser.test.js): `chromium: remove returns rows to their original slots, the all buttons skip disabled rows, and a second Init adds nothing`. Rows moved back land in their recorded slots, add-all and remove-all leave a disabled row in place, and each press fires one event after repeated Init calls.
-- not-recorded: [tests/transfer-list-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/transfer-list-browser.test.js): `chromium: a form reset puts the rows back where they started`. A reset button and form.reset() restore both lists and the default checked state, a removed row stays removed, and a cancelled reset moves nothing. No spoken-output assertion.
-
 <a id="radio-buttons"></a>
 
 ## Radio buttons
@@ -1062,24 +929,6 @@ Web adaptation: Shared name provides exclusivity; fieldset/legend names the grou
 - verification: Native group selection is checked; initially-empty and disabled-option paths remain unmeasured. Next: Check both Tab directions and arrow wrapping with the actual default and disabled choices.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
-
-<a id="color-picker"></a>
-
-## Color picker
-
-**unassessed within the stated scope.** A saturation and brightness area as a keyboard slider, a hue range on the framework slider, a hex field and the native color input as form value and preview, with input, change and onChange events.
-
-Source review: needs-review, 2026-10-18. [src/sass/components/forms/_color-picker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_color-picker.scss), [src/ts/components/colorPicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/colorPicker.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-18); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: Progressive enhancement of <input type="color">: without JavaScript the native picker remains, and the browser picker still opens from the input after enhancement. Documented support reviewed 2026-10-18 against `llm.md#color-picker`.
-
-- Known boundary: Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified.
-
-- verification: Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified. Next: Pick a color with a screen reader and with touch in each engine, and confirm the area valuetext and the hex field are announced; check forced colors and 200% text.
-
-- not-recorded: [tests/color-picker-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/color-picker-browser.test.js): `chromium: color picker drives the native input from the area, hue and hex field`. Group and control names, Down and Shift+Left steps with valuetext, input, change and onChange order, a press and a drag past the corner in an RTL page, hue changes keeping saturation and brightness, hex Enter without form submission, an invalid hex reverting, the silent value setter, a native input event updating the hue, one submitted field and destroy leaving only the native input. No spoken-output assertion.
 
 <a id="switches"></a>
 
@@ -1218,43 +1067,6 @@ Web adaptation: Default inline presentation with optional docked and modal displ
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker digital values: empty`. Empty hour/minute fallback display and submitted values agree, including twelve-hour midnight normalization and retained AM/PM state.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: time picker digital values: boundaries`. Reinitialization from midnight, noon, late-night 24-hour strings and lowercase AM/PM preserves twelve-hour display and period state.
 - not-recorded: [tests/modal-picker-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/modal-picker-browser.test.js): `chromium: a modal time picker steps its fields with the arrow keys and writes the time on Enter`. The fields are spin buttons with their range, Up, Down and Page Up step and wrap them, the hand follows, Enter writes the time and closes the dialog, and Escape closes it without a change. Runs in all three engines. No screen reader output.
-
-<a id="keypad"></a>
-
-## Keypad and Keyboard
-
-**unassessed within the stated scope.** A three-column keypad of round keys with two-cell wide keys and a keyboard of rows sized from a column count with an optional number row, typing into the field named by aria-controls with value keys, Backspace, Enter, a one-shot Shift, data-key keys inside the field's wrapper, dial-pad letters, styled call keys, an onKey callback and a pressed shape morph.
-
-Source review: needs-review, 2026-10-11. [src/sass/components/_keypad.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_keypad.scss), [src/ts/components/keypad.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/keypad.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-11); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode="none" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so the keypad checks it on its own edits. Documented support reviewed 2026-10-11 against `llm.md#keypad-and-keyboard`.
-
-- Known boundary: Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. There is no caps lock, no symbol layer switching and no hardware key highlighting, and minlength does not apply to keypad edits; the page owns layouts beyond the keys it writes.
-
-- verification: Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. Next: Type a PIN and a message with a screen reader and on a touch device in each engine, and check forced colors and enlarged text.
-
-- not-recorded: [tests/keypad-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/keypad-browser.test.js): `chromium: keypad and keyboard type at the caret, edit, submit, shift and lay out their keys`. Digits typed at the caret, maxlength, focus kept in the field on a pointer press, Backspace including emoji, Enter submitting once, a pattern mismatch blocking Enter, onKey values, composed input events from a shadow root, number, decimal and signed input, a disabled fieldset and its legend, a trailing Backspace in the field that runs once for two keypads, for a field inside its keyboard and for a field rendered after init, a password toggle that is not a key, a prefilled untouched field typed at the end, a caret placed at the start kept for keys activated from the keyboard, Shift showing capitals and releasing after one character, space and a textarea new line, three 72px round keypad columns, a two-cell wide key, a tenth-of-row letter key, the half-key indent, a one-and-a-half-key Shift, the space bar filling its row, a 40px number row that types and that hidden drops, the pressed corner, destroy, and the shared listeners leaving with the last keypad. No spoken-output assertion.
-
-<a id="questionnaire"></a>
-
-## Questionnaire
-
-**unassessed within the stated scope.** A native form of fieldsets shown one at a time, with single choice, multiple choice and text answers, choice descriptions, required and data-required questions, Skip for optional ones, authored or generated errors, a progress row, Enter to advance, disabled questions for branching and normal form submission.
-
-Source review: needs-review, 2026-10-08. [src/sass/components/_questionnaire.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_questionnaire.scss), [src/ts/components/questionnaire.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/questionnaire.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: Each question is a native fieldset named by its legend; the browser's constraint validation checks answers, hidden questions use hidden, and without JavaScript the form shows every question and still submits. Documented support reviewed 2026-10-08 against `llm.md#questionnaire`.
-
-- Known boundary: Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no answer keyboard shortcuts, no summary step and no saved progress; the page owns persistence and branching.
-
-- verification: Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Answer a questionnaire with a screen reader in each engine and confirm the question, its description, errors and the progress are announced; check forced colors and enlarged text.
-
-- stale: [tests/questionnaire-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/questionnaire-browser.test.js): `chromium: questionnaire shows one question, validates, skips, branches and submits`. One question shown, the buttons that apply, the progress text and named progressbar, aria-describedby with the description and error, required radio and data-required checkbox errors with focus and aria-invalid, errors clearing on answer, a generated requiredMessage error, a question enabled mid-way, Enter moving on instead of submitting, Back focus, Skip clearing an answer and firing change, submit opening the first unanswered question, FormData without a disabled question and destroy restoring the plain form. No spoken-output assertion.
-- stale: [tests/questionnaire-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/questionnaire-browser.test.js): `chromium: questionnaire validates requestSubmit and ignores disabled checkboxes`. A checked disabled checkbox not answering a data-required group, focus on the first enabled checkbox, requestSubmit() blocked by an unanswered group and by a hidden required field with each question opened and its error shown, a valid requestSubmit() sending FormData, and destroy clearing the custom validity. No spoken-output assertion.
 
 <a id="footer"></a>
 
@@ -2115,6 +1927,139 @@ Web adaptation: A native modal <dialog>; commands are links and buttons, and the
 
 - stale: [tests/command-palette-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/command-palette-browser.test.js): `chromium: command palette opens on its shortcut, filters, moves with the arrows and runs a command`. Combobox and listbox roles, Ctrl+K toggle, input focus, top placement, wrapping arrows, accent-insensitive and keyword filtering, hidden empty groups, the empty message, Enter and click running a command, closing with focus return, the commandfor opener, a fresh search on reopening, Escape, destroy and the keycap style. No spoken-output assertion.
 
+<a id="input-mask"></a>
+
+## Input mask
+
+**unassessed within the stated scope.** A data-mask pattern on a text, tel, search, url or password input, where 0 takes a digit, a a letter, * either and a backslash escapes a literal; typed, pasted, autofilled and composed text formatted with the caret after the edit, Backspace and Delete across literals, saved and reset values formatted, the formatted value submitted and validated, and formatting before the page's input listeners.
+
+Source review: needs-review, 2026-10-25. [src/ts/components/inputMask.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/inputMask.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A capture-phase input listener rewrites the native value, so the form, constraint validation and FormData see what the field shows. Composing input is skipped and the field formats on compositionend, and a beforeinput listener turns a one-character delete next to a literal into a delete of the slot character across it. Documented support reviewed 2026-10-25 against `llm.md#input-mask`.
+
+- Known boundary: Typing, inserted pastes, deletes across literals, composition in both event orders, saved and reset values, listener order, Keypad keys and destroy() are checked in a browser; real IMEs, Android keyboards, clipboard pastes and spoken output remain unverified, and undo after a formatted edit does nothing. The form submits only the formatted value, and masks cannot change with the value.
+
+- verification: Typing, inserted pastes, deletes across literals, composition in both event orders, saved and reset values, listener order, Keypad keys and destroy() are checked in a browser; real IMEs, Android keyboards, clipboard pastes and spoken output remain unverified. Next: Type into a masked field with a Japanese IME, Chinese pinyin and Gboard on Android, and read it with VoiceOver and NVDA.
+
+- not-recorded: [tests/input-mask-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/input-mask-browser.test.js): `chromium: typed and pasted digits take the mask's pattern, and the form submits it`. Real keyboard typing and an insertText paste formatted with the caret after the last digit, and the formatted value in FormData and the submit event.
+- not-recorded: [tests/input-mask-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/input-mask-browser.test.js): `chromium: the field waits for a composition to end, in either event order`. Composition dispatched with the last input before and after compositionend, and a CDP composition of full-width digits.
+
+<a id="currency-input"></a>
+
+## Currency input
+
+**unassessed within the stated scope.** A data-currency ISO 4217 code on a text input; the amount shown with Intl.NumberFormat in the nearest lang and that currency on blur, the plain number in the locale's decimal mark on focus, typed and pasted amounts read in either decimal mark, a validity message for text with no digit that i18n can replace, saved and reset values formatted, a value property, and the plain number in the form data.
+
+Source review: needs-review, 2026-10-25. [src/ts/components/currencyInput.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/currencyInput.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: The native value holds the formatted text, and a capture-phase formdata listener on the document swaps the field's entry for the plain number, so submits and new FormData(form) read a number while the field keeps its name. setCustomValidity reports text with no amount, so constraint validation and .validate show the message. Documented support reviewed 2026-10-25 against `llm.md#currency-input`.
+
+- Known boundary: Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified. Formatting happens on blur only, and a form that repeats a currency field's name gets one entry for them.
+
+- verification: Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified. Next: Type an amount on iOS Safari and Android Chrome decimal keypads under lang="de", and read the field with VoiceOver and NVDA.
+
+- not-recorded: [tests/currency-input-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/currency-input-browser.test.js): `chromium: a typed amount shows in the locale and currency after blur, and the form gets the number`. Real keyboard typing under lang="de" with euros formatted on blur, and the plain number in FormData and the submit event.
+- not-recorded: [tests/currency-input-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/currency-input-browser.test.js): `chromium: text that holds no amount stays as typed and marks the field invalid until it does`. Text with no digit kept, the validity message and aria-invalid set, cleared once the field holds an amount, and the message replaced through data-currency-input-options.
+
+<a id="rich-text-editor"></a>
+
+## Rich text editor
+
+**unassessed within the stated scope.** A Tiptap editor mounted from a textarea, toolbar buttons that run Tiptap commands with JSON arguments, pressed and disabled button state, form submission through the textarea, label naming and read-only textareas.
+
+Source review: needs-review, 2026-10-08. [src/sass/components/_rich-text-editor.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_rich-text-editor.scss), [src/ts/components/richTextEditor.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/richTextEditor.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: The page supplies Tiptap's Editor class and extensions; the component mounts it, names the contenteditable textbox from the textarea and keeps the textarea in sync. The toolbar is the docked toolbar. Documented support reviewed 2026-10-08 against `llm.md#rich-text-editor`.
+
+- Known boundary: Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified.
+
+- verification: Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified. Next: Use the editor with a screen reader and an IME in each engine, paste from a word processor, and select text on touch devices.
+
+- stale: [tests/rich-text-editor-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/rich-text-editor-browser.test.js): `chromium: rich text editor formats text, reflects state and keeps the textarea in sync`. Hidden textarea, textbox role and name from the label, starting HTML, label click focus, bold and heading commands with aria-pressed and .active, undo disabled state, textarea value and input event, empty value, and destroy. No spoken-output assertion.
+- stale: [tests/rich-text-editor-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/rich-text-editor-browser.test.js): `chromium: rich text editor follows a disabled textarea`. A disabled textarea makes the editor read-only and disables every toolbar button.
+
+<a id="drop-zone"></a>
+
+## Drop zone
+
+**unassessed within the stated scope.** A label-sized native file input with a dragover state and a list of chosen file names and locale-formatted sizes.
+
+Source review: needs-review, 2026-10-06. [src/sass/components/forms/_drop-zone.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_drop-zone.scss), [src/ts/behaviors/forms.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/forms.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: The native input covers the label, so clicks, keys and drops are the browser's; the shared Forms behavior marks the drag and fills the list. Documented support reviewed 2026-10-06 against `llm.md#drop-zone`.
+
+- Known boundary: Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified.
+
+- verification: Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified. Next: Drag files from the operating system onto the zone in each engine and confirm the selection and list update; check the list announcement with a screen reader.
+
+- stale: [tests/drop-zone-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/drop-zone-browser.test.js): `chromium: drop zone covers its label with the file input, marks a drag and lists chosen files`. Input covering the label, label naming the input, dragover set and cleared by dragenter, dragleave and drop, listed names and sizes, list cleared on an empty selection and keyboard focus ring. No spoken-output assertion.
+
+<a id="tree-select"></a>
+
+## Tree select
+
+**unassessed within the stated scope.** A native select[data-tree] whose flat options name their parent's value in data-parent; a role="tree" popup with the ARIA tree keyboard contract over visible, enabled rows, mirrored under RTL; single or native multiple independent leaf choices, with branches normalized out of multiple selection; branch options disabled while it runs; optional single/multiple leaf search retaining ancestor paths and restoring pre-query expansion; refresh() preserving the query, expansion baseline and focus.
+
+Source review: needs-review, 2026-10-25. [src/ts/components/treeSelect.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/treeSelect.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: TreeSelect extends FormSelect, so the native select keeps the form value, reset, validity and disabled state. The popup is a ul role="tree" inside the Menu surface, one list below the rows Menu styles, named as the field is. Search reuses the labelled dialog/search/status controls around that tree without a listbox wrapper. Documented support reviewed 2026-10-27 against `llm.md#tree-select`.
+
+- Known boundary: Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output, touch, native zoom and OS IME remain unverified. Leaf filtering, expansion restoration, native submission, reset/refresh, modal/shadow focus and forced-color scrolling are checked in all three engines. No choosable branch; the field shows leaf text, not ancestor paths. Multiple toggling, hidden selections, native two-value submission and distinct selected/focus paint are checked in all three engines.
+
+- verification: Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output and touch remain unverified. Next: Move through the tree and choose a leaf with VoiceOver and NVDA, and tap branches and leaves on iOS Safari and Android Chrome.
+
+- not-recorded: [tests/tree-select-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/tree-select-browser.test.js): `chromium: ArrowRight expands a branch, Enter chooses a leaf, and the form submits its value`. Opening with Enter, expanding two branches with ArrowRight, choosing a leaf with Enter, and its value in FormData and the submit event.
+- not-recorded: [tests/tree-select-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/tree-select-browser.test.js): `chromium: rtl: the arrows, Home, End and * follow the tree pattern over visible, enabled rows`. Opening, entering, closing and leaving branches with the mirrored arrows, Home, End and *, skipping a disabled placeholder and leaf without wrapping.
+
+<a id="cascader"></a>
+
+## Cascader
+
+**unassessed within the stated scope.** Nested lists with data-value read into listbox columns in a popover anchored to a read-only combobox input; click and keyboard navigation with arrows, Home, End, Enter, Space, Escape and Tab, swapped under rtl; leaf-only commits shown as joined labels with input and change events; one form entry per level through a form-associated control; data-selected starting path, reset, required with i18n.required, aria-invalid and disabled state.
+
+Source review: needs-review, 2026-10-25. [src/ts/components/cascader.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/cascader.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: The author's nested lists stay hidden as the source. A manual popover opened with the input as its source uses CSS anchor positioning, and a form-associated expressive-cascader-control wraps the input and submits the path, so the browser handles reset, validity and disabled state. Documented support reviewed 2026-10-25 against `llm.md#cascader`.
+
+- Known boundary: Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified. There is no search, type-ahead, multiple selection or lazy loading, and only a leaf commits.
+
+- verification: Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified. Next: Move through three columns and commit a leaf with NVDA in Firefox and VoiceOver in Safari.
+
+- not-recorded: [tests/cascader-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/cascader-browser.test.js): `chromium: the roadmap check: choosing an option in each of three columns submits the three values as one path`. Clicks through three columns, the joined labels in the input, and the three values in FormData and the submit event, through the wrapping control.
+- not-recorded: [tests/cascader-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/cascader-browser.test.js): `chromium: the keyboard opens the field, moves through the columns, commits a leaf and closes`. Each opening key, arrows without wrapping, Home and End, the next and previous column, Escape, Tab and Shift+Tab closing without committing, and Space committing a leaf.
+
+<a id="transfer-list"></a>
+
+## Transfer list
+
+**unassessed within the stated scope.** Two .list groups of labelled checkbox rows with add, add-all, remove and remove-all buttons between them, chosen rows kept in the order they arrived, rows returned to their original slots, the chosen values submitted under data-name in order, form reset, a polite announcement, an expressive:transfer event, and a layout that follows the page direction and stacks below the medium window size.
+
+Source review: needs-review, 2026-10-25. [src/sass/components/_transfer-list.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_transfer-list.scss), [src/ts/behaviors/transferList.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/transferList.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A document-delegated behavior moves the rows and appends the chosen values in a formdata listener, so the checkboxes carry no name. The rows stay native checkboxes rather than a listbox, so Tab and Space work without an arrow-key contract. Documented support reviewed 2026-10-25 against `llm.md#transfer-list`.
+
+- Known boundary: The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser; spoken output and forced colors remain unverified.
+
+- verification: The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser; spoken output and forced colors remain unverified. Next: Move rows with NVDA in Firefox and VoiceOver in Safari and confirm each move is announced once; check the lists and icons in forced colors mode.
+
+- not-recorded: [tests/transfer-list-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/transfer-list-browser.test.js): `chromium: moving two options to the chosen list puts both in the form data, in order`. Two checked rows moved one at a time arrive unchecked, and new FormData and a real submit both hold their values in the order they were moved.
+- not-recorded: [tests/transfer-list-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/transfer-list-browser.test.js): `chromium: remove returns rows to their original slots, the all buttons skip disabled rows, and a second Init adds nothing`. Rows moved back land in their recorded slots, add-all and remove-all leave a disabled row in place, and each press fires one event after repeated Init calls.
+- not-recorded: [tests/transfer-list-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/transfer-list-browser.test.js): `chromium: a form reset puts the rows back where they started`. A reset button and form.reset() restore both lists and the default checked state, a removed row stays removed, and a cancelled reset moves nothing. No spoken-output assertion.
+
 <a id="rating"></a>
 
 ## Rating
@@ -2150,6 +2095,61 @@ Web adaptation: Native radios keep one Tab stop, arrow keys and form submission;
 - verification: Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified. Next: Choose a swatch with a keyboard and a screen reader in Firefox and Safari, and confirm each color name and the checked state are announced; check 200% text.
 
 - not-recorded: [tests/color-swatches-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/color-swatches-browser.test.js): `chromium: color swatches draw each radio as its color and keep native radio behavior`. Swatch color, 40px round shape and checked ring, the named group, arrow keys moving the choice, the form value, the focus ring after arrow keys and the swatch color under forced colors. No spoken-output assertion.
+
+<a id="color-picker"></a>
+
+## Color picker
+
+**unassessed within the stated scope.** A saturation and brightness area as a keyboard slider, a hue range on the framework slider, a hex field and the native color input as form value and preview, with input, change and onChange events.
+
+Source review: needs-review, 2026-10-18. [src/sass/components/forms/_color-picker.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_color-picker.scss), [src/ts/components/colorPicker.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/colorPicker.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-18); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: Progressive enhancement of <input type="color">: without JavaScript the native picker remains, and the browser picker still opens from the input after enhancement. Documented support reviewed 2026-10-18 against `llm.md#color-picker`.
+
+- Known boundary: Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified.
+
+- verification: Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified. Next: Pick a color with a screen reader and with touch in each engine, and confirm the area valuetext and the hex field are announced; check forced colors and 200% text.
+
+- not-recorded: [tests/color-picker-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/color-picker-browser.test.js): `chromium: color picker drives the native input from the area, hue and hex field`. Group and control names, Down and Shift+Left steps with valuetext, input, change and onChange order, a press and a drag past the corner in an RTL page, hue changes keeping saturation and brightness, hex Enter without form submission, an invalid hex reverting, the silent value setter, a native input event updating the hue, one submitted field and destroy leaving only the native input. No spoken-output assertion.
+
+<a id="keypad"></a>
+
+## Keypad and Keyboard
+
+**unassessed within the stated scope.** A three-column keypad of round keys with two-cell wide keys and a keyboard of rows sized from a column count with an optional number row, typing into the field named by aria-controls with value keys, Backspace, Enter, a one-shot Shift, data-key keys inside the field's wrapper, dial-pad letters, styled call keys, an onKey callback and a pressed shape morph.
+
+Source review: needs-review, 2026-10-11. [src/sass/components/_keypad.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_keypad.scss), [src/ts/components/keypad.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/keypad.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-11); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode="none" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so the keypad checks it on its own edits. Documented support reviewed 2026-10-11 against `llm.md#keypad-and-keyboard`.
+
+- Known boundary: Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. There is no caps lock, no symbol layer switching and no hardware key highlighting, and minlength does not apply to keypad edits; the page owns layouts beyond the keys it writes.
+
+- verification: Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. Next: Type a PIN and a message with a screen reader and on a touch device in each engine, and check forced colors and enlarged text.
+
+- not-recorded: [tests/keypad-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/keypad-browser.test.js): `chromium: keypad and keyboard type at the caret, edit, submit, shift and lay out their keys`. Digits typed at the caret, maxlength, focus kept in the field on a pointer press, Backspace including emoji, Enter submitting once, a pattern mismatch blocking Enter, onKey values, composed input events from a shadow root, number, decimal and signed input, a disabled fieldset and its legend, a trailing Backspace in the field that runs once for two keypads, for a field inside its keyboard and for a field rendered after init, a password toggle that is not a key, a prefilled untouched field typed at the end, a caret placed at the start kept for keys activated from the keyboard, Shift showing capitals and releasing after one character, space and a textarea new line, three 72px round keypad columns, a two-cell wide key, a tenth-of-row letter key, the half-key indent, a one-and-a-half-key Shift, the space bar filling its row, a 40px number row that types and that hidden drops, the pressed corner, destroy, and the shared listeners leaving with the last keypad. No spoken-output assertion.
+
+<a id="questionnaire"></a>
+
+## Questionnaire
+
+**unassessed within the stated scope.** A native form of fieldsets shown one at a time, with single choice, multiple choice and text answers, choice descriptions, required and data-required questions, Skip for optional ones, authored or generated errors, a progress row, Enter to advance, disabled questions for branching and normal form submission.
+
+Source review: needs-review, 2026-10-08. [src/sass/components/_questionnaire.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_questionnaire.scss), [src/ts/components/questionnaire.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/questionnaire.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: Each question is a native fieldset named by its legend; the browser's constraint validation checks answers, hidden questions use hidden, and without JavaScript the form shows every question and still submits. Documented support reviewed 2026-10-08 against `llm.md#questionnaire`.
+
+- Known boundary: Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no answer keyboard shortcuts, no summary step and no saved progress; the page owns persistence and branching.
+
+- verification: Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Next: Answer a questionnaire with a screen reader in each engine and confirm the question, its description, errors and the progress are announced; check forced colors and enlarged text.
+
+- stale: [tests/questionnaire-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/questionnaire-browser.test.js): `chromium: questionnaire shows one question, validates, skips, branches and submits`. One question shown, the buttons that apply, the progress text and named progressbar, aria-describedby with the description and error, required radio and data-required checkbox errors with focus and aria-invalid, errors clearing on answer, a generated requiredMessage error, a question enabled mid-way, Enter moving on instead of submitting, Back focus, Skip clearing an answer and firing change, submit opening the first unanswered question, FormData without a disabled question and destroy restoring the plain form. No spoken-output assertion.
+- stale: [tests/questionnaire-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/questionnaire-browser.test.js): `chromium: questionnaire validates requestSubmit and ignores disabled checkboxes`. A checked disabled checkbox not answering a data-required group, focus on the first enabled checkbox, requestSubmit() blocked by an unanswered group and by a hidden required field with each question opened and its error shown, a valid requestSubmit() sending FormData, and destroy clearing the custom validity. No spoken-output assertion.
 
 <a id="typography"></a>
 

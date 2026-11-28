@@ -341,18 +341,11 @@ function unmount() {
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
-| `Keypad` | `.keypad, .keyboard` |
-| `ColorPicker` | `.color-picker` |
-| `Questionnaire` | `form.questionnaire` |
 | `Datepicker` | `.date-picker` |
 | `Menu` | `.menu-trigger` |
-| `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
-| `CurrencyInput` | `input[data-currency]` of type text |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollArea` | `.scroll-area.custom` |
 | `FormSelect` | `select` without `data-tree` |
-| `TreeSelect` | `select[data-tree]` |
-| `Cascader` | `.cascader` |
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
@@ -382,8 +375,15 @@ function unmount() {
 | `BackToTop` | `.back-to-top`, from `@expressivecss/extras` |
 | `HoverCard` | `.hover-card-trigger`, from `@expressivecss/extras` |
 | `Menubar` | `.menubar`, from `@expressivecss/extras` |
+| `Keypad` | `.keypad, .keyboard`, from `@expressivecss/extras` |
+| `ColorPicker` | `.color-picker`, from `@expressivecss/extras` |
+| `Questionnaire` | `form.questionnaire`, from `@expressivecss/extras` |
+| `InputMask` | `input[data-mask]` of type text, tel, search, url or password, from `@expressivecss/extras` |
+| `CurrencyInput` | `input[data-currency]` of type text, from `@expressivecss/extras` |
+| `TreeSelect` | `select[data-tree]`, from `@expressivecss/extras` |
+| `Cascader` | `.cascader`, from `@expressivecss/extras` |
 
-`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also initializes Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, Sortable, Lists, DataTables and TransferList, and importing `@expressivecss/extras` initializes ImageCompare and Tour. The modular entries require explicit setup for these behaviors.
+`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also initializes Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, Sortable, Lists and DataTables, and importing `@expressivecss/extras` initializes ImageCompare, Tour, TransferList and DropZone. The modular entries require explicit setup for these behaviors.
 
 ## Component lifecycle
 
@@ -436,11 +436,11 @@ The main bundle exports:
 
 - `AutoInit`, `Forms`, and `version`
 - `Copy` and `Theme`, the copy button and theme switch behaviors
-- `PaneResize`, `ImageCompare`, `Tour`, `Sortable` and `TransferList` behaviors, and the `Menubar` component
+- `PaneResize`, `Sortable`, `Lists` and `DataTables` behaviors
 - `Dialogs`, `BottomSheets`, and `SideSheets`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
-- `Chips`, `Datepicker`, `Menu`, and `Lightbox`
-- `Slider` and `ScrollSpy`
+- `Chips`, `Datepicker`, and `Menu`
+- `Slider`
 - `FormSelect`, `NavigationRail`, and `Tabs`
 - `Timepicker`, `Snackbar`, and `Tooltip`
 
@@ -6798,18 +6798,11 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
-| `Keypad` | `.keypad, .keyboard` |
-| `ColorPicker` | `.color-picker` |
-| `Questionnaire` | `form.questionnaire` |
 | `Datepicker` | `.date-picker` |
 | `Menu` | `.menu-trigger` |
-| `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
-| `CurrencyInput` | `input[data-currency]` of type text |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollArea` | `.scroll-area.custom` |
 | `FormSelect` | `select` without `data-tree` |
-| `TreeSelect` | `select[data-tree]` |
-| `Cascader` | `.cascader` |
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
@@ -6839,6 +6832,13 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `BackToTop` | `.back-to-top`, from `@expressivecss/extras` |
 | `HoverCard` | `.hover-card-trigger`, from `@expressivecss/extras` |
 | `Menubar` | `.menubar`, from `@expressivecss/extras` |
+| `Keypad` | `.keypad, .keyboard`, from `@expressivecss/extras` |
+| `ColorPicker` | `.color-picker`, from `@expressivecss/extras` |
+| `Questionnaire` | `form.questionnaire`, from `@expressivecss/extras` |
+| `InputMask` | `input[data-mask]` of type text, tel, search, url or password, from `@expressivecss/extras` |
+| `CurrencyInput` | `input[data-currency]` of type text, from `@expressivecss/extras` |
+| `TreeSelect` | `select[data-tree]`, from `@expressivecss/extras` |
+| `Cascader` | `.cascader`, from `@expressivecss/extras` |
 
 Snackbar, CharacterCounter, and Slider stay out of this table. Slider still starts itself when the bundle loads. Forms, Chips, Cards, ExpandingCard, Dialogs, BottomSheets, and SideSheets also run an import-time `Init()`. Chips, Cards, and ExpandingCard appear in the table as well so a later `AutoInit()` can pick up elements added after load.
 
@@ -8247,8 +8247,7 @@ For markup added later, call `Forms.InitTextarea(textarea)` or `Forms.InitFileIn
 for each new control. A second call on the same control adds no listeners; `InitTextarea` only
 measures the textarea again. After assigning textarea text from script, call
 `Forms.textareaAutoResize(textarea)`. `Forms.validateField(input)` refreshes validation state
-and error descriptions; for drop-zone file inputs it also refreshes file validation and feedback.
-`Forms.listDropZoneFiles(zone, input)` rebuilds the zone's filename and localized-size list.
+and error descriptions. Drop-zone file inputs belong to `DropZone` in `@expressivecss/extras`.
 Forms has no per-field instance or `destroy()` method. See the
 [form helpers API](https://www.expressivecss.com/text-inputs.html#api).
 
@@ -9225,7 +9224,7 @@ The editable area is a multi-line `textbox` named from the textarea's `<label fo
 ```js
 import { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
-import { RichTextEditor } from '@expressivecss/expressive';
+import { RichTextEditor } from '@expressivecss/extras';
 
 RichTextEditor.init(document.querySelector('.rich-text-editor'), {
   Editor,
@@ -9263,7 +9262,7 @@ Destroys the editor, removes its element and the button state, and shows the tex
 
 A large target for choosing or dropping files, with an optional list and independent type, size and count limits.
 
-A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input covers the label, so clicking, keyboard input and file dropping reach the native control. Forms marks dragover and lists each selected file's name and localized size. The root bundle installs Forms on load; modular consumers call `Forms.Init()`. Document-level input/change handling also supports dynamically inserted zones and open shadow roots.
+A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input covers the label, so clicking, keyboard input and file dropping reach the native control. The `DropZone` behavior from `@expressivecss/extras` marks dragover and lists each selected file's name and localized size; `DropZone.listFiles(zone, input)` rebuilds the list. Importing `@expressivecss/extras` installs it on load; modular consumers call `DropZone.Init()`. Document-level input/change handling also supports dynamically inserted zones and open shadow roots.
 
 A dropped file replaces the selection; add multiple to take several files. `accept` alone is a picker hint. Add data-validate-types for type checks, data-max-size for a per-file byte limit or data-max-files for a count limit. Unmarked zones retain their existing behavior. Reset clears lists after dispatch/default handling; cancellation preserves the current view, and a newer selection keeps its state.
 
@@ -9306,12 +9305,12 @@ zone.addEventListener('expressive:reject', ({ detail }) => {
   console.log(detail.reason, detail.rejected.map(file => file.name));
 });
 // Silent validity/feedback refresh after scripted files or constraint changes:
-Expressive.Forms.validateField(input);
+ExpressiveExtras.DropZone.validateField(input);
 // To refresh the file list too, dispatch one bubbling composed input or change:
 input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
 ```
 
-Valid replacement, clearing, removal of the opt-in followed by validation, and an uncanceled reset release only framework-owned type validity. If the application replaces that message, recovery preserves its new value. Reset uses native form ownership, including controls associated through a form attribute outside the form subtree. Cleanup runs after dispatch/default handling, respects cancellation and leaves newer selections intact. Reset and silent validation emit no rejection event. Disabled controls and fieldsets remain inactive, including reset-time validity writes; call Forms.validateField after scripted enabling to refresh the current selection. Handled shadow-root forms follow the same reset contract.
+Valid replacement, clearing, removal of the opt-in followed by validation, and an uncanceled reset release only framework-owned type validity. If the application replaces that message, recovery preserves its new value. Reset uses native form ownership, including controls associated through a form attribute outside the form subtree. Cleanup runs after dispatch/default handling, respects cancellation and leaves newer selections intact. Reset and silent validation emit no rejection event. Disabled controls and fieldsets remain inactive, including reset-time validity writes; call DropZone.validateField after scripted enabling to refresh the current selection. Handled shadow-root forms follow the same reset contract.
 
 Uploads are outside these options. File names and MIME labels do not verify contents. Native validation can be bypassed by scripts or explicit form settings; always validate received data on the server.
 
@@ -9332,7 +9331,7 @@ Add `data-max-size="1048576"` to the native input for a maximum of 1,048,576 byt
 </div>
 ```
 
-Use positive decimal safe-integer bytes, with surrounding whitespace allowed. Missing, blank, zero, negative, fractional, exponent, hexadecimal, nonnumeric or unsafe values impose no size constraint. Leading zeros are allowed. Remove the attribute or change its value and call Forms.validateField to silently refresh validity and feedback; dispatch a bubbling composed input/change to refresh the list too.
+Use positive decimal safe-integer bytes, with surrounding whitespace allowed. Missing, blank, zero, negative, fractional, exponent, hexadecimal, nonnumeric or unsafe values impose no size constraint. Leading zeros are allowed. Remove the attribute or change its value and call DropZone.validateField to silently refresh validity and feedback; dispatch a bubbling composed input/change to refresh the list too.
 
 Combine both constraints on one input: `type="file" multiple data-validate-types accept=".pdf,.png" data-max-size="1048576"`. Supply the same direct polite data-error status area. A nonempty data-error-size value localizes size feedback; empty uses a message naming the exact byte limit. Existing data-error continues localizing type feedback. Type failures take precedence; only when all files match types does the size failure appear. With neither file failure, remaining native/application errors are shown or feedback clears when valid. Existing application custom validity is never overwritten.
 
@@ -9357,7 +9356,7 @@ Add `data-max-files="2"` to the native input for at most two selected files. Exa
 </div>
 ```
 
-Use trimmed positive decimal safe-integer counts, including leading zeros. Missing, blank, zero, negative, fractional, exponent, hexadecimal, nonnumeric or unsafe limits impose no count constraint. Remove/change the attribute and call Forms.validateField to silently refresh validity/feedback; a bubbling composed input/change also refreshes the list.
+Use trimmed positive decimal safe-integer counts, including leading zeros. Missing, blank, zero, negative, fractional, exponent, hexadecimal, nonnumeric or unsafe limits impose no count constraint. Remove/change the attribute and call DropZone.validateField to silently refresh validity/feedback; a bubbling composed input/change also refreshes the list.
 
 Combine all three constraints on one input: `type="file" multiple data-validate-types accept=".pdf,.png" data-max-size="1048576" data-max-files="2"`. Keep the direct polite data-error status area. Nonempty data-error-count localizes count feedback; empty uses a message naming the count limit. Existing data-error and data-error-size continue localizing type/size messages. Type failures take precedence, followed by size and then count. Preserve unowned application custom validity even while the status explains a file-rule failure.
 
@@ -9652,7 +9651,7 @@ The area is a `role="slider"` with `aria-valuetext` such as "Saturation 60%, bri
 ```
 
 ```js
-const picker = Expressive.ColorPicker.init(el, {
+const picker = ExpressiveExtras.ColorPicker.init(el, {
   onChange: (value) => console.log(value), // '#6750a4'
   // The accessible names, for a page in another language.
   i18n: {
@@ -10029,7 +10028,7 @@ Set `searchable: true` with `TreeSelect.init` or `data-tree-select-options` on a
 ```
 
 ```js
-Expressive.TreeSelect.init(select, {
+ExpressiveExtras.TreeSelect.init(select, {
   searchable: true,
   i18n: { searchLabel: 'Find a leaf', noResults: 'No matching leaves' }
 });
@@ -10645,13 +10644,13 @@ Add `aria-invalid="true"` or `class="invalid"` on the input. The box uses `error
 
 Moves options between an available list and a chosen list, and submits the chosen ones with the form.
 
-A `.transfer-list` holds a `.list.transfer-available`, a `.transfer-actions` group of four `type="button"` buttons, and a `.list.transfer-chosen`. Each row is a `<label>` around a checkbox with a `value` and no `name`. Name each list with `aria-label` or `aria-labelledby`, and give the container a `data-name`. The root bundle starts the behavior on load; with the modular entry, call `TransferList.Init()`. Its listeners are on the document, so a list added later needs no call.
+A `.transfer-list` holds a `.list.transfer-available`, a `.transfer-actions` group of four `type="button"` buttons, and a `.list.transfer-chosen`. Each row is a `<label>` around a checkbox with a `value` and no `name`. Name each list with `aria-label` or `aria-labelledby`, and give the container a `data-name`. Importing `@expressivecss/extras` starts the behavior on load; with its modular entry, call `TransferList.Init()`. Its listeners are on the document, so a list added later needs no call.
 
 `data-transfer="add"` moves the checked rows of the available list to the end of the chosen list, and `remove` moves the checked rows of the chosen list back. `add-all` and `remove-all` move every row. Moved rows arrive unchecked, and a row whose checkbox is disabled stays where it is. The chosen list keeps the order rows arrived in, and a row moved back returns to the place it had before the first move. The rows are native checkboxes, so Tab reaches each one and Space checks it; there is no listbox role or arrow-key model. A button pressed with nothing to move does nothing, and focus stays on the button after a move.
 
 When the form builds its data, each row of the chosen list adds its checkbox value under the container's `data-name`, in the chosen list's order. A form reset puts every row back where it was before the first move. A list inside a `<fieldset disabled>` submits nothing, as the fieldset's own fields do, but a chosen row whose own checkbox is disabled still submits.
 
-After each move the container fires a bubbling `expressive:transfer` event that crosses shadow roots, whose `detail` is `{ rows, from, to }`: the moved rows in their new order, then the two lists. A polite live region after the container announces the move. `Expressive.TransferList.i18n.moved` holds its text, `Moved {count} to {list}` by default, where `{list}` is the destination list's name.
+After each move the container fires a bubbling `expressive:transfer` event that crosses shadow roots, whose `detail` is `{ rows, from, to }`: the moved rows in their new order, then the two lists. A polite live region after the container announces the move. `ExpressiveExtras.TransferList.i18n.moved` holds its text, `Moved {count} to {list}` by default, where `{list}` is the destination list's name.
 
 ```html
 <form>

@@ -1,4 +1,4 @@
-import { Utils, afterAnyFormReset } from '../core/utils';
+import { Utils, afterAnyFormReset } from '@expressivecss/expressive/core';
 
 const AVAILABLE = '.transfer-available';
 const CHOSEN = '.transfer-chosen';

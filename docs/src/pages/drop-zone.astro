@@ -55,12 +55,19 @@ const S = defineSections([
         <p>
           Add <code>multiple</code> to the input to take several files at
           once. A dropped file replaces the selection, as it does on any file
-          input. The Forms behavior adds <code>dragover</code> to the zone
+          input. The <code>DropZone</code> behavior from <code>@expressivecss/extras</code> adds <code>dragover</code> to the zone
           while files are over it. It fills <code>.drop-zone-files</code> with
           each file's name and size, formatted for the page's locale. It
           listens on the document, so zones added later work too. Resetting
           the form empties the list after reset dispatch finishes; a canceled
           reset preserves it. A newer selection keeps its list and feedback.
+        </p>
+        <p>
+          Importing <code>@expressivecss/extras</code> starts the behavior; with
+          its modular entry, call <code>DropZone.Init()</code> once.
+          <code>DropZone.listFiles(zone, input)</code> rebuilds a zone's list
+          from its input. Core's <code>Forms</code> leaves drop-zone file inputs
+          to it.
         </p>
         <p>
           <code>accept</code> is a picker hint. Opt into the type validation
@@ -118,7 +125,7 @@ const S = defineSections([
       framework's type error. Remaining native/application errors stay visible.
       Canceled resets preserve the current view. Disabled controls remain
       inactive; after enabling or changing files/constraints from script, call
-      <code>Expressive.Forms.validateField(input)</code> to refresh validity and
+      <code>ExpressiveExtras.DropZone.validateField(input)</code> to refresh validity and
       feedback silently. A bubbling composed input or change also refreshes
       the file list. Both paths work in open shadow roots.
     </p>
@@ -185,7 +192,7 @@ const S = defineSections([
     <p>
       Script refresh, application-validity ownership, disabled controls, native
       submission settings and reset recovery follow the type-validation contract
-      above. <code>Forms.validateField(input)</code> silently refreshes both
+      above. <code>DropZone.validateField(input)</code> silently refreshes both
       constraints. Always enforce received file limits on the server.
     </p>
   </Section>
@@ -239,7 +246,7 @@ const S = defineSections([
       input/change; equivalent decimal values still deduplicate.
     </p>
     <p>
-      <code>Forms.validateField(input)</code> silently refreshes all three
+      <code>DropZone.validateField(input)</code> silently refreshes all three
       constraints after script changes. Valid replacement, clearing, opt-out
       and native reset follow the same application-validity, cancellation,
       disabled-control, shadow and external-form recovery contract above.

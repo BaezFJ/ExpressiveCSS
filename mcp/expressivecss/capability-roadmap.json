@@ -2760,256 +2760,6 @@
       ]
     },
     {
-      "slug": "input-mask",
-      "title": "Input mask",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-25",
-      "scope": "A data-mask pattern on a text, tel, search, url or password input, where 0 takes a digit, a a letter, * either and a backslash escapes a literal; typed, pasted, autofilled and composed text formatted with the caret after the edit, Backspace and Delete across literals, saved and reset values formatted, the formatted value submitted and validated, and formatting before the page's input listeners.",
-      "adaptation": "A capture-phase input listener rewrites the native value, so the form, constraint validation and FormData see what the field shows. Composing input is skipped and the field formats on compositionend, and a beforeinput listener turns a one-character delete next to a literal into a delete of the slot character across it.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-25",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the field a labelled native input, show the expected format in visible text, leave IME composition alone until it ends, keep the caret where the person is editing, and submit and validate the value the person sees."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Typing, inserted pastes, deletes across literals, composition in both event orders, saved and reset values, listener order, Keypad keys and destroy() are checked in a browser; real IMEs, Android keyboards, clipboard pastes and spoken output remain unverified, and undo after a formatted edit does nothing. The form submits only the formatted value, and masks cannot change with the value."
-      ],
-      "supportSource": "llm.md#input-mask",
-      "supportReviewedOn": "2026-10-25",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/ts/components/inputMask.ts",
-          "sha256": "cd8df794a9148bcf3a112066dd662beea863dd8228c83c878dc15ac0e0420ea0"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Typing, inserted pastes, deletes across literals, composition in both event orders, saved and reset values, listener order, Keypad keys and destroy() are checked in a browser; real IMEs, Android keyboards, clipboard pastes and spoken output remain unverified.",
-          "nextStep": "Type into a masked field with a Japanese IME, Chinese pinyin and Gboard on Android, and read it with VoiceOver and NVDA."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/input-mask-browser.test.js",
-          "name": "chromium: typed and pasted digits take the mask's pattern, and the form submits it",
-          "scope": "Real keyboard typing and an insertText paste formatted with the caret after the last digit, and the formatted value in FormData and the submit event.",
-          "state": "not-recorded"
-        },
-        {
-          "file": "tests/input-mask-browser.test.js",
-          "name": "chromium: the field waits for a composition to end, in either event order",
-          "scope": "Composition dispatched with the last input before and after compositionend, and a CDP composition of full-width digits.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "incomplete",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "currency-input",
-      "title": "Currency input",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-25",
-      "scope": "A data-currency ISO 4217 code on a text input; the amount shown with Intl.NumberFormat in the nearest lang and that currency on blur, the plain number in the locale's decimal mark on focus, typed and pasted amounts read in either decimal mark, a validity message for text with no digit that i18n can replace, saved and reset values formatted, a value property, and the plain number in the form data.",
-      "adaptation": "The native value holds the formatted text, and a capture-phase formdata listener on the document swaps the field's entry for the plain number, so submits and new FormData(form) read a number while the field keeps its name. setCustomValidity reports text with no amount, so constraint validation and .validate show the message.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-25",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the field a labelled native input that names the currency, show the amount in the reader's locale, let people edit a plain number, report text that holds no amount as invalid, and submit a number a server can read whatever the locale."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified. Formatting happens on blur only, and a form that repeats a currency field's name gets one entry for them."
-      ],
-      "supportSource": "llm.md#currency-input",
-      "supportReviewedOn": "2026-10-25",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/ts/components/currencyInput.ts",
-          "sha256": "a3c806c79bccdb2e96234d6428483ac3bec1be9c213a97df6e3008f00212c28b"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified.",
-          "nextStep": "Type an amount on iOS Safari and Android Chrome decimal keypads under lang=\"de\", and read the field with VoiceOver and NVDA."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/currency-input-browser.test.js",
-          "name": "chromium: a typed amount shows in the locale and currency after blur, and the form gets the number",
-          "scope": "Real keyboard typing under lang=\"de\" with euros formatted on blur, and the plain number in FormData and the submit event.",
-          "state": "not-recorded"
-        },
-        {
-          "file": "tests/currency-input-browser.test.js",
-          "name": "chromium: text that holds no amount stays as typed and marks the field invalid until it does",
-          "scope": "Text with no digit kept, the validity message and aria-invalid set, cleared once the field holds an amount, and the message replaced through data-currency-input-options.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "incomplete",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "rich-text-editor",
-      "title": "Rich text editor",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-08",
-      "scope": "A Tiptap editor mounted from a textarea, toolbar buttons that run Tiptap commands with JSON arguments, pressed and disabled button state, form submission through the textarea, label naming and read-only textareas.",
-      "adaptation": "The page supplies Tiptap's Editor class and extensions; the component mounts it, names the contenteditable textbox from the textarea and keeps the textarea in sync. The toolbar is the docked toolbar.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-08",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Name the editable area, expose formatting state on toggle buttons, keep the toolbar reachable by keyboard and submit the content with its form."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified."
-      ],
-      "supportSource": "llm.md#rich-text-editor",
-      "supportReviewedOn": "2026-10-08",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/components/_rich-text-editor.scss",
-          "sha256": "226fa4214606a435d08a15df773dd220e9eb10b2c4e05f006e8b43c1329a360c"
-        },
-        {
-          "path": "src/ts/components/richTextEditor.ts",
-          "sha256": "d14e0d63acb86d53a84a131dd83fc96d5aaab5914b8ba10fc1e15e069bb30d11"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified.",
-          "nextStep": "Use the editor with a screen reader and an IME in each engine, paste from a word processor, and select text on touch devices."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/rich-text-editor-browser.test.js",
-          "name": "chromium: rich text editor formats text, reflects state and keeps the textarea in sync",
-          "scope": "Hidden textarea, textbox role and name from the label, starting HTML, label click focus, bold and heading commands with aria-pressed and .active, undo disabled state, textarea value and input event, empty value, and destroy. No spoken-output assertion.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/rich-text-editor-browser.test.js",
-          "name": "chromium: rich text editor follows a disabled textarea",
-          "scope": "A disabled textarea makes the editor read-only and disables every toolbar button.",
-          "state": "stale"
-        }
-      ],
-      "browserEvidence": "needs-rerun",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "drop-zone",
-      "title": "Drop zone",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-06",
-      "scope": "A label-sized native file input with a dragover state and a list of chosen file names and locale-formatted sizes.",
-      "adaptation": "The native input covers the label, so clicks, keys and drops are the browser's; the shared Forms behavior marks the drag and fills the list.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-06",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep a native, labelled file input reachable by keyboard, show drag feedback that is not color alone, list chosen files in text and validate type and size where the files are used."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified."
-      ],
-      "supportSource": "llm.md#drop-zone",
-      "supportReviewedOn": "2026-10-06",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/components/forms/_drop-zone.scss",
-          "sha256": "f85c6545be72c10b8fea56495c248556cccb801b550f7491e4d211353c12fb0d"
-        },
-        {
-          "path": "src/ts/behaviors/forms.ts",
-          "sha256": "57733061183d4f3adbedd53803d19f26c4d31ca2459cd1707a5266b8bff46d9a"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified.",
-          "nextStep": "Drag files from the operating system onto the zone in each engine and confirm the selection and list update; check the list announcement with a screen reader."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/drop-zone-browser.test.js",
-          "name": "chromium: drop zone covers its label with the file input, marks a drag and lists chosen files",
-          "scope": "Input covering the label, label naming the input, dragover set and cleared by dragenter, dragleave and drop, listed names and sizes, list cleared on an empty selection and keyboard focus ring. No spoken-output assertion.",
-          "state": "stale"
-        }
-      ],
-      "browserEvidence": "needs-rerun",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
       "slug": "select",
       "title": "Select",
       "kind": "component",
@@ -3175,130 +2925,6 @@
       ]
     },
     {
-      "slug": "tree-select",
-      "title": "Tree select",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-25",
-      "scope": "A native select[data-tree] whose flat options name their parent's value in data-parent; a role=\"tree\" popup with the ARIA tree keyboard contract over visible, enabled rows, mirrored under RTL; single or native multiple independent leaf choices, with branches normalized out of multiple selection; branch options disabled while it runs; optional single/multiple leaf search retaining ancestor paths and restoring pre-query expansion; refresh() preserving the query, expansion baseline and focus.",
-      "adaptation": "TreeSelect extends FormSelect, so the native select keeps the form value, reset, validity and disabled state. The popup is a ul role=\"tree\" inside the Menu surface, one list below the rows Menu styles, named as the field is. Search reuses the labelled dialog/search/status controls around that tree without a listbox wrapper.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-25",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep a labelled native select as the form control, expose the hierarchy as an ARIA tree with its keyboard contract, let people choose only a leaf, and submit that leaf's value whatever the nesting."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output, touch, native zoom and OS IME remain unverified. Leaf filtering, expansion restoration, native submission, reset/refresh, modal/shadow focus and forced-color scrolling are checked in all three engines. No choosable branch; the field shows leaf text, not ancestor paths. Multiple toggling, hidden selections, native two-value submission and distinct selected/focus paint are checked in all three engines."
-      ],
-      "supportSource": "llm.md#tree-select",
-      "supportReviewedOn": "2026-10-27",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/ts/components/treeSelect.ts",
-          "sha256": "0fefba309bbd4046963a2a4fd61a6352746beadb1dfc1a10675c4d9062fb2178"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output and touch remain unverified.",
-          "nextStep": "Move through the tree and choose a leaf with VoiceOver and NVDA, and tap branches and leaves on iOS Safari and Android Chrome."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/tree-select-browser.test.js",
-          "name": "chromium: ArrowRight expands a branch, Enter chooses a leaf, and the form submits its value",
-          "scope": "Opening with Enter, expanding two branches with ArrowRight, choosing a leaf with Enter, and its value in FormData and the submit event.",
-          "state": "not-recorded"
-        },
-        {
-          "file": "tests/tree-select-browser.test.js",
-          "name": "chromium: rtl: the arrows, Home, End and * follow the tree pattern over visible, enabled rows",
-          "scope": "Opening, entering, closing and leaving branches with the mirrored arrows, Home, End and *, skipping a disabled placeholder and leaf without wrapping.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "incomplete",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "cascader",
-      "title": "Cascader",
-      "kind": "component",
-      "support": "implemented",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "source-reviewed",
-      "reviewedOn": "2026-10-25",
-      "scope": "Nested lists with data-value read into listbox columns in a popover anchored to a read-only combobox input; click and keyboard navigation with arrows, Home, End, Enter, Space, Escape and Tab, swapped under rtl; leaf-only commits shown as joined labels with input and change events; one form entry per level through a form-associated control; data-selected starting path, reset, required with i18n.required, aria-invalid and disabled state.",
-      "adaptation": "The author's nested lists stay hidden as the source. A manual popover opened with the input as its source uses CSS anchor positioning, and a form-associated expressive-cascader-control wraps the input and submits the path, so the browser handles reset, validity and disabled state.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-25",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the field a labelled input that reads as a combobox, name every column, show which options form the open path, reach every option from the keyboard in both directions, close without committing on Escape, and submit every level of the path."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified. There is no search, type-ahead, multiple selection or lazy loading, and only a leaf commits."
-      ],
-      "supportSource": "llm.md#cascader",
-      "supportReviewedOn": "2026-10-25",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/ts/components/cascader.ts",
-          "sha256": "1eaf01ab62f3f0820bde3f84d1ff3bed77889e4d092afac6da44b2df1532d008"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified.",
-          "nextStep": "Move through three columns and commit a leaf with NVDA in Firefox and VoiceOver in Safari."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/cascader-browser.test.js",
-          "name": "chromium: the roadmap check: choosing an option in each of three columns submits the three values as one path",
-          "scope": "Clicks through three columns, the joined labels in the input, and the three values in FormData and the submit event, through the wrapping control.",
-          "state": "not-recorded"
-        },
-        {
-          "file": "tests/cascader-browser.test.js",
-          "name": "chromium: the keyboard opens the field, moves through the columns, commits a leaf and closes",
-          "scope": "Each opening key, arrows without wrapping, Home and End, the next and previous column, Escape, Tab and Shift+Tab closing without committing, and Space committing a leaf.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "incomplete",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
       "slug": "checkboxes",
       "title": "Checkboxes",
       "kind": "component",
@@ -3378,78 +3004,6 @@
       ]
     },
     {
-      "slug": "transfer-list",
-      "title": "Transfer list",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-25",
-      "scope": "Two .list groups of labelled checkbox rows with add, add-all, remove and remove-all buttons between them, chosen rows kept in the order they arrived, rows returned to their original slots, the chosen values submitted under data-name in order, form reset, a polite announcement, an expressive:transfer event, and a layout that follows the page direction and stacks below the medium window size.",
-      "adaptation": "A document-delegated behavior moves the rows and appends the chosen values in a formdata listener, so the checkboxes carry no name. The rows stay native checkboxes rather than a listbox, so Tab and Space work without an arrow-key contract.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-25",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Name both lists, keep every row and button reachable by keyboard, announce each move, keep focus on the pressed button, and submit the chosen options in a stable order."
-      },
-      "relationship": "none",
-      "limitations": [
-        "The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser; spoken output and forced colors remain unverified."
-      ],
-      "supportSource": "llm.md#transfer-list",
-      "supportReviewedOn": "2026-10-25",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/components/_transfer-list.scss",
-          "sha256": "2b6a2f8a42df55e7fb79c887cecb245c822c1b535d4a9c4caad9083abe13f73f"
-        },
-        {
-          "path": "src/ts/behaviors/transferList.ts",
-          "sha256": "e13632859b9e57b81c55f0f84d13e5ad5f974c699e54f05d17316d8d1c024aff"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser; spoken output and forced colors remain unverified.",
-          "nextStep": "Move rows with NVDA in Firefox and VoiceOver in Safari and confirm each move is announced once; check the lists and icons in forced colors mode."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/transfer-list-browser.test.js",
-          "name": "chromium: moving two options to the chosen list puts both in the form data, in order",
-          "scope": "Two checked rows moved one at a time arrive unchecked, and new FormData and a real submit both hold their values in the order they were moved.",
-          "state": "not-recorded"
-        },
-        {
-          "file": "tests/transfer-list-browser.test.js",
-          "name": "chromium: remove returns rows to their original slots, the all buttons skip disabled rows, and a second Init adds nothing",
-          "scope": "Rows moved back land in their recorded slots, add-all and remove-all leave a disabled row in place, and each press fires one event after repeated Init calls.",
-          "state": "not-recorded"
-        },
-        {
-          "file": "tests/transfer-list-browser.test.js",
-          "name": "chromium: a form reset puts the rows back where they started",
-          "scope": "A reset button and form.reset() restore both lists and the default checked state, a removed row stays removed, and a cancelled reset moves nothing. No spoken-output assertion.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "incomplete",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
       "slug": "radio-buttons",
       "title": "Radio buttons",
       "kind": "component",
@@ -3516,66 +3070,6 @@
         }
       ],
       "browserEvidence": "needs-rerun",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "color-picker",
-      "title": "Color picker",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-18",
-      "scope": "A saturation and brightness area as a keyboard slider, a hue range on the framework slider, a hex field and the native color input as form value and preview, with input, change and onChange events.",
-      "adaptation": "Progressive enhancement of <input type=\"color\">: without JavaScript the native picker remains, and the browser picker still opens from the input after enhancement.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-18",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep a native color input as the value, name the group and each control, make every axis reachable by keyboard with its value announced, keep the colors under forced colors and keep Enter in the hex field from submitting the form."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified."
-      ],
-      "supportSource": "llm.md#color-picker",
-      "supportReviewedOn": "2026-10-18",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/components/forms/_color-picker.scss",
-          "sha256": "d4bff9e9896e104ae3842e94155d23591bd29c3741e4c66cfeb299f52f126d8c"
-        },
-        {
-          "path": "src/ts/components/colorPicker.ts",
-          "sha256": "f21cb593636261f0bd56515bfaa3bf24284d00e517406672a9823cc06f52be16"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified.",
-          "nextStep": "Pick a color with a screen reader and with touch in each engine, and confirm the area valuetext and the hex field are announced; check forced colors and 200% text."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/color-picker-browser.test.js",
-          "name": "chromium: color picker drives the native input from the area, hue and hex field",
-          "scope": "Group and control names, Down and Shift+Left steps with valuetext, input, change and onChange order, a press and a drag past the corner in an RTL page, hue changes keeping saturation and brightness, hex Enter without form submission, an invalid hex reverting, the silent value setter, a native input event updating the hue, one submitted field and destroy leaving only the native input. No spoken-output assertion.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "incomplete",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",
@@ -4167,132 +3661,6 @@
           "name": "chromium: a modal time picker steps its fields with the arrow keys and writes the time on Enter",
           "scope": "The fields are spin buttons with their range, Up, Down and Page Up step and wrap them, the hand follows, Enter writes the time and closes the dialog, and Escape closes it without a change. Runs in all three engines. No screen reader output.",
           "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "needs-rerun",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "keypad",
-      "title": "Keypad and Keyboard",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-11",
-      "scope": "A three-column keypad of round keys with two-cell wide keys and a keyboard of rows sized from a column count with an optional number row, typing into the field named by aria-controls with value keys, Backspace, Enter, a one-shot Shift, data-key keys inside the field's wrapper, dial-pad letters, styled call keys, an onKey callback and a pressed shape morph.",
-      "adaptation": "Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode=\"none\" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so the keypad checks it on its own edits.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-11",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Name the group and every icon key, keep keys from submitting the form, keep the field labelled and usable from a hardware keyboard, and keep keys at a usable target size."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. There is no caps lock, no symbol layer switching and no hardware key highlighting, and minlength does not apply to keypad edits; the page owns layouts beyond the keys it writes."
-      ],
-      "supportSource": "llm.md#keypad-and-keyboard",
-      "supportReviewedOn": "2026-10-11",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/components/_keypad.scss",
-          "sha256": "b530b6c62630f0bb86f146db24d4d7b363491355b2f2d3302a34b2274b42bf13"
-        },
-        {
-          "path": "src/ts/components/keypad.ts",
-          "sha256": "074900c8486ebcb978cb33bff7d51c47e1721e738eb593651768c3d17e768752"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified.",
-          "nextStep": "Type a PIN and a message with a screen reader and on a touch device in each engine, and check forced colors and enlarged text."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/keypad-browser.test.js",
-          "name": "chromium: keypad and keyboard type at the caret, edit, submit, shift and lay out their keys",
-          "scope": "Digits typed at the caret, maxlength, focus kept in the field on a pointer press, Backspace including emoji, Enter submitting once, a pattern mismatch blocking Enter, onKey values, composed input events from a shadow root, number, decimal and signed input, a disabled fieldset and its legend, a trailing Backspace in the field that runs once for two keypads, for a field inside its keyboard and for a field rendered after init, a password toggle that is not a key, a prefilled untouched field typed at the end, a caret placed at the start kept for keys activated from the keyboard, Shift showing capitals and releasing after one character, space and a textarea new line, three 72px round keypad columns, a two-cell wide key, a tenth-of-row letter key, the half-key indent, a one-and-a-half-key Shift, the space bar filling its row, a 40px number row that types and that hidden drops, the pressed corner, destroy, and the shared listeners leaving with the last keypad. No spoken-output assertion.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "incomplete",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "questionnaire",
-      "title": "Questionnaire",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-08",
-      "scope": "A native form of fieldsets shown one at a time, with single choice, multiple choice and text answers, choice descriptions, required and data-required questions, Skip for optional ones, authored or generated errors, a progress row, Enter to advance, disabled questions for branching and normal form submission.",
-      "adaptation": "Each question is a native fieldset named by its legend; the browser's constraint validation checks answers, hidden questions use hidden, and without JavaScript the form shows every question and still submits.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-08",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Name each question with a legend, show one error per question next to it and move focus to the control to fix, keep hidden questions out of the tab order, let optional questions be skipped and keep the form usable without JavaScript."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no answer keyboard shortcuts, no summary step and no saved progress; the page owns persistence and branching."
-      ],
-      "supportSource": "llm.md#questionnaire",
-      "supportReviewedOn": "2026-10-08",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/components/_questionnaire.scss",
-          "sha256": "dc9ce2c61c6533b8e7dc22584c2daa7ca67efed19c5cad4155c1c66583b0e179"
-        },
-        {
-          "path": "src/ts/components/questionnaire.ts",
-          "sha256": "f13384d26139b816b99da0305e956febde43c672d0600d545eb96e998900003b"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
-          "nextStep": "Answer a questionnaire with a screen reader in each engine and confirm the question, its description, errors and the progress are announced; check forced colors and enlarged text."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/questionnaire-browser.test.js",
-          "name": "chromium: questionnaire shows one question, validates, skips, branches and submits",
-          "scope": "One question shown, the buttons that apply, the progress text and named progressbar, aria-describedby with the description and error, required radio and data-required checkbox errors with focus and aria-invalid, errors clearing on answer, a generated requiredMessage error, a question enabled mid-way, Enter moving on instead of submitting, Back focus, Skip clearing an answer and firing change, submit opening the first unanswered question, FormData without a disabled question and destroy restoring the plain form. No spoken-output assertion.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/questionnaire-browser.test.js",
-          "name": "chromium: questionnaire validates requestSubmit and ignores disabled checkboxes",
-          "scope": "A checked disabled checkbox not answering a data-required group, focus on the first enabled checkbox, requestSubmit() blocked by an unanswered group and by a hidden required field with each question opened and its error shown, a valid requestSubmit() sending FormData, and destroy clearing the custom validity. No spoken-output assertion.",
-          "state": "stale"
         }
       ],
       "browserEvidence": "needs-rerun",
@@ -7309,6 +6677,452 @@
       ]
     },
     {
+      "slug": "input-mask",
+      "title": "Input mask",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-25",
+      "scope": "A data-mask pattern on a text, tel, search, url or password input, where 0 takes a digit, a a letter, * either and a backslash escapes a literal; typed, pasted, autofilled and composed text formatted with the caret after the edit, Backspace and Delete across literals, saved and reset values formatted, the formatted value submitted and validated, and formatting before the page's input listeners.",
+      "adaptation": "A capture-phase input listener rewrites the native value, so the form, constraint validation and FormData see what the field shows. Composing input is skipped and the field formats on compositionend, and a beforeinput listener turns a one-character delete next to a literal into a delete of the slot character across it.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-25",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the field a labelled native input, show the expected format in visible text, leave IME composition alone until it ends, keep the caret where the person is editing, and submit and validate the value the person sees."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Typing, inserted pastes, deletes across literals, composition in both event orders, saved and reset values, listener order, Keypad keys and destroy() are checked in a browser; real IMEs, Android keyboards, clipboard pastes and spoken output remain unverified, and undo after a formatted edit does nothing. The form submits only the formatted value, and masks cannot change with the value."
+      ],
+      "supportSource": "llm.md#input-mask",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/ts/components/inputMask.ts",
+          "sha256": "cd8df794a9148bcf3a112066dd662beea863dd8228c83c878dc15ac0e0420ea0"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Typing, inserted pastes, deletes across literals, composition in both event orders, saved and reset values, listener order, Keypad keys and destroy() are checked in a browser; real IMEs, Android keyboards, clipboard pastes and spoken output remain unverified.",
+          "nextStep": "Type into a masked field with a Japanese IME, Chinese pinyin and Gboard on Android, and read it with VoiceOver and NVDA."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/input-mask-browser.test.js",
+          "name": "chromium: typed and pasted digits take the mask's pattern, and the form submits it",
+          "scope": "Real keyboard typing and an insertText paste formatted with the caret after the last digit, and the formatted value in FormData and the submit event.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/input-mask-browser.test.js",
+          "name": "chromium: the field waits for a composition to end, in either event order",
+          "scope": "Composition dispatched with the last input before and after compositionend, and a CDP composition of full-width digits.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "currency-input",
+      "title": "Currency input",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-25",
+      "scope": "A data-currency ISO 4217 code on a text input; the amount shown with Intl.NumberFormat in the nearest lang and that currency on blur, the plain number in the locale's decimal mark on focus, typed and pasted amounts read in either decimal mark, a validity message for text with no digit that i18n can replace, saved and reset values formatted, a value property, and the plain number in the form data.",
+      "adaptation": "The native value holds the formatted text, and a capture-phase formdata listener on the document swaps the field's entry for the plain number, so submits and new FormData(form) read a number while the field keeps its name. setCustomValidity reports text with no amount, so constraint validation and .validate show the message.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-25",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the field a labelled native input that names the currency, show the amount in the reader's locale, let people edit a plain number, report text that holds no amount as invalid, and submit a number a server can read whatever the locale."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified. Formatting happens on blur only, and a form that repeats a currency field's name gets one entry for them."
+      ],
+      "supportSource": "llm.md#currency-input",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/ts/components/currencyInput.ts",
+          "sha256": "a3c806c79bccdb2e96234d6428483ac3bec1be9c213a97df6e3008f00212c28b"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Typing and blur, focus editing, listener order, pasted amounts submitted with Enter, the validity message, saved and reset values and destroy() are checked in a browser, and the parsing rules in jsdom; mobile decimal keypads and spoken output remain unverified.",
+          "nextStep": "Type an amount on iOS Safari and Android Chrome decimal keypads under lang=\"de\", and read the field with VoiceOver and NVDA."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/currency-input-browser.test.js",
+          "name": "chromium: a typed amount shows in the locale and currency after blur, and the form gets the number",
+          "scope": "Real keyboard typing under lang=\"de\" with euros formatted on blur, and the plain number in FormData and the submit event.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/currency-input-browser.test.js",
+          "name": "chromium: text that holds no amount stays as typed and marks the field invalid until it does",
+          "scope": "Text with no digit kept, the validity message and aria-invalid set, cleared once the field holds an amount, and the message replaced through data-currency-input-options.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "rich-text-editor",
+      "title": "Rich text editor",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-08",
+      "scope": "A Tiptap editor mounted from a textarea, toolbar buttons that run Tiptap commands with JSON arguments, pressed and disabled button state, form submission through the textarea, label naming and read-only textareas.",
+      "adaptation": "The page supplies Tiptap's Editor class and extensions; the component mounts it, names the contenteditable textbox from the textarea and keeps the textarea in sync. The toolbar is the docked toolbar.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-08",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Name the editable area, expose formatting state on toggle buttons, keep the toolbar reachable by keyboard and submit the content with its form."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified."
+      ],
+      "supportSource": "llm.md#rich-text-editor",
+      "supportReviewedOn": "2026-10-08",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/components/_rich-text-editor.scss",
+          "sha256": "226fa4214606a435d08a15df773dd220e9eb10b2c4e05f006e8b43c1329a360c"
+        },
+        {
+          "path": "src/ts/components/richTextEditor.ts",
+          "sha256": "d14e0d63acb86d53a84a131dd83fc96d5aaab5914b8ba10fc1e15e069bb30d11"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Formatting a selection, pressed and disabled toolbar state, textarea sync with input events, label naming and focus, a disabled textarea and destroy are checked in a browser; spoken output, IME composition, paste from other applications and touch selection remain unverified.",
+          "nextStep": "Use the editor with a screen reader and an IME in each engine, paste from a word processor, and select text on touch devices."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/rich-text-editor-browser.test.js",
+          "name": "chromium: rich text editor formats text, reflects state and keeps the textarea in sync",
+          "scope": "Hidden textarea, textbox role and name from the label, starting HTML, label click focus, bold and heading commands with aria-pressed and .active, undo disabled state, textarea value and input event, empty value, and destroy. No spoken-output assertion.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/rich-text-editor-browser.test.js",
+          "name": "chromium: rich text editor follows a disabled textarea",
+          "scope": "A disabled textarea makes the editor read-only and disables every toolbar button.",
+          "state": "stale"
+        }
+      ],
+      "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "drop-zone",
+      "title": "Drop zone",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-06",
+      "scope": "A label-sized native file input with a dragover state and a list of chosen file names and locale-formatted sizes.",
+      "adaptation": "The native input covers the label, so clicks, keys and drops are the browser's; the shared Forms behavior marks the drag and fills the list.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-06",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep a native, labelled file input reachable by keyboard, show drag feedback that is not color alone, list chosen files in text and validate type and size where the files are used."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified."
+      ],
+      "supportSource": "llm.md#drop-zone",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/components/forms/_drop-zone.scss",
+          "sha256": "f85c6545be72c10b8fea56495c248556cccb801b550f7491e4d211353c12fb0d"
+        },
+        {
+          "path": "src/ts/behaviors/forms.ts",
+          "sha256": "57733061183d4f3adbedd53803d19f26c4d31ca2459cd1707a5266b8bff46d9a"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Input coverage, the dragover state, the file list and keyboard focus are checked in a browser with synthetic events; real operating-system drags and spoken output remain unverified.",
+          "nextStep": "Drag files from the operating system onto the zone in each engine and confirm the selection and list update; check the list announcement with a screen reader."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/drop-zone-browser.test.js",
+          "name": "chromium: drop zone covers its label with the file input, marks a drag and lists chosen files",
+          "scope": "Input covering the label, label naming the input, dragover set and cleared by dragenter, dragleave and drop, listed names and sizes, list cleared on an empty selection and keyboard focus ring. No spoken-output assertion.",
+          "state": "stale"
+        }
+      ],
+      "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "tree-select",
+      "title": "Tree select",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-25",
+      "scope": "A native select[data-tree] whose flat options name their parent's value in data-parent; a role=\"tree\" popup with the ARIA tree keyboard contract over visible, enabled rows, mirrored under RTL; single or native multiple independent leaf choices, with branches normalized out of multiple selection; branch options disabled while it runs; optional single/multiple leaf search retaining ancestor paths and restoring pre-query expansion; refresh() preserving the query, expansion baseline and focus.",
+      "adaptation": "TreeSelect extends FormSelect, so the native select keeps the form value, reset, validity and disabled state. The popup is a ul role=\"tree\" inside the Menu surface, one list below the rows Menu styles, named as the field is. Search reuses the labelled dialog/search/status controls around that tree without a listbox wrapper.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-25",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep a labelled native select as the form control, expose the hierarchy as an ARIA tree with its keyboard contract, let people choose only a leaf, and submit that leaf's value whatever the nesting."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output, touch, native zoom and OS IME remain unverified. Leaf filtering, expansion restoration, native submission, reset/refresh, modal/shadow focus and forced-color scrolling are checked in all three engines. No choosable branch; the field shows leaf text, not ancestor paths. Multiple toggling, hidden selections, native two-value submission and distinct selected/focus paint are checked in all three engines."
+      ],
+      "supportSource": "llm.md#tree-select",
+      "supportReviewedOn": "2026-10-27",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/ts/components/treeSelect.ts",
+          "sha256": "0fefba309bbd4046963a2a4fd61a6352746beadb1dfc1a10675c4d9062fb2178"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Keys in both directions, typeahead, pointer toggling, refresh(), validation focus, form data, indentation, chevrons and disabled rows are checked in a browser, and the tree from data-parent in jsdom; spoken output and touch remain unverified.",
+          "nextStep": "Move through the tree and choose a leaf with VoiceOver and NVDA, and tap branches and leaves on iOS Safari and Android Chrome."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/tree-select-browser.test.js",
+          "name": "chromium: ArrowRight expands a branch, Enter chooses a leaf, and the form submits its value",
+          "scope": "Opening with Enter, expanding two branches with ArrowRight, choosing a leaf with Enter, and its value in FormData and the submit event.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/tree-select-browser.test.js",
+          "name": "chromium: rtl: the arrows, Home, End and * follow the tree pattern over visible, enabled rows",
+          "scope": "Opening, entering, closing and leaving branches with the mirrored arrows, Home, End and *, skipping a disabled placeholder and leaf without wrapping.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "cascader",
+      "title": "Cascader",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-25",
+      "scope": "Nested lists with data-value read into listbox columns in a popover anchored to a read-only combobox input; click and keyboard navigation with arrows, Home, End, Enter, Space, Escape and Tab, swapped under rtl; leaf-only commits shown as joined labels with input and change events; one form entry per level through a form-associated control; data-selected starting path, reset, required with i18n.required, aria-invalid and disabled state.",
+      "adaptation": "The author's nested lists stay hidden as the source. A manual popover opened with the input as its source uses CSS anchor positioning, and a form-associated expressive-cascader-control wraps the input and submits the path, so the browser handles reset, validity and disabled state.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-25",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the field a labelled input that reads as a combobox, name every column, show which options form the open path, reach every option from the keyboard in both directions, close without committing on Escape, and submit every level of the path."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified. There is no search, type-ahead, multiple selection or lazy loading, and only a leaf commits."
+      ],
+      "supportSource": "llm.md#cascader",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/ts/components/cascader.ts",
+          "sha256": "1eaf01ab62f3f0820bde3f84d1ff3bed77889e4d092afac6da44b2df1532d008"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Clicks and keys through three columns, rtl, roles, names and states, form data, reset, required, disabled state and destroy() are checked in Chromium, Firefox and WebKit, and parsing in jsdom; spoken output remains unverified.",
+          "nextStep": "Move through three columns and commit a leaf with NVDA in Firefox and VoiceOver in Safari."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/cascader-browser.test.js",
+          "name": "chromium: the roadmap check: choosing an option in each of three columns submits the three values as one path",
+          "scope": "Clicks through three columns, the joined labels in the input, and the three values in FormData and the submit event, through the wrapping control.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/cascader-browser.test.js",
+          "name": "chromium: the keyboard opens the field, moves through the columns, commits a leaf and closes",
+          "scope": "Each opening key, arrows without wrapping, Home and End, the next and previous column, Escape, Tab and Shift+Tab closing without committing, and Space committing a leaf.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "transfer-list",
+      "title": "Transfer list",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-25",
+      "scope": "Two .list groups of labelled checkbox rows with add, add-all, remove and remove-all buttons between them, chosen rows kept in the order they arrived, rows returned to their original slots, the chosen values submitted under data-name in order, form reset, a polite announcement, an expressive:transfer event, and a layout that follows the page direction and stacks below the medium window size.",
+      "adaptation": "A document-delegated behavior moves the rows and appends the chosen values in a formdata listener, so the checkboxes carry no name. The rows stay native checkboxes rather than a listbox, so Tab and Space work without an arrow-key contract.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-25",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Name both lists, keep every row and button reachable by keyboard, announce each move, keep focus on the pressed button, and submit the chosen options in a stable order."
+      },
+      "relationship": "none",
+      "limitations": [
+        "The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser; spoken output and forced colors remain unverified."
+      ],
+      "supportSource": "llm.md#transfer-list",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/components/_transfer-list.scss",
+          "sha256": "2b6a2f8a42df55e7fb79c887cecb245c822c1b535d4a9c4caad9083abe13f73f"
+        },
+        {
+          "path": "src/ts/behaviors/transferList.ts",
+          "sha256": "e13632859b9e57b81c55f0f84d13e5ad5f974c699e54f05d17316d8d1c024aff"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "The add, remove and move-all buttons, original slots on the way back, disabled rows, focus, the announcement, the expressive:transfer event, the form data order, disabled fieldsets, nested lists, form reset, right-to-left pages and the stacked narrow layout are checked in a browser; spoken output and forced colors remain unverified.",
+          "nextStep": "Move rows with NVDA in Firefox and VoiceOver in Safari and confirm each move is announced once; check the lists and icons in forced colors mode."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/transfer-list-browser.test.js",
+          "name": "chromium: moving two options to the chosen list puts both in the form data, in order",
+          "scope": "Two checked rows moved one at a time arrive unchecked, and new FormData and a real submit both hold their values in the order they were moved.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/transfer-list-browser.test.js",
+          "name": "chromium: remove returns rows to their original slots, the all buttons skip disabled rows, and a second Init adds nothing",
+          "scope": "Rows moved back land in their recorded slots, add-all and remove-all leave a disabled row in place, and each press fires one event after repeated Init calls.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/transfer-list-browser.test.js",
+          "name": "chromium: a form reset puts the rows back where they started",
+          "scope": "A reset button and form.reset() restore both lists and the default checked state, a removed row stays removed, and a cancelled reset moves nothing. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
       "slug": "rating",
       "title": "Rating",
       "kind": "component",
@@ -7414,6 +7228,192 @@
         }
       ],
       "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "color-picker",
+      "title": "Color picker",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-18",
+      "scope": "A saturation and brightness area as a keyboard slider, a hue range on the framework slider, a hex field and the native color input as form value and preview, with input, change and onChange events.",
+      "adaptation": "Progressive enhancement of <input type=\"color\">: without JavaScript the native picker remains, and the browser picker still opens from the input after enhancement.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-18",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep a native color input as the value, name the group and each control, make every axis reachable by keyboard with its value announced, keep the colors under forced colors and keep Enter in the hex field from submitting the form."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified."
+      ],
+      "supportSource": "llm.md#color-picker",
+      "supportReviewedOn": "2026-10-18",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/components/forms/_color-picker.scss",
+          "sha256": "d4bff9e9896e104ae3842e94155d23591bd29c3741e4c66cfeb299f52f126d8c"
+        },
+        {
+          "path": "src/ts/components/colorPicker.ts",
+          "sha256": "f21cb593636261f0bd56515bfaa3bf24284d00e517406672a9823cc06f52be16"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Arrow keys, Shift steps, pointer press and drag with clamping, the unmirrored area in RTL, the hue range, the hex field with Enter and invalid values, the value property, native input changes, the form value and destroy are checked in Chromium, Firefox and WebKit; spoken output, forced colors and touch remain unverified.",
+          "nextStep": "Pick a color with a screen reader and with touch in each engine, and confirm the area valuetext and the hex field are announced; check forced colors and 200% text."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/color-picker-browser.test.js",
+          "name": "chromium: color picker drives the native input from the area, hue and hex field",
+          "scope": "Group and control names, Down and Shift+Left steps with valuetext, input, change and onChange order, a press and a drag past the corner in an RTL page, hue changes keeping saturation and brightness, hex Enter without form submission, an invalid hex reverting, the silent value setter, a native input event updating the hue, one submitted field and destroy leaving only the native input. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "keypad",
+      "title": "Keypad and Keyboard",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-11",
+      "scope": "A three-column keypad of round keys with two-cell wide keys and a keyboard of rows sized from a column count with an optional number row, typing into the field named by aria-controls with value keys, Backspace, Enter, a one-shot Shift, data-key keys inside the field's wrapper, dial-pad letters, styled call keys, an onKey callback and a pressed shape morph.",
+      "adaptation": "Keys are native buttons in a named group; edits go through the field's value and fire a composed input event, Enter uses requestSubmit() so validation runs, and inputmode=\"none\" on the field keeps the device keyboard closed. Browsers check minlength only on what a person types, so the keypad checks it on its own edits.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-11",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Name the group and every icon key, keep keys from submitting the form, keep the field labelled and usable from a hardware keyboard, and keep keys at a usable target size."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified. There is no caps lock, no symbol layer switching and no hardware key highlighting, and minlength does not apply to keypad edits; the page owns layouts beyond the keys it writes."
+      ],
+      "supportSource": "llm.md#keypad-and-keyboard",
+      "supportReviewedOn": "2026-10-11",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/components/_keypad.scss",
+          "sha256": "b530b6c62630f0bb86f146db24d4d7b363491355b2f2d3302a34b2274b42bf13"
+        },
+        {
+          "path": "src/ts/components/keypad.ts",
+          "sha256": "074900c8486ebcb978cb33bff7d51c47e1721e738eb593651768c3d17e768752"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Typing at the caret, maxlength, pattern validation on Enter, Backspace including emoji, Enter submitting a form and adding a new line in a textarea, a one-shot Shift with capitals shown, Caps Lock, Layer keys, hardware key highlight, minlength on keypad edits, number inputs, disabled fieldsets, in-field keys, shadow roots, focus staying in the field, the keypad grid and wide keys, keyboard key widths and the number row, the pressed shape and destroy are checked in a browser; screen reader output, forced colors, enlarged text and touch devices remain unverified.",
+          "nextStep": "Type a PIN and a message with a screen reader and on a touch device in each engine, and check forced colors and enlarged text."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/keypad-browser.test.js",
+          "name": "chromium: keypad and keyboard type at the caret, edit, submit, shift and lay out their keys",
+          "scope": "Digits typed at the caret, maxlength, focus kept in the field on a pointer press, Backspace including emoji, Enter submitting once, a pattern mismatch blocking Enter, onKey values, composed input events from a shadow root, number, decimal and signed input, a disabled fieldset and its legend, a trailing Backspace in the field that runs once for two keypads, for a field inside its keyboard and for a field rendered after init, a password toggle that is not a key, a prefilled untouched field typed at the end, a caret placed at the start kept for keys activated from the keyboard, Shift showing capitals and releasing after one character, space and a textarea new line, three 72px round keypad columns, a two-cell wide key, a tenth-of-row letter key, the half-key indent, a one-and-a-half-key Shift, the space bar filling its row, a 40px number row that types and that hidden drops, the pressed corner, destroy, and the shared listeners leaving with the last keypad. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "questionnaire",
+      "title": "Questionnaire",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-08",
+      "scope": "A native form of fieldsets shown one at a time, with single choice, multiple choice and text answers, choice descriptions, required and data-required questions, Skip for optional ones, authored or generated errors, a progress row, Enter to advance, disabled questions for branching and normal form submission.",
+      "adaptation": "Each question is a native fieldset named by its legend; the browser's constraint validation checks answers, hidden questions use hidden, and without JavaScript the form shows every question and still submits.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-08",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Name each question with a legend, show one error per question next to it and move focus to the control to fix, keep hidden questions out of the tab order, let optional questions be skipped and keep the form usable without JavaScript."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no answer keyboard shortcuts, no summary step and no saved progress; the page owns persistence and branching."
+      ],
+      "supportSource": "llm.md#questionnaire",
+      "supportReviewedOn": "2026-10-08",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/components/_questionnaire.scss",
+          "sha256": "dc9ce2c61c6533b8e7dc22584c2daa7ca67efed19c5cad4155c1c66583b0e179"
+        },
+        {
+          "path": "src/ts/components/questionnaire.ts",
+          "sha256": "f13384d26139b816b99da0305e956febde43c672d0600d545eb96e998900003b"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Showing one question, required radios, data-required checkboxes that ignore disabled ones, generated and authored errors, aria-invalid and aria-describedby, Enter, Skip clearing an answer, Back focus, a disabled question left out, submit and requestSubmit() opening the first unanswered question, answer shortcuts, the review step, saved progress, FormData and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "nextStep": "Answer a questionnaire with a screen reader in each engine and confirm the question, its description, errors and the progress are announced; check forced colors and enlarged text."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/questionnaire-browser.test.js",
+          "name": "chromium: questionnaire shows one question, validates, skips, branches and submits",
+          "scope": "One question shown, the buttons that apply, the progress text and named progressbar, aria-describedby with the description and error, required radio and data-required checkbox errors with focus and aria-invalid, errors clearing on answer, a generated requiredMessage error, a question enabled mid-way, Enter moving on instead of submitting, Back focus, Skip clearing an answer and firing change, submit opening the first unanswered question, FormData without a disabled question and destroy restoring the plain form. No spoken-output assertion.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/questionnaire-browser.test.js",
+          "name": "chromium: questionnaire validates requestSubmit and ignores disabled checkboxes",
+          "scope": "A checked disabled checkbox not answering a data-required group, focus on the first enabled checkbox, requestSubmit() blocked by an unanswered group and by a hidden required field with each question opened and its error shown, a valid requestSubmit() sending FormData, and destroy clearing the custom validity. No spoken-output assertion.",
+          "state": "stale"
+        }
+      ],
+      "browserEvidence": "needs-rerun",
       "recheckWhen": [
         "A reviewed source changes",
         "A mapped test or its recorded inputs change",

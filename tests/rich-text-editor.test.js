@@ -5,7 +5,7 @@
 import { describe, test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Expressive, resetBody } from './setup.js';
+import { ExpressiveExtras, resetBody } from './setup.js';
 
 class FakeEditor {
   constructor({ element, content, editable, editorProps }) {
@@ -51,7 +51,7 @@ describe('RichTextEditor', () => {
     console.warn = (...args) => warnings.push(args);
     let instance;
     try {
-      instance = Expressive.RichTextEditor.init(document.querySelector('.rich-text-editor'), { Editor: FakeEditor });
+      instance = ExpressiveExtras.RichTextEditor.init(document.querySelector('.rich-text-editor'), { Editor: FakeEditor });
       assert.ok(instance.editor, 'the editor did not mount');
       assert.equal(warnings.length, 1);
     } finally {
@@ -72,7 +72,7 @@ describe('RichTextEditor', () => {
     let submitted = 0;
     const onSubmit = () => submitted++;
     document.addEventListener('submit', onSubmit);
-    const instance = Expressive.RichTextEditor.init(form.querySelector('.rich-text-editor'), { Editor: FakeEditor });
+    const instance = ExpressiveExtras.RichTextEditor.init(form.querySelector('.rich-text-editor'), { Editor: FakeEditor });
 
     try {
       // The hidden textarea cannot be focused to report, so it must not validate.

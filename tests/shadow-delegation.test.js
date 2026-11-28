@@ -142,7 +142,7 @@ describe('Document delegation reaches into shadow roots', () => {
     test(`${label(mode)}: InputMask keeps the caret where the user typed`, () => {
       const { host, root } = mount(mode, '<input data-mask="(000) 000-0000">');
       const input = root.querySelector('input');
-      const mask = Expressive.InputMask.init(input);
+      const mask = ExpressiveExtras.InputMask.init(input);
       try {
         input.focus();
         input.value = '55512';

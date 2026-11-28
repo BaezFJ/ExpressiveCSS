@@ -31,7 +31,7 @@ function each(name, settings, body) {
           const { menuOptions, ...markup } = settings;
           select.dataset.treeSelectOptions = JSON.stringify(markup);
           Expressive.AutoInit(document.body, { TreeSelect: { menuOptions: { inDuration: 0, outDuration: 0, ...menuOptions } } });
-          window.multiTree = Expressive.TreeSelect.getInstance(select);
+          window.multiTree = ExpressiveExtras.TreeSelect.getInstance(select);
           window.changes = [];
           window.submitted = null;
           select.addEventListener('change', e => changes.push({ values: multiTree.getSelectedValues(), composed: e.composed }));
@@ -174,7 +174,7 @@ each('nonsearch opening honors autoFocus false and preserves a leaf reached befo
     await page.evaluate(() => {
       const select = multiTree.el;
       multiTree.destroy();
-      window.multiTree = Expressive.TreeSelect.init(select, { menuOptions: { inDuration: 100, outDuration: 0 } });
+      window.multiTree = ExpressiveExtras.TreeSelect.init(select, { menuOptions: { inDuration: 100, outDuration: 0 } });
     });
     await trigger(page).click();
     for (const text of ['Europe', 'France', 'Paris', 'Asia', 'Tokyo']) await label(page, text).click();
@@ -267,7 +267,7 @@ each('search respects autoFocus false, callback context and uncovered outside fo
     const select = multiTree.el;
     multiTree.destroy();
     window.calls = [];
-    window.multiTree = Expressive.TreeSelect.init(select, { searchable: true, menuOptions: {
+    window.multiTree = ExpressiveExtras.TreeSelect.init(select, { searchable: true, menuOptions: {
       inDuration: 0, outDuration: 0, autoFocus: false,
       onOpenEnd(el) { calls.push(['open', el === select, this === multiTree.menu]); },
       onCloseStart(el) { calls.push(['close', el === select, this === multiTree.menu]); }
@@ -320,7 +320,7 @@ each('search retains both native values and timed focus inside modal dialogs and
       const root = kind === 'shadow' ? host.attachShadow({ mode: 'open' }) : host;
       root.append(document.querySelector('style').cloneNode(true), form);
       if (kind === 'dialog') host.showModal();
-      window.multiTree = Expressive.TreeSelect.init(select, { searchable: true,
+      window.multiTree = ExpressiveExtras.TreeSelect.init(select, { searchable: true,
         menuOptions: { inDuration: 100, outDuration: 0 } });
     }, kind);
     await trigger(page).click();

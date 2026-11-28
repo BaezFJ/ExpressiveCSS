@@ -198,7 +198,7 @@ each('a field in a shadow root formats the value a reset restores', async ({ pag
     host.id = 'host';
     const root = host.attachShadow({ mode: 'open' });
     root.innerHTML = '<form><input name="shadowed" data-mask="(000) 000-0000" value="5551234567"></form>';
-    Expressive.InputMask.init(root.querySelector('input'));
+    ExpressiveExtras.InputMask.init(root.querySelector('input'));
   });
   assert.equal(await value(), '(555) 123-4567');
   await page.evaluate(() => {
@@ -222,7 +222,7 @@ each('keypad keys format the field like typing', async ({ page, state }) => {
 });
 
 each('destroy() stops formatting', async ({ page, state }) => {
-  await page.evaluate(() => Expressive.InputMask.getInstance(document.getElementById('phone')).destroy());
+  await page.evaluate(() => ExpressiveExtras.InputMask.getInstance(document.getElementById('phone')).destroy());
   await page.click('#phone');
   await page.keyboard.type('5551');
   assert.equal((await state()).value, '5551');

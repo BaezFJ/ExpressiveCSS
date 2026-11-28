@@ -23,7 +23,6 @@ import { PaneResize } from "./behaviors/paneResize";
 import { Sortable } from "./behaviors/sortable";
 import { Lists } from "./behaviors/lists";
 import { DataTables } from "./behaviors/dataTables";
-import { TransferList } from "./behaviors/transferList";
 
 export * from './modular';
 
@@ -51,4 +50,3 @@ PaneResize.Init();
 Sortable.Init();
 Lists.Init();
 DataTables.Init();
-TransferList.Init();

@@ -53,28 +53,13 @@ export const AUTO_INIT_COMPONENTS = {
   ScrollArea: { component: Components.ScrollArea, selector: ".scroll-area.custom" },
   Carousel: { component: Components.Carousel, selector: ".carousel" },
   Chips: { component: Components.Chips, selector: ".chips" },
-  Keypad: { component: Components.Keypad, selector: ".keypad, .keyboard" },
-  ColorPicker: { component: Components.ColorPicker, selector: ".color-picker" },
-  Questionnaire: {
-    component: Components.Questionnaire,
-    selector: "form.questionnaire",
-  },
   Datepicker: {
     component: Components.Datepicker,
     selector: ".date-picker",
   },
   Menu: { component: Components.Menu, selector: ".menu-trigger" },
-  // Only the input types with a caret: setSelectionRange() throws on the rest.
-  InputMask: {
-    component: Components.InputMask,
-    selector: 'input[data-mask]:is(:not([type]), [type="text" i], [type="tel" i], [type="search" i], [type="url" i], [type="password" i])',
-  },
-  // Only a text input can hold the formatted amount.
-  CurrencyInput: { component: Components.CurrencyInput, selector: 'input[data-currency]:is(:not([type]), [type="text" i])' },
-  // A data-tree select is a tree select, not a flat one.
+  // A data-tree select is a tree select, which @expressivecss/extras starts.
   FormSelect: { component: Components.FormSelect, selector: "select:not([data-tree])" },
-  TreeSelect: { component: Components.TreeSelect, selector: "select[data-tree]" },
-  Cascader: { component: Components.Cascader, selector: ".cascader" },
   NavigationRail: {
     component: Components.NavigationRail,
     selector: ".navigation-rail",

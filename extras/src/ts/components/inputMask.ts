@@ -1,5 +1,4 @@
-import { Component, BaseOptions } from '../core/component';
-import { Utils, afterFormReset } from '../core/utils';
+import { Component, Utils, afterFormReset, type BaseOptions } from '@expressivecss/expressive/core';
 
 const _defaults = Object.freeze({});
 

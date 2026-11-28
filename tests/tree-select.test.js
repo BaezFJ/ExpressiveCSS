@@ -5,7 +5,7 @@
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Expressive, resetBody } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody } from './setup.js';
 
 beforeEach(resetBody);
 
@@ -27,7 +27,7 @@ function start(options = PLACES, attributes = '', settings = {}) {
     <select id="place" name="place" data-tree ${attributes}>${options}</select>
     <label for="place">Place</label>
   </div></form>`;
-  return Expressive.TreeSelect.init(document.getElementById('place'), settings);
+  return ExpressiveExtras.TreeSelect.init(document.getElementById('place'), settings);
 }
 
 /** The rows under `list` as text, with each branch's rows nested after it. */
@@ -142,7 +142,7 @@ test('destroy() restores the native select and only the disabled attributes the 
   assert.deepEqual(disabled, ['Choose a place', 'Europe', 'France', 'Kyoto']);
   assert.equal(document.querySelector('menu'), null);
   assert.equal(select.parentElement.matches('.field'), true);
-  assert.equal(Expressive.TreeSelect.getInstance(select), undefined);
+  assert.equal(ExpressiveExtras.TreeSelect.getInstance(select), undefined);
 });
 
 test('refresh() disables a new branch and re-enables an option that stops being one', () => {
@@ -164,7 +164,7 @@ test('FormSelect.init() leaves a tree select alone', () => {
   const instance = start();
   Expressive.FormSelect.init(instance.el);
   assert.equal(Expressive.FormSelect.getInstance(instance.el), undefined);
-  assert.equal(Expressive.TreeSelect.getInstance(instance.el), instance);
+  assert.equal(ExpressiveExtras.TreeSelect.getInstance(instance.el), instance);
   assert.equal(document.querySelectorAll('.field').length, 1);
   assert.equal(document.querySelectorAll('menu').length, 1);
 });
@@ -174,8 +174,8 @@ test('AutoInit starts a TreeSelect on a data-tree select and a FormSelect on any
     <div class="field"><select id="tree" data-tree>${PLACES}</select><label for="tree">Tree</label></div>`;
   Expressive.AutoInit();
   assert.ok(Expressive.FormSelect.getInstance(document.getElementById('plain')));
-  assert.equal(Expressive.TreeSelect.getInstance(document.getElementById('plain')), undefined);
-  assert.ok(Expressive.TreeSelect.getInstance(document.getElementById('tree')));
+  assert.equal(ExpressiveExtras.TreeSelect.getInstance(document.getElementById('plain')), undefined);
+  assert.ok(ExpressiveExtras.TreeSelect.getInstance(document.getElementById('tree')));
   assert.equal(Expressive.FormSelect.getInstance(document.getElementById('tree')), undefined);
 });
 
@@ -183,8 +183,8 @@ test('the tree takes the field\'s aria-labelledby or aria-label before its label
   document.body.innerHTML = `<h2 id="heading">Destination</h2>
     <div class="field"><select id="a" data-tree aria-labelledby="heading">${PLACES}</select><label for="a">Place</label></div>
     <div class="field"><select id="b" data-tree aria-label="Where to">${PLACES}</select></div>`;
-  const named = Expressive.TreeSelect.init(document.getElementById('a'));
-  const labelled = Expressive.TreeSelect.init(document.getElementById('b'));
+  const named = ExpressiveExtras.TreeSelect.init(document.getElementById('a'));
+  const labelled = ExpressiveExtras.TreeSelect.init(document.getElementById('b'));
   assert.equal(named.tree.getAttribute('aria-labelledby'), 'heading');
   assert.equal(labelled.tree.ariaLabel, 'Where to');
   assert.equal(labelled.tree.hasAttribute('aria-labelledby'), false);
@@ -228,7 +228,7 @@ test('opening inside a page list item or another tree expands only the tree\'s o
     document.body.innerHTML = `<ul><li id="outer"${role}><form><div class="field">
       <select id="place" name="place" data-tree>${PLACES.replace('<option value="paris" data-parent="france">', '<option value="paris" data-parent="france" selected>')}</select>
       <label for="place">Place</label></div></form>${sibling}</li></ul>`;
-    const instance = Expressive.TreeSelect.init(document.getElementById('place'));
+    const instance = ExpressiveExtras.TreeSelect.init(document.getElementById('place'));
     instance._focusSelected();
     assert.equal(row(instance, 'Europe').ariaExpanded, 'true');
     assert.equal(row(instance, 'France').ariaExpanded, 'true');
@@ -242,7 +242,7 @@ test('destroying the object FormSelect.init() returned for a tree select leaves 
   Expressive.FormSelect.init(instance.el).destroy();
   assert.equal(instance.el.parentElement.matches('.hide-select'), true);
   assert.equal(instance.el.tabIndex, -1);
-  assert.equal(Expressive.TreeSelect.getInstance(instance.el), instance);
+  assert.equal(ExpressiveExtras.TreeSelect.getInstance(instance.el), instance);
   assert.ok(instance.input.isConnected);
   assert.ok(instance.tree.isConnected);
 });
@@ -273,7 +273,7 @@ test('AutoInit tree search names its popup and tree without putting search insid
     aria-label="Chosen place" data-tree-select-options='{"searchable":true,"i18n":{"searchLabel":"Find leaves","noResults":"Nothing here"}}'>${PLACES}</select>`;
   const before = Expressive.Menu._menus.length;
   Expressive.AutoInit();
-  const instance = Expressive.TreeSelect.getInstance(document.getElementById('search-tree'));
+  const instance = ExpressiveExtras.TreeSelect.getInstance(document.getElementById('search-tree'));
   try {
     const search = instance.menuEl.querySelector('input[type="search"]');
     assert.ok(search);
@@ -473,8 +473,8 @@ for (const multiple of [false, true]) test(`two ${multiple ? 'multiple ' : ''}se
   document.body.innerHTML = ['first', 'second'].map(id => `<label for="${id}">${id}</label>
     <select id="${id}" ${multiple ? 'multiple' : ''} data-tree data-tree-select-options='{"searchable":true}'>${multiple ? MULTIPLE_PLACES : PLACES}</select>`).join('');
   Expressive.AutoInit();
-  const first = Expressive.TreeSelect.getInstance(document.getElementById('first'));
-  const second = Expressive.TreeSelect.getInstance(document.getElementById('second'));
+  const first = ExpressiveExtras.TreeSelect.getInstance(document.getElementById('first'));
+  const second = ExpressiveExtras.TreeSelect.getInstance(document.getElementById('second'));
   try {
     first._activate(row(first, 'Asia'));
     second._activate(row(second, 'Europe'));
@@ -495,7 +495,7 @@ for (const multiple of [false, true]) test(`two ${multiple ? 'multiple ' : ''}se
     assert.equal(second.el.querySelector('[value="asia"]').disabled, true);
     assert.ok(second.menuEl.isConnected);
   } finally {
-    if (Expressive.TreeSelect.getInstance(first.el)) first.destroy();
+    if (ExpressiveExtras.TreeSelect.getInstance(first.el)) first.destroy();
     second.destroy();
   }
 });
@@ -504,7 +504,7 @@ for (const multiple of [false, true]) test(`two ${multiple ? 'multiple ' : ''}se
 test('AutoInit multiple trees expose multiselect state on the actual tree and start empty', () => {
   document.body.innerHTML = `<form><div class="field"><select id="many" name="place" multiple data-tree>${MULTIPLE_PLACES}</select><label for="many">Places</label></div></form>`;
   Expressive.AutoInit();
-  const instance = Expressive.TreeSelect.getInstance(document.getElementById('many'));
+  const instance = ExpressiveExtras.TreeSelect.getInstance(document.getElementById('many'));
   try {
     assert.ok(instance);
     assert.equal(instance.tree.ariaMultiSelectable, 'true');
@@ -595,7 +595,7 @@ test('a programmatically chosen branch never gives a multiple tree an implicit l
   document.body.innerHTML = `<form><div class="field"><select id="place" name="place" data-tree multiple required>${ASIA}</select><label for="place">Places</label></div></form>`;
   const select = document.getElementById('place');
   select.options[0].selected = true;
-  const instance = Expressive.TreeSelect.init(select, {});
+  const instance = ExpressiveExtras.TreeSelect.init(select, {});
   try {
     assert.deepEqual(instance.getSelectedValues(), []);
     assert.equal(instance.input.value, '');

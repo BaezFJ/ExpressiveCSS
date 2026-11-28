@@ -315,7 +315,7 @@ form.addEventListener('submit', (event) => {
   </Section>
   <Section {...S.methods}>
 <Code code={`
-const questionnaire = Expressive.Questionnaire.getInstance(document.querySelector('form.questionnaire'));
+const questionnaire = ExpressiveExtras.Questionnaire.getInstance(document.querySelector('form.questionnaire'));
 questionnaire.items;     // the fieldsets that apply, in order
 questionnaire.index;     // position of the shown question
 questionnaire.next();    // checks the shown question, then moves on

@@ -9,7 +9,7 @@ Component ID: `transfer-list`
 
 Contract: ExpressiveCSS 0.20.0
 
-Contract SHA-256: `dfb461fb921c4edf4d7713e16dad7f4afc50d0317f65d8903edc6e69f06bf950`
+Contract SHA-256: `973f4b1a3ceaac5ce31b09d08893eb5c8a72f371da5ab15c1bf3978786a8d4a2`
 
 #### Selection and adaptation
 
@@ -31,7 +31,7 @@ Full parity remains unassessed. Review provenance and specification links: [capa
 
 #### Contract
 
-A `.transfer-list` holds a `.list.transfer-available`, a `.transfer-actions` group of four `type="button"` buttons, and a `.list.transfer-chosen`. Each row is a `<label>` around a checkbox with a `value` and no `name`. Name each list with `aria-label` or `aria-labelledby`, and give the container a `data-name`. The root bundle starts the behavior on load; with the modular entry, call `TransferList.Init()`. Its listeners are on the document, so a list added later needs no call.
+A `.transfer-list` holds a `.list.transfer-available`, a `.transfer-actions` group of four `type="button"` buttons, and a `.list.transfer-chosen`. Each row is a `<label>` around a checkbox with a `value` and no `name`. Name each list with `aria-label` or `aria-labelledby`, and give the container a `data-name`. Importing `@expressivecss/extras` starts the behavior on load; with its modular entry, call `TransferList.Init()`. Its listeners are on the document, so a list added later needs no call.
 
 `data-transfer="add"` moves the checked rows of the available list to the end of the chosen list, and `remove` moves the checked rows of the chosen list back. `add-all` and `remove-all` move every row. Moved rows arrive unchecked, and a row whose checkbox is disabled stays where it is. The chosen list keeps the order rows arrived in, and a row moved back returns to the place it had before the first move. The rows are native checkboxes, so Tab reaches each one and Space checks it; there is no listbox role or arrow-key model. A button pressed with nothing to move does nothing, and focus stays on the button after a move.
 

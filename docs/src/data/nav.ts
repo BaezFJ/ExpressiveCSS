@@ -566,39 +566,6 @@ const GROUPS: DocsGroup[] = [
           "Material Design 3 text fields, from the HTML.",
       },
       {
-        id: "input_mask",
-        exports: ["InputMask"],
-        label: "Input mask",
-        route: "/input-mask.html",
-        description:
-          "Formats a text field's value to a pattern, such as a phone or card number, as people type, paste or compose.",
-      },
-      {
-        id: "currency_input",
-        exports: ["CurrencyInput"],
-        label: "Currency input",
-        route: "/currency-input.html",
-        description:
-          "Shows a typed amount in the page's locale and currency once the field loses focus, and submits the plain number.",
-      },
-      {
-        id: "rich_text_editor",
-        styles: ["components/rich-text-editor"],
-        exports: ["RichTextEditor"],
-        label: "Rich text editor",
-        route: "/rich-text-editor.html",
-        description:
-          "A text field with a formatting toolbar for writing headings, lists and styled text, built on Tiptap.",
-      },
-      {
-        id: "drop_zone",
-        styles: ["components/forms/drop-zone"],
-        label: "Drop zone",
-        route: "/drop-zone.html",
-        description:
-          "A large target for choosing or dropping files, with a list of what was chosen.",
-      },
-      {
         id: "select",
         styles: ["components/forms/select"],
         exports: ["FormSelect"],
@@ -606,23 +573,6 @@ const GROUPS: DocsGroup[] = [
         route: "/select.html",
         description:
           "Choose one option, or several, from a styled menu.",
-      },
-      {
-        id: "tree_select",
-        exports: ["TreeSelect"],
-        label: "Tree select",
-        route: "/tree-select.html",
-        description:
-          "Choose one or more leaves from a tree using the keyboard or pointer.",
-      },
-      {
-        id: "cascader",
-        styles: ["components/cascader"],
-        exports: ["Cascader"],
-        label: "Cascader",
-        route: "/cascader.html",
-        description:
-          "Pick a path through nested options shown in columns, and submit the whole path.",
       },
       {
         id: "checkboxes",
@@ -633,15 +583,6 @@ const GROUPS: DocsGroup[] = [
           "Material Design 3 checkboxes, from the HTML.",
       },
       {
-        id: "transfer_list",
-        styles: ["components/transfer-list"],
-        exports: ["TransferList"],
-        label: "Transfer list",
-        route: "/transfer-list.html",
-        description:
-          "Moves options between an available list and a chosen list, and submits the chosen ones with the form.",
-      },
-      {
         id: "radio_buttons",
         styles: ["components/forms/radio-buttons"],
         label: "Radio",
@@ -649,15 +590,6 @@ const GROUPS: DocsGroup[] = [
         route: "/radio-buttons.html",
         description:
           "Material Design 3 radios, from the HTML.",
-      },
-      {
-        id: "color-picker",
-        styles: ["components/forms/color-picker"],
-        exports: ["ColorPicker"],
-        label: "Color picker",
-        route: "/color-picker.html",
-        description:
-          "Choose any color with a saturation and brightness area, a hue slider and a hex field, over a native color input.",
       },
       {
         id: "switches",
@@ -713,25 +645,6 @@ const GROUPS: DocsGroup[] = [
         route: "/timepicker.html",
         description:
           "Pick a time from a clock face, in 12-hour or 24-hour form.",
-      },
-      {
-        id: "keypad",
-        styles: ["components/keypad"],
-        exports: ["Keypad"],
-        label: "Keypad",
-        title: "Keypad and Keyboard",
-        route: "/keypad.html",
-        description:
-          "On-screen keys that type into a text field: a PIN or dial pad, or a full keyboard.",
-      },
-      {
-        id: "questionnaire",
-        styles: ["components/questionnaire"],
-        exports: ["Questionnaire"],
-        label: "Questionnaire",
-        route: "/questionnaire.html",
-        description:
-          "A form that asks one question at a time, with single and multiple choice, free text and skippable questions.",
       },
     ],
   },
@@ -1139,9 +1052,70 @@ const GROUPS: DocsGroup[] = [
           "A searchable list of commands in a dialog, opened from anywhere with a shortcut.",
       },
       {
+        id: "input_mask",
+        exports: ["InputMask"],
+        section: "Forms",
+        label: "Input mask",
+        route: "/input-mask.html",
+        description:
+          "Formats a text field's value to a pattern, such as a phone or card number, as people type, paste or compose.",
+      },
+      {
+        id: "currency_input",
+        exports: ["CurrencyInput"],
+        label: "Currency input",
+        route: "/currency-input.html",
+        description:
+          "Shows a typed amount in the page's locale and currency once the field loses focus, and submits the plain number.",
+      },
+      {
+        id: "rich_text_editor",
+        styles: ["components/rich-text-editor"],
+        exports: ["RichTextEditor"],
+        label: "Rich text editor",
+        route: "/rich-text-editor.html",
+        description:
+          "A text field with a formatting toolbar for writing headings, lists and styled text, built on Tiptap.",
+      },
+      {
+        id: "drop_zone",
+        styles: ["components/forms/drop-zone"],
+        exports: ["DropZone"],
+        label: "Drop zone",
+        route: "/drop-zone.html",
+        description:
+          "A large target for choosing or dropping files, with a list of what was chosen.",
+      },
+      {
+        id: "tree_select",
+        styles: ["components/tree-select"],
+        exports: ["TreeSelect"],
+        label: "Tree select",
+        route: "/tree-select.html",
+        description:
+          "Choose one or more leaves from a tree using the keyboard or pointer.",
+      },
+      {
+        id: "cascader",
+        styles: ["components/cascader"],
+        exports: ["Cascader"],
+        label: "Cascader",
+        route: "/cascader.html",
+        description:
+          "Pick a path through nested options shown in columns, and submit the whole path.",
+      },
+      {
+        id: "transfer_list",
+        styles: ["components/transfer-list"],
+        exports: ["TransferList"],
+        label: "Transfer list",
+        route: "/transfer-list.html",
+        description:
+          "Moves options between an available list and a chosen list, and submits the chosen ones with the form.",
+      },
+      {
         id: "rating",
         styles: ["components/rating"],
-        section: "Forms",
         label: "Rating",
         route: "/rating.html",
         description:
@@ -1154,6 +1128,34 @@ const GROUPS: DocsGroup[] = [
         route: "/color-swatches.html",
         description:
           "Pick one color from a preset palette, on native radio buttons.",
+      },
+      {
+        id: "color-picker",
+        styles: ["components/forms/color-picker"],
+        exports: ["ColorPicker"],
+        label: "Color picker",
+        route: "/color-picker.html",
+        description:
+          "Choose any color with a saturation and brightness area, a hue slider and a hex field, over a native color input.",
+      },
+      {
+        id: "keypad",
+        styles: ["components/keypad"],
+        exports: ["Keypad"],
+        label: "Keypad",
+        title: "Keypad and Keyboard",
+        route: "/keypad.html",
+        description:
+          "On-screen keys that type into a text field: a PIN or dial pad, or a full keyboard.",
+      },
+      {
+        id: "questionnaire",
+        styles: ["components/questionnaire"],
+        exports: ["Questionnaire"],
+        label: "Questionnaire",
+        route: "/questionnaire.html",
+        description:
+          "A form that asks one question at a time, with single and multiple choice, free text and skippable questions.",
       },
     ],
   },

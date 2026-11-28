@@ -48,7 +48,7 @@ Importing `@expressivecss/extras` registers its components with core's
 `AutoInit` and starts its document behaviors. For explicit initialization,
 import from `@expressivecss/extras/modular` instead, which has no side effects.
 Extras imports core through `@expressivecss/expressive/core` and
-`@expressivecss/expressive/modular` (for `Menu`), so both packages share one
+`@expressivecss/expressive/modular` (for `Menu`, `FormSelect` and `Forms`), so both packages share one
 copy of core. There is no CommonJS build.
 
 ```js

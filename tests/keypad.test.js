@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { Expressive, resetBody, window } from './setup.js';
+import { ExpressiveExtras, resetBody, window } from './setup.js';
 
 const detachedPad = () => {
   const pad = document.createElement('div');
@@ -13,7 +13,7 @@ const detachedPad = () => {
 test('a keypad initialized before insertion types once it is in the document', () => {
   resetBody();
   const pad = detachedPad();
-  const keypad = Expressive.Keypad.init(pad);
+  const keypad = ExpressiveExtras.Keypad.init(pad);
   document.body.innerHTML = '<input id="pin">';
   document.body.append(pad);
   const input = document.getElementById('pin');
@@ -34,7 +34,7 @@ test('a keypad initialized before insertion types once it is in the document', (
 test('a keypad destroyed before insertion stays inert', () => {
   resetBody();
   const pad = detachedPad();
-  Expressive.Keypad.init(pad).destroy();
+  ExpressiveExtras.Keypad.init(pad).destroy();
   document.body.innerHTML = '<input id="pin">';
   document.body.append(pad);
   pad.querySelector('button').click();
@@ -51,7 +51,7 @@ test('an i18n message set to undefined keeps its default', () => {
   const onError = (e) => errors.push(e.error);
   window.addEventListener('error', onError);
   // As when a translation table lacks the key.
-  const keypad = Expressive.Keypad.init(pad, { i18n: { tooShort: undefined } });
+  const keypad = ExpressiveExtras.Keypad.init(pad, { i18n: { tooShort: undefined } });
   try {
     pad.querySelector('button').click();
     assert.deepEqual(errors, []);
@@ -73,7 +73,7 @@ test('Enter skips a form whose default button is busy and leaves the field alone
   const counts = { submit: 0, input: 0 };
   form.addEventListener('submit', (event) => { event.preventDefault(); counts.submit++; });
   input.addEventListener('input', () => counts.input++);
-  const keypad = Expressive.Keypad.init(document.querySelector('.keypad'));
+  const keypad = ExpressiveExtras.Keypad.init(document.querySelector('.keypad'));
   const enter = () => document.querySelector('[data-key="Enter"]').click();
   try {
     input.focus();

@@ -72,6 +72,17 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `@expressivecss/extras`, core's `AutoInit()` still starts them, and
   importing extras starts `Tour` and `ImageCompare`. `Sortable` stays in core
   with lists.
+- The form extras moved to `@expressivecss/extras`: `InputMask`,
+  `CurrencyInput`, `RichTextEditor`, `TreeSelect`, `Cascader`, `ColorPicker`,
+  `Keypad`, `Questionnaire` and the `TransferList` behavior, with the drop
+  zone's styles. Their markup is unchanged. Core's `AutoInit()` still starts
+  `data-mask`, `data-currency` and `select[data-tree]` fields once extras has
+  loaded, and importing extras starts `TransferList`. The drop zone's file
+  rules, file list and drag marking moved out of `Forms` into the new extras
+  `DropZone` behavior: call `ExpressiveExtras.DropZone.validateField(input)`
+  instead of `Forms.validateField` for a drop-zone file input, and
+  `DropZone.listFiles(zone, input)` instead of `Forms.listDropZoneFiles`.
+  `Forms.markDropZone` is now `DropZone.markDrag`.
 
 ## [0.20.0] - 2026-11-18
 

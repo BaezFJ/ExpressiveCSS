@@ -1,6 +1,7 @@
-import { Utils, controllerFor, restoreAttribute, logicalKey } from '../core/utils';
-import { Component, BaseOptions } from '../core/component';
-import { FormControl, formAssociated, wrapInControl, unwrapControl } from '../core/formControl';
+import {
+  Component, Utils, controllerFor, restoreAttribute, logicalKey, formAssociated, wrapInControl, unwrapControl,
+  type BaseOptions, type FormControl,
+} from '@expressivecss/expressive/core';
 
 /** One option from the author's nested lists. */
 interface CascaderNode {

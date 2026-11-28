@@ -5,12 +5,15 @@ import Code from "../Code.astro";
 interface Props {
   plugin: string;
   lead?: string;
+  /** The global the class is on: `ExpressiveExtras` for an @expressivecss/extras component. */
+  global?: string;
 }
 
 const {
   plugin,
+  global = "Expressive",
   lead = "All methods are called on the plugin instance. You can get the instance like this:",
 } = Astro.props;
 ---
 <blockquote>{lead}</blockquote>
-<Code code={`const instance = Expressive.${plugin}.getInstance(elem);`} />
+<Code code={`const instance = ${global}.${plugin}.getInstance(elem);`} />

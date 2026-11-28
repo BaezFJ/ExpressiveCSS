@@ -1,4 +1,4 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
 
 // Rich text editor. An outlined frame around a docked .toolbar and the
 // Tiptap editor, which the script mounts in .rich-text-editor-content after

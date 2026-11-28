@@ -118,7 +118,7 @@ function questionnaire() {
     <fieldset data-required><legend>Second group</legend><input type="checkbox" name="second"></fieldset>
     <footer><button type="button" value="next">Next</button></footer>
   </form>`;
-  return Expressive.Questionnaire.init(document.querySelector('form'));
+  return ExpressiveExtras.Questionnaire.init(document.querySelector('form'));
 }
 
 test('questionnaire input validates its containing question without writing unrelated validity', () => {

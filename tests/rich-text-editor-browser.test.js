@@ -43,7 +43,7 @@ for (const [name, engine, test] of engines) {
       await page.addScriptTag({ content: tiptap });
       await page.evaluate(() => {
         const { Editor, StarterKit } = window.Tiptap;
-        window.Expressive.RichTextEditor.init(document.querySelector('.rich-text-editor'), { Editor, extensions: [StarterKit] });
+        window.ExpressiveExtras.RichTextEditor.init(document.querySelector('.rich-text-editor'), { Editor, extensions: [StarterKit] });
       });
 
       const editable = page.locator('.rich-text-editor-content [contenteditable="true"]');
@@ -54,7 +54,7 @@ for (const [name, engine, test] of engines) {
       // Tiptap moves focus a frame after the command runs.
       const focused = () => page.waitForFunction(() => document.activeElement?.matches('[contenteditable="true"]'));
       const run = (command, argument) => page.evaluate(([command, argument]) => {
-        window.Expressive.RichTextEditor.getInstance(document.querySelector('.rich-text-editor')).editor.commands[command](argument);
+        window.ExpressiveExtras.RichTextEditor.getInstance(document.querySelector('.rich-text-editor')).editor.commands[command](argument);
       }, [command, argument]);
 
       assert.equal(await page.locator('textarea').isHidden(), true, 'the textarea is hidden');
@@ -96,7 +96,7 @@ for (const [name, engine, test] of engines) {
 
       await page.evaluate(() => {
         const el = document.querySelector('.rich-text-editor');
-        window.Expressive.RichTextEditor.getInstance(el).destroy();
+        window.ExpressiveExtras.RichTextEditor.getInstance(el).destroy();
       });
       assert.equal(await page.locator('.rich-text-editor-content').count(), 0, 'destroy removes the editor');
       assert.equal(await page.locator('textarea').isVisible(), true, 'destroy shows the textarea');
@@ -117,7 +117,7 @@ for (const [name, engine, test] of engines) {
       await page.addScriptTag({ content: tiptap });
       await page.evaluate(() => {
         const { Editor, StarterKit } = window.Tiptap;
-        window.Expressive.RichTextEditor.init(document.querySelector('.rich-text-editor'), { Editor, extensions: [StarterKit] });
+        window.ExpressiveExtras.RichTextEditor.init(document.querySelector('.rich-text-editor'), { Editor, extensions: [StarterKit] });
       });
       const editable = page.locator('.rich-text-editor-content [contenteditable="true"]');
       await editable.click();
@@ -146,7 +146,7 @@ for (const [name, engine, test] of engines) {
       await page.addScriptTag({ content: tiptap });
       await page.evaluate(() => {
         const { Editor, StarterKit } = window.Tiptap;
-        window.Expressive.RichTextEditor.init(document.querySelector('.rich-text-editor'), { Editor, extensions: [StarterKit] });
+        window.ExpressiveExtras.RichTextEditor.init(document.querySelector('.rich-text-editor'), { Editor, extensions: [StarterKit] });
       });
       assert.equal(await page.locator('.rich-text-editor-content [contenteditable="false"]').count(), 1);
       assert.equal(await page.locator('button[data-command]:not(:disabled)').count(), 0, 'every button is disabled');

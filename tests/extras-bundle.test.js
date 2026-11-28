@@ -64,6 +64,8 @@ const MOVED_ROOTS = [
   "mega-menu", "tree", ...CHARTS.map((name) => `${name}-chart`),
   "back-to-top", "message-scroller", "pull-to-refresh", "list.swipeable", "show-more", "loading-overlay", "confetti",
   "particles", "lightboxed", "map", "command-palette", "menubar", "scrollspy", "table-of-contents", "tour", "image-compare",
+  "rich-text-editor", "drop-zone", "cascader-options", "cascader-popover", "transfer-list", "color-picker", "keypad", "keyboard",
+  "questionnaire",
 ];
 const PAGE_FOOTER = "footer:not(.status-bar, :has(> .navigation-bar:only-child))";
 
@@ -124,6 +126,52 @@ test("extras imports public core components from the modular entry, sharing thei
         "the Menubar's menu is not core's Menu");
     } finally {
       bar.destroy();
+    }
+  } finally {
+    resetBody();
+  }
+});
+
+// The form extras that moved in the same release, with the drop zone's behavior.
+const MOVED_FORMS = [
+  "InputMask", "CurrencyInput", "RichTextEditor", "TreeSelect", "Cascader", "TransferList", "ColorPicker", "Keypad",
+  "Questionnaire", "DropZone",
+];
+
+test("the form extras are exported by extras, not by core", async () => {
+  const coreModular = await import("../dist/js/modular.mjs");
+  const coreApi = await import("../dist/js/core.mjs");
+  const extrasModular = await import("../extras/dist/js/modular.mjs");
+  for (const name of MOVED_FORMS) {
+    assert.ok(!(name in Expressive) && !(name in coreModular) && !(name in coreApi), `core still exports ${name}`);
+    assert.equal(typeof ExpressiveExtras[name], "function", `extras does not export ${name}`);
+    assert.equal(extrasModular[name], ExpressiveExtras[name]);
+  }
+  // Core Forms keeps generic validation; the drop zone's file rules and list moved with it.
+  assert.equal(typeof Expressive.Forms.validateField, "function");
+  assert.ok(!("listDropZoneFiles" in Expressive.Forms) && !("markDropZone" in Expressive.Forms), "core Forms still handles drop zones");
+  assert.doesNotMatch(read("dist/js/expressive.js"), /drop-zone-files|data-max-files|data-mask|data-currency/, "core's bundle handles a form extra");
+  // TreeSelect builds on core's FormSelect instead of bundling a copy.
+  assert.ok(Object.getPrototypeOf(ExpressiveExtras.TreeSelect) === Expressive.FormSelect, "TreeSelect does not extend core's FormSelect");
+  assert.doesNotMatch(read("dist/css/expressive.css"), /role="?tree"?\]/, "expressive.css styles the tree select");
+  assert.match(read("extras/dist/css/extras.css"), /ul\[role="?tree"?\]/, "extras.css does not style the tree select");
+});
+
+test("AutoInit started through core starts the form extras", () => {
+  try {
+    document.body.innerHTML = `<input data-mask="999"><input data-currency="USD">
+      <div class="field"><select data-tree><option value="a">A</option></select><label>Tree</label></div>
+      <div class="keypad"><button type="button">1</button></div><div class="color-picker"><input type="color"></div>`;
+    Expressive.AutoInit();
+    const started = [
+      [ExpressiveExtras.InputMask, "input[data-mask]"], [ExpressiveExtras.CurrencyInput, "input[data-currency]"],
+      [ExpressiveExtras.TreeSelect, "select[data-tree]"], [ExpressiveExtras.Keypad, ".keypad"], [ExpressiveExtras.ColorPicker, ".color-picker"],
+    ];
+    assert.equal(Expressive.FormSelect.getInstance(document.querySelector("select")), undefined, "core's FormSelect claimed the tree select");
+    for (const [component, selector] of started) {
+      const instance = component.getInstance(document.querySelector(selector));
+      assert.ok(instance, `${component.name} did not start`);
+      instance.destroy();
     }
   } finally {
     resetBody();
