@@ -23,7 +23,7 @@ const COMPONENT_DECISIONS_BY_SLUG = new Map(COMPONENT_DECISIONS.components.map((
 const DEFAULT_MAX_COMPONENT_RESPONSE_CHARS = 24_000;
 const GUIDANCE_TOOLS = new Set(['setup_expert', 'creative_director', 'page_architect', 'page_arcjitect', 'component_syntax_expert', 'component_catalog']);
 const RESPONSE_BUDGET_SETTING = 'EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES';
-function configuredResponseBudget(value = '65536') {
+function configuredResponseBudget(value = '98304') {
   if (!/^\d+$/u.test(value) || !Number.isSafeInteger(Number(value)) || Number(value) < 1) {
     throw new Error(`${RESPONSE_BUDGET_SETTING} must be a positive safe integer in decimal bytes.`);
   }
@@ -2459,6 +2459,7 @@ function buildCatalogPayload(catalog, version, parsed) {
       aliases: decision?.aliases ?? [],
       runtime: decision?.runtime ?? null,
       docs: guide.sourceUrl,
+      package: guide.package ?? '@expressivecss/expressive',
     };
   }).sort((a, b) => a.slug.localeCompare(b.slug));
 

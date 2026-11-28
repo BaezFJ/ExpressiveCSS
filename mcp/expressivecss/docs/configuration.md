@@ -7,7 +7,7 @@ cannot change them.
 
 | Variable | What it controls |
 | --- | --- |
-| `EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES` | Response size cap, default `65536`. See [response size limits](response-budget.md). |
+| `EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES` | Response size cap, default `98304`. See [response size limits](response-budget.md). |
 | `EXPRESSIVECSS_MCP_MAX_COMPONENT_RESPONSE_CHARS` | Kept for old configs and the legacy `maxCharactersPerComponent` metadata. It no longer trims anything. |
 | `EXPRESSIVECSS_MCP_MAX_COMPONENT_SKIPS` | How many nearest matches `component_syntax_expert` suggests for an unknown name, from 1 to 20. Default `7`. |
 | `EXPRESSIVECSS_MCP_QA_MAX_FILES` | Most files `quality_inspector` reads. Default `300`. |

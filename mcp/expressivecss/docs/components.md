@@ -143,6 +143,7 @@ sorted by slug, and `count` is their total.
 | `aliases` | Other names for the component, or `[]`. Search matches them; `component_syntax_expert` does not gain them. |
 | `runtime` | Runtime ownership, or null. |
 | `docs` | Documentation link, or null. |
+| `package` | The npm package that ships the component: `@expressivecss/expressive` or `@expressivecss/extras`. |
 
 The result also has `contractVersion`, `sourceHash` and
 `guideSource: "bundled"`. It holds no markup, rules, sections or capability

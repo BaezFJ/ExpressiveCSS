@@ -8,9 +8,13 @@
   outside the Material 3 set to `@expressivecss/extras` 0.21.0.
 - Guides for `@expressivecss/extras` components carry `package` and
   `install` fields in `component-guides.json`, in `component_syntax_expert`
-  and `creative_director` results, and in component guide resources. The
-  `component_catalog` listing leaves them out to stay within the default
-  response budget.
+  and `creative_director` results, and in component guide resources. Every
+  `component_catalog` entry has a `package` field naming
+  `@expressivecss/expressive` or `@expressivecss/extras`.
+- The default `EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES` rises from 65,536 to
+  98,304 bytes (96 KiB), so the complete catalogue listing, with its package
+  fields, still fits the default. Operators who set the variable keep their
+  value.
 
 ## 0.6.1 - 2026-11-18
 

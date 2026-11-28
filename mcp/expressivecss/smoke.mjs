@@ -155,12 +155,12 @@ async function verifyResponseBudgets(matchingDir, versionedDir) {
         const result = await peer.callTool(input);
         assert.deepEqual(wire.result, result, 'measure the actual wire tool result');
         if (scoped.includes(input.name)) {
-          assert.ok(bytes(wire.result) <= (budget ?? 65_536), `${input.name}: ${bytes(wire.result)} bytes exceed ${budget ?? 65_536}`);
+          assert.ok(bytes(wire.result) <= (budget ?? 98_304), `${input.name}: ${bytes(wire.result)} bytes exceed ${budget ?? 98_304}`);
           if (result.structuredContent) {
             assert.equal(validators.get(input.name)(result.structuredContent).valid, true, `${input.name} output schema`);
             assert.deepEqual(JSON.parse(result.content[0].text), result.structuredContent);
             const record = result.structuredContent.responseBudget;
-            assert.equal(record.maxBytes, budget ?? 65_536);
+            assert.equal(record.maxBytes, budget ?? 98_304);
             for (const omitted of record.omissions) assert.ok(record.recoveries[omitted.recovery]);
           }
         }
@@ -375,12 +375,12 @@ async function verifyCatalogueResources(expectedEntries, toolPayload, consumerRo
       const read = async () => {
         const result = await peer.readResource({ uri });
         assert.deepEqual(result, wire.result, 'measure the final wire resource result');
-        assert.ok(bytes(wire.result) <= (budget ?? 65_536));
+        assert.ok(bytes(wire.result) <= (budget ?? 98_304));
         assert.equal(result.contents.length, 1);
         assert.equal(result.contents[0].uri, uri);
         assert.equal(result.contents[0].mimeType, 'application/json');
         const payload = JSON.parse(result.contents[0].text);
-        assert.deepEqual(payload.responseBudget, { maxBytes: budget ?? 65_536, delivery: 'complete', omissions: [], recoveries: [] });
+        assert.deepEqual(payload.responseBudget, { maxBytes: budget ?? 98_304, delivery: 'complete', omissions: [], recoveries: [] });
         return result;
       };
       await action({ peer, read, wire: () => wire });
@@ -482,7 +482,7 @@ async function verifyCatalogueResources(expectedEntries, toolPayload, consumerRo
       await assert.rejects(peer.readResource({ uri }), (error) => {
         assert.equal(error.code, -32001);
         increasedBudget = error.data.requiredBytes;
-        assert.ok(increasedBudget > 65_536);
+        assert.ok(increasedBudget > 98_304);
         return true;
       });
     }, { dir: fixtureDir });
@@ -542,12 +542,12 @@ async function verifyComponentResources(catalogueToolPayload, consumerRoots) {
       const read = async (uri) => {
         const result = await peer.readResource({ uri });
         assert.deepEqual(result, wire.result, 'measure the final wire resource result');
-        assert.ok(bytes(wire.result) <= (budget ?? 65_536), `${uri} exceeds the response budget`);
+        assert.ok(bytes(wire.result) <= (budget ?? 98_304), `${uri} exceeds the response budget`);
         assert.equal(result.contents.length, 1);
         assert.equal(result.contents[0].uri, uri);
         assert.equal(result.contents[0].mimeType, 'application/json');
         const payload = JSON.parse(result.contents[0].text);
-        assert.deepEqual(payload.responseBudget, { maxBytes: budget ?? 65_536, delivery: 'complete', omissions: [], recoveries: [] });
+        assert.deepEqual(payload.responseBudget, { maxBytes: budget ?? 98_304, delivery: 'complete', omissions: [], recoveries: [] });
         return { result, payload };
       };
       const budgetError = async (uri) => {
@@ -559,7 +559,7 @@ async function verifyComponentResources(catalogueToolPayload, consumerRoots) {
         });
         assert.equal(Object.hasOwn(wire, 'result'), false);
         assert.equal(data.uri, uri);
-        assert.equal(data.maxBytes, budget ?? 65_536);
+        assert.equal(data.maxBytes, budget ?? 98_304);
         assert.equal(data.setting, setting);
         return data;
       };
@@ -1243,7 +1243,7 @@ try {
   assert.deepEqual(omissionSchema.properties.reason.enum, ['compact-detail', 'not-requested', 'length-limit', 'byte-budget']);
   await verifyResponseBudgets(matchingDir, versionedDir);
 
-  const expectedCatalog = guideData.guides.map(({ file, content }) => {
+  const expectedCatalog = guideData.guides.map(({ file, content, package: owner }) => {
     const slug = file.replace(/\.md$/u, '');
     const decision = decisionsData.components.find((entry) => entry.slug === slug);
     return {
@@ -1253,8 +1253,10 @@ try {
       aliases: decision?.aliases ?? [],
       runtime: decision?.runtime ?? null,
       docs: content.match(/\[Component documentation\]\(([^)]+)\)/u)?.[1] ?? null,
+      package: owner ?? '@expressivecss/expressive',
     };
   }).sort((a, b) => a.slug.localeCompare(b.slug));
+  assert.ok(expectedCatalog.some((entry) => entry.package === '@expressivecss/extras'), 'extras entries name their package');
   const catalog = await client.callTool({ name: 'component_catalog', arguments: { workflowId: 'catalogue-smoke' } });
   assertScopedResult(catalog, 'component_catalog');
   assert.equal(catalog.structuredContent.stage, 'component_catalog');
@@ -2105,10 +2107,10 @@ try {
     const fixtureCatalog = await optionsFixtureClient.callTool({ name: 'component_catalog', arguments: {} });
     assert.equal(fixtureCatalog.structuredContent.count, fixtureGuides.guides.length);
     const fixtureEntries = new Map(fixtureCatalog.structuredContent.entries.map((entry) => [entry.slug, entry]));
-    assert.deepEqual(fixtureEntries.get('nested'), { slug: 'nested', title: 'Nested', description: null, aliases: [], runtime: null, docs: null });
-    assert.deepEqual(fixtureEntries.get('last'), { slug: 'last', title: 'Last', description: 'Preferred description', aliases: ['final'], runtime: 'css-only', docs: null });
-    assert.deepEqual(fixtureEntries.get('empty'), { slug: 'empty', title: 'Empty', description: 'Job fallback', aliases: [], runtime: 'native', docs: null });
-    assert.deepEqual(fixtureEntries.get('same-level'), { slug: 'same-level', title: 'Same level', description: null, aliases: [], runtime: null, docs: null });
+    assert.deepEqual(fixtureEntries.get('nested'), { slug: 'nested', title: 'Nested', description: null, aliases: [], runtime: null, docs: null, package: '@expressivecss/expressive' });
+    assert.deepEqual(fixtureEntries.get('last'), { slug: 'last', title: 'Last', description: 'Preferred description', aliases: ['final'], runtime: 'css-only', docs: null, package: '@expressivecss/expressive' });
+    assert.deepEqual(fixtureEntries.get('empty'), { slug: 'empty', title: 'Empty', description: 'Job fallback', aliases: [], runtime: 'native', docs: null, package: '@expressivecss/expressive' });
+    assert.deepEqual(fixtureEntries.get('same-level'), { slug: 'same-level', title: 'Same level', description: null, aliases: [], runtime: null, docs: null, package: '@expressivecss/expressive' });
     assert.deepEqual(JSON.parse(fixtureCatalog.content[0].text), fixtureCatalog.structuredContent);
     const rankedFixtures = searchFixtures.map(({ slug }, index) => ({
       ...fixtureEntries.get(slug), matchType: index === 0 ? 'exact-name' : index < 3 ? 'exact-alias' : 'heuristic',
