@@ -146,7 +146,7 @@ for (const [engine, browserType, browserTest] of engines) {
           svg: el.querySelector('.scatter-chart-plot > svg').getAttribute('aria-hidden'),
           series: [...el.querySelectorAll('.scatter-chart-series')].map((group) => group.dataset.series),
           legend: [...el.querySelectorAll('.scatter-chart-legend li')].map((li) => li.textContent),
-          instance: [!!Expressive.ScatterChart.getInstance(el), !!Expressive.LineChart.getInstance(el)],
+          instance: [!!ExpressiveExtras.ScatterChart.getInstance(el), !!ExpressiveExtras.LineChart.getInstance(el)],
         };
       });
       assert.equal(ltr.table, 'absolute', 'the table is visually hidden');
@@ -210,7 +210,7 @@ for (const [engine, browserType, browserTest] of engines) {
         figure.className = 'scatter-chart axis';
         figure.append(...['figcaption', 'table'].map((tag) => el.querySelector(`:scope > ${tag}`).cloneNode(true)));
         el.after(figure);
-        Expressive.ScatterChart.init(figure, { xMin: 0, xMax: 2500 });
+        ExpressiveExtras.ScatterChart.init(figure, { xMin: 0, xMax: 2500 });
         return [...figure.querySelectorAll('.scatter-chart-axis.x > li')].map((li) => li.textContent);
       });
       assert.deepEqual(options, ['0', '1K', '2K']);
@@ -254,7 +254,7 @@ for (const [engine, browserType, browserTest] of engines) {
 
       // In the chart with gaps, the keys skip the points it leaves out.
       const gaps = await page.locator('#gaps').evaluate((el) => {
-        const chart = Expressive.ScatterChart.getInstance(el);
+        const chart = ExpressiveExtras.ScatterChart.getInstance(el);
         const seen = [];
         for (let i = 0; i < 6; i++) {
           chart.show(i);
@@ -306,12 +306,12 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.evaluate(() => Expressive.AutoInit());
       const plot = page.locator('#ltr .scatter-chart-plot');
       await plot.focus();
-      await page.evaluate(() => Expressive.ScatterChart.getInstance(document.querySelector('#ltr')).show(1));
+      await page.evaluate(() => ExpressiveExtras.ScatterChart.getInstance(document.querySelector('#ltr')).show(1));
 
       // Civic's highway value goes from 40 to 45.
       const moved = await page.locator('#ltr').evaluate((el) => {
         el.querySelector('tbody tr td:nth-of-type(3)').textContent = '45';
-        const chart = Expressive.ScatterChart.getInstance(el);
+        const chart = ExpressiveExtras.ScatterChart.getInstance(el);
         chart.update();
         const animate = el.querySelectorAll('.scatter-chart-points')[1].querySelector('animate');
         return {
@@ -333,7 +333,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.emulateMedia({ reducedMotion: 'reduce' });
       const still = await page.locator('#ltr').evaluate((el) => {
         el.querySelector('tbody tr td:nth-of-type(3)').textContent = '30';
-        Expressive.ScatterChart.getInstance(el).update();
+        ExpressiveExtras.ScatterChart.getInstance(el).update();
         return el.querySelectorAll('animate').length;
       });
       assert.equal(still, 0, 'no motion when the reader prefers less');
@@ -444,14 +444,14 @@ for (const [engine, browserType, browserTest] of engines) {
       const chart = await drawnBubbles(page, '#bubble-gaps');
       assert.deepEqual(chart.series.map((drawn) => drawn.length), [2, 2], 'Chile ("n/a") and Peru ("0") draw nothing');
       const seen = await page.locator('#bubble-gaps').evaluate((el) => {
-        const instance = Expressive.ScatterChart.getInstance(el);
+        const instance = ExpressiveExtras.ScatterChart.getInstance(el);
         return [0, 1, 2, 3, 4].map((i) => {
           instance.show(i);
           return el.querySelector('.scatter-chart-tooltip').hidden ? null : el.querySelector('.scatter-chart-tooltip strong').textContent;
         });
       });
       assert.deepEqual(seen, ['Mexico', 'Mexico', 'Spain', 'Spain', null]);
-      await page.evaluate(() => Expressive.ScatterChart.getInstance(document.querySelector('#bubble-gaps')).show(-1));
+      await page.evaluate(() => ExpressiveExtras.ScatterChart.getInstance(document.querySelector('#bubble-gaps')).show(-1));
       await page.locator('#bubble-gaps .scatter-chart-plot').focus();
       await page.keyboard.press('End');
       assert.equal(await page.locator('#bubble-gaps .scatter-chart-tooltip strong').textContent(), 'Spain', 'End reaches the last drawn point');
@@ -522,7 +522,7 @@ for (const [engine, browserType, browserTest] of engines) {
       // Chile's population goes from 20 to 80, so its bubbles go from half the largest diameter to all of it.
       const grown = await page.locator('#bubbles').evaluate((el) => {
         el.querySelector('tbody tr td:nth-of-type(4)').textContent = '80';
-        Expressive.ScatterChart.getInstance(el).update();
+        ExpressiveExtras.ScatterChart.getInstance(el).update();
         const moving = [...el.querySelectorAll('.scatter-chart-points')].filter((path) => path.getAnimations().length);
         return {
           focused: document.activeElement === el.querySelector('.scatter-chart-plot'),
@@ -539,7 +539,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.emulateMedia({ reducedMotion: 'reduce' });
       const still = await page.locator('#bubbles').evaluate((el) => {
         el.querySelector('tbody tr td:nth-of-type(4)').textContent = '20';
-        Expressive.ScatterChart.getInstance(el).update();
+        ExpressiveExtras.ScatterChart.getInstance(el).update();
         return [...el.querySelectorAll('.scatter-chart-points')].filter((path) => path.getAnimations().length).length;
       });
       assert.equal(still, 0, 'no motion when the reader prefers less');

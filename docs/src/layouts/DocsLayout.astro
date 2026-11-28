@@ -44,6 +44,10 @@ const prerelease = version.includes("-");
 const suffix = import.meta.env.DEV ? "" : ".min";
 const cssUrl = `/dist/css/expressive${suffix}.css`;
 const jsUrl = `/dist/js/expressive${suffix}.js`;
+// Every page also loads the @expressivecss/extras build, after core's: core
+// pages show extras components in their examples, and the site footer is one.
+const extrasCssUrl = `/dist/extras/css/extras${suffix}.css`;
+const extrasJsUrl = `/dist/extras/js/extras${suffix}.js`;
 // Stamped in by astro.config.mjs -- see the note there.
 declare const __REPO_ROOT__: string;
 const buildMissing = !existsSync(join(__REPO_ROOT__, "dist/css"));
@@ -85,6 +89,7 @@ const sourceColorPalettes = [
     <link rel="describedby" href="/llms.txt">
     <link rel="alternate" type="text/markdown" href={markdownPath}>
     <link rel="stylesheet" href={cssUrl}>
+    <link rel="stylesheet" href={extrasCssUrl}>
     <link rel="stylesheet" href={`/static/docs.css?v=${version}`}>
     {/* Apply a stored --md-source before first paint so the page does not flash the default seed. */}
     <script is:inline>
@@ -246,6 +251,7 @@ const sourceColorPalettes = [
 <Footer version={version} prerelease={prerelease} />
 
 <script is:inline src={jsUrl}></script>
+<script is:inline src={extrasJsUrl}></script>
 <script is:inline src={`/static/docs.js?v=${version}`}></script>
 <script is:inline src="/static/code-blocks.js"></script>
 </body>

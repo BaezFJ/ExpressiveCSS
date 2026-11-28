@@ -168,7 +168,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await settle(page);
       const hidden = (id) => page.evaluate((id) => document.getElementById(id).hasAttribute('hidden'), id);
       assert.equal(await hidden('live'), false, 'the fallback font cuts the text');
-      await page.evaluate(() => Expressive.ShowMore.getInstance(document.getElementById('gone').parentElement).destroy());
+      await page.evaluate(() => ExpressiveExtras.ShowMore.getInstance(document.getElementById('gone').parentElement).destroy());
 
       release();
       await page.waitForFunction(() => document.fonts.status === 'loaded');

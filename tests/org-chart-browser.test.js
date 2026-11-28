@@ -1,9 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import { engines } from './browser.js';
+import { pageCss } from './css.js';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+// Core then extras, as a page that uses extras loads them.
+const css = pageCss();
 
 const card = (tag, role, name) => `<${tag} class="org-chart-node"><span class="org-chart-role">${role}</span><span class="avatar" aria-hidden="true">${name[0]}</span><span class="org-chart-name">${name}</span></${tag}>`;
 const leaf = (role, name) => `<li>${card('div', role, name)}</li>`;

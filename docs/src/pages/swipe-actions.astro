@@ -132,7 +132,7 @@ document.addEventListener('expressive:swipetoggle', (event) => {
   </Section>
   <Section {...S.methods}>
 <Code code={`
-const list = Expressive.SwipeActions.getInstance(document.querySelector('.list.swipeable'));
+const list = ExpressiveExtras.SwipeActions.getInstance(document.querySelector('.list.swipeable'));
 list.open(row); // opens a row of the list, closing the one that was open
 list.close();   // closes the open row
 list.destroy(); // removes listeners, closes the open row without an event

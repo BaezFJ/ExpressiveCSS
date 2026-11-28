@@ -1473,7 +1473,7 @@ scenario('actionable snackbar persists and restores focus on keyboard dismissal'
 scenario('remaining lightbox supports Space and preserves its image on teardown', `
 <img id="photo" class="lightboxed" width="120" height="80" style="border-radius:4px" tabindex="0" role="button" alt="Mountain lake">
 <button id="after-photo">Next action</button>`, async page => {
-  await page.evaluate(()=>window.instances=[Expressive.Lightbox.init(document.querySelector('#photo'),{inDuration:0,outDuration:0})]);
+  await page.evaluate(()=>window.instances=[ExpressiveExtras.Lightbox.init(document.querySelector('#photo'),{inDuration:0,outDuration:0})]);
   await page.locator('#photo').focus();await page.keyboard.press('Space');
   await expect.poll(()=>page.evaluate(()=>window.instances[0].overlayActive)).toBe(true);
   await expect.poll(()=>page.evaluate(()=>window.instances[0].doneAnimating)).toBe(true);
@@ -1508,7 +1508,7 @@ scenario('remaining web navigation, badges and list controls expose their meanin
 <ul class="list"><li><label><input id="row-choice" type="checkbox">Include this record</label></li><li><a href="#results">Open record</a></li></ul>
 <section id="home" class="scrollspy" style="min-height:100vh"><h2>Overview</h2></section><section id="results" style="min-height:100vh"><h2>Results</h2></section><section id="next-results" class="scrollspy" style="min-height:100vh"><h2>Following results</h2></section>
 <footer><nav aria-label="Legal"><a href="#home">Privacy</a></nav></footer>`, async page => {
-  await page.evaluate(()=>{document.body.append(document.querySelector('footer'));window.instances=Expressive.ScrollSpy.init(document.querySelectorAll('.scrollspy'),{getActiveElement:id=>`nav[aria-label="Contents"] a[href="#${id}"]`});});
+  await page.evaluate(()=>{document.body.append(document.querySelector('footer'));window.instances=ExpressiveExtras.ScrollSpy.init(document.querySelectorAll('.scrollspy'),{getActiveElement:id=>`nav[aria-label="Contents"] a[href="#${id}"]`});});
   await expect(page.getByRole('navigation')).toHaveCount(4);
   await expect(page.getByRole('contentinfo')).toHaveCount(1);
   await expect(page.getByRole('button',{name:'Inbox, 12 unread'})).toHaveCount(1);
@@ -1529,7 +1529,7 @@ scenario('Lightbox reports opened and closed when reduced motion cuts a transiti
     const photo = document.querySelector('#photo');
     for (const type of ['open', 'opened', 'close', 'closed']) photo.addEventListener(`expressive:${type}`, () => window.events.push(type));
     // Far longer than the waits below, so only the reduced-motion flush can end them.
-    window.box = Expressive.Lightbox.init(photo, { inDuration: 30000, outDuration: 30000 });
+    window.box = ExpressiveExtras.Lightbox.init(photo, { inDuration: 30000, outDuration: 30000 });
     window.box.open();
   });
   await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -1544,7 +1544,7 @@ scenario('Lightbox reports opened and closed when reduced motion cuts a transiti
 // The image zooms in place, so Tab used to reach the page behind the overlay.
 scenario('Lightbox closes on Tab', `
 <img id="photo" class="lightboxed" width="120" height="80" style="border-radius:4px" tabindex="0" role="button" alt="Lake"><button id="next" type="button">Next</button>`, async page => {
-  await page.evaluate(() => Expressive.Lightbox.init(document.querySelector('#photo'), { inDuration: 0, outDuration: 0 }));
+  await page.evaluate(() => ExpressiveExtras.Lightbox.init(document.querySelector('#photo'), { inDuration: 0, outDuration: 0 }));
   await page.locator('#photo').focus();
   await page.keyboard.press('Enter');
   await expect(page.locator('#lightbox-overlay')).toHaveCount(1);
@@ -1559,7 +1559,7 @@ for (const action of ['interrupt', 'reopen', 'motion', 'focus', 'isolation', 'tr
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.evaluate(() => {
     window.events = [];
-    window.instances = [...document.querySelectorAll('img')].map(el => Expressive.Lightbox.init(el, {
+    window.instances = [...document.querySelectorAll('img')].map(el => ExpressiveExtras.Lightbox.init(el, {
       inDuration: 120, outDuration: 120,
       onOpenStart: () => window.events.push('open-start'), onOpenEnd: () => window.events.push('open-end'),
       onCloseStart: () => window.events.push('close-start'), onCloseEnd: () => window.events.push('close-end')
@@ -1611,7 +1611,7 @@ for (const action of ['interrupt', 'reopen', 'motion', 'focus', 'isolation', 'tr
         const root = host.attachShadow({ mode: 'open' });
         const photo = document.querySelector('#photo').cloneNode(true);
         root.append(photo);
-        const box = Expressive.Lightbox.init(photo);
+        const box = ExpressiveExtras.Lightbox.init(photo);
         window.instances.push(box);
         photo.focus();
         if (moveFocus) {
@@ -1700,7 +1700,7 @@ for (const action of ['interrupt', 'reopen', 'motion', 'focus', 'isolation', 'tr
       await page.evaluate(phase => {
         let box = window.instances[0];
         if (phase === 'closing') {
-          box = Expressive.Lightbox.init(document.querySelector('#photo'), { inDuration: 120, outDuration: 120, onCloseEnd: () => window.events.push('close-end') });
+          box = ExpressiveExtras.Lightbox.init(document.querySelector('#photo'), { inDuration: 120, outDuration: 120, onCloseEnd: () => window.events.push('close-end') });
           window.instances[0] = box;
         }
         box.open();
@@ -1732,13 +1732,13 @@ for (const action of ['offsets', 'groups', 'teardown', 'anchors']) scenario(`Scr
     const first = id => `#toc-a a[href="#${id}"]`;
     const other = id => `#toc-b a[href="#${id}"]`;
     window.instances = [];
-    for (const id of ['spy-a', 'spy-b']) window.instances.push(Expressive.ScrollSpy.init(document.getElementById(id), {
+    for (const id of ['spy-a', 'spy-b']) window.instances.push(ExpressiveExtras.ScrollSpy.init(document.getElementById(id), {
       getActiveElement: first, scrollOffset: action === 'offsets' && id === 'spy-b' ? 250 : 0,
       activeClass: id === 'spy-a' ? 'first-active' : 'second-active', keepTopElementActive: action === 'groups'
     }));
     if (action === 'groups') {
       document.querySelector('#spy-b').style.top = '1600px';
-      for (const id of ['spy-c', 'spy-d']) window.instances.push(Expressive.ScrollSpy.init(document.getElementById(id), {
+      for (const id of ['spy-c', 'spy-d']) window.instances.push(ExpressiveExtras.ScrollSpy.init(document.getElementById(id), {
         getActiveElement: other, scrollOffset: 0, activeClass: 'other-active'
       }));
     }
@@ -1772,7 +1772,7 @@ for (const action of ['offsets', 'groups', 'teardown', 'anchors']) scenario(`Scr
     await page.evaluate(() => { window.instances[1].destroy(); window.instances[1].destroy(); });
     await expect(page.locator('#toc-a a[aria-current]')).toHaveCount(0);
     assert.equal(await page.locator('#spy-b').evaluate(el => el.style.getPropertyValue('--md-comp-scrollspy-offset')), '');
-    await page.evaluate(() => { window.instances = Expressive.ScrollSpy.init(document.querySelectorAll('#spy-a, #spy-b'), { scrollOffset: 0 }); });
+    await page.evaluate(() => { window.instances = ExpressiveExtras.ScrollSpy.init(document.querySelectorAll('#spy-a, #spy-b'), { scrollOffset: 0 }); });
     await expect(page.locator('#toc-a a[aria-current]')).toHaveText('First');
   } else {
     for (const direction of ['ltr', 'rtl']) for (const motion of ['reduce', 'no-preference']) {
@@ -1793,7 +1793,7 @@ for (const action of ['offsets', 'groups', 'teardown', 'anchors']) scenario(`Scr
 scenario('remaining lightbox teardown cancels pending work and preserves native button focus', `
 <button id="photo-button" type="button" aria-label="Enlarge mountain lake"><img id="wrapped-photo" class="lightboxed" width="120" height="80" alt="Mountain lake"></button><button id="next-photo">Next</button>`, async page => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
-  await page.evaluate(()=>{window.completed=0;window.instances=[Expressive.Lightbox.init(document.querySelector('img'),{inDuration:150,outDuration:150,onOpenEnd:()=>window.completed++})];});
+  await page.evaluate(()=>{window.completed=0;window.instances=[ExpressiveExtras.Lightbox.init(document.querySelector('img'),{inDuration:150,outDuration:150,onOpenEnd:()=>window.completed++})];});
   await page.locator('#photo-button').focus();await page.keyboard.press('Space');
   await expect.poll(()=>page.evaluate(()=>window.instances[0].overlayActive)).toBe(true);
   await page.evaluate(()=>window.instances.pop().destroy());await page.waitForTimeout(200);

@@ -84,13 +84,13 @@ const S = defineSections([
       <tr><td><code>onClose</code></td><td>Function</td><td><code>null</code></td><td>Runs after the text is clamped again, with the container element. The instance is <code>this</code>.</td></tr>
       <tr><td><code>i18n</code></td><td>Object</td><td><code>{'{ showLess: "Show less" }'}</code></td><td>The expanded button label. <code>data-show-less</code> overrides it for one button.</td></tr>
     </OptionsTable>
-    <p>Pass callbacks to <code>Expressive.ShowMore.init(el, options)</code> from script.
+    <p>Pass callbacks to <code>ExpressiveExtras.ShowMore.init(el, options)</code> from script.
       <code>isOpen</code> reports whether the full text shows. Use <code>open()</code> and
       <code>close()</code> to change that state.</p>
   </Section>
   <Section {...S.methods}>
 <Code code={`
-const more = Expressive.ShowMore.getInstance(document.querySelector('.show-more'));
+const more = ExpressiveExtras.ShowMore.getInstance(document.querySelector('.show-more'));
 more.open();    // shows the full text and fires expressive:open
 more.close();   // clamps it again and fires expressive:close
 more.destroy(); // removes the listeners and restores the markup

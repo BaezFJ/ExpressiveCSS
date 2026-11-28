@@ -78,7 +78,7 @@ function importURLAssets(source, path) {
   return parts.join('');
 }
 
-export async function bundle(entry, out, framework) {
+export async function bundle(entry, out, framework, extras) {
   const build = consumerBundler(entry, framework);
   const inputPaths = new Map();
   const { outputFiles, metafile } = await build({
@@ -107,8 +107,8 @@ export async function bundle(entry, out, framework) {
         if (args.kind === 'url-token' || args.kind === 'import-rule') return { path: args.path, external: true };
       });
       // The matching selective CSS is emitted separately beside the fonts.
-      builder.onResolve({ filter: /^@expressivecss\/expressive\/css(?:\/min)?$/ },
-        () => ({ path: 'expressive.css', namespace: 'selective', sideEffects: false }));
+      builder.onResolve({ filter: /^@expressivecss\/(?:expressive|extras)\/css(?:\/min)?$/ },
+        ({ path }) => ({ path, namespace: 'selective', sideEffects: false }));
       builder.onLoad({ filter: /.*/, namespace: 'selective' }, () => ({ contents: '', loader: 'empty' }));
     } }],
   });
@@ -117,15 +117,18 @@ export async function bundle(entry, out, framework) {
   const assets = [...files.keys()].filter(name => name.startsWith('assets/')).sort();
   if (assets.length) files.set(assetManifest, Buffer.from(JSON.stringify({ generatedBy: 'expressive-build', assets }) + '\n'));
   const modules = new Set();
+  const extrasModules = new Set();
   const sources = new Set();
   const localJS = join(framework, 'dist/js') + sep;
+  const extrasJS = extras && join(extras, 'dist/js') + sep;
   for (const output of Object.values(metafile.outputs)) {
     for (const [input, { bytesInOutput }] of Object.entries(output.inputs)) {
       const path = inputPaths.get(resolve(input));
       if (!bytesInOutput || !path || !scriptFile.test(path)) continue;
       if (path.startsWith(localJS) || input.includes('node_modules/@expressivecss/expressive/dist/js/')) modules.add(basename(path));
+      else if (extrasJS && path.startsWith(extrasJS) || input.includes('node_modules/@expressivecss/extras/dist/js/')) extrasModules.add(basename(path));
       else sources.add(path);
     }
   }
-  return { files, inputs: new Set(inputPaths.values()), modules, sources };
+  return { files, inputs: new Set(inputPaths.values()), modules, extrasModules, sources };
 }

@@ -240,8 +240,11 @@ each('under dir="rtl" the columns run right to left and the arrow keys swap', as
   assert.deepEqual([seen.focused, seen.columns.length], ['California', 3]);
 });
 
-/** Replaces the page with `markup`, the bundle and AutoInit. */
-const load = (page, markup) => page.setContent(`<style>${css}</style>${markup}<script>${js}</script><script>Expressive.AutoInit()</script>`);
+/** Replaces the page with `markup`, the bundle and AutoInit. A new document, so extras loads again after the new core script. */
+const load = async (page, markup) => {
+  await page.goto('about:blank');
+  await page.setContent(`<style>${css}</style>${markup}<script>${js}</script><script>Expressive.AutoInit()</script>`);
+};
 
 each('the roadmap check: choosing an option in each of three columns submits the three values as one path', async (page) => {
   await page.click('#place');
@@ -292,7 +295,7 @@ each('a form reset brings back the starting path without events, also with the p
     const root = document.getElementById('host').attachShadow({ mode: 'open' });
     root.innerHTML = `<form>${markup}</form>`;
     const el = root.querySelector('.cascader');
-    const cascader = Expressive.Cascader.init(el);
+    const cascader = ExpressiveExtras.Cascader.init(el);
     cascader.open();
     root.querySelector('[role="option"]:last-child').click();
     const before = new FormData(root.querySelector('form')).getAll('shadowed');
@@ -345,7 +348,7 @@ each('a disabled input or fieldset submits nothing and does not open', async (pa
     document.getElementById('set').disabled = true;
   });
   assert.deepEqual(await data(), []);
-  await page.evaluate(() => Expressive.Cascader.getInstance(document.querySelector('.cascader')).open());
+  await page.evaluate(() => ExpressiveExtras.Cascader.getInstance(document.querySelector('.cascader')).open());
   assert.equal(await page.getAttribute('#place', 'aria-expanded'), 'false');
 
   await page.evaluate(() => (document.getElementById('set').disabled = false));
@@ -356,7 +359,7 @@ each('destroy() unwraps the input and gives its name and required back', async (
   await load(page, `<form id="form">${field('place', 'required')}</form>`);
   const seen = await page.evaluate(() => {
     const input = document.getElementById('place');
-    Expressive.Cascader.getInstance(document.querySelector('.cascader')).destroy();
+    ExpressiveExtras.Cascader.getInstance(document.querySelector('.cascader')).destroy();
     return [input.parentElement.localName, input.getAttribute('name'), input.required, input.hasAttribute('aria-required'), document.querySelectorAll('expressive-cascader-control').length];
   });
   assert.deepEqual(seen, ['div', 'place', true, false, 0]);
@@ -416,7 +419,7 @@ each('presses inside a closed shadow root choose options, and a press outside cl
     document.body.prepend(host);
     window.closedRoot = host.attachShadow({ mode: 'closed' });
     window.closedRoot.innerHTML = `<form>${markup}</form>`;
-    window.shutCascader = Expressive.Cascader.init(window.closedRoot.querySelector('.cascader'));
+    window.shutCascader = ExpressiveExtras.Cascader.init(window.closedRoot.querySelector('.cascader'));
     window.shutCascader.open();
   }, field('shut'));
   await page.mouse.click(...center(await rect('United States')));
@@ -437,7 +440,7 @@ each('a field disabled while open closes on the next choice without committing',
   await page.evaluate(() => (document.getElementById('set').disabled = true));
   await option(page, 'Canada').click();
   assert.deepEqual(await page.evaluate(() => {
-    const cascader = Expressive.Cascader.getInstance(document.querySelector('.cascader'));
+    const cascader = ExpressiveExtras.Cascader.getInstance(document.querySelector('.cascader'));
     return [cascader.isOpen, cascader.value, window.events.length];
   }), [false, [], 0]);
 });

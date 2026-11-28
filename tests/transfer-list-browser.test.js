@@ -24,6 +24,11 @@ const page = (body, dir = 'ltr') => `<!doctype html><html lang="en" dir="${dir}"
 ${body}
 <script>${js}</script></body></html>`;
 const form = (list) => `<form id="form">${list}<button id="submit">Submit</button></form>`;
+// A new document each time, so extras loads again after the new core script.
+const load = async (p, html) => {
+  await p.goto('about:blank');
+  await p.setContent(html);
+};
 
 const values = (p, list) => p.locator(`#form .transfer-${list} input`).evaluateAll((boxes) => boxes.map((box) => box.value));
 const formValues = (p, id = 'form') => p.evaluate((id) => new FormData(document.getElementById(id)).getAll('toppings'), id);
@@ -46,7 +51,7 @@ for (const [name, engine, test] of engines) {
     const browser = await leaseBrowser(engine);
     try {
       const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
-      await p.setContent(page(form(transferList())));
+      await load(p, page(form(transferList())));
       await check(p, 'Onions');
       await press(p, 'Add checked toppings');
       await check(p, 'Olives');
@@ -65,7 +70,7 @@ for (const [name, engine, test] of engines) {
     const browser = await leaseBrowser(engine);
     try {
       const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
-      await p.setContent(page(`${form(transferList({ chosen: ['mushrooms'] }))}<form id="other"><input name="toppings" value="cheese"></form>`));
+      await load(p, page(`${form(transferList({ chosen: ['mushrooms'] }))}<form id="other"><input name="toppings" value="cheese"></form>`));
       assert.deepEqual(await formValues(p), ['mushrooms'], 'a row that starts chosen submits');
       await check(p, 'Basil');
       await check(p, 'Peppers');
@@ -74,7 +79,7 @@ for (const [name, engine, test] of engines) {
       assert.deepEqual(await formValues(p), ['mushrooms', 'peppers', 'basil']);
       assert.deepEqual(await formValues(p, 'other'), ['cheese'], 'the other form keeps its own data');
 
-      await p.setContent(page(form(transferList({ chosen: ['mushrooms'], name: '' }))));
+      await load(p, page(form(transferList({ chosen: ['mushrooms'], name: '' }))));
       await check(p, 'Olives');
       await press(p, 'Add checked toppings');
       assert.deepEqual(await values(p, 'chosen'), ['mushrooms', 'olives'], 'the rows still move');
@@ -101,14 +106,14 @@ for (const [name, engine, test] of engines) {
     const browser = await leaseBrowser(engine);
     try {
       const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
-      await p.setContent(page(`<form id="form">
+      await load(p, page(`<form id="form">
         <fieldset disabled>${transferList({ chosen: ['mushrooms'] })}<input name="native" value="n"></fieldset>
         <fieldset disabled><legend>${transferList({ chosen: ['ham'], name: ' data-name="meats"' })}</legend></fieldset>
       </form>`));
       assert.deepEqual(await p.evaluate(() => [...new FormData(document.getElementById('form'))]), [['meats', 'ham']],
         'only the list in the first legend, which the fieldset leaves enabled, submits');
 
-      await p.setContent(page(form(transferList({ chosen: ['mushrooms'] }))));
+      await load(p, page(form(transferList({ chosen: ['mushrooms'] }))));
       await p.evaluate(() => {
         document.querySelector('[value="mushrooms"]').disabled = true;
         const basil = document.querySelector('[value="basil"]');
@@ -121,7 +126,7 @@ for (const [name, engine, test] of engines) {
       assert.deepEqual(await formValues(p), ['mushrooms', 'olives'], 'a disabled chosen row still submits');
 
       // An inner list inside an outer row submits only under its own name.
-      await p.setContent(page(form(transferList({ chosen: ['mushrooms'] }))));
+      await load(p, page(form(transferList({ chosen: ['mushrooms'] }))));
       await p.locator('.transfer-chosen > li').evaluate((li, inner) => li.insertAdjacentHTML('beforeend', inner),
         transferList({ chosen: ['ham'], name: ' data-name="meats"' }).replace(/aria-label="([^"]+)"/g, 'aria-label="Inner $1"'));
       assert.deepEqual(await p.evaluate(() => [...new FormData(document.getElementById('form'))]), [['toppings', 'mushrooms'], ['meats', 'ham']]);
@@ -137,16 +142,16 @@ for (const [name, engine, test] of engines) {
       const box = (selector) => p.locator(selector).boundingBox();
       const flipped = () => p.locator('[data-transfer="add"] .material-symbols').evaluate((icon) => getComputedStyle(icon).scale);
 
-      await p.setContent(page(form(transferList())));
+      await load(p, page(form(transferList())));
       assert.ok((await box('.transfer-available')).x < (await box('.transfer-chosen')).x, 'ltr: available on the left');
       assert.equal(await flipped(), 'none');
 
-      await p.setContent(page(form(transferList()), 'rtl'));
+      await load(p, page(form(transferList()), 'rtl'));
       assert.ok((await box('.transfer-available')).x > (await box('.transfer-chosen')).x, 'rtl: available on the right');
       assert.equal(await flipped(), '-1 1', 'rtl: the icon points toward the chosen list');
 
       await p.setViewportSize({ width: 400, height: 700 });
-      await p.setContent(page(form(transferList())));
+      await load(p, page(form(transferList())));
       const available = await box('.transfer-available');
       const actions = await box('.transfer-actions');
       const chosen = await box('.transfer-chosen');
@@ -157,7 +162,7 @@ for (const [name, engine, test] of engines) {
 
       await p.setViewportSize({ width: 800, height: 700 });
       const many = Array.from({ length: 50 }, (_, i) => `item${i}`);
-      await p.setContent(page(form(transferList({ available: many }))));
+      await load(p, page(form(transferList({ available: many }))));
       const scroll = await p.locator('.transfer-available').evaluate((list) => [list.scrollHeight, list.clientHeight]);
       assert.ok(scroll[0] > scroll[1], 'a long list scrolls inside its box');
       const last = await box('[data-transfer="remove-all"]');
@@ -171,10 +176,10 @@ for (const [name, engine, test] of engines) {
     const browser = await leaseBrowser(engine);
     try {
       const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
-      await p.setContent(page(form(transferList())));
+      await load(p, page(form(transferList())));
       await p.evaluate(() => {
-        Expressive.TransferList.Init();
-        Expressive.TransferList.Init();
+        ExpressiveExtras.TransferList.Init();
+        ExpressiveExtras.TransferList.Init();
         window.__events = 0;
         document.addEventListener('expressive:transfer', () => window.__events++);
       });
@@ -206,7 +211,7 @@ for (const [name, engine, test] of engines) {
     const browser = await leaseBrowser(engine);
     try {
       const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
-      await p.setContent(page(form(transferList())));
+      await load(p, page(form(transferList())));
       await p.evaluate(() => {
         window.__events = 0;
         document.addEventListener('expressive:transfer', () => window.__events++);
@@ -234,18 +239,18 @@ for (const [name, engine, test] of engines) {
     const browser = await leaseBrowser(engine);
     try {
       const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
-      await p.setContent(page(form(transferList())));
+      await load(p, page(form(transferList())));
       const region = p.locator('.transfer-list + [aria-live="polite"]');
       await check(p, 'Olives');
       await check(p, 'Basil');
       await press(p, 'Add checked toppings');
       assert.equal(await region.textContent(), 'Moved 2 to Chosen toppings');
-      await p.evaluate(() => { Expressive.TransferList.i18n.moved = '{count} → {list}'; });
+      await p.evaluate(() => { ExpressiveExtras.TransferList.i18n.moved = '{count} → {list}'; });
       await check(p, 'Peppers');
       await press(p, 'Add checked toppings');
       assert.equal(await region.textContent(), '1 → Chosen toppings');
       await p.evaluate(() => {
-        Expressive.TransferList.i18n.moved = 'Moved {count} to {list}';
+        ExpressiveExtras.TransferList.i18n.moved = 'Moved {count} to {list}';
         const list = document.querySelector('.transfer-available');
         list.removeAttribute('aria-label');
         list.setAttribute('aria-labelledby', 'pantry missing');
@@ -264,7 +269,7 @@ for (const [name, engine, test] of engines) {
     const browser = await leaseBrowser(engine);
     try {
       const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
-      await p.setContent(page(form(transferList())));
+      await load(p, page(form(transferList())));
       await p.evaluate(() => {
         document.addEventListener('expressive:transfer', (e) => {
           window.__detail = {
@@ -314,7 +319,7 @@ for (const [name, engine, test] of engines) {
       const markup = form(transferList({ chosen: ['mushrooms'] }))
         .replace('value="mushrooms"', 'value="mushrooms" checked')
         .replace('<button id="submit">', '<button type="reset" id="clear">Reset</button><button id="submit">');
-      await p.setContent(page(markup));
+      await load(p, page(markup));
       const settled = () => p.evaluate(() => new Promise((resolve) => setTimeout(resolve)));
 
       await p.locator('#clear').click();
@@ -360,7 +365,7 @@ for (const [name, engine, test] of engines) {
     const browser = await leaseBrowser(engine);
     try {
       const p = await browser.newPage({ viewport: { width: 800, height: 700 } });
-      await p.setContent(page('<form id="form"></form>'));
+      await load(p, page('<form id="form"></form>'));
       await p.evaluate((list) => document.getElementById('form').insertAdjacentHTML('beforeend', list), transferList());
       await check(p, 'Onions');
       await press(p, 'Add checked toppings');

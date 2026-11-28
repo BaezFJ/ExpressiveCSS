@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { engines } from './browser.js';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -48,7 +48,7 @@ const near = (actual, expected) => assert.ok(
 for (const [engine, browserType, browserTest] of engines) {
 
   browserTest(`${engine}: .axis labels chart scales at round values on their grid lines`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
       await page.emulateMedia({ reducedMotion: 'reduce' });

@@ -4,7 +4,7 @@ ExpressiveCSS is a Material Design 3 front-end framework written in Sass and
 TypeScript. It gives you theme tokens, layout and utility classes, styled form
 controls, and JavaScript components.
 
-> Version `0.20.0` is under active development.
+> Version `0.21.0` is under active development.
 
 Documentation: [www.expressivecss.com](https://www.expressivecss.com)
 
@@ -54,7 +54,8 @@ npx expressive-build index.html src --entry src/ui.ts
 ```
 
 This writes the selected CSS, bundled browser entry and fonts to
-`public/expressive/`. Omit `--entry` for CSS alone. Add `--check` to verify
+`public/expressive/`, plus `css/extras.css` when `@expressivecss/extras` is
+installed. Omit `--entry` for CSS alone. Add `--check` to verify
 committed assets in a pre-commit hook. See [Smaller builds](docs/guides/smaller-builds.md).
 
 ## Guides
@@ -67,6 +68,13 @@ committed assets in a pre-commit hook. See [Smaller builds](docs/guides/smaller-
   compile only the Sass you need, and subset icon fonts
 - [Working on ExpressiveCSS](docs/guides/development.md): npm commands, tests,
   and where things live in the repository
+
+## Additional components
+
+Components outside the Material 3 component set, such as charts, timeline,
+command palette, rich text editor, map and tour, ship in a separate package,
+`@expressivecss/extras`. Install it next to core and load it after core; see
+[extras/README.md](extras/README.md).
 
 ## MCP server for AI tools
 

@@ -2,9 +2,9 @@
 
 ExpressiveCSS is a Material Design 3 front-end framework built with Sass and TypeScript. It provides design tokens, light and dark themes, a responsive grid, utilities, styled controls, and interactive browser components.
 
-This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.20.0`, which is under active development.
+This file consolidates the ExpressiveCSS framework documentation for code-generation systems. It describes version `0.21.0`, which is under active development.
 
-- Package: `@expressivecss/expressive`
+- Package: `@expressivecss/expressive`; components outside Material 3 ship in `@expressivecss/extras` (see [Additional components package](#additional-components-package))
 - Runtime target: modern browsers; the last five Chrome and Firefox versions
 - JavaScript formats: ES module, CommonJS, and browser IIFE
 - Styles: compiled CSS, minified CSS, and Sass sources
@@ -163,12 +163,30 @@ The build writes expanded and minified CSS, ESM, CommonJS, IIFE browser bundles,
 | --- | --- |
 | `@expressivecss/expressive` | JavaScript module and TypeScript declarations |
 | `@expressivecss/expressive/modular` | ESM exports and types without import-time initialization |
+| `@expressivecss/expressive/core` | `Component`, `Utils`, `AutoInit` and helpers for extension packages; `Expressive.core` in the IIFE |
 | `@expressivecss/expressive/css` | Expanded compiled stylesheet |
 | `@expressivecss/expressive/css/min` | Minified compiled stylesheet |
 | `@expressivecss/expressive/fonts/*` | Self-hosted woff2 files |
 | `@expressivecss/expressive/scss` | Sass entry point |
 | `@expressivecss/expressive/scss/custom` | Configurable component and utility selection |
 | `@expressivecss/expressive/scss/*` | Individual Sass source paths |
+
+## Additional components package
+
+Sections marked `Package: @expressivecss/extras` document components that are not on Material 3's component list. They are not in core. Install the extras package at the same minor version and load it after core:
+
+```sh
+npm install @expressivecss/expressive @expressivecss/extras
+```
+
+```html
+<link rel="stylesheet" href="node_modules/@expressivecss/expressive/dist/css/expressive.min.css">
+<link rel="stylesheet" href="node_modules/@expressivecss/extras/dist/css/extras.min.css">
+<script src="node_modules/@expressivecss/expressive/dist/js/expressive.min.js"></script>
+<script src="node_modules/@expressivecss/extras/dist/js/extras.min.js"></script>
+```
+
+The IIFE exposes the extras classes as `ExpressiveExtras`, and core `Expressive.AutoInit()` starts them. In a bundler, `import '@expressivecss/extras/css'` after core's CSS and `import { LineChart } from '@expressivecss/extras'` after `@expressivecss/expressive`; `@expressivecss/extras/modular` has no import-time setup. For Sass, put core's `src/sass` on the load path and compile `@expressivecss/extras/scss`.
 
 ## Minimal browser setup
 
@@ -340,49 +358,49 @@ function unmount() {
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
-| `Confetti` | `.confetti` |
-| `Particles` | `canvas.particles` |
-| `Keypad` | `.keypad, .keyboard` |
-| `ColorPicker` | `.color-picker` |
-| `BarChart` | `.bar-chart` |
-| `PieChart` | `.pie-chart` |
-| `HeatmapChart` | `.heatmap-chart` |
-| `RadarChart` | `.radar-chart` |
-| `RadialChart` | `.radial-chart` |
-| `MixedChart` | `.mixed-chart` |
-| `ScatterChart` | `.scatter-chart` |
-| `SankeyChart` | `.sankey-chart` |
-| `FunnelChart` | `.funnel-chart` |
-| `TreemapChart` | `.treemap-chart` |
-| `ColumnChart` | `.column-chart` |
-| `CommandPalette` | `dialog.command-palette` |
-| `Questionnaire` | `form.questionnaire` |
 | `Datepicker` | `.date-picker` |
-| `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
-| `MessageScroller` | `.message-scroller` |
-| `PullToRefresh` | `.pull-to-refresh` |
-| `LoadingOverlay` | `.loading-overlay` |
-| `SwipeActions` | `.list.swipeable` |
-| `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
-| `ShowMore` | `.show-more` |
-| `CurrencyInput` | `input[data-currency]` of type text |
-| `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollArea` | `.scroll-area.custom` |
-| `ScrollSpy` | `.scrollspy` |
-| `BackToTop` | `.back-to-top` |
 | `FormSelect` | `select` without `data-tree` |
-| `TreeSelect` | `select[data-tree]` |
-| `Cascader` | `.cascader` |
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
-| `HoverCard` | `.hover-card-trigger` |
 | `FloatingActionButton` | `.fab-menu` |
-| `Menubar` | `.menubar` |
+| `ColumnChart` | `.column-chart`, from `@expressivecss/extras` |
+| `BarChart` | `.bar-chart`, from `@expressivecss/extras` |
+| `PieChart` | `.pie-chart`, from `@expressivecss/extras` |
+| `HeatmapChart` | `.heatmap-chart`, from `@expressivecss/extras` |
+| `RadarChart` | `.radar-chart`, from `@expressivecss/extras` |
+| `RadialChart` | `.radial-chart`, from `@expressivecss/extras` |
+| `MixedChart` | `.mixed-chart`, from `@expressivecss/extras` |
+| `ScatterChart` | `.scatter-chart`, from `@expressivecss/extras` |
+| `FunnelChart` | `.funnel-chart`, from `@expressivecss/extras` |
+| `SankeyChart` | `.sankey-chart`, from `@expressivecss/extras` |
+| `TreemapChart` | `.treemap-chart`, from `@expressivecss/extras` |
+| `LineChart` | `.line-chart`, from `@expressivecss/extras` |
+| `Confetti` | `.confetti`, from `@expressivecss/extras` |
+| `Particles` | `canvas.particles`, from `@expressivecss/extras` |
+| `CommandPalette` | `dialog.command-palette`, from `@expressivecss/extras` |
+| `MessageScroller` | `.message-scroller`, from `@expressivecss/extras` |
+| `PullToRefresh` | `.pull-to-refresh`, from `@expressivecss/extras` |
+| `LoadingOverlay` | `.loading-overlay`, from `@expressivecss/extras` |
+| `SwipeActions` | `.list.swipeable`, from `@expressivecss/extras` |
+| `ShowMore` | `.show-more`, from `@expressivecss/extras` |
+| `Lightbox` | `.lightboxed`, from `@expressivecss/extras` |
+| `ScrollSpy` | `.scrollspy`, from `@expressivecss/extras` |
+| `BackToTop` | `.back-to-top`, from `@expressivecss/extras` |
+| `HoverCard` | `.hover-card-trigger`, from `@expressivecss/extras` |
+| `Menubar` | `.menubar`, from `@expressivecss/extras` |
+| `Keypad` | `.keypad, .keyboard`, from `@expressivecss/extras` |
+| `ColorPicker` | `.color-picker`, from `@expressivecss/extras` |
+| `Questionnaire` | `form.questionnaire`, from `@expressivecss/extras` |
+| `InputMask` | `input[data-mask]` of type text, tel, search, url or password, from `@expressivecss/extras` |
+| `CurrencyInput` | `input[data-currency]` of type text, from `@expressivecss/extras` |
+| `TreeSelect` | `select[data-tree]`, from `@expressivecss/extras` |
+| `Cascader` | `.cascader`, from `@expressivecss/extras` |
 
-`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also initializes Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, ImageCompare, Tour, Sortable, Lists, DataTables and TransferList. The modular entry requires explicit setup for these behaviors.
+`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also initializes Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, Sortable, Lists and DataTables, and importing `@expressivecss/extras` initializes ImageCompare, Tour, TransferList and DropZone. The modular entries require explicit setup for these behaviors.
 
 ## Component lifecycle
 
@@ -435,13 +453,15 @@ The main bundle exports:
 
 - `AutoInit`, `Forms`, and `version`
 - `Copy` and `Theme`, the copy button and theme switch behaviors
-- `PaneResize`, `ImageCompare`, `Tour`, `Sortable` and `TransferList` behaviors, and the `Menubar` component
+- `PaneResize`, `Sortable`, `Lists` and `DataTables` behaviors
 - `Dialogs`, `BottomSheets`, and `SideSheets`
 - `Autocomplete`, `FloatingActionButton`, `Cards`, `Carousel`, and `CharacterCounter`
-- `Chips`, `Datepicker`, `Menu`, and `Lightbox`
-- `Slider` and `ScrollSpy`
+- `Chips`, `Datepicker`, and `Menu`
+- `Slider`
 - `FormSelect`, `NavigationRail`, and `Tabs`
 - `Timepicker`, `Snackbar`, and `Tooltip`
+
+Extension packages such as `@expressivecss/extras` import `Component`, `Utils` and `AutoInit` from `@expressivecss/expressive/core`, or read `Expressive.core` in the IIFE, and add components with `AutoInit.register(name, { component, selector })`.
 
 ---
 
@@ -453,7 +473,7 @@ Build Material Design 3 interfaces from semantic HTML, with light and dark theme
 
 ### Installation
 
-Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.20.0` and is still growing, so the usual path is to build from the repository.
+Expressive comes in two different forms. You can select which version you want depending on your preference and expertise. The project is at version `0.21.0` and is still growing, so the usual path is to build from the repository.
 
 #### Expressive
 
@@ -3023,6 +3043,8 @@ Detail content starts after `--md-comp-expanding-card-content-delay`, declared o
 
 ## Aura
 
+Package: `@expressivecss/extras`, loaded after core.
+
 A light that runs around the border of the one button or card a screen most needs you to see.
 
 An `.aura` wraps one element and runs a light around a 2px ring just outside it. Use it on the button, card or panel a screen most needs the user to notice, and keep it to one per screen. `dual` sends primary and tertiary lights around opposite sides, `rainbow` turns the whole hue wheel, and `glow` draws a blurred halo behind the element in place of a ring; give a glowing element an opaque container. The ring has 12px corners to match a card and is fully rounded around a button; set `--md-comp-aura-shape` to the corner size of anything else. Reduced motion stops the turning and keeps the ring. A shadow root ignores `@property`, so with the sheet adopted only there the light turns in 7.2deg steps. CSS only; there is no JavaScript.
@@ -3197,9 +3219,11 @@ instead of laying them over the media; markup can do the same by carrying
 
 ## Image compare
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Two images of the same scene with a divider that reveals one over the other.
 
-A `.image-compare` holds two `<img>` and a native `<input type="range">`. The range is the control, so keys, drags and taps work as on any slider and its value is announced; it covers the images invisibly. The `ImageCompare` behavior writes the value to `--md-comp-image-compare-position`, which clips the second image and places the divider and handle. RTL starts the first image on the right. Slider leaves this range alone. Give each image alt text that says which it is, and name the range. A form reset moves the divider back with the range. `Expressive.ImageCompare.sync(range)` places a compare added after load; the root bundle starts the behavior on load, and the modular entry with `ImageCompare.Init()`.
+A `.image-compare` holds two `<img>` and a native `<input type="range">`. The range is the control, so keys, drags and taps work as on any slider and its value is announced; it covers the images invisibly. The `ImageCompare` behavior writes the value to `--md-comp-image-compare-position`, which clips the second image and places the divider and handle. RTL starts the first image on the right. Slider leaves this range alone. Give each image alt text that says which it is, and name the range. A form reset moves the divider back with the range. `ExpressiveExtras.ImageCompare.sync(range)` places a compare added after load; the `@expressivecss/extras` bundle starts the behavior on load, and its modular entry with `ImageCompare.Init()`.
 
 ```html
 <div class="image-compare">
@@ -3214,6 +3238,8 @@ Tokens: `--md-comp-image-compare-position` (50%, written by the behavior), `--md
 ---
 
 ## Marquee
+
+Package: `@expressivecss/extras`, loaded after core.
 
 A row of logos, images or text that scrolls without end.
 
@@ -3251,9 +3277,11 @@ A `.marquee` holds two identical `<ul class="marquee-content">` groups. The seco
 
 ## Confetti
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Bursts of theme-colored confetti for a moment worth celebrating, such as a finished order or a completed goal.
 
-Give a button the `confetti` class and each click bursts from its center over the whole page. A `<canvas class="confetti" aria-hidden="true">` covers its nearest positioned ancestor and bursts inside it once when initialized, unless `manualStart` is set, and again on each `fire()`. `Expressive.Confetti.fire(options)` bursts over the page with no markup. `AutoInit()` starts every `.confetti`.
+Give a button the `confetti` class and each click bursts from its center over the whole page. A `<canvas class="confetti" aria-hidden="true">` covers its nearest positioned ancestor and bursts inside it once when initialized, unless `manualStart` is set, and again on each `fire()`. `ExpressiveExtras.Confetti.fire(options)` bursts over the page with no markup. `AutoInit()` starts every `.confetti`.
 
 ```html
 <button type="button" class="filled confetti">Celebrate</button>
@@ -3263,7 +3291,7 @@ Give a button the `confetti` class and each click bursts from its center over th
 </div>
 
 <script>
-Expressive.Confetti.fire({ particleCount: 100, spread: 70, origin: { x: 0.5, y: 0.6 } });
+ExpressiveExtras.Confetti.fire({ particleCount: 100, spread: 70, origin: { x: 0.5, y: 0.6 } });
 </script>
 ```
 
@@ -3308,6 +3336,8 @@ Removes a button's click handler, or stops and clears a canvas.
 
 ## Particles
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Drifting dots behind a section, such as a hero or a sign-in panel, that lean toward the pointer.
 
 A `<canvas class="particles" aria-hidden="true">` covers its nearest positioned ancestor and lets clicks through. Each dot drifts slowly, fades out near the edges and moves toward the pointer while it is over the canvas. A dot that leaves the canvas is replaced inside it. `AutoInit()` starts every `canvas.particles`.
@@ -3319,7 +3349,7 @@ A `<canvas class="particles" aria-hidden="true">` covers its nearest positioned 
 </div>
 
 <script>
-Expressive.Particles.init(document.querySelector('canvas.particles'), { quantity: 150, vy: -0.3, staticity: 20 });
+ExpressiveExtras.Particles.init(document.querySelector('canvas.particles'), { quantity: 150, vy: -0.3, staticity: 20 });
 </script>
 ```
 
@@ -3349,6 +3379,8 @@ Stops drawing, removes the pointer listener and clears the canvas.
 ---
 
 ## Map
+
+Package: `@expressivecss/extras`, loaded after core.
 
 An interactive map with markers, popups, routes, arcs, clusters and controls, built on MapLibre.
 
@@ -3389,7 +3421,7 @@ The default style is OpenFreeMap's Positron in the light theme and its Dark styl
 ```js
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as maplibregl from 'maplibre-gl';
-import { MapView } from '@expressivecss/expressive';
+import { MapView } from '@expressivecss/extras';
 
 const map = MapView.init(document.querySelector('.map'), { maplibregl, center: [-87.65, 41.89], zoom: 11 });
 map.addRoute('delivery', [[-87.70, 41.85], [-87.62, 41.88]]);
@@ -3604,6 +3636,8 @@ Delete a row at once and offer Undo in a snackbar, as the Snackbar App behavior 
 
 ## Message
 
+Package: `@expressivecss/extras`, loaded after core.
+
 One message in a conversation, with an optional avatar, header and footer.
 
 A `.message` lays out one message. It places an optional `.message-avatar`, `.message-header` and `.message-footer` around a single surface, usually a `.message-bubble`. Every other child is the surface, so wrap several elements in one `<div>` to keep them together. Messages sit on the start side; add `end` for the sender's own messages, which also turns the bubble to `primary-container`. Write the parts as `<div>`: outside sectioning content a `<header>` is a banner landmark and a `<footer>` is contentinfo.
@@ -3693,6 +3727,8 @@ Copy, feedback and retry actions go in the footer as named icon buttons. On an `
 
 ## Message scroller
 
+Package: `@expressivecss/extras`, loaded after core.
+
 A chat scroll container that anchors turns, follows streamed replies and keeps its place as history loads.
 
 A `.message-scroller` frame holds a `.message-scroller-viewport` and an optional `.message-scroller-button`. Every child of the viewport is one item, usually a `.message` or `.message-group`. The frame fills its parent, so the parent sets the height. `AutoInit()` starts every `.message-scroller`.
@@ -3758,6 +3794,8 @@ Scrolling is smooth unless the reader prefers reduced motion.
 
 ## Pull-to-refresh
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Refreshes a list or page when a person pulls down at its top, or presses its refresh button.
 
 A `.pull-to-refresh` container holds a `.loading-indicator` as a direct child, a `<button data-refresh>` and the content. `AutoInit()` starts every `.pull-to-refresh`. The container can scroll itself, with `overflow-y: auto` or `scroll`, or sit in a page that scrolls; either way a pull counts only at a scroll position of 0.
@@ -3818,6 +3856,8 @@ Removes the listeners and the status region, and ends a running refresh without 
 
 ## Loading overlay
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Covers part of a page while it loads, so nothing inside takes input until the page clears it.
 
 A `.loading-overlay` region holds a `.loading-indicator` as a direct child and the content. `AutoInit()` starts every `.loading-overlay`. The page sets `aria-busy="true"` on the region when its work starts, and removes the attribute, or sets any other value, when the work is done; there is no method for either. While the region is busy, a scrim covers it, the indicator shows in its centre, and the script makes the region `inert`, so nothing inside takes a click, a tap or keyboard focus. When it clears, the region gets back the `inert` state it had before.
@@ -3870,6 +3910,8 @@ Stops following `aria-busy`, removes the status region, and gives the region bac
 ---
 
 ## Swipe actions
+
+Package: `@expressivecss/extras`, loaded after core.
 
 Reveals a list row's actions when a person swipes it sideways, or presses its actions button.
 
@@ -3982,6 +4024,8 @@ A leading icon goes first in the summary, hidden from assistive technology. The 
 ---
 
 ## Show more
+
+Package: `@expressivecss/extras`, loaded after core.
 
 Clamped text with a button that shows the rest, and hides itself when the text already fits.
 
@@ -4497,6 +4541,8 @@ Replace `.fab` and `.fixed-action-btn` wrappers with `.fab-menu` and labelled ac
 
 ## Back to top
 
+Package: `@expressivecss/extras`, loaded after core.
+
 A link that appears once a long page has scrolled down, and returns to the top with focus on the main content.
 
 Write an `<a class="back-to-top">` whose `href` names the page's main content, give it an `aria-label`, and add the FAB classes `button circle extra` for its look. `AutoInit()` starts every `.back-to-top`. The link sits in the bottom inline-end corner, `position: fixed`, and stays hidden until the window has scrolled past `threshold`, one viewport height by default. It hides again above it, unless it has focus: a focused link stays until focus leaves, so pressing Home on it does not drop focus to the body. Without the script the link is always visible and jumps to its target, as any in-page link does. Until the script starts it is also visible at the top of the page, so call `AutoInit()` before the first paint, from a script at the end of the body, to keep it from showing there.
@@ -4538,6 +4584,8 @@ Removes the observer and the threshold element, and any `tabindex` the script ad
 ---
 
 ## Footer
+
+Package: `@expressivecss/extras`, loaded after core.
 
 Site navigation and extra information at the end of a page.
 
@@ -5558,6 +5606,8 @@ the plain indicator would be lost.
 
 ## Skeleton
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Placeholder shapes that hold the layout while content loads.
 
 A `.skeleton` is an empty block in the shape of the content it stands in for, with a shimmer passing across it. Size the default box with `width` and `height`. `text` is one line of body text, and the last of several lines runs shorter. `circle` is a 40px circle for an avatar. Reduced motion stops the shimmer and keeps the shapes. CSS only; there is no JavaScript.
@@ -5587,6 +5637,8 @@ Skeletons say nothing to assistive technology. Mark the region being filled with
 ---
 
 ## Empty state
+
+Package: `@expressivecss/extras`, loaded after core.
 
 What a view shows when it has nothing to list: an icon, a heading, text and actions.
 
@@ -5717,6 +5769,8 @@ An `.error-summary` alert at the top of a `novalidate` form lists what is wrong 
 
 ## Popover
 
+Package: `@expressivecss/extras`, loaded after core.
+
 A panel that opens from a button and stays until dismissed, on the native popover attribute.
 
 A `.popover` is a `[popover]` element, and the button that opens it names it with `popovertarget` (or `commandfor` with `command="toggle-popover"`). The browser owns the behavior: pressing the button toggles the panel, Escape or a click outside closes it, focus returns to the button, and the button reports the panel as expanded. CSS anchor positioning places the panel 4px below the button with their start edges aligned, and flips it to the other side when it would not fit. A browser without anchor positioning centers the panel in the viewport instead. CSS only; there is no JavaScript.
@@ -5753,6 +5807,8 @@ Name an icon-only button for what it explains, not "Info". The panel follows the
 ---
 
 ## Hover card
+
+Package: `@expressivecss/extras`, loaded after core.
 
 Shows a card of preview content after a delay when a link is hovered or gets keyboard focus.
 
@@ -5805,6 +5861,8 @@ Hides a card the instance showed and removes the listeners. The link and card ke
 ---
 
 ## Stepper
+
+Package: `@expressivecss/extras`, loaded after core.
 
 Progress through a fixed sequence of steps, such as a checkout, with each step's state.
 
@@ -5859,6 +5917,8 @@ The spoken states are tokens. Set them in the page's language on the stepper or 
 
 ## Timeline
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Events in order, each with a time, a title and details, joined by a line.
 
 An `<ol class="timeline">` lists events in the order the page chooses, newest or oldest first. Each `<li>` is an event: an optional `<time>` with a `datetime`, a heading and supporting `<p>` text. A dot marks each event and a line joins it to the next. A leading icon as the first child replaces the dot with a tonal circle; hide it from assistive technology. CSS only; there is no JavaScript.
@@ -5902,6 +5962,8 @@ An `<ol class="timeline">` lists events in the order the page chooses, newest or
 ---
 
 ## Calendar
+
+Package: `@expressivecss/extras`, loaded after core.
 
 A month, week or day of events, or a year of months, on tables the page renders.
 
@@ -5964,6 +6026,8 @@ Tokens: `--md-comp-calendar-day-min-height` (96px; 64px Compact), `--md-comp-cal
 
 ## Stat
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Key figures in tiles, each with a label, a value and an optional change.
 
 A `<dl class="stats">` holds one `<div>` tile per figure: a `<dt>` label, a `<dd>` value and an optional `<dd class="stat-change">` comparison. The description list keeps each value paired with its label for assistive technology. Tiles share a row and wrap below 160px each. CSS only; there is no JavaScript.
@@ -5997,6 +6061,8 @@ Add `up` or `down` to `.stat-change` for an arrow, and `negative` when the chang
 
 ## Description list
 
+Package: `@expressivecss/extras`, loaded after core.
+
 A record's details as label and value pairs, in two columns that stack on compact screens.
 
 A `dl.description-list` pairs each `<dt>` label with the `<dd>` values after it. Labels take the first column from Medium widths up, with a divider above each pair; at Compact widths, and inside a `.query-container` narrower than 600px, each label sits above its value. A `<div>` may wrap each pair and adds no box. Several `<dd>` elements under one label stack without a divider. Use stat tiles for big numbers instead. CSS only; there is no JavaScript.
@@ -6020,6 +6086,8 @@ A `dl.description-list` pairs each `<dt>` label with the `<dd>` values after it.
 ---
 
 ## KPI
+
+Package: `@expressivecss/extras`, loaded after core.
 
 One key figure in a card, with a trend chip, a sparkline and details.
 
@@ -6068,6 +6136,8 @@ The container color, shape and padding come from the card tokens.
 
 ## Countdown
 
+Package: `@expressivecss/extras`, loaded after core.
+
 A number from 0 to 999 whose digits roll to each new value.
 
 A `.countdown` is a `<span>` with `--md-comp-countdown-value` set to a whole number and the same number as its text. When the value changes, each digit rolls up or down to the new one. The rolling digits are generated content hidden from assistive technology, so the text is what a screen reader reads; change the property and the text together. Values below 0 show 0 and values above 999 show 999. The box is as wide as the number; `--md-comp-countdown-digits` pads it with leading zeros to 2 or 3 digits. Size and color come from the surrounding text. With reduced motion the digits change without rolling. CSS only; the page's script sets the value.
@@ -6110,6 +6180,8 @@ Pad each part to two digits so a clock keeps its width. A `role="timer"` contain
 ---
 
 ## Line chart
+
+Package: `@expressivecss/extras`, loaded after core.
 
 Trends over time drawn from a data table, with a tooltip, a legend and a sparkline size.
 
@@ -6157,6 +6229,8 @@ A `<figure class="line-chart">` holds a `<figcaption>` and a `<table>`. The firs
 
 ## Column chart
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Values compared across categories or periods, drawn as columns from a data table, grouped or stacked.
 
 A `<figure class="column-chart">` takes the same `<figcaption>` and `<table>` as a line chart. The first column labels each group; each further column is a series named by its header cell. `AutoInit()` draws each row as a group of columns growing from zero, one per series, with x labels, a legend when there is more than one series, and a highlight band and tooltip that follow the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
@@ -6203,6 +6277,8 @@ A `<figure class="column-chart">` takes the same `<figcaption>` and `<table>` as
 
 ## Bar chart
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Ranked or long-labelled categories drawn as horizontal bars from a data table, grouped, stacked or as a meter.
 
 A `<figure class="bar-chart">` takes the same `<figcaption>` and `<table>` as a column chart. `AutoInit()` draws each row as a band of bars growing from zero along the inline axis, one bar per series, with the row's label at the inline start, a legend when there is more than one series, and a highlight band and tooltip that follow the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
@@ -6247,6 +6323,8 @@ A `<figure class="bar-chart">` takes the same `<figcaption>` and `<table>` as a 
 ---
 
 ## Pie chart
+
+Package: `@expressivecss/extras`, loaded after core.
 
 Parts of a whole drawn as slices from a data table, as a pie or a donut with its total.
 
@@ -6293,6 +6371,8 @@ A `<figure class="pie-chart">` takes the same `<figcaption>` and `<table>` as a 
 
 ## Heatmap chart
 
+Package: `@expressivecss/extras`, loaded after core.
+
 A data table drawn as a grid of cells shaded by value, for patterns across two categories such as days and hours.
 
 A `<figure class="heatmap-chart">` takes the same `<figcaption>` and `<table>` as a column chart. `AutoInit()` draws every body cell as a cell of a grid, one grid row per table row and one grid column per value column, shaded from the lowest value to the highest. The row headers sit at the inline start, the column headers below, and a scale under the grid names the lowest and highest cells. A tooltip shows the cell under the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
@@ -6335,6 +6415,8 @@ A `<figure class="heatmap-chart">` takes the same `<figcaption>` and `<table>` a
 ---
 
 ## Radar chart
+
+Package: `@expressivecss/extras`, loaded after core.
 
 Several measures on one scale drawn as shapes on spokes from a data table, one shape per series.
 
@@ -6379,6 +6461,8 @@ A `<figure class="radar-chart">` takes the same `<figcaption>` and `<table>` as 
 
 ## Radial chart
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Progress toward a goal drawn as rings from a data table, as concentric rings or a half-circle gauge.
 
 A `<figure class="radial-chart">` takes the same `<figcaption>` and `<table>` as a column chart. `AutoInit()` draws each row of the first value column as a ring, outermost first, filled clockwise from the top as a share of `data-max` (100 by default), with a legend of the rows and their cells when there is more than one, and a tooltip that follows the pointer across the rings. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
@@ -6421,6 +6505,8 @@ A `<figure class="radial-chart">` takes the same `<figcaption>` and `<table>` as
 ---
 
 ## Mixed chart
+
+Package: `@expressivecss/extras`, loaded after core.
 
 Columns, lines and areas together from one data table, with a second scale for values in other units.
 
@@ -6469,6 +6555,8 @@ A `<figure class="mixed-chart">` takes the same `<figcaption>` and `<table>` as 
 
 ## Scatter chart
 
+Package: `@expressivecss/extras`, loaded after core.
+
 One measure plotted against another, with a point for each row.
 
 A `<figure class="scatter-chart">` takes a `<figcaption>` and a `<table>`. The first column labels each row, the second holds its x value, and each further column is a series of y values named by its header cell. `AutoInit()` draws one point per series for each row, at the row's x value and the series' y value. A legend names the series when there are two or more, and a tooltip shows the point under the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
@@ -6512,6 +6600,8 @@ A `<figure class="scatter-chart">` takes a `<figcaption>` and a `<table>`. The f
 ---
 
 ## Sankey chart
+
+Package: `@expressivecss/extras`, loaded after core.
 
 Flows between nodes, each link as thick as its value.
 
@@ -6558,6 +6648,8 @@ The inherited `min` and `max` options default to `null` and do not control flow 
 
 ## Funnel chart
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Steps people take in order, each drawn as a stage as wide as the people who reach it.
 
 A `<figure class="funnel-chart">` takes a `<figcaption>` and a `<table>`. The first column labels each row and the second holds its value. `AutoInit()` draws each row as a stage, from the top down in table order, centered and as wide as its value against the largest one, which fills the chart. Each row's label sits beside its stage at the inline start. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
@@ -6600,6 +6692,8 @@ The inherited `min` and `max` options default to `null` and do not control stage
 
 ## Treemap chart
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Parts of a whole drawn as rectangles whose areas follow their values, filling the plot.
 
 A `<figure class="treemap-chart">` takes the same `<figcaption>` and `<table>` as a pie chart. `AutoInit()` draws each row of the first value column as a rectangle whose share of the plot's area is its share of the total, with its name and cell written inside it, and a tooltip that follows the pointer. The table stays in the page, visually hidden, as the chart's text alternative; without JavaScript it shows instead of the chart.
@@ -6640,6 +6734,8 @@ A `<figure class="treemap-chart">` takes the same `<figcaption>` and `<table>` a
 ---
 
 ## Tree
+
+Package: `@expressivecss/extras`, loaded after core.
 
 Nested lists of folders and links that open in place, for file browsers and deep navigation.
 
@@ -6683,6 +6779,8 @@ It is lists of disclosures and links rather than `role="tree"`: every row is a T
 ---
 
 ## Organization chart
+
+Package: `@expressivecss/extras`, loaded after core.
 
 A reporting line drawn top down, with each person as a card under their manager.
 
@@ -6795,49 +6893,64 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
-| `Confetti` | `.confetti` |
-| `Particles` | `canvas.particles` |
-| `Keypad` | `.keypad, .keyboard` |
-| `ColorPicker` | `.color-picker` |
-| `BarChart` | `.bar-chart` |
-| `PieChart` | `.pie-chart` |
-| `HeatmapChart` | `.heatmap-chart` |
-| `RadarChart` | `.radar-chart` |
-| `RadialChart` | `.radial-chart` |
-| `MixedChart` | `.mixed-chart` |
-| `ScatterChart` | `.scatter-chart` |
-| `SankeyChart` | `.sankey-chart` |
-| `FunnelChart` | `.funnel-chart` |
-| `TreemapChart` | `.treemap-chart` |
-| `ColumnChart` | `.column-chart` |
-| `CommandPalette` | `dialog.command-palette` |
-| `Questionnaire` | `form.questionnaire` |
 | `Datepicker` | `.date-picker` |
-| `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
-| `MessageScroller` | `.message-scroller` |
-| `PullToRefresh` | `.pull-to-refresh` |
-| `LoadingOverlay` | `.loading-overlay` |
-| `SwipeActions` | `.list.swipeable` |
-| `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
-| `ShowMore` | `.show-more` |
-| `CurrencyInput` | `input[data-currency]` of type text |
-| `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollArea` | `.scroll-area.custom` |
-| `ScrollSpy` | `.scrollspy` |
-| `BackToTop` | `.back-to-top` |
 | `FormSelect` | `select` without `data-tree` |
-| `TreeSelect` | `select[data-tree]` |
-| `Cascader` | `.cascader` |
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
-| `HoverCard` | `.hover-card-trigger` |
 | `FloatingActionButton` | `.fab-menu` |
-| `Menubar` | `.menubar` |
+| `ColumnChart` | `.column-chart`, from `@expressivecss/extras` |
+| `BarChart` | `.bar-chart`, from `@expressivecss/extras` |
+| `PieChart` | `.pie-chart`, from `@expressivecss/extras` |
+| `HeatmapChart` | `.heatmap-chart`, from `@expressivecss/extras` |
+| `RadarChart` | `.radar-chart`, from `@expressivecss/extras` |
+| `RadialChart` | `.radial-chart`, from `@expressivecss/extras` |
+| `MixedChart` | `.mixed-chart`, from `@expressivecss/extras` |
+| `ScatterChart` | `.scatter-chart`, from `@expressivecss/extras` |
+| `FunnelChart` | `.funnel-chart`, from `@expressivecss/extras` |
+| `SankeyChart` | `.sankey-chart`, from `@expressivecss/extras` |
+| `TreemapChart` | `.treemap-chart`, from `@expressivecss/extras` |
+| `LineChart` | `.line-chart`, from `@expressivecss/extras` |
+| `Confetti` | `.confetti`, from `@expressivecss/extras` |
+| `Particles` | `canvas.particles`, from `@expressivecss/extras` |
+| `CommandPalette` | `dialog.command-palette`, from `@expressivecss/extras` |
+| `MessageScroller` | `.message-scroller`, from `@expressivecss/extras` |
+| `PullToRefresh` | `.pull-to-refresh`, from `@expressivecss/extras` |
+| `LoadingOverlay` | `.loading-overlay`, from `@expressivecss/extras` |
+| `SwipeActions` | `.list.swipeable`, from `@expressivecss/extras` |
+| `ShowMore` | `.show-more`, from `@expressivecss/extras` |
+| `Lightbox` | `.lightboxed`, from `@expressivecss/extras` |
+| `ScrollSpy` | `.scrollspy`, from `@expressivecss/extras` |
+| `BackToTop` | `.back-to-top`, from `@expressivecss/extras` |
+| `HoverCard` | `.hover-card-trigger`, from `@expressivecss/extras` |
+| `Menubar` | `.menubar`, from `@expressivecss/extras` |
+| `Keypad` | `.keypad, .keyboard`, from `@expressivecss/extras` |
+| `ColorPicker` | `.color-picker`, from `@expressivecss/extras` |
+| `Questionnaire` | `form.questionnaire`, from `@expressivecss/extras` |
+| `InputMask` | `input[data-mask]` of type text, tel, search, url or password, from `@expressivecss/extras` |
+| `CurrencyInput` | `input[data-currency]` of type text, from `@expressivecss/extras` |
+| `TreeSelect` | `select[data-tree]`, from `@expressivecss/extras` |
+| `Cascader` | `.cascader`, from `@expressivecss/extras` |
 
 Snackbar, CharacterCounter, and Slider stay out of this table. Slider still starts itself when the bundle loads. Forms, Chips, Cards, ExpandingCard, Dialogs, BottomSheets, and SideSheets also run an import-time `Init()`. Chips, Cards, and ExpandingCard appear in the table as well so a later `AutoInit()` can pick up elements added after load.
+
+### Registering components
+
+`AutoInit.register(name, entry)` adds a component to the table, after the built-in ones. `AutoInit()` and watch mode then start and destroy it like a built-in: they skip `no-autoinit` elements and read its options from `data-<name>-options` and from the `AutoInit()` options under `name`. The entry takes the component class, the `selector` it claims and an optional `filter` function. Extension packages such as `@expressivecss/extras` call it when they load. It throws when the name is taken or the selector is not valid.
+
+```js
+import { AutoInit, Component } from '@expressivecss/expressive/core';
+
+class Ticker extends Component {
+  static key = 'Expressive_Ticker';
+  static get defaults() { return { interval: 1000 }; }
+}
+
+AutoInit.register('Ticker', { component: Ticker, selector: '.ticker' });
+```
 
 ### Ignoring elements
 
@@ -7046,6 +7159,8 @@ instance.destroy();
 
 ## Mega menu
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Site navigation whose top items open wide panels of grouped links, on native popovers.
 
 A `nav.mega-menu` holds links and `<button>`s. Each button names a `.mega-menu-panel` with `popovertarget`, so the panel is a native popover: the browser opens it, closes it on Escape or an outside click, puts it next in the Tab order and exposes the button's expanded state. There is no JavaScript and no menu role; these are links read and tabbed in order. The panel opens below the bar, spans the window less `--md-comp-mega-menu-margin`, and lays its `<section>` groups out in as many columns as fit. A `<small>` in a link is a description line. Use a menubar for application commands.
@@ -7072,6 +7187,8 @@ Tokens: `--md-comp-mega-menu-container-color` (`surface-container`), `--md-comp-
 ---
 
 ## Menubar
+
+Package: `@expressivecss/extras`, loaded after core.
 
 An application's row of menus, such as File, Edit and View, with the menubar keyboard contract.
 
@@ -7103,9 +7220,11 @@ removes managed tab stops and roles added by initialization. Open an individual 
 
 ## Tour
 
+Package: `@expressivecss/extras`, loaded after core.
+
 A card that walks people through an interface one step at a time, beside each element it explains.
 
-A `.tour` is a `popover="manual"` element with `role="dialog"`, holding one `<section>` per step. Each section's `data-tour-target` names the id of the element it explains. Add a `.tour-progress` line, a `.tour-actions` row with `[data-tour-back]`, `[data-tour-next]` and `[data-tour-done]` buttons, and a `[data-tour-close]` button; a `[data-tour-start="tour-id"]` button starts it. The `Tour` behavior shows one step at a time below its target (above when there is no room), rings the target with `.tour-target` and scrolls it into view, and skips steps whose target is missing or hidden. Back hides on the first step, Next on the last, and Done shows only on the last. The card is named by the step heading and takes focus. Escape, Done or close end the tour and return focus; the card's `toggle` event reports it. `Expressive.Tour.start(el, index)`, `go(el, index)` and `end(el, completed)` work from script, and the tour fires `expressive:open`, `expressive:change` (`{ step, index }`) and `expressive:close` (`{ completed }`), and `Expressive.Tour.i18n.progress` holds "Step {current} of {total}". The root bundle starts the behavior on load; with the modular entry, call `Tour.Init()`.
+A `.tour` is a `popover="manual"` element with `role="dialog"`, holding one `<section>` per step. Each section's `data-tour-target` names the id of the element it explains. Add a `.tour-progress` line, a `.tour-actions` row with `[data-tour-back]`, `[data-tour-next]` and `[data-tour-done]` buttons, and a `[data-tour-close]` button; a `[data-tour-start="tour-id"]` button starts it. The `Tour` behavior shows one step at a time below its target (above when there is no room), rings the target with `.tour-target` and scrolls it into view, and skips steps whose target is missing or hidden. Back hides on the first step, Next on the last, and Done shows only on the last. The card is named by the step heading and takes focus. Escape, Done or close end the tour and return focus; the card's `toggle` event reports it. `ExpressiveExtras.Tour.start(el, index)`, `go(el, index)` and `end(el, completed)` work from script, and the tour fires `expressive:open`, `expressive:change` (`{ step, index }`) and `expressive:close` (`{ completed }`), and `ExpressiveExtras.Tour.i18n.progress` holds "Step {current} of {total}". The `@expressivecss/extras` bundle starts the behavior on load; with its modular entry, call `Tour.Init()`.
 
 ```html
 <button type="button" data-tour-start="welcome">Take the tour</button>
@@ -7135,6 +7254,8 @@ Media components handle large objects such as images. For responsive images and 
 
 ### Lightbox
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Lightbox supports Space and native button activation. Repeated open or close requests are ignored; reopening during closing cancels the old transition. Canceled transitions do not report completion. Reduced motion skips animation and finishes pending transitions when enabled while mounted. Destroy cancels pending work, retains the original image, restores owned attributes and styles, and preserves trigger focus without overriding application focus. The open image, its overlay and its caption are manual popovers in the browser's top layer, so a clipping or transformed ancestor does not cut the image off, and Lightbox leaves its ancestors' styles alone. Tab still closes it rather than being trapped: this does not supply a modal-gallery focus contract.
 
 Lightbox is Expressive’s material-style enlarge-on-click image. Click an image with `lightboxed` and it centers and grows. Click it again, scroll, or press Escape to dismiss. `AutoInit()` starts every `.lightboxed` image except those marked `no-autoinit`.
@@ -7148,7 +7269,7 @@ Lightbox is Expressive’s material-style enlarge-on-click image. Click an image
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.lightboxed');
-  const instances = Expressive.Lightbox.init(elems, {
+  const instances = ExpressiveExtras.Lightbox.init(elems, {
     // specify options here
   });
 });
@@ -7170,7 +7291,7 @@ document.addEventListener('DOMContentLoaded', function() {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = Expressive.Lightbox.getInstance(elem);
+const instance = ExpressiveExtras.Lightbox.getInstance(elem);
 ```
 
 ##### .open();
@@ -7396,6 +7517,8 @@ Add `max` for a full-viewport dialog with no corners. That is the M3 full-screen
 
 ## Scrollspy
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Highlight the table of contents as the page scrolls.
 
 Scrollspy watches a set of sections and which one is currently in view. The table of contents on the right of every documentation page is the live demo: the matching link gets `active`, and clicking a link scrolls to that section.
@@ -7431,12 +7554,12 @@ Each link is at least 48dp tall, the Material touch target. For a denser list, s
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.ScrollSpy`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.scrollspy`.
+The extras IIFE bundle exposes `ExpressiveExtras.ScrollSpy`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.scrollspy`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.scrollspy');
-  const instances = Expressive.ScrollSpy.init(elems, {
+  const instances = ExpressiveExtras.ScrollSpy.init(elems, {
     // specify options here
   });
 });
@@ -7482,7 +7605,7 @@ function(id) {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = Expressive.ScrollSpy.getInstance(elem);
+const instance = ExpressiveExtras.ScrollSpy.getInstance(elem);
 ```
 
 #### .destroy();
@@ -8229,12 +8352,13 @@ For markup added later, call `Forms.InitTextarea(textarea)` or `Forms.InitFileIn
 for each new control. A second call on the same control adds no listeners; `InitTextarea` only
 measures the textarea again. After assigning textarea text from script, call
 `Forms.textareaAutoResize(textarea)`. `Forms.validateField(input)` refreshes validation state
-and error descriptions; for drop-zone file inputs it also refreshes file validation and feedback.
-`Forms.listDropZoneFiles(zone, input)` rebuilds the zone's filename and localized-size list.
+and error descriptions. Drop-zone file inputs belong to `DropZone` in `@expressivecss/extras`.
 Forms has no per-field instance or `destroy()` method. See the
 [form helpers API](https://www.expressivecss.com/text-inputs.html#api).
 
 ## Command palette
+
+Package: `@expressivecss/extras`, loaded after core.
 
 A searchable list of commands in a dialog, opened from anywhere with a shortcut.
 
@@ -8793,6 +8917,8 @@ These methods are not provided. The clock defaults to visible inline presentatio
 
 ## Keypad and Keyboard
 
+Package: `@expressivecss/extras`, loaded after core.
+
 On-screen keys that type into a text field: a PIN or dial pad, or a full keyboard.
 
 A `.keypad` is three columns of round 72dp keys for PINs, codes and amounts. A `.keyboard` is a surface of rows, each child a row of keys, for text. Both are a `role="group"` with an `aria-label`, and `aria-controls` names the `<input>` or `<textarea>` they type into. Every key is a `<button type="button">`. A key with a `value` types it at the caret, replacing any selection, and the field gets the same `input` event typing would fire. `AutoInit()` starts every `.keypad` and `.keyboard`.
@@ -9105,6 +9231,8 @@ form.addEventListener('submit', (event) => {
 
 ## Input mask
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Formats a text field's value to a pattern, such as a phone or card number, as people type, paste or compose.
 
 Add `data-mask` to an `<input>` of type `text`, `tel`, `search`, `url` or `password`. `AutoInit()` starts every one. In the mask, `0` takes a digit, `a` takes a letter and `*` takes either. Every other character is a literal the mask writes itself, and a backslash makes the next character a literal, so `\0` writes a zero.
@@ -9132,6 +9260,8 @@ Removes the listeners and leaves the value as it is.
 ---
 
 ## Currency input
+
+Package: `@expressivecss/extras`, loaded after core.
 
 Shows a typed amount in the page's locale and currency once the field loses focus, and submits the plain number.
 
@@ -9174,6 +9304,8 @@ Removes the listeners, clears the validity message and leaves the text as it is.
 
 ## Rich text editor
 
+Package: `@expressivecss/extras`, loaded after core.
+
 A text field with a formatting toolbar for writing headings, lists and styled text, built on Tiptap.
 
 A `.rich-text-editor` holds a docked `.toolbar` and a `<textarea>` whose value is the starting HTML. The component hides the textarea, mounts the editor in a `.rich-text-editor-content` after it, and writes the editor's HTML back on every change, so the textarea submits with its form and fires `input`. An empty editor submits an empty value. Without JavaScript the textarea stays visible and the toolbar is hidden.
@@ -9207,7 +9339,7 @@ The editable area is a multi-line `textbox` named from the textarea's `<label fo
 ```js
 import { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
-import { RichTextEditor } from '@expressivecss/expressive';
+import { RichTextEditor } from '@expressivecss/extras';
 
 RichTextEditor.init(document.querySelector('.rich-text-editor'), {
   Editor,
@@ -9243,9 +9375,11 @@ Destroys the editor, removes its element and the button state, and shows the tex
 
 ## Drop zone
 
+Package: `@expressivecss/extras`, loaded after core.
+
 A large target for choosing or dropping files, with an optional list and independent type, size and count limits.
 
-A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input covers the label, so clicking, keyboard input and file dropping reach the native control. Forms marks dragover and lists each selected file's name and localized size. The root bundle installs Forms on load; modular consumers call `Forms.Init()`. Document-level input/change handling also supports dynamically inserted zones and open shadow roots.
+A `.drop-zone` holds a `<label>` with an icon, a prompt and a native `<input type="file">`, and an optional `<ul class="drop-zone-files">` after it. The input covers the label, so clicking, keyboard input and file dropping reach the native control. The `DropZone` behavior from `@expressivecss/extras` marks dragover and lists each selected file's name and localized size; `DropZone.listFiles(zone, input)` rebuilds the list. Importing `@expressivecss/extras` installs it on load; modular consumers call `DropZone.Init()`. Document-level input/change handling also supports dynamically inserted zones and open shadow roots.
 
 A dropped file replaces the selection; add multiple to take several files. `accept` alone is a picker hint. Add data-validate-types for type checks, data-max-size for a per-file byte limit or data-max-files for a count limit. Unmarked zones retain their existing behavior. Reset clears lists after dispatch/default handling; cancellation preserves the current view, and a newer selection keeps its state.
 
@@ -9288,12 +9422,12 @@ zone.addEventListener('expressive:reject', ({ detail }) => {
   console.log(detail.reason, detail.rejected.map(file => file.name));
 });
 // Silent validity/feedback refresh after scripted files or constraint changes:
-Expressive.Forms.validateField(input);
+ExpressiveExtras.DropZone.validateField(input);
 // To refresh the file list too, dispatch one bubbling composed input or change:
 input.dispatchEvent(new Event('input', { bubbles: true, composed: true }));
 ```
 
-Valid replacement, clearing, removal of the opt-in followed by validation, and an uncanceled reset release only framework-owned type validity. If the application replaces that message, recovery preserves its new value. Reset uses native form ownership, including controls associated through a form attribute outside the form subtree. Cleanup runs after dispatch/default handling, respects cancellation and leaves newer selections intact. Reset and silent validation emit no rejection event. Disabled controls and fieldsets remain inactive, including reset-time validity writes; call Forms.validateField after scripted enabling to refresh the current selection. Handled shadow-root forms follow the same reset contract.
+Valid replacement, clearing, removal of the opt-in followed by validation, and an uncanceled reset release only framework-owned type validity. If the application replaces that message, recovery preserves its new value. Reset uses native form ownership, including controls associated through a form attribute outside the form subtree. Cleanup runs after dispatch/default handling, respects cancellation and leaves newer selections intact. Reset and silent validation emit no rejection event. Disabled controls and fieldsets remain inactive, including reset-time validity writes; call DropZone.validateField after scripted enabling to refresh the current selection. Handled shadow-root forms follow the same reset contract.
 
 Uploads are outside these options. File names and MIME labels do not verify contents. Native validation can be bypassed by scripts or explicit form settings; always validate received data on the server.
 
@@ -9314,7 +9448,7 @@ Add `data-max-size="1048576"` to the native input for a maximum of 1,048,576 byt
 </div>
 ```
 
-Use positive decimal safe-integer bytes, with surrounding whitespace allowed. Missing, blank, zero, negative, fractional, exponent, hexadecimal, nonnumeric or unsafe values impose no size constraint. Leading zeros are allowed. Remove the attribute or change its value and call Forms.validateField to silently refresh validity and feedback; dispatch a bubbling composed input/change to refresh the list too.
+Use positive decimal safe-integer bytes, with surrounding whitespace allowed. Missing, blank, zero, negative, fractional, exponent, hexadecimal, nonnumeric or unsafe values impose no size constraint. Leading zeros are allowed. Remove the attribute or change its value and call DropZone.validateField to silently refresh validity and feedback; dispatch a bubbling composed input/change to refresh the list too.
 
 Combine both constraints on one input: `type="file" multiple data-validate-types accept=".pdf,.png" data-max-size="1048576"`. Supply the same direct polite data-error status area. A nonempty data-error-size value localizes size feedback; empty uses a message naming the exact byte limit. Existing data-error continues localizing type feedback. Type failures take precedence; only when all files match types does the size failure appear. With neither file failure, remaining native/application errors are shown or feedback clears when valid. Existing application custom validity is never overwritten.
 
@@ -9339,7 +9473,7 @@ Add `data-max-files="2"` to the native input for at most two selected files. Exa
 </div>
 ```
 
-Use trimmed positive decimal safe-integer counts, including leading zeros. Missing, blank, zero, negative, fractional, exponent, hexadecimal, nonnumeric or unsafe limits impose no count constraint. Remove/change the attribute and call Forms.validateField to silently refresh validity/feedback; a bubbling composed input/change also refreshes the list.
+Use trimmed positive decimal safe-integer counts, including leading zeros. Missing, blank, zero, negative, fractional, exponent, hexadecimal, nonnumeric or unsafe limits impose no count constraint. Remove/change the attribute and call DropZone.validateField to silently refresh validity/feedback; a bubbling composed input/change also refreshes the list.
 
 Combine all three constraints on one input: `type="file" multiple data-validate-types accept=".pdf,.png" data-max-size="1048576" data-max-files="2"`. Keep the direct polite data-error status area. Nonempty data-error-count localizes count feedback; empty uses a message naming the count limit. Existing data-error and data-error-size continue localizing type/size messages. Type failures take precedence, followed by size and then count. Preserve unowned application custom validity even while the status explains a file-rule failure.
 
@@ -9461,6 +9595,8 @@ For how a form with these groups submits, shows its errors and moves focus, foll
 
 ## Questionnaire
 
+Package: `@expressivecss/extras`, loaded after core.
+
 A form that asks one question at a time, with single and multiple choice, free text and skippable questions.
 
 A `<form class="questionnaire">` holds one `<fieldset>` per question and a `<footer>` of buttons. The `<legend>` is the prompt and a `<p>` under it describes the question. Answers are ordinary radio buttons, checkboxes or text fields; a `<small>` inside a choice's label describes that choice, and choices draw as outlined rows that fill with `secondary-container` when selected. A `<p class="questionnaire-error">` in a question holds its error text. The footer buttons are marked by `value`: `previous`, `skip` and `next`, each `type="button"`, plus a submit button. `AutoInit()` starts every `form.questionnaire`.
@@ -9557,6 +9693,8 @@ Shows every question and removes the progress row, ids, states and listeners the
 
 ## Rating
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Stars for choosing or showing a score, on native radio buttons.
 
 For input, a `<fieldset class="rating">` holds a `<legend>` and one radio per star, each in a `<label>` whose visually hidden text ("3 stars") comes before the radio. The radio is drawn as the star, so Tab, the arrow keys, `required` and form submission stay native. A star fills when it or a later star is checked, and hovering previews a choice. Put the text before the radio: a span after it is the older `input + span` radio, which hides the input. CSS only; there is no JavaScript.
@@ -9594,6 +9732,8 @@ To show a score, give an element `class="rating"`, `role="img"`, a name with the
 
 ## Color swatches
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Pick one color from a preset palette, on native radio buttons.
 
 A `<fieldset class="color-swatches">` holds a `<legend>` and one radio per color, each in a `<label>` whose visually hidden text ("Purple") comes before the radio, with `--md-comp-color-swatch-color` set on the radio. The radio is drawn as a 40px round chip of that color with a 48px target, and the checked one gets a ring, so the choice is marked by shape as well as color. Tab, the arrow keys and form submission stay native. Add an `<input type="color">` in a label of its own at the end for a custom value; it is already drawn as a matching round swatch. Under forced colors the swatches keep their colors and the checked one gets a `Highlight` outline. CSS only; there is no JavaScript.
@@ -9621,6 +9761,8 @@ A `<fieldset class="color-swatches">` holds a `<legend>` and one radio per color
 
 ## Color picker
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Choose any color with a saturation and brightness area, a hue slider and a hex field, over a native color input.
 
 Write a `.color-picker` with `role="group"` and a name around an `<input type="color">`. Without JavaScript that is the native swatch and the browser's picker. `ColorPicker`, which AutoInit starts, adds three controls around the input: a saturation and brightness area, a hue slider and a hex field. The native input stays the form value and the preview, and the browser's picker still opens from it. Every change writes the input and fires its `input` event, and a committed change (a released drag, a key press, a released hue, an applied hex value) also fires `change`, so existing listeners keep working. A form reset redraws the controls from the restored value without firing events.
@@ -9634,7 +9776,7 @@ The area is a `role="slider"` with `aria-valuetext` such as "Saturation 60%, bri
 ```
 
 ```js
-const picker = Expressive.ColorPicker.init(el, {
+const picker = ExpressiveExtras.ColorPicker.init(el, {
   onChange: (value) => console.log(value), // '#6750a4'
   // The accessible names, for a page in another language.
   i18n: {
@@ -9935,6 +10077,8 @@ instance.destroy();
 
 ## Tree select
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Choose leaves from options nested as a tree, expanded with the keyboard or pointer.
 
 A native `<select data-tree>` holds flat `<option>`s. A child names its parent option's value in `data-parent`; an option without one is a root, and an option another option names is a branch. `AutoInit()` starts every `select[data-tree]` as `TreeSelect`, a FormSelect subclass, so the field, labels, validation messages and reset work as in a select. The native select still owns the form value, reset, validity and the disabled state. HTML cannot nest `<optgroup>`s, so nesting comes only from `data-parent`.
@@ -10011,7 +10155,7 @@ Set `searchable: true` with `TreeSelect.init` or `data-tree-select-options` on a
 ```
 
 ```js
-Expressive.TreeSelect.init(select, {
+ExpressiveExtras.TreeSelect.init(select, {
   searchable: true,
   i18n: { searchLabel: 'Find a leaf', noResults: 'No matching leaves' }
 });
@@ -10057,6 +10201,8 @@ Removes the tree and its listeners, restores the branch options' `disabled` attr
 ---
 
 ## Cascader
+
+Package: `@expressivecss/extras`, loaded after core.
 
 Pick a path through nested options shown in columns, where each choice opens the next column, and submit the whole path.
 
@@ -10625,15 +10771,17 @@ Add `aria-invalid="true"` or `class="invalid"` on the input. The box uses `error
 
 ## Transfer list
 
+Package: `@expressivecss/extras`, loaded after core.
+
 Moves options between an available list and a chosen list, and submits the chosen ones with the form.
 
-A `.transfer-list` holds a `.list.transfer-available`, a `.transfer-actions` group of four `type="button"` buttons, and a `.list.transfer-chosen`. Each row is a `<label>` around a checkbox with a `value` and no `name`. Name each list with `aria-label` or `aria-labelledby`, and give the container a `data-name`. The root bundle starts the behavior on load; with the modular entry, call `TransferList.Init()`. Its listeners are on the document, so a list added later needs no call.
+A `.transfer-list` holds a `.list.transfer-available`, a `.transfer-actions` group of four `type="button"` buttons, and a `.list.transfer-chosen`. Each row is a `<label>` around a checkbox with a `value` and no `name`. Name each list with `aria-label` or `aria-labelledby`, and give the container a `data-name`. Importing `@expressivecss/extras` starts the behavior on load; with its modular entry, call `TransferList.Init()`. Its listeners are on the document, so a list added later needs no call.
 
 `data-transfer="add"` moves the checked rows of the available list to the end of the chosen list, and `remove` moves the checked rows of the chosen list back. `add-all` and `remove-all` move every row. Moved rows arrive unchecked, and a row whose checkbox is disabled stays where it is. The chosen list keeps the order rows arrived in, and a row moved back returns to the place it had before the first move. The rows are native checkboxes, so Tab reaches each one and Space checks it; there is no listbox role or arrow-key model. A button pressed with nothing to move does nothing, and focus stays on the button after a move.
 
 When the form builds its data, each row of the chosen list adds its checkbox value under the container's `data-name`, in the chosen list's order. A form reset puts every row back where it was before the first move. A list inside a `<fieldset disabled>` submits nothing, as the fieldset's own fields do, but a chosen row whose own checkbox is disabled still submits.
 
-After each move the container fires a bubbling `expressive:transfer` event that crosses shadow roots, whose `detail` is `{ rows, from, to }`: the moved rows in their new order, then the two lists. A polite live region after the container announces the move. `Expressive.TransferList.i18n.moved` holds its text, `Moved {count} to {list}` by default, where `{list}` is the destination list's name.
+After each move the container fires a bubbling `expressive:transfer` event that crosses shadow roots, whose `detail` is `{ rows, from, to }`: the moved rows in their new order, then the two lists. A polite live region after the container announces the move. `ExpressiveExtras.TransferList.i18n.moved` holds its text, `Moved {count} to {list}` by default, where `{list}` is the destination list's name.
 
 ```html
 <form>

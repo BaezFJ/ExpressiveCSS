@@ -2,7 +2,8 @@ import { parse } from '@babel/parser';
 import { isReferenced, traverse, traverseFast } from '@babel/types';
 
 export const scriptFile = /\.[cm]?[jt]sx?$/i;
-const framework = new Set(['@expressivecss/expressive', '@expressivecss/expressive/modular']);
+const framework = new Set(['@expressivecss/expressive', '@expressivecss/expressive/modular', '@expressivecss/extras', '@expressivecss/extras/modular']);
+const globals = new Set(['Expressive', 'ExpressiveExtras']);
 
 export function parseScript(source, file) {
   const plugins = ['decorators-legacy'];
@@ -29,7 +30,7 @@ function loadsFramework(node) {
 
 export function collectModuleAPIs(tokens, tree, mode) {
   const locals = new Map();
-  const namespaces = new Set(['Expressive']);
+  const namespaces = new Set(globals);
   const keep = name => tokens.add(`api:${name}`);
   function bind(pattern) {
     if (pattern?.type === 'Identifier') namespaces.add(pattern.name);
@@ -61,7 +62,7 @@ export function collectModuleAPIs(tokens, tree, mode) {
       && isReferenced(node, ancestors.at(-1).node, ancestors.at(-2)?.node)) keep(locals.get(node.name));
     if (node.type !== 'MemberExpression' && node.type !== 'OptionalMemberExpression') return;
     const object = node.object;
-    const global = memberName(object) === 'Expressive' && ['window', 'globalThis', 'self'].includes(object.object?.name);
+    const global = globals.has(memberName(object)) && ['window', 'globalThis', 'self'].includes(object.object?.name);
     if (global || namespaces.has(object.name) || (mode !== 'bundled' && loadsFramework(object))) {
       const name = memberName(node);
       if (name) keep(name);

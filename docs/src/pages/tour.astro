@@ -107,15 +107,15 @@ const S = defineSections([
           so it can, for example, remember that the user saw the tour.
         </p>
         <p>
-          From script, call <code>Expressive.Tour.start(el, index)</code>,
+          From script, call <code>ExpressiveExtras.Tour.start(el, index)</code>,
           <code>go(el, index)</code> and <code>end(el, completed)</code>.
           The tour fires <code>expressive:open</code>, and
           <code>expressive:change</code> with <code>{"{ step, index }"}</code>.
           It also fires <code>expressive:close</code> with
           <code>{"{ completed }"}</code>, which is true when Done ended the
-          tour. <code>Expressive.Tour.i18n.progress</code> holds the
-          <code>{"Step {current} of {total}"}</code> text. The root bundle
-          starts the behavior on load. With the modular entry, call
+          tour. <code>ExpressiveExtras.Tour.i18n.progress</code> holds the
+          <code>{"Step {current} of {total}"}</code> text. The extras bundle
+          starts the behavior on load. With its modular entry, call
           <code>Tour.Init()</code>.
         </p>
   </Section>

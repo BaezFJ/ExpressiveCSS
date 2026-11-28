@@ -54,11 +54,11 @@ async function open(browser, settings) {
     const select = document.getElementById('place');
     if (settings) select.dataset.treeSelectOptions = JSON.stringify(settings);
     Expressive.AutoInit();
-    if (settings) window.treeSelect = Expressive.TreeSelect.getInstance(select);
+    if (settings) window.treeSelect = ExpressiveExtras.TreeSelect.getInstance(select);
   }, settings);
   const state = () =>
     page.evaluate(() => {
-      const instance = Expressive.TreeSelect.getInstance(document.getElementById('place'));
+      const instance = ExpressiveExtras.TreeSelect.getInstance(document.getElementById('place'));
       const row = (text) => Array.from(instance.tree.querySelectorAll('li')).find((li) => li.firstChild.textContent === text);
       const focused = document.activeElement.closest('li[role="treeitem"]');
       return {
@@ -88,7 +88,7 @@ function each(name, body, settings) {
           await page?.evaluate(() => {
             window.treeSelect?.destroy();
             document.querySelectorAll('dialog[open]').forEach(dialog => dialog.close());
-            document.querySelectorAll('select[data-tree]').forEach(select => Expressive.TreeSelect.getInstance(select)?.destroy());
+            document.querySelectorAll('select[data-tree]').forEach(select => ExpressiveExtras.TreeSelect.getInstance(select)?.destroy());
           });
         } finally { await browser.close(); }
       }
@@ -116,7 +116,7 @@ each('ArrowRight expands a branch, Enter chooses a leaf, and the form submits it
   await focusOn(page, 'Paris');
   await page.keyboard.press('Enter');
 
-  await page.waitForFunction(() => !Expressive.TreeSelect.getInstance(document.getElementById('place')).menu.isOpen);
+  await page.waitForFunction(() => !ExpressiveExtras.TreeSelect.getInstance(document.getElementById('place')).menu.isOpen);
   const after = await state();
   assert.equal(after.field, 'Paris');
   assert.equal(after.selected, 'true');
@@ -130,7 +130,7 @@ each('ArrowRight expands a branch, Enter chooses a leaf, and the form submits it
 });
 
 /** Waits until the place tree has closed. */
-const closed = (page) => page.waitForFunction(() => !Expressive.TreeSelect.getInstance(document.getElementById('place')).menu.isOpen);
+const closed = (page) => page.waitForFunction(() => !ExpressiveExtras.TreeSelect.getInstance(document.getElementById('place')).menu.isOpen);
 
 /** Which arrow opens and which closes in each direction. */
 const ARROWS = { ltr: ['ArrowRight', 'ArrowLeft'], rtl: ['ArrowLeft', 'ArrowRight'] };
@@ -256,7 +256,7 @@ each('refresh() keeps open branches open and focus on the same row', async ({ pa
     const madrid = new Option('Madrid', 'madrid');
     madrid.dataset.parent = 'spain';
     select.add(madrid);
-    Expressive.TreeSelect.getInstance(select).refresh();
+    ExpressiveExtras.TreeSelect.getInstance(select).refresh();
   });
   await focusOn(page, 'Lyon');
   const after = await state();
@@ -271,7 +271,7 @@ each('refresh() keeps open branches open and focus on the same row', async ({ pa
   // A focused branch keeps focus as well.
   await page.keyboard.press('ArrowLeft');
   await focusOn(page, 'France');
-  await page.evaluate(() => Expressive.TreeSelect.getInstance(document.getElementById('place')).refresh());
+  await page.evaluate(() => ExpressiveExtras.TreeSelect.getInstance(document.getElementById('place')).refresh());
   await focusOn(page, 'France');
 });
 
@@ -280,7 +280,7 @@ each('a required tree select that fails validation moves focus to its field and 
     const select = document.getElementById('needed');
     const valid = select.form.reportValidity();
     await new Promise((resolve) => setTimeout(resolve, 50));
-    const instance = Expressive.TreeSelect.getInstance(select);
+    const instance = ExpressiveExtras.TreeSelect.getInstance(select);
     return {
       valid,
       focused: document.activeElement === instance.input,
@@ -295,7 +295,7 @@ each('a branch the page selects shows in the field but is left out of the form d
   const read = await page.evaluate(() => {
     const select = document.getElementById('place');
     select.value = 'asia';
-    Expressive.TreeSelect.getInstance(select).refresh();
+    ExpressiveExtras.TreeSelect.getInstance(select).refresh();
     return { selected: select.value, entries: Array.from(new FormData(select.form).keys()) };
   });
   assert.deepEqual(read, { selected: 'asia', entries: [] });
@@ -355,7 +355,7 @@ each('refresh() moves focus off a row that became disabled', async ({ page }) =>
   await page.evaluate(() => {
     const select = document.getElementById('place');
     select.querySelector('[value="spain"]').disabled = true;
-    Expressive.TreeSelect.getInstance(select).refresh();
+    ExpressiveExtras.TreeSelect.getInstance(select).refresh();
   });
   await focusOn(page, 'Europe');
   await page.keyboard.press('End');
@@ -593,7 +593,7 @@ treeSearch('respects autoFocus false, callback context and outside focus', async
     const select = treeSelect.el;
     treeSelect.destroy();
     window.calls = [];
-    window.treeSelect = Expressive.TreeSelect.init(select, { searchable: true, menuOptions: {
+    window.treeSelect = ExpressiveExtras.TreeSelect.init(select, { searchable: true, menuOptions: {
       inDuration: 0, outDuration: 0, autoFocus: false,
       onOpenEnd(el) { calls.push(['open', el === select, this === treeSelect.menu]); },
       onCloseStart(el) { calls.push(['close', el === select, this === treeSelect.menu]); }
@@ -649,7 +649,7 @@ treeSearch('preserves result focus through delayed opening in native dialogs and
       const root = kind === 'shadow' ? host.attachShadow({ mode: 'open' }) : host;
       root.append(document.querySelector('style').cloneNode(true), form);
       if (kind === 'dialog') host.showModal();
-      window.treeSelect = Expressive.TreeSelect.init(select, { searchable: true,
+      window.treeSelect = ExpressiveExtras.TreeSelect.init(select, { searchable: true,
         menuOptions: { inDuration: 100, outDuration: 0 } });
     }, kind);
     await treeTrigger(page).click();
@@ -710,7 +710,7 @@ treeSearch('keeps an initially disabled search hidden and enables its hierarchy 
     const select = treeSelect.el;
     treeSelect.destroy();
     select.disabled = true;
-    window.treeSelect = Expressive.TreeSelect.init(select, { searchable: true,
+    window.treeSelect = ExpressiveExtras.TreeSelect.init(select, { searchable: true,
       menuOptions: { inDuration: 0, outDuration: 0 } });
   });
   const search = searchInput(page);
@@ -735,7 +735,7 @@ treeSearch('fits translated no-results feedback in a transformed narrow containe
     treeSelect.destroy();
     select.innerHTML = '<option value="group" disabled>Places</option><option value="paris" data-parent="group">Paris</option>';
     Object.assign(select.form.style, { width: '160px', transform: 'translateX(1px)' });
-    window.treeSelect = Expressive.TreeSelect.init(select, { searchable: true,
+    window.treeSelect = ExpressiveExtras.TreeSelect.init(select, { searchable: true,
       i18n: { noResults: message }, menuOptions: { inDuration: 0, outDuration: 0 } });
   }, message);
   await treeTrigger(page).click();

@@ -85,12 +85,12 @@ for (const [name, engine, browserTest] of engines) {
       assert.equal(await input.evaluate(el => el.files.length), 0);
       assert.equal(await input.evaluate(el => el.validity.valid), true);
       assert.equal(await page.locator('.drop-zone-files > li').count(), 0);
-      await input.evaluate(el => { el.required = true; Expressive.Forms.validateField(el); });
+      await input.evaluate(el => { el.required = true; ExpressiveExtras.DropZone.validateField(el); });
       assert.equal(await input.evaluate(el => el.validity.valueMissing), true);
       assert.equal(await input.evaluate(el => el.validity.customError), false);
       await page.locator('#submit').click();
       assert.equal(await page.evaluate(() => window.submits), 1);
-      await input.evaluate(el => { el.required = false; Expressive.Forms.validateField(el); });
+      await input.evaluate(el => { el.required = false; ExpressiveExtras.DropZone.validateField(el); });
       await expect(error).toBeHidden();
       await input.evaluate(el => {
         el.form.reset();
@@ -191,12 +191,12 @@ for (const [name, engine, browserTest] of engines) {
       assert.equal(await input.evaluate(el => el.files.length), 0);
       assert.equal(await input.evaluate(el => el.validationMessage), 'Application policy');
       await expect(error).toHaveText('Application policy');
-      await input.evaluate(el => { el.setCustomValidity(''); Expressive.Forms.validateField(el); });
+      await input.evaluate(el => { el.setCustomValidity(''); ExpressiveExtras.DropZone.validateField(el); });
       await expect(error).toBeHidden();
       await input.setInputFiles(scenario.invalid);
       await input.evaluate(el => { el.disabled = true; el.form.reset(); });
       assert.equal(await input.evaluate(el => el.files.length), 0);
-      await input.evaluate(el => { el.disabled = false; Expressive.Forms.validateField(el); });
+      await input.evaluate(el => { el.disabled = false; ExpressiveExtras.DropZone.validateField(el); });
       assert.equal(await input.evaluate(el => el.validity.valid), true);
       await expect(error).toBeHidden();
     } finally {

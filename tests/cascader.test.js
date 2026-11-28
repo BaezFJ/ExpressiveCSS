@@ -7,7 +7,7 @@
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Expressive, resetBody } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody } from './setup.js';
 
 beforeEach(resetBody);
 
@@ -29,13 +29,13 @@ const places = (marks = {}) => `
 function start(list = places(), input = '<input id="place" name="place" type="text">') {
   document.body.innerHTML = `<form><div class="field cascader">${input}<label for="place">Place</label>
     <ul class="cascader-options">${list}</ul></div></form>`;
-  return Expressive.Cascader.init(document.querySelector('.cascader'));
+  return ExpressiveExtras.Cascader.init(document.querySelector('.cascader'));
 }
 
 test('AutoInit starts a cascader on .cascader and makes its input a read-only combobox with a dialog', () => {
   start();
   Expressive.AutoInit();
-  const cascader = Expressive.Cascader.getInstance(document.querySelector('.cascader'));
+  const cascader = ExpressiveExtras.Cascader.getInstance(document.querySelector('.cascader'));
   try {
     const input = cascader.input;
     assert.equal(input.readOnly, true);
@@ -93,7 +93,7 @@ test('destroy() removes the popover and puts the input attributes back, keeping 
   assert.equal(input.getAttribute('aria-controls'), 'elsewhere');
   assert.equal(input.getAttribute('name'), 'place');
   assert.equal(input.value, 'United States / California / San Francisco');
-  assert.equal(Expressive.Cascader.getInstance(document.querySelector('.cascader')), undefined);
+  assert.equal(ExpressiveExtras.Cascader.getInstance(document.querySelector('.cascader')), undefined);
 });
 
 test('open() builds a column per level of the chosen path, named after the label and the options that opened them; close() clears them', () => {

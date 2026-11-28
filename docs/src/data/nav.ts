@@ -36,10 +36,12 @@ export interface DocsPage {
 export interface DocsGroup {
   label: string;
   icon: string;
+  /** Set when the group's pages document a separate package rather than core. */
+  package?: "extras";
   pages: DocsPage[];
 }
 
-export const NAV: DocsGroup[] = [
+const GROUPS: DocsGroup[] = [
   {
     label: "Start",
     icon: "home",
@@ -282,14 +284,6 @@ export const NAV: DocsGroup[] = [
           "Place an app's bar, navigation rail, pane and trailing toolbar.",
       },
       {
-        id: "footer",
-        styles: ["components/page-footer"],
-        label: "Footer",
-        route: "/footer.html",
-        description:
-          "Site navigation and extra information at the end of a page.",
-      },
-      {
         id: "tabs",
         styles: ["components/tabs"],
         exports: ["Tabs"],
@@ -315,14 +309,6 @@ export const NAV: DocsGroup[] = [
           "A list of pages. The HTML is the component.",
       },
       {
-        id: "stepper",
-        styles: ["components/stepper"],
-        label: "Stepper",
-        route: "/stepper.html",
-        description:
-          "Progress through a fixed sequence of steps, such as a checkout, with each step's state.",
-      },
-      {
         id: "menu",
         styles: ["components/menu"],
         exports: ["Menu"],
@@ -331,40 +317,6 @@ export const NAV: DocsGroup[] = [
         description:
           "Material Design 3 menus, from the HTML.",
         aliases: ["/dropdown.html"],
-      },
-      {
-        id: "mega_menu",
-        styles: ["components/mega-menu"],
-        label: "Mega menu",
-        route: "/mega-menu.html",
-        description:
-          "Site navigation whose top items open wide panels of grouped links, on native popovers.",
-      },
-      {
-        id: "menubar",
-        styles: ["components/menubar"],
-        exports: ["Menubar"],
-        label: "Menubar",
-        route: "/menubar.html",
-        description:
-          "An application's row of menus, such as File, Edit and View, with the menubar keyboard contract.",
-      },
-      {
-        id: "scrollspy",
-        styles: ["components/scrollspy", "components/table_of_contents"],
-        exports: ["ScrollSpy"],
-        label: "Scrollspy",
-        route: "/scrollspy.html",
-        description:
-          "Highlight the table of contents as the page scrolls.",
-      },
-      {
-        id: "tree",
-        styles: ["components/tree"],
-        label: "Tree",
-        route: "/tree.html",
-        description:
-          "Nested lists of folders and links that open in place, for file browsers and deep navigation.",
       },
     ],
   },
@@ -419,15 +371,6 @@ export const NAV: DocsGroup[] = [
           "A circular action that can open a menu of related shortcuts.",
       },
       {
-        id: "back-to-top",
-        styles: ["components/back-to-top"],
-        exports: ["BackToTop"],
-        label: "Back to top",
-        route: "/back-to-top.html",
-        description:
-          "A link that appears once a long page has scrolled down, and returns to the top with focus on the main content.",
-      },
-      {
         id: "cards",
         styles: ["components/cards", "components/expanding-card"],
         exports: ["Cards", "ExpandingCard"],
@@ -438,14 +381,6 @@ export const NAV: DocsGroup[] = [
           "Material Design 3 cards, from the HTML.",
       },
       {
-        id: "aura",
-        styles: ["components/aura"],
-        label: "Aura",
-        route: "/aura.html",
-        description:
-          "A light that runs around the border of the one button or card a screen most needs you to see.",
-      },
-      {
         id: "lists",
         styles: ["components/list", "utilities/defer-render"],
         exports: ["Sortable", "Lists"],
@@ -454,6 +389,342 @@ export const NAV: DocsGroup[] = [
         description:
           "Continuous vertical indexes of text and images.",
         aliases: ["/collections.html"],
+      },
+      {
+        id: "accordion",
+        styles: ["components/accordion"],
+        label: "Accordion",
+        route: "/accordion.html",
+        description:
+          "Stacked disclosures that open one section of content at a time, on native details.",
+      },
+      {
+        id: "data_table",
+        styles: ["components/data-table"],
+        exports: ["DataTables"],
+        section: "Data and charts",
+        label: "Data table",
+        route: "/data-table.html",
+        description:
+          "Rows of records in a scrolling table with a sticky header, sort state and row selection.",
+      },
+      {
+        id: "dialogs",
+        styles: ["components/dialog", "components/scrim"],
+        exports: ["Dialogs"],
+        section: "Dialogs and sheets",
+        label: "Dialogs",
+        route: "/dialogs.html",
+        description:
+          "Important prompts in a user flow, each for a single task.",
+        aliases: ["/floating-sheet.html", "/modals.html"],
+      },
+      {
+        id: "bottom_sheet",
+        styles: ["components/bottom-sheet"],
+        exports: ["BottomSheets"],
+        label: "Bottom sheet",
+        route: "/bottom-sheet.html",
+        description:
+          "Secondary content anchored to the bottom of the screen.",
+      },
+      {
+        id: "side_sheet",
+        styles: ["components/side-sheet"],
+        exports: ["SideSheets"],
+        label: "Side sheet",
+        route: "/side-sheet.html",
+        description:
+          "Optional content and actions, without interrupting the main view.",
+      },
+      {
+        id: "drag_handle",
+        styles: ["components/drag-handle"],
+        label: "Drag handle",
+        route: "/drag-handle.html",
+        description:
+          "The bar that marks a thing as draggable. It does not do the dragging.",
+      },
+      {
+        id: "badges",
+        styles: ["components/badges"],
+        section: "Communication",
+        label: "Badges",
+        route: "/badges.html",
+        description:
+          "Notifications, counts, or status on navigation items and icons.",
+      },
+      {
+        id: "avatar",
+        styles: ["components/avatar"],
+        label: "Avatar",
+        route: "/avatar.html",
+        description:
+          "A person or account as a circular image, initials or icon, alone or in an overlapping group.",
+      },
+      {
+        id: "tooltips",
+        styles: ["components/tooltip"],
+        exports: ["Tooltip"],
+        label: "Tooltips",
+        route: "/tooltips.html",
+        description:
+          "Material Design 3 tooltips, from the HTML.",
+      },
+      {
+        id: "snackbar",
+        styles: ["components/snackbar"],
+        exports: ["Snackbar"],
+        label: "Snackbar",
+        route: "/snackbar.html",
+        description:
+          "Material Design 3 snackbars, from the HTML.",
+        aliases: ["/toasts.html"],
+      },
+      {
+        id: "preloader",
+        styles: ["components/progress"],
+        label: "Preloader",
+        route: "/preloader.html",
+        description:
+          "Activity and progress. The HTML is the indicator.",
+      },
+      {
+        id: "loading_indicator",
+        styles: ["components/loading-indicator"],
+        label: "Loading indicator",
+        route: "/loading-indicator.html",
+        description:
+          "A shape that morphs while it spins, for waits under five seconds.",
+      },
+      {
+        id: "alert",
+        styles: ["components/alert"],
+        label: "Alert",
+        route: "/alert.html",
+        description:
+          "A message that stays in the page next to the content it is about, with optional actions.",
+      },
+      {
+        id: "carousel",
+        styles: ["components/carousel"],
+        exports: ["Carousel"],
+        section: "Media and motion",
+        label: "Carousel",
+        route: "/carousel.html",
+        description:
+          "Material 3 adaptive carousels for visual collections.",
+      },
+      {
+        id: "toolbars",
+        styles: ["components/toolbar"],
+        section: "Search and commands",
+        label: "Toolbars",
+        route: "/toolbars.html",
+        description:
+          "Frequently used actions for the current page.",
+        aliases: ["/bottom-app-bar.html"],
+      },
+      {
+        id: "status-bar",
+        styles: ["components/status-bar"],
+        label: "Status bar",
+        route: "/status-bar.html",
+        description:
+          "A thin row of app state and shortcuts along the bottom of an app shell.",
+      },
+      {
+        id: "search",
+        styles: ["components/search"],
+        label: "Search",
+        route: "/search.html",
+        description:
+          "A search bar, and the view it expands into.",
+      },
+    ],
+  },
+  {
+    label: "Forms",
+    icon: "edit",
+    pages: [
+      {
+        id: "fieldsets",
+        styles: ["components/forms/fieldset"],
+        label: "Fieldsets",
+        route: "/fieldsets.html",
+        description:
+          "Grouped form sections, from the HTML.",
+      },
+      {
+        id: "text_inputs",
+        styles: ["components/forms/file-input", "components/forms/input-fields"],
+        exports: ["CharacterCounter", "Forms"],
+        label: "Text fields",
+        title: "Text Inputs",
+        route: "/text-inputs.html",
+        description:
+          "Material Design 3 text fields, from the HTML.",
+      },
+      {
+        id: "select",
+        styles: ["components/forms/select"],
+        exports: ["FormSelect"],
+        label: "Select",
+        route: "/select.html",
+        description:
+          "Choose one option, or several, from a styled menu.",
+      },
+      {
+        id: "checkboxes",
+        styles: ["components/forms/checkboxes"],
+        label: "Checkboxes",
+        route: "/checkboxes.html",
+        description:
+          "Material Design 3 checkboxes, from the HTML.",
+      },
+      {
+        id: "radio_buttons",
+        styles: ["components/forms/radio-buttons"],
+        label: "Radio",
+        title: "Radio Buttons",
+        route: "/radio-buttons.html",
+        description:
+          "Material Design 3 radios, from the HTML.",
+      },
+      {
+        id: "switches",
+        styles: ["components/forms/switches"],
+        label: "Switches",
+        route: "/switches.html",
+        description:
+          "Material Design 3 switches, from the HTML.",
+      },
+      {
+        id: "sliders",
+        styles: ["components/forms/slider"],
+        exports: ["Slider"],
+        label: "Slider",
+        route: "/slider.html",
+        description:
+          "Select a value from a range.",
+        aliases: ["/range.html"],
+      },
+      {
+        id: "chips",
+        styles: ["components/chips"],
+        exports: ["Chips"],
+        label: "Chips",
+        route: "/chips.html",
+        description:
+          "Small blocks for contacts, tags, and filters.",
+      },
+      {
+        id: "autocomplete",
+        exports: ["Autocomplete"],
+        label: "Autocomplete",
+        route: "/autocomplete.html",
+        description:
+          "Suggest values under a text field as the user types.",
+      },
+      {
+        id: "datepicker",
+        styles: ["components/datepicker", "components/docked-display"],
+        exports: ["Datepicker"],
+        label: "Date picker",
+        title: "Date Picker",
+        route: "/datepicker.html",
+        description:
+          "Select a date, a range, or several dates from a calendar.",
+      },
+      {
+        id: "timepicker",
+        styles: ["components/modal-display", "components/timepicker"],
+        exports: ["Timepicker"],
+        label: "Time picker",
+        title: "Time Picker",
+        route: "/timepicker.html",
+        description:
+          "Pick a time from a clock face, in 12-hour or 24-hour form.",
+      },
+    ],
+  },
+  {
+    // @expressivecss/extras: components beyond the Material 3 set. Their pages
+    // also load the extras CSS and JS, and their `exports` and `styles` come
+    // from extras/src.
+    label: "Additional components",
+    icon: "extension",
+    package: "extras",
+    pages: [
+      {
+        id: "footer",
+        styles: ["components/page-footer"],
+        section: "Structure",
+        label: "Footer",
+        route: "/footer.html",
+        description:
+          "Site navigation and extra information at the end of a page.",
+      },
+      {
+        id: "stepper",
+        styles: ["components/stepper"],
+        label: "Stepper",
+        route: "/stepper.html",
+        description:
+          "Progress through a fixed sequence of steps, such as a checkout, with each step's state.",
+      },
+      {
+        id: "mega_menu",
+        styles: ["components/mega-menu"],
+        label: "Mega menu",
+        route: "/mega-menu.html",
+        description:
+          "Site navigation whose top items open wide panels of grouped links, on native popovers.",
+      },
+      {
+        id: "tree",
+        styles: ["components/tree"],
+        label: "Tree",
+        route: "/tree.html",
+        description:
+          "Nested lists of folders and links that open in place, for file browsers and deep navigation.",
+      },
+      {
+        id: "menubar",
+        styles: ["components/menubar"],
+        exports: ["Menubar"],
+        label: "Menubar",
+        route: "/menubar.html",
+        description:
+          "An application's row of menus, such as File, Edit and View, with the menubar keyboard contract.",
+      },
+      {
+        id: "scrollspy",
+        styles: ["components/scrollspy", "components/table_of_contents"],
+        exports: ["ScrollSpy"],
+        label: "Scrollspy",
+        route: "/scrollspy.html",
+        description:
+          "Highlight the table of contents as the page scrolls.",
+      },
+      {
+        id: "back-to-top",
+        styles: ["components/back-to-top"],
+        exports: ["BackToTop"],
+        section: "Actions",
+        label: "Back to top",
+        route: "/back-to-top.html",
+        description:
+          "A link that appears once a long page has scrolled down, and returns to the top with focus on the main content.",
+      },
+      {
+        id: "aura",
+        styles: ["components/aura"],
+        section: "Containment",
+        label: "Aura",
+        route: "/aura.html",
+        description:
+          "A light that runs around the border of the one button or card a screen most needs you to see.",
       },
       {
         id: "message",
@@ -491,14 +762,6 @@ export const NAV: DocsGroup[] = [
           "Reveals a list row's actions when a person swipes it sideways, or presses its actions button.",
       },
       {
-        id: "accordion",
-        styles: ["components/accordion"],
-        label: "Accordion",
-        route: "/accordion.html",
-        description:
-          "Stacked disclosures that open one section of content at a time, on native details.",
-      },
-      {
         id: "show_more",
         styles: ["components/show-more"],
         exports: ["ShowMore"],
@@ -508,18 +771,9 @@ export const NAV: DocsGroup[] = [
           "Clamped text with a button that shows the rest, and hides itself when the text already fits.",
       },
       {
-        id: "data_table",
-        styles: ["components/data-table"],
-        exports: ["DataTables"],
-        section: "Data and charts",
-        label: "Data table",
-        route: "/data-table.html",
-        description:
-          "Rows of records in a scrolling table with a sticky header, sort state and row selection.",
-      },
-      {
         id: "stat",
         styles: ["components/stat"],
+        section: "Data and charts",
         label: "Stat",
         route: "/stat.html",
         description:
@@ -548,6 +802,22 @@ export const NAV: DocsGroup[] = [
         route: "/countdown.html",
         description:
           "A number from 0 to 999 whose digits roll to each new value.",
+      },
+      {
+        id: "timeline",
+        styles: ["components/timeline"],
+        label: "Timeline",
+        route: "/timeline.html",
+        description:
+          "Events in order, each with a time, a title and details, joined by a line.",
+      },
+      {
+        id: "calendar",
+        styles: ["components/calendar"],
+        label: "Calendar",
+        route: "/calendar.html",
+        description:
+          "A month of days with their events, on a table the page renders.",
       },
       {
         id: "line-chart",
@@ -658,91 +928,13 @@ export const NAV: DocsGroup[] = [
           "Parts of a whole drawn as rectangles whose areas follow their values.",
       },
       {
-        id: "timeline",
-        styles: ["components/timeline"],
-        label: "Timeline",
-        route: "/timeline.html",
-        description:
-          "Events in order, each with a time, a title and details, joined by a line.",
-      },
-      {
-        id: "calendar",
-        styles: ["components/calendar"],
-        label: "Calendar",
-        route: "/calendar.html",
-        description:
-          "A month of days with their events, on a table the page renders.",
-      },
-      {
-        id: "dialogs",
-        styles: ["components/dialog", "components/scrim"],
-        exports: ["Dialogs"],
-        section: "Dialogs and sheets",
-        label: "Dialogs",
-        route: "/dialogs.html",
-        description:
-          "Important prompts in a user flow, each for a single task.",
-        aliases: ["/floating-sheet.html", "/modals.html"],
-      },
-      {
-        id: "bottom_sheet",
-        styles: ["components/bottom-sheet"],
-        exports: ["BottomSheets"],
-        label: "Bottom sheet",
-        route: "/bottom-sheet.html",
-        description:
-          "Secondary content anchored to the bottom of the screen.",
-      },
-      {
-        id: "side_sheet",
-        styles: ["components/side-sheet"],
-        exports: ["SideSheets"],
-        label: "Side sheet",
-        route: "/side-sheet.html",
-        description:
-          "Optional content and actions, without interrupting the main view.",
-      },
-      {
-        id: "drag_handle",
-        styles: ["components/drag-handle"],
-        label: "Drag handle",
-        route: "/drag-handle.html",
-        description:
-          "The bar that marks a thing as draggable. It does not do the dragging.",
-      },
-      {
-        id: "badges",
-        styles: ["components/badges"],
-        section: "Communication",
-        label: "Badges",
-        route: "/badges.html",
-        description:
-          "Notifications, counts, or status on navigation items and icons.",
-      },
-      {
-        id: "avatar",
-        styles: ["components/avatar"],
-        label: "Avatar",
-        route: "/avatar.html",
-        description:
-          "A person or account as a circular image, initials or icon, alone or in an overlapping group.",
-      },
-      {
         id: "org-chart",
         styles: ["components/org-chart"],
+        section: "Communication",
         label: "Organization chart",
         route: "/org-chart.html",
         description:
           "A reporting line drawn top down, with each person as a card under their manager.",
-      },
-      {
-        id: "tooltips",
-        styles: ["components/tooltip"],
-        exports: ["Tooltip"],
-        label: "Tooltips",
-        route: "/tooltips.html",
-        description:
-          "Material Design 3 tooltips, from the HTML.",
       },
       {
         id: "popover",
@@ -751,6 +943,22 @@ export const NAV: DocsGroup[] = [
         route: "/popover.html",
         description:
           "A panel that opens from a button and stays until dismissed, on the native popover attribute.",
+      },
+      {
+        id: "skeleton",
+        styles: ["components/skeleton"],
+        label: "Skeleton",
+        route: "/skeleton.html",
+        description:
+          "Placeholder shapes that hold the layout while content loads.",
+      },
+      {
+        id: "empty_state",
+        styles: ["components/empty-state"],
+        label: "Empty state",
+        route: "/empty-state.html",
+        description:
+          "What a view shows when it has nothing to list: an icon, a heading, text and actions.",
       },
       {
         id: "hover_card",
@@ -770,32 +978,6 @@ export const NAV: DocsGroup[] = [
           "A card that walks people through an interface one step at a time, beside each element it explains.",
       },
       {
-        id: "snackbar",
-        styles: ["components/snackbar"],
-        exports: ["Snackbar"],
-        label: "Snackbar",
-        route: "/snackbar.html",
-        description:
-          "Material Design 3 snackbars, from the HTML.",
-        aliases: ["/toasts.html"],
-      },
-      {
-        id: "preloader",
-        styles: ["components/progress"],
-        label: "Preloader",
-        route: "/preloader.html",
-        description:
-          "Activity and progress. The HTML is the indicator.",
-      },
-      {
-        id: "loading_indicator",
-        styles: ["components/loading-indicator"],
-        label: "Loading indicator",
-        route: "/loading-indicator.html",
-        description:
-          "A shape that morphs while it spins, for waits under five seconds.",
-      },
-      {
         id: "loading_overlay",
         styles: ["components/loading-overlay"],
         exports: ["LoadingOverlay"],
@@ -805,38 +987,13 @@ export const NAV: DocsGroup[] = [
           "Covers part of a page while it loads, so nothing inside takes input until the page clears it.",
       },
       {
-        id: "skeleton",
-        styles: ["components/skeleton"],
-        label: "Skeleton",
-        route: "/skeleton.html",
-        description:
-          "Placeholder shapes that hold the layout while content loads.",
-      },
-      {
-        id: "empty_state",
-        styles: ["components/empty-state"],
-        label: "Empty state",
-        route: "/empty-state.html",
-        description:
-          "What a view shows when it has nothing to list: an icon, a heading, text and actions.",
-      },
-      {
-        id: "alert",
-        styles: ["components/alert"],
-        label: "Alert",
-        route: "/alert.html",
-        description:
-          "A message that stays in the page next to the content it is about, with optional actions.",
-      },
-      {
-        id: "carousel",
-        styles: ["components/carousel"],
-        exports: ["Carousel"],
+        id: "marquee",
+        styles: ["components/marquee"],
         section: "Media and motion",
-        label: "Carousel",
-        route: "/carousel.html",
+        label: "Marquee",
+        route: "/marquee.html",
         description:
-          "Material 3 adaptive carousels for visual collections.",
+          "A row of logos, images or text that scrolls without end.",
       },
       {
         id: "image_compare",
@@ -846,14 +1003,6 @@ export const NAV: DocsGroup[] = [
         route: "/image-compare.html",
         description:
           "Two images of the same scene with a divider that reveals one over the other.",
-      },
-      {
-        id: "marquee",
-        styles: ["components/marquee"],
-        label: "Marquee",
-        route: "/marquee.html",
-        description:
-          "A row of logos, images or text that scrolls without end.",
       },
       {
         id: "confetti",
@@ -893,67 +1042,19 @@ export const NAV: DocsGroup[] = [
           "An interactive map with markers, popups, routes, arcs, clusters and controls, built on MapLibre.",
       },
       {
-        id: "toolbars",
-        styles: ["components/toolbar"],
-        section: "Search and commands",
-        label: "Toolbars",
-        route: "/toolbars.html",
-        description:
-          "Frequently used actions for the current page.",
-        aliases: ["/bottom-app-bar.html"],
-      },
-      {
-        id: "status-bar",
-        styles: ["components/status-bar"],
-        label: "Status bar",
-        route: "/status-bar.html",
-        description:
-          "A thin row of app state and shortcuts along the bottom of an app shell.",
-      },
-      {
-        id: "search",
-        styles: ["components/search"],
-        label: "Search",
-        route: "/search.html",
-        description:
-          "A search bar, and the view it expands into.",
-      },
-      {
         id: "command_palette",
         styles: ["components/command-palette"],
         exports: ["CommandPalette"],
+        section: "Search and commands",
         label: "Command palette",
         route: "/command-palette.html",
         description:
           "A searchable list of commands in a dialog, opened from anywhere with a shortcut.",
       },
-    ],
-  },
-  {
-    label: "Forms",
-    icon: "edit",
-    pages: [
-      {
-        id: "fieldsets",
-        styles: ["components/forms/fieldset"],
-        label: "Fieldsets",
-        route: "/fieldsets.html",
-        description:
-          "Grouped form sections, from the HTML.",
-      },
-      {
-        id: "text_inputs",
-        styles: ["components/forms/file-input", "components/forms/input-fields"],
-        exports: ["CharacterCounter", "Forms"],
-        label: "Text fields",
-        title: "Text Inputs",
-        route: "/text-inputs.html",
-        description:
-          "Material Design 3 text fields, from the HTML.",
-      },
       {
         id: "input_mask",
         exports: ["InputMask"],
+        section: "Forms",
         label: "Input mask",
         route: "/input-mask.html",
         description:
@@ -979,22 +1080,15 @@ export const NAV: DocsGroup[] = [
       {
         id: "drop_zone",
         styles: ["components/forms/drop-zone"],
+        exports: ["DropZone"],
         label: "Drop zone",
         route: "/drop-zone.html",
         description:
           "A large target for choosing or dropping files, with a list of what was chosen.",
       },
       {
-        id: "select",
-        styles: ["components/forms/select"],
-        exports: ["FormSelect"],
-        label: "Select",
-        route: "/select.html",
-        description:
-          "Choose one option, or several, from a styled menu.",
-      },
-      {
         id: "tree_select",
+        styles: ["components/tree-select"],
         exports: ["TreeSelect"],
         label: "Tree select",
         route: "/tree-select.html",
@@ -1011,14 +1105,6 @@ export const NAV: DocsGroup[] = [
           "Pick a path through nested options shown in columns, and submit the whole path.",
       },
       {
-        id: "checkboxes",
-        styles: ["components/forms/checkboxes"],
-        label: "Checkboxes",
-        route: "/checkboxes.html",
-        description:
-          "Material Design 3 checkboxes, from the HTML.",
-      },
-      {
         id: "transfer_list",
         styles: ["components/transfer-list"],
         exports: ["TransferList"],
@@ -1028,17 +1114,8 @@ export const NAV: DocsGroup[] = [
           "Moves options between an available list and a chosen list, and submits the chosen ones with the form.",
       },
       {
-        id: "radio_buttons",
-        styles: ["components/forms/radio-buttons"],
-        label: "Radio",
-        title: "Radio Buttons",
-        route: "/radio-buttons.html",
-        description:
-          "Material Design 3 radios, from the HTML.",
-      },
-      {
         id: "rating",
-        styles: ["components/forms/rating"],
+        styles: ["components/rating"],
         label: "Rating",
         route: "/rating.html",
         description:
@@ -1046,7 +1123,7 @@ export const NAV: DocsGroup[] = [
       },
       {
         id: "color-swatches",
-        styles: ["components/forms/color-swatches"],
+        styles: ["components/color-swatches"],
         label: "Color swatches",
         route: "/color-swatches.html",
         description:
@@ -1060,61 +1137,6 @@ export const NAV: DocsGroup[] = [
         route: "/color-picker.html",
         description:
           "Choose any color with a saturation and brightness area, a hue slider and a hex field, over a native color input.",
-      },
-      {
-        id: "switches",
-        styles: ["components/forms/switches"],
-        label: "Switches",
-        route: "/switches.html",
-        description:
-          "Material Design 3 switches, from the HTML.",
-      },
-      {
-        id: "sliders",
-        styles: ["components/forms/slider"],
-        exports: ["Slider"],
-        label: "Slider",
-        route: "/slider.html",
-        description:
-          "Select a value from a range.",
-        aliases: ["/range.html"],
-      },
-      {
-        id: "chips",
-        styles: ["components/chips"],
-        exports: ["Chips"],
-        label: "Chips",
-        route: "/chips.html",
-        description:
-          "Small blocks for contacts, tags, and filters.",
-      },
-      {
-        id: "autocomplete",
-        exports: ["Autocomplete"],
-        label: "Autocomplete",
-        route: "/autocomplete.html",
-        description:
-          "Suggest values under a text field as the user types.",
-      },
-      {
-        id: "datepicker",
-        styles: ["components/datepicker", "components/docked-display"],
-        exports: ["Datepicker"],
-        label: "Date picker",
-        title: "Date Picker",
-        route: "/datepicker.html",
-        description:
-          "Select a date, a range, or several dates from a calendar.",
-      },
-      {
-        id: "timepicker",
-        styles: ["components/modal-display", "components/timepicker"],
-        exports: ["Timepicker"],
-        label: "Time picker",
-        title: "Time Picker",
-        route: "/timepicker.html",
-        description:
-          "Pick a time from a clock face, in 12-hour or 24-hour form.",
       },
       {
         id: "keypad",
@@ -1139,5 +1161,12 @@ export const NAV: DocsGroup[] = [
   },
 ];
 
+/** The navigation groups, leaving out any that has no pages yet. */
+export const NAV: DocsGroup[] = GROUPS.filter((group) => group.pages.length);
+
 /** Every canonical page, in navigation order. */
 export const PAGES: DocsPage[] = NAV.flatMap((group) => group.pages);
+
+/** Whether page `id` documents @expressivecss/extras rather than core. */
+export const isExtrasPage = (id: string): boolean =>
+  NAV.some((group) => group.package === "extras" && group.pages.some((page) => page.id === id));

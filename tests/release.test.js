@@ -6,10 +6,15 @@ test('release policy rejects mismatches and prevents stable rollback', () => {
   const manifests = {
     framework: { name: '@expressivecss/expressive', version: '0.9.0' },
     mcp: { name: '@expressivecss/mcp-server', version: '0.2.0-rc.1' },
+    extras: { name: '@expressivecss/extras', version: '0.1.0' },
   };
   assert.equal(releaseMetadata('v0.9.0', manifests, false).distTag, 'latest');
   assert.equal(releaseMetadata('mcp-v0.2.0-rc.1', manifests, true).distTag, 'next');
-  for (const tag of ['v0.8.0', 'v00.9.0', '../master', 'v0.9.0\n', 'mcp-v0.9.0']) {
+  assert.deepEqual(releaseMetadata('extras-v0.1.0', manifests, false), {
+    kind: 'extras', directory: 'extras', name: '@expressivecss/extras', version: '0.1.0', distTag: 'latest',
+  });
+  assert.throws(() => releaseMetadata('extras-v0.1.0', { ...manifests, extras: { ...manifests.extras, name: '@expressivecss/expressive' } }, false));
+  for (const tag of ['v0.8.0', 'v00.9.0', '../master', 'v0.9.0\n', 'mcp-v0.9.0', 'extras-v0.9.0', 'extras-mcp-v0.1.0']) {
     assert.throws(() => releaseMetadata(tag, manifests, false));
   }
   assert.throws(() => releaseMetadata('v0.9.0\n', { ...manifests, framework: { ...manifests.framework, version: '0.9.0\n' } }, false));

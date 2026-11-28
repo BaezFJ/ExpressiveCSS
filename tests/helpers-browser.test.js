@@ -1,12 +1,14 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { chromium } from 'playwright';
 import { compileString } from 'sass';
 import { fileURLToPath } from 'node:url';
 import { leaseBrowser, engines } from './browser.js';
+import { pageCss } from './css.js';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+// Core then extras, as a page that uses extras loads them: some pages here have no script to load extras.
+const css = pageCss();
 const browserTest = existsSync(chromium.executablePath()) ? test : test.skip;
 
 browserTest('visually-hidden text is off screen but still names its link', async () => {

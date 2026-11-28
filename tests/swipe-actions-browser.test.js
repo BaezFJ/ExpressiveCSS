@@ -134,7 +134,7 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.equal(await revealed(page, '#row3'), true, 'the focused action is visible');
       await page.keyboard.press('Enter');
       assert.deepEqual(await page.evaluate(() => window.clicks), ['Archive message 3'], 'Enter runs the action once');
-      await page.evaluate(() => Expressive.SwipeActions.getInstance(document.getElementById('list')).destroy());
+      await page.evaluate(() => ExpressiveExtras.SwipeActions.getInstance(document.getElementById('list')).destroy());
     } finally {
       await browser.close();
     }
@@ -147,7 +147,7 @@ const scrolling = () => fixture().replace('<div id="box" style="width:360px">', 
 /** The instance on the list, called in the page. */
 const call = (page, method, ...args) => page.evaluate(([method, args]) => {
   const list = document.getElementById('list');
-  return Expressive.SwipeActions.getInstance(list)[method](...args.map((id) => document.getElementById(id)));
+  return ExpressiveExtras.SwipeActions.getInstance(list)[method](...args.map((id) => document.getElementById(id)));
 }, [method, args]);
 
 const offset = (page, selector) => page.locator(selector).evaluate((row) => row.style.getPropertyValue('--swipe-offset'));
@@ -279,7 +279,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const { page, swipe } = await open(browser, engine);
       await page.evaluate(() => {
         window.callbacks = [];
-        Expressive.SwipeActions.getInstance(document.getElementById('list')).options.onToggle = (detail) => window.callbacks.push({ row: detail.row.id, open: detail.open });
+        ExpressiveExtras.SwipeActions.getInstance(document.getElementById('list')).options.onToggle = (detail) => window.callbacks.push({ row: detail.row.id, open: detail.open });
       });
       await swipe('#row2', -150);
       await page.click('#row4 [data-swipe-toggle]');
@@ -347,7 +347,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const focused = await page.evaluate((rowMarkup) => {
         const root = document.getElementById('host').attachShadow({ mode: 'open' });
         root.innerHTML = `<ul class="list swipeable" aria-label="Inbox">${rowMarkup}</ul>`;
-        const swipe = Expressive.SwipeActions.init(root.querySelector('ul'));
+        const swipe = ExpressiveExtras.SwipeActions.init(root.querySelector('ul'));
         swipe.open(root.querySelector('li'));
         const action = root.querySelector('[data-action="archive"]');
         action.focus();
@@ -376,7 +376,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.click('#row4 [data-swipe-toggle]');
       assert.equal(await page.locator('#list > .swipe-open').count(), 0, 'nothing opens after destroy()');
 
-      await page.evaluate(() => Expressive.SwipeActions.init(document.getElementById('list')));
+      await page.evaluate(() => ExpressiveExtras.SwipeActions.init(document.getElementById('list')));
       await swipe('#row5', -100, { end: null });
       await call(page, 'destroy');
       await send('touchend');

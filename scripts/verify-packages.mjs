@@ -10,24 +10,34 @@ import { JSDOM } from 'jsdom';
 import { compile, NodePackageImporter } from 'sass';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
-const packages = { framework: '.', mcp: 'mcp/expressivecss' };
+const packages = { framework: '.', mcp: 'mcp/expressivecss', extras: 'extras' };
 const selected = process.argv.slice(2);
-assert.ok(selected.every((name) => Object.hasOwn(packages, name)), 'Use framework and/or mcp');
+assert.ok(selected.every((name) => Object.hasOwn(packages, name)), 'Use framework, mcp and/or extras');
 const temporary = mkdtempSync(join(tmpdir(), 'expressivecss-packages-'));
 function run(command, args, cwd) {
   execFileSync(command, args, { cwd, stdio: 'inherit', timeout: 300_000 });
 }
+/** Packs the package in `cwd` into `destination` and returns the tarball's path. */
+function pack(cwd, destination) {
+  const before = new Set(readdirSync(destination));
+  run('npm', ['pack', '--pack-destination', destination], cwd);
+  const created = readdirSync(destination).filter((file) => file.endsWith('.tgz') && !before.has(file));
+  assert.equal(created.length, 1);
+  return join(destination, created[0]);
+}
+const tarballs = {};
 try {
   for (const name of selected.length ? selected : Object.keys(packages)) {
     const cwd = resolve(root, packages[name]);
     const target = join(temporary, name);
     mkdirSync(target);
-    run('npm', ['pack', '--pack-destination', target], cwd);
-    const tarballs = readdirSync(target).filter((file) => file.endsWith('.tgz'));
-    assert.equal(tarballs.length, 1);
+    // The framework's prepack builds extras too, and extras installs beside its peer.
+    if (name === 'extras') tarballs.framework ??= pack(root, target);
+    tarballs[name] = pack(cwd, target);
     // No symlink back to the checkout, and no consumer lifecycle scripts.
     run('npm', ['init', '-y'], target);
-    run('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', join(target, tarballs[0])], target);
+    const peer = name === 'extras' ? ['--strict-peer-deps', tarballs.framework] : [];
+    run('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', tarballs[name], ...peer], target);
     const manifest = JSON.parse(readFileSync(join(cwd, 'package.json'), 'utf8'));
     const installed = join(target, 'node_modules', manifest.name);
     assert.ok(readFileSync(join(installed, 'LICENSE'), 'utf8').includes('Permission is hereby granted'));
@@ -38,6 +48,35 @@ try {
         assert.ok(existsSync(join(installed, file)), `Missing ${file}`);
       }
       run('node', [join(installed, 'smoke.mjs')], target);
+    } else if (name === 'extras') {
+      // Versioned on its own: the strict peer install above fails unless this range includes the checkout's core.
+      assert.ok(manifest.peerDependencies?.['@expressivecss/expressive'], 'Extras must declare its core peer');
+      for (const file of ['dist/types/index.d.ts', 'dist/types/modular.d.ts', 'dist/js/extras.mjs', 'dist/js/modular.mjs',
+        'dist/js/extras.cjs', 'dist/js/extras.js', 'dist/js/extras.min.js', 'dist/css/extras.css', 'dist/css/extras.min.css', 'dist/cli/styles.json',
+        'src/sass/extras.scss', 'README.md', 'CHANGELOG.md']) {
+        assert.ok(readFileSync(join(installed, file)).length, `Missing or empty ${file}`);
+      }
+      // Extras reuses the installed core and never ships a copy of it.
+      for (const file of readdirSync(join(installed, 'dist/js'), { recursive: true }).filter((file) => /\.[mc]?js$/.test(file))) {
+        assert.doesNotMatch(readFileSync(join(installed, 'dist/js', file), 'utf8'), /class Component\b|function AutoInit\b/, file);
+      }
+      writeFileSync(join(target, 'consumer.mjs'), `import * as extras from '${manifest.name}';\nimport * as modular from '${manifest.name}/modular';\nimport assert from 'node:assert/strict';\nassert.equal(extras.version, '${manifest.version}');\nassert.equal(modular.version, extras.version);\n`);
+      run('node', ['consumer.mjs'], target);
+      // CommonJS consumers get the same core instance through core's require entry.
+      writeFileSync(join(target, 'consumer.cjs'), `const extras = require('${manifest.name}');\nconst core = require('@expressivecss/expressive').core;\nconst assert = require('node:assert/strict');\nassert.equal(extras.version, '${manifest.version}');\nassert.ok(extras.LineChart.prototype instanceof core.Component);\n`);
+      run('node', ['consumer.cjs'], target);
+      const coreSass = join(target, 'node_modules/@expressivecss/expressive/src/sass');
+      assert.doesNotMatch(compile(join(installed, 'src/sass/extras.scss'), { loadPaths: [coreSass] }).css, /--md-sys-[\w-]+\s*:/);
+      const dom = new JSDOM('<!doctype html><html><body></body></html>', {
+        url: 'http://localhost/', runScripts: 'outside-only', pretendToBeVisual: true,
+      });
+      try {
+        dom.window.eval(readFileSync(join(target, 'node_modules/@expressivecss/expressive/dist/js/expressive.min.js'), 'utf8'));
+        dom.window.eval(readFileSync(join(installed, 'dist/js/extras.min.js'), 'utf8'));
+        assert.equal(dom.window.ExpressiveExtras.version, manifest.version);
+      } finally {
+        dom.window.close();
+      }
     } else {
       const consumerRequire = createRequire(join(target, 'package.json'));
       assert.ok(consumerRequire.resolve(manifest.name).startsWith(installed));

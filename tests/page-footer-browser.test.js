@@ -1,9 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import { engines } from './browser.js';
+import { pageCss } from './css.js';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+// Core then extras, as a page that uses extras loads them.
+const css = pageCss();
 
 for (const [engine, type, browserTest] of engines) {
   browserTest(`Only a lone navigation bar opts a footer out of the page footer (${engine})`, async () => {

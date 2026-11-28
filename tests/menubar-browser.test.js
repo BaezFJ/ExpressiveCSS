@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { engines } from './browser.js';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -18,7 +18,7 @@ const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><styl
 
 for (const [name, engine, test] of engines) {
   test(`${name}: a menubar has one tab stop and moves between its menus with the arrow keys`, { timeout: 30000 }, async (t) => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 900, height: 600 } });
       await page.setContent(markup('ltr'));
@@ -72,6 +72,8 @@ for (const [name, engine, test] of engines) {
       assert.deepEqual(await open(), ['Edit'], 'a flyout row keeps Right for its submenu');
       await page.keyboard.press('Escape');
 
+      // A new document, so extras loads again after the new core script.
+      await page.goto('about:blank');
       await page.setContent(markup('rtl'));
       await page.keyboard.press('Tab');
       await page.keyboard.press('ArrowLeft');

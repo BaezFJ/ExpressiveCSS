@@ -93,7 +93,7 @@ const hidden = (page, selector = '#list') => page.waitForFunction(
 
 /** The instance on an element, called in the page. */
 const call = (page, method, selector = '#list') => page.evaluate(
-  ([method, selector]) => Expressive.PullToRefresh.getInstance(document.querySelector(selector))[method](), [method, selector]);
+  ([method, selector]) => ExpressiveExtras.PullToRefresh.getInstance(document.querySelector(selector))[method](), [method, selector]);
 
 /** The list's refresh state, as the test reads it. */
 const state = (page, selector = '#list') => page.locator(selector).evaluate((el) => {
@@ -140,10 +140,10 @@ for (const [engine, browserType, browserTest] of engines) {
       now = await state(page);
       assert.equal(now.refreshes, 2);
       assert.equal(now.visible, true);
-      await page.evaluate(() => Expressive.PullToRefresh.getInstance(document.getElementById('list')).complete());
+      await page.evaluate(() => ExpressiveExtras.PullToRefresh.getInstance(document.getElementById('list')).complete());
       assert.equal((await state(page)).busy, null);
       await page.waitForFunction(() => getComputedStyle(document.querySelector('#list > .loading-indicator')).visibility === 'hidden');
-      await page.evaluate(() => Expressive.PullToRefresh.getInstance(document.getElementById('list')).destroy());
+      await page.evaluate(() => ExpressiveExtras.PullToRefresh.getInstance(document.getElementById('list')).destroy());
     } finally {
       await browser.close();
     }
@@ -304,13 +304,13 @@ for (const [engine, browserType, browserTest] of engines) {
       // A refresh that never finishes on its own.
       await page.evaluate(() => {
         window.onPull = (event) => event.detail.waitUntil(new Promise(() => {}));
-        Expressive.PullToRefresh.init(document.getElementById('list'));
+        ExpressiveExtras.PullToRefresh.init(document.getElementById('list'));
       });
       await page.click('#list [data-refresh]');
       assert.equal((await read()).busy, 'true');
       await call(page, 'destroy');
       assert.deepEqual(await read(), { busy: null, pulling: false, offset: '', progress: '' });
-      assert.deepEqual(await page.locator('#list').evaluate((el) => [!!Expressive.PullToRefresh.getInstance(el), el.querySelectorAll('.pull-to-refresh-status').length]), [false, 0],
+      assert.deepEqual(await page.locator('#list').evaluate((el) => [!!ExpressiveExtras.PullToRefresh.getInstance(el), el.querySelectorAll('.pull-to-refresh-status').length]), [false, 0],
         'the instance and its status region are gone');
       await hidden(page);
 
@@ -423,7 +423,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const { page, pull } = await open(browser, engine);
       await page.evaluate(() => {
         const list = document.getElementById('list');
-        Expressive.PullToRefresh.getInstance(list).destroy();
+        ExpressiveExtras.PullToRefresh.getInstance(list).destroy();
         list.setAttribute('data-pull-to-refresh-options', '{"threshold": 200}');
         Expressive.AutoInit();
       });
@@ -435,7 +435,7 @@ for (const [engine, browserType, browserTest] of engines) {
 
       await page.evaluate(() => {
         const list = document.getElementById('list');
-        Expressive.PullToRefresh.getInstance(list).destroy();
+        ExpressiveExtras.PullToRefresh.getInstance(list).destroy();
         list.setAttribute('data-pull-to-refresh-options', '{"threshold": -5}');
         Expressive.AutoInit();
       });
@@ -446,7 +446,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await call(page, 'complete');
 
       const got = await page.evaluate(() => new Promise((resolve) => {
-        Expressive.PullToRefresh.init(document.getElementById('list'), {
+        ExpressiveExtras.PullToRefresh.init(document.getElementById('list'), {
           onRefresh(detail) { resolve(typeof detail.waitUntil); },
         });
         document.querySelector('#list [data-refresh]').click();
@@ -477,7 +477,7 @@ for (const [engine, browserType, browserTest] of engines) {
 
       await page.evaluate(() => {
         const list = document.getElementById('list');
-        Expressive.PullToRefresh.getInstance(list).destroy();
+        ExpressiveExtras.PullToRefresh.getInstance(list).destroy();
         list.setAttribute('data-pull-to-refresh-options', '{"i18n": {"refreshing": "Actualizando"}}');
         Expressive.AutoInit();
       });
@@ -498,7 +498,7 @@ for (const [engine, browserType, browserTest] of engines) {
       page.on('pageerror', (error) => errors.push(error.message));
       await page.evaluate(() => {
         window.calls = 0;
-        Expressive.PullToRefresh.init(document.getElementById('list'), {
+        ExpressiveExtras.PullToRefresh.init(document.getElementById('list'), {
           onRefresh() { window.calls++; throw new Error('broken handler'); },
         });
       });

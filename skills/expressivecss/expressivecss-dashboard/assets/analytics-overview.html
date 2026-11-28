@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Overview | Common Ground insights</title>
   <!-- Reference dashboard for the ExpressiveCSS dashboard guide. Sample data for the fictional Common Ground community app.
-       Copy beside the framework's complete dist directory, or point these two URLs at your project's assets. -->
+       Copy beside the framework's complete dist directory, with @expressivecss/extras's dist in dist/extras for the charts,
+       or point these URLs at your project's assets. -->
   <link rel="stylesheet" href="dist/css/expressive.min.css">
+  <link rel="stylesheet" href="dist/extras/css/extras.min.css">
   <style>
     /* App shell: rail beside a column that holds the app bar, the content and the compact navigation bar. */
     body { margin: 0; }
@@ -329,6 +331,7 @@
     </div>
   </div>
   <script src="dist/js/expressive.min.js"></script>
+  <script src="dist/extras/js/extras.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       Expressive.AutoInit();

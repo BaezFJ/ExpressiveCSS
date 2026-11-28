@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { engines } from './browser.js';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -14,7 +14,7 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
 
 for (const [name, engine, test] of engines) {
   test(`${name}: particles fill their box in the theme color, follow the pointer, drift, refit on resize and stay still under reduced motion`, { timeout: 30000 }, async (t) => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 700 } });
       await page.setContent(markup);
@@ -26,12 +26,12 @@ for (const [name, engine, test] of engines) {
         const random = Math.random;
         Math.random = () => 0.5;
         try {
-          window.Expressive.Particles.init(document.getElementById('particles'), { quantity: 1, ...options });
+          window.ExpressiveExtras.Particles.init(document.getElementById('particles'), { quantity: 1, ...options });
         } finally {
           Math.random = random;
         }
       }, options);
-      const instance = () => page.evaluate(() => !!window.Expressive.Particles.getInstance(document.getElementById('particles')));
+      const instance = () => page.evaluate(() => !!window.ExpressiveExtras.Particles.getInstance(document.getElementById('particles')));
       // The painted pixels of the canvas in CSS pixels, with the color of the
       // most opaque one, after the given number of frames.
       const painted = (frames = 30) => page.evaluate((frames) => new Promise((resolve) => {
@@ -81,7 +81,7 @@ for (const [name, engine, test] of engines) {
       await page.mouse.move(700, 650);
       assert.ok(near(center((await painted(5)).box), { x: 260, y: 150 }, 2), 'a pointer outside the canvas leaves the particle in place');
 
-      await page.evaluate(() => window.Expressive.Particles.getInstance(document.getElementById('particles')).destroy());
+      await page.evaluate(() => window.ExpressiveExtras.Particles.getInstance(document.getElementById('particles')).destroy());
       assert.equal((await painted(5)).box, null, 'destroy() clears the canvas');
       assert.equal(await instance(), false);
 
@@ -123,7 +123,7 @@ for (const [name, engine, test] of engines) {
       assert.ok(shownOnResize, 'a moving canvas is blank for the frame it is resized in');
       await painted(3);
       assert.deepEqual(await page.locator('#particles').evaluate((c) => [c.width / devicePixelRatio, c.clientWidth]), [300, 300], 'the pixel buffer follows a resize');
-      await page.evaluate(() => window.Expressive.Particles.getInstance(document.getElementById('particles')).destroy());
+      await page.evaluate(() => window.ExpressiveExtras.Particles.getInstance(document.getElementById('particles')).destroy());
 
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await start({ vx: 1, staticity: 2.1, ease: 1 });
@@ -158,7 +158,7 @@ for (const [name, engine, test] of engines) {
       assert.notDeepEqual(dark, light, 'still particles keep the old theme color');
       await page.emulateMedia({ reducedMotion: 'no-preference' });
       assert.ok(center((await painted(40)).box).x > center(still.box).x + 5, 'turning reduced motion off does not animate');
-      await page.evaluate(() => window.Expressive.Particles.getInstance(document.getElementById('particles')).destroy());
+      await page.evaluate(() => window.ExpressiveExtras.Particles.getInstance(document.getElementById('particles')).destroy());
     } finally {
       await browser.close();
     }

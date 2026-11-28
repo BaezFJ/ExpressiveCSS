@@ -251,7 +251,7 @@ const average = (values: number[]) => (values.reduce((total, value) => total + v
           options and methods.
         </p>
 <Code code={`
-const chart = Expressive.RadarChart.init(document.querySelector('.radar-chart'), { max: 100 });
+const chart = ExpressiveExtras.RadarChart.init(document.querySelector('.radar-chart'), { max: 100 });
 chart.show(2);   // highlight the third row; -1 hides the tooltip
 chart.update();  // redraw from the table; focus and the highlighted row stay
 chart.destroy(); // remove the drawing and show the table again

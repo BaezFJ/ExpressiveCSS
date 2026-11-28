@@ -10,7 +10,7 @@ on:
         required: true
         default: framework
         type: choice
-        options: [framework, mcp]
+        options: [framework, mcp, extras]
 
 permissions:
   contents: read
@@ -60,6 +60,9 @@ jobs:
       - run: npx playwright install --with-deps chromium firefox webkit
       - run: npm run verify
       - run: npm test --prefix mcp/expressivecss
+      # Packs and checks all three packages in clean consumers. The framework's
+      # prepack rebuilds dist/ and extras/dist/ from the root, so the extras
+      # tarball below is packed from that build.
       - run: npm run verify:packages
       - name: Check registry availability
         if: github.event_name == 'release'

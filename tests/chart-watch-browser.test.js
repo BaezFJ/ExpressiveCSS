@@ -63,7 +63,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const { page } = await open(browser);
       const result = await page.evaluate(async () => {
         const el = document.getElementById('watched');
-        const chart = count(Expressive.LineChart.getInstance(el));
+        const chart = count(ExpressiveExtras.LineChart.getInstance(el));
         const old = el.querySelector('.line-chart-plot');
         el.querySelector('tbody tr:nth-child(2) td').textContent = '25';
         el.querySelector('tbody').insertAdjacentHTML('beforeend', '<tr><th>Apr</th><td>40</td></tr>');
@@ -98,7 +98,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const { page } = await open(browser);
       const result = await page.evaluate(async () => {
         const el = document.getElementById('plain');
-        const chart = count(Expressive.LineChart.getInstance(el));
+        const chart = count(ExpressiveExtras.LineChart.getInstance(el));
         const plot = el.querySelector('.line-chart-plot');
         el.querySelector('tbody td').textContent = '99';
         el.querySelector('tbody').insertAdjacentHTML('beforeend', '<tr><th>Apr</th><td>40</td></tr>');
@@ -117,7 +117,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const { page } = await open(browser);
       const result = await page.evaluate(async () => {
         const el = document.getElementById('watched');
-        const chart = count(Expressive.LineChart.getInstance(el));
+        const chart = count(ExpressiveExtras.LineChart.getInstance(el));
         el.querySelector('tbody td').dataset.value = '99';
         await settle();
         el.querySelector('thead th:nth-child(2)').classList.add('dashed');
@@ -125,7 +125,7 @@ for (const [engine, browserType, browserTest] of engines) {
         el.querySelector('tbody tr:nth-child(2) td').firstChild.data = '77';
         await settle();
 
-        const heat = count(Expressive.HeatmapChart.getInstance(document.getElementById('heat')));
+        const heat = count(ExpressiveExtras.HeatmapChart.getInstance(document.getElementById('heat')));
         heat.el.querySelector('thead th:nth-child(2)').dataset.label = 'W1';
         await settle();
         return {
@@ -147,7 +147,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const { page } = await open(browser);
       const result = await page.evaluate(async (fresh) => {
         const el = document.getElementById('watched');
-        const chart = count(Expressive.LineChart.getInstance(el));
+        const chart = count(ExpressiveExtras.LineChart.getInstance(el));
         const old = el.querySelector('table');
         old.insertAdjacentHTML('afterend', fresh);
         old.remove();
@@ -176,7 +176,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const { page } = await open(browser);
       const result = await page.evaluate(async () => {
         const el = document.getElementById('watched');
-        const chart = Expressive.LineChart.getInstance(el);
+        const chart = ExpressiveExtras.LineChart.getInstance(el);
         el.querySelector('table').remove();
         await settle();
         return { plots: el.querySelectorAll('.line-chart-plot').length, labels: chart.labels.length, series: chart.series.length };
@@ -193,7 +193,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const { page, errors } = await open(browser);
       const result = await page.evaluate(async () => {
         const el = document.getElementById('watched');
-        const chart = count(Expressive.LineChart.getInstance(el));
+        const chart = count(ExpressiveExtras.LineChart.getInstance(el));
         chart.destroy();
         el.querySelector('tbody td').textContent = '5';
         el.querySelector('tbody').insertAdjacentHTML('beforeend', '<tr><th>Apr</th><td>40</td></tr>');
@@ -211,23 +211,23 @@ for (const [engine, browserType, browserTest] of engines) {
     const browser = await leaseBrowser(browserType);
     try {
       const { page } = await open(browser);
-      await page.evaluate(() => count(Expressive.LineChart.getInstance(document.getElementById('toggle'))));
+      await page.evaluate(() => count(ExpressiveExtras.LineChart.getInstance(document.getElementById('toggle'))));
       const redraws = () => page.evaluate(async () => {
         await settle();
-        return Expressive.LineChart.getInstance(document.getElementById('toggle')).redraws;
+        return ExpressiveExtras.LineChart.getInstance(document.getElementById('toggle')).redraws;
       });
 
       await page.locator('#toggle .line-chart-plot').focus();
       await page.keyboard.press('ArrowRight');
       await page.keyboard.press('ArrowRight');
       assert.equal(await redraws(), 0, 'moving the highlight');
-      assert.equal(await page.locator('#toggle').evaluate((el) => Expressive.LineChart.getInstance(el).activeIndex), 1,
+      assert.equal(await page.locator('#toggle').evaluate((el) => ExpressiveExtras.LineChart.getInstance(el).activeIndex), 1,
         'the arrows reached the watched chart');
 
       const focused = await page.locator('#toggle').evaluate(async (el) => {
         el.querySelector('tbody td').textContent = '5';
         await settle();
-        const chart = Expressive.LineChart.getInstance(el);
+        const chart = ExpressiveExtras.LineChart.getInstance(el);
         return { redraws: chart.redraws, focused: document.activeElement === el.querySelector('.line-chart-plot'), index: chart.activeIndex };
       });
       assert.deepEqual(focused, { redraws: 1, focused: true, index: 1 }, 'a watched redraw keeps focus and the row');
@@ -240,14 +240,14 @@ for (const [engine, browserType, browserTest] of engines) {
 
       await page.locator('#toggle').evaluate((el) => {
         el.querySelector('tbody td').textContent = '9';
-        Expressive.LineChart.getInstance(el).update();
+        ExpressiveExtras.LineChart.getInstance(el).update();
       });
       assert.equal(await redraws(), 3, 'an edit and a manual update() in one run');
 
       const narrow = await page.evaluate(async () => {
         // Started again here, so the count covers its first label thinning.
         const el = document.getElementById('narrow');
-        const chart = count(Expressive.LineChart.init(el));
+        const chart = count(ExpressiveExtras.LineChart.init(el));
         await settle();
         await settle();
         const start = chart.redraws;
@@ -267,12 +267,12 @@ for (const [engine, browserType, browserTest] of engines) {
     try {
       const { page } = await open(browser, false);
       const result = await page.evaluate(async () => {
-        const pie = count(Expressive.PieChart.init(document.getElementById('pie'), { watch: true }));
+        const pie = count(ExpressiveExtras.PieChart.init(document.getElementById('pie'), { watch: true }));
         pie.el.querySelector('tbody').insertAdjacentHTML('beforeend', '<tr><th>C</th><td>3</td></tr>');
 
         const el = document.getElementById('heat');
         el.removeAttribute('data-watch');
-        const heat = count(Expressive.HeatmapChart.init(el, { watch: true }));
+        const heat = count(ExpressiveExtras.HeatmapChart.init(el, { watch: true }));
         const scroll = () => el.querySelector('.heatmap-chart-scroll');
         scroll().scrollLeft = 200;
         const left = scroll().scrollLeft;

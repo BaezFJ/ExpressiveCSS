@@ -9,7 +9,7 @@ import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-import { Expressive, resetBody, fire, window } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, fire, window } from './setup.js';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -178,7 +178,7 @@ describe('Lightbox dimensions', () => {
     document.body.innerHTML = `<img class="lightboxed" src="http://localhost/1.jpg">`;
     const img = document.querySelector('img');
     fixRect(img, 100, 50);
-    const instance = Expressive.Lightbox.init(img);
+    const instance = ExpressiveExtras.Lightbox.init(img);
 
     instance.open();
     instance.close();
@@ -191,7 +191,7 @@ describe('Lightbox dimensions', () => {
   test('an image with no size yet does not open into NaN', () => {
     document.body.innerHTML = `<img class="lightboxed" src="http://localhost/1.jpg">`;
     const img = document.querySelector('img');
-    const instance = Expressive.Lightbox.init(img);
+    const instance = ExpressiveExtras.Lightbox.init(img);
     try {
       instance.open();
       assert.equal(document.getElementById('lightbox-overlay'), null);
@@ -207,7 +207,7 @@ describe('Lightbox dimensions', () => {
     document.body.innerHTML = `<img class="lightboxed" src="http://localhost/1.jpg" style="display: block">`;
     const img = document.querySelector('img');
     fixRect(img, 100, 50);
-    const instance = Expressive.Lightbox.init(img);
+    const instance = ExpressiveExtras.Lightbox.init(img);
     try {
       img.focus();
       instance.open();
@@ -2409,7 +2409,7 @@ describe('Footer', () => {
     // rules already reach through it - but the copyright-bar selector only
     // matched a direct `footer > small`, so a footer written the documented
     // way got an unstyled legal row. The docs' own chrome had it for months.
-    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    const css = readFileSync(new URL('../extras/dist/css/extras.css', import.meta.url), 'utf8');
     const bar = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)].find(
       (m) => /min-height:\s*var\(--md-comp-footer-legal-height\)/.test(m[2])
     );
@@ -2950,7 +2950,7 @@ describe('Particles', () => {
       document.documentElement.removeAttribute('theme');
     };
     try {
-      const instance = Expressive.Particles.init(canvas, { quantity: 3 });
+      const instance = ExpressiveExtras.Particles.init(canvas, { quantity: 3 });
       return { instance, paints, visibility, restore, query: (part) => Object.entries(queries).find(([q]) => q.includes(part))[1] };
     } catch (error) {
       restore();

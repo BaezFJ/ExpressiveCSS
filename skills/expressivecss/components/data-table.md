@@ -5,11 +5,11 @@ Rows of records in a scrolling table with a sticky header, sort state and row se
 
 Component ID: `data-table`
 
-[Component documentation](https://www.expressivecss.com/data-table.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/data-table.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.20.0)
+[Component documentation](https://www.expressivecss.com/data-table.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/data-table.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.21.0)
 
-Contract: ExpressiveCSS 0.20.0
+Contract: ExpressiveCSS 0.21.0
 
-Contract SHA-256: `25c1c27cf5f1c0af361eb36e2484901c97f05f8633e1703b67742c669d7d677c`
+Contract SHA-256: `8432222aca12115fa1cde1eb910606de0238aeef83bc57a4e05a792aa1adef98`
 
 #### Selection and adaptation
 

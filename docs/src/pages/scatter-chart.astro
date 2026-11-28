@@ -197,7 +197,7 @@ const spend: [string, number, number, number][] = [
           plus <code>xMin</code> and <code>xMax</code> for the x scale.
         </p>
 <Code code={`
-const chart = Expressive.ScatterChart.init(document.querySelector('.scatter-chart'), { xMin: 0 });
+const chart = ExpressiveExtras.ScatterChart.init(document.querySelector('.scatter-chart'), { xMin: 0 });
 chart.show(2);   // highlight the third point in table order; -1 hides the tooltip
 chart.update();  // redraw from the table; focus and the highlighted point stay
 chart.destroy(); // remove the drawing and show the table again

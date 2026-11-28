@@ -69,7 +69,7 @@ const S = defineSections([
 
 <script>
 const canvas = document.querySelector('canvas.particles');
-Expressive.Particles.init(canvas, { quantity: 150, vy: -0.3, staticity: 20 });
+ExpressiveExtras.Particles.init(canvas, { quantity: 150, vy: -0.3, staticity: 20 });
 </script>
 `} />
   </Section>
@@ -94,14 +94,14 @@ Expressive.Particles.init(canvas, { quantity: 150, vy: -0.3, staticity: 20 });
   </Section>
   <Section {...S.methods}>
 <Code code={`
-const particles = Expressive.Particles.getInstance(canvas);
+const particles = ExpressiveExtras.Particles.getInstance(canvas);
 particles.destroy();   // stops drawing and clears the canvas
 `} />
   </Section>
 <script is:inline>
 // The bundle loads after the page body.
 document.addEventListener('DOMContentLoaded', () => {
-  Expressive.Particles.init(document.getElementById('demo-drift'), { quantity: 150, vy: -0.3, staticity: 20 });
+  ExpressiveExtras.Particles.init(document.getElementById('demo-drift'), { quantity: 150, vy: -0.3, staticity: 20 });
 });
 </script>
 </DocsLayout>

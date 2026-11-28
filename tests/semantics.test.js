@@ -209,17 +209,19 @@ function declarationProblems(name, c, compositeRoles) {
 
 function sassComponents() {
   const out = [];
-  const walk = (dir, prefix = '') => {
-    for (const e of readdirSync(new URL(`src/sass/components/${dir}`, root), { withFileTypes: true })) {
+  const walk = (base, dir = '', prefix = '') => {
+    for (const e of readdirSync(new URL(`${base}${dir}`, root), { withFileTypes: true })) {
       if (e.isDirectory()) {
-        walk(`${dir}${e.name}/`, `${prefix}${e.name}/`);
+        walk(base, `${dir}${e.name}/`, `${prefix}${e.name}/`);
         continue;
       }
       if (!e.name.startsWith('_') || e.name === '_index.scss') continue;
       out.push(prefix + e.name.slice(1).replace('.scss', ''));
     }
   };
-  walk('');
+  // Components moved to @expressivecss/extras keep their rows.
+  walk('src/sass/components/');
+  walk('extras/src/sass/components/');
   return out;
 }
 

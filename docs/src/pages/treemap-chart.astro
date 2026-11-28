@@ -129,7 +129,7 @@ const storage: [string, number][] = [
           apply.
         </p>
 <Code code={`
-const chart = Expressive.TreemapChart.init(document.querySelector('.treemap-chart'));
+const chart = ExpressiveExtras.TreemapChart.init(document.querySelector('.treemap-chart'));
 chart.show(2);   // highlight the third row, or the next one with a rectangle; -1 hides the tooltip
 chart.update();  // redraw from the table; focus and the highlighted row stay
 chart.destroy(); // remove the drawing and show the table again

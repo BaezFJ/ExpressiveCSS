@@ -31,5 +31,6 @@
   },
   // docs/src carries the Astro documentation site's shared page catalogue (ADR 0003).
   // Not in tsconfig.build.json: it is site source, not part of the package.
+  // extras/src/ts is checked by extras/tsconfig.json.
   "include": ["src/ts", "docs/src"]
 }

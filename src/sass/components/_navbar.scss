@@ -495,7 +495,7 @@ header:has(> #{$_bar}) {
 // pinned bar, so headings with an id rest below it. Only a page-level bar
 // (body > header) counts: demo bars in articles, cards and dialogs leave
 // headings alone. Zero specificity leaves a page's own :root token or heading
-// scroll-margin, and .scrollspy, in charge. The offset is the bar's height
+// scroll-margin, and the extras .scrollspy, in charge. The offset is the bar's height
 // plus 8px; a collapsed flexible bar is the small one. :has() can't nest, so
 // each test names the bar as a child of the header.
 $_page-bar: ":root:has(> body > header > #{$_bar})";

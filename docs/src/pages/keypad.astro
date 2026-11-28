@@ -170,7 +170,7 @@ const rows = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
 </div>
 
 <script>
-Expressive.Keypad.init(document.querySelector('.keypad'), {
+ExpressiveExtras.Keypad.init(document.querySelector('.keypad'), {
   onKey: (key) => { if (key === 'Contacts') openContacts(); },
 });
 </script>
@@ -312,7 +312,7 @@ Expressive.Keypad.init(document.querySelector('.keypad'), {
   </Section>
   <Section {...S.methods}>
 <Code code={`
-const keypad = Expressive.Keypad.getInstance(el);
+const keypad = ExpressiveExtras.Keypad.getInstance(el);
 keypad.target;    // the field named by aria-controls, or null
 keypad.destroy(); // removes the listeners
 `} />

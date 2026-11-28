@@ -1,0 +1,64 @@
+@use "abstracts" as *;
+@use "../abstracts/charts" as *;
+
+// Funnel chart. A <figure class="funnel-chart"> holds a <figcaption> and a
+// <table> of data: the first column labels each row, and the second holds
+// each stage's value. Without JavaScript the table shows. FunnelChart draws
+// each row as a stage, top to bottom in table order, as wide as its value
+// against the largest one and centered, with the row's label at the inline
+// start. It hides the table visually, so a screen reader still reads the
+// data as a table. The plot and tooltip come from chart(). The plot is as
+// tall as its rows, so --md-comp-funnel-chart-height does not apply; set
+// the row height instead.
+//
+// Each stage's span carries --width, its width as a percentage of the plot.
+//
+// Tokens:
+//   --md-comp-funnel-chart-row-height    40px
+//   --md-comp-funnel-chart-stage-height  60% of each row's height
+//   --md-comp-funnel-chart-shape         4px, the stage's corner radius
+//   --md-comp-funnel-chart-color-1       primary, every stage's color
+
+@include chart("funnel-chart", $grid: false, $rows: true, $cursor: band);
+
+.funnel-chart {
+  --md-comp-funnel-chart-stage-height: 60%;
+}
+
+.funnel-chart-stages {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+
+  > div {
+    display: flex;
+    align-items: center;
+  }
+
+  > div > span {
+    width: calc(var(--width, 0) * 1%);
+    height: var(--md-comp-funnel-chart-stage-height);
+    margin-inline: auto;
+    border-radius: var(--md-comp-funnel-chart-shape);
+    background-color: var(--funnel-chart-color);
+  }
+
+  // Each stage grows from nothing, or after update() from its old width,
+  // which FunnelChart writes as --from-width.
+  @media (prefers-reduced-motion: no-preference) {
+    > div > span {
+      transition: width var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-standard);
+
+      @starting-style {
+        width: calc(var(--from-width, 0) * 1%);
+      }
+    }
+  }
+}
+
+@media (forced-colors: active) {
+  .funnel-chart-stages > div > span {
+    forced-color-adjust: none;
+  }
+}

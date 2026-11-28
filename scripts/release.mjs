@@ -6,22 +6,26 @@ import { resolve } from 'node:path';
 import { parseSemver, compareSemver } from './lib/resolve-expressivecss-version.mjs';
 
 const versionPattern = '(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-([0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*))?';
-const tagPattern = new RegExp(`^(mcp-)?v${versionPattern}$`);
+const tagPattern = new RegExp(`^(mcp-|extras-)?v${versionPattern}$`);
+const packages = {
+  framework: { prefix: '', name: '@expressivecss/expressive', directory: '.' },
+  mcp: { prefix: 'mcp-', name: '@expressivecss/mcp-server', directory: 'mcp/expressivecss' },
+  extras: { prefix: 'extras-', name: '@expressivecss/extras', directory: 'extras' },
+};
 export function releaseMetadata(tag, manifests, prerelease) {
   assert.equal(typeof tag, 'string', 'Release tag is required');
   assert.ok(!/[\r\n]/.test(tag), 'Release tag must be a single line');
   const match = tagPattern.exec(tag);
-  assert.ok(match, 'Expected vX.Y.Z or mcp-vX.Y.Z, optionally with a prerelease suffix');
-  const kind = match[1] ? 'mcp' : 'framework';
-  const version = tag.slice(kind === 'mcp' ? 5 : 1);
+  assert.ok(match, 'Expected vX.Y.Z, mcp-vX.Y.Z or extras-vX.Y.Z, optionally with a prerelease suffix');
+  const kind = Object.keys(packages).find((key) => packages[key].prefix === (match[1] ?? ''));
+  const { prefix, name, directory } = packages[kind];
+  const version = tag.slice(prefix.length + 1);
   const isPrerelease = Boolean(match[5]);
   assert.ok(!match[5]?.split('.').some((part) => /^0\d+$/.test(part)), 'Numeric prerelease identifiers cannot have leading zeros');
   assert.equal(prerelease, isPrerelease, 'GitHub prerelease flag must match the version suffix');
   assert.equal(manifests[kind].version, version, 'Release tag must match package version');
-  const expectedName = kind === 'mcp' ? '@expressivecss/mcp-server' : '@expressivecss/expressive';
-  assert.equal(manifests[kind].name, expectedName, 'Unexpected package name');
-  return { kind, directory: kind === 'mcp' ? 'mcp/expressivecss' : '.', name: expectedName, version,
-    distTag: isPrerelease ? 'next' : 'latest' };
+  assert.equal(manifests[kind].name, name, 'Unexpected package name');
+  return { kind, directory, name, version, distTag: isPrerelease ? 'next' : 'latest' };
 }
 export function assertForwardRelease(version, current) {
   if (!current) return;
@@ -55,11 +59,12 @@ if (import.meta.main) {
   const manifests = {
     framework: JSON.parse(readFileSync('package.json', 'utf8')),
     mcp: JSON.parse(readFileSync('mcp/expressivecss/package.json', 'utf8')),
+    extras: JSON.parse(readFileSync('extras/package.json', 'utf8')),
   };
   const manual = process.env.GITHUB_EVENT_NAME === 'workflow_dispatch';
   const kind = process.env.RELEASE_PACKAGE;
-  if (manual) assert.ok(['framework', 'mcp'].includes(kind), 'Select framework or mcp');
-  const tag = manual ? `${kind === 'mcp' ? 'mcp-' : ''}v${manifests[kind].version}` : process.env.RELEASE_TAG;
+  if (manual) assert.ok(Object.hasOwn(packages, kind), 'Select framework, mcp or extras');
+  const tag = manual ? `${packages[kind].prefix}v${manifests[kind].version}` : process.env.RELEASE_TAG;
   const prerelease = manual ? manifests[kind].version.includes('-') : process.env.RELEASE_PRERELEASE === 'true';
   const release = releaseMetadata(tag, manifests, prerelease);
   if (process.argv.includes('--registry')) {

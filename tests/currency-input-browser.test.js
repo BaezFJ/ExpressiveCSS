@@ -58,7 +58,7 @@ async function open(browser) {
     const root = document.getElementById('host').attachShadow({ mode: 'open' });
     root.innerHTML = '<form lang="de"><input name="shadowed" data-currency="EUR" value="1234.5"></form>';
     Expressive.AutoInit();
-    Expressive.CurrencyInput.init(root.querySelector('input'));
+    ExpressiveExtras.CurrencyInput.init(root.querySelector('input'));
   });
   const state = (id = 'amount') =>
     page.evaluate((id) => {
@@ -103,7 +103,7 @@ each('a three-decimal amount keeps its value where the currency and number forma
     form.lang = 'fr-CH';
     form.innerHTML = '<input id="swiss-amount" name="swiss-amount" data-currency="KWD" value="1.234">';
     document.body.append(form);
-    Expressive.CurrencyInput.init(form.firstElementChild);
+    ExpressiveExtras.CurrencyInput.init(form.firstElementChild);
   });
   const submits = () => page.evaluate(() => new FormData(document.getElementById('swiss')).get('swiss-amount'));
   assert.match((await state('swiss-amount')).value, /1[.,]234/, 'formatted');
@@ -182,7 +182,7 @@ each('destroy() stops formatting, clears the validity message and leaves the for
   await page.click('#amount');
   await page.keyboard.type('abc');
   await page.keyboard.press('Tab');
-  await page.evaluate(() => Expressive.CurrencyInput.getInstance(document.getElementById('amount')).destroy());
+  await page.evaluate(() => ExpressiveExtras.CurrencyInput.getInstance(document.getElementById('amount')).destroy());
   assert.equal(await page.evaluate(() => document.getElementById('amount').checkValidity()), true);
   await page.focus('#amount');
   await page.keyboard.press('End');

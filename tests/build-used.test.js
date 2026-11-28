@@ -374,3 +374,52 @@ for (const [name, contents] of [
     }
   });
 }
+
+function withExtras(app) {
+  symlinkSync(join(root, 'extras'), join(app, 'node_modules/@expressivecss/extras'), 'junction');
+  return app;
+}
+
+test('installed extras get their own selective stylesheet, chosen before core', t => {
+  const app = withExtras(consumer(t));
+  writeFileSync(join(app, 'index.html'), '<div class="kpi"></div><nav class="tabs"></nav>');
+  writeFileSync(join(app, 'ui.ts'), `import '@expressivecss/extras/css';
+    import { Menubar } from '@expressivecss/extras/modular';
+    export const bar = Menubar;`);
+  succeeds(cli(app, '--entry', 'ui.ts'));
+  const extras = readFileSync(join(app, 'public/expressive/css/extras.css'), 'utf8');
+  const core = readFileSync(join(app, 'public/expressive/css/expressive.css'), 'utf8');
+  assert.doesNotThrow(() => postcss.parse(extras));
+  for (const rule of ['@layer tokens', '.kpi{', '.menubar{']) assert.ok(extras.includes(rule), rule);
+  for (const rule of ['.marquee', '.sankey-chart', '.countdown']) assert.ok(!extras.includes(rule), rule);
+  // Menubar builds core menus, so core keeps the menu styles; extras classes stay out of core.
+  assert.match(core, /\.menu\b/);
+  assert.ok(!core.includes('.kpi'));
+  assert.doesNotMatch(readFileSync(join(app, 'public/expressive/js/app.js'), 'utf8'), /\.kpi\{/);
+});
+
+test('extras APIs used through the global or a separate import keep their styles', t => {
+  const app = withExtras(consumer(t));
+  writeFileSync(join(app, 'page.js'), 'window.ExpressiveExtras.LineChart.init(document.querySelector("figure"));');
+  writeFileSync(join(app, 'other.mjs'), 'import { Confetti } from "@expressivecss/extras"; Confetti.init(document.body);');
+  succeeds(cli(app));
+  const extras = readFileSync(join(app, 'public/expressive/css/extras.css'), 'utf8');
+  assert.ok(extras.includes('.line-chart'), 'global API');
+  assert.ok(extras.includes('.confetti'), 'imported API');
+  assert.ok(!extras.includes('.sankey-chart'));
+});
+
+test('--include reaches extras partials, and css/extras.css goes when extras is not installed', t => {
+  const app = consumer(t);
+  writeFileSync(join(app, 'index.html'), '<nav class="tabs"></nav>');
+  const unknown = cli(app, '--include', 'components/marquee');
+  assert.equal(unknown.status, 1);
+  assert.match(unknown.stderr, /Unknown component partial: components\/marquee/);
+  withExtras(app);
+  succeeds(cli(app, '--include', 'components/marquee'));
+  const extrasPath = join(app, 'public/expressive/css/extras.css');
+  assert.ok(readFileSync(extrasPath, 'utf8').includes('.marquee'));
+  rmSync(join(app, 'node_modules/@expressivecss/extras'));
+  succeeds(cli(app));
+  assert.ok(!existsSync(extrasPath));
+});

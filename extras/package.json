@@ -1,0 +1,68 @@
+{
+  "name": "@expressivecss/extras",
+  "version": "0.21.0",
+  "description": "Additional ExpressiveCSS components beyond the Material Design 3 set.",
+  "license": "MIT",
+  "author": "BaezFJ <baezdevs@gmail.com>",
+  "homepage": "https://www.expressivecss.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BaezFJ/ExpressiveCSS.git",
+    "directory": "extras"
+  },
+  "bugs": {
+    "url": "https://github.com/BaezFJ/ExpressiveCSS/issues"
+  },
+  "keywords": [
+    "css",
+    "sass",
+    "material-design-3",
+    "components",
+    "expressivecss"
+  ],
+  "type": "module",
+  "main": "./dist/js/extras.cjs",
+  "types": "./dist/types/index.d.ts",
+  "unpkg": "./dist/js/extras.min.js",
+  "jsdelivr": "./dist/js/extras.min.js",
+  "sideEffects": [
+    "./dist/js/extras.mjs",
+    "./dist/js/extras.cjs",
+    "./dist/js/extras.js",
+    "./dist/js/extras.min.js",
+    "*.css",
+    "*.scss"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/js/extras.mjs",
+      "require": "./dist/js/extras.cjs",
+      "default": "./dist/js/extras.mjs"
+    },
+    "./modular": {
+      "types": "./dist/types/modular.d.ts",
+      "import": "./dist/js/modular.mjs"
+    },
+    "./css": "./dist/css/extras.css",
+    "./css/min": "./dist/css/extras.min.css",
+    "./scss": "./src/sass/extras.scss",
+    "./scss/*": "./src/sass/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src/sass",
+    "CHANGELOG.md",
+    "README.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "prepack": "node -e \"require('fs').existsSync('dist/js/extras.mjs') || (console.error('extras/dist is missing: run npm run build in the repository root first.'), process.exit(1))\""
+  },
+  "peerDependencies": {
+    "@expressivecss/expressive": "^0.21.0"
+  }
+}

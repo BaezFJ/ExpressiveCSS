@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { engines } from './browser.js';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -58,7 +58,7 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
 
 for (const [name, engine, test] of engines) {
   test(`${name}: keypad and keyboard type at the caret, edit, submit, shift and lay out their keys`, { timeout: 30000 }, async (t) => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     let page;
     try {
       page = await browser.newPage({ viewport: { width: 800, height: 900 } });
@@ -73,7 +73,7 @@ for (const [name, engine, test] of engines) {
           e.preventDefault();
           e.target.dataset.sent = Number(e.target.dataset.sent || 0) + 1;
         });
-        window.Expressive.Keypad.init(document.querySelectorAll('.no-autoinit'), { onKey: (k) => window.keysSeen.push(k) });
+        window.ExpressiveExtras.Keypad.init(document.querySelectorAll('.no-autoinit'), { onKey: (k) => window.keysSeen.push(k) });
       });
       const value = (id) => page.locator(`#${id}`).inputValue();
       const press = (scope, selector) => page.locator(`#${scope} ${selector}`).click();
@@ -189,7 +189,7 @@ for (const [name, engine, test] of engines) {
         root.innerHTML = '<input id="code" aria-label="Code"><div class="keypad" role="group" aria-label="Code keypad" aria-controls="code"><button type="button" value="7">7</button></div>';
         let heard = 0;
         document.addEventListener('input', () => heard++);
-        window.Expressive.Keypad.init(root.querySelector('.keypad'));
+        window.ExpressiveExtras.Keypad.init(root.querySelector('.keypad'));
         root.querySelector('button').click();
         return { value: root.getElementById('code').value, heard };
       });
@@ -266,13 +266,13 @@ for (const [name, engine, test] of engines) {
       await page.mouse.up();
 
       // destroy() stops typing.
-      await page.evaluate(() => window.Expressive.Keypad.getInstance(document.getElementById('kb')).destroy());
+      await page.evaluate(() => window.ExpressiveExtras.Keypad.getInstance(document.getElementById('kb')).destroy());
       await press('kb', '[value="q"]');
       assert.equal(await value('note'), 'Hi y\n.', 'a destroyed keyboard types nothing');
-      assert.equal(await page.evaluate(() => window.Expressive.Keypad.getInstance(document.getElementById('kb'))), undefined);
+      assert.equal(await page.evaluate(() => window.ExpressiveExtras.Keypad.getInstance(document.getElementById('kb'))), undefined);
 
       // With every keypad destroyed, the shared listeners are gone too.
-      await page.evaluate(() => document.querySelectorAll('.no-autoinit').forEach((el) => window.Expressive.Keypad.getInstance(el)?.destroy()));
+      await page.evaluate(() => document.querySelectorAll('.no-autoinit').forEach((el) => window.ExpressiveExtras.Keypad.getInstance(el)?.destroy()));
       const dialed = await value('dial');
       await page.locator('#dial + label + button').click();
       assert.equal(await value('dial'), dialed, 'an in-field key does nothing without a keypad');
@@ -280,7 +280,7 @@ for (const [name, engine, test] of engines) {
       await page?.evaluate(() => {
         const shadow = document.getElementById('host').shadowRoot;
         for (const el of [...document.querySelectorAll('.keypad, .keyboard'), ...(shadow?.querySelectorAll('.keypad') ?? [])]) {
-          window.Expressive.Keypad.getInstance(el)?.destroy();
+          window.ExpressiveExtras.Keypad.getInstance(el)?.destroy();
         }
       }).catch(() => {});
       await browser.close();
@@ -288,7 +288,7 @@ for (const [name, engine, test] of engines) {
   });
 
   test(`${name}: keyboard caps lock, symbol layers, hardware key highlight and minlength`, { timeout: 30000 }, async (t) => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
       await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body>
@@ -307,7 +307,7 @@ for (const [name, engine, test] of engines) {
       await page.addScriptTag({ content: js });
       const result = await page.evaluate(() => {
         const heard = [];
-        Expressive.Keypad.init(document.querySelector('#kb'), { onKey: (key) => heard.push(key) });
+        ExpressiveExtras.Keypad.init(document.querySelector('#kb'), { onKey: (key) => heard.push(key) });
         const field = document.querySelector('#code');
         const press = (selector) => document.querySelector(`#kb ${selector}`).click();
         const caps = document.querySelector('[data-key="CapsLock"]');
@@ -376,7 +376,7 @@ for (const [name, engine, test] of engines) {
         document.querySelector('#form').reset();
         const reset = field.validity.valid;
         press('[value="a"]');
-        Expressive.Keypad.getInstance(document.querySelector('#kb')).destroy();
+        ExpressiveExtras.Keypad.getInstance(document.querySelector('#kb')).destroy();
         return { kept, keptShort, short, reset, destroyed: field.validity.valid };
       });
       assert.deepEqual(own, { kept: 'Unavailable', keptShort: 'Unavailable', short: false, reset: true, destroyed: true });

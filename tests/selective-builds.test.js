@@ -374,7 +374,17 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Custom scrollbars phase 104: 114,575 gzip bytes.
   // Custom scrollbars phase 105: 114,867 gzip bytes.
   // Custom scrollbars phase 106: 115,288 gzip bytes.
-  assert.ok(sizes(js).gzip <= 115288, `JavaScript gzip: ${sizes(js).gzip}`);
+  // Reviewed Expressive.core and AutoInit.register for @expressivecss/extras: 115,599 gzip bytes (+311).
+  // Reviewed moving the charts to @expressivecss/extras: 100,113 gzip bytes (-15,486).
+  // Reviewed moving the interactive components, Tour and ImageCompare to @expressivecss/extras: 82,240 gzip bytes (-17,873).
+  // Reviewed moving the form extras, TransferList and the drop zone behavior to @expressivecss/extras: 67,095 gzip bytes (-15,145).
+  assert.ok(sizes(js).gzip <= 67095, `JavaScript gzip: ${sizes(js).gzip}`);
+  const extrasJs = readFileSync(`${root}/extras/dist/js/extras.min.js`, 'utf8').replace(/^\/\/# sourceMappingURL=.*\n?/m, '');
+  // Reviewed the charts moved from core, registered with core's AutoInit: 16,457 gzip bytes.
+  // Reviewed the interactive components, Tour and ImageCompare moved from core, with Menu read from core's modular entry: 35,318 gzip bytes (+18,861).
+  // Reviewed the form extras, TransferList and DropZone moved from core, with FormSelect and Forms read from core's modular entry: 50,805 gzip bytes (+15,487).
+  // Reviewed the AutoInit table moving to its own module for the CLI style index: 50,811 gzip bytes (+6).
+  assert.ok(sizes(extrasJs).gzip <= 50811, `Extras JavaScript gzip: ${sizes(extrasJs).gzip}`);
   // Reviewed accordion, data table, avatar, skeleton and empty state: 50,062 gzip bytes (+387).
   // Reviewed popover, stepper, drop zone and text field add-ons: 51,878 gzip bytes (+1,816).
   // Reviewed timeline, stat, tree, rating, command palette and the kbd keycap: 53,687 gzip bytes (+1,809).
@@ -616,5 +626,15 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Custom scrollbars phase 104: 94,892 gzip bytes.
   // Custom scrollbars phase 105: 94,922 gzip bytes.
   // Custom scrollbars phase 106: 94,925 gzip bytes.
-  assert.ok(sizes(css).gzip <= 94925, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed moving the CSS-only components to @expressivecss/extras: 86,848 gzip bytes (-8,077).
+  // Reviewed moving the charts and their mixins to @expressivecss/extras, with card media figures told apart by their table: 75,804 gzip bytes (-11,044).
+  // Reviewed moving the interactive components, the table of contents and the carousel's lightbox rule to @expressivecss/extras: 72,648 gzip bytes (-3,156).
+  // Reviewed moving the form extras, the drop zone and the tree select rules to @expressivecss/extras: 68,727 gzip bytes (-3,921).
+  assert.ok(sizes(css).gzip <= 68727, `CSS gzip: ${sizes(css).gzip}`);
+  const extrasCss = readFileSync(`${root}/extras/dist/css/extras.min.css`, 'utf8').replace(/\/\*# sourceMappingURL=.*?\*\//, '').trimEnd();
+  // Reviewed the CSS-only components moved from core, with the footer grid at the base rule's weight: 9,385 gzip bytes.
+  // Reviewed the charts and their mixins moved from core: 20,263 gzip bytes (+10,878).
+  // Reviewed the interactive components, the table of contents and the carousel's lightbox rule moved from core: 23,602 gzip bytes (+3,339).
+  // Reviewed the form extras, the drop zone and the tree select rules moved from core: 27,588 gzip bytes (+3,986).
+  assert.ok(sizes(extrasCss).gzip <= 27588, `Extras CSS gzip: ${sizes(extrasCss).gzip}`);
 });

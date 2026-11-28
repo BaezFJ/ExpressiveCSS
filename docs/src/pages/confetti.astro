@@ -15,7 +15,7 @@ const S = defineSections([
   { id: "methods", label: "Methods" },
 ]);
 
-const randomScript = `Expressive.Confetti.fire({
+const randomScript = `ExpressiveExtras.Confetti.fire({
   angle: 55 + Math.random() * 70,
   spread: 50 + Math.random() * 20,
   particleCount: 50 + Math.floor(Math.random() * 50),
@@ -27,16 +27,16 @@ const timer = setInterval(() => {
   const left = end - Date.now();
   if (left <= 0) return clearInterval(timer);
   const burst = { spread: 360, startVelocity: 30, ticks: 60, particleCount: 50 * left / 5000 };
-  Expressive.Confetti.fire({ ...burst, origin: { x: 0.1 + Math.random() * 0.2, y: Math.random() - 0.2 } });
-  Expressive.Confetti.fire({ ...burst, origin: { x: 0.7 + Math.random() * 0.2, y: Math.random() - 0.2 } });
+  ExpressiveExtras.Confetti.fire({ ...burst, origin: { x: 0.1 + Math.random() * 0.2, y: Math.random() - 0.2 } });
+  ExpressiveExtras.Confetti.fire({ ...burst, origin: { x: 0.7 + Math.random() * 0.2, y: Math.random() - 0.2 } });
 }, 250);`;
 
 const cannonsScript = `const end = Date.now() + 3000;
 const colors = ['#a786ff', '#fd8bbc', '#eca184', '#f8deb1'];
 (function frame() {
   if (Date.now() > end) return;
-  Expressive.Confetti.fire({ particleCount: 2, angle: 60, spread: 55, startVelocity: 60, origin: { x: 0, y: 0.5 }, colors });
-  Expressive.Confetti.fire({ particleCount: 2, angle: 120, spread: 55, startVelocity: 60, origin: { x: 1, y: 0.5 }, colors });
+  ExpressiveExtras.Confetti.fire({ particleCount: 2, angle: 60, spread: 55, startVelocity: 60, origin: { x: 0, y: 0.5 }, colors });
+  ExpressiveExtras.Confetti.fire({ particleCount: 2, angle: 120, spread: 55, startVelocity: 60, origin: { x: 1, y: 0.5 }, colors });
   requestAnimationFrame(frame);
 })();`;
 
@@ -46,8 +46,8 @@ const starsScript = `const stars = {
 };
 for (const delay of [0, 100, 200]) {
   setTimeout(() => {
-    Expressive.Confetti.fire({ ...stars, particleCount: 40 });
-    Expressive.Confetti.fire({ ...stars, particleCount: 10, shapes: ['circle'], scalar: 0.75 });
+    ExpressiveExtras.Confetti.fire({ ...stars, particleCount: 40 });
+    ExpressiveExtras.Confetti.fire({ ...stars, particleCount: 10, shapes: ['circle'], scalar: 0.75 });
   }, delay);
 }`;
 ---
@@ -96,20 +96,20 @@ for (const delay of [0, 100, 200]) {
 
 <script>
 const canvas = document.querySelector('canvas.confetti');
-const confetti = Expressive.Confetti.init(canvas, { startVelocity: 30, origin: { y: 0.6 } });
+const confetti = ExpressiveExtras.Confetti.init(canvas, { startVelocity: 30, origin: { y: 0.6 } });
 button.addEventListener('click', () => confetti.fire());
 </script>
 `} />
   </Section>
   <Section {...S.script}>
         <p>
-          <code>Expressive.Confetti.fire(options)</code> bursts over the page
+          <code>ExpressiveExtras.Confetti.fire(options)</code> bursts over the page
           with no markup, for example when a request succeeds. It returns a
           promise that resolves when the last piece is gone.
         </p>
 <Code code={`
 await saveOrder();
-Expressive.Confetti.fire({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+ExpressiveExtras.Confetti.fire({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
 `} />
   </Section>
   <Section {...S.examples}>
@@ -160,9 +160,9 @@ Expressive.Confetti.fire({ particleCount: 100, spread: 70, origin: { y: 0.6 } })
   </Section>
   <Section {...S.methods}>
 <Code code={`
-Expressive.Confetti.fire(options);   // bursts over the page; resolves when it ends
+ExpressiveExtras.Confetti.fire(options);   // bursts over the page; resolves when it ends
 
-const confetti = Expressive.Confetti.getInstance(element);
+const confetti = ExpressiveExtras.Confetti.getInstance(element);
 confetti.fire({ spread: 90 });       // this canvas, or from this button's center
 confetti.destroy();                  // removes the click handler, or clears the canvas
 `} />
@@ -170,11 +170,11 @@ confetti.destroy();                  // removes the click handler, or clears the
 <script is:inline>
 // The bundle loads after the page body.
 document.addEventListener('DOMContentLoaded', () => {
-  const canvas = Expressive.Confetti.init(document.getElementById('demo-canvas'), { startVelocity: 30, origin: { y: 0.6 } });
+  const canvas = ExpressiveExtras.Confetti.init(document.getElementById('demo-canvas'), { startVelocity: 30, origin: { y: 0.6 } });
   document.getElementById('demo-canvas-fire').addEventListener('click', () => canvas.fire());
   const demos = {
     'demo-random': () => {
-      Expressive.Confetti.fire({
+      ExpressiveExtras.Confetti.fire({
         angle: 55 + Math.random() * 70,
         spread: 50 + Math.random() * 20,
         particleCount: 50 + Math.floor(Math.random() * 50),
@@ -187,8 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const left = end - Date.now();
         if (left <= 0) return clearInterval(timer);
         const burst = { spread: 360, startVelocity: 30, ticks: 60, particleCount: 50 * left / 5000 };
-        Expressive.Confetti.fire({ ...burst, origin: { x: 0.1 + Math.random() * 0.2, y: Math.random() - 0.2 } });
-        Expressive.Confetti.fire({ ...burst, origin: { x: 0.7 + Math.random() * 0.2, y: Math.random() - 0.2 } });
+        ExpressiveExtras.Confetti.fire({ ...burst, origin: { x: 0.1 + Math.random() * 0.2, y: Math.random() - 0.2 } });
+        ExpressiveExtras.Confetti.fire({ ...burst, origin: { x: 0.7 + Math.random() * 0.2, y: Math.random() - 0.2 } });
       }, 250);
     },
     'demo-cannons': () => {
@@ -196,8 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const colors = ['#a786ff', '#fd8bbc', '#eca184', '#f8deb1'];
       (function frame() {
         if (Date.now() > end) return;
-        Expressive.Confetti.fire({ particleCount: 2, angle: 60, spread: 55, startVelocity: 60, origin: { x: 0, y: 0.5 }, colors });
-        Expressive.Confetti.fire({ particleCount: 2, angle: 120, spread: 55, startVelocity: 60, origin: { x: 1, y: 0.5 }, colors });
+        ExpressiveExtras.Confetti.fire({ particleCount: 2, angle: 60, spread: 55, startVelocity: 60, origin: { x: 0, y: 0.5 }, colors });
+        ExpressiveExtras.Confetti.fire({ particleCount: 2, angle: 120, spread: 55, startVelocity: 60, origin: { x: 1, y: 0.5 }, colors });
         requestAnimationFrame(frame);
       })();
     },
@@ -208,8 +208,8 @@ document.addEventListener('DOMContentLoaded', () => {
       };
       for (const delay of [0, 100, 200]) {
         setTimeout(() => {
-          Expressive.Confetti.fire({ ...stars, particleCount: 40 });
-          Expressive.Confetti.fire({ ...stars, particleCount: 10, shapes: ['circle'], scalar: 0.75 });
+          ExpressiveExtras.Confetti.fire({ ...stars, particleCount: 40 });
+          ExpressiveExtras.Confetti.fire({ ...stars, particleCount: 10, shapes: ['circle'], scalar: 0.75 });
         }, delay);
       }
     }

@@ -10,7 +10,7 @@ Footer, Breadcrumbs, Pagination, Scrollspy, Message, Message scroller, Accordion
 
 Each section lists the relationship, reviewed sections, requirements, and framework comparison, then any verification, feature, or integration gap and the mapped browser scope. Read only the selected component's section.
 
-## [Footer](../../components/footer.md)
+## [Footer](../../../expressivecss-extras/components/footer.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -52,7 +52,7 @@ Integration gap: aria-disabled and pointer-events alone cannot disable a link fo
 
 Mapped browser scope: Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
 
-## [Scrollspy](../../components/scrollspy.md)
+## [Scrollspy](../../../expressivecss-extras/components/scrollspy.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -66,7 +66,7 @@ Verification gap: A scoped TOC current link is checked; shared observer behavior
 
 Mapped browser scope: Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
 
-## [Message](../../components/message.md)
+## [Message](../../../expressivecss-extras/components/message.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -80,7 +80,7 @@ Verification gap: Avatar anchoring, start and end sides in LTR and RTL, and grou
 
 Mapped browser scope: Avatar level with the bubble bottom and above the footer, start/end edges in LTR and RTL, no gap without an avatar, grouped corner radii and no message landmarks. No spoken-output assertion.
 
-## [Message scroller](../../components/message-scroller.md)
+## [Message scroller](../../../expressivecss-extras/components/message-scroller.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -94,7 +94,7 @@ Verification gap: Following, release on scrolling up, the inert button, prepend 
 
 Mapped browser scope: Opening at the end, following streamed text, release on a wheel scroll up, the inert button and resuming from it, following kept through a click on a message, scrollToMessage with a peek and with a missing id, prepend preservation, an appended anchor at the peek with a spacer that clears as the reply grows, and destroy. No spoken-output assertion.
 
-## [Pull-to-refresh](../../components/pull-to-refresh.md)
+## [Pull-to-refresh](../../../expressivecss-extras/components/pull-to-refresh.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -110,7 +110,7 @@ Feature gap: Only a downward pull at the top refreshes; there is no pull from th
 
 Mapped browser scope: The contained overscroll, one event and a visible indicator per pull past the threshold, cancelled moves only during a pull, the indicator kept until the page reports the finish, drags that do nothing, repeat refreshes ignored while busy, the refresh button, a container that pulls the page, reduced motion with a :root duration override, and destroy() mid-refresh. No spoken-output assertion.
 
-## [Swipe actions](../../components/swipe-actions.md)
+## [Swipe actions](../../../expressivecss-extras/components/swipe-actions.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -126,7 +126,7 @@ Feature gap: Actions only on the inline-end side, and no full swipe that runs an
 
 Mapped browser scope: Swipe reveal with no action run, the keyboard path through the toggle and its actions, short and over-long swipes, drags that do nothing, the toggle, outside tap, Escape and action close, one open row with matching events and callbacks, right-to-left pages, reduced motion with a :root duration override, and destroy() with a row open or mid-swipe. No spoken-output assertion.
 
-## [Transfer list](../../components/transfer-list.md)
+## [Transfer list](../../../expressivecss-extras/components/transfer-list.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -142,7 +142,7 @@ Feature gap: No reordering inside the chosen list, no search over either list, n
 
 Mapped browser scope: Moving checked and all rows both ways, original slots, disabled rows and buttons, empty presses, focus after a move, the announcement and its i18n text, the event detail, form data from new FormData and a real submit, empty and missing data-name, disabled fieldsets, nested lists, reset by button and form.reset() including a cancelled reset, a list added after load, right-to-left pages and the narrow layout. No spoken-output assertion.
 
-## [Input mask](../../components/input-mask.md)
+## [Input mask](../../../expressivecss-extras/components/input-mask.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -158,7 +158,7 @@ Feature gap: The form submits only the formatted value, and masks cannot change 
 
 Mapped browser scope: Typed and inserted digits formatted with the caret after the last one, form data and submit data, dropped letters, typed literals and overflow, letter and escaped-literal masks, Backspace and Delete next to a literal, a selection delete, a mid-value insert, composition dispatched in both event orders and through CDP, a saved value formatted without events and again after a reset button and form.reset(), field, form and document input listeners, Keypad keys, and destroy(). No spoken-output assertion.
 
-## [Currency input](../../components/currency-input.md)
+## [Currency input](../../../expressivecss-extras/components/currency-input.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -174,7 +174,7 @@ Feature gap: Formatting happens on blur, not while typing; there is no currency 
 
 Mapped browser scope: A typed amount formatted on blur with the plain number in form data and submit data, the plain number on focus, change and blur listeners reading the formatted text, pasted amounts submitted with Enter under de and en, text with no digit kept and marked invalid with the default and replaced message, a saved value formatted without events and again after a reset button and form.reset(), and destroy() clearing the message. No spoken-output assertion.
 
-## [Loading overlay](../../components/loading-overlay.md)
+## [Loading overlay](../../../expressivecss-extras/components/loading-overlay.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -190,7 +190,7 @@ Feature gap: The scrim does not follow the content of a region that scrolls itse
 
 Mapped browser scope: A mouse click, Tab and typing blocked while busy and a click restored mid-fade after aria-busy="false" or its removal, a region set busy twice, inert from the start, an author's inert kept, the status region outside the region with default and markup i18n words, focus returned, also inside a shadow root, kept after a move and skipped for a removed control, the scrim covering the region with the indicator centred, the scrim and indicator above z-index 4 content and isolated only while busy, and destroy() while busy and at rest. No spoken-output assertion.
 
-## [Back to top](../../components/back-to-top.md)
+## [Back to top](../../../expressivecss-extras/components/back-to-top.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -206,7 +206,7 @@ Feature gap: Only the window's scroll is watched; a pane, dialog or scroll area 
 
 Mapped browser scope: Focus on the target and the next Tab after a click and after Enter, the temporary tabindex removed, the hidden link skipped by Tab, missed by elementFromPoint and absent from the ARIA snapshot before and after scrolling past the threshold, a focused link kept through Home and hidden once focus leaves, no fade out when the script starts after the first paint, smooth and instant scrolls, a 400px threshold from markup, the 16px corner in ltr and rtl and the offset token, and the link without the script. No spoken-output assertion.
 
-## [Cascader](../../components/cascader.md)
+## [Cascader](../../../expressivecss-extras/components/cascader.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -222,7 +222,7 @@ Feature gap: No search, type-ahead, multiple selection, lazy-loaded children or 
 
 Mapped browser scope: Clicks through three columns with the joined labels, input and change once per new path, a click on a branch keeping focus, a click outside closing, each opening key, arrows, Home, End, the next and previous column, Escape, Tab and Shift+Tab, Enter after IME composition, column names and selected states, rtl columns and keys, form data and submit data, reset, required, disabled state, destroy(), hidden source lists, side-by-side columns, a scrolling column and rows sized by the root font size. No spoken-output assertion.
 
-## [Tree select](../../components/tree-select.md)
+## [Tree select](../../../expressivecss-extras/components/tree-select.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -252,7 +252,7 @@ Verification gap: Tile corners, the chevron turn, exclusive groups and the expan
 
 Mapped browser scope: Outer, inner and open corner radii, chevron rotation, hidden native marker, exclusive name groups, Enter on a focused summary and the expanded state Chromium reports for each summary. No spoken-output assertion.
 
-## [Show more](../../components/show-more.md)
+## [Show more](../../../expressivecss-extras/components/show-more.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -296,7 +296,7 @@ Verification gap: Sizes, the circle, the group overlap and named initials are ch
 
 Mapped browser scope: Default, small and large sizes, circle radius, image and initials names in the accessibility tree, and the group overlap in LTR and RTL. No spoken-output assertion.
 
-## [Skeleton](../../components/skeleton.md)
+## [Skeleton](../../../expressivecss-extras/components/skeleton.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -310,7 +310,7 @@ Verification gap: The shimmer, its reduced-motion stop and the absence of skelet
 
 Mapped browser scope: Running shimmer animation, its removal under reduced motion, reversed direction in RTL, text and circle geometry and no skeleton nodes in the accessibility tree. No spoken-output assertion.
 
-## [Empty state](../../components/empty-state.md)
+## [Empty state](../../../expressivecss-extras/components/empty-state.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -338,7 +338,7 @@ Verification gap: The layout, both tones, enlarged-text wrapping and the authore
 
 Mapped browser scope: Icon, heading, text, close and actions placement, end-aligned actions, 16px corners, title-small heading, underlined links, text start without an icon, secondary and critical container colors, the authored alert role and controls kept inside at 280px. No spoken-output assertion.
 
-## [Stepper](../../components/stepper.md)
+## [Stepper](../../../expressivecss-extras/components/stepper.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -352,7 +352,7 @@ Verification gap: Layout in LTR and RTL, indicator fills and glyphs, and the spo
 
 Mapped browser scope: Row and stack layout in LTR and RTL, supporting text and content placement, current, complete and invalid indicator fills and glyphs, no trailing connector, spoken state text and its token override. No spoken-output assertion.
 
-## [Popover](../../components/popover.md)
+## [Popover](../../../expressivecss-extras/components/popover.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -366,7 +366,7 @@ Verification gap: Anchoring and flipping in LTR and RTL, light dismiss, Escape a
 
 Mapped browser scope: Default, top and end placement against the button in LTR and RTL, both-axis flip at the viewport corner, Escape with focus return, outside click, staying open for an inner button, one auto popover at a time and the Chromium expanded state. No spoken-output assertion.
 
-## [Hover card](../../components/hover-card.md)
+## [Hover card](../../../expressivecss-extras/components/hover-card.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -380,7 +380,7 @@ Verification gap: Hover delay, a pointer that passes over, staying open on the c
 
 Mapped browser scope: Hover with the delay, the card's place against the link, staying open on the card and hiding after exitDelay; keyboard focus, Tab into the card, Escape with focus return, focus leaving the card and a click that focuses the link. No spoken-output assertion.
 
-## [Drop zone](../../components/drop-zone.md)
+## [Drop zone](../../../expressivecss-extras/components/drop-zone.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -394,7 +394,7 @@ Verification gap: Input coverage, the dragover state, the file list and keyboard
 
 Mapped browser scope: Input covering the label, label naming the input, dragover set and cleared by dragenter, dragleave and drop, listed names and sizes, list cleared on an empty selection and keyboard focus ring. No spoken-output assertion.
 
-## [Tree](../../components/tree.md)
+## [Tree](../../../expressivecss-extras/components/tree.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -408,7 +408,7 @@ Verification gap: Indentation, chevrons in LTR and RTL, opening a branch and the
 
 Mapped browser scope: Level indent, leaf and branch text alignment, open and closed chevrons in LTR and RTL, opening a branch, the current row fill, guide lines and no tree role. No spoken-output assertion.
 
-## [Stat](../../components/stat.md)
+## [Stat](../../../expressivecss-extras/components/stat.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -422,7 +422,7 @@ Verification gap: Tiling, wrapping, the value type role, arrow direction, the ne
 
 Mapped browser scope: One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion.
 
-## [Description list](../../components/description-list.md)
+## [Description list](../../../expressivecss-extras/components/description-list.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -436,7 +436,7 @@ Verification gap: Two columns, the compact stack, one divider per pair, div-wrap
 
 Mapped browser scope: Label and value columns, shared rows, div-wrapped groups, stacked extra values, one divider per pair, the compact stacked layout and unchanged reading order. No spoken-output assertion.
 
-## [KPI](../../components/kpi.md)
+## [KPI](../../../expressivecss-extras/components/kpi.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -451,7 +451,7 @@ Verification gap: Part placement, the value type role, arrow direction, the nega
 Mapped browser scope: Trend beside the value, actions in the label row's end corner, chart under the value, an edge-to-edge footer closing the card, the headline value size, up and down arrows, the negative chip and chart colors and term-definition pairs in the accessibility tree. No spoken-output assertion.
 
 
-## [Countdown](../../components/countdown.md)
+## [Countdown](../../../expressivecss-extras/components/countdown.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -465,7 +465,7 @@ Verification gap: Width, digit positions, the baseline, the roll transition, red
 
 Mapped browser scope: Box width per digit count and padding, strip positions for in-range and clamped values, baseline alignment, the translate transition on change, reduced motion and the accessibility tree text. No spoken-output assertion.
 
-## [Line chart](../../components/line-chart.md)
+## [Line chart](../../../expressivecss-extras/components/line-chart.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -481,7 +481,7 @@ Feature gap: There are no y axis value labels; the grid lines carry no numbers. 
 
 Mapped browser scope: Hidden table in the accessibility tree, aria-hidden SVG, series classes and colors, labels, legend, the dashed series, no curve overshoot, gaps, data-min, data-max, data-value, a typographic minus, the area modifier, the sparkline size and focus, destroy restoring the table, pointer and keyboard tooltip movement, the live region, charts inside sized cards and primary actions, headerless tables, the RTL axis and arrows, ambiguous cell text as gaps and forced-color swatches. No spoken-output assertion.
 
-## [Column chart](../../components/column-chart.md)
+## [Column chart](../../../expressivecss-extras/components/column-chart.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -497,7 +497,7 @@ Feature gap: There are no y axis value labels or range columns. Next check: Add 
 
 Mapped browser scope: Hidden table in the accessibility tree, the named plot, labels, legend, series classes, separate instances from line charts, grouped and stacked column geometry, gaps, negative columns, data-min above zero, the sparkline size and focus, destroy restoring the table, pointer and keyboard tooltip movement, the highlight band and the RTL row order. No spoken-output assertion.
 
-## [Bar chart](../../components/bar-chart.md)
+## [Bar chart](../../../expressivecss-extras/components/bar-chart.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -513,7 +513,7 @@ Feature gap: There are no value axis labels. Next check: Add optional value labe
 
 Mapped browser scope: Hidden table in the accessibility tree, the named plot, row labels, legend, separate instances from column charts, the plot height from its rows, grouped, stacked and split bar geometry, values, negative bars, RTL bars, the sparkline layout and focus, destroy restoring the table, pointer and keyboard tooltip movement and the highlight band. No spoken-output assertion.
 
-## [Pie chart](../../components/pie-chart.md)
+## [Pie chart](../../../expressivecss-extras/components/pie-chart.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -529,7 +529,7 @@ Feature gap: There are no labels outside the pie, and rows past six reuse the co
 
 Mapped browser scope: Hidden table in the accessibility tree, the named plot, the square plot, slice geometry and colors, gap lines, legend cells and shares, separate instances from line charts, the donut hole and total, values, the sparkline size and focus, destroy restoring the table, pointer angle and keyboard tooltip movement, the active slice and RTL. No spoken-output assertion.
 
-## [Heatmap chart](../../components/heatmap-chart.md)
+## [Heatmap chart](../../../expressivecss-extras/components/heatmap-chart.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -545,7 +545,7 @@ Feature gap: A wide grid narrows its cells to fit instead of scrolling, and the 
 
 Mapped browser scope: Hidden table in the accessibility tree, the named plot, cell shades and gaps, the row height, row and column labels, short and running labels, the scale and its ends, the fixed scale, values and their text color, page overflow, destroy restoring the table, pointer and keyboard movement round the grid, the active cell and RTL. No spoken-output assertion.
 
-## [Radar chart](../../components/radar-chart.md)
+## [Radar chart](../../../expressivecss-extras/components/radar-chart.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -561,7 +561,7 @@ Feature gap: A gap joins the spokes either side of it rather than breaking the s
 
 Mapped browser scope: Hidden table in the accessibility tree, the named plot, the square plot, rings and spokes, shape geometry from zero to data-max, a joined gap and a clamped value, series colors and the dashed class, points and area, labels on their spokes, the legend, separate instances from line charts, the sparkline size and focus, destroy restoring the table, nearest-spoke pointer and keyboard tooltip movement, the cursor spoke and RTL. No spoken-output assertion.
 
-## [Radial chart](../../components/radial-chart.md)
+## [Radial chart](../../../expressivecss-extras/components/radial-chart.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -577,7 +577,7 @@ Feature gap: There are no labels on the rings, no gradient or segmented fills, a
 
 Mapped browser scope: Hidden table in the accessibility tree, the named plot, the square plot, ring geometry, colors and dash shares, tracks, legend cells, separate instances from line charts, the gauge box and total, thinner crowded rings, the sparkline size and focus, destroy restoring the table, pointer distance and keyboard tooltip movement, the active ring and RTL. No spoken-output assertion.
 
-## [Mixed chart](../../components/mixed-chart.md)
+## [Mixed chart](../../../expressivecss-extras/components/mixed-chart.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -593,7 +593,7 @@ Feature gap: There are no y axis labels for either scale, no always-on line mark
 
 Mapped browser scope: Hidden table, the named plot, column positions on the start scale with an empty slot for a gap, area and dashed line classes and colors, a fixed and a fitted end scale, legend order, separate instances from column charts, a chart of gaps showing its table, and the tooltip and cursor points from the keyboard. No spoken-output assertion.
 
-## [Scatter chart](../../components/scatter-chart.md)
+## [Scatter chart](../../../expressivecss-extras/components/scatter-chart.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -609,7 +609,7 @@ Feature gap: There are no bubble sizes, trend lines or separate x columns per se
 
 Mapped browser scope: Hidden table, the named plot and its role description, the x column read as the axis, one point per row per series at its value in left-to-right and right-to-left pages, gaps, both axes with fixed and fitted ends, keyboard steps in table order, the nearest point by pointer, update() motion, data-watch and the toggle legend. No spoken-output assertion.
 
-## [Sankey chart](../../components/sankey-chart.md)
+## [Sankey chart](../../../expressivecss-extras/components/sankey-chart.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -625,7 +625,7 @@ Feature gap: Nodes are not reached by keyboard or pointer, node order follows th
 
 Mapped browser scope: Hidden table, the named plot and its role description, link thickness and node height on one scale, columns, stacking order, skipped rows, node names and colors, right-to-left mirroring, keyboard steps in table order, the link under the pointer and a touch tap, update() motion, reduced motion and data-watch. No spoken-output assertion.
 
-## [Funnel chart](../../components/funnel-chart.md)
+## [Funnel chart](../../../expressivecss-extras/components/funnel-chart.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -641,7 +641,7 @@ Feature gap: There are no tapered stages, colors per row, step-to-step conversio
 
 Mapped browser scope: Hidden table, the named plot and its role description, one centered stage per row as wide as its value against the largest in left-to-right and right-to-left pages, gaps, labels beside their stages, the tooltip and its percentages, keyboard steps, the row under the pointer, update() motion and data-watch. No spoken-output assertion.
 
-## [Treemap chart](../../components/treemap-chart.md)
+## [Treemap chart](../../../expressivecss-extras/components/treemap-chart.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -657,7 +657,7 @@ Feature gap: There is one level only, with no parent groups, legend, drill-down 
 
 Mapped browser scope: Hidden table, the named plot and its role description, each rectangle's area in proportion to its value, the squarified layout in left-to-right and right-to-left pages, rows with no positive value, colors in table order, the inset gap, text only where it fits, keyboard steps in table order, the rectangle under the pointer, the tooltip with each row's share, update() and data-watch. No spoken-output assertion.
 
-## [Timeline](../../components/timeline.md)
+## [Timeline](../../../expressivecss-extras/components/timeline.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -671,7 +671,7 @@ Verification gap: Marker and line geometry in LTR and RTL and the icon variant a
 
 Mapped browser scope: Marker column, dot size, connecting line and its absence on the last event, the icon circle and its column in LTR and RTL. No spoken-output assertion.
 
-## [Command palette](../../components/command-palette.md)
+## [Command palette](../../../expressivecss-extras/components/command-palette.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -685,7 +685,7 @@ Verification gap: The shortcut, filtering, arrow and Enter handling, closing, fo
 
 Mapped browser scope: Combobox and listbox roles, Ctrl+K toggle, input focus, top placement, wrapping arrows, accent-insensitive and keyword filtering, hidden empty groups, the empty message, Enter and click running a command, closing with focus return, the commandfor opener, a fresh search on reopening, Escape, destroy and the keycap style. No spoken-output assertion.
 
-## [Rating](../../components/rating.md)
+## [Rating](../../../expressivecss-extras/components/rating.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -699,7 +699,7 @@ Verification gap: Star fill, hover preview, native arrow keys, form value, the d
 
 Mapped browser scope: Visible 24px masked radios, fill up to the checked star, Tab entry and arrow keys, focus ring on entry, hover preview, form value, display width and fill direction in LTR and RTL, and the group, radio and image names. No spoken-output assertion.
 
-## [Aura](../../components/aura.md)
+## [Aura](../../../expressivecss-extras/components/aura.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -713,7 +713,7 @@ Verification gap: The ring geometry, the turning angle, its reverse in RTL, its 
 
 Mapped browser scope: Ring padding and corners around a button and a card, a running registered angle, its reverse in RTL, the glow halo, the stop under reduced motion, a stepped turn and a 0deg resting ring in a shadow-only load, and no aura nodes in the accessibility tree. No spoken-output assertion.
 
-## [Questionnaire](../../components/questionnaire.md)
+## [Questionnaire](../../../expressivecss-extras/components/questionnaire.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -727,7 +727,7 @@ Verification gap: Showing one question, required radios, data-required checkboxe
 
 Mapped browser scope: One question shown, the buttons that apply, the progress text and named progressbar, aria-describedby with the description and error, required radio and data-required checkbox errors with focus and aria-invalid, errors clearing on answer, a generated requiredMessage error, a question enabled mid-way, Enter moving on instead of submitting, Back focus, Skip clearing an answer and firing change, submit opening the first unanswered question, FormData without a disabled question and destroy restoring the plain form; a checked disabled checkbox not answering a data-required group, and requestSubmit() opening an unanswered group or a hidden required field. No spoken-output assertion.
 
-## [Marquee](../../components/marquee.md)
+## [Marquee](../../../expressivecss-extras/components/marquee.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -741,7 +741,7 @@ Verification gap: The group placement, the half-cycle position, the right-to-lef
 
 Mapped browser scope: A short group filling the strip, the copy one gap after it, the half-cycle position horizontally, in RTL and vertically, reverse, pausing on hover, focus and .paused, one link per item in the accessibility tree and the reduced-motion stop with the copy hidden. No spoken-output assertion.
 
-## [Rich text editor](../../components/rich-text-editor.md)
+## [Rich text editor](../../../expressivecss-extras/components/rich-text-editor.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -755,7 +755,7 @@ Verification gap: Formatting a selection, pressed and disabled toolbar state, te
 
 Mapped browser scope: Hidden textarea, textbox role and name from the label, starting HTML, label click focus, bold and heading commands with aria-pressed and .active, undo disabled state, textarea value and input event, empty value, and destroy. No spoken-output assertion.
 
-## [Confetti](../../components/confetti.md)
+## [Confetti](../../../expressivecss-extras/components/confetti.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -769,7 +769,7 @@ Verification gap: The burst origin on a button and on a canvas, theme colors, ma
 
 Mapped browser scope: A canvas bursting at its center on init, manualStart waiting for fire(), a button bursting from its center in the theme primary color, the page canvas covering the viewport in the top layer with aria-hidden and no pointer events, fire() resolving after it is removed, a burst over an open modal dialog, destroy and the reduced-motion skip. No spoken-output assertion.
 
-## [Particles](../../components/particles.md)
+## [Particles](../../../expressivecss-extras/components/particles.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -783,7 +783,7 @@ Verification gap: The canvas covering its box, the on-surface default and the co
 
 Mapped browser scope: The canvas covering its positioned ancestor, a dot fading in where it was placed in the theme on-surface color, following the pointer inside the canvas and holding when it leaves, destroy clearing the canvas, vx drift, the color option, the pixel buffer after a resize and still dots under reduced motion. No spoken-output assertion.
 
-## [Map](../../components/map.md)
+## [Map](../../../expressivecss-extras/components/map.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -797,7 +797,7 @@ Verification gap: Marker placement, the popup opened from its marker with aria-e
 
 Mapped browser scope: Markers placed with the default dot, the popup without a marker open at init, a marker button opening its popup with aria-expanded, Escape and a map click closing it with focus back on the marker, zoom out disabled at the minimum zoom, zoom in, the compass bearing and reset, route, arcs and clusters in the theme primary color, no count layer without glyphs, all redrawn in the dark primary after a theme change, removeOverlay, destroy restoring the markup and controls, a location arriving after destroy being ignored, and a marker in a shadow root opening its popup. No spoken-output assertion.
 
-## [Keypad and Keyboard](../../components/keypad.md)
+## [Keypad and Keyboard](../../../expressivecss-extras/components/keypad.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -811,7 +811,7 @@ Verification gap: Typing at the caret, maxlength, pattern validation on Enter, B
 
 Mapped browser scope: Digits typed at the caret, maxlength, focus kept in the field on a pointer press, Backspace including emoji, Enter submitting once, a pattern mismatch blocking Enter, onKey values, composed input events from a shadow root, number, decimal and signed input, a disabled fieldset and its legend, a trailing Backspace in the field that runs once for two keypads, for a field inside its keyboard and for a field rendered after init, a password toggle that is not a key, a prefilled untouched field typed at the end, a caret placed at the start kept for keys activated from the keyboard, Shift showing capitals and releasing after one character, space and a textarea new line, three 72px round keypad columns, a two-cell wide key, a tenth-of-row letter key, the half-key indent, a one-and-a-half-key Shift, the space bar filling its row, a 40px number row that types and that hidden drops, the pressed corner, destroy, and the shared listeners leaving with the last keypad. No spoken-output assertion.
 
-## [Mega menu](../../components/mega-menu.md)
+## [Mega menu](../../../expressivecss-extras/components/mega-menu.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -825,7 +825,7 @@ Verification gap: Panel placement, the expanded state, Escape, focus order into 
 
 Mapped browser scope: Popover opening from its button, the panel below the bar spanning the window, side-by-side groups, the turning chevron, Tab into the panel, Escape, closed links out of reach and stacked groups on a phone. No spoken-output assertion.
 
-## [Menubar](../../components/menubar.md)
+## [Menubar](../../../expressivecss-extras/components/menubar.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -839,7 +839,7 @@ Verification gap: Roles, the roving tab stop, arrow, Home and End movement, open
 
 Mapped browser scope: Menubar and menuitem roles, one tab stop that follows focus, Left, Right, Home and End with wrapping, Down opening on the first item, Right and Left between open menus, flyout rows keeping Right, Escape back to the bar and RTL. No spoken-output assertion.
 
-## [Calendar](../../components/calendar.md)
+## [Calendar](../../../expressivecss-extras/components/calendar.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -853,7 +853,7 @@ Verification gap: Equal columns, today, outside days, ellipsized event chips, co
 
 Mapped browser scope: Seven equal columns, day height, the today mark, muted outside days, event chips that stay inside their day and ellipsize, event links, column headers and the month at phone width. No spoken-output assertion.
 
-## [Tour](../../components/tour.md)
+## [Tour](../../../expressivecss-extras/components/tour.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -867,7 +867,7 @@ Verification gap: Placement beside each target, the card name, progress, button 
 
 Mapped browser scope: Opening from a start button, the card named by the step heading, progress text, skipped missing targets, button visibility per step, placement below each target, releasing the previous target, Escape, focus return and cleanup after hidePopover. No spoken-output assertion.
 
-## [Image compare](../../components/image-compare.md)
+## [Image compare](../../../expressivecss-extras/components/image-compare.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -881,7 +881,7 @@ Verification gap: The initial position, the reveal by arrow keys, the focus ring
 
 Mapped browser scope: The initial value applied on load, each image on its side of the divider, arrow keys moving the divider, the handle focus ring, RTL, named native sliders and Slider leaving the range alone. No spoken-output assertion.
 
-## [Organization chart](../../components/org-chart.md)
+## [Organization chart](../../../expressivecss-extras/components/org-chart.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -895,7 +895,7 @@ Verification gap: Cards side by side under their manager in LTR and RTL, the con
 
 Mapped browser scope: Reports side by side below their manager in order, the manager over its reports, the bar stopping at the end reports, the drop from the manager, mirrored order and bar in RTL, a narrow chart scrolling with every card's start reachable, Enter folding a team, the caret under reduced motion, the CanvasText caret in forced colors and nested lists in the accessibility tree. No spoken-output assertion.
 
-## [Color swatches](../../components/color-swatches.md)
+## [Color swatches](../../../expressivecss-extras/components/color-swatches.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 
@@ -909,7 +909,7 @@ Verification gap: Swatch color, size and shape, the checked ring, the group name
 
 Mapped browser scope: Swatch color, 40px round shape and checked ring, the named group, arrow keys moving the choice, the form value, the focus ring after arrow keys and the swatch color under forced colors. No spoken-output assertion.
 
-## [Color picker](../../components/color-picker.md)
+## [Color picker](../../../expressivecss-extras/components/color-picker.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 

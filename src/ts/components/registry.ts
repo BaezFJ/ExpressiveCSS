@@ -53,57 +53,13 @@ export const AUTO_INIT_COMPONENTS = {
   ScrollArea: { component: Components.ScrollArea, selector: ".scroll-area.custom" },
   Carousel: { component: Components.Carousel, selector: ".carousel" },
   Chips: { component: Components.Chips, selector: ".chips" },
-  Confetti: { component: Components.Confetti, selector: ".confetti" },
-  Particles: { component: Components.Particles, selector: "canvas.particles" },
-  Keypad: { component: Components.Keypad, selector: ".keypad, .keyboard" },
-  ColorPicker: { component: Components.ColorPicker, selector: ".color-picker" },
-  ColumnChart: { component: Components.ColumnChart, selector: ".column-chart" },
-  BarChart: { component: Components.BarChart, selector: ".bar-chart" },
-  PieChart: { component: Components.PieChart, selector: ".pie-chart" },
-  HeatmapChart: { component: Components.HeatmapChart, selector: ".heatmap-chart" },
-  RadarChart: { component: Components.RadarChart, selector: ".radar-chart" },
-  RadialChart: { component: Components.RadialChart, selector: ".radial-chart" },
-  MixedChart: { component: Components.MixedChart, selector: ".mixed-chart" },
-  ScatterChart: { component: Components.ScatterChart, selector: ".scatter-chart" },
-  FunnelChart: { component: Components.FunnelChart, selector: ".funnel-chart" },
-  SankeyChart: { component: Components.SankeyChart, selector: ".sankey-chart" },
-  TreemapChart: { component: Components.TreemapChart, selector: ".treemap-chart" },
-  CommandPalette: {
-    component: Components.CommandPalette,
-    selector: "dialog.command-palette",
-  },
-  Questionnaire: {
-    component: Components.Questionnaire,
-    selector: "form.questionnaire",
-  },
   Datepicker: {
     component: Components.Datepicker,
     selector: ".date-picker",
   },
-  LineChart: { component: Components.LineChart, selector: ".line-chart" },
   Menu: { component: Components.Menu, selector: ".menu-trigger" },
-  MessageScroller: {
-    component: Components.MessageScroller,
-    selector: ".message-scroller",
-  },
-  PullToRefresh: { component: Components.PullToRefresh, selector: ".pull-to-refresh" },
-  LoadingOverlay: { component: Components.LoadingOverlay, selector: ".loading-overlay" },
-  SwipeActions: { component: Components.SwipeActions, selector: ".list.swipeable" },
-  // Only the input types with a caret: setSelectionRange() throws on the rest.
-  InputMask: {
-    component: Components.InputMask,
-    selector: 'input[data-mask]:is(:not([type]), [type="text" i], [type="tel" i], [type="search" i], [type="url" i], [type="password" i])',
-  },
-  ShowMore: { component: Components.ShowMore, selector: ".show-more" },
-  // Only a text input can hold the formatted amount.
-  CurrencyInput: { component: Components.CurrencyInput, selector: 'input[data-currency]:is(:not([type]), [type="text" i])' },
-  Lightbox: { component: Components.Lightbox, selector: ".lightboxed" },
-  ScrollSpy: { component: Components.ScrollSpy, selector: ".scrollspy" },
-  BackToTop: { component: Components.BackToTop, selector: ".back-to-top" },
-  // A data-tree select is a tree select, not a flat one.
+  // A data-tree select is a tree select, which @expressivecss/extras starts.
   FormSelect: { component: Components.FormSelect, selector: "select:not([data-tree])" },
-  TreeSelect: { component: Components.TreeSelect, selector: "select[data-tree]" },
-  Cascader: { component: Components.Cascader, selector: ".cascader" },
   NavigationRail: {
     component: Components.NavigationRail,
     selector: ".navigation-rail",
@@ -114,13 +70,10 @@ export const AUTO_INIT_COMPONENTS = {
     selector: ".time-picker",
   },
   Tooltip: { component: Components.Tooltip, selector: ".tooltipped" },
-  HoverCard: { component: Components.HoverCard, selector: ".hover-card-trigger" },
   FloatingActionButton: {
     component: Components.FloatingActionButton,
     selector: ".fab-menu",
   },
-  // After Menu, so the bar's own menu options replace AutoInit's defaults.
-  Menubar: { component: Components.Menubar, selector: ".menubar" },
 } satisfies Record<string, AutoInitEntry>;
 
 type Registry = typeof AUTO_INIT_COMPONENTS;
@@ -133,6 +86,9 @@ export type AutoInitOptions = {
   [K in keyof Registry]?: Partial<
     InstanceType<Registry[K]["component"]>["options"]
   >;
+} & {
+  /** Options for a component added with `AutoInit.register`, under its name. */
+  [name: string]: object | undefined;
 };
 
 /**
@@ -235,10 +191,12 @@ function markupOptions(el: Element, name: string, defaults: object) {
 
 // Each component's static `init` is overloaded; indexing the table widens it
 // to a union TypeScript cannot call, so widen it once, here, to the shape the
-// table satisfies.
-const entry = (name: keyof Registry): AutoInitEntry => AUTO_INIT_COMPONENTS[name];
-const NAMES = Object.keys(AUTO_INIT_COMPONENTS) as (keyof Registry)[];
-const WATCH_SELECTOR = `:is(${NAMES.map((name) => entry(name).selector).join(",")}):not(.no-autoinit)`;
+// table satisfies. Components added with `AutoInit.register` follow the
+// built-in ones, in the order they were added.
+const ENTRIES = new Map<string, AutoInitEntry>(Object.entries(AUTO_INIT_COMPONENTS));
+const entry = (name: string): AutoInitEntry => ENTRIES.get(name);
+const watchSelector = () => `:is(${[...ENTRIES.values()].map(({ selector }) => selector).join(",")}):not(.no-autoinit)`;
+let WATCH_SELECTOR = watchSelector();
 
 /**
  * Starts component `name` on one element, with its markup options under
@@ -246,7 +204,7 @@ const WATCH_SELECTOR = `:is(${NAMES.map((name) => entry(name).selector).join(","
  * released, so one bad element neither stops the rest of the pass nor keeps
  * a later pass from trying again.
  */
-function initElement(name: keyof Registry, el: Element, options: object = {}) {
+function initElement(name: string, el: Element, options: object = {}) {
   const { component } = entry(name);
   try {
     component.init(el, { ...markupOptions(el, name, component.defaults), ...options });
@@ -261,7 +219,7 @@ function initElement(name: keyof Registry, el: Element, options: object = {}) {
  * as a half-built instance's can, is logged and the base teardown runs anyway,
  * so the listeners go and the element is free for a new instance.
  */
-function stopElement(name: keyof Registry, el: Element) {
+function stopElement(name: string, el: Element) {
   const instance = entry(name).component.getInstance(el);
   try {
     instance?.destroy();
@@ -278,7 +236,7 @@ function stopElement(name: keyof Registry, el: Element) {
  * alternative only, which would break the opt-out for any comma-separated
  * entry (Cards is the first).
  */
-function claimed(name: keyof Registry, root: ParentNode, self = false): Element[] {
+function claimed(name: string, root: ParentNode, self = false): Element[] {
   const { selector, filter = () => true } = entry(name);
   const query = `:is(${selector}):not(.no-autoinit)`;
   const own = self && (root as Element).matches(query) ? [root as Element] : [];
@@ -288,7 +246,7 @@ function claimed(name: keyof Registry, root: ParentNode, self = false): Element[
 /** Starts the components an added element and its descendants claim, leaving existing instances alone. */
 function startAdded(node: Node, options?: Partial<AutoInitOptions>) {
   if (!hasClaims(node)) return;
-  for (const name of NAMES) {
+  for (const name of ENTRIES.keys()) {
     claimed(name, node, true).forEach((el) => entry(name).component.getInstance(el) || initElement(name, el, options?.[name]));
   }
 }
@@ -308,7 +266,7 @@ function hasClaims(node: Node): node is Element {
  */
 function stopRemoved(node: Node) {
   if (node.isConnected || !hasClaims(node)) return;
-  for (const name of NAMES) {
+  for (const name of ENTRIES.keys()) {
     claimed(name, node, true).forEach((el) => stopElement(name, el));
   }
 }
@@ -344,8 +302,23 @@ export function AutoInit(
   options?: Partial<AutoInitOptions>,
   settings: { watch?: boolean } = {},
 ): () => void {
-  for (const name of NAMES) {
+  for (const name of ENTRIES.keys()) {
     claimed(name, context).forEach((el) => initElement(name, el, options?.[name]));
   }
   return settings.watch ? watch(context, options) : () => {};
 }
+
+/**
+ * Adds component `name` to AutoInit, after the built-in components. AutoInit()
+ * and watch mode then start and destroy it like a built-in, skip `.no-autoinit`
+ * elements, and read its options from `data-<name>-options`. Extension packages
+ * such as `@expressivecss/extras` call this when they load.
+ * @throws When `name` is already taken or `selector` is not a valid selector.
+ */
+AutoInit.register = (name: string, value: AutoInitEntry): void => {
+  if (ENTRIES.has(name)) throw new Error(`AutoInit already has a component named "${name}".`);
+  // Throws now on a selector that would otherwise break every later scan.
+  globalThis.document?.createDocumentFragment().querySelector(value.selector);
+  ENTRIES.set(name, value);
+  WATCH_SELECTOR = watchSelector();
+};

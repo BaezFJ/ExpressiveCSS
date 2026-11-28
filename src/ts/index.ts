@@ -20,12 +20,9 @@ import { Copy } from "./behaviors/copy";
 import { BusyButtons } from "./behaviors/busyButtons";
 import { Theme } from "./behaviors/theme";
 import { PaneResize } from "./behaviors/paneResize";
-import { ImageCompare } from "./behaviors/imageCompare";
-import { Tour } from "./behaviors/tour";
 import { Sortable } from "./behaviors/sortable";
 import { Lists } from "./behaviors/lists";
 import { DataTables } from "./behaviors/dataTables";
-import { TransferList } from "./behaviors/transferList";
 
 export * from './modular';
 
@@ -50,9 +47,6 @@ Copy.Init();
 BusyButtons.Init();
 Theme.Init();
 PaneResize.Init();
-ImageCompare.Init();
-Tour.Init();
 Sortable.Init();
 Lists.Init();
 DataTables.Init();
-TransferList.Init();

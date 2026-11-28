@@ -337,7 +337,7 @@ const visitors: [string, number][] = [["Organic", 80], ["Direct", 75], ["Referra
           does not apply.
         </p>
 <Code code={`
-const chart = Expressive.RadialChart.init(document.querySelector('.radial-chart'));
+const chart = ExpressiveExtras.RadialChart.init(document.querySelector('.radial-chart'));
 chart.show(1);   // highlight the second ring; -1 hides the tooltip
 chart.update();  // redraw from the table; focus and the highlighted row stay
 chart.destroy(); // remove the drawing and show the table again

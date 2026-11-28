@@ -12,7 +12,7 @@
 import { test, describe, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Expressive, resetBody, window } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, window } from './setup.js';
 
 const capture = (opts) => (typeof opts === 'object' && opts !== null ? !!opts.capture : !!opts);
 
@@ -192,8 +192,8 @@ describe('destroy() releases shared listeners', () => {
       <a href="#section1">to one</a>`;
     const [first, second] = document.querySelectorAll('.scrollspy');
 
-    const a = Expressive.ScrollSpy.init(first);
-    const b = Expressive.ScrollSpy.init(second);
+    const a = ExpressiveExtras.ScrollSpy.init(first);
+    const b = ExpressiveExtras.ScrollSpy.init(second);
     assert.deepEqual(watch.live(), [], 'ScrollSpy attached a window/document listener');
 
     a.destroy();
@@ -215,12 +215,12 @@ describe('destroy() releases shared listeners', () => {
     try {
       const section = document.querySelector('section');
       const link = document.querySelector('a');
-      instances.push(Expressive.ScrollSpy.init(section));
+      instances.push(ExpressiveExtras.ScrollSpy.init(section));
       observers[0].callback([{ isIntersecting: true, intersectionRatio: 1 }]);
       assert.equal(link.getAttribute('aria-current'), 'true');
       instances[0].destroy();
       assert.equal(observers[0].disconnected, true);
-      instances.push(Expressive.ScrollSpy.init(section));
+      instances.push(ExpressiveExtras.ScrollSpy.init(section));
       observers[0].callback([{ isIntersecting: true, intersectionRatio: 1 }]);
       assert.equal(link.hasAttribute('aria-current'), false);
       observers[1].callback([{ isIntersecting: true, intersectionRatio: 1 }]);
@@ -228,7 +228,7 @@ describe('destroy() releases shared listeners', () => {
       instances[1].destroy();
       observers[1].callback([{ isIntersecting: true, intersectionRatio: 1 }]);
       assert.equal(link.hasAttribute('aria-current'), false);
-      assert.equal(Expressive.ScrollSpy._elements.length, 0);
+      assert.equal(ExpressiveExtras.ScrollSpy._elements.length, 0);
       assert.equal(observers[1].disconnected, true);
     } finally {
       instances.forEach(instance => instance.destroy());
@@ -248,7 +248,7 @@ describe('destroy() releases shared listeners', () => {
       for (const [type, name] of [['line', 'LineChart'], ['heatmap', 'HeatmapChart'], ['treemap', 'TreemapChart']]) {
         observers.length = 0;
         document.body.innerHTML = `<figure class="${type}-chart"><table><thead><tr><th>Day</th><th>A</th><th>B</th></tr></thead><tbody><tr><th>Mon</th><td>1</td><td>2</td></tr><tr><th>Tue</th><td>3</td><td>4</td></tr></tbody></table></figure>`;
-        const instance = Expressive[name].init(document.querySelector('figure'));
+        const instance = ExpressiveExtras[name].init(document.querySelector('figure'));
         try {
           assert.ok(observers.length > 0, `${name} observed nothing`);
           document.querySelector('tbody').replaceChildren();

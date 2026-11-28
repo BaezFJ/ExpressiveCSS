@@ -68,7 +68,7 @@ jobs:
       - run: npm run test:node
         if: matrix.node != 20
 
-      - run: node scripts/verify-packages.mjs framework
+      - run: node scripts/verify-packages.mjs framework extras
         if: matrix.node == 24
 
   mcp:

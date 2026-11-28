@@ -1,0 +1,49 @@
+@use "abstracts" as *;
+@use "../abstracts/charts" as *;
+
+// Line chart. A <figure class="line-chart"> holds a <figcaption> and a
+// <table> of data: the first column labels the x axis, each further column
+// is a series named by its header cell. Without JavaScript the table shows.
+// LineChart draws an SVG from the table and hides the table visually, so a
+// screen reader still reads the data as a table. The plot, tooltip, labels
+// and legend are shared with the column chart through chart().
+//
+// The SVG stretches to the plot (preserveAspectRatio="none") and strokes
+// stay a constant width, so resizing needs no script. Points, the cursor
+// and the tooltip are HTML positioned in percentages for the same reason.
+//
+// Modifiers: .area fills under each line, .stacked stacks each series on
+// the ones before it and fills between them, .points marks each value with
+// a dot, .straight draws straight lines between values, .fade fades the
+// line ends, .axis labels the y axis at round values with a grid line at
+// each, .sparkline is a small chart with no axis, grid, legend or tooltip,
+// and .toggle makes each legend item a button that shows or hides its series.
+// A series header cell's classes reach its line: <th class="dashed">.
+//
+// Tokens:
+//   --md-comp-line-chart-height       240px (sparkline 48px)
+//   --md-comp-line-chart-line-width   3px (sparkline 2px)
+//   --md-comp-line-chart-grid-color   outline-variant
+//   --md-comp-line-chart-axis-width   48px, room for the .axis labels
+//   --md-comp-line-chart-color-1..4   primary, tertiary, secondary,
+//                                     on-surface-variant
+
+@include chart("line-chart", $cursor: line, $lines: true);
+@include chart-axis("line-chart");
+
+.line-chart-plot > svg {
+  @include fill-parent;
+  overflow: visible;
+}
+
+.line-chart-area {
+  display: none;
+
+  .line-chart:is(.area, .stacked) & {
+    display: inline;
+  }
+}
+
+.line-chart.fade .line-chart-plot > svg {
+  mask-image: linear-gradient(to right, transparent, #000 15% 85%, transparent);
+}

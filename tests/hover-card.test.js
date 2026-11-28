@@ -1,6 +1,6 @@
 import { test, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { Expressive, resetBody, window } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, window } from './setup.js';
 
 afterEach(resetBody);
 
@@ -38,7 +38,7 @@ function events(el) {
 
 test('HoverCard defaults to a 500ms enter and 300ms exit delay, and reads data-hover-card-options', () => {
   document.body.innerHTML = markup();
-  let instance = Expressive.HoverCard.init(document.querySelector('a'));
+  let instance = ExpressiveExtras.HoverCard.init(document.querySelector('a'));
   try {
     assert.equal(instance.options.enterDelay, 500);
     assert.equal(instance.options.exitDelay, 300);
@@ -48,7 +48,7 @@ test('HoverCard defaults to a 500ms enter and 300ms exit delay, and reads data-h
   }
   document.body.innerHTML = markup(` data-hover-card-options='{"enterDelay":100,"exitDelay":50}'`);
   Expressive.AutoInit(document.body);
-  instance = Expressive.HoverCard.getInstance(document.querySelector('a'));
+  instance = ExpressiveExtras.HoverCard.getInstance(document.querySelector('a'));
   try {
     assert.equal(instance.options.enterDelay, 100);
     assert.equal(instance.options.exitDelay, 50);
@@ -63,7 +63,7 @@ test('HoverCard open() and close() act at once and report each change once', () 
   const link = document.querySelector('a');
   const card = document.getElementById('card');
   const seen = events(link);
-  const instance = Expressive.HoverCard.init(link);
+  const instance = ExpressiveExtras.HoverCard.init(link);
   try {
     instance.open();
     instance.open();
@@ -90,12 +90,12 @@ test('HoverCard destroy() hides a card it showed and leaves the markup as writte
   document.body.innerHTML = markup();
   const before = document.body.innerHTML;
   const link = document.querySelector('a');
-  const instance = Expressive.HoverCard.init(link);
+  const instance = ExpressiveExtras.HoverCard.init(link);
   try {
     instance.open();
     instance.destroy();
     assert.equal(document.body.innerHTML, before);
-    assert.equal(Expressive.HoverCard.getInstance(link), undefined);
+    assert.equal(ExpressiveExtras.HoverCard.getInstance(link), undefined);
   } finally {
     instance.destroy();
     restore();
@@ -106,7 +106,7 @@ test('HoverCard logs one error and starts nothing when aria-details names no ele
   const error = t.mock.method(console, 'error', () => {});
   const { calls, restore } = shimPopovers();
   document.body.innerHTML = '<a class="hover-card-trigger" href="#ada" aria-details="missing">Ada</a>';
-  const instance = Expressive.HoverCard.init(document.querySelector('a'));
+  const instance = ExpressiveExtras.HoverCard.init(document.querySelector('a'));
   try {
     assert.equal(error.mock.callCount(), 1);
     assert.equal(instance.cardEl, null);
@@ -123,7 +123,7 @@ test('HoverCard shows after enterDelay on hover and never for a pointer that pas
   const { calls, restore } = shimPopovers();
   document.body.innerHTML = markup();
   const link = document.querySelector('a');
-  const instance = Expressive.HoverCard.init(link);
+  const instance = ExpressiveExtras.HoverCard.init(link);
   t.mock.timers.enable({ apis: ['setTimeout'] });
   try {
     pointer(link, 'pointerenter');
@@ -148,7 +148,7 @@ test('HoverCard stays while the pointer moves from the link onto the card, and h
   document.body.innerHTML = markup();
   const link = document.querySelector('a');
   const card = document.getElementById('card');
-  const instance = Expressive.HoverCard.init(link);
+  const instance = ExpressiveExtras.HoverCard.init(link);
   t.mock.timers.enable({ apis: ['setTimeout'] });
   try {
     pointer(link, 'pointerenter');
@@ -175,7 +175,7 @@ test('HoverCard ignores touch, and never prevents the click that follows the lin
   const { calls, restore } = shimPopovers();
   document.body.innerHTML = markup();
   const link = document.querySelector('a');
-  const instance = Expressive.HoverCard.init(link);
+  const instance = ExpressiveExtras.HoverCard.init(link);
   t.mock.timers.enable({ apis: ['setTimeout'] });
   try {
     for (const type of ['pointerenter', 'pointerdown', 'pointerup', 'pointerleave']) pointer(link, type, 'touch');
@@ -202,7 +202,7 @@ test('HoverCard Escape hides the card and leaves the key to whatever has focus e
   document.body.innerHTML = `${markup()}<div role="dialog"><button id="save">Save</button></div>`;
   const link = document.querySelector('a');
   const card = document.getElementById('card');
-  const instance = Expressive.HoverCard.init(link);
+  const instance = ExpressiveExtras.HoverCard.init(link);
   let reached = 0;
   document.querySelector('[role="dialog"]').addEventListener('keydown', () => reached++);
   try {
@@ -224,7 +224,7 @@ test('HoverCard Escape with focus in the card takes the key and returns focus to
   document.body.innerHTML = markup();
   const link = document.querySelector('a');
   const card = document.getElementById('card');
-  const instance = Expressive.HoverCard.init(link);
+  const instance = ExpressiveExtras.HoverCard.init(link);
   try {
     instance.open();
     // jsdom hides a [popover] in its own stylesheet and will not focus inside it.
@@ -250,7 +250,7 @@ test('HoverCard keeps working after showPopover throws, as it does for a card wi
   const { calls, restore } = shimPopovers();
   document.body.innerHTML = markup();
   const link = document.querySelector('a');
-  const instance = Expressive.HoverCard.init(link);
+  const instance = ExpressiveExtras.HoverCard.init(link);
   const show = window.HTMLElement.prototype.showPopover;
   try {
     window.HTMLElement.prototype.showPopover = () => { throw new window.DOMException('Not a popover', 'NotSupportedError'); };
@@ -269,7 +269,7 @@ test('HoverCard keeps the card when the pointer returns to the link within exitD
   const { calls, restore } = shimPopovers();
   document.body.innerHTML = markup();
   const link = document.querySelector('a');
-  const instance = Expressive.HoverCard.init(link);
+  const instance = ExpressiveExtras.HoverCard.init(link);
   t.mock.timers.enable({ apis: ['setTimeout'] });
   try {
     pointer(link, 'pointerenter');
@@ -286,7 +286,7 @@ test('HoverCard keeps the card when the pointer returns to the link within exitD
     t.mock.timers.tick(1000);
     assert.deepEqual(calls.map(([kind]) => kind), ['show', 'hide'], 'destroy() hid the card and stopped listening');
     // A card still waiting out enterDelay never shows once destroyed.
-    const later = Expressive.HoverCard.init(link);
+    const later = ExpressiveExtras.HoverCard.init(link);
     pointer(link, 'pointerenter');
     t.mock.timers.tick(200);
     later.destroy();
@@ -309,7 +309,7 @@ test('HoverCard hands a shared card from one link to the next', () => {
   for (const [name, el] of [['first', first], ['second', second]]) {
     for (const type of ['open', 'close']) el.addEventListener(`expressive:${type}`, () => seen.push(`${name} ${type}`));
   }
-  const instances = [first, second].map((el) => Expressive.HoverCard.init(el));
+  const instances = [first, second].map((el) => ExpressiveExtras.HoverCard.init(el));
   try {
     instances[0].open();
     instances[1].open();
@@ -327,7 +327,7 @@ test('HoverCard leaves Escape alone while an input method composes', () => {
   const { restore } = shimPopovers();
   document.body.innerHTML = markup();
   const card = document.getElementById('card');
-  const instance = Expressive.HoverCard.init(document.querySelector('a'));
+  const instance = ExpressiveExtras.HoverCard.init(document.querySelector('a'));
   try {
     instance.open();
     document.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', isComposing: true, bubbles: true, cancelable: true }));

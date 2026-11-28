@@ -118,7 +118,7 @@ Verification gap: Existing DOM/timer checks do not prove rendered scrolling, RTL
 
 No browser check is directly mapped. Source and unit tests do not substitute for the concrete rendered check above.
 
-## [Lightbox](../../components/lightbox.md)
+## [Lightbox](../../../expressivecss-extras/components/lightbox.md)
 
 Relationship: none. No dedicated entry in the reviewed [Google component inventory](https://m3.material.io/components). Requirements below are web accessibility guidance, not a Google component specification.
 

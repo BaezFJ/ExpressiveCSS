@@ -1,0 +1,227 @@
+@use "abstracts" as *;
+@use "../abstracts/charts" as *;
+
+// Bar chart. The column chart's markup and runtime turned on its side:
+// BarChart draws each row of the table as a band of bars growing from zero
+// along the inline axis, with the row's label at the inline start. The
+// plot is as tall as its rows, so --md-comp-bar-chart-height does not
+// apply; set the row height instead.
+//
+// The spans carry the column chart's --top and --bottom, the space after
+// and before each bar on the value axis. They are read across the plot,
+// and swapped when BarChart marks the bars .rtl, where they grow leftwards.
+//
+// Modifiers: .stacked draws one bar per row with each series after the
+// ones before it, .split separates stacked segments and rounds each one,
+// .track draws a full-width track behind each row's bars, .values writes
+// each cell's text from its bar's base, .axis labels the value axis under
+// the plot at round values, .sparkline is a small chart with
+// no labels, grid, legend or tooltip.
+//
+// Tokens:
+//   --md-comp-bar-chart-row-height   40px (sparkline 24px)
+//   --md-comp-bar-chart-bar-height   60% of each row's height
+//   --md-comp-bar-chart-shape        4px, the bar's end radius
+//   --md-comp-bar-chart-track-color  surface-container-highest
+//   --md-comp-bar-chart-grid-color   outline-variant
+//   --md-comp-bar-chart-color-1..4   primary, tertiary, secondary,
+//                                    on-surface-variant
+//   --md-comp-bar-chart-on-color-1..4  on-primary, on-tertiary,
+//                                      on-secondary, surface; .values text
+
+@include chart("bar-chart", $on-colors: true, $rows: true, $cursor: band);
+@include chart-axis("bar-chart", $beside: false);
+
+.bar-chart {
+  --md-comp-bar-chart-bar-height: 60%;
+  --md-comp-bar-chart-track-color: var(--md-sys-color-surface-container-highest);
+
+  &.sparkline {
+    --md-comp-bar-chart-row-height: #{rem(24px)};
+
+    display: flex;
+  }
+
+  &.split {
+    --bar-chart-joint: var(--md-comp-bar-chart-shape);
+    --bar-chart-gap: 2px;
+  }
+}
+
+// .axis labels the value axis under the plot, with a grid line up from
+// each label. The row labels keep the plot's height.
+.bar-chart.axis > :is(.bar-chart-plot, .bar-chart-labels) {
+  margin-block-end: 24px;
+}
+
+.bar-chart-axis > li {
+  inset: 0 auto;
+  inset-inline-start: calc(100% - var(--at, 0%));
+  border-block-start: 0;
+  border-inline-start: 1px solid var(--md-comp-bar-chart-grid-color);
+}
+
+.bar-chart-axis > li > span {
+  inset: 100% auto auto 0;
+  width: auto;
+  padding: 4px 0 0;
+  overflow: visible;
+  translate: -50% 0;
+}
+
+// .values adds a copy of the bars for their text; both share the geometry.
+.bar-chart-layers {
+  display: contents;
+}
+
+:is(.bar-chart-bars, .bar-chart-values) {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-auto-rows: minmax(0, 1fr);
+
+  // A row: its bars one under another, or overlapping when stacked.
+  > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: minmax(0, 1fr);
+    gap: 2px;
+    align-self: center;
+    height: var(--md-comp-bar-chart-bar-height);
+    border-radius: var(--md-comp-bar-chart-shape);
+  }
+
+  // The space before and after each bar. A split segment stands back
+  // from its joints by --bar-chart-base-gap and --bar-chart-tip-gap.
+  > div > span {
+    --bar-chart-left: calc(var(--bottom, 0%) + var(--bar-chart-base-gap, 0px));
+    --bar-chart-right: calc(var(--top, 100%) + var(--bar-chart-tip-gap, 0px));
+  }
+
+  &.rtl > div > span {
+    --bar-chart-left: calc(var(--top, 100%) + var(--bar-chart-tip-gap, 0px));
+    --bar-chart-right: calc(var(--bottom, 0%) + var(--bar-chart-base-gap, 0px));
+  }
+}
+
+.bar-chart-bars {
+  // --bar-chart-tip rounds the end away from zero, --bar-chart-base the
+  // end on zero.
+  > div > span {
+    --bar-chart-tip: var(--md-comp-bar-chart-shape);
+    --bar-chart-base: 0px;
+    --bar-chart-ends: var(--bar-chart-base) var(--bar-chart-tip) var(--bar-chart-tip) var(--bar-chart-base);
+
+    background-color: var(--bar-chart-color);
+    clip-path: inset(0 var(--bar-chart-right) 0 var(--bar-chart-left) round var(--bar-chart-ends));
+
+    // A bar below zero has its tip at the inline start.
+    &.negative {
+      --bar-chart-ends: var(--bar-chart-tip) var(--bar-chart-base) var(--bar-chart-base) var(--bar-chart-tip);
+    }
+
+    // A range floats, so both its ends are tips.
+    &.floating {
+      --bar-chart-base: var(--bar-chart-tip);
+    }
+  }
+
+  &.rtl > div > span {
+    --bar-chart-ends: var(--bar-chart-tip) var(--bar-chart-base) var(--bar-chart-base) var(--bar-chart-tip);
+
+    &.negative {
+      --bar-chart-ends: var(--bar-chart-base) var(--bar-chart-tip) var(--bar-chart-tip) var(--bar-chart-base);
+    }
+  }
+
+  @include chart-column-motion;
+}
+
+// One bar per row, rounded only at the ends of the whole stack unless split.
+.bar-chart.stacked :is(.bar-chart-bars, .bar-chart-values) > div {
+  gap: 0;
+
+  > span {
+    grid-area: 1 / 1;
+
+    &:not(:last-child) {
+      --bar-chart-tip: var(--bar-chart-joint, 0px);
+      --bar-chart-tip-gap: var(--bar-chart-gap, 0px);
+    }
+
+    &:not(:first-child) {
+      --bar-chart-base: var(--bar-chart-joint, 0px);
+      --bar-chart-base-gap: var(--bar-chart-gap, 0px);
+    }
+  }
+}
+
+.bar-chart.track .bar-chart-bars > div {
+  background-color: var(--md-comp-bar-chart-track-color);
+
+  > span {
+    --bar-chart-base: var(--md-comp-bar-chart-shape);
+  }
+}
+
+// Each cell's text from its bar's base: the series' on-color over the bar,
+// the label color past its end, so a short bar's value runs on beyond it.
+// The span spans the row, so padding and the gradient share its width.
+.bar-chart-values {
+  pointer-events: none;
+
+  > div > span {
+    --bar-chart-text-color: var(--md-sys-color-on-surface);
+
+    @include ellipsis;
+    align-content: center;
+    padding: 0 8px 0 calc(var(--bar-chart-left) + 8px);
+    background: linear-gradient(to right, var(--bar-chart-text-color) var(--bar-chart-left), var(--bar-chart-on-color) 0 calc(100% - var(--bar-chart-right)), var(--bar-chart-text-color) 0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    @include typescale("label-medium");
+    font-variant-numeric: tabular-nums;
+    text-align: left;
+  }
+
+  // The base on the right: a bar below zero, or above it in RTL.
+  &:not(.rtl) > div > span.negative,
+  &.rtl > div > span:not(.negative) {
+    padding: 0 calc(var(--bar-chart-right) + 8px) 0 8px;
+    text-align: right;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    > div > span {
+      transition: opacity var(--md-sys-motion-duration-short4) linear var(--md-sys-motion-duration-medium4);
+
+      @starting-style {
+        opacity: 0;
+      }
+    }
+  }
+}
+
+// A stacked segment keeps its text inside it; the next segment follows.
+.bar-chart.stacked .bar-chart-values > div > span {
+  padding: 0 calc(var(--bar-chart-right) + 8px) 0 calc(var(--bar-chart-left) + 8px);
+  clip-path: inset(0 var(--bar-chart-right) 0 var(--bar-chart-left));
+}
+
+@media (forced-colors: active) {
+  .bar-chart-bars > div > span,
+  .bar-chart-values > div > span {
+    forced-color-adjust: none;
+  }
+
+  .bar-chart-values > div > span {
+    --bar-chart-text-color: CanvasText;
+  }
+
+  // The track is a fill, which forced colors paint as Canvas.
+  .bar-chart.track .bar-chart-bars > div {
+    outline: 1px solid CanvasText;
+    outline-offset: -1px;
+  }
+}

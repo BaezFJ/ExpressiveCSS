@@ -144,7 +144,7 @@ for (const [engine, browserType, browserTest] of engines) {
           table: getComputedStyle(el.querySelector('table')).position,
           plot: [plot.tabIndex, plot.getAttribute('aria-label'), plot.getAttribute('aria-roledescription')],
           svg: el.querySelector('.sankey-chart-plot > svg').getAttribute('aria-hidden'),
-          instance: [!!Expressive.SankeyChart.getInstance(el), !!Expressive.LineChart.getInstance(el)],
+          instance: [!!ExpressiveExtras.SankeyChart.getInstance(el), !!ExpressiveExtras.LineChart.getInstance(el)],
         };
       });
       assert.equal(ltr.table, 'absolute', 'the table is visually hidden');
@@ -295,7 +295,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const tapped = await page.locator('#ltr .sankey-chart-plot').evaluate((plot, [x, y]) => {
         plot.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch', clientX: x, clientY: y }));
         plot.dispatchEvent(new PointerEvent('pointerleave', { pointerType: 'touch' }));
-        return [Expressive.SankeyChart.getInstance(plot.parentElement).activeIndex, plot.querySelector('.sankey-chart-tooltip').hidden];
+        return [ExpressiveExtras.SankeyChart.getInstance(plot.parentElement).activeIndex, plot.querySelector('.sankey-chart-tooltip').hidden];
       }, [x, y]);
       assert.deepEqual(tapped, [2, false]);
     } finally {
@@ -319,10 +319,10 @@ for (const [engine, browserType, browserTest] of engines) {
         const shapes = () => [...el.querySelectorAll('.sankey-chart-link, .sankey-chart-node')];
         const before = shapes().map((path) => path.getAttribute('d'));
         el.querySelector('tbody').rows[1].cells[2].textContent = '70';
-        Expressive.SankeyChart.getInstance(el).update();
+        ExpressiveExtras.SankeyChart.getInstance(el).update();
         return {
           focused: el.querySelector('.sankey-chart-plot') === document.activeElement,
-          active: Expressive.SankeyChart.getInstance(el).activeIndex,
+          active: ExpressiveExtras.SankeyChart.getInstance(el).activeIndex,
           tooltip: el.querySelector('.sankey-chart-tooltip').innerText.replace(/\s+/g, ' ').trim(),
           animations: shapes().map((path, i) => {
             const animate = path.querySelector('animate');
@@ -350,7 +350,7 @@ for (const [engine, browserType, browserTest] of engines) {
 
       const animations = await page.locator('#update').evaluate((el) => {
         el.querySelector('tbody').rows[1].cells[2].textContent = '70';
-        Expressive.SankeyChart.getInstance(el).update();
+        ExpressiveExtras.SankeyChart.getInstance(el).update();
         return el.querySelectorAll('animate').length;
       });
       assert.equal(animations, 0, 'nothing moves under reduced motion');

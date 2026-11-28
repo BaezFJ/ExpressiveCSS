@@ -103,7 +103,7 @@ const S = defineSections([
        data-currency-input-options='{"i18n":{"invalid":"Betrag eingeben."}}'>
 `} />
 <Code code={`
-const price = Expressive.CurrencyInput.getInstance(document.getElementById('price'));
+const price = ExpressiveExtras.CurrencyInput.getInstance(document.getElementById('price'));
 price.value;     // 1234.5, or null when the field is empty or holds no digit
 price.destroy(); // removes the listeners, clears the message, leaves the text
 `} />

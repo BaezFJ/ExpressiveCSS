@@ -2,7 +2,7 @@
 
 # ExpressiveCSS design rules
 
-Copied from `m3-guidelines.md` (SHA-256 `7408eef75ae0e320155c41e9891000b0cdfe56c476531a978e071c175c07d6b0`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.
+Copied from `m3-guidelines.md` (SHA-256 `7bb0a73b2843621e526b9f3bdd8b92dda6889b3bdbb10929ae0a78c3b94ccf07`), the design contract for generating Material 3 interfaces with ExpressiveCSS. Read it before choosing components for a new surface; the [component decision index](./component-decisions.md) and each component guide give the shipped contract. Where this file and the live Material specification disagree, the specification wins on design intent and the installed version wins on what exists.
 
 Contents: Hard rules · 1.2 What changes with window size · 1.4 Navigation by window size · 3. Component chooser · 12. Screen recipes · 13. Quick anatomy cheat sheet · 14. Name map (retired names → ExpressiveCSS).
 
@@ -117,7 +117,7 @@ The **app bar** is not navigation between app views. It names the current page a
 | Many homogeneous rows to find and act on | **List** |
 | Related form fields | **Fieldset** |
 | Image-first browse | **Carousel** |
-| Site-wide links after the page | **Footer** (`<footer>`), not a navigation bar |
+| Site-wide links after the page | **Footer** (`<footer>`), not a navigation bar (@expressivecss/extras) |
 
 ## 12. Screen recipes
 
@@ -159,7 +159,7 @@ Generate these skeletons unless the user asks otherwise. Fill in real destinatio
 - App bar with title + text destinations in a `<menu>` from `large` up; compact navigation bar or modal expanded rail below that.
 - `main.container` + 12-column grid.
 - Cards for features, lists for indexes, breadcrumbs on nested docs.
-- Site `<footer>` (not a navigation bar) for legal and site maps.
+- Site `<footer>` (not a navigation bar, @expressivecss/extras) for legal and site maps.
 
 ## 13. Quick anatomy cheat sheet
 

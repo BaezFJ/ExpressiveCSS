@@ -23,9 +23,11 @@
 
 import { describe, test } from 'node:test';
 import assert from 'node:assert';
-import { readFileSync } from 'node:fs';
+import { pageCss } from './css.js';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+// Core then extras, as a page that uses extras loads them: the charts declare
+// and read their tokens in extras.css.
+const css = pageCss();
 
 /** Tokens the sheet defines: assigned in a rule, or registered with @property. */
 const declared = new Set([

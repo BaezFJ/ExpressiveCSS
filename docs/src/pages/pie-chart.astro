@@ -322,7 +322,7 @@ const visits: [string, number][] = [["Search", 4210], ["Direct", 3120], ["Social
           apply.
         </p>
 <Code code={`
-const chart = Expressive.PieChart.init(document.querySelector('.pie-chart'));
+const chart = ExpressiveExtras.PieChart.init(document.querySelector('.pie-chart'));
 chart.show(2);   // highlight the third row; -1 hides the tooltip
 chart.update();  // redraw from the table; focus and the highlighted row stay
 chart.destroy(); // remove the drawing and show the table again

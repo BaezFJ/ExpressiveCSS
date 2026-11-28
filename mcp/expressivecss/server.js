@@ -23,7 +23,7 @@ const COMPONENT_DECISIONS_BY_SLUG = new Map(COMPONENT_DECISIONS.components.map((
 const DEFAULT_MAX_COMPONENT_RESPONSE_CHARS = 24_000;
 const GUIDANCE_TOOLS = new Set(['setup_expert', 'creative_director', 'page_architect', 'page_arcjitect', 'component_syntax_expert', 'component_catalog']);
 const RESPONSE_BUDGET_SETTING = 'EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES';
-function configuredResponseBudget(value = '65536') {
+function configuredResponseBudget(value = '98304') {
   if (!/^\d+$/u.test(value) || !Number.isSafeInteger(Number(value)) || Number(value) < 1) {
     throw new Error(`${RESPONSE_BUDGET_SETTING} must be a positive safe integer in decimal bytes.`);
   }
@@ -792,6 +792,11 @@ function parseGuide(file, content) {
   };
 }
 
+// Extras guides carry their package and install note so agents do not assume core ships them.
+function packageFields(guide) {
+  return guide.package ? { package: guide.package, install: guide.install } : {};
+}
+
 function sameFileIdentity(left, right) {
   return left.dev === right.dev && left.ino === right.ino;
 }
@@ -895,7 +900,7 @@ async function loadGuideCatalog(projectRoot) {
     const bundledContract = JSON.parse(bundledContractRead.text);
     const components = new Map();
     for (const entry of bundled.guides) {
-      const guide = parseGuide(entry.file, entry.content);
+      const guide = { ...parseGuide(entry.file, entry.content), ...packageFields(entry) };
       components.set(guide.slug, guide);
     }
     bundledGuideCache = {
@@ -1377,6 +1382,7 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
       docs: guide.sourceUrl,
       selectionSource: 'decision-catalog',
       confidence: 'primary',
+      ...packageFields(guide),
       aliases,
       useWhen: decision.useWhen ?? [],
       avoidWhen: decision.avoidWhen ?? [],
@@ -1404,6 +1410,7 @@ function buildCreativeCandidates(catalog, goal, maxSuggestions, componentsHint =
       docs: guide.sourceUrl,
       selectionSource: 'fuzzy-fallback',
       confidence: 'fallback',
+      ...packageFields(guide),
       aliases: decision?.aliases ?? [],
       useWhen: decision?.useWhen ?? [],
       avoidWhen: decision?.avoidWhen ?? [],
@@ -1571,6 +1578,7 @@ function summarizeGuide(guide, { sections, detail, includeCapabilities }) {
     title: guide.title,
     source: guide.sourceUrl,
     docs: guide.astroSource,
+    ...packageFields(guide),
     ...(detail === 'detailed' ? {
       contract: clampText(guide.contract, 900),
       syntax: {
@@ -2451,6 +2459,7 @@ function buildCatalogPayload(catalog, version, parsed) {
       aliases: decision?.aliases ?? [],
       runtime: decision?.runtime ?? null,
       docs: guide.sourceUrl,
+      package: guide.package ?? '@expressivecss/expressive',
     };
   }).sort((a, b) => a.slug.localeCompare(b.slug));
 
@@ -2734,6 +2743,7 @@ function bundledResources(catalog, catalogUri, catalogSnapshot) {
       title: guide.title,
       docs: guide.sourceUrl,
       repositorySource: guide.astroSource,
+      ...packageFields(guide),
       contractVersion: catalog.frameworkVersion,
       sourceHash: catalog.sourceHash,
       guideSource: catalog.guideSource,

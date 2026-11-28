@@ -14,6 +14,8 @@ browserTest('dashboard reference sorts its table and moves aria-sort', { timeout
     page.on('pageerror', (error) => errors.push(error.message));
     await page.route('http://dashboard.test/**', (route) => {
       const { pathname } = new URL(route.request().url());
+      // The extras build is served from dist/extras, as on the docs site.
+      if (pathname.startsWith('/dist/extras/')) return route.fulfill({ path: new URL(`../extras/dist/${pathname.slice(13)}`, import.meta.url).pathname });
       if (pathname.startsWith('/dist/')) return route.fulfill({ path: new URL(`..${pathname}`, import.meta.url).pathname });
       return route.fulfill({ body: html, contentType: 'text/html' });
     });

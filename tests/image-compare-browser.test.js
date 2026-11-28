@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { engines } from './browser.js';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -15,7 +15,7 @@ ${compare('ltr', 'ltr', 25)}${compare('rtl', 'rtl')}<script>${js}</script></body
 
 for (const [name, engine, test] of engines) {
   test(`${name}: image compare reveals the second image up to the range's value`, { timeout: 30000 }, async (t) => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 500, height: 500 }, deviceScaleFactor: 1 });
       await page.setContent(markup);

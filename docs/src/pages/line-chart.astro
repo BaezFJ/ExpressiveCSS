@@ -514,7 +514,7 @@ ${cardScript.replace(/^/gm, "  ")}
           caption, still need <code>update()</code>.
         </p>
 <Code code={`
-const chart = Expressive.LineChart.init(document.querySelector('.line-chart'), {
+const chart = ExpressiveExtras.LineChart.init(document.querySelector('.line-chart'), {
   min: 0
 });
 chart.show(2);   // highlight the third row; -1 hides the tooltip

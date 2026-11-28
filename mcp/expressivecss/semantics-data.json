@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "generatedBy": "scripts/gen-expressivecss-skill.mjs",
-  "frameworkVersion": "0.20.0",
+  "frameworkVersion": "0.21.0",
   "semantics": {
     "about": "Normative HTML semantics for ExpressiveCSS. This data file is the single source of truth: SEMANTICS.md is generated from it by scripts/gen-semantics.mjs, and tests/semantics.test.js enforces it. One row per roster entry, each stating its kind - component, foundation or behavior, as CONTEXT.md defines them. CONTEXT.md defines the rest of the vocabulary.",
     "scope": "Element choice, landmark structure, and the ARIA that element choice implies. Keyboard interaction, focus management and colour contrast are deliberately out of scope.",
@@ -49,8 +49,7 @@
       "currency-input",
       "hover-card",
       "input-mask",
-      "landmarks",
-      "tree-select"
+      "landmarks"
     ],
     "notComponents": {
       "table_of_contents": "the list it styles is Scrollspy's markup, taught under Scrollspy in `llm.md` and rendered per page by the docs site's page scaffold. The partial stays in the sheet; `scrollspy` owns its rule."
@@ -818,7 +817,7 @@
           }
         ]
       },
-      "forms/rating": {
+      "rating": {
         "status": "enforced",
         "note": "Added with the rating component. The input is a fieldset of native radios drawn as stars; the display is a named image.",
         "rules": [
@@ -844,7 +843,7 @@
           }
         ]
       },
-      "forms/color-swatches": {
+      "color-swatches": {
         "status": "enforced",
         "note": "Added with the color swatches component. A fieldset of native radios in labels with visually hidden names, drawn as round chips of their colors, with an optional native color input for a custom value.",
         "rules": [

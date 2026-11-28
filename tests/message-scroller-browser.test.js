@@ -2,8 +2,10 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { leaseBrowser, engines } from './browser.js';
+import { pageCss } from './css.js';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+// Core then extras: the shadow root test styles its own tree.
+const css = pageCss();
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 const requested = process.env.EXPRESSIVECSS_TEST_BROWSER;
 
@@ -101,8 +103,8 @@ for (const [name, engine, test] of engines) {
       await frames();
       assert.ok((await state()).fromEnd <= 2, 'clicking a message keeps following');
 
-      assert.equal(await page.evaluate(() => window.Expressive.MessageScroller.getInstance(document.querySelector('.message-scroller')).scrollToMessage('nope')), false);
-      assert.equal(await page.evaluate(() => window.Expressive.MessageScroller.getInstance(document.querySelector('.message-scroller')).scrollToMessage('m10')), true);
+      assert.equal(await page.evaluate(() => window.ExpressiveExtras.MessageScroller.getInstance(document.querySelector('.message-scroller')).scrollToMessage('nope')), false);
+      assert.equal(await page.evaluate(() => window.ExpressiveExtras.MessageScroller.getInstance(document.querySelector('.message-scroller')).scrollToMessage('m10')), true);
       await page.waitForFunction(() => {
         const v = document.querySelector('.message-scroller-viewport');
         return Math.abs(document.getElementById('m10').getBoundingClientRect().top - v.getBoundingClientRect().top - 64) <= 2;
@@ -117,7 +119,7 @@ for (const [name, engine, test] of engines) {
       await frames();
       assert.ok(Math.abs((await offset('m10')) - before) <= 1, 'prepended history keeps the visible message in place');
 
-      await page.evaluate(() => window.Expressive.MessageScroller.getInstance(document.querySelector('.message-scroller')).scrollToEnd());
+      await page.evaluate(() => window.ExpressiveExtras.MessageScroller.getInstance(document.querySelector('.message-scroller')).scrollToEnd());
       await atEnd();
       await page.evaluate(() => {
         document.querySelector('.message-scroller-viewport').insertAdjacentHTML('beforeend', '<div id="ask" class="message end" data-scroll-anchor><p class="message-bubble">New question</p></div>');
@@ -142,8 +144,8 @@ for (const [name, engine, test] of engines) {
       assert.equal(s.spacer, '', 'the spacer is gone once the reply fills the viewport');
       assert.ok(s.fromEnd <= 2, 'the reply is followed past the bottom');
 
-      await page.evaluate(() => window.Expressive.MessageScroller.getInstance(document.querySelector('.message-scroller')).destroy());
-      assert.equal(await page.evaluate(() => window.Expressive.MessageScroller.getInstance(document.querySelector('.message-scroller'))), undefined);
+      await page.evaluate(() => window.ExpressiveExtras.MessageScroller.getInstance(document.querySelector('.message-scroller')).destroy());
+      assert.equal(await page.evaluate(() => window.ExpressiveExtras.MessageScroller.getInstance(document.querySelector('.message-scroller'))), undefined);
       assert.equal((await state()).inert, false, 'destroy releases the button');
     } finally {
       await browser.close();
@@ -158,7 +160,7 @@ for (const [name, engine, test] of engines) {
         await page.setContent(markup(items));
         await page.addScriptTag({ content: js });
         return page.evaluate((options) => {
-          window.Expressive.MessageScroller.init(document.querySelector('.message-scroller'), options);
+          window.ExpressiveExtras.MessageScroller.init(document.querySelector('.message-scroller'), options);
           const v = document.querySelector('.message-scroller-viewport');
           const last = v.querySelector(':scope > [data-scroll-anchor]:nth-last-child(-n+2)');
           return {
@@ -193,7 +195,7 @@ for (const [name, engine, test] of engines) {
       const result = await page.evaluate(async ({ css, items }) => {
         const root = document.getElementById('host').attachShadow({ mode: 'open' });
         root.innerHTML = `<style>${css}</style><div style="height:400px;width:500px"><div class="message-scroller"><div class="message-scroller-viewport" role="log" aria-label="Conversation" tabindex="0">${items}</div><button type="button" class="message-scroller-button" aria-label="Scroll to latest message">↓</button></div></div>`;
-        const scroller = window.Expressive.MessageScroller.init(root.querySelector('.message-scroller'), {});
+        const scroller = window.ExpressiveExtras.MessageScroller.init(root.querySelector('.message-scroller'), {});
         const found = scroller.scrollToMessage('m10');
         const v = scroller.viewport;
         for (let i = 0; i < 120; i++) {

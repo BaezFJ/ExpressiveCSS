@@ -78,20 +78,21 @@ function namedAPIs(tokens, names) {
 }
 
 function collectTemplateAPIs(tokens, source, scanImports = true) {
-  const namespaces = new Set(['Expressive']);
+  const namespaces = new Set(['Expressive', 'ExpressiveExtras']);
   if (scanImports) {
-    const named = /(?:import|export)\s*\{([^}]+)\}\s*from\s*["']@expressivecss\/expressive(?:\/modular)?["']/g;
+    const named = /(?:import|export)\s*\{([^}]+)\}\s*from\s*["']@expressivecss\/(?:expressive|extras)(?:\/modular)?["']/g;
     for (const [, names] of source.matchAll(named)) namedAPIs(tokens, names);
-    const imports = /import\s*\*\s*as\s+([\w$]+)\s*from\s*["']@expressivecss\/expressive(?:\/modular)?["']/g;
+    const imports = /import\s*\*\s*as\s+([\w$]+)\s*from\s*["']@expressivecss\/(?:expressive|extras)(?:\/modular)?["']/g;
     for (const [, alias] of source.matchAll(imports)) namespaces.add(alias);
-    const required = /(?:\b(?:var|let|const)\s+(?:\{([^{}]+)\}|([\w$]+))\s*=\s*)?\brequire\s*\(\s*["']@expressivecss\/expressive["']\s*\)(?:\s*\??\.\s*(\w+))?/g;
+    const required = /(?:\b(?:var|let|const)\s+(?:\{([^{}]+)\}|([\w$]+))\s*=\s*)?\brequire\s*\(\s*["']@expressivecss\/(?:expressive|extras)["']\s*\)(?:\s*\??\.\s*(\w+))?/g;
     for (const [, names, alias, member] of source.matchAll(required)) {
       if (names) namedAPIs(tokens, names);
       if (member) tokens.add(`api:${member}`);
       else if (alias) namespaces.add(alias);
     }
   }
-  // Leave the member available as the next receiver in window.Expressive.Snackbar.
+  // Leave the member available as the next receiver in window.Expressive.Snackbar
+  // (or window.ExpressiveExtras.LineChart).
   for (const [, alias, name] of source.matchAll(/(?<![\w$])([\w$]+)(?=\s*\??\.\s*(\w+))/g)) {
     if (namespaces.has(alias)) tokens.add(`api:${name}`);
   }

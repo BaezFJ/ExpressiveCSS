@@ -6,8 +6,8 @@ says exactly what it left out, and tells you how to get it.
 
 ## The setting
 
-`EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES` sets the cap. The default is 65,536
-bytes (64 KiB). It must be a positive safe integer written as decimal digits.
+`EXPRESSIVECSS_MCP_MAX_RESPONSE_BYTES` sets the cap. The default is 98,304
+bytes (96 KiB). It must be a positive safe integer written as decimal digits.
 Empty values, zero, signs, fractions, whitespace, exponents and unsafe
 integers stop the server at startup. Only the operator can change it; tool
 callers cannot.

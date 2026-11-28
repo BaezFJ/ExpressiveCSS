@@ -1,7 +1,7 @@
 import { beforeEach, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { setTimeout as settleReset } from 'node:timers/promises';
-import { Expressive, resetBody, window } from './setup.js';
+import { ExpressiveExtras, resetBody, window } from './setup.js';
 
 const markup = `<form id="upload"><div class="drop-zone"><label>Choose documents
   <input id="files" type="file" multiple data-validate-types accept=".pdf,.png" aria-describedby="hint">
@@ -9,7 +9,7 @@ const markup = `<form id="upload"><div class="drop-zone"><label>Choose documents
   <ul class="drop-zone-files" aria-live="polite"></ul>
   </div><p id="hint">Keep the originals.</p></form>`;
 const input = () => document.getElementById('files');
-const validate = () => Expressive.Forms.validateField(input());
+const validate = () => ExpressiveExtras.DropZone.validateField(input());
 const file = (name, type = '') => new window.File(['contents'], name, { type });
 const choose = (...files) => {
   Object.defineProperty(input(), 'files', { configurable: true, value: files });
@@ -26,7 +26,7 @@ test('an unsupported file invalidates the whole selection without replacing its 
   assert.equal(input().validationMessage, 'Choose PDF or PNG files.');
   assert.equal(document.getElementById('upload').checkValidity(), false);
   assert.equal(input().files, selected);
-  Expressive.Forms.listDropZoneFiles(document.querySelector('.drop-zone'), input());
+  ExpressiveExtras.DropZone.listFiles(document.querySelector('.drop-zone'), input());
   assert.equal(document.querySelectorAll('.drop-zone-files > li').length, 2);
   assert.equal(document.querySelector('.drop-zone-files img'), null);
   assert.match(document.querySelector('.drop-zone-files').textContent, /<img src=x onerror=alert\(1\)>\.exe/);
@@ -389,7 +389,7 @@ test('one oversized file invalidates the complete retained list with separate ac
   validate();
   assert.equal(input().validationMessage, 'Chaque fichier doit faire 1 Ko au maximum.');
   assert.equal(input().getAttribute('aria-describedby'), `hint ${error.id}`);
-  Expressive.Forms.listDropZoneFiles(document.querySelector('.drop-zone'), input());
+  ExpressiveExtras.DropZone.listFiles(document.querySelector('.drop-zone'), input());
   assert.equal(document.querySelectorAll('.drop-zone-files > li').length, 2);
   assert.equal(document.querySelector('.drop-zone-files img'), null);
 });
@@ -607,7 +607,7 @@ test('count failure retains every file and safely lists it with separate accessi
   validate();
   assert.equal(input().validationMessage, 'Choisissez au plus deux fichiers.');
   assert.equal(input().getAttribute('aria-describedby'), `hint ${error.id}`);
-  Expressive.Forms.listDropZoneFiles(document.querySelector('.drop-zone'), input());
+  ExpressiveExtras.DropZone.listFiles(document.querySelector('.drop-zone'), input());
   assert.equal(document.querySelectorAll('.drop-zone-files > li').length, 3);
   assert.equal(document.querySelector('.drop-zone-files img'), null);
 });
@@ -779,7 +779,7 @@ test('count rules stay isolated and skip disabled controls without clearing appl
   assert.equal(input().validity.customError, false);
   fieldset.disabled = false;
   validate();
-  Expressive.Forms.validateField(other);
+  ExpressiveExtras.DropZone.validateField(other);
   assert.match(input().validationMessage, /2/);
   assert.match(other.validationMessage, /1/);
   assert.match(zone.querySelector('[data-error]').textContent, /2/);

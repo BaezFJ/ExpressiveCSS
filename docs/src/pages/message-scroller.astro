@@ -145,7 +145,7 @@ viewport.removeAttribute('aria-busy');
 <div class="message-scroller no-autoinit">…</div>
 
 <script>
-Expressive.MessageScroller.init(document.querySelector('.message-scroller'), {
+ExpressiveExtras.MessageScroller.init(document.querySelector('.message-scroller'), {
   defaultScrollPosition: 'last-anchor'
 });
 </script>
@@ -176,7 +176,7 @@ viewport.insertAdjacentHTML('afterbegin', olderMessagesHtml);
           <button type="button" class="tonal" id="demo-jump">Jump to the opening question</button>
         </p>
 <Code code={`
-const scroller = Expressive.MessageScroller.getInstance(document.querySelector('.message-scroller'));
+const scroller = ExpressiveExtras.MessageScroller.getInstance(document.querySelector('.message-scroller'));
 scroller.scrollToMessage('m1');
 `} />
   </Section>
@@ -204,7 +204,7 @@ scroller.scrollToMessage('m1');
   </Section>
   <Section {...S.methods}>
 <Code code={`
-const scroller = Expressive.MessageScroller.getInstance(document.querySelector('.message-scroller'));
+const scroller = ExpressiveExtras.MessageScroller.getInstance(document.querySelector('.message-scroller'));
 scroller.scrollToEnd();          // scrolls to the latest message and follows again
 scroller.scrollToStart();
 scroller.scrollToMessage('m42'); // false when no such message is in the viewport
@@ -225,7 +225,7 @@ scroller.destroy();              // removes listeners, observers and the spacer
 (() => {
   const root = document.getElementById('demo-scroller');
   const viewport = root.querySelector('.message-scroller-viewport');
-  const scroller = () => Expressive.MessageScroller.getInstance(root);
+  const scroller = () => ExpressiveExtras.MessageScroller.getInstance(root);
   const add = (side, text, where = 'beforeend') => {
     const message = document.createElement('div');
     message.className = side ? 'message end' : 'message';

@@ -5,7 +5,7 @@ import { test, describe, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 
-import { Expressive, resetBody, window } from "./setup.js";
+import { Expressive, ExpressiveExtras, resetBody, window } from "./setup.js";
 
 const css = readFileSync(
   new URL("../dist/css/expressive.css", import.meta.url),
@@ -265,7 +265,7 @@ describe("Menubar", () => {
       </div>
       <menu id="f"><li>New</li></menu><menu id="e"><li>Undo</li></menu>
       <menu id="v"><li>Zoom</li></menu><menu id="h"><li>About</li></menu>`;
-    const bar = Expressive.Menubar.init(document.querySelector(".menubar"));
+    const bar = ExpressiveExtras.Menubar.init(document.querySelector(".menubar"));
     const [file, edit, , help] = document.querySelectorAll(".menu-trigger");
     try {
       file.focus();
@@ -410,7 +410,7 @@ describe("Menu checkbox items", () => {
     document.body.innerHTML = `
       <div class="menubar"><button type="button" class="menu-trigger" data-target="v">View</button></div>
       <menu id="v"><li role="menuitemcheckbox" aria-checked="false"><button type="button">Ruler</button></li></menu>`;
-    const bar = Expressive.Menubar.init(document.querySelector(".menubar"));
+    const bar = ExpressiveExtras.Menubar.init(document.querySelector(".menubar"));
     const changes = [];
     document.addEventListener("expressive:change", (e) => changes.push(e.detail.checked));
     try {
@@ -682,7 +682,7 @@ describe("Menu radio groups", () => {
         <li role="menuitemradio" aria-checked="true"><button type="button">Fit</button></li>
         <li role="menuitemradio" aria-checked="false"><button type="button">Fill</button></li>
       </ul></li></menu>`;
-    const bar = Expressive.Menubar.init(document.querySelector(".menubar"));
+    const bar = ExpressiveExtras.Menubar.init(document.querySelector(".menubar"));
     const changes = [];
     document.addEventListener("expressive:change", (e) => changes.push(e.detail.item.textContent.trim()));
     try {

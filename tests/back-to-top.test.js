@@ -5,7 +5,7 @@
 import { describe, test, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Expressive, resetBody, window } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, window } from './setup.js';
 
 const markup = `
   <main id="main"><h1>Title</h1><button type="button">First</button></main>
@@ -53,7 +53,7 @@ describe('BackToTop', () => {
   test('stays inert until the sentinel is above the viewport', () => {
     document.body.innerHTML = markup;
     const link = document.querySelector('.back-to-top');
-    const instance = Expressive.BackToTop.init(link);
+    const instance = ExpressiveExtras.BackToTop.init(link);
     try {
       const sentinel = document.body.firstElementChild;
       assert.equal(observers[0].targets[0], sentinel, 'the sentinel is observed');
@@ -75,7 +75,7 @@ describe('BackToTop', () => {
     const link = document.querySelector('.back-to-top');
     link.dataset.backToTopOptions = '{"threshold": "400px"}';
     Expressive.AutoInit();
-    const instance = Expressive.BackToTop.getInstance(link);
+    const instance = ExpressiveExtras.BackToTop.getInstance(link);
     try {
       assert.equal(instance.options.threshold, '400px');
       assert.equal(document.body.firstElementChild.style.top, '400px');
@@ -88,7 +88,7 @@ describe('BackToTop', () => {
     document.body.innerHTML = markup;
     const link = document.querySelector('.back-to-top');
     const main = document.getElementById('main');
-    const instance = Expressive.BackToTop.init(link);
+    const instance = ExpressiveExtras.BackToTop.init(link);
     try {
       observers[0].fire(false, -10);
       const click = new window.MouseEvent('click', { bubbles: true, cancelable: true });
@@ -107,7 +107,7 @@ describe('BackToTop', () => {
   test('a missing target focuses the body, and an authored tabindex stays', () => {
     document.body.innerHTML = markup.replace('href="#main"', 'href="#top"');
     const link = document.querySelector('.back-to-top');
-    const instance = Expressive.BackToTop.init(link);
+    const instance = ExpressiveExtras.BackToTop.init(link);
     try {
       link.click();
       assert.equal(document.activeElement, document.body);
@@ -128,7 +128,7 @@ describe('BackToTop', () => {
     window.matchMedia = (query) => ({ matches: query.includes('reduce'), media: query, addEventListener() {}, removeEventListener() {} });
     document.body.innerHTML = markup;
     const link = document.querySelector('.back-to-top');
-    const instance = Expressive.BackToTop.init(link);
+    const instance = ExpressiveExtras.BackToTop.init(link);
     try {
       link.click();
       assert.deepEqual(scrolls, [{ top: 0, behavior: 'instant' }]);
@@ -141,7 +141,7 @@ describe('BackToTop', () => {
   test('a focused link stays shown until it loses focus', () => {
     document.body.innerHTML = markup;
     const link = document.querySelector('.back-to-top');
-    const instance = Expressive.BackToTop.init(link);
+    const instance = ExpressiveExtras.BackToTop.init(link);
     try {
       observers[0].fire(false, -10);
       link.focus();
@@ -157,7 +157,7 @@ describe('BackToTop', () => {
   test('a modified or already handled click is left to the browser', () => {
     document.body.innerHTML = markup;
     const link = document.querySelector('.back-to-top');
-    const instance = Expressive.BackToTop.init(link);
+    const instance = ExpressiveExtras.BackToTop.init(link);
     try {
       for (const key of ['ctrlKey', 'metaKey', 'shiftKey', 'altKey']) {
         const click = new window.MouseEvent('click', { bubbles: true, cancelable: true, [key]: true });
@@ -179,7 +179,7 @@ describe('BackToTop', () => {
     console.warn = (...args) => warnings.push(args[0]);
     document.body.innerHTML = markup;
     const link = document.querySelector('.back-to-top');
-    const instance = Expressive.BackToTop.init(link, { threshold: 'banana' });
+    const instance = ExpressiveExtras.BackToTop.init(link, { threshold: 'banana' });
     try {
       assert.equal(document.body.firstElementChild.style.top, '100vh');
       assert.equal(warnings.length, 1);
@@ -194,12 +194,12 @@ describe('BackToTop', () => {
     document.body.innerHTML = markup;
     const authored = document.body.innerHTML;
     const link = document.querySelector('.back-to-top');
-    const instance = Expressive.BackToTop.init(link);
+    const instance = ExpressiveExtras.BackToTop.init(link);
     link.click();
     instance.destroy();
     assert.equal(observers[0].targets.length, 0, 'the observer is disconnected');
     assert.equal(document.body.innerHTML, authored);
     assert.equal(document.getElementById('main').hasAttribute('tabindex'), false);
-    assert.equal(Expressive.BackToTop.getInstance(link), undefined);
+    assert.equal(ExpressiveExtras.BackToTop.getInstance(link), undefined);
   });
 });

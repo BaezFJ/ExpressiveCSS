@@ -53,7 +53,7 @@ for (const [engine, browserType, browserTest] of engines) {
           fill: getComputedStyle(el.querySelector('.radar-chart-area')).fillOpacity,
           axes: [...el.querySelectorAll('.radar-chart-axes li')].map((li) => [li.textContent, li.style.getPropertyValue('--turn')]),
           legend: [...el.querySelectorAll('.radar-chart-legend li')].map((li) => [li.dataset.series, li.textContent]),
-          instance: [!!Expressive.RadarChart.getInstance(el), !!Expressive.LineChart.getInstance(el)],
+          instance: [!!ExpressiveExtras.RadarChart.getInstance(el), !!ExpressiveExtras.LineChart.getInstance(el)],
         };
       });
       assert.equal(skills.table, 'absolute', 'the table is visually hidden');
@@ -113,7 +113,7 @@ for (const [engine, browserType, browserTest] of engines) {
         el.querySelector('.radar-chart-plot').offsetWidth,
       ]), [false, 'none', 48]);
 
-      await page.evaluate(() => Expressive.RadarChart.getInstance(document.querySelector('#skills')).destroy());
+      await page.evaluate(() => ExpressiveExtras.RadarChart.getInstance(document.querySelector('#skills')).destroy());
       assert.deepEqual(await page.locator('#skills').evaluate((el) => [
         el.querySelectorAll('.radar-chart-plot, .radar-chart-legend').length,
         getComputedStyle(el.querySelector('table')).clipPath,
@@ -162,7 +162,7 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.deepEqual(await cursor.evaluate((el) => [...el.children].map((dot) => dot.style.top)), ['75%', '0%']);
 
       assert.equal(await page.evaluate(() => {
-        const chart = Expressive.RadarChart.getInstance(document.querySelector('#skills'));
+        const chart = ExpressiveExtras.RadarChart.getInstance(document.querySelector('#skills'));
         chart.show(99);
         return chart.el.querySelector('.radar-chart-tooltip').hidden;
       }), true, 'an index past the last row hides the tooltip');
@@ -198,7 +198,7 @@ for (const [engine, browserType, browserTest] of engines) {
         document.body.append(wrap);
         const el = wrap.firstElementChild;
         el.querySelectorAll('.radar-chart-plot').forEach((node) => node.remove());
-        const chart = Expressive.RadarChart.init(el);
+        const chart = ExpressiveExtras.RadarChart.init(el);
         chart.show(0);
         el.querySelector('.radar-chart-plot').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
         return [el.querySelector('.radar-chart-axes li:nth-child(2)').style.getPropertyValue('--turn'), chart.activeIndex];

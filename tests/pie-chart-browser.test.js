@@ -2,8 +2,10 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { leaseBrowser, engines } from './browser.js';
+import { pageCss } from './css.js';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+// Core then extras, as a page that uses extras loads them: the color probe has no script to load extras.
+const css = pageCss();
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 
 const chart = (attrs, caption, header, rows, foot = '') => `<figure ${attrs}>
@@ -50,7 +52,7 @@ for (const [engine, browserType, browserTest] of engines) {
           legend: [...el.querySelectorAll('.pie-chart-legend li')].map((li) =>
             [li.dataset.series, ...[...li.children].map((span) => span.textContent)]),
           labels: el.querySelectorAll('.pie-chart-labels, .pie-chart-values').length,
-          instance: [!!Expressive.PieChart.getInstance(el), !!Expressive.LineChart.getInstance(el)],
+          instance: [!!ExpressiveExtras.PieChart.getInstance(el), !!ExpressiveExtras.LineChart.getInstance(el)],
           hole: getComputedStyle(el.querySelector('.pie-chart-hole')).transform,
           total: getComputedStyle(el.querySelector('.pie-chart-pie')).display,
         };
@@ -110,7 +112,7 @@ for (const [engine, browserType, browserTest] of engines) {
         el.querySelector('.pie-chart-plot').offsetWidth,
       ]), [false, 'none', 48]);
 
-      await page.evaluate(() => Expressive.PieChart.getInstance(document.querySelector('#plans')).destroy());
+      await page.evaluate(() => ExpressiveExtras.PieChart.getInstance(document.querySelector('#plans')).destroy());
       assert.deepEqual(await page.locator('#plans').evaluate((el) => [
         el.querySelectorAll('.pie-chart-plot, .pie-chart-legend').length,
         getComputedStyle(el.querySelector('table')).clipPath,
@@ -162,7 +164,7 @@ for (const [engine, browserType, browserTest] of engines) {
 
       // An index past the last row hides the tooltip, as in other charts.
       assert.equal(await page.evaluate(() => {
-        const chart = Expressive.PieChart.getInstance(document.querySelector('#plans'));
+        const chart = ExpressiveExtras.PieChart.getInstance(document.querySelector('#plans'));
         chart.show(99);
         return chart.el.querySelector('.pie-chart-tooltip').hidden;
       }), true);
@@ -208,7 +210,7 @@ for (const [engine, browserType, browserTest] of engines) {
         document.body.append(wrap);
         const el = wrap.firstElementChild;
         el.querySelectorAll('.pie-chart-plot, .pie-chart-legend').forEach((node) => node.remove());
-        const chart = Expressive.PieChart.init(el);
+        const chart = ExpressiveExtras.PieChart.init(el);
         chart.show(0);
         el.querySelector('.pie-chart-plot').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
         return [el.querySelector('.pie-chart-slice').getAttribute('d'), chart.activeIndex];
@@ -347,7 +349,7 @@ for (const [engine, browserType, browserTest] of engines) {
 
       // The group's tooltip has its sum and share, and no line for the column that does not add up.
       const tip = await page.locator('#other').evaluate((el) => {
-        Expressive.PieChart.getInstance(el).show(4);
+        ExpressiveExtras.PieChart.getInstance(el).show(4);
         return [...el.querySelectorAll('.pie-chart-tooltip > *')].map((node) => node.textContent);
       });
       assert.deepEqual(tip, ['Other', 'Leads', '$18 (1.8%)']);
@@ -360,7 +362,7 @@ for (const [engine, browserType, browserTest] of engines) {
       // Reading a cell's signs stays linear on a long run of tabs; a backtracking pattern took seconds.
       const spaced = await page.locator('#spaced').evaluate((el) => {
         const start = performance.now();
-        Expressive.PieChart.init(el);
+        ExpressiveExtras.PieChart.init(el);
         return [performance.now() - start, el.querySelectorAll('.pie-chart-legend li').length];
       });
       assert.ok(spaced[0] < 1000 && spaced[1] === 2, `a cell padded with tabs draws quickly: ${spaced}`);

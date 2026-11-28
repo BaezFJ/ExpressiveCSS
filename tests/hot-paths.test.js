@@ -8,7 +8,7 @@
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Expressive, resetBody, window } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, window } from './setup.js';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -33,7 +33,7 @@ describe('layout reads per scroll tick', () => {
     const counter = { reads: 0 };
     sections.forEach((el) => stubRect(el, counter));
 
-    const spies = sections.map((el) => Expressive.ScrollSpy.init(el));
+    const spies = sections.map((el) => ExpressiveExtras.ScrollSpy.init(el));
     counter.reads = 0; // ignore construction
 
     window.dispatchEvent(new window.Event('scroll'));

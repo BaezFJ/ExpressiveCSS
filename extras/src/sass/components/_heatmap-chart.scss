@@ -1,0 +1,242 @@
+@use "abstracts" as *;
+@use "../abstracts/charts" as *;
+
+// Heatmap chart. The same <figure>, <figcaption> and <table> as a line
+// chart; HeatmapChart draws every cell of the table as a square of a grid,
+// with the row headers at the inline start and the column headers below.
+// The plot, tooltip and legend come from chart(); the plot is as tall as
+// its rows, so --md-comp-heatmap-chart-height does not apply.
+//
+// Each cell carries --level, 0 for the lowest value and 1 for the highest,
+// and mixes the color into the empty color by that much. On a diverging
+// scale (data-mid) a level below 0 mixes in the low color instead. A .gap
+// cell has no value and draws no fill. Value text is black or white,
+// whichever contrasts more with the cell's mix, in any theme.
+//
+// Cells keep --md-comp-heatmap-chart-cell-min-width, and a grid too wide
+// for its figure scrolls its cells sideways beside the row labels.
+//
+// Modifiers: .values writes each cell's text on it.
+//
+// Tokens:
+//   --md-comp-heatmap-chart-row-height      32px
+//   --md-comp-heatmap-chart-cell-min-width  12px, below which the grid scrolls
+//   --md-comp-heatmap-chart-gap             3px between cells
+//   --md-comp-heatmap-chart-shape           4px, the cell's corner radius
+//   --md-comp-heatmap-chart-color           primary, the highest value
+//   --md-comp-heatmap-chart-low-color       tertiary, the lowest value on a
+//                                           diverging scale
+//   --md-comp-heatmap-chart-empty-color     surface-container-highest, the
+//                                           lowest, or the midpoint
+
+@include chart("heatmap-chart", $grid: false);
+
+// A level's color: the color above 0, the low color below it, both mixed
+// into the empty color, so one formula serves both kinds of scale.
+@function shade($level) {
+  @return color-mix(
+    in oklab,
+    var(--md-comp-heatmap-chart-color) calc(max(#{$level}, 0) * 100%),
+    color-mix(
+      in oklab,
+      var(--md-comp-heatmap-chart-low-color) calc(max(-1 * #{$level}, 0) * 100%),
+      var(--md-comp-heatmap-chart-empty-color)
+    )
+  );
+}
+
+.heatmap-chart {
+  --md-comp-heatmap-chart-row-height: #{rem(32px)};
+  --md-comp-heatmap-chart-cell-min-width: 12px;
+  --md-comp-heatmap-chart-low-color: var(--md-sys-color-tertiary);
+  --md-comp-heatmap-chart-gap: 3px;
+  --md-comp-heatmap-chart-shape: var(--md-sys-shape-corner-extra-small);
+  --md-comp-heatmap-chart-color: var(--md-sys-color-primary);
+  --md-comp-heatmap-chart-empty-color: var(--md-sys-color-surface-container-highest);
+}
+
+// The cells and the tooltip swatch share the mix.
+.heatmap-chart-cell,
+.heatmap-chart-tooltip > span {
+  --heatmap-chart-color: #{shade(var(--level, 0))};
+}
+
+.heatmap-chart-plot {
+  height: auto;
+}
+
+// The row labels, then the cells beside them. Row labels take up to 40% of
+// the width and end in an ellipsis past it; the cells take the rest and
+// scroll sideways when their minimum width would not fit, while the row
+// labels stay in view. Both sides use the same fixed row height, so the
+// rows line up.
+.heatmap-chart-grid {
+  display: grid;
+  grid-template-columns: fit-content(40%) minmax(0, 1fr);
+  column-gap: var(--md-comp-heatmap-chart-gap);
+  color: var(--md-sys-color-on-surface-variant);
+  @include typescale("body-small");
+}
+
+.heatmap-chart-rows,
+.heatmap-chart-cells {
+  display: grid;
+  grid-template-rows: repeat(var(--rows, 1), var(--md-comp-heatmap-chart-row-height)) auto;
+  gap: var(--md-comp-heatmap-chart-gap);
+}
+
+.heatmap-chart-rows {
+  min-width: 0;
+}
+
+.heatmap-chart-scroll {
+  overflow-x: auto;
+  // Room for the active cell's outline, which the scrolling would clip.
+  margin: -3px;
+  padding: 3px;
+}
+
+.heatmap-chart-cells {
+  grid-template-columns: repeat(var(--columns, 1), minmax(var(--md-comp-heatmap-chart-cell-min-width), 1fr));
+  width: max(100%, var(--columns, 1) * (var(--md-comp-heatmap-chart-cell-min-width) + var(--md-comp-heatmap-chart-gap)) - var(--md-comp-heatmap-chart-gap));
+}
+
+.heatmap-chart-row,
+.heatmap-chart-column {
+  @include ellipsis;
+}
+
+.heatmap-chart-row {
+  align-self: center;
+  padding-inline-end: 8px;
+}
+
+.heatmap-chart-column {
+  padding-block-start: 4px;
+  text-align: center;
+
+  // A label that runs on over empty ones starts at its own column.
+  &.run {
+    text-align: start;
+  }
+
+  // When each label is wider than its column, HeatmapChart keeps every nth
+  // one, as LineChart does. A kept label spreads over the hidden ones beside
+  // it, centred on its column; the end labels line up with the grid's edges.
+  .heatmap-chart-cells[data-thinned] > &:not([data-skip]) {
+    display: flex;
+    justify-content: center;
+    overflow: visible;
+
+    &:nth-child(1 of .heatmap-chart-column) {
+      justify-content: start;
+    }
+
+    &:nth-last-child(1 of .heatmap-chart-column) {
+      justify-content: end;
+    }
+  }
+
+  &[data-skip] {
+    visibility: hidden;
+  }
+}
+
+.heatmap-chart-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-width: 0;
+  border-radius: var(--md-comp-heatmap-chart-shape);
+  background-color: var(--heatmap-chart-color);
+  // White or black, whichever contrasts more. Y in XYZ D65 is the WCAG
+  // relative luminance; below 0.1791 white wins. The steep clamp leaves no
+  // gray between the two, and the white is D65 white.
+  --heatmap-chart-white: clamp(0, (0.1791 - y) * 1000000, 1);
+
+  color: color(
+    from var(--heatmap-chart-color) xyz-d65
+    calc(var(--heatmap-chart-white) * 0.9505) var(--heatmap-chart-white) calc(var(--heatmap-chart-white) * 1.089)
+  );
+  @include typescale("label-small");
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+
+  &.gap {
+    background: none;
+    box-shadow: inset 0 0 0 1px var(--md-comp-heatmap-chart-grid-color);
+  }
+
+  // Set by HeatmapChart.show().
+  &.active {
+    outline: 2px solid var(--md-sys-color-on-surface);
+    outline-offset: 1px;
+  }
+}
+
+.heatmap-chart-tooltip {
+  translate: 8px 0;
+
+  // A gap's swatch, outlined like its cell.
+  > span.gap::before {
+    background: none;
+    box-shadow: inset 0 0 0 1px var(--md-comp-heatmap-chart-grid-color);
+  }
+
+  &.end {
+    translate: calc(-100% - 8px) 0;
+  }
+}
+
+.heatmap-chart-legend {
+  align-items: center;
+  justify-content: end;
+  gap: 8px;
+}
+
+.heatmap-chart-scale {
+  width: 96px;
+  height: 8px;
+  border-radius: var(--md-sys-shape-corner-extra-small);
+  // From the lowest cell's shade to the highest's, set by HeatmapChart.
+  background: linear-gradient(
+    in oklab to var(--heatmap-chart-to, right),
+    #{shade(var(--low, 0))},
+    #{shade(var(--high, 1))}
+  );
+
+  // A stepped scale is a swatch per band, which HeatmapChart writes.
+  &:has(> span) {
+    display: flex;
+    overflow: hidden;
+    background: none;
+  }
+
+  > span {
+    flex: 1;
+    background: #{shade(var(--level, 0))};
+  }
+}
+
+// A diverging scale whose data crosses the midpoint passes its empty color.
+.heatmap-chart-scale.diverging {
+  background: linear-gradient(
+    in oklab to var(--heatmap-chart-to, right),
+    #{shade(var(--low, 0))},
+    var(--md-comp-heatmap-chart-empty-color) var(--mid, 0%),
+    #{shade(var(--high, 1))}
+  );
+}
+
+@media (forced-colors: active) {
+  // The shades are the data, so they keep their colors.
+  .heatmap-chart-cell,
+  .heatmap-chart-scale {
+    forced-color-adjust: none;
+  }
+
+  .heatmap-chart-cell.active {
+    outline-color: Highlight;
+  }
+}

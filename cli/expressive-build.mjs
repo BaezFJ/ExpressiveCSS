@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { createHash, randomUUID } from 'node:crypto';
 import { existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, realpathSync, renameSync, rmSync, writeFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
 import { basename, dirname, extname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -18,7 +19,8 @@ const usage = `Usage: expressive-build [files or directories...] [options]
   --help              Show this help.
 
 Scans the current directory by default. CSS is written to css/expressive.css,
-with licensed fonts in fonts/. JavaScript bundling requires esbuild as a dev dependency.`;
+with licensed fonts in fonts/. When @expressivecss/extras is installed, its used
+styles are written to css/extras.css. JavaScript bundling requires esbuild as a dev dependency.`;
 
 const options = {
   entry: { type: 'string' }, 'out-dir': { type: 'string', default: 'public/expressive' },
@@ -87,10 +89,13 @@ function replace(path, content) {
   } finally { rmSync(temp, { force: true }); }
 }
 
-function outputs(css, bundledFiles) {
+const extrasCSS = 'css/extras.css';
+
+function outputs(css, extras, bundledFiles) {
   const files = new Map([
     ...bundledFiles,
     ['css/expressive.css', Buffer.from(css)],
+    ...(extras === undefined ? [] : [[extrasCSS, Buffer.from(extras)]]),
     ['LICENSE-ExpressiveCSS', readFileSync(join(framework, 'LICENSE'))],
   ]);
   const fonts = join(framework, 'dist/fonts');
@@ -125,7 +130,8 @@ function ownsBundle(previous) {
 
 function differences(out, files, inputs) {
   const changes = new Map();
-  const names = new Set([...files.keys(), bundleJS, bundleCSS, ...previousAssets(out, files)]);
+  // css/extras.css goes when extras is uninstalled; the output directory is this tool's.
+  const names = new Set([...files.keys(), bundleJS, bundleCSS, extrasCSS, ...previousAssets(out, files)]);
   // Keep the old inventory until every referenced asset has been updated or removed.
   if (names.delete(assetManifest)) names.add(assetManifest);
   for (const name of names) {
@@ -139,35 +145,64 @@ function differences(out, files, inputs) {
   return changes;
 }
 
-function loadStyles() {
-  const path = join(framework, 'dist/cli/styles.json');
+function loadStyles(root, name) {
+  const path = join(root, 'dist/cli/styles.json');
   if (!existsSync(path)) throw new Error('Missing packaged style index. In a framework checkout, run npm run build first.');
   const index = JSON.parse(readFileSync(path, 'utf8'));
-  const sheet = readFileSync(join(framework, 'dist/css/expressive.min.css'), 'utf8').replace(/^\uFEFF/, '');
+  const sheet = readFileSync(join(root, `dist/css/${name}.min.css`), 'utf8').replace(/^\uFEFF/, '');
   if (index.sha256 !== createHash('sha256').update(sheet).digest('hex')) {
-    throw new Error('The stylesheet and usage index differ. Rebuild or reinstall ExpressiveCSS.');
+    throw new Error(`The ${name} stylesheet and usage index differ. Rebuild or reinstall ExpressiveCSS.`);
   }
   return { index, sheet };
 }
 
+// The application's own @expressivecss/extras, if it installed one.
+function installedExtras() {
+  try {
+    return dirname(realpathSync(createRequire(resolve('package.json')).resolve('@expressivecss/extras/package.json')));
+  } catch (error) {
+    if (error.code !== 'MODULE_NOT_FOUND') throw error;
+  }
+}
+
+// A package's APIs count as used when the bundle kept their code, or the whole bundle.
+function bundledAPIs(tokens, index, modules, bundles) {
+  const whole = bundles.some(name => modules.has(name));
+  for (const [name, api] of Object.entries(index.apis)) {
+    if (whole || modules.has(api.chunk)) tokens.add(`api:${name}`);
+  }
+}
+
+// Each package takes the --include partials it has; a partial neither has is a mistake.
+function ownIncludes(include, indexes) {
+  const has = (index, name) => index.components.some(group => group.name === name.slice(11));
+  const unknown = include.find(name => name.startsWith('components/') && !indexes.some(index => has(index, name)));
+  if (unknown) throw new Error(`Unknown component partial: ${unknown}`);
+  return index => include.filter(name => !name.startsWith('components/') || has(index, name));
+}
+
 async function assets({ entry, include }, files, out) {
-  const { index, sheet } = loadStyles();
-  const bundled = entry ? await bundle(resolve(entry), out, framework) : undefined;
+  const core = loadStyles(framework, 'expressive');
+  const extrasRoot = installedExtras();
+  const extras = extrasRoot && loadStyles(extrasRoot, 'extras');
+  const bundled = entry ? await bundle(resolve(entry), out, framework, extrasRoot) : undefined;
   const sources = new Set([...files, ...(bundled?.sources ?? [])]);
   const tokens = scan(sources, bundled);
   if (bundled) {
     const js = bundled.files.get(bundleJS).toString();
     collectUsage(tokens, js, bundleJS, 'bundled');
-    const fullBundle = ['expressive.cjs', 'expressive.js', 'expressive.min.js'].some(name => bundled.modules.has(name));
-    for (const [name, api] of Object.entries(index.apis)) {
-      if (fullBundle || bundled.modules.has(api.chunk)) tokens.add(`api:${name}`);
-    }
+    bundledAPIs(tokens, core.index, bundled.modules, ['expressive.cjs', 'expressive.js', 'expressive.min.js']);
+    if (extras) bundledAPIs(tokens, extras.index, bundled.extrasModules, ['extras.cjs', 'extras.js', 'extras.min.js']);
     const appCSS = bundled.files.get(bundleCSS);
     if (appCSS) stylesheetClasses(tokens, appCSS.toString());
   }
-  const { css, names } = selectedStyles(index, sheet, tokens, include);
+  const includes = ownIncludes(include, [core.index, ...(extras ? [extras.index] : [])]);
+  // Extras first: markup its components build through core (Menubar's menus) adds core tokens.
+  const added = extras && selectedStyles(extras.index, extras.sheet, tokens, includes(extras.index));
+  const { css, names } = selectedStyles(core.index, core.sheet, tokens, includes(core.index));
   console.log(`Scanned ${sources.size} source files. Components: ${names.join(', ')}.`);
-  return { output: outputs(css, bundled?.files ?? []), inputs: new Set([...files, ...(bundled?.inputs ?? [])]) };
+  if (added) console.log(`Extras: ${added.names.join(', ') || 'none'}.`);
+  return { output: outputs(css, added?.css, bundled?.files ?? []), inputs: new Set([...files, ...(bundled?.inputs ?? [])]) };
 }
 
 function sync(out, changes, check) {

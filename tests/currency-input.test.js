@@ -5,7 +5,7 @@
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Expressive, resetBody } from './setup.js';
+import { ExpressiveExtras, resetBody } from './setup.js';
 
 beforeEach(resetBody);
 
@@ -14,7 +14,7 @@ function start(currency, lang = 'de', value = '') {
   document.body.innerHTML = `<form lang="${lang}"><input name="amount" data-currency="${currency}"></form>`;
   const input = document.querySelector('input');
   input.value = value;
-  return Expressive.CurrencyInput.init(input);
+  return ExpressiveExtras.CurrencyInput.init(input);
 }
 
 /** What `text` reads as in a field of `currency` under `lang`. */

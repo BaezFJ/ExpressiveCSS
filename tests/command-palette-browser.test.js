@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { engines } from './browser.js';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -27,7 +27,7 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
 
 for (const [name, engine, test] of engines) {
   test(`${name}: command palette opens on its shortcut, filters, moves with the arrows and runs a command`, { timeout: 30000 }, async (t) => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 900, height: 700 } });
       await page.setContent(markup);
@@ -171,9 +171,9 @@ for (const [name, engine, test] of engines) {
       assert.equal(await isOpen(), true, 'a non-Latin layout opens it from the physical K key');
       // Chromium may ignore Escape on a dialog a synthetic event opened, as
       // it has no user activation; close it directly.
-      await page.evaluate(() => window.Expressive.CommandPalette.getInstance(document.getElementById('palette')).close());
+      await page.evaluate(() => window.ExpressiveExtras.CommandPalette.getInstance(document.getElementById('palette')).close());
 
-      await page.evaluate(() => window.Expressive.CommandPalette.getInstance(document.getElementById('palette')).destroy());
+      await page.evaluate(() => window.ExpressiveExtras.CommandPalette.getInstance(document.getElementById('palette')).destroy());
       assert.equal(await input.getAttribute('role'), null, 'destroy removes the roles it added');
       await page.keyboard.press('Control+k');
       assert.equal(await isOpen(), false, 'destroy removes the shortcut');
@@ -189,11 +189,11 @@ for (const [name, engine, test] of engines) {
 
 for (const [name, engine, test] of engines) {
   test(`${name}: holding the command palette shortcut toggles it once`, { timeout: 30000 }, async () => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
       await page.setContent(markup.replace('</body>', () => `<script>${js}</script></body>`));
-      await page.evaluate(() => { window.palette = Expressive.CommandPalette.init(document.getElementById('palette'), {}); });
+      await page.evaluate(() => { window.palette = ExpressiveExtras.CommandPalette.init(document.getElementById('palette'), {}); });
       await page.keyboard.press('Control+k');
       const taken = await page.evaluate(() => {
         const event = new KeyboardEvent('keydown', { key: 'k', code: 'KeyK', ctrlKey: true, repeat: true, bubbles: true, cancelable: true });

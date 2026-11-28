@@ -14,8 +14,9 @@ or resolution time. We coordinate fixes and public advisories with reporters.
 ## Supported versions
 
 Security fixes target the latest stable release of each package independently:
-`@expressivecss/expressive` and `@expressivecss/mcp-server`. Older releases and
-prereleases have no backport commitment. Upgrade to the current stable release.
+`@expressivecss/expressive`, `@expressivecss/extras` and
+`@expressivecss/mcp-server`. Older releases and prereleases have no backport
+commitment. Upgrade to the current stable release.
 Publish corrections as new versions; do not replace published tags or tarballs.
 
 ## Trust boundaries

@@ -110,8 +110,8 @@ npm run test:packages:docker
 CONTAINER_RUNTIME=podman npm run test:docker
 ```
 
-Package checks install MCP dependencies, run its smoke tests, and validate both
-package tarballs in clean consumers. Nothing is published.
+Package checks install MCP dependencies, run its smoke tests, and validate the
+framework, extras and MCP tarballs in clean consumers. Nothing is published.
 
 ### Maintaining container checks
 

@@ -85,7 +85,7 @@ const S = defineSections([
                     <p class="flow-text">
                         Expressive comes in two forms. Pick the one that fits your
                         preference and experience.
-                        The project is at version <code>0.20.0</code> and still growing, so the usual path is to build
+                        The project is at version <code>0.21.0</code> and still growing, so the usual path is to build
                         from the repository.
                     </p>
                     <div class="row">
@@ -144,6 +144,29 @@ npm install @expressivecss/expressive
                     <Code code={`
 yarn add @expressivecss/expressive
 `} />
+
+                    <h5 id="extras">Additional components</h5>
+                    <p>
+                        Components beyond the Material Design 3 set, listed under Additional components, ship
+                        in a second package, <code>@expressivecss/extras</code>. Install it beside the core
+                        package and load its CSS and JavaScript after core's.
+                    </p>
+                    <Code code={`
+npm install @expressivecss/expressive @expressivecss/extras
+`} />
+                    <Code code={`
+<link rel="stylesheet" href="css/expressive.min.css">
+<link rel="stylesheet" href="css/extras.min.css">
+<script src="js/expressive.min.js"></script>
+<script src="js/extras.min.js"></script>
+`} />
+                    <p>
+                        Upgrading from 0.20? Those components left the core package in 0.21.0 with their markup
+                        unchanged. Add the extras files as above, then reach those classes through the
+                        <code>ExpressiveExtras</code> global instead of <code>Expressive</code>, or import them from
+                        <code>@expressivecss/extras</code>. The
+                        <a href="/CHANGELOG.md">changelog</a> lists every moved name.
+                    </p>
 
                     <p>
                         Using a coding agent? <a href={route("ai")}>AI agents</a> covers the agent skills,
@@ -314,7 +337,9 @@ my-site/
     <Code code={`npm install -D esbuild
 npx expressive-build index.html src --entry src/ui.ts`} />
     <p>Serve <code>public/expressive/css/expressive.css</code> and
-      <code>public/expressive/js/app.js</code> (a module). If the entry imports application CSS,
+      <code>public/expressive/js/app.js</code> (a module), and
+      <code>public/expressive/css/extras.css</code> after it when the application has
+      <code>@expressivecss/extras</code> installed. If the entry imports application CSS,
       load <code>public/expressive/css/app.css</code> after the framework stylesheet. Omit <code>--entry</code>
       for CSS alone, or append <code>--check</code> in a pre-commit hook to detect
       stale files. Use <code>--include</code> for class names supplied at runtime.</p>

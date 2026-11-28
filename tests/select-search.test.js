@@ -1,6 +1,6 @@
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { Expressive, resetBody, window } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, window } from './setup.js';
 
 beforeEach(resetBody);
 
@@ -238,7 +238,7 @@ test('duplicate values retain option identity and value-based change events', ()
 test('TreeSelect reuses search controls around its tree and leaves no extra Menu instance', () => {
   document.body.innerHTML = '<label for="tree">Place</label><select id="tree" data-tree><option value="a">Paris</option></select>';
   const before = Expressive.Menu._menus.length;
-  const instance = Expressive.TreeSelect.init(document.querySelector('select'), { searchable: true });
+  const instance = ExpressiveExtras.TreeSelect.init(document.querySelector('select'), { searchable: true });
   try {
     assert.ok(instance.menuEl.querySelector('input[type="search"]'));
     assert.equal(instance.menuEl.getAttribute('role'), 'dialog');

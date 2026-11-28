@@ -1,8 +1,12 @@
 import { test, describe, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 
-import { Expressive, resetBody } from "./setup.js";
+import { Expressive as Core, ExpressiveExtras, resetBody } from "./setup.js";
 import { AUTO_INIT_FIXTURES } from "./fixtures.js";
+
+// Core's AutoInit also starts the components @expressivecss/extras registers,
+// which live on the extras namespace.
+const Expressive = { ...Core, ...ExpressiveExtras };
 
 test("component init returns an empty array for empty element collections", () => {
   const parent = document.createElement("div");

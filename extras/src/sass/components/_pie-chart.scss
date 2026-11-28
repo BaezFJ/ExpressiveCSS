@@ -1,0 +1,222 @@
+@use "abstracts" as *;
+@use "../abstracts/charts" as *;
+
+// Pie chart. The same <figure>, <figcaption> and <table> as a line chart;
+// PieChart draws the first value column as slices of the whole, clockwise
+// from the top, with a legend of every row, its cell and its share. The
+// plot, tooltip and legend swatches come from chart(); the plot is a square
+// as wide as --md-comp-pie-chart-height.
+//
+// The slices are SVG in a -50 to 50 box with a radius of 46, under a mask
+// whose lines cut the gaps and whose circle, scaled here, cuts the donut's
+// hole. The value labels and the tooltip sit on a slice's middle from the
+// --turn PieChart sets, a fraction of a turn clockwise from the top.
+//
+// Modifiers: .donut cuts a hole and shows a <tfoot> total in it, .values
+// writes each slice's share on it, .labels writes each slice's name
+// outside it with a leader line, .sparkline is a small pie with no
+// legend, tooltip or names.
+//
+// Tokens:
+//   --md-comp-pie-chart-height       240px, the pie's diameter (sparkline 48px)
+//   --md-comp-pie-chart-hole         0.6, the donut hole's share of the diameter
+//   --md-comp-pie-chart-label-width  96px, the room each side of the pie for
+//                                    .labels, at most a quarter of the figure
+//   --md-comp-pie-chart-gap          1.5, the gap between slices in hundredths
+//                                    of the plot's width
+//   --md-comp-pie-chart-color-1..6   primary, tertiary, secondary,
+//                                    on-surface-variant, then primary- and
+//                                    tertiary-container deepened toward
+//                                    on-surface
+//   --md-comp-pie-chart-on-color-1..6  on-primary, on-tertiary, on-secondary,
+//                                      surface, surface, surface; .values text
+
+@include chart(
+  "pie-chart",
+  $colors: 6,
+  $on-colors: true,
+  $round: true,
+  $tooltip: middle,
+  $legend-columns: 4
+);
+
+.pie-chart {
+  --md-comp-pie-chart-hole: 0.6;
+  --md-comp-pie-chart-gap: 1.5;
+  // Where labels and the tooltip sit, as a share of the radius.
+  --pie-chart-label-at: 0.62;
+
+  gap: 16px;
+
+  &.labels {
+    --md-comp-pie-chart-label-width: #{rem(96px)};
+  }
+
+  &.donut {
+    // The middle of the ring.
+    --pie-chart-label-at: calc((1 + var(--md-comp-pie-chart-hole)) / 2);
+  }
+}
+
+.pie-chart-pie {
+  position: absolute;
+  inset: 0;
+
+  > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// The origin of an SVG transform is the box's middle, (0, 0).
+.pie-chart-hole {
+  transform: scale(0);
+}
+
+.pie-chart.donut .pie-chart-hole {
+  transform: scale(var(--md-comp-pie-chart-hole));
+}
+
+.pie-chart-gaps {
+  stroke-width: var(--md-comp-pie-chart-gap);
+}
+
+.pie-chart-slice {
+  fill: var(--pie-chart-color);
+
+  // GROWN in pieChart.ts.
+  &.active {
+    transform: scale(1.06);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform var(--md-sys-motion-duration-short4) var(--md-sys-motion-easing-standard), opacity var(--md-sys-motion-duration-medium4) var(--md-sys-motion-easing-standard);
+
+    @starting-style {
+      opacity: 0;
+      transform: scale(0.8);
+    }
+  }
+}
+
+.pie-chart-values > span,
+.pie-chart-tooltip {
+  --pie-chart-angle: calc(var(--turn, 0) * 1turn);
+
+  position: absolute;
+  left: calc(50% + sin(var(--pie-chart-angle)) * var(--pie-chart-label-at) * 46%);
+  top: calc(50% - cos(var(--pie-chart-angle)) * var(--pie-chart-label-at) * 46%);
+}
+
+.pie-chart-values > span {
+  translate: -50% -50%;
+  color: var(--pie-chart-on-color);
+  @include typescale("label-medium");
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.pie-chart.labels:not(.sparkline) .pie-chart-plot {
+  // A narrow figure keeps at least half its width for the pie.
+  width: min(100% - 2 * min(var(--md-comp-pie-chart-label-width), 25%), var(--md-comp-pie-chart-height));
+  margin-block: 24px;
+}
+
+// One unit of the names' places is 1cqw, a hundredth of the pie, so the
+// leader lines can measure from it as well as the names.
+.pie-chart.labels .pie-chart-pie {
+  container-type: size;
+}
+
+// PieChart sets each name's --pie-chart-name-top, pushed apart from its
+// neighbours.
+.pie-chart-names > span {
+  // The middle of the name's near edge, 8px past the grown active slice.
+  --pie-chart-name-at: calc(50cqw + 8px);
+  --pie-chart-name-step: 1.25lh;
+  --pie-chart-angle: calc(var(--turn, 0) * 1turn);
+  // 1 for a name running rightwards, -1 for one running leftwards.
+  --pie-chart-side: 1;
+
+  position: absolute;
+  left: calc(50cqw + sin(var(--pie-chart-angle)) * var(--pie-chart-name-at));
+  top: var(--pie-chart-name-top, 50cqw);
+  translate: 0 -50%;
+  color: var(--md-sys-color-on-surface-variant);
+  @include typescale("label-medium");
+  white-space: nowrap;
+
+  &.end {
+    --pie-chart-side: -1;
+
+    translate: -100% -50%;
+  }
+
+  // No wider than the room beside the pie, which is at least half the pie's
+  // width when the plot rule above caps it at a quarter of the figure.
+  > span {
+    display: block;
+    max-width: calc(min(var(--md-comp-pie-chart-label-width), 50cqw) - 8px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // The leader line runs from 4px before the name to the slice's edge on its
+  // middle, so a name pushed up or down still points at its slice. The drop
+  // is how far the name sits below that edge; it adds the top because
+  // Chromium gets x - max(…) wrong when max() has one argument.
+  &::before {
+    --pie-chart-dx: calc(sin(var(--pie-chart-angle)) * (46cqw - var(--pie-chart-name-at)) + var(--pie-chart-side) * 4px);
+    --pie-chart-drop: calc(var(--pie-chart-name-top, 50cqw) + cos(var(--pie-chart-angle)) * 46cqw - 50cqw);
+
+    content: "";
+    position: absolute;
+    top: calc(50% - 0.5px);
+    left: -4px;
+    width: hypot(var(--pie-chart-dx), var(--pie-chart-drop));
+    height: 1px;
+    transform-origin: 0 50%;
+    rotate: calc(-1 * atan2(var(--pie-chart-drop), var(--pie-chart-dx)));
+    background: var(--md-sys-color-outline-variant);
+  }
+
+  &.end::before {
+    left: calc(100% + 4px);
+  }
+}
+
+.pie-chart-total {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  > * {
+    max-width: calc(80% * var(--md-comp-pie-chart-hole));
+    overflow-wrap: anywhere;
+  }
+
+  > strong {
+    color: var(--md-sys-color-on-surface);
+    @include typescale("headline-small");
+  }
+
+  > span {
+    color: var(--md-sys-color-on-surface-variant);
+    @include typescale("body-small");
+  }
+}
+
+.pie-chart.donut .pie-chart-total {
+  display: flex;
+}
+
+@media (forced-colors: active) {
+  .pie-chart-pie {
+    forced-color-adjust: none;
+  }
+}

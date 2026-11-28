@@ -6,7 +6,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { engines } from './browser.js';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -27,7 +27,7 @@ const markup = `
 
 for (const [name, engine, test] of engines) {
   test(`${name}: Menubar, Cards and Tooltip behave the same in light DOM and an open shadow root`, { timeout: 30000 }, async (t) => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 900, height: 700 } });
       // The shadow host is positioned and offset, so a tooltip placed in
@@ -45,7 +45,7 @@ for (const [name, engine, test] of engines) {
         const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
         const run = async (root) => {
-          const bar = Expressive.Menubar.init(root.querySelector('.menubar'), { inDuration: 0, outDuration: 0 });
+          const bar = ExpressiveExtras.Menubar.init(root.querySelector('.menubar'), { inDuration: 0, outDuration: 0 });
           const [file, edit] = root.querySelectorAll('.menu-trigger');
           Expressive.Menu.getInstance(file).open();
           await wait(50);
