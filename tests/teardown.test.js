@@ -12,7 +12,7 @@
 import { test, describe, beforeEach, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Expressive, resetBody, window } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, window } from './setup.js';
 
 const capture = (opts) => (typeof opts === 'object' && opts !== null ? !!opts.capture : !!opts);
 
@@ -248,7 +248,7 @@ describe('destroy() releases shared listeners', () => {
       for (const [type, name] of [['line', 'LineChart'], ['heatmap', 'HeatmapChart'], ['treemap', 'TreemapChart']]) {
         observers.length = 0;
         document.body.innerHTML = `<figure class="${type}-chart"><table><thead><tr><th>Day</th><th>A</th><th>B</th></tr></thead><tbody><tr><th>Mon</th><td>1</td><td>2</td></tr><tr><th>Tue</th><td>3</td><td>4</td></tr></tbody></table></figure>`;
-        const instance = Expressive[name].init(document.querySelector('figure'));
+        const instance = ExpressiveExtras[name].init(document.querySelector('figure'));
         try {
           assert.ok(observers.length > 0, `${name} observed nothing`);
           document.querySelector('tbody').replaceChildren();

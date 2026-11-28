@@ -1,4 +1,4 @@
-import { numberValue } from '../core/utils';
+import { numberValue } from '@expressivecss/expressive/core';
 import { LineChart, LineChartOptions, Series, hasClass } from './lineChart';
 
 export type ColumnChartOptions = LineChartOptions;

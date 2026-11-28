@@ -1,4 +1,4 @@
-import { svgNode } from '../core/utils';
+import { svgNode } from '@expressivecss/expressive/core';
 import { LineChart, LineChartOptions, ROW_COLORS, cellValue, linearKey, morph, pace, plotSvg, seriesColor, swapActive, textSpan as span } from './lineChart';
 
 export type SankeyChartOptions = LineChartOptions;

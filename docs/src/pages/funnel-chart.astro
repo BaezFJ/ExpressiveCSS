@@ -105,7 +105,7 @@ const steps: [string, number, string][] = [
           for <code>watch</code> and the shared methods.
         </p>
 <Code code={`
-const chart = Expressive.FunnelChart.init(document.querySelector('.funnel-chart'));
+const chart = ExpressiveExtras.FunnelChart.init(document.querySelector('.funnel-chart'));
 chart.show(2);   // highlight the third row; -1 hides the tooltip
 chart.update();  // redraw from the table; focus and the highlighted row stay
 chart.destroy(); // remove the drawing and show the table again

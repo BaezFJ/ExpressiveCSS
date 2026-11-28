@@ -102,7 +102,7 @@ for (const [engine, browserType, browserTest] of engines) {
           table: getComputedStyle(el.querySelector('table')).position,
           plot: [plot.tabIndex, plot.getAttribute('aria-label'), plot.getAttribute('aria-roledescription')],
           hidden: el.querySelector('.treemap-chart-boxes').getAttribute('aria-hidden'),
-          instance: [!!Expressive.TreemapChart.getInstance(el), !!Expressive.LineChart.getInstance(el)],
+          instance: [!!ExpressiveExtras.TreemapChart.getInstance(el), !!ExpressiveExtras.LineChart.getInstance(el)],
         };
       });
       assert.equal(ltr.table, 'absolute', 'the table is visually hidden');
@@ -269,7 +269,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.keyboard.press('ArrowRight');
       const after = await page.locator('#ltr').evaluate((el) => {
         el.querySelectorAll('tbody td')[1].textContent = '600';
-        Expressive.TreemapChart.getInstance(el).update();
+        ExpressiveExtras.TreemapChart.getInstance(el).update();
         return {
           focused: document.activeElement === el.querySelector('.treemap-chart-plot'),
           animations: el.getAnimations({ subtree: true }).length,
@@ -299,7 +299,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.evaluate(() => Expressive.AutoInit());
       await page.locator('#ltr').evaluate((el) => {
         el.querySelector('tbody').replaceChildren();
-        const chart = Expressive.TreemapChart.getInstance(el);
+        const chart = ExpressiveExtras.TreemapChart.getInstance(el);
         chart.update();
         // A chart with no rows has nothing to show.
         chart.show(0);

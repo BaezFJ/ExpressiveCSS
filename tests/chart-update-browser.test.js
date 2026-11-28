@@ -39,7 +39,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.keyboard.press('ArrowRight');
 
       const after = await page.locator('#line').evaluate((el) => {
-        const chart = Expressive.LineChart.getInstance(el);
+        const chart = ExpressiveExtras.LineChart.getInstance(el);
         const old = el.querySelector('.line-chart-plot');
         el.querySelector('tbody tr:nth-child(2) td').textContent = '25';
         el.querySelector('tbody').insertAdjacentHTML('beforeend', '<tr><th>Apr</th><td>40</td></tr>');
@@ -60,11 +60,11 @@ for (const [engine, browserType, browserTest] of engines) {
       });
 
       await page.keyboard.press('End');
-      assert.equal(await page.locator('#line').evaluate((el) => Expressive.LineChart.getInstance(el).activeIndex), 3,
+      assert.equal(await page.locator('#line').evaluate((el) => ExpressiveExtras.LineChart.getInstance(el).activeIndex), 3,
         'the new plot answers the keys');
 
       const shrunk = await page.locator('#line').evaluate((el) => {
-        const chart = Expressive.LineChart.getInstance(el);
+        const chart = ExpressiveExtras.LineChart.getInstance(el);
         el.querySelectorAll('tbody tr:nth-child(n+3)').forEach((tr) => tr.remove());
         chart.update();
         return [chart.activeIndex, el.querySelector('.line-chart-tooltip strong').textContent];
@@ -85,11 +85,11 @@ for (const [engine, browserType, browserTest] of engines) {
         const empty = document.getElementById('empty');
         const before = empty.querySelector('.column-chart-plot');
         empty.querySelector('tbody').innerHTML = '<tr><th>Jan</th><td>5</td></tr>';
-        Expressive.ColumnChart.getInstance(empty).update();
+        ExpressiveExtras.ColumnChart.getInstance(empty).update();
         const plot = empty.querySelector('.column-chart-plot');
 
         const pie = document.getElementById('pie');
-        const instance = Expressive.PieChart.getInstance(pie);
+        const instance = ExpressiveExtras.PieChart.getInstance(pie);
         pie.querySelector('tbody').insertAdjacentHTML('beforeend', '<tr><th>C</th><td>3</td></tr>');
         instance.update();
         const slices = pie.querySelectorAll('.pie-chart-slice').length;
@@ -113,7 +113,7 @@ for (const [engine, browserType, browserTest] of engines) {
         document.body.append(host);
         const root = host.attachShadow({ mode: 'open' });
         root.innerHTML = markup;
-        const chart = Expressive.LineChart.init(root.querySelector('.line-chart'));
+        const chart = ExpressiveExtras.LineChart.init(root.querySelector('.line-chart'));
         root.querySelector('.line-chart-plot').focus();
         chart.update();
         return root.activeElement === root.querySelector('.line-chart-plot');
@@ -135,7 +135,7 @@ for (const [engine, browserType, browserTest] of engines) {
         scroll().scrollLeft = 200;
         const left = scroll().scrollLeft;
         el.querySelector('tbody td').textContent = '9';
-        Expressive.HeatmapChart.getInstance(el).update();
+        ExpressiveExtras.HeatmapChart.getInstance(el).update();
         return [left, scroll().scrollLeft];
       });
       assert.ok(before > 0, 'the grid scrolls');

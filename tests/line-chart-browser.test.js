@@ -83,7 +83,7 @@ for (const [engine, browserType, browserTest] of engines) {
       ]);
       assert.deepEqual(spark, [false, 'none', '48px']);
 
-      await page.evaluate(() => Expressive.LineChart.getInstance(document.querySelector('#plans')).destroy());
+      await page.evaluate(() => ExpressiveExtras.LineChart.getInstance(document.querySelector('#plans')).destroy());
       assert.deepEqual(await page.locator('#plans').evaluate((el) => [
         el.querySelectorAll('.line-chart-plot, .line-chart-labels, .line-chart-legend').length,
         getComputedStyle(el.querySelector('table')).clipPath,
@@ -201,18 +201,18 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.match(await page.locator('#rtl .line-chart-tooltip').innerText(), /^Feb/);
 
       // Only a single number counts; anything else is a gap.
-      assert.deepEqual(await page.evaluate(() => Expressive.LineChart.getInstance(document.querySelector('#strict')).series[0].values),
+      assert.deepEqual(await page.evaluate(() => ExpressiveExtras.LineChart.getInstance(document.querySelector('#strict')).series[0].values),
         [null, null, null, null, -1200.5, 12, null, null, null, 1000]);
 
       assert.equal(await page.evaluate(() => {
-        const chart = Expressive.LineChart.getInstance(document.querySelector('#empty'));
+        const chart = ExpressiveExtras.LineChart.getInstance(document.querySelector('#empty'));
         chart.show(0);
         return [chart.activeIndex, document.querySelectorAll('#empty .line-chart-plot').length].join();
       }), '-1,0', 'show() on a chart without data does nothing');
 
       // Showing the same row again leaves the live tooltip alone.
       assert.equal(await page.evaluate(() => {
-        const chart = Expressive.LineChart.getInstance(document.querySelector('#pair'));
+        const chart = ExpressiveExtras.LineChart.getInstance(document.querySelector('#pair'));
         chart.show(1);
         let mutations = 0;
         new MutationObserver((records) => { mutations += records.length; })
@@ -223,7 +223,7 @@ for (const [engine, browserType, browserTest] of engines) {
 
       // Each stacked series sits on the total below it and fills down to it.
       const stacked = await page.locator('#stacked').evaluate((el) => {
-        const chart = Expressive.LineChart.getInstance(el);
+        const chart = ExpressiveExtras.LineChart.getInstance(el);
         chart.show(1);
         return {
           areas: [...el.querySelectorAll('.line-chart-area')].map((area) => [getComputedStyle(area).display, area.getAttribute('d')]),
@@ -240,14 +240,14 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.equal(stacked.tooltip, 'FebA3B4', 'the tooltip keeps each cell, not the total');
 
       const gap = await page.locator('#stacked-gap').evaluate((el) => {
-        const chart = Expressive.LineChart.getInstance(el);
+        const chart = ExpressiveExtras.LineChart.getInstance(el);
         chart.show(1);
         const atGap = [el.querySelectorAll('.line-chart-cursor > span').length, el.querySelector('.line-chart-tooltip').textContent];
         chart.show(2);
         const dots = [...el.querySelectorAll('.line-chart-cursor > span')].map((dot) => parseFloat(dot.style.top));
         const runs = el.querySelectorAll('.line-chart-line')[1].getAttribute('d').match(/M/g).length;
         // A y axis above zero clips the bottom band's base to the plot.
-        const ys = [...Expressive.LineChart.init(el, { min: 1 }).el.querySelectorAll('.line-chart-area')]
+        const ys = [...ExpressiveExtras.LineChart.init(el, { min: 1 }).el.querySelectorAll('.line-chart-area')]
           .flatMap((area) => [...area.getAttribute('d').matchAll(/,(-?[\d.]+)/g)].map((match) => Number(match[1])));
         return { atGap, dots, runs, lowest: Math.max(...ys) };
       });

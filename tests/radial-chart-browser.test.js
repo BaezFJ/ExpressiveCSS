@@ -57,7 +57,7 @@ for (const [engine, browserType, browserTest] of engines) {
           legend: [...el.querySelectorAll('.radial-chart-legend li')].map((li) =>
             [li.dataset.series, ...[...li.children].map((span) => span.textContent)]),
           labels: el.querySelectorAll('.radial-chart-labels, .radial-chart-total').length,
-          instance: [!!Expressive.RadialChart.getInstance(el), !!Expressive.LineChart.getInstance(el)],
+          instance: [!!ExpressiveExtras.RadialChart.getInstance(el), !!ExpressiveExtras.LineChart.getInstance(el)],
         };
       });
       assert.equal(goals.table, 'absolute', 'the table is visually hidden');
@@ -132,7 +132,7 @@ for (const [engine, browserType, browserTest] of engines) {
         el.querySelector('.radial-chart-plot').offsetWidth,
       ]), [false, 48], 'a sparkline keeps its size as a flex item');
 
-      await page.evaluate(() => Expressive.RadialChart.getInstance(document.querySelector('#goals')).destroy());
+      await page.evaluate(() => ExpressiveExtras.RadialChart.getInstance(document.querySelector('#goals')).destroy());
       assert.deepEqual(await page.locator('#goals').evaluate((el) => [
         el.querySelectorAll('.radial-chart-plot, .radial-chart-legend').length,
         getComputedStyle(el.querySelector('table')).clipPath,
@@ -215,7 +215,7 @@ for (const [engine, browserType, browserTest] of engines) {
         document.body.append(wrap);
         const el = wrap.firstElementChild;
         el.querySelectorAll('.radial-chart-plot, .radial-chart-legend').forEach((node) => node.remove());
-        const chart = Expressive.RadialChart.init(el);
+        const chart = ExpressiveExtras.RadialChart.init(el);
         chart.show(0);
         el.querySelector('.radial-chart-plot').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
         return [el.querySelector('.radial-chart-ring').getAttribute('transform'), chart.activeIndex];
@@ -334,7 +334,7 @@ for (const [engine, browserType, browserTest] of engines) {
 
       // A full ring's tooltip sits at nine o'clock, where the fill ends.
       const tip = await page.locator('#named').evaluate((el) => {
-        Expressive.RadialChart.getInstance(el).show(0);
+        ExpressiveExtras.RadialChart.getInstance(el).show(0);
         const tooltip = el.querySelector('.radial-chart-tooltip');
         const r = parseFloat(el.querySelector('.radial-chart-ring').getAttribute('r'));
         return [Math.abs(parseFloat(tooltip.style.left) - (50 - r)) < 0.01, Math.abs(parseFloat(tooltip.style.top) - 50) < 0.01];
@@ -342,7 +342,7 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.deepEqual(tip, [true, true], 'the tooltip follows the three-quarter fill');
 
       // Across the whole of a name, the pointer picks that name's ring.
-      await page.evaluate(() => Expressive.RadialChart.getInstance(document.querySelector('#named')).show(-1));
+      await page.evaluate(() => ExpressiveExtras.RadialChart.getInstance(document.querySelector('#named')).show(-1));
       const name = await page.locator('#named .radial-chart-names > span').nth(1).boundingBox();
       for (const share of [0.05, 0.5, 0.95]) {
         await page.mouse.move(name.x + name.width * share, name.y + name.height / 2);
@@ -412,7 +412,7 @@ for (const [engine, browserType, browserTest] of engines) {
             const width = parseFloat(rings[0].getAttribute('stroke-width'));
             return Math.abs(d + g - (2 * Math.PI * r) / 4) < 0.01 && Math.abs(g - width - 2 * (width / 8)) < 0.01;
           })(),
-          tooltip: (Expressive.RadialChart.getInstance(el).show(0), ['left', 'top'].map((side) => parseFloat(el.querySelector('.radial-chart-tooltip').style[side]))),
+          tooltip: (ExpressiveExtras.RadialChart.getInstance(el).show(0), ['left', 'top'].map((side) => parseFloat(el.querySelector('.radial-chart-tooltip').style[side]))),
           r: parseFloat(rings[0].getAttribute('r')),
         };
       });
@@ -447,7 +447,7 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.deepEqual(rings.series, ['1', '3'], 'an empty ring has no sweep');
       assert.deepEqual(rings.turns, [['0turn', '0.5turn'], ['0turn', '0.25turn']], 'full rings sweep from the top as far as their fill');
       const faded = await page.locator('#rings').evaluate((el) => {
-        Expressive.RadialChart.getInstance(el).show(0);
+        ExpressiveExtras.RadialChart.getInstance(el).show(0);
         return [...el.querySelectorAll('.radial-chart-sweep')].map((sweep) => getComputedStyle(sweep).opacity);
       });
       assert.deepEqual(faded, ['1', '0.38'], 'the sweeps beside the shown ring fade with it');

@@ -47,14 +47,18 @@ describe('documentation coverage', () => {
 
   test('every public Sass function and mixin has a reference entry', () => {
     const source = sourceFor(PAGES.find(page => page.id === 'sass'));
-    const dir = new URL('../src/sass/abstracts/', import.meta.url);
+    // Extras abstracts are documented in the page's extras section.
+    const extrasSection = source.slice(source.indexOf('<Section {...S.extras}>'));
     const missing = [];
-    for (const file of readdirSync(dir).filter(file => file.endsWith('.scss'))) {
-      for (const [, name] of read(`src/sass/abstracts/${file}`).matchAll(/^@(?:function|mixin)\s+([\w-]+)/gm)) {
-        if (name.startsWith('_') || name.startsWith('-')) continue;
-        if (!source.includes(`${name}(`)) missing.push(`${file}: ${name}`);
+    for (const [root, text] of [['src/sass/abstracts', source], ['extras/src/sass/abstracts', extrasSection]]) {
+      for (const file of readdirSync(new URL(`../${root}/`, import.meta.url)).filter(file => file.endsWith('.scss'))) {
+        for (const [, name] of read(`${root}/${file}`).matchAll(/^@(?:function|mixin)\s+([\w-]+)/gm)) {
+          if (name.startsWith('_') || name.startsWith('-')) continue;
+          if (!text.includes(`${name}(`)) missing.push(`${root}/${file}: ${name}`);
+        }
       }
     }
+    assert.ok(source.includes('<Section {...S.extras}>'), 'the Sass API page has no extras section');
     assert.deepEqual(missing, []);
   });
 

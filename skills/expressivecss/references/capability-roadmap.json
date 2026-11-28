@@ -2014,967 +2014,6 @@
       ]
     },
     {
-      "slug": "line-chart",
-      "title": "Line chart",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-06",
-      "scope": "Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, round y axis labels with .axis, a legend, and a pointer and keyboard tooltip.",
-      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-06",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the data available as text, name the chart, keep series distinguishable and let a keyboard reach every value the pointer can."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified. The axis modifier provides round value labels; full visual parity remains unassessed."
-      ],
-      "supportSource": "llm.md#line-chart",
-      "supportReviewedOn": "2026-10-06",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
-        },
-        {
-          "path": "src/sass/components/_line-chart.scss",
-          "sha256": "cf8029ceb68d9abb123876fbccc2f83567aaf373354edeab57add74be375c957"
-        },
-        {
-          "path": "src/ts/components/lineChart.ts",
-          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified.",
-          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; test enlarged text."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/line-chart-browser.test.js",
-          "name": "chromium: line chart draws its table, keeps it readable and restores it on destroy",
-          "scope": "Hidden table in the accessibility tree, aria-hidden SVG, series classes and colors, labels, legend, the dashed series, no curve overshoot, gaps, data-min, data-max, data-value, a typographic minus, the area modifier, the sparkline size and focus, and destroy restoring the table.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/line-chart-browser.test.js",
-          "name": "chromium: line chart tooltip follows the pointer and the arrow keys",
-          "scope": "Pointer position to row, tooltip text and live region, cursor points, flipping right of centre, hiding on leave, focus, arrows, Home, End and Escape. No spoken-output assertion.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/line-chart-browser.test.js",
-          "name": "chromium: line chart handles cards, headerless tables, RTL, strict values and forced colors",
-          "scope": "A chart in a sized card and in a primary action keeps its own layout and caption, a header row without <thead> is not data, the RTL axis matches its labels and arrow keys, ambiguous cell text is a gap, show() is safe without data and skips a repeated row, stacked bands fill down to the series below or the plot bottom with cursor points on the totals and each cell in the tooltip, a stacked gap breaks the series above it, the stacked range keeps 10% headroom above zero, and swatches keep their series colors in forced colors.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/chart-axis-browser.test.js",
-          "name": "chromium: .axis labels chart scales at round values on their grid lines",
-          "scope": "Labels widen the scale to round values, repeat the cells' currency sign, sit beside the plot with a grid line each, and leave author-set ends in place. No rendering comparison.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "needs-rerun",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "column-chart",
-      "title": "Column chart",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-07",
-      "scope": "Columns drawn from zero from a figure's data table, grouped by row or stacked, with fade, track and sparkline modifiers, negative values, gaps, a fixed y range, x labels, round y axis labels with .axis, a legend, and a pointer and keyboard tooltip with a highlight band.",
-      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-07",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the data available as text, name the chart, start columns at zero, keep series distinguishable and let a keyboard reach every value the pointer can."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. The axis modifier provides round value labels and range draws low-to-high columns; horizontal bars use the bar chart."
-      ],
-      "supportSource": "llm.md#column-chart",
-      "supportReviewedOn": "2026-10-07",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
-        },
-        {
-          "path": "src/sass/components/_column-chart.scss",
-          "sha256": "a8434058d5f4a486061317f871d4cabc433934d8127f9dc216bb47b40b0dbee6"
-        },
-        {
-          "path": "src/ts/components/columnChart.ts",
-          "sha256": "3c8ad721e3abc034c763870081d87a2df0aaf2470d212f03c51086e0ee5deb7d"
-        },
-        {
-          "path": "src/ts/components/lineChart.ts",
-          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
-          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/column-chart-browser.test.js",
-          "name": "chromium: column chart draws grouped, stacked and negative columns from its table",
-          "scope": "Hidden table in the accessibility tree, the named plot and its role description, labels, legend, series classes, separate instances from line charts, grouped column geometry with an empty slot for a gap, stacked segments on the total below with only the top segment rounded, a gap leaving the segments above out, negative columns from a centred zero, data-min above zero, the sparkline size and focus, and destroy restoring the table.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/column-chart-browser.test.js",
-          "name": "chromium: column chart tooltip and band follow the pointer and the arrow keys",
-          "scope": "Pointer position to row, tooltip text without empty cells, no cursor points, the band's width and position, hiding on leave, focus, End and Escape, and the first row on the right in RTL. No spoken-output assertion.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/chart-axis-browser.test.js",
-          "name": "chromium: .axis labels chart scales at round values on their grid lines",
-          "scope": "Shares the line chart's axis code; the line, mixed and bar cases cover it. No column-specific rendering comparison.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "needs-rerun",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "bar-chart",
-      "title": "Bar chart",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-07",
-      "scope": "Horizontal bars drawn from zero from a figure's data table, grouped by row or stacked, with split, track, values and sparkline modifiers, negative values, gaps, a fixed value range, row labels, round value axis labels with .axis, a legend, and a pointer and keyboard tooltip with a highlight band.",
-      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the bars and their values are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-07",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the data available as text, name the chart, start bars at zero, keep series distinguishable and let a keyboard reach every value the pointer can."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Drawing, the hidden table, grouped, stacked and split geometry, values, gaps, negative values, the value range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no value axis labels."
-      ],
-      "supportSource": "llm.md#bar-chart",
-      "supportReviewedOn": "2026-10-07",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
-        },
-        {
-          "path": "src/sass/components/_bar-chart.scss",
-          "sha256": "f819b1e6a9106a7999cc0248e92accdf22e7790d4ea7d66bc1131a4d9602712a"
-        },
-        {
-          "path": "src/ts/components/barChart.ts",
-          "sha256": "0830bb0f5cb198ceff231e622f4ad296efc379ef75c47e8ad826dd336f2e922a"
-        },
-        {
-          "path": "src/ts/components/columnChart.ts",
-          "sha256": "3c8ad721e3abc034c763870081d87a2df0aaf2470d212f03c51086e0ee5deb7d"
-        },
-        {
-          "path": "src/ts/components/lineChart.ts",
-          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Drawing, the hidden table, grouped, stacked and split geometry, values, gaps, negative values, the value range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
-          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/bar-chart-browser.test.js",
-          "name": "chromium: bar chart draws grouped, stacked and negative bars from its table",
-          "scope": "Hidden table in the accessibility tree, the named plot and its role description, row labels beside the plot, legend, separate instances from column charts, plot height from the rows, grouped and stacked bar geometry read across the plot, split segments, values text inside and past short bars and clipped to stacked segments, split gaps only at joints, the grid cleared in forced colors, negative bars from a centred zero, RTL bars growing leftwards from a dir attribute or CSS direction, the sparkline layout and focus, and destroy restoring the table.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/bar-chart-browser.test.js",
-          "name": "chromium: bar chart tooltip and band follow the pointer and the up and down arrows",
-          "scope": "Pointer height to row, tooltip text, the band's height and position, flipping above the row in the lower half, hiding on leave, focus, arrows, End and Escape, the first row at the top in RTL, and a touch tap showing the tapped row in bar and column charts, kept on lift and hidden on pointer cancel. No spoken-output assertion.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/chart-axis-browser.test.js",
-          "name": "chromium: .axis labels chart scales at round values on their grid lines",
-          "scope": "Labels sit under the plot at round values from zero, mirrored in RTL. No rendering comparison.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "needs-rerun",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "pie-chart",
-      "title": "Pie chart",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-07",
-      "scope": "Slices drawn clockwise from the top from a figure's data table, with a legend of each row's cell and share, donut, values and sparkline modifiers, a <tfoot> total in the donut hole, labels with each slice's name outside it, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the slice.",
-      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the slices, values, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-07",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the data available as text, name the chart, keep slices distinguishable and their shares readable, and let a keyboard reach every slice the pointer can."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names and their leader lines, data-other grouping, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values have no slice. The .labels names only move up or down their side, so many thin slices near the top or bottom can run into the caption or legend unless data-other groups them."
-      ],
-      "supportSource": "llm.md#pie-chart",
-      "supportReviewedOn": "2026-10-07",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
-        },
-        {
-          "path": "src/sass/components/_pie-chart.scss",
-          "sha256": "e8af880485cebacccd8a23b7387f675cf1f54e58e913bc7314f9fe41b10bd690"
-        },
-        {
-          "path": "src/ts/components/lineChart.ts",
-          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
-        },
-        {
-          "path": "src/ts/components/pieChart.ts",
-          "sha256": "d346e4b9b82814107f71872643a627971a249474de46cbc1f5bf4e4a5282811f"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names and their leader lines, data-other grouping, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
-          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-        },
-        {
-          "kind": "feature",
-          "description": "Rows past six reuse the colors, and .labels names only move up or down their side, so many thin slices at the top or bottom push names into the caption or legend unless data-other groups them.",
-          "nextStep": "Set data-other on pies with many small parts; lay names out in two dimensions if grouped pies still crowd."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/pie-chart-browser.test.js",
-          "name": "chromium: pie chart draws slices, a legend and a donut total from its table",
-          "scope": "Hidden table in the accessibility tree, the named plot and its role description, the square plot, slice paths and colors, a seventh color avoiding the first, gap lines, a whole-circle slice, zero rows kept in the legend without a slice, legend cells and shares, separate instances from line charts, the donut hole and <tfoot> total, values only on slices of 5% or more, the sparkline size and focus, and destroy restoring the table.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/pie-chart-browser.test.js",
-          "name": "chromium: pie chart tooltip follows the pointer round the pie and the arrow keys",
-          "scope": "Pointer angle to slice, the active slice, tooltip text with the share and further columns, swatches in the slice color, opening leftwards on the right half, hiding off the pie, focus, all four arrows, wrapping past either end, End and Escape, and clockwise slices and arrows in RTL. No spoken-output assertion.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/pie-chart-browser.test.js",
-          "name": "chromium: pie chart .labels writes each slice's name outside it",
-          "scope": "A name for every drawn slice in its color and none for a zero row, every name outside the grown pie, right-half names running rightwards and left-half names leftwards, four thin neighbouring slices pushed apart without overlap, names either side of the middle line kept apart, a 160px figure keeping half its width for the pie with the names inside it, the names aria-hidden, and none on a sparkline. No rendering comparison.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "needs-rerun",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "heatmap-chart",
-      "title": "Heatmap chart",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-07",
-      "scope": "Every body cell of a figure's data table drawn as a shaded grid cell, with row headers beside the grid, column headers below, a scale naming the lowest and highest cells, values, data-label short or hidden labels, data-min and data-max, gaps, and a pointer and keyboard tooltip that moves cell by cell.",
-      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, labels and scale are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-07",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the data available as text, name the chart, keep values readable without telling shades apart, and let a keyboard reach every cell the pointer can."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified."
-      ],
-      "supportSource": "llm.md#heatmap-chart",
-      "supportReviewedOn": "2026-10-07",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
-        },
-        {
-          "path": "src/sass/components/_heatmap-chart.scss",
-          "sha256": "e6c9b7e74463c09ce71d7406e07303ae6e78bd2f44e69f0031b83a337ed8ee11"
-        },
-        {
-          "path": "src/ts/components/heatmapChart.ts",
-          "sha256": "c645df4cbb79baaacbe139fff85610cc033b2cec5091c465160294a634c4b997"
-        },
-        {
-          "path": "src/ts/components/lineChart.ts",
-          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified.",
-          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/heatmap-chart-browser.test.js",
-          "name": "chromium: heatmap chart draws a shaded grid and a scale from its table",
-          "scope": "Hidden table in the accessibility tree, the named plot and its role description, aria-hidden grid and scale, cell levels and fills, gaps, the row height, row and column labels, empty and running data-labels, the scale ends, data-min and data-max clamping, values, text that takes the higher-contrast of black and white on saturated and near-threshold colors, the legend over a fixed scale, long row labels capped at 40% of the width, no page overflow from a wide table, a table of gaps left undrawn, separate instances from line charts, and destroy restoring the table.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/heatmap-chart-browser.test.js",
-          "name": "chromium: heatmap chart tooltip follows the pointer and the arrow keys round the grid",
-          "scope": "Pointer to cell by position, the space between cells, a touch drag that keeps its first target, the active cell, tooltip text for cells and gaps, the swatch shade and the outlined gap swatch, a press on a label focusing without a tooltip, opening leftwards on the right half, hiding off the cells, focus, all four arrows stopping at the edges, Home, End and Escape, Escape left uncancelled once the tooltip is hidden, and right-to-left columns with swapped arrows and scale. No spoken-output assertion.",
-          "state": "stale"
-        }
-      ],
-      "browserEvidence": "needs-rerun",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "radar-chart",
-      "title": "Radar chart",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-07",
-      "scope": "Spokes drawn clockwise from the top from a figure's data table, one shape per series from zero in the middle to the scale's top at the rim, row labels past each spoke, a legend for several series, area, points, dashed and sparkline modifiers, data-min and data-max, round labelled rings with .axis, and a pointer and keyboard tooltip with a cursor spoke.",
-      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, shapes, labels and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-07",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the data available as text, name the chart, keep series distinguishable and every spoke labelled, and let a keyboard reach every row the pointer can."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. A gap breaks the outline; there are no ring value labels."
-      ],
-      "supportSource": "llm.md#radar-chart",
-      "supportReviewedOn": "2026-10-07",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
-        },
-        {
-          "path": "src/sass/components/_radar-chart.scss",
-          "sha256": "32e7d3cc1886b1f396244cf102f2537c9e57c096909f9dd4990fcde046f20ab7"
-        },
-        {
-          "path": "src/ts/components/lineChart.ts",
-          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
-        },
-        {
-          "path": "src/ts/components/radarChart.ts",
-          "sha256": "ee6c818e8bc8ad11f06d4419e3c45234c2de7cdfaf5eca103b93a1c372d7ba0d"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
-          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-        },
-        {
-          "kind": "feature",
-          "description": "Series past four reuse the colors.",
-          "nextStep": "Keep to three series, or compare more in a line or bar chart."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/radar-chart-browser.test.js",
-          "name": "chromium: radar chart draws a grid, shapes, labels and a legend from its table",
-          "scope": "Hidden table in the accessibility tree, the named plot and its role description, the square plot, four rings and spokes, shape geometry from zero to data-max with a joined gap and a clamped value, series colors and the dashed class, points, the area fill, labels on their spokes, the legend, separate instances from line charts, no fill, points or legend by default, the sparkline size, focus and hidden labels, and destroy restoring the table.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/radar-chart-browser.test.js",
-          "name": "chromium: radar chart tooltip follows the pointer round the spokes and the arrow keys",
-          "scope": "Nearest spoke by pointer angle inside and past the rim, tooltip text without gaps, opening leftwards on the right half, the cursor spoke and its points, focus, all four arrows, wrapping past either end, End and Escape, and clockwise spokes and arrows in RTL. No spoken-output assertion.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/chart-axis-browser.test.js",
-          "name": "chromium: .axis labels chart scales at round values on their grid lines",
-          "scope": "Rings and labels fall at round values with zero unlabelled. No rendering comparison.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "needs-rerun",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "radial-chart",
-      "title": "Radial chart",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-07",
-      "scope": "Rings drawn clockwise from the top from a figure's data table as a share of data-max, with tracks, a legend of each row's cell for more than one row, gauge, labels and sparkline modifiers, a <tfoot> total in the middle, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the ring.",
-      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rings, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-07",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the data available as text, name the chart, keep rings distinguishable and their values readable, and let a keyboard reach every ring the pointer can."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, segments, gradient fills, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values leave only the track. The .labels names can run into a crowded middle total."
-      ],
-      "supportSource": "llm.md#radial-chart",
-      "supportReviewedOn": "2026-10-07",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
-        },
-        {
-          "path": "src/sass/components/_radial-chart.scss",
-          "sha256": "7bbf15655da199f7ea4c87245dd0bc644fa36f5fbc12fbde959cac940347cd18"
-        },
-        {
-          "path": "src/ts/components/lineChart.ts",
-          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
-        },
-        {
-          "path": "src/ts/components/radialChart.ts",
-          "sha256": "2d6acf36785432d8c8ad32adc3aabe0441ad41efe7f14e78c707b1077b7e548e"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, segments, gradient fills, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
-          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-        },
-        {
-          "kind": "feature",
-          "description": "Rings past four reuse the colors.",
-          "nextStep": "Keep to four rings and use the legend for more."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/radial-chart-browser.test.js",
-          "name": "chromium: radial chart draws rings, a legend and a total from its table",
-          "scope": "Hidden table in the accessibility tree, the named plot and its role description, the square plot, ring radii, widths, colors and dash shares, tracks, an empty ring for a missing value, legend cells, separate instances from line charts, the gauge's box, half-circle dash, round track caps and <tfoot> total, no legend for one ring, thinner crowded rings, a value past the maximum, the sparkline size and focus in a flex row, and destroy restoring the table.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/radial-chart-browser.test.js",
-          "name": "chromium: radial chart tooltip follows the pointer across the rings and the arrow keys",
-          "scope": "Pointer distance to ring, gaps split between rings, the active ring, tooltip text with further columns, swatches in the ring color, opening direction, hiding in the middle, off the rings and below a gauge's base line, focus, all four arrows, End and Escape, and clockwise rings with swapped arrows in RTL. No spoken-output assertion.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/radial-chart-browser.test.js",
-          "name": "chromium: radial chart .labels names each ring at its start",
-          "scope": "A name per ring in on-surface-variant, centred on its ring's top and inside the top left quarter, no overlaps, smaller names for eight crowded rings, three-quarter tracks with round ends, the tooltip at a full ring's end, hovering across a name picking its own ring, the names aria-hidden, and none on a gauge or sparkline, which keep their half and whole tracks. No rendering comparison.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "needs-rerun",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "mixed-chart",
-      "title": "Mixed chart",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-07",
-      "scope": "Columns, smooth lines and areas drawn per series from a figure's data table by header class, with dashed lines, a second scale for end series with its own fixed range, x labels, round labels for both scales with .axis, aligned to shared grid lines, a legend, a sparkline modifier, and a pointer and keyboard tooltip with points on the lines.",
-      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns and SVG are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-07",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the data available as text, name the chart, keep series distinguishable without color alone, state each scale's units, and let a keyboard reach every row the pointer can."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Drawing, the hidden table, both scales, gaps, stacked columns, points, straight lines, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified."
-      ],
-      "supportSource": "llm.md#mixed-chart",
-      "supportReviewedOn": "2026-10-07",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
-        },
-        {
-          "path": "src/sass/components/_mixed-chart.scss",
-          "sha256": "4195fbf13249ef7bf4da8560f5b0ccbc715367f2b5771c3b96a255af4b9e39bb"
-        },
-        {
-          "path": "src/ts/components/columnChart.ts",
-          "sha256": "3c8ad721e3abc034c763870081d87a2df0aaf2470d212f03c51086e0ee5deb7d"
-        },
-        {
-          "path": "src/ts/components/lineChart.ts",
-          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
-        },
-        {
-          "path": "src/ts/components/mixedChart.ts",
-          "sha256": "3c4bc2efee52a5ec53e9318467e9802efbe17b016b4d977c0b3a95ba0f4b52ba"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Drawing, the hidden table, both scales, gaps, stacked columns, points, straight lines, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
-          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/mixed-chart-browser.test.js",
-          "name": "chromium: mixed chart draws columns, areas and lines on two scales",
-          "scope": "Hidden table, the named plot and its role description, column positions on the start scale with an empty slot for a gap, area and dashed line classes and colors, an area fill only on area series, a fixed end scale, a fitted end scale shared by two series, legend order, separate instances from column charts, a chart of gaps showing its table, and the tooltip and cursor points from the keyboard. No spoken-output assertion.",
-          "state": "stale"
-        },
-        {
-          "file": "tests/chart-axis-browser.test.js",
-          "name": "chromium: .axis labels chart scales at round values on their grid lines",
-          "scope": "The end scale stretches to the start scale's steps so both label sets share the grid lines, each with its own percent sign. No rendering comparison.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "needs-rerun",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "scatter-chart",
-      "title": "Scatter chart",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-24",
-      "scope": "Points drawn from a figure's data table, with a shared x column and one series per further column, gaps for cells that are not numbers, fixed ranges for both scales, round labels for both scales with .axis, a legend with .toggle, update() motion, data-watch, a pointer and keyboard tooltip that steps through points in table order, and .bubble sizes from the last column with areas proportional to its values.",
-      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-24",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the data available as text, name the chart, keep series distinguishable, state each scale's units, and let a keyboard reach every point the pointer can."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Point placement in left-to-right and right-to-left pages, gaps, both axes, the tooltip, keyboard steps, the nearest point by pointer, update() motion, data-watch, the toggle legend and .bubble areas, gaps, tooltip, refit and size motion are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no trend lines, separate x columns per series or sizes per series."
-      ],
-      "supportSource": "llm.md#scatter-chart",
-      "supportReviewedOn": "2026-10-24",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "d52835370886e64f1d421237458b048d80bb024ee151ca5fde48dd8b070de240"
-        },
-        {
-          "path": "src/sass/components/_scatter-chart.scss",
-          "sha256": "59c390527dfaed1e73b4a639f7bdfba9125ade37682623ddf982ac293d284ca9"
-        },
-        {
-          "path": "src/ts/components/lineChart.ts",
-          "sha256": "06a7be0f88231c0368d299a6506643e9aac6fc9a99ac7143ae1d180f98541c71"
-        },
-        {
-          "path": "src/ts/components/scatterChart.ts",
-          "sha256": "6e5098db6b538b9609957e23e3a752ef65bb59b235ecb8c3a79fdda629031bbe"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Point placement, gaps, both axes, the tooltip, keyboard steps, the pointer, update() motion, data-watch and the toggle legend are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
-          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/scatter-chart-browser.test.js",
-          "name": "chromium: scatter chart places one point per row at its x and y values",
-          "scope": "Hidden table, the named plot and its role description, the x column read as the axis, one point per row per series at its value in left-to-right and right-to-left pages, legend order, and separate instances from line charts. No spoken-output assertion.",
-          "state": "not-recorded"
-        },
-        {
-          "file": "tests/scatter-chart-browser.test.js",
-          "name": "chromium: bubble chart sizes each point so its area follows the last column",
-          "scope": "With .bubble, the last column leaves the series and legend, and each bubble's area is proportional to its row's size, the largest 48px across, at its scatter position in left-to-right and right-to-left pages. No spoken-output assertion.",
-          "state": "not-recorded"
-        },
-        {
-          "file": "tests/scatter-chart-browser.test.js",
-          "name": "chromium: scatter chart arrow keys step through the points in table order",
-          "scope": "Keyboard focus shows the first point; arrows, Home, End and Escape step through points in table order and skip gaps; the live tooltip text. No spoken-output assertion.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "incomplete",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "funnel-chart",
-      "title": "Funnel chart",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-25",
-      "scope": "Stages drawn from a figure's data table, one per row from the second column in table order, centered and as wide as their value against the largest, gaps and values of zero or less left without a stage, row labels at the inline start, a pointer and keyboard tooltip that adds each stage's percentage of the first row, update() width motion and data-watch.",
-      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the stages are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-25",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the data available as text, name the chart, label each stage, and let a keyboard reach every row the pointer can."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Stage widths and order in left-to-right and right-to-left pages, gaps, labels, the tooltip and its percentages, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no tapered stages, colors per row, step-to-step conversion rates or horizontal funnels."
-      ],
-      "supportSource": "llm.md#funnel-chart",
-      "supportReviewedOn": "2026-10-25",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "47a0a21ff5ea47c1030e3730605cadb4498d868202a88d89670c3aa55cf09702"
-        },
-        {
-          "path": "src/sass/components/_funnel-chart.scss",
-          "sha256": "e74e9224c52ba9b4bad9c68194708fd8346ef16d96df926dba16868cc13f6842"
-        },
-        {
-          "path": "src/ts/components/funnelChart.ts",
-          "sha256": "f11baa23053f0e4bf649b5c6eb3500fc8b4224f97d85e30455b9d29f4bafacb8"
-        },
-        {
-          "path": "src/ts/components/lineChart.ts",
-          "sha256": "06a7be0f88231c0368d299a6506643e9aac6fc9a99ac7143ae1d180f98541c71"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Stage widths, gaps, labels, the tooltip, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
-          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/funnel-chart-browser.test.js",
-          "name": "chromium: funnel chart sizes each stage by its value, in table order",
-          "scope": "Hidden table, separate instances from line charts, and each stage's width proportional to its value against the largest, centered and in table order, in left-to-right and right-to-left pages. No spoken-output assertion.",
-          "state": "not-recorded"
-        },
-        {
-          "file": "tests/funnel-chart-browser.test.js",
-          "name": "chromium: funnel chart moves between rows with the up and down arrows",
-          "scope": "Keyboard focus shows the first row; the down and up arrows, Home, End and Escape move or hide the live tooltip, with the same keys in a right-to-left page. No spoken-output assertion.",
-          "state": "not-recorded"
-        },
-        {
-          "file": "tests/funnel-chart-browser.test.js",
-          "name": "chromium: funnel chart tooltip gives each stage's share of the first",
-          "scope": "The tooltip text names the row and each column, adds each stage's percentage of the first row with a tenth below 10%, and leaves it out for gaps and values of zero or less. No spoken-output assertion.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "incomplete",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "sankey-chart",
-      "title": "Sankey chart",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-25",
-      "scope": "Nodes and links drawn from a figure's data table of source, target and value columns, with nodes in columns by their longest path from a source, stacked in the order they first appear, links and nodes on one scale, rows skipped for values that are not positive, missing names, self links and cycles, node names and colors, right-to-left mirroring, update() motion, data-watch, and a pointer and keyboard tooltip that steps through links in table order.",
-      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG and node names are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-25",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the flows available as text, name the chart, keep nodes distinguishable, name each node on the chart, and let a keyboard reach every link the pointer can."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Link and node sizes, columns, skipped rows, names, colors, right-to-left mirroring, keyboard steps, the link under the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Nodes are not reached by keyboard or pointer, and node order follows the table with no crossing reduction."
-      ],
-      "supportSource": "llm.md#sankey-chart",
-      "supportReviewedOn": "2026-10-25",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "47a0a21ff5ea47c1030e3730605cadb4498d868202a88d89670c3aa55cf09702"
-        },
-        {
-          "path": "src/sass/components/_sankey-chart.scss",
-          "sha256": "18ab606b1b20260e5f144e5cf61c37f8b5b1356b55f134be88c07ad3a699e344"
-        },
-        {
-          "path": "src/ts/components/lineChart.ts",
-          "sha256": "06a7be0f88231c0368d299a6506643e9aac6fc9a99ac7143ae1d180f98541c71"
-        },
-        {
-          "path": "src/ts/components/sankeyChart.ts",
-          "sha256": "dd1cf4c14eda375f994c1cdb534802ef8c4b5611a24c8aebd8aec29b433d3b6a"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Link and node sizes, columns, skipped rows, names, colors, right-to-left mirroring, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
-          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/sankey-chart-browser.test.js",
-          "name": "chromium: sankey chart sizes links and nodes on one scale",
-          "scope": "Hidden table, the named plot and its role description, each link as thick as its value at both ends, each node as tall as the larger of its in and out totals, columns from the inline start, stacking in order of first appearance, links that do not overlap on a node edge, the tallest column filling the plot, and separate instances from line charts. No spoken-output assertion.",
-          "state": "not-recorded"
-        },
-        {
-          "file": "tests/sankey-chart-browser.test.js",
-          "name": "chromium: sankey chart arrow keys step through the drawn links in table order",
-          "scope": "Keyboard focus shows the first link; arrows, Home, End and Escape step through the drawn links in table order and skip the rows that draw nothing; the marked link and the live tooltip text. No spoken-output assertion.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "incomplete",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
-      "slug": "treemap-chart",
-      "title": "Treemap chart",
-      "kind": "component",
-      "support": "unassessed",
-      "lastReviewedSupport": "implemented",
-      "sourceReview": "needs-review",
-      "reviewedOn": "2026-10-25",
-      "scope": "Rectangles drawn from a figure's data table, one per row of the first value column with its area in proportion to the total, in a squarified layout that mirrors in right-to-left pages, with names and cells written in rectangles that hold them, no rectangle for cells that are not positive numbers, six colors, update(), data-watch, and a pointer and keyboard tooltip with each row's share that steps through rows in table order.",
-      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rectangles are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
-      "upstream": {
-        "source": "https://m3.material.io/components",
-        "reviewedOn": "2026-10-25",
-        "scope": "web-extension-inventory-reviewed",
-        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-        "sections": [
-          "No standalone Material component"
-        ],
-        "sources": [],
-        "requirements": "Keep the data available as text, name the chart, keep each part identifiable without relying on color alone, and let a keyboard reach every part the pointer can."
-      },
-      "relationship": "none",
-      "limitations": [
-        "Areas, the layout in left-to-right and right-to-left pages, gaps, colors, text fitting, keyboard steps, the rectangle under the pointer, the tooltip, update() and data-watch are checked in a browser, and the forced-colors edge is checked in the stylesheet; screen reader output and enlarged text remain unverified. There is one level only: no parent groups, legend, drill-down or animated update()."
-      ],
-      "supportSource": "llm.md#treemap-chart",
-      "supportReviewedOn": "2026-10-25",
-      "googleLinks": [],
-      "sources": [
-        {
-          "path": "src/sass/abstracts/_mixins.scss",
-          "sha256": "47a0a21ff5ea47c1030e3730605cadb4498d868202a88d89670c3aa55cf09702"
-        },
-        {
-          "path": "src/sass/components/_treemap-chart.scss",
-          "sha256": "13349240ea10df863edf9673ed731ef784524f44ded2610501c12c422d15c805"
-        },
-        {
-          "path": "src/ts/components/lineChart.ts",
-          "sha256": "06a7be0f88231c0368d299a6506643e9aac6fc9a99ac7143ae1d180f98541c71"
-        },
-        {
-          "path": "src/ts/components/treemapChart.ts",
-          "sha256": "146294b6f97121b990cca2e1de1dd96489707e38bdc4c969d52cddba6210be3f"
-        }
-      ],
-      "gaps": [
-        {
-          "kind": "verification",
-          "description": "Areas, layout, gaps, colors, text fitting, keyboard steps, the pointer, the tooltip, update() and data-watch are checked in a browser; screen reader output, forced colors in a browser and enlarged text remain unverified.",
-          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text in a browser."
-        }
-      ],
-      "browserChecks": [
-        {
-          "file": "tests/treemap-chart-browser.test.js",
-          "name": "chromium: treemap chart draws each row as a rectangle whose area follows its value",
-          "scope": "Hidden table, the named plot and its role description, separate instances from line charts, each rectangle's area in proportion to its value, the areas covering the plot without overlap, and the squarified layout in left-to-right and right-to-left pages. No spoken-output assertion.",
-          "state": "not-recorded"
-        },
-        {
-          "file": "tests/treemap-chart-browser.test.js",
-          "name": "chromium: treemap chart steps through its rectangles by key in table order, in either direction",
-          "scope": "Keyboard focus skips a row with no rectangle; arrows, Home, End and Escape step through rows in table order without swapping in a right-to-left page; the outlined rectangle and the live tooltip text with each row's share. No spoken-output assertion.",
-          "state": "not-recorded"
-        }
-      ],
-      "browserEvidence": "incomplete",
-      "recheckWhen": [
-        "A reviewed source changes",
-        "A mapped test or its recorded inputs change",
-        "Google revises the linked guidance or before claiming a new release matches it"
-      ]
-    },
-    {
       "slug": "dialogs",
       "title": "Dialogs",
       "kind": "component",
@@ -7018,6 +6057,967 @@
           "file": "tests/calendar-browser.test.js",
           "name": "chromium: calendar week and day views place events on an hourly grid, and the year view tiles months",
           "scope": "Hour row height, event top and height from start and duration, events inside their day column, event links, today in the header, hour row headers, a day view event across its column, months side by side and stacked at phone width. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "line-chart",
+      "title": "Line chart",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-06",
+      "scope": "Smooth monotone lines drawn from a figure's data table, with area, stacked, fade and sparkline modifiers, dashed series, gaps, a fixed y range, x labels, round y axis labels with .axis, a legend, and a pointer and keyboard tooltip.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-06",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the data available as text, name the chart, keep series distinguishable and let a keyboard reach every value the pointer can."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified. The axis modifier provides round value labels; full visual parity remains unassessed."
+      ],
+      "supportSource": "llm.md#line-chart",
+      "supportReviewedOn": "2026-10-06",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
+        },
+        {
+          "path": "src/sass/components/_line-chart.scss",
+          "sha256": "cf8029ceb68d9abb123876fbccc2f83567aaf373354edeab57add74be375c957"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Drawing, the hidden table, gaps, the y range, RTL, the tooltip, keyboard movement, forced-color swatches and destroy are checked in a browser; screen reader output and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; test enlarged text."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/line-chart-browser.test.js",
+          "name": "chromium: line chart draws its table, keeps it readable and restores it on destroy",
+          "scope": "Hidden table in the accessibility tree, aria-hidden SVG, series classes and colors, labels, legend, the dashed series, no curve overshoot, gaps, data-min, data-max, data-value, a typographic minus, the area modifier, the sparkline size and focus, and destroy restoring the table.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/line-chart-browser.test.js",
+          "name": "chromium: line chart tooltip follows the pointer and the arrow keys",
+          "scope": "Pointer position to row, tooltip text and live region, cursor points, flipping right of centre, hiding on leave, focus, arrows, Home, End and Escape. No spoken-output assertion.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/line-chart-browser.test.js",
+          "name": "chromium: line chart handles cards, headerless tables, RTL, strict values and forced colors",
+          "scope": "A chart in a sized card and in a primary action keeps its own layout and caption, a header row without <thead> is not data, the RTL axis matches its labels and arrow keys, ambiguous cell text is a gap, show() is safe without data and skips a repeated row, stacked bands fill down to the series below or the plot bottom with cursor points on the totals and each cell in the tooltip, a stacked gap breaks the series above it, the stacked range keeps 10% headroom above zero, and swatches keep their series colors in forced colors.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/chart-axis-browser.test.js",
+          "name": "chromium: .axis labels chart scales at round values on their grid lines",
+          "scope": "Labels widen the scale to round values, repeat the cells' currency sign, sit beside the plot with a grid line each, and leave author-set ends in place. No rendering comparison.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "column-chart",
+      "title": "Column chart",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-07",
+      "scope": "Columns drawn from zero from a figure's data table, grouped by row or stacked, with fade, track and sparkline modifiers, negative values, gaps, a fixed y range, x labels, round y axis labels with .axis, a legend, and a pointer and keyboard tooltip with a highlight band.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-07",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the data available as text, name the chart, start columns at zero, keep series distinguishable and let a keyboard reach every value the pointer can."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. The axis modifier provides round value labels and range draws low-to-high columns; horizontal bars use the bar chart."
+      ],
+      "supportSource": "llm.md#column-chart",
+      "supportReviewedOn": "2026-10-07",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
+        },
+        {
+          "path": "src/sass/components/_column-chart.scss",
+          "sha256": "a8434058d5f4a486061317f871d4cabc433934d8127f9dc216bb47b40b0dbee6"
+        },
+        {
+          "path": "src/ts/components/columnChart.ts",
+          "sha256": "3c8ad721e3abc034c763870081d87a2df0aaf2470d212f03c51086e0ee5deb7d"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Drawing, the hidden table, grouped and stacked geometry, range columns, gaps, negative values, the y range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/column-chart-browser.test.js",
+          "name": "chromium: column chart draws grouped, stacked and negative columns from its table",
+          "scope": "Hidden table in the accessibility tree, the named plot and its role description, labels, legend, series classes, separate instances from line charts, grouped column geometry with an empty slot for a gap, stacked segments on the total below with only the top segment rounded, a gap leaving the segments above out, negative columns from a centred zero, data-min above zero, the sparkline size and focus, and destroy restoring the table.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/column-chart-browser.test.js",
+          "name": "chromium: column chart tooltip and band follow the pointer and the arrow keys",
+          "scope": "Pointer position to row, tooltip text without empty cells, no cursor points, the band's width and position, hiding on leave, focus, End and Escape, and the first row on the right in RTL. No spoken-output assertion.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/chart-axis-browser.test.js",
+          "name": "chromium: .axis labels chart scales at round values on their grid lines",
+          "scope": "Shares the line chart's axis code; the line, mixed and bar cases cover it. No column-specific rendering comparison.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "bar-chart",
+      "title": "Bar chart",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-07",
+      "scope": "Horizontal bars drawn from zero from a figure's data table, grouped by row or stacked, with split, track, values and sparkline modifiers, negative values, gaps, a fixed value range, row labels, round value axis labels with .axis, a legend, and a pointer and keyboard tooltip with a highlight band.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the bars and their values are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-07",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the data available as text, name the chart, start bars at zero, keep series distinguishable and let a keyboard reach every value the pointer can."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, grouped, stacked and split geometry, values, gaps, negative values, the value range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no value axis labels."
+      ],
+      "supportSource": "llm.md#bar-chart",
+      "supportReviewedOn": "2026-10-07",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
+        },
+        {
+          "path": "src/sass/components/_bar-chart.scss",
+          "sha256": "f819b1e6a9106a7999cc0248e92accdf22e7790d4ea7d66bc1131a4d9602712a"
+        },
+        {
+          "path": "src/ts/components/barChart.ts",
+          "sha256": "0830bb0f5cb198ceff231e622f4ad296efc379ef75c47e8ad826dd336f2e922a"
+        },
+        {
+          "path": "src/ts/components/columnChart.ts",
+          "sha256": "3c8ad721e3abc034c763870081d87a2df0aaf2470d212f03c51086e0ee5deb7d"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Drawing, the hidden table, grouped, stacked and split geometry, values, gaps, negative values, the value range, RTL, the tooltip, the band, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/bar-chart-browser.test.js",
+          "name": "chromium: bar chart draws grouped, stacked and negative bars from its table",
+          "scope": "Hidden table in the accessibility tree, the named plot and its role description, row labels beside the plot, legend, separate instances from column charts, plot height from the rows, grouped and stacked bar geometry read across the plot, split segments, values text inside and past short bars and clipped to stacked segments, split gaps only at joints, the grid cleared in forced colors, negative bars from a centred zero, RTL bars growing leftwards from a dir attribute or CSS direction, the sparkline layout and focus, and destroy restoring the table.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/bar-chart-browser.test.js",
+          "name": "chromium: bar chart tooltip and band follow the pointer and the up and down arrows",
+          "scope": "Pointer height to row, tooltip text, the band's height and position, flipping above the row in the lower half, hiding on leave, focus, arrows, End and Escape, the first row at the top in RTL, and a touch tap showing the tapped row in bar and column charts, kept on lift and hidden on pointer cancel. No spoken-output assertion.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/chart-axis-browser.test.js",
+          "name": "chromium: .axis labels chart scales at round values on their grid lines",
+          "scope": "Labels sit under the plot at round values from zero, mirrored in RTL. No rendering comparison.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "pie-chart",
+      "title": "Pie chart",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-07",
+      "scope": "Slices drawn clockwise from the top from a figure's data table, with a legend of each row's cell and share, donut, values and sparkline modifiers, a <tfoot> total in the donut hole, labels with each slice's name outside it, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the slice.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the slices, values, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-07",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the data available as text, name the chart, keep slices distinguishable and their shares readable, and let a keyboard reach every slice the pointer can."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names and their leader lines, data-other grouping, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values have no slice. The .labels names only move up or down their side, so many thin slices near the top or bottom can run into the caption or legend unless data-other groups them."
+      ],
+      "supportSource": "llm.md#pie-chart",
+      "supportReviewedOn": "2026-10-07",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
+        },
+        {
+          "path": "src/sass/components/_pie-chart.scss",
+          "sha256": "e8af880485cebacccd8a23b7387f675cf1f54e58e913bc7314f9fe41b10bd690"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
+        },
+        {
+          "path": "src/ts/components/pieChart.ts",
+          "sha256": "d346e4b9b82814107f71872643a627971a249474de46cbc1f5bf4e4a5282811f"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Drawing, the hidden table, slice geometry and colors, the legend and shares, the donut hole and total, values, outside names and their leader lines, data-other grouping, zero and missing values, RTL, the tooltip, pointer angle hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+        },
+        {
+          "kind": "feature",
+          "description": "Rows past six reuse the colors, and .labels names only move up or down their side, so many thin slices at the top or bottom push names into the caption or legend unless data-other groups them.",
+          "nextStep": "Set data-other on pies with many small parts; lay names out in two dimensions if grouped pies still crowd."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/pie-chart-browser.test.js",
+          "name": "chromium: pie chart draws slices, a legend and a donut total from its table",
+          "scope": "Hidden table in the accessibility tree, the named plot and its role description, the square plot, slice paths and colors, a seventh color avoiding the first, gap lines, a whole-circle slice, zero rows kept in the legend without a slice, legend cells and shares, separate instances from line charts, the donut hole and <tfoot> total, values only on slices of 5% or more, the sparkline size and focus, and destroy restoring the table.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/pie-chart-browser.test.js",
+          "name": "chromium: pie chart tooltip follows the pointer round the pie and the arrow keys",
+          "scope": "Pointer angle to slice, the active slice, tooltip text with the share and further columns, swatches in the slice color, opening leftwards on the right half, hiding off the pie, focus, all four arrows, wrapping past either end, End and Escape, and clockwise slices and arrows in RTL. No spoken-output assertion.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/pie-chart-browser.test.js",
+          "name": "chromium: pie chart .labels writes each slice's name outside it",
+          "scope": "A name for every drawn slice in its color and none for a zero row, every name outside the grown pie, right-half names running rightwards and left-half names leftwards, four thin neighbouring slices pushed apart without overlap, names either side of the middle line kept apart, a 160px figure keeping half its width for the pie with the names inside it, the names aria-hidden, and none on a sparkline. No rendering comparison.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "heatmap-chart",
+      "title": "Heatmap chart",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-07",
+      "scope": "Every body cell of a figure's data table drawn as a shaded grid cell, with row headers beside the grid, column headers below, a scale naming the lowest and highest cells, values, data-label short or hidden labels, data-min and data-max, gaps, and a pointer and keyboard tooltip that moves cell by cell.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, labels and scale are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-07",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the data available as text, name the chart, keep values readable without telling shades apart, and let a keyboard reach every cell the pointer can."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified."
+      ],
+      "supportSource": "llm.md#heatmap-chart",
+      "supportReviewedOn": "2026-10-07",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
+        },
+        {
+          "path": "src/sass/components/_heatmap-chart.scss",
+          "sha256": "e6c9b7e74463c09ce71d7406e07303ae6e78bd2f44e69f0031b83a337ed8ee11"
+        },
+        {
+          "path": "src/ts/components/heatmapChart.ts",
+          "sha256": "c645df4cbb79baaacbe139fff85610cc033b2cec5091c465160294a634c4b997"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Drawing, the hidden table, cell shades and gaps, the fixed, diverging and stepped scales, values and their text color, short and running labels, the scale ends, RTL, page overflow from a wide table, scrolling a wide grid, the tooltip, pointer and keyboard movement round the grid and destroy are checked in Chromium, Firefox and WebKit; screen reader output, forced colors and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/heatmap-chart-browser.test.js",
+          "name": "chromium: heatmap chart draws a shaded grid and a scale from its table",
+          "scope": "Hidden table in the accessibility tree, the named plot and its role description, aria-hidden grid and scale, cell levels and fills, gaps, the row height, row and column labels, empty and running data-labels, the scale ends, data-min and data-max clamping, values, text that takes the higher-contrast of black and white on saturated and near-threshold colors, the legend over a fixed scale, long row labels capped at 40% of the width, no page overflow from a wide table, a table of gaps left undrawn, separate instances from line charts, and destroy restoring the table.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/heatmap-chart-browser.test.js",
+          "name": "chromium: heatmap chart tooltip follows the pointer and the arrow keys round the grid",
+          "scope": "Pointer to cell by position, the space between cells, a touch drag that keeps its first target, the active cell, tooltip text for cells and gaps, the swatch shade and the outlined gap swatch, a press on a label focusing without a tooltip, opening leftwards on the right half, hiding off the cells, focus, all four arrows stopping at the edges, Home, End and Escape, Escape left uncancelled once the tooltip is hidden, and right-to-left columns with swapped arrows and scale. No spoken-output assertion.",
+          "state": "stale"
+        }
+      ],
+      "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "radar-chart",
+      "title": "Radar chart",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-07",
+      "scope": "Spokes drawn clockwise from the top from a figure's data table, one shape per series from zero in the middle to the scale's top at the rim, row labels past each spoke, a legend for several series, area, points, dashed and sparkline modifiers, data-min and data-max, round labelled rings with .axis, and a pointer and keyboard tooltip with a cursor spoke.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the grid, shapes, labels and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-07",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the data available as text, name the chart, keep series distinguishable and every spoke labelled, and let a keyboard reach every row the pointer can."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. A gap breaks the outline; there are no ring value labels."
+      ],
+      "supportSource": "llm.md#radar-chart",
+      "supportReviewedOn": "2026-10-07",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
+        },
+        {
+          "path": "src/sass/components/_radar-chart.scss",
+          "sha256": "32e7d3cc1886b1f396244cf102f2537c9e57c096909f9dd4990fcde046f20ab7"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
+        },
+        {
+          "path": "src/ts/components/radarChart.ts",
+          "sha256": "ee6c818e8bc8ad11f06d4419e3c45234c2de7cdfaf5eca103b93a1c372d7ba0d"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Drawing, the hidden table, the grid, shape geometry and colors, the scale with data-max and clamping, gaps, labels, the legend, area and points, the sparkline, RTL, the tooltip and cursor spoke, nearest-spoke pointer hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+        },
+        {
+          "kind": "feature",
+          "description": "Series past four reuse the colors.",
+          "nextStep": "Keep to three series, or compare more in a line or bar chart."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/radar-chart-browser.test.js",
+          "name": "chromium: radar chart draws a grid, shapes, labels and a legend from its table",
+          "scope": "Hidden table in the accessibility tree, the named plot and its role description, the square plot, four rings and spokes, shape geometry from zero to data-max with a joined gap and a clamped value, series colors and the dashed class, points, the area fill, labels on their spokes, the legend, separate instances from line charts, no fill, points or legend by default, the sparkline size, focus and hidden labels, and destroy restoring the table.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/radar-chart-browser.test.js",
+          "name": "chromium: radar chart tooltip follows the pointer round the spokes and the arrow keys",
+          "scope": "Nearest spoke by pointer angle inside and past the rim, tooltip text without gaps, opening leftwards on the right half, the cursor spoke and its points, focus, all four arrows, wrapping past either end, End and Escape, and clockwise spokes and arrows in RTL. No spoken-output assertion.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/chart-axis-browser.test.js",
+          "name": "chromium: .axis labels chart scales at round values on their grid lines",
+          "scope": "Rings and labels fall at round values with zero unlabelled. No rendering comparison.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "radial-chart",
+      "title": "Radial chart",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-07",
+      "scope": "Rings drawn clockwise from the top from a figure's data table as a share of data-max, with tracks, a legend of each row's cell for more than one row, gauge, labels and sparkline modifiers, a <tfoot> total in the middle, further columns in the tooltip, and a pointer and keyboard tooltip that highlights the ring.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rings, total and legend are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-07",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the data available as text, name the chart, keep rings distinguishable and their values readable, and let a keyboard reach every ring the pointer can."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, segments, gradient fills, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Zero and negative values leave only the track. The .labels names can run into a crowded middle total."
+      ],
+      "supportSource": "llm.md#radial-chart",
+      "supportReviewedOn": "2026-10-07",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
+        },
+        {
+          "path": "src/sass/components/_radial-chart.scss",
+          "sha256": "7bbf15655da199f7ea4c87245dd0bc644fa36f5fbc12fbde959cac940347cd18"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
+        },
+        {
+          "path": "src/ts/components/radialChart.ts",
+          "sha256": "2d6acf36785432d8c8ad32adc3aabe0441ad41efe7f14e78c707b1077b7e548e"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Drawing, the hidden table, ring geometry and colors, tracks, the legend, the <tfoot> total, the gauge's half circles, ring names, gauge names under the base line, segments, gradient fills, values past the maximum and missing values, thinning crowded rings, RTL, the tooltip, pointer distance hit testing, keyboard movement and destroy are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+        },
+        {
+          "kind": "feature",
+          "description": "Rings past four reuse the colors.",
+          "nextStep": "Keep to four rings and use the legend for more."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/radial-chart-browser.test.js",
+          "name": "chromium: radial chart draws rings, a legend and a total from its table",
+          "scope": "Hidden table in the accessibility tree, the named plot and its role description, the square plot, ring radii, widths, colors and dash shares, tracks, an empty ring for a missing value, legend cells, separate instances from line charts, the gauge's box, half-circle dash, round track caps and <tfoot> total, no legend for one ring, thinner crowded rings, a value past the maximum, the sparkline size and focus in a flex row, and destroy restoring the table.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/radial-chart-browser.test.js",
+          "name": "chromium: radial chart tooltip follows the pointer across the rings and the arrow keys",
+          "scope": "Pointer distance to ring, gaps split between rings, the active ring, tooltip text with further columns, swatches in the ring color, opening direction, hiding in the middle, off the rings and below a gauge's base line, focus, all four arrows, End and Escape, and clockwise rings with swapped arrows in RTL. No spoken-output assertion.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/radial-chart-browser.test.js",
+          "name": "chromium: radial chart .labels names each ring at its start",
+          "scope": "A name per ring in on-surface-variant, centred on its ring's top and inside the top left quarter, no overlaps, smaller names for eight crowded rings, three-quarter tracks with round ends, the tooltip at a full ring's end, hovering across a name picking its own ring, the names aria-hidden, and none on a gauge or sparkline, which keep their half and whole tracks. No rendering comparison.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "mixed-chart",
+      "title": "Mixed chart",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-07",
+      "scope": "Columns, smooth lines and areas drawn per series from a figure's data table by header class, with dashed lines, a second scale for end series with its own fixed range, x labels, round labels for both scales with .axis, aligned to shared grid lines, a legend, a sparkline modifier, and a pointer and keyboard tooltip with points on the lines.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the columns and SVG are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-07",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the data available as text, name the chart, keep series distinguishable without color alone, state each scale's units, and let a keyboard reach every row the pointer can."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Drawing, the hidden table, both scales, gaps, stacked columns, points, straight lines, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified."
+      ],
+      "supportSource": "llm.md#mixed-chart",
+      "supportReviewedOn": "2026-10-07",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "df530a22fb6b17740054c81ec3ae63c2199726c103e661885ec9bcad0d0f8f4c"
+        },
+        {
+          "path": "src/sass/components/_mixed-chart.scss",
+          "sha256": "4195fbf13249ef7bf4da8560f5b0ccbc715367f2b5771c3b96a255af4b9e39bb"
+        },
+        {
+          "path": "src/ts/components/columnChart.ts",
+          "sha256": "3c8ad721e3abc034c763870081d87a2df0aaf2470d212f03c51086e0ee5deb7d"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "6fdb7471049d342a5e66aa30ba84857208c7d2ed167223b26578e62b9437d960"
+        },
+        {
+          "path": "src/ts/components/mixedChart.ts",
+          "sha256": "3c4bc2efee52a5ec53e9318467e9802efbe17b016b4d977c0b3a95ba0f4b52ba"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Drawing, the hidden table, both scales, gaps, stacked columns, points, straight lines, the legend, the tooltip, cursor points and keyboard movement are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/mixed-chart-browser.test.js",
+          "name": "chromium: mixed chart draws columns, areas and lines on two scales",
+          "scope": "Hidden table, the named plot and its role description, column positions on the start scale with an empty slot for a gap, area and dashed line classes and colors, an area fill only on area series, a fixed end scale, a fitted end scale shared by two series, legend order, separate instances from column charts, a chart of gaps showing its table, and the tooltip and cursor points from the keyboard. No spoken-output assertion.",
+          "state": "stale"
+        },
+        {
+          "file": "tests/chart-axis-browser.test.js",
+          "name": "chromium: .axis labels chart scales at round values on their grid lines",
+          "scope": "The end scale stretches to the start scale's steps so both label sets share the grid lines, each with its own percent sign. No rendering comparison.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "needs-rerun",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "scatter-chart",
+      "title": "Scatter chart",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-24",
+      "scope": "Points drawn from a figure's data table, with a shared x column and one series per further column, gaps for cells that are not numbers, fixed ranges for both scales, round labels for both scales with .axis, a legend with .toggle, update() motion, data-watch, a pointer and keyboard tooltip that steps through points in table order, and .bubble sizes from the last column with areas proportional to its values.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG is aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-24",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the data available as text, name the chart, keep series distinguishable, state each scale's units, and let a keyboard reach every point the pointer can."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Point placement in left-to-right and right-to-left pages, gaps, both axes, the tooltip, keyboard steps, the nearest point by pointer, update() motion, data-watch, the toggle legend and .bubble areas, gaps, tooltip, refit and size motion are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no trend lines, separate x columns per series or sizes per series."
+      ],
+      "supportSource": "llm.md#scatter-chart",
+      "supportReviewedOn": "2026-10-24",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "d52835370886e64f1d421237458b048d80bb024ee151ca5fde48dd8b070de240"
+        },
+        {
+          "path": "src/sass/components/_scatter-chart.scss",
+          "sha256": "59c390527dfaed1e73b4a639f7bdfba9125ade37682623ddf982ac293d284ca9"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "06a7be0f88231c0368d299a6506643e9aac6fc9a99ac7143ae1d180f98541c71"
+        },
+        {
+          "path": "src/ts/components/scatterChart.ts",
+          "sha256": "6e5098db6b538b9609957e23e3a752ef65bb59b235ecb8c3a79fdda629031bbe"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Point placement, gaps, both axes, the tooltip, keyboard steps, the pointer, update() motion, data-watch and the toggle legend are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/scatter-chart-browser.test.js",
+          "name": "chromium: scatter chart places one point per row at its x and y values",
+          "scope": "Hidden table, the named plot and its role description, the x column read as the axis, one point per row per series at its value in left-to-right and right-to-left pages, legend order, and separate instances from line charts. No spoken-output assertion.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scatter-chart-browser.test.js",
+          "name": "chromium: bubble chart sizes each point so its area follows the last column",
+          "scope": "With .bubble, the last column leaves the series and legend, and each bubble's area is proportional to its row's size, the largest 48px across, at its scatter position in left-to-right and right-to-left pages. No spoken-output assertion.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/scatter-chart-browser.test.js",
+          "name": "chromium: scatter chart arrow keys step through the points in table order",
+          "scope": "Keyboard focus shows the first point; arrows, Home, End and Escape step through points in table order and skip gaps; the live tooltip text. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "funnel-chart",
+      "title": "Funnel chart",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-25",
+      "scope": "Stages drawn from a figure's data table, one per row from the second column in table order, centered and as wide as their value against the largest, gaps and values of zero or less left without a stage, row labels at the inline start, a pointer and keyboard tooltip that adds each stage's percentage of the first row, update() width motion and data-watch.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the stages are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-25",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the data available as text, name the chart, label each stage, and let a keyboard reach every row the pointer can."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Stage widths and order in left-to-right and right-to-left pages, gaps, labels, the tooltip and its percentages, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. There are no tapered stages, colors per row, step-to-step conversion rates or horizontal funnels."
+      ],
+      "supportSource": "llm.md#funnel-chart",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "47a0a21ff5ea47c1030e3730605cadb4498d868202a88d89670c3aa55cf09702"
+        },
+        {
+          "path": "src/sass/components/_funnel-chart.scss",
+          "sha256": "e74e9224c52ba9b4bad9c68194708fd8346ef16d96df926dba16868cc13f6842"
+        },
+        {
+          "path": "src/ts/components/funnelChart.ts",
+          "sha256": "f11baa23053f0e4bf649b5c6eb3500fc8b4224f97d85e30455b9d29f4bafacb8"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "06a7be0f88231c0368d299a6506643e9aac6fc9a99ac7143ae1d180f98541c71"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Stage widths, gaps, labels, the tooltip, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/funnel-chart-browser.test.js",
+          "name": "chromium: funnel chart sizes each stage by its value, in table order",
+          "scope": "Hidden table, separate instances from line charts, and each stage's width proportional to its value against the largest, centered and in table order, in left-to-right and right-to-left pages. No spoken-output assertion.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/funnel-chart-browser.test.js",
+          "name": "chromium: funnel chart moves between rows with the up and down arrows",
+          "scope": "Keyboard focus shows the first row; the down and up arrows, Home, End and Escape move or hide the live tooltip, with the same keys in a right-to-left page. No spoken-output assertion.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/funnel-chart-browser.test.js",
+          "name": "chromium: funnel chart tooltip gives each stage's share of the first",
+          "scope": "The tooltip text names the row and each column, adds each stage's percentage of the first row with a tenth below 10%, and leaves it out for gaps and values of zero or less. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "sankey-chart",
+      "title": "Sankey chart",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-25",
+      "scope": "Nodes and links drawn from a figure's data table of source, target and value columns, with nodes in columns by their longest path from a source, stacked in the order they first appear, links and nodes on one scale, rows skipped for values that are not positive, missing names, self links and cycles, node names and colors, right-to-left mirroring, update() motion, data-watch, and a pointer and keyboard tooltip that steps through links in table order.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the SVG and node names are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-25",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the flows available as text, name the chart, keep nodes distinguishable, name each node on the chart, and let a keyboard reach every link the pointer can."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Link and node sizes, columns, skipped rows, names, colors, right-to-left mirroring, keyboard steps, the link under the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified. Nodes are not reached by keyboard or pointer, and node order follows the table with no crossing reduction."
+      ],
+      "supportSource": "llm.md#sankey-chart",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "47a0a21ff5ea47c1030e3730605cadb4498d868202a88d89670c3aa55cf09702"
+        },
+        {
+          "path": "src/sass/components/_sankey-chart.scss",
+          "sha256": "18ab606b1b20260e5f144e5cf61c37f8b5b1356b55f134be88c07ad3a699e344"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "06a7be0f88231c0368d299a6506643e9aac6fc9a99ac7143ae1d180f98541c71"
+        },
+        {
+          "path": "src/ts/components/sankeyChart.ts",
+          "sha256": "dd1cf4c14eda375f994c1cdb534802ef8c4b5611a24c8aebd8aec29b433d3b6a"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Link and node sizes, columns, skipped rows, names, colors, right-to-left mirroring, keyboard steps, the pointer, update() motion and data-watch are checked in a browser; screen reader output, forced colors and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/sankey-chart-browser.test.js",
+          "name": "chromium: sankey chart sizes links and nodes on one scale",
+          "scope": "Hidden table, the named plot and its role description, each link as thick as its value at both ends, each node as tall as the larger of its in and out totals, columns from the inline start, stacking in order of first appearance, links that do not overlap on a node edge, the tallest column filling the plot, and separate instances from line charts. No spoken-output assertion.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/sankey-chart-browser.test.js",
+          "name": "chromium: sankey chart arrow keys step through the drawn links in table order",
+          "scope": "Keyboard focus shows the first link; arrows, Home, End and Escape step through the drawn links in table order and skip the rows that draw nothing; the marked link and the live tooltip text. No spoken-output assertion.",
+          "state": "not-recorded"
+        }
+      ],
+      "browserEvidence": "incomplete",
+      "recheckWhen": [
+        "A reviewed source changes",
+        "A mapped test or its recorded inputs change",
+        "Google revises the linked guidance or before claiming a new release matches it"
+      ]
+    },
+    {
+      "slug": "treemap-chart",
+      "title": "Treemap chart",
+      "kind": "component",
+      "support": "unassessed",
+      "lastReviewedSupport": "implemented",
+      "sourceReview": "needs-review",
+      "reviewedOn": "2026-10-25",
+      "scope": "Rectangles drawn from a figure's data table, one per row of the first value column with its area in proportion to the total, in a squarified layout that mirrors in right-to-left pages, with names and cells written in rectangles that hold them, no rectangle for cells that are not positive numbers, six colors, update(), data-watch, and a pointer and keyboard tooltip with each row's share that steps through rows in table order.",
+      "adaptation": "The <table> stays in the page as the text alternative and the no-JavaScript fallback; the rectangles are aria-hidden and the plot is one Tab stop with a polite live tooltip.",
+      "upstream": {
+        "source": "https://m3.material.io/components",
+        "reviewedOn": "2026-10-25",
+        "scope": "web-extension-inventory-reviewed",
+        "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+        "sections": [
+          "No standalone Material component"
+        ],
+        "sources": [],
+        "requirements": "Keep the data available as text, name the chart, keep each part identifiable without relying on color alone, and let a keyboard reach every part the pointer can."
+      },
+      "relationship": "none",
+      "limitations": [
+        "Areas, the layout in left-to-right and right-to-left pages, gaps, colors, text fitting, keyboard steps, the rectangle under the pointer, the tooltip, update() and data-watch are checked in a browser, and the forced-colors edge is checked in the stylesheet; screen reader output and enlarged text remain unverified. There is one level only: no parent groups, legend, drill-down or animated update()."
+      ],
+      "supportSource": "llm.md#treemap-chart",
+      "supportReviewedOn": "2026-10-25",
+      "googleLinks": [],
+      "sources": [
+        {
+          "path": "src/sass/abstracts/_mixins.scss",
+          "sha256": "47a0a21ff5ea47c1030e3730605cadb4498d868202a88d89670c3aa55cf09702"
+        },
+        {
+          "path": "src/sass/components/_treemap-chart.scss",
+          "sha256": "13349240ea10df863edf9673ed731ef784524f44ded2610501c12c422d15c805"
+        },
+        {
+          "path": "src/ts/components/lineChart.ts",
+          "sha256": "06a7be0f88231c0368d299a6506643e9aac6fc9a99ac7143ae1d180f98541c71"
+        },
+        {
+          "path": "src/ts/components/treemapChart.ts",
+          "sha256": "146294b6f97121b990cca2e1de1dd96489707e38bdc4c969d52cddba6210be3f"
+        }
+      ],
+      "gaps": [
+        {
+          "kind": "verification",
+          "description": "Areas, layout, gaps, colors, text fitting, keyboard steps, the pointer, the tooltip, update() and data-watch are checked in a browser; screen reader output, forced colors in a browser and enlarged text remain unverified.",
+          "nextStep": "Read a chart with a screen reader in each engine and confirm the table and the live tooltip are announced; check forced colors and enlarged text in a browser."
+        }
+      ],
+      "browserChecks": [
+        {
+          "file": "tests/treemap-chart-browser.test.js",
+          "name": "chromium: treemap chart draws each row as a rectangle whose area follows its value",
+          "scope": "Hidden table, the named plot and its role description, separate instances from line charts, each rectangle's area in proportion to its value, the areas covering the plot without overlap, and the squarified layout in left-to-right and right-to-left pages. No spoken-output assertion.",
+          "state": "not-recorded"
+        },
+        {
+          "file": "tests/treemap-chart-browser.test.js",
+          "name": "chromium: treemap chart steps through its rectangles by key in table order, in either direction",
+          "scope": "Keyboard focus skips a row with no rectangle; arrows, Home, End and Escape step through rows in table order without swapping in a right-to-left page; the outlined rectangle and the live tooltip text with each row's share. No spoken-output assertion.",
           "state": "not-recorded"
         }
       ],

@@ -60,7 +60,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await press('Large');
       await press('Small');
       const line = page.locator('#line');
-      await line.evaluate((el) => Expressive.LineChart.getInstance(el).update());
+      await line.evaluate((el) => ExpressiveExtras.LineChart.getInstance(el).update());
       const kept = await read();
       assert.deepEqual(kept.buttons, ['Small:false:null', 'Large:true:true'], 'update keeps a hidden series hidden');
       assert.deepEqual(kept.series, ['2'], 'the series shown keeps its color');
@@ -129,7 +129,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.locator('#range .chart-toggle').first().click();
       const range = await page.locator('#range').evaluate((el) => {
         const column = el.querySelector('.column-chart-columns [data-series]');
-        return [column.dataset.series, column.classList.contains('floating'), Expressive.ColumnChart.getInstance(el).series[0].base];
+        return [column.dataset.series, column.classList.contains('floating'), ExpressiveExtras.ColumnChart.getInstance(el).series[0].base];
       });
       assert.deepEqual(range, ['2', true, [10]], 'the range keeps reading its own column');
 
@@ -150,7 +150,7 @@ for (const [engine, browserType, browserTest] of engines) {
 
       const back = await page.locator('#twins').evaluate((el) => {
         el.querySelectorAll('tbody td:nth-child(3)').forEach((td) => (td.textContent = ''));
-        const chart = Expressive.LineChart.getInstance(el);
+        const chart = ExpressiveExtras.LineChart.getInstance(el);
         chart.update();
         return [chart.series.map((series) => series.column), el.querySelectorAll('.chart-toggle[aria-pressed="false"]').length];
       });

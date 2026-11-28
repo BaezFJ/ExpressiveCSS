@@ -1,4 +1,5 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
+@use "../abstracts/charts" as *;
 
 // Treemap chart. The same <figure>, <figcaption> and <table> as a pie
 // chart; TreemapChart draws each row of the first value column as a

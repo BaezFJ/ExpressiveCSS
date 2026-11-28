@@ -24,12 +24,15 @@ A standalone page needs the stylesheet, the script and one `AutoInit()` call. Pa
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="dist/css/expressive.min.css">
+    <!-- The charts ship in @expressivecss/extras, loaded after core. -->
+    <link rel="stylesheet" href="dist/extras/css/extras.min.css">
   </head>
   <body>
     <main class="container">
       <!-- charts -->
     </main>
     <script src="dist/js/expressive.min.js"></script>
+    <script src="dist/extras/js/extras.min.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', () => Expressive.AutoInit());
     </script>
@@ -88,7 +91,7 @@ The stat answers the question, the chart shows the evidence, and the switch narr
       body.replaceChildren(...rows.slice(-Number(button.dataset.period)));
       card.querySelector('.stats dd').textContent = button.dataset.total;
       card.querySelector('.stat-change').textContent = button.dataset.change;
-      Expressive.LineChart.getInstance(figure).update();
+      ExpressiveExtras.LineChart.getInstance(figure).update();
     });
   });
 </script>

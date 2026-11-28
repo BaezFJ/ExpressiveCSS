@@ -1,4 +1,5 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
+@use "../abstracts/charts" as *;
 
 // Line chart. A <figure class="line-chart"> holds a <figcaption> and a
 // <table> of data: the first column labels the x axis, each further column

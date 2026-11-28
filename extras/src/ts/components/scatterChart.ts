@@ -1,4 +1,4 @@
-import { svgNode } from '../core/utils';
+import { svgNode } from '@expressivecss/expressive/core';
 import { LineChart, LineChartOptions, ChartScale, Series, affix, cellValue, linearKey, morph, plotSvg, tickFormat, pace, textSpan as span, tickAxis, tickText } from './lineChart';
 
 export interface ScatterChartOptions extends LineChartOptions {

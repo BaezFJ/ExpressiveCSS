@@ -356,7 +356,7 @@ const total = (rows: number[][]) => rows.flat().reduce((sum, value) => sum + val
           cell, counted row by row from 0.
         </p>
 <Code code={`
-const chart = Expressive.HeatmapChart.init(document.querySelector('.heatmap-chart'), { min: 0, max: 100 });
+const chart = ExpressiveExtras.HeatmapChart.init(document.querySelector('.heatmap-chart'), { min: 0, max: 100 });
 chart.show(13);  // highlight the second row's second cell in a 12-column grid; -1 hides the tooltip
 chart.update();  // redraw from the table; focus and the highlighted row stay
 chart.destroy(); // remove the drawing and show the table again

@@ -472,114 +472,6 @@ const GROUPS: DocsGroup[] = [
           "Rows of records in a scrolling table with a sticky header, sort state and row selection.",
       },
       {
-        id: "line-chart",
-        styles: ["components/line-chart"],
-        exports: ["LineChart"],
-        label: "Line chart",
-        route: "/line-chart.html",
-        description:
-          "Trends over time drawn from a data table, with a tooltip, a legend and a sparkline size.",
-      },
-      {
-        id: "column-chart",
-        styles: ["components/column-chart"],
-        exports: ["ColumnChart"],
-        label: "Column chart",
-        route: "/column-chart.html",
-        description:
-          "Values compared across categories or periods, drawn as columns from a data table, grouped or stacked.",
-      },
-      {
-        id: "bar-chart",
-        styles: ["components/bar-chart"],
-        exports: ["BarChart"],
-        label: "Bar chart",
-        route: "/bar-chart.html",
-        description:
-          "Ranked or long-labelled categories drawn as horizontal bars from a data table, grouped, stacked or as a meter.",
-      },
-      {
-        id: "pie-chart",
-        styles: ["components/pie-chart"],
-        exports: ["PieChart"],
-        label: "Pie chart",
-        route: "/pie-chart.html",
-        description:
-          "Parts of a whole drawn as slices from a data table, as a pie or a donut with its total.",
-      },
-      {
-        id: "heatmap-chart",
-        styles: ["components/heatmap-chart"],
-        exports: ["HeatmapChart"],
-        label: "Heatmap chart",
-        route: "/heatmap-chart.html",
-        description:
-          "A data table drawn as a grid of cells shaded by value, for patterns across two categories such as days and hours.",
-      },
-      {
-        id: "radar-chart",
-        styles: ["components/radar-chart"],
-        exports: ["RadarChart"],
-        label: "Radar chart",
-        route: "/radar-chart.html",
-        description:
-          "Several measures on one scale drawn as shapes on spokes from a data table, one shape per series.",
-      },
-      {
-        id: "radial-chart",
-        styles: ["components/radial-chart"],
-        exports: ["RadialChart"],
-        label: "Radial chart",
-        route: "/radial-chart.html",
-        description:
-          "Progress toward a goal drawn as rings from a data table, as concentric rings or a half-circle gauge.",
-      },
-      {
-        id: "mixed-chart",
-        styles: ["components/mixed-chart"],
-        exports: ["MixedChart"],
-        label: "Mixed chart",
-        route: "/mixed-chart.html",
-        description:
-          "Columns, lines and areas together from one data table, with a second scale for values in other units.",
-      },
-      {
-        id: "scatter-chart",
-        styles: ["components/scatter-chart"],
-        exports: ["ScatterChart"],
-        label: "Scatter chart",
-        route: "/scatter-chart.html",
-        description:
-          "One measure plotted against another, with a point for each row.",
-      },
-      {
-        id: "funnel-chart",
-        styles: ["components/funnel-chart"],
-        exports: ["FunnelChart"],
-        label: "Funnel chart",
-        route: "/funnel-chart.html",
-        description:
-          "Steps people take in order, each drawn as a stage as wide as the people who reach it.",
-      },
-      {
-        id: "sankey-chart",
-        styles: ["components/sankey-chart"],
-        exports: ["SankeyChart"],
-        label: "Sankey chart",
-        route: "/sankey-chart.html",
-        description:
-          "Flows between nodes, each link as thick as its value.",
-      },
-      {
-        id: "treemap-chart",
-        styles: ["components/treemap-chart"],
-        exports: ["TreemapChart"],
-        label: "Treemap chart",
-        route: "/treemap-chart.html",
-        description:
-          "Parts of a whole drawn as rectangles whose areas follow their values.",
-      },
-      {
         id: "dialogs",
         styles: ["components/dialog", "components/scrim"],
         exports: ["Dialogs"],
@@ -1093,6 +985,114 @@ const GROUPS: DocsGroup[] = [
         route: "/calendar.html",
         description:
           "A month of days with their events, on a table the page renders.",
+      },
+      {
+        id: "line-chart",
+        styles: ["components/line-chart"],
+        exports: ["LineChart"],
+        label: "Line chart",
+        route: "/line-chart.html",
+        description:
+          "Trends over time drawn from a data table, with a tooltip, a legend and a sparkline size.",
+      },
+      {
+        id: "column-chart",
+        styles: ["components/column-chart"],
+        exports: ["ColumnChart"],
+        label: "Column chart",
+        route: "/column-chart.html",
+        description:
+          "Values compared across categories or periods, drawn as columns from a data table, grouped or stacked.",
+      },
+      {
+        id: "bar-chart",
+        styles: ["components/bar-chart"],
+        exports: ["BarChart"],
+        label: "Bar chart",
+        route: "/bar-chart.html",
+        description:
+          "Ranked or long-labelled categories drawn as horizontal bars from a data table, grouped, stacked or as a meter.",
+      },
+      {
+        id: "pie-chart",
+        styles: ["components/pie-chart"],
+        exports: ["PieChart"],
+        label: "Pie chart",
+        route: "/pie-chart.html",
+        description:
+          "Parts of a whole drawn as slices from a data table, as a pie or a donut with its total.",
+      },
+      {
+        id: "heatmap-chart",
+        styles: ["components/heatmap-chart"],
+        exports: ["HeatmapChart"],
+        label: "Heatmap chart",
+        route: "/heatmap-chart.html",
+        description:
+          "A data table drawn as a grid of cells shaded by value, for patterns across two categories such as days and hours.",
+      },
+      {
+        id: "radar-chart",
+        styles: ["components/radar-chart"],
+        exports: ["RadarChart"],
+        label: "Radar chart",
+        route: "/radar-chart.html",
+        description:
+          "Several measures on one scale drawn as shapes on spokes from a data table, one shape per series.",
+      },
+      {
+        id: "radial-chart",
+        styles: ["components/radial-chart"],
+        exports: ["RadialChart"],
+        label: "Radial chart",
+        route: "/radial-chart.html",
+        description:
+          "Progress toward a goal drawn as rings from a data table, as concentric rings or a half-circle gauge.",
+      },
+      {
+        id: "mixed-chart",
+        styles: ["components/mixed-chart"],
+        exports: ["MixedChart"],
+        label: "Mixed chart",
+        route: "/mixed-chart.html",
+        description:
+          "Columns, lines and areas together from one data table, with a second scale for values in other units.",
+      },
+      {
+        id: "scatter-chart",
+        styles: ["components/scatter-chart"],
+        exports: ["ScatterChart"],
+        label: "Scatter chart",
+        route: "/scatter-chart.html",
+        description:
+          "One measure plotted against another, with a point for each row.",
+      },
+      {
+        id: "funnel-chart",
+        styles: ["components/funnel-chart"],
+        exports: ["FunnelChart"],
+        label: "Funnel chart",
+        route: "/funnel-chart.html",
+        description:
+          "Steps people take in order, each drawn as a stage as wide as the people who reach it.",
+      },
+      {
+        id: "sankey-chart",
+        styles: ["components/sankey-chart"],
+        exports: ["SankeyChart"],
+        label: "Sankey chart",
+        route: "/sankey-chart.html",
+        description:
+          "Flows between nodes, each link as thick as its value.",
+      },
+      {
+        id: "treemap-chart",
+        styles: ["components/treemap-chart"],
+        exports: ["TreemapChart"],
+        label: "Treemap chart",
+        route: "/treemap-chart.html",
+        description:
+          "Parts of a whole drawn as rectangles whose areas follow their values.",
       },
       {
         id: "org-chart",

@@ -9,3 +9,5 @@
   description list, KPI, countdown, timeline, calendar, organization chart,
   popover, skeleton, empty state, marquee, rating, color swatches, stepper,
   mega menu, tree and the page footer.
+- The twelve charts that moved from core, with the `chart()`, `chart-axis()`
+  and `chart-column-motion()` Sass mixins in `abstracts/charts`.

@@ -1,6 +1,6 @@
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { Expressive, resetBody, window } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, window } from './setup.js';
 
 beforeEach(resetBody);
 
@@ -13,7 +13,7 @@ function chart(type, rows) {
 }
 
 test('scatter hit testing reads each plot dimension once, regardless of point count', () => {
-  const instance = Expressive.ScatterChart.init(chart('scatter-chart', Array.from({ length: 1000 }, (_, i) => [i, i])));
+  const instance = ExpressiveExtras.ScatterChart.init(chart('scatter-chart', Array.from({ length: 1000 }, (_, i) => [i, i])));
   try {
     const counts = {};
     for (const [name, value] of Object.entries({ clientLeft: 2, clientTop: 3, clientWidth: 800, clientHeight: 200 })) {
@@ -29,7 +29,7 @@ test('scatter hit testing reads each plot dimension once, regardless of point co
 });
 
 test('scatter hit testing keeps first ties, border offsets and fresh dimensions', () => {
-  const instance = Expressive.ScatterChart.init(chart('scatter-chart', [[0, 0], [50, 50], [100, 100]]), {
+  const instance = ExpressiveExtras.ScatterChart.init(chart('scatter-chart', [[0, 0], [50, 50], [100, 100]]), {
     xMin: 0, xMax: 100, min: 0, max: 100
   });
   try {
@@ -51,7 +51,7 @@ test('scatter hit testing keeps first ties, border offsets and fresh dimensions'
 });
 
 test('treemap highlighting leaves unrelated boxes untouched and clears on hide', () => {
-  const instance = Expressive.TreemapChart.init(chart('treemap-chart', [[1, 0], [0, 0], [3, 0], [4, 0]]));
+  const instance = ExpressiveExtras.TreemapChart.init(chart('treemap-chart', [[1, 0], [0, 0], [3, 0], [4, 0]]));
   try {
     instance.show(0);
     const untouched = instance._boxes[3];
@@ -81,7 +81,7 @@ test('sankey highlighting touches only the old and new paths and survives redraw
     <thead><tr><th>Source</th><th>Target</th><th>Value</th></tr></thead>
     <tbody>${Array.from({ length: 100 }, (_, i) => `<tr><td>Source</td><td>Target ${i}</td><td>1</td></tr>`).join('')}</tbody>
   </table></figure>`;
-  const instance = Expressive.SankeyChart.init(document.querySelector('figure'));
+  const instance = ExpressiveExtras.SankeyChart.init(document.querySelector('figure'));
   try {
     instance.show(0);
     const touched = [];

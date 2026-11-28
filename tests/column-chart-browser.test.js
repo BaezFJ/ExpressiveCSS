@@ -54,7 +54,7 @@ for (const [engine, browserType, browserTest] of engines) {
         labels: [...el.querySelectorAll('.column-chart-labels li')].map((li) => li.textContent),
         legend: [...el.querySelectorAll('.column-chart-legend li')].map((li) => li.textContent),
         dashed: el.querySelectorAll('.column-chart-columns span.dashed').length,
-        instance: [!!Expressive.ColumnChart.getInstance(el), !!Expressive.LineChart.getInstance(el), !!el.Expressive_LineChart],
+        instance: [!!ExpressiveExtras.ColumnChart.getInstance(el), !!ExpressiveExtras.LineChart.getInstance(el), !!el.Expressive_LineChart],
         clip: getComputedStyle(el.querySelector('.column-chart-columns span')).clipPath,
       }));
       assert.equal(plans.table, 'absolute', 'the table is visually hidden');
@@ -119,7 +119,7 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.deepEqual(spark, [false, 'none', '48px']);
       assert.equal(await page.locator('#line .line-chart-plot').getAttribute('aria-roledescription'), 'line chart');
 
-      await page.evaluate(() => Expressive.ColumnChart.getInstance(document.querySelector('#plans')).destroy());
+      await page.evaluate(() => ExpressiveExtras.ColumnChart.getInstance(document.querySelector('#plans')).destroy());
       assert.deepEqual(await page.locator('#plans').evaluate((el) => [
         el.querySelectorAll('.column-chart-plot, .column-chart-labels, .column-chart-legend').length,
         getComputedStyle(el.querySelector('table')).clipPath,
@@ -170,7 +170,7 @@ for (const [engine, browserType, browserTest] of engines) {
         document.body.append(wrap);
         const el = wrap.firstElementChild;
         el.querySelectorAll('.column-chart-plot, .column-chart-labels, .column-chart-legend').forEach((node) => node.remove());
-        Expressive.ColumnChart.init(el);
+        ExpressiveExtras.ColumnChart.init(el);
         const plotBox = el.querySelector('.column-chart-plot').getBoundingClientRect();
         const first = el.querySelector('.column-chart-columns span').getBoundingClientRect();
         return first.left - plotBox.left > plotBox.width / 2;
@@ -200,7 +200,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.evaluate(() => Expressive.AutoInit());
 
       const ranges = await page.locator('#ranges').evaluate((el) => {
-        const chart = Expressive.ColumnChart.getInstance(el);
+        const chart = ExpressiveExtras.ColumnChart.getInstance(el);
         const rows = [...el.querySelectorAll('.column-chart-columns > div')];
         const first = rows[0].children[0];
         return {
@@ -224,10 +224,10 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.equal(new Set(ranges.ends).size, 1, `both ends of a range are rounded: ${ranges.ends}`);
       assert.deepEqual(ranges.tooltip, ['Range', '−10 – 10', 'Mean', '0'], 'the tooltip shows the cell as written');
 
-      const stackedRange = await page.locator('#stacked-range').evaluate((el) => Expressive.ColumnChart.getInstance(el).series.map((series) => [series.base, series.tops]));
+      const stackedRange = await page.locator('#stacked-range').evaluate((el) => ExpressiveExtras.ColumnChart.getInstance(el).series.map((series) => [series.base, series.tops]));
       assert.deepEqual(stackedRange, [[[10], [20]], [[0], [5]], [[5], [10]]], 'with .stacked a range keeps its ends, and only the other series stack');
 
-      const bars = await page.locator('#bars').evaluate((el) => Expressive.BarChart.getInstance(el).series[0].base);
+      const bars = await page.locator('#bars').evaluate((el) => ExpressiveExtras.BarChart.getInstance(el).series[0].base);
       assert.deepEqual(bars, [2, 4], 'data-value gives the two ends as numbers');
     } finally {
       await browser.close();

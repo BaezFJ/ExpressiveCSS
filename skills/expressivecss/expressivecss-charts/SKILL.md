@@ -129,10 +129,10 @@ To change data, edit the table and call the existing instance's `update()`:
 ```js
 const figure = document.querySelector('#revenue .line-chart');
 figure.querySelector('tbody').replaceChildren(...newRows);
-Expressive.LineChart.getInstance(figure).update();
+ExpressiveExtras.LineChart.getInstance(figure).update();
 ```
 
-The classes are `LineChart`, `ColumnChart`, `BarChart`, `PieChart`, `HeatmapChart`, `RadarChart`, `RadialChart`, `MixedChart`, `ScatterChart`, `FunnelChart`, `SankeyChart` and `TreemapChart`. Each instance has `update()`, `show(index)` and `destroy()`. `show(-1)` hides the tooltip; the index meaning follows the selected chart. `destroy()` removes the drawing and shows the table. New hosts need `init` or a scoped `AutoInit()` call. With ES modules, import the selected class from `@expressivecss/expressive`.
+The classes are `LineChart`, `ColumnChart`, `BarChart`, `PieChart`, `HeatmapChart`, `RadarChart`, `RadialChart`, `MixedChart`, `ScatterChart`, `FunnelChart`, `SankeyChart` and `TreemapChart`. Each instance has `update()`, `show(index)` and `destroy()`. `show(-1)` hides the tooltip; the index meaning follows the selected chart. `destroy()` removes the drawing and shows the table. New hosts need `init` or a scoped `AutoInit()` call. The charts ship in `@expressivecss/extras`: load its CSS and script after core's, and use the `ExpressiveExtras` global, or import the selected class from `@expressivecss/extras` after `@expressivecss/expressive`.
 
 Set `data-watch` on the figure before initialization, or pass `{ watch: true }`, to update automatically when its table changes. Changes to the figure's range, classes or caption still need `update()`. In-place updates preserve keyboard focus, highlighted data and hidden legend series where applicable. Reinitialization replaces the instance and resets that state.
 

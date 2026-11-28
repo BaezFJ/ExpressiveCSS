@@ -1,5 +1,4 @@
-import { Component, BaseOptions } from '../core/component';
-import { Utils, numberValue, svgNode, isRtl } from '../core/utils';
+import { Component, type BaseOptions, Utils, numberValue, svgNode, isRtl } from '@expressivecss/expressive/core';
 
 export interface LineChartOptions extends BaseOptions {
   /**

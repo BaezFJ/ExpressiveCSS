@@ -46,7 +46,7 @@ card.querySelectorAll('[data-period]').forEach((button) => {
     body.replaceChildren(...rows.slice(-Number(button.dataset.period)));
     card.querySelector('.stats dd').textContent = button.dataset.total;
     card.querySelector('.stat-change').textContent = button.dataset.change;
-    Expressive.ColumnChart.getInstance(figure).update();
+    ExpressiveExtras.ColumnChart.getInstance(figure).update();
   });
 });`;
 ---
@@ -475,7 +475,7 @@ ${cardScript.replace(/^/gm, "  ")}
           takes the line chart's options and methods.
         </p>
 <Code code={`
-const chart = Expressive.ColumnChart.init(document.querySelector('.column-chart'), {
+const chart = ExpressiveExtras.ColumnChart.init(document.querySelector('.column-chart'), {
   max: 10000
 });
 chart.show(2);   // highlight the third group; -1 hides the tooltip

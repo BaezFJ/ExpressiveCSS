@@ -53,6 +53,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   state, marquee, rating, color swatches, stepper, mega menu, tree and the
   page footer. Their markup is unchanged; load `extras.css` after
   `expressive.css` to keep them.
+- The twelve charts moved to `@expressivecss/extras`: `LineChart`,
+  `ColumnChart`, `BarChart`, `PieChart`, `HeatmapChart`, `RadarChart`,
+  `RadialChart`, `MixedChart`, `ScatterChart`, `FunnelChart`, `SankeyChart`
+  and `TreemapChart`. Their markup is unchanged. Load `extras.css` and
+  `extras.js` after core's files; the classes are on `ExpressiveExtras` or
+  imported from `@expressivecss/extras`, and core's `AutoInit()` still starts
+  them once extras has loaded. The `chart()`, `chart-axis()` and
+  `chart-column-motion()` Sass mixins moved with them, to the extras
+  `abstracts/charts` module.
 
 ## [0.20.0] - 2026-11-18
 

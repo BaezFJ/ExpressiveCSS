@@ -58,7 +58,7 @@ for (const [engine, browserType, browserTest] of engines) {
           hidden: el.querySelector('.bar-chart-bars').getAttribute('aria-hidden'),
           labels: [...labels.children].map((li) => li.textContent),
           legend: [...el.querySelectorAll('.bar-chart-legend li')].map((li) => li.textContent),
-          instance: [!!Expressive.BarChart.getInstance(el), !!Expressive.ColumnChart.getInstance(el)],
+          instance: [!!ExpressiveExtras.BarChart.getInstance(el), !!ExpressiveExtras.ColumnChart.getInstance(el)],
           height: plot.getBoundingClientRect().height,
           beside: labels.getBoundingClientRect().right <= plot.getBoundingClientRect().left
             && Math.abs(labels.getBoundingClientRect().top - plot.getBoundingClientRect().top) < 1,
@@ -129,7 +129,7 @@ for (const [engine, browserType, browserTest] of engines) {
         const el = wrap.firstElementChild;
         el.id = 'profit-rtl';
         el.querySelectorAll('.bar-chart-plot, .bar-chart-labels, .bar-chart-legend').forEach((node) => node.remove());
-        Expressive.BarChart.init(el);
+        ExpressiveExtras.BarChart.init(el);
         return el.querySelector('.bar-chart-labels').getBoundingClientRect().left >= el.querySelector('.bar-chart-plot').getBoundingClientRect().right;
       });
       assert.equal(rtl, true, 'the labels sit on the right in RTL');
@@ -153,7 +153,7 @@ for (const [engine, browserType, browserTest] of engines) {
         'forced colors clear the grid');
       await page.emulateMedia({ forcedColors: 'none' });
 
-      await page.evaluate(() => Expressive.BarChart.getInstance(document.querySelector('#plans')).destroy());
+      await page.evaluate(() => ExpressiveExtras.BarChart.getInstance(document.querySelector('#plans')).destroy());
       assert.deepEqual(await page.locator('#plans').evaluate((el) => [
         el.querySelectorAll('.bar-chart-plot, .bar-chart-labels, .bar-chart-legend').length,
         getComputedStyle(el.querySelector('table')).clipPath,
@@ -211,7 +211,7 @@ for (const [engine, browserType, browserTest] of engines) {
         const el = wrap.firstElementChild;
         el.id = 'plans-rtl';
         el.querySelectorAll('.bar-chart-plot, .bar-chart-labels, .bar-chart-legend').forEach((node) => node.remove());
-        Expressive.BarChart.init(el);
+        ExpressiveExtras.BarChart.init(el);
       });
       await page.locator('#plans-rtl .bar-chart-plot').scrollIntoViewIfNeeded();
       const rtlBox = await page.locator('#plans-rtl .bar-chart-plot').boundingBox();

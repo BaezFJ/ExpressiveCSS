@@ -1,5 +1,5 @@
 import { LineChart, LineChartOptions, rowLegend, seriesColor, swapActive, tintTooltip } from './lineChart';
-import { svgNode as node } from '../core/utils';
+import { svgNode as node } from '@expressivecss/expressive/core';
 
 export type RadialChartOptions = LineChartOptions;
 

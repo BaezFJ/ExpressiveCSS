@@ -345,21 +345,9 @@ function unmount() {
 | `Particles` | `canvas.particles` |
 | `Keypad` | `.keypad, .keyboard` |
 | `ColorPicker` | `.color-picker` |
-| `BarChart` | `.bar-chart` |
-| `PieChart` | `.pie-chart` |
-| `HeatmapChart` | `.heatmap-chart` |
-| `RadarChart` | `.radar-chart` |
-| `RadialChart` | `.radial-chart` |
-| `MixedChart` | `.mixed-chart` |
-| `ScatterChart` | `.scatter-chart` |
-| `SankeyChart` | `.sankey-chart` |
-| `FunnelChart` | `.funnel-chart` |
-| `TreemapChart` | `.treemap-chart` |
-| `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
 | `Datepicker` | `.date-picker` |
-| `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
 | `MessageScroller` | `.message-scroller` |
 | `PullToRefresh` | `.pull-to-refresh` |
@@ -382,6 +370,18 @@ function unmount() {
 | `HoverCard` | `.hover-card-trigger` |
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
+| `ColumnChart` | `.column-chart`, from `@expressivecss/extras` |
+| `BarChart` | `.bar-chart`, from `@expressivecss/extras` |
+| `PieChart` | `.pie-chart`, from `@expressivecss/extras` |
+| `HeatmapChart` | `.heatmap-chart`, from `@expressivecss/extras` |
+| `RadarChart` | `.radar-chart`, from `@expressivecss/extras` |
+| `RadialChart` | `.radial-chart`, from `@expressivecss/extras` |
+| `MixedChart` | `.mixed-chart`, from `@expressivecss/extras` |
+| `ScatterChart` | `.scatter-chart`, from `@expressivecss/extras` |
+| `FunnelChart` | `.funnel-chart`, from `@expressivecss/extras` |
+| `SankeyChart` | `.sankey-chart`, from `@expressivecss/extras` |
+| `TreemapChart` | `.treemap-chart`, from `@expressivecss/extras` |
+| `LineChart` | `.line-chart`, from `@expressivecss/extras` |
 
 `Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also initializes Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, ImageCompare, Tour, Sortable, Lists, DataTables and TransferList. The modular entry requires explicit setup for these behaviors.
 
@@ -6802,21 +6802,9 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `Particles` | `canvas.particles` |
 | `Keypad` | `.keypad, .keyboard` |
 | `ColorPicker` | `.color-picker` |
-| `BarChart` | `.bar-chart` |
-| `PieChart` | `.pie-chart` |
-| `HeatmapChart` | `.heatmap-chart` |
-| `RadarChart` | `.radar-chart` |
-| `RadialChart` | `.radial-chart` |
-| `MixedChart` | `.mixed-chart` |
-| `ScatterChart` | `.scatter-chart` |
-| `SankeyChart` | `.sankey-chart` |
-| `FunnelChart` | `.funnel-chart` |
-| `TreemapChart` | `.treemap-chart` |
-| `ColumnChart` | `.column-chart` |
 | `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
 | `Datepicker` | `.date-picker` |
-| `LineChart` | `.line-chart` |
 | `Menu` | `.menu-trigger` |
 | `MessageScroller` | `.message-scroller` |
 | `PullToRefresh` | `.pull-to-refresh` |
@@ -6839,6 +6827,18 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `HoverCard` | `.hover-card-trigger` |
 | `FloatingActionButton` | `.fab-menu` |
 | `Menubar` | `.menubar` |
+| `ColumnChart` | `.column-chart`, from `@expressivecss/extras` |
+| `BarChart` | `.bar-chart`, from `@expressivecss/extras` |
+| `PieChart` | `.pie-chart`, from `@expressivecss/extras` |
+| `HeatmapChart` | `.heatmap-chart`, from `@expressivecss/extras` |
+| `RadarChart` | `.radar-chart`, from `@expressivecss/extras` |
+| `RadialChart` | `.radial-chart`, from `@expressivecss/extras` |
+| `MixedChart` | `.mixed-chart`, from `@expressivecss/extras` |
+| `ScatterChart` | `.scatter-chart`, from `@expressivecss/extras` |
+| `FunnelChart` | `.funnel-chart`, from `@expressivecss/extras` |
+| `SankeyChart` | `.sankey-chart`, from `@expressivecss/extras` |
+| `TreemapChart` | `.treemap-chart`, from `@expressivecss/extras` |
+| `LineChart` | `.line-chart`, from `@expressivecss/extras` |
 
 Snackbar, CharacterCounter, and Slider stay out of this table. Slider still starts itself when the bundle loads. Forms, Chips, Cards, ExpandingCard, Dialogs, BottomSheets, and SideSheets also run an import-time `Init()`. Chips, Cards, and ExpandingCard appear in the table as well so a later `AutoInit()` can pick up elements added after load.
 

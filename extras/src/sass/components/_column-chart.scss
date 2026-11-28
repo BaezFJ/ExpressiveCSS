@@ -1,4 +1,5 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
+@use "../abstracts/charts" as *;
 
 // Column chart. The same <figure>, <figcaption> and <table> as a line
 // chart; ColumnChart draws each row as a group of columns, one per series,

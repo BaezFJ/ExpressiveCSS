@@ -11,6 +11,7 @@ const S = defineSections([
   { id: "functions", label: "Functions" },
   { id: "mixins", label: "General mixins" },
   { id: "components", label: "Component mixins" },
+  { id: "extras", label: "Extras chart mixins" },
   { id: "partials", label: "Partial directory" },
 ]);
 // Core partials only: the extras stylesheet loads whole.
@@ -134,6 +135,19 @@ const partials = PAGES.filter(page => !isExtrasPage(page.id)).flatMap(page => (p
         <tr><td><code>selection-control-label($display: flex)</code></td><td>A 48px minimum label row for a checkbox, radio or switch, with body-large type and a 12px gap.</td></tr>
         <tr><td><code>nav-destination($prefix, $inset, $transition)</code></td><td>Stacked navigation destination styles. The prefix names component tokens, such as <code>nav-bar</code>; inset is top padding and transition is a CSS transition value. Accepts an optional content block.</td></tr>
         <tr><td><code>nav-destination-row($prefix)</code></td><td>Changes the stacked destination to a horizontal row. Include after the stacked styles.</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </Section>
+  <Section {...S.extras}>
+    <p>The chart mixins ship with the charts in <code>@expressivecss/extras</code>, in
+      <code>src/sass/abstracts/_charts.scss</code>. That module loads core's abstracts as
+      <code>"abstracts"</code>, so compile with core's <code>src/sass</code> on the load path,
+      as the extras stylesheet does.</p>
+    <div class="docs-table-scroll">
+    <table class="striped">
+      <thead><tr><th>Mixin</th><th>Contract</th></tr></thead>
+      <tbody>
         <tr><td><code>chart($name, $colors: 4, $on-colors: false, $grid: true, $round: false, $rows: false, $tooltip: top, $cursor: null, $lines: false, $legend-columns: null)</code></td><td>At stylesheet top level, emits a chart's common container, plot, tooltip, labels, legend and tokens, with the supplied class prefix. The options add 5 or 6 series colors and their on-colors, drop the grid, draw a round or row-band plot, centre the tooltip, draw a <code>line</code> or <code>band</code> cursor, style SVG lines, and lay the legend out as a table of 3 or more columns.</td></tr>
         <tr><td><code>chart-axis($name, $beside: true)</code></td><td>At stylesheet top level, emits value labels and grid lines for the named chart. <code>false</code> leaves label spacing to the component.</td></tr>
         <tr><td><code>chart-column-motion()</code></td><td>Inside a column/bar container, animates marks from the zero line or previous values when reduced motion is not requested.</td></tr>

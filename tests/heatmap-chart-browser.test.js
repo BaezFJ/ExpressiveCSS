@@ -60,7 +60,7 @@ for (const [engine, browserType, browserTest] of engines) {
           columns: [...el.querySelectorAll('.heatmap-chart-column')].map((column) => column.textContent),
           height: cells[0].getBoundingClientRect().height,
           legend: [...el.querySelector('.heatmap-chart-legend').children].map((span) => span.textContent),
-          instance: [!!Expressive.HeatmapChart.getInstance(el), !!Expressive.LineChart.getInstance(el)],
+          instance: [!!ExpressiveExtras.HeatmapChart.getInstance(el), !!ExpressiveExtras.LineChart.getInstance(el)],
           overflow: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
         };
       });
@@ -161,7 +161,7 @@ for (const [engine, browserType, browserTest] of engines) {
       });
       assert.deepEqual(long, [true, true, true]);
 
-      await page.evaluate(() => Expressive.HeatmapChart.getInstance(document.querySelector('#sales')).destroy());
+      await page.evaluate(() => ExpressiveExtras.HeatmapChart.getInstance(document.querySelector('#sales')).destroy());
       assert.deepEqual(await page.locator('#sales').evaluate((el) => [
         el.querySelectorAll('.heatmap-chart-plot, .heatmap-chart-legend').length,
         getComputedStyle(el.querySelector('table')).clipPath,
@@ -216,7 +216,7 @@ for (const [engine, browserType, browserTest] of engines) {
         const to = cells[2].getBoundingClientRect();
         cells[0].dispatchEvent(new PointerEvent('pointermove', {
           bubbles: true, pointerType: 'touch', clientX: to.x + to.width / 2, clientY: to.y + to.height / 2 }));
-        return Expressive.HeatmapChart.getInstance(el).activeIndex;
+        return ExpressiveExtras.HeatmapChart.getInstance(el).activeIndex;
       });
       assert.equal(dragged, 2);
 
@@ -270,7 +270,7 @@ for (const [engine, browserType, browserTest] of engines) {
         document.body.append(wrap);
         const el = wrap.firstElementChild;
         el.querySelectorAll('.heatmap-chart-plot, .heatmap-chart-legend').forEach((node) => node.remove());
-        const chart = Expressive.HeatmapChart.init(el);
+        const chart = ExpressiveExtras.HeatmapChart.init(el);
         chart.show(0);
         el.querySelector('.heatmap-chart-plot').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
         const cells = el.querySelectorAll('.heatmap-chart-cell');
@@ -405,7 +405,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.locator('#wide .heatmap-chart-scroll').evaluate((el) => { el.scrollLeft = el.scrollWidth; });
       const label = await page.locator('#wide .heatmap-chart-row').boundingBox();
       await page.mouse.move(label.x + label.width / 2, label.y + label.height / 2);
-      assert.equal(await page.locator('#wide').evaluate((el) => Expressive.HeatmapChart.getInstance(el).activeIndex), -1);
+      assert.equal(await page.locator('#wide').evaluate((el) => ExpressiveExtras.HeatmapChart.getInstance(el).activeIndex), -1);
 
       // Tab leaves the chart from the plot, and a press in the grid focuses the plot.
       await page.keyboard.press('Tab');
@@ -454,7 +454,7 @@ for (const [engine, browserType, browserTest] of engines) {
       for (const dir of ['ltr', 'rtl']) {
         await page.evaluate((value) => {
           document.documentElement.dir = value;
-          document.querySelectorAll('.heatmap-chart').forEach((figure) => Expressive.HeatmapChart.getInstance(figure).update());
+          document.querySelectorAll('.heatmap-chart').forEach((figure) => ExpressiveExtras.HeatmapChart.getInstance(figure).update());
         }, dir);
         for (let width = 200; width <= 700; width += 10) {
           await page.locator('#box').evaluate((box, px) => { box.style.width = `${px}px`; }, width);
@@ -500,7 +500,7 @@ for (const [engine, browserType, browserTest] of engines) {
       });
       await page.evaluate(() => {
         Expressive.AutoInit();
-        Expressive.HeatmapChart.getInstance(document.getElementById('sales')).show(1);
+        ExpressiveExtras.HeatmapChart.getInstance(document.getElementById('sales')).show(1);
       });
       assert.ok(await gap() < 1, 'it starts on its cell');
       await page.evaluate(() => { document.getElementById('box').style.width = '320px'; });

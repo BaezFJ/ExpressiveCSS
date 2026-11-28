@@ -1,4 +1,5 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
+@use "../abstracts/charts" as *;
 
 // Sankey chart. A <figure class="sankey-chart"> holds a <figcaption> and a
 // <table> of flows: the first column names each row's source node, the

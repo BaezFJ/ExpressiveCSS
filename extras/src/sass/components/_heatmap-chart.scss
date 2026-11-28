@@ -1,4 +1,5 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
+@use "../abstracts/charts" as *;
 
 // Heatmap chart. The same <figure>, <figcaption> and <table> as a line
 // chart; HeatmapChart draws every cell of the table as a square of a grid,

@@ -1,4 +1,5 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
+@use "../abstracts/charts" as *;
 
 // Radar chart. The same <figure>, <figcaption> and <table> as a line chart;
 // RadarChart draws each row as a spoke, clockwise from the top, and each

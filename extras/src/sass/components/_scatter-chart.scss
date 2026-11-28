@@ -1,4 +1,5 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
+@use "../abstracts/charts" as *;
 
 // Scatter chart. A <figure class="scatter-chart"> holds a <figcaption> and a
 // <table> of data: the first column labels each row, the second is the x

@@ -47,8 +47,8 @@ async function open(browser, reducedMotion = 'no-preference') {
  */
 const sampleColumns = async (el, times) => {
   el.querySelector('tbody td').textContent = '80';
-  Expressive.ColumnChart.getInstance(el)?.update();
-  Expressive.BarChart.getInstance(el)?.update();
+  ExpressiveExtras.ColumnChart.getInstance(el)?.update();
+  ExpressiveExtras.BarChart.getInstance(el)?.update();
   const span = el.querySelector(':is(.column-chart-columns, .bar-chart-bars) span');
   const motion = el.getAnimations({ subtree: true });
   const insets = () => getComputedStyle(span).clipPath.match(/-?[\d.]+(?=%|px)/g).slice(0, 4).map(Number);
@@ -69,7 +69,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const page = await open(browser);
       const result = await page.locator('#line').evaluate(async (el) => {
         el.querySelectorAll('tbody td:nth-child(2)').forEach((td) => { td.textContent = '80'; });
-        Expressive.LineChart.getInstance(el).update();
+        ExpressiveExtras.LineChart.getInstance(el).update();
         const svg = el.querySelector('.line-chart-plot svg');
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         const running = svg.getCurrentTime() > 0;
@@ -110,7 +110,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const page = await open(browser, 'reduce');
       const result = await page.locator('#line').evaluate((el) => {
         el.querySelectorAll('tbody td:nth-child(2)').forEach((td) => { td.textContent = '80'; });
-        Expressive.LineChart.getInstance(el).update();
+        ExpressiveExtras.LineChart.getInstance(el).update();
         return [el.querySelectorAll('animate').length, Math.round(el.querySelector('.line-chart-line').getBBox().y)];
       });
       assert.deepEqual(result, [0, 20]);
@@ -138,7 +138,7 @@ for (const [engine, browserType, browserTest] of engines) {
           tr.querySelector('td').textContent = '30';
           tr.insertAdjacentHTML('beforeend', '<td>10</td>');
         });
-        Expressive.LineChart.getInstance(el).update();
+        ExpressiveExtras.LineChart.getInstance(el).update();
         const [below, added] = el.querySelectorAll('.line-chart-series');
         return {
           below: below.querySelectorAll('animate').length,
@@ -151,7 +151,7 @@ for (const [engine, browserType, browserTest] of engines) {
       assert.deepEqual([...new Set(ys(stacked.to))], [60]);
 
       const gap = await page.locator('#gap').evaluate((el) => {
-        const chart = Expressive.LineChart.getInstance(el);
+        const chart = ExpressiveExtras.LineChart.getInstance(el);
         el.querySelector('tbody tr:nth-child(2) td').textContent = '20';
         chart.update();
         const from = el.querySelector('.line-chart-points animate').getAttribute('from');
@@ -186,7 +186,7 @@ for (const [engine, browserType, browserTest] of engines) {
 
       const added = await page.locator('#column').evaluate((el) => {
         el.querySelector('tbody').insertAdjacentHTML('beforeend', '<tr><th>Feb</th><td>50</td></tr>');
-        Expressive.ColumnChart.getInstance(el).update();
+        ExpressiveExtras.ColumnChart.getInstance(el).update();
         const span = el.querySelectorAll('.column-chart-columns span')[1];
         return [span.style.getPropertyValue('--from-top'), span.style.getPropertyValue('--from-bottom')];
       });
@@ -203,7 +203,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const result = await page.evaluate(() => ['paced', 'still'].map((id) => {
         const el = document.getElementById(id);
         el.querySelectorAll('tbody td').forEach((td) => { td.textContent = '80'; });
-        Expressive.LineChart.getInstance(el).update();
+        ExpressiveExtras.LineChart.getInstance(el).update();
         const animate = el.querySelector('.line-chart-line animate');
         return animate && [animate.getAttribute('dur'), animate.getAttribute('keySplines').replace(/\s+/g, '')];
       }));
@@ -221,7 +221,7 @@ for (const [engine, browserType, browserTest] of engines) {
         el.querySelector('tbody td').textContent = '30';
         el.querySelector('thead tr').insertAdjacentHTML('beforeend', '<th>Costs</th>');
         el.querySelector('tbody tr').insertAdjacentHTML('beforeend', '<td>10</td>');
-        Expressive.ColumnChart.getInstance(el).update();
+        ExpressiveExtras.ColumnChart.getInstance(el).update();
         return [...el.querySelectorAll('.column-chart-columns span')].map((span) =>
           [span.style.getPropertyValue('--from-top'), span.style.getPropertyValue('--from-bottom')]);
       });
@@ -237,7 +237,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const page = await open(browser);
       const result = await page.locator('#mixed').evaluate((el) => {
         el.querySelectorAll('tbody td').forEach((td) => { td.textContent = '80'; });
-        Expressive.MixedChart.getInstance(el).update();
+        ExpressiveExtras.MixedChart.getInstance(el).update();
         const span = el.querySelector('.mixed-chart-columns span');
         const animate = el.querySelector('.mixed-chart-line animate');
         const motion = span.getAnimations();

@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { JSDOM } from "jsdom";
 
-import { ExpressiveExtras } from "./setup.js";
+import { Expressive, ExpressiveExtras, resetBody } from "./setup.js";
 import { parseRules } from "./css.js";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
@@ -52,18 +52,20 @@ test("the stylesheets do not re-emit core tokens, fonts or base styles", () => {
   }
 });
 
-// The CSS-only components that moved out of core: no rule in core's sheet
-// starts at their root any more, and the extras sheet has those rules. A core
-// rule may still name one in passing, as the busy button's exclusion names
-// .mega-menu.
+const CHARTS = ["line", "column", "bar", "pie", "heatmap", "radar", "radial", "mixed", "scatter", "funnel", "sankey", "treemap"];
+const CHART_CLASSES = CHARTS.map((name) => `${name[0].toUpperCase()}${name.slice(1)}Chart`);
+
+// The components that moved out of core: no rule in core's sheet starts at
+// their root any more, and the extras sheet has those rules. A core rule may
+// still name one in passing, as the busy button's exclusion names .mega-menu.
 const MOVED_ROOTS = [
   "aura", "message-bubble", "stats", "description-list", "kpi", "countdown", "timeline", "calendar-year",
   "org-chart", "popover", "skeleton", "empty-state", "marquee", "rating", "color-swatches", "stepper",
-  "mega-menu", "tree",
+  "mega-menu", "tree", ...CHARTS.map((name) => `${name}-chart`),
 ];
 const PAGE_FOOTER = "footer:not(.status-bar, :has(> .navigation-bar:only-child))";
 
-test("moved CSS-only components are styled by extras.css, not expressive.css", () => {
+test("moved components are styled by extras.css, not expressive.css", () => {
   const roots = (file) => parseRules(read(file).replace(/\/\*[\s\S]*?\*\//g, "")).flatMap((rule) => rule.selectors);
   const core = roots("dist/css/expressive.css");
   const extras = roots("extras/dist/css/extras.css");
@@ -74,4 +76,33 @@ test("moved CSS-only components are styled by extras.css, not expressive.css", (
   }
   assert.ok(!core.some((selector) => selector.startsWith(PAGE_FOOTER)), "expressive.css still styles the page footer");
   assert.ok(extras.some((selector) => selector.startsWith(PAGE_FOOTER)), "extras.css does not style the page footer");
+});
+
+test("the charts are exported by extras, not by core", async () => {
+  const coreModular = await import("../dist/js/modular.mjs");
+  const coreApi = await import("../dist/js/core.mjs");
+  const extrasModular = await import("../extras/dist/js/modular.mjs");
+  for (const name of CHART_CLASSES) {
+    assert.ok(!(name in Expressive) && !(name in coreModular) && !(name in coreApi), `core still exports ${name}`);
+    assert.equal(typeof ExpressiveExtras[name], "function", `extras does not export ${name}`);
+    assert.equal(extrasModular[name], ExpressiveExtras[name]);
+  }
+  assert.doesNotMatch(read("dist/css/expressive.css"), /\.(?:line|column|bar|pie|heatmap|radar|radial|mixed|scatter|funnel|sankey|treemap)-chart(?![\w-])/,
+    "expressive.css names a chart class");
+});
+
+test("AutoInit started through core starts the extras charts", () => {
+  try {
+    document.body.innerHTML = CHARTS.map((name) => `<figure class="${name}-chart"><figcaption>${name}</figcaption><table>
+      <thead><tr><th>Name</th><th>A</th><th>B</th></tr></thead>
+      <tbody><tr><th>One</th><td>1</td><td>2</td></tr><tr><th>Two</th><td>3</td><td>4</td></tr></tbody></table></figure>`).join("");
+    Expressive.AutoInit();
+    for (const [i, name] of CHART_CLASSES.entries()) {
+      const el = document.querySelector(`.${CHARTS[i]}-chart`);
+      assert.ok(ExpressiveExtras[name].getInstance(el), `${name} did not start`);
+      ExpressiveExtras[name].getInstance(el).destroy();
+    }
+  } finally {
+    resetBody();
+  }
 });

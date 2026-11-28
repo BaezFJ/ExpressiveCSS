@@ -135,7 +135,7 @@ const visits: [string, string, number][] = [
           for <code>watch</code> and the shared methods.
         </p>
 <Code code={`
-const chart = Expressive.SankeyChart.init(document.querySelector('.sankey-chart'));
+const chart = ExpressiveExtras.SankeyChart.init(document.querySelector('.sankey-chart'));
 chart.show(2);   // highlight the third drawn link in table order; -1 hides the tooltip
 chart.update();  // redraw from the table; focus and the highlighted link stay
 chart.destroy(); // remove the drawing and show the table again

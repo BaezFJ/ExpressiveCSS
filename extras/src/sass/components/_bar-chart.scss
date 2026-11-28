@@ -1,4 +1,5 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
+@use "../abstracts/charts" as *;
 
 // Bar chart. The column chart's markup and runtime turned on its side:
 // BarChart draws each row of the table as a band of bars growing from zero

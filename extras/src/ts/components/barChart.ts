@@ -1,4 +1,4 @@
-import { isRtl } from '../core/utils';
+import { isRtl } from '@expressivecss/expressive/core';
 import { ColumnChart, ColumnChartOptions } from './columnChart';
 
 export type BarChartOptions = ColumnChartOptions;

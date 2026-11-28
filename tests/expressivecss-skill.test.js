@@ -5,7 +5,7 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { compile } from 'sass';
 import * as publicApi from '../dist/js/modular.mjs';
-import { PAGES } from '../docs/src/data/nav.ts';
+import { PAGES, isExtrasPage } from '../docs/src/data/nav.ts';
 import { readSkillMetadata } from '../docs/src/lib/skill-metadata.ts';
 
 const skillUrl = new URL('../skills/expressivecss/SKILL.md', import.meta.url);
@@ -629,7 +629,8 @@ describe('the ExpressiveCSS agent skill', () => {
     const index = readFileSync(new URL('references/api-index.md', skillDirectory), 'utf8');
     const decisions = JSON.parse(readFileSync(new URL('../docs/src/data/component-decisions.json', import.meta.url), 'utf8'));
     assert.match(skill, /\[API index\]\(\.\/references\/api-index\.md\)/);
-    assert.deepEqual(PAGES.flatMap((page) => page.exports ?? []).sort(), Object.keys(publicApi).sort());
+    // Core's modular entry; extras pages own @expressivecss/extras exports (docs-coverage checks those).
+    assert.deepEqual(PAGES.filter((page) => !isExtrasPage(page.id)).flatMap((page) => page.exports ?? []).sort(), Object.keys(publicApi).sort());
     for (const page of PAGES) {
       for (const name of page.exports ?? []) {
         assert.ok(index.includes(`| \`${name}\` |`), `API index omits ${name}`);

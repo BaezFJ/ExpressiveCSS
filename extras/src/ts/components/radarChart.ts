@@ -1,5 +1,5 @@
 import { LineChart, LineChartOptions, polarPoint, Series, splitRuns, straightPath } from './lineChart';
-import { svgNode as node } from '../core/utils';
+import { svgNode as node } from '@expressivecss/expressive/core';
 
 export type RadarChartOptions = LineChartOptions;
 

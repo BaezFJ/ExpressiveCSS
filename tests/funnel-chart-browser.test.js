@@ -92,7 +92,7 @@ async function tabTo(page, id) {
 function change(id, row, value) {
   const el = document.querySelector(id);
   el.querySelector(`tbody tr:nth-child(${row + 1}) td`).textContent = value;
-  Expressive.FunnelChart.getInstance(el).update();
+  ExpressiveExtras.FunnelChart.getInstance(el).update();
   const stage = el.querySelectorAll('.funnel-chart-stages > div')[row].querySelector('span');
   const share = () => stage.getBoundingClientRect().width / el.querySelector('.funnel-chart-plot').clientWidth;
   const [transition] = stage.getAnimations();
@@ -122,7 +122,7 @@ for (const [engine, browserType, browserTest] of engines) {
     try {
       const [page] = await open(browser);
       const instance = await page.locator('#ltr').evaluate((el) =>
-        [!!Expressive.FunnelChart.getInstance(el), !!Expressive.LineChart.getInstance(el)]);
+        [!!ExpressiveExtras.FunnelChart.getInstance(el), !!ExpressiveExtras.LineChart.getInstance(el)]);
       assert.deepEqual(instance, [true, false]);
       for (const id of ['#ltr', '#rtl']) {
         const drawn = await read(page, id);
@@ -233,7 +233,7 @@ for (const [engine, browserType, browserTest] of engines) {
     try {
       const [page] = await open(browser);
       const tips = (id) => page.locator(id).evaluate((el, source) => {
-        const chart = Expressive.FunnelChart.getInstance(el);
+        const chart = ExpressiveExtras.FunnelChart.getInstance(el);
         return chart.labels.map((_, i) => {
           chart.show(i);
           return new Function(`return ${source}`)()(el.querySelector('.funnel-chart-tooltip'));
@@ -274,7 +274,7 @@ for (const [engine, browserType, browserTest] of engines) {
         }
         // update() keeps focus on the plot and the highlighted row.
         const kept = await page.locator('#ltr').evaluate((el) =>
-          [el.querySelector('.funnel-chart-plot') === document.activeElement, Expressive.FunnelChart.getInstance(el).activeIndex]);
+          [el.querySelector('.funnel-chart-plot') === document.activeElement, ExpressiveExtras.FunnelChart.getInstance(el).activeIndex]);
         assert.deepEqual(kept, [true, 1], motion);
         assert.match(await tip(page, '#ltr'), /^Signed up Visitors 800 \(80%\)/, motion);
         await page.close();

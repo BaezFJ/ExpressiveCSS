@@ -320,7 +320,7 @@ const spent = sum(spending.map(([, value]) => value));
           takes the column chart's options and methods.
         </p>
 <Code code={`
-const chart = Expressive.BarChart.init(document.querySelector('.bar-chart'), {
+const chart = ExpressiveExtras.BarChart.init(document.querySelector('.bar-chart'), {
   max: 10000
 });
 chart.show(2);   // highlight the third row; -1 hides the tooltip

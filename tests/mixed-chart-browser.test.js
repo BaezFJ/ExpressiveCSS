@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { engines } from './browser.js';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -28,7 +28,7 @@ const html = `<style>${css}</style>
 for (const [engine, browserType, browserTest] of engines) {
 
   browserTest(`${engine}: mixed chart draws columns, areas and lines on two scales`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
       await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -49,7 +49,7 @@ for (const [engine, browserType, browserTest] of engines) {
           // Margin is on the end scale, 0 to 100; its first point is 25% up.
           margin: el.querySelector('.area .mixed-chart-line').getAttribute('d').match(/^M[\d.]+,([\d.]+)/)[1],
           legend: [...el.querySelectorAll('.mixed-chart-legend li')].map((li) => [li.dataset.series, li.textContent]),
-          instance: [!!Expressive.MixedChart.getInstance(el), !!Expressive.ColumnChart.getInstance(el)],
+          instance: [!!ExpressiveExtras.MixedChart.getInstance(el), !!ExpressiveExtras.ColumnChart.getInstance(el)],
         };
       });
       assert.equal(mixed.table, 'absolute', 'the table is visually hidden');
@@ -88,7 +88,7 @@ for (const [engine, browserType, browserTest] of engines) {
   });
 
   browserTest(`${engine}: mixed chart stacks its columns and marks straight lines`, async () => {
-    const browser = await browserType.launch({ headless: true });
+    const browser = await leaseBrowser(browserType);
     try {
       const page = await browser.newPage();
       await page.emulateMedia({ reducedMotion: 'reduce' });
@@ -103,7 +103,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.evaluate(() => Expressive.AutoInit());
 
       const stacked = await page.locator('#stacked').evaluate((el) => {
-        const chart = Expressive.MixedChart.getInstance(el);
+        const chart = ExpressiveExtras.MixedChart.getInstance(el);
         const rows = [...el.querySelectorAll('.mixed-chart-columns > div')];
         return {
           tops: chart.series.map((series) => series.tops),

@@ -297,7 +297,7 @@ const online = [38, 44, 41, 52, 49, 58];
           the first scale.
         </p>
 <Code code={`
-const chart = Expressive.MixedChart.init(document.querySelector('.mixed-chart'));
+const chart = ExpressiveExtras.MixedChart.init(document.querySelector('.mixed-chart'));
 chart.show(2);   // highlight the third row; -1 hides the tooltip
 chart.update();  // redraw from the table; focus and the highlighted row stay
 chart.destroy(); // remove the drawing and show the table again
