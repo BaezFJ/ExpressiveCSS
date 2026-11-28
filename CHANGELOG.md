@@ -5,6 +5,39 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- The agent skill's layout guide gains a desktop reference, mapped from
+  Material's desktop guidance onto ExpressiveCSS. It covers panes and a capped
+  single pane on wide windows, the switch to a navigation rail, and replacing
+  bottom sheets with menus, side sheets or dialogs. It also covers a
+  single-click control for each drag, zoom and refresh gesture, keyboard
+  shortcuts, multiple selection, and hover and focus states.
+
+- The layout guide also gains a parts and adaptive design reference. It names
+  the window, grid, bars, rails, panes, containment, drag handles and rulers,
+  keeps all content in panes, and adapts panes and components to people,
+  devices and window changes.
+
+- The skill's scaffold reference follows Material's current scaffold pages. It
+  adds snap widths and the persistent and temporary resizing rules, how docked
+  and floating panes adapt across breakpoints, and focus rules for co-planar,
+  floating and docked panes.
+
+- The grids and spacing reference follows Material's current pages. It adds
+  spacing that adapts to breakpoints and density settings, and explains why a
+  Material dp value reads as the same number of CSS pixels on the web.
+
+- The breakpoints reference follows Material's current breakpoint pages. It
+  adds per-breakpoint navigation, pane widths, margins and reachability, a
+  412px fixed pane override for large windows, and splits a two-pane medium
+  layout 50/50.
+
+- The canonical layouts reference follows Material's current examples. It
+  adds the supporting pane's placement and fixed 360px width with a stacking
+  grid rule, list-detail behavior when a foldable opens or closes, and the
+  ExpressiveCSS templates as the web code starting points.
+
 ## [0.20.0] - 2026-11-18
 
 This release adds `ScrollArea` for an optional themed scrollbar and the

@@ -1,6 +1,6 @@
 ---
 name: expressivecss-layout
-description: "Plans and reviews ExpressiveCSS layouts and app shells. Use for breakpoints, canonical layouts, panes, navigation, grid spacing or RTL adaptation. Single-component styling uses its component guide."
+description: "Plans and reviews ExpressiveCSS layouts and app shells. Use for breakpoints, canonical layouts, panes, navigation, grid spacing, RTL adaptation, or desktop windows with pointer and keyboard input. Single-component styling uses its component guide."
 ---
 
 # ExpressiveCSS layout
@@ -13,16 +13,18 @@ Read each reference only when its condition applies.
 
 | Reference | Read when |
 | --- | --- |
+| [Parts and adaptive design](./references/adaptive-design.md) | Naming a layout's window, grid, bars, rails and panes, grouping panes, or adapting panes and components to people, devices and window changes |
 | [Scaffold](../expressivecss-design/references/scaffold.md) | Placing bars, rails and panes, choosing a pane count, or adding resizing |
 | [Canonical layouts](./references/canonical-layouts.md) | Building a feed, list-detail or supporting pane layout, or a layered pane |
 | [Breakpoints](./references/breakpoints.md) | Deciding what to reveal, divide, resize, reposition or swap at the next width |
 | [Grids and spacing](./references/grids-and-spacing.md) | Aligning content, choosing spacing between groups, or adding a dense view |
+| [Desktop](./references/desktop.md) | Scaling a mobile layout to desktop, or supporting drag and drop, zoom, refresh, multiple selection, context menus, hover actions or keyboard shortcuts |
 
 ## What a layout has to do
 
-Material's overview lists six principles. Each one has a concrete check in ExpressiveCSS:
+Material's [layout overview](https://m3.material.io/foundations/layout/layout-overview/overview), reviewed 2026-11-27, lists six principles. Each one has a concrete check in ExpressiveCSS:
 
-1. **Organize the screen, signal hierarchy and draw attention to key actions.** Place every element in a region with a job, and give each region one high-emphasis action at most (see the hard rules in the [design rules](../references/design-rules.md)).
+1. **Organize the screen, signal hierarchy and draw attention to key actions.** Place every element in a region with a job and all content in a pane, and give each region one high-emphasis action at most (see the hard rules in the [design rules](../references/design-rules.md)). The [parts and adaptive design reference](./references/adaptive-design.md) names the parts.
 2. **Adapt to the compact, medium, expanded, large and extra-large breakpoints.** Design compact first, then decide what changes at each breakpoint the product reaches. The breakpoint table below gives the widths and classes.
 3. **Build from an established canonical layout.** Start from list-detail, supporting pane, or a feed of cards before writing custom layout CSS. The starting points are listed under [Start from a canonical layout](#start-from-a-canonical-layout).
 4. **Design for bidirectionality.** The same page must work left to right (LTR) and right to left (RTL). See [Bidirectionality](#bidirectionality).

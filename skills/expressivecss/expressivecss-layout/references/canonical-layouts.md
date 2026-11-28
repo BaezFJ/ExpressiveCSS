@@ -1,6 +1,6 @@
 # Canonical layouts
 
-Read this when choosing a starting layout for a screen, or when building or reviewing a feed, list-detail, or supporting pane layout. Material's [canonical layout examples](https://m3.material.io/foundations/layout/canonical-examples/overview), reviewed 2026-10-13, set the design intent. The [panes guide](../../components/panes.md) and the selected component guides define what ExpressiveCSS ships.
+Read this when choosing a starting layout for a screen, or when building or reviewing a feed, list-detail, or supporting pane layout. Material's [canonical layout examples](https://m3.material.io/foundations/layout/canonical-examples/overview), last reviewed 2026-11-27, set the design intent. The [panes guide](../../components/panes.md) and the selected component guides define what ExpressiveCSS ships.
 
 ## Contents
 
@@ -13,7 +13,7 @@ Read this when choosing a starting layout for a screen, or when building or revi
 
 ## Pick an example
 
-Canonical layouts show how to fill the scaffold's bar, rail and pane regions for common screens. Each one has a configuration for compact, medium and expanded windows. Start from the closest one and change it, instead of designing the screen from nothing.
+Canonical layouts show how to fill the scaffold's bar, rail and pane regions for common screens. Each one has a configuration for compact, medium and expanded windows. Start from the closest one and change it, instead of designing the screen from nothing. Material ships them as code for Jetpack Compose and Android Views; on the web, the ExpressiveCSS templates and examples below are the code starting points.
 
 | Example | Use it when | ExpressiveCSS starting point |
 | --- | --- | --- |
@@ -56,6 +56,8 @@ List-detail shows an explorable list beside the selected item's detail. It alway
 | Large (1200 to 1599) | 2 |
 | Extra-large (1600+) | 2 |
 
+Material pictures compact as a phone in portrait, a closed foldable or a tablet in split screen; medium as an open foldable or a tablet in portrait; and expanded as a phone or tablet in landscape. Use these only to picture who reaches each width; the window width decides the layout.
+
 - Compact: one pane, either the list or the detail.
 - Medium: one pane for dense content or deep focus. Two panes help when people browse a collection and switch items often; use a navigation bar or modal rail to leave room for both.
 - Expanded and wider: two panes.
@@ -66,7 +68,7 @@ ExpressiveCSS `.panes.list-detail` has a 360px list pane and a flexible detail p
 
 - Back button: only in the single-pane detail view, and return focus to the selected list item when it is used. Hide it under the same condition that shows both panes. The panes collapse by the width of the nearest ancestor with `container-type: inline-size`, or the viewport when there is none. The template's container spans the whole window, so its `.hide-on-expanded-and-up` matches. When the container is narrower than the window, for example beside a navigation rail, hide Back with an `@container (width >= 840px)` rule against that container instead. A viewport helper there hides Back while only one pane shows, leaving no way back to the list.
 - Selected state: only in the two-pane list. Mark it with `aria-current` on the item's link, as the template does.
-- Visual focus: in two panes, group content so the eye goes to the detail. Separated panes (`.panes.separated`) or the default divider both work.
+- Visual focus: in two panes, use explicit or implicit grouping so the eye goes to the detail. Separated panes (`.panes.separated`) give each pane its own rounded surface, and the default puts a divider line between the panes; Material counts both as explicit grouping. Implicit grouping relies on space alone.
 
 ### When the layout changes
 
@@ -75,12 +77,18 @@ The window can change while someone is using the page: rotating, unfolding, resi
 - No item selected: one pane shows the list. Two panes show the list and an empty or placeholder detail, such as an [empty state](../../components/empty-state.md). For multi-select, keep showing the most recently used pane when the layout drops to one pane.
 - Item selected, one pane to two: show both, with the selected item's detail visible.
 - Item selected, two panes to one: usually show the detail, with its header and back button. If selection does not navigate, as in multi-select, show the list with the item still selected. If the single-pane layout was showing the list before, return to the list.
+- On a foldable, the same rules apply: opening it with no selection shows the list and an empty detail, opening it with a selection shows that item's detail, and closing it with a selection shows the detail in the single pane.
 
 Save state between detail views. Keep read and unread status, and keep each detail view's scroll position when people move to another item and back. ExpressiveCSS does not store this; the application does.
 
 ## Supporting pane
 
 A supporting pane layout has a focus pane with the main content, about two thirds of the space, and a supporting pane for the rest. Use it for productivity tools, document editing with comments, and media browsing.
+
+| Breakpoint | Supporting pane placement | Supporting pane width |
+| --- | --- | --- |
+| Compact or medium | Below the focus pane | Flexible |
+| Expanded and wider | Leading or trailing side | Fixed, 360px |
 
 - Compact: put the supporting pane below the focus pane. A [bottom sheet](../../components/bottom-sheet.md) can hold supporting content and keep attention on the focus pane.
 - Medium: put the supporting pane below the focus pane.
@@ -97,6 +105,16 @@ A supporting pane layout has a focus pane with the main content, about two third
 
 This stacks on compact and medium and becomes an 8/4 split, close to two thirds, from 840px. Keep the focus content first in the source so it is read first.
 
+The 8/4 split is flexible, while Material fixes the supporting pane at 360px from expanded, which `.panes.supporting` matches but without stacking. When both matter, keep the same markup and add a small grid rule from 840px in the application stylesheet:
+
+```css
+@media (min-width: 840px) {
+  .doc-layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 24px; }
+}
+```
+
+Put the class on a wrapper that holds the `<section>` and `<aside>` without `.row` or spans; below 840px they stack in source order.
+
 ## Custom and layered layouts
 
 Build custom layouts on top of a canonical layout or by combining scaffold regions; the [scaffold reference](../../expressivecss-design/references/scaffold.md) covers the regions and adaptations.
@@ -109,5 +127,5 @@ To focus people on one task, layer a pane above the content. Material calls this
 - Feed items keep the same source and visual order at every width.
 - List-detail shows a back button only in one pane and a selected state only in two, and focus returns to the selected item after going back.
 - Crossing 840px with and without a selected item shows the views described above, and read state and scroll position survive.
-- Supporting content stays reachable on compact and medium, either stacked below the focus pane or in a bottom sheet.
+- Supporting content stays reachable on compact and medium, either stacked below the focus pane or in a bottom sheet, and sits beside the focus pane from expanded, ideally at a fixed 360px.
 - A layered pane follows its component's focus and dismissal contract.

@@ -312,6 +312,106 @@ describe('the ExpressiveCSS agent skill', () => {
     }
   });
 
+  test('routes desktop work to a reference that keeps every input working', () => {
+    const layout = readFileSync(new URL('expressivecss-layout/SKILL.md', skillDirectory), 'utf8');
+    const url = new URL('expressivecss-layout/references/desktop.md', skillDirectory);
+    const desktop = readFileSync(url, 'utf8');
+    assert.match(body, /\| Page layout, app shell, desktop or breakpoints \| Layout,/);
+    assert.ok(layout.includes('](./references/desktop.md)'));
+    for (const [, target] of desktop.matchAll(/\]\((\.{1,2}\/[^)#\s]+)/g)) {
+      assert.ok(existsSync(new URL(target, url)), `desktop reference links to missing ${target}`);
+    }
+    assert.match(desktop, /cap and center a single pane[\s\S]*`\.container`/i);
+    assert.match(desktop, /navigation bar to a rail at medium[\s\S]*extra-large[\s\S]*`\.navigation-rail\.expanded`/i);
+    assert.match(desktop, /replace bottom sheets[\s\S]*context \[menu\][\s\S]*side sheet[\s\S]*`show\(\)`[\s\S]*dialog/i);
+    assert.match(desktop, /\| Pull to refresh, or Ctrl\+R \/ Cmd\+R \| A visible Refresh button/);
+    assert.match(desktop, /hover must not be the only way/i);
+    assert.match(desktop, /never to gate a feature/i);
+    assert.match(desktop, /`event\.defaultPrevented`[\s\S]*editable field/);
+    assert.match(desktop, /Do not take over browser or assistive technology shortcuts/);
+  });
+
+  test('teaches the parts of a layout and adaptive design', () => {
+    const layout = readFileSync(new URL('expressivecss-layout/SKILL.md', skillDirectory), 'utf8');
+    const url = new URL('expressivecss-layout/references/adaptive-design.md', skillDirectory);
+    const adaptive = readFileSync(url, 'utf8');
+    assert.ok(layout.includes('](./references/adaptive-design.md)'));
+    for (const [, target] of adaptive.matchAll(/\]\((\.{1,2}\/[^)#\s]+)/g)) {
+      assert.ok(existsSync(new URL(target, url)), `adaptive design reference links to missing ${target}`);
+    }
+    for (const part of ['Window', 'Grid', 'Bars', 'Rails', 'Panes', 'Containment', 'Drag handles', 'Rulers']) {
+      assert.match(adaptive, new RegExp(`^\\| ${part} \\|`, 'm'), `parts table omits ${part}`);
+    }
+    assert.match(adaptive, /Every piece of content belongs in a pane/);
+    assert.match(adaptive, /Implicit grouping[\s\S]*Explicit grouping/);
+    assert.match(adaptive, /\| People \|[\s\S]*\| Devices \|[\s\S]*\| Usage \|/);
+    assert.match(adaptive, /Show and hide[\s\S]*Levitate[\s\S]*Reflow/);
+    assert.match(adaptive, /\*\*Resizing\.\*\*[\s\S]*\*\*Showing and hiding\.\*\*[\s\S]*\*\*Presentation changes\.\*\*/);
+  });
+
+  test('keeps the canonical layouts on Material feed, list-detail and supporting pane guidance', () => {
+    const url = new URL('expressivecss-layout/references/canonical-layouts.md', skillDirectory);
+    const canonical = readFileSync(url, 'utf8');
+    for (const [, target] of canonical.matchAll(/\]\((\.{1,2}\/[^)#\s]+)/g)) {
+      assert.ok(existsSync(new URL(target, url)), `canonical layouts reference links to missing ${target}`);
+    }
+    for (const heading of ['Feed', 'List-detail', 'Supporting pane', 'Custom and layered layouts']) {
+      assert.match(canonical, new RegExp(`^## ${heading}$`, 'm'), `canonical layouts reference omits ${heading}`);
+    }
+    assert.match(canonical, /\| Compact or medium \| Below the focus pane \| Flexible \|/);
+    assert.match(canonical, /\| Expanded and wider \| Leading or trailing side \| Fixed, 360px \|/);
+    assert.match(canonical, /grid-template-columns: minmax\(0, 1fr\) 360px/);
+    assert.match(canonical, /On a foldable, the same rules apply/);
+    assert.match(canonical, /Back button: only in the single-pane detail view/);
+  });
+
+  test('gives every Material breakpoint its panes, navigation and widths', () => {
+    const url = new URL('expressivecss-layout/references/breakpoints.md', skillDirectory);
+    const breakpoints = readFileSync(url, 'utf8');
+    for (const [, target] of breakpoints.matchAll(/\]\((\.{1,2}\/[^)#\s]+)/g)) {
+      assert.ok(existsSync(new URL(target, url)), `breakpoints reference links to missing ${target}`);
+    }
+    for (const name of ['Compact', 'Medium', 'Expanded', 'Large', 'Extra-large']) {
+      assert.match(breakpoints, new RegExp(`^\\| ${name} \\|`, 'm'), `breakpoint table omits ${name}`);
+    }
+    assert.match(breakpoints, /^## Breakpoint by breakpoint$/m);
+    assert.match(breakpoints, /`\.m6` and `\.m6`/);
+    assert.match(breakpoints, /navigation bar with two/);
+    assert.match(breakpoints, /--md-comp-pane-list-width: 412px/);
+    assert.match(breakpoints, /top quarter of the screen is hard to reach/);
+    assert.doesNotMatch(breakpoints, /`\.m4` and `\.m8`/);
+  });
+
+  test('maps Material grids, spacing, density and dp onto the web', () => {
+    const url = new URL('expressivecss-layout/references/grids-and-spacing.md', skillDirectory);
+    const grids = readFileSync(url, 'utf8');
+    for (const [, target] of grids.matchAll(/\]\((\.{1,2}\/[^)#\s]+)/g)) {
+      assert.ok(existsSync(new URL(target, url)), `grids and spacing reference links to missing ${target}`);
+    }
+    for (const heading of ['Grids', 'Rulers and alignment', 'Spacing', 'Density', 'Pixel density and dp']) {
+      assert.match(grids, new RegExp(`^## ${heading}$`, 'm'), `grids and spacing reference omits ${heading}`);
+    }
+    assert.match(grids, /spacing system adapts to breakpoints and density settings/);
+    assert.match(grids, /48 by 48 CSS pixels/);
+    assert.match(grids, /Make density opt-in/);
+    assert.match(grids, /Read a Material dp value as the same number of CSS pixels/);
+  });
+
+  test('keeps the scaffold reference on Material pane adaptation, resizing and focus', () => {
+    const url = new URL('expressivecss-design/references/scaffold.md', skillDirectory);
+    const scaffold = readFileSync(url, 'utf8');
+    for (const [, target] of scaffold.matchAll(/\]\((\.{1,2}\/[^)#\s]+)/g)) {
+      assert.ok(existsSync(new URL(target, url)), `scaffold reference links to missing ${target}`);
+    }
+    for (const presentation of ['Co-planar', 'Floating', 'Docked']) {
+      assert.match(scaffold, new RegExp(`^\\| ${presentation} \\|`, 'm'), `presentation table omits ${presentation}`);
+    }
+    assert.match(scaffold, /\*\*Show and hide\.\*\*[\s\S]*\*\*Levitate\.\*\*[\s\S]*\*\*Reflow\.\*\*/);
+    assert.match(scaffold, /360dp and 412dp/);
+    assert.match(scaffold, /\*\*Persistent resizing\*\*[\s\S]*\*\*Temporary resizing\*\*/);
+    assert.match(scaffold, /### Focus across panes[\s\S]*\*\*Co-planar panes\*\*[\s\S]*\*\*Modal floating panes\*\*[\s\S]*\*\*Non-modal floating panes\*\*[\s\S]*\*\*Docked panes\*\*/);
+  });
+
   test('lets the generated decision index own every component guide exactly once', () => {
     assert.match(decisionIndex, /^<!-- Generated by scripts\/gen-expressivecss-skill\.mjs\. Do not edit\. -->/);
     assert.equal(componentFiles.length, 101);
