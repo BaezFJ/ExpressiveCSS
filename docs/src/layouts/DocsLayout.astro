@@ -7,7 +7,7 @@ import Footer from "../components/Footer.astro";
 import PageHeader from "../components/PageHeader.astro";
 import DocsNavigation from "../components/DocsNavigation.astro";
 import PageBody from "../components/PageBody.astro";
-import { NAV, isExtrasPage } from "../data/nav";
+import { NAV } from "../data/nav";
 import { markdownRoute, page, route } from "../lib/catalogue";
 import type { Sections } from "../lib/sections";
 
@@ -44,8 +44,8 @@ const prerelease = version.includes("-");
 const suffix = import.meta.env.DEV ? "" : ".min";
 const cssUrl = `/dist/css/expressive${suffix}.css`;
 const jsUrl = `/dist/js/expressive${suffix}.js`;
-// Pages documenting @expressivecss/extras also load its build, after core's.
-const extras = isExtrasPage(id);
+// Every page also loads the @expressivecss/extras build, after core's: core
+// pages show extras components in their examples, and the site footer is one.
 const extrasCssUrl = `/dist/extras/css/extras${suffix}.css`;
 const extrasJsUrl = `/dist/extras/js/extras${suffix}.js`;
 // Stamped in by astro.config.mjs -- see the note there.
@@ -89,7 +89,7 @@ const sourceColorPalettes = [
     <link rel="describedby" href="/llms.txt">
     <link rel="alternate" type="text/markdown" href={markdownPath}>
     <link rel="stylesheet" href={cssUrl}>
-    {extras && <link rel="stylesheet" href={extrasCssUrl}>}
+    <link rel="stylesheet" href={extrasCssUrl}>
     <link rel="stylesheet" href={`/static/docs.css?v=${version}`}>
     {/* Apply a stored --md-source before first paint so the page does not flash the default seed. */}
     <script is:inline>
@@ -251,7 +251,7 @@ const sourceColorPalettes = [
 <Footer version={version} prerelease={prerelease} />
 
 <script is:inline src={jsUrl}></script>
-{extras && <script is:inline src={extrasJsUrl}></script>}
+<script is:inline src={extrasJsUrl}></script>
 <script is:inline src={`/static/docs.js?v=${version}`}></script>
 <script is:inline src="/static/code-blocks.js"></script>
 </body>

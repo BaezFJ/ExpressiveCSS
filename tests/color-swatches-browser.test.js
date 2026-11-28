@@ -1,10 +1,12 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { chromium } from 'playwright';
 import { leaseBrowser } from './browser.js';
+import { pageCss } from './css.js';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+// Core then extras, as a page that uses extras loads them.
+const css = pageCss();
 
 test('chromium: color swatches draw each radio as its color and keep native radio behavior', { timeout: 30000 }, async (t) => {
   if (!existsSync(chromium.executablePath())) { t.skip('chromium is not installed'); return; }

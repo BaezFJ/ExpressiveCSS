@@ -567,86 +567,6 @@
       }
     },
     {
-      "slug": "footer",
-      "title": "Footer",
-      "aliases": [],
-      "guideSource": {
-        "pageId": "footer",
-        "heading": "Footer",
-        "headingLevel": 2,
-        "semantics": [
-          "page-footer"
-        ]
-      },
-      "jobs": [
-        "Site navigation and extra information at the end of a page."
-      ],
-      "useWhen": [
-        "Site links and legal information at page end."
-      ],
-      "avoidWhen": [
-        "Primary app destinations need persistent navigation."
-      ],
-      "alternatives": [
-        "navigation-bar"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/footer.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#footer",
-          "reviewedOn": "2026-09-13",
-          "documentedSupport": "Native footer with navigation columns and copyright content.",
-          "webAdaptation": "Web page landmark styled with theme roles.",
-          "limitations": [
-            "A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-09-13",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Use a document footer landmark where appropriate, name distinct navigation groups and preserve meaningful links, reading order and reflow."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "Home/Search/Profile should not require scrolling to a footer. Use a navigation bar or rail for those destinations.",
-      "capabilityReview": {
-        "reviewedOn": "2026-09-13",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_page-footer.scss",
-            "sha256": "68f4f28773946707239b84419a512acc18b507763893bccaed26d1ae41543f8c"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified.",
-            "nextStep": "Place a document footer outside main and sectioning elements; verify named legal navigation at enlarged text."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
-            "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion."
-          }
-        ],
-        "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
-      }
-    },
-    {
       "slug": "tabs",
       "title": "Tabs",
       "aliases": [
@@ -932,94 +852,6 @@
       }
     },
     {
-      "slug": "stepper",
-      "title": "Stepper",
-      "aliases": [
-        "steps",
-        "wizard",
-        "progress steps",
-        "checkout steps"
-      ],
-      "guideSource": {
-        "pageId": "stepper",
-        "heading": "Stepper",
-        "headingLevel": 2,
-        "semantics": [
-          "stepper"
-        ]
-      },
-      "jobs": [
-        "Progress through a fixed sequence of steps, such as a checkout, with each step's state."
-      ],
-      "useWhen": [
-        "Show progress through a fixed order of steps the user completes one after another."
-      ],
-      "avoidWhen": [
-        "Views people switch between freely need tabs; one task with a percentage needs a progress indicator."
-      ],
-      "alternatives": [
-        "tabs",
-        "progress",
-        "breadcrumbs",
-        "timeline",
-        "questionnaire"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/stepper.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#stepper",
-          "reviewedOn": "2026-10-06",
-          "documentedSupport": "Horizontal and vertical ordered lists with current, complete and invalid steps, supporting text, links back to finished steps and a content panel in vertical steps.",
-          "webAdaptation": "An <ol> with aria-current=\"step\"; CSS alt text speaks the complete and invalid states from translatable tokens.",
-          "limitations": [
-            "Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-06",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep the steps in an ordered list, mark exactly one current step, convey complete and error states in text as well as color, and keep labels translatable."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "Account, Notifications and Privacy settings that people open in any order are tabs. A stepper would number them as if they had to be done in sequence.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-06",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_stepper.scss",
-            "sha256": "0efd332c2e84cd20bdf98ab9b1645aecb174cc6042f55abeb7b78383db32be12"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified.",
-            "nextStep": "Move through a checkout with a screen reader in each engine and confirm the step count, the current step and the completed state are announced once."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/stepper-browser.test.js",
-            "name": "chromium: stepper lays out its steps, marks their state and speaks it",
-            "scope": "Row and stack layout in LTR and RTL, supporting text and content placement, current, complete and invalid indicator fills and glyphs, no trailing connector, spoken state text and its token override. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
       "slug": "menu",
       "title": "Menu",
       "aliases": [
@@ -1140,91 +972,6 @@
           }
         ],
         "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
-      }
-    },
-    {
-      "slug": "mega-menu",
-      "title": "Mega menu",
-      "aliases": [
-        "mega dropdown",
-        "site navigation menu",
-        "flyout navigation"
-      ],
-      "guideSource": {
-        "pageId": "mega_menu",
-        "heading": "Mega menu",
-        "headingLevel": 2,
-        "semantics": [
-          "mega-menu"
-        ]
-      },
-      "jobs": [
-        "Site navigation whose top items open wide panels of grouped links, on native popovers."
-      ],
-      "useWhen": [
-        "Give a site with many sections top-level navigation whose items open panels of grouped links."
-      ],
-      "avoidWhen": [
-        "Commands in an application belong in a menu or menubar; a short list of destinations needs a navbar or navigation rail."
-      ],
-      "alternatives": [
-        "menu",
-        "menubar",
-        "app-bar"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/mega-menu.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#mega-menu",
-          "reviewedOn": "2026-10-15",
-          "documentedSupport": "Links and disclosure buttons in a row, wide panels of grouped links below the bar, a turning chevron and current-page state.",
-          "webAdaptation": "Native popovers opened with popovertarget; the browser owns opening, light dismiss, Escape, focus order and the expanded state.",
-          "limitations": [
-            "Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-15",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep the top items as links and disclosure buttons in a named nav, expose the expanded state, keep the panel next in the focus order, close on Escape and do not claim menu roles."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A docs site with Products, Solutions and Resources sections uses a mega menu. A text editor with File, Edit and View commands uses a menubar.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-15",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_mega-menu.scss",
-            "sha256": "b758dd7848889422d714b8b1a6f36cb51d99aa74bc9e312de73f08bfbd481f22"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified.",
-            "nextStep": "Open and close each panel with a screen reader in each engine and confirm the expanded state is announced."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/mega-menu-browser.test.js",
-            "name": "chromium: mega menu opens a wide panel of link groups below its button",
-            "scope": "Popover opening from its button, the panel below the bar spanning the window, side-by-side groups, the turning chevron, Tab into the panel, Escape, closed links out of reach and stacked groups on a phone. No spoken-output assertion."
-          }
-        ]
       }
     },
     {
@@ -1421,93 +1168,6 @@
           }
         ],
         "inventorySha256": "c04a890acc518f0e6c2c339b320e0eb1e90e734d0d897c367bd6c15d655858fa"
-      }
-    },
-    {
-      "slug": "tree",
-      "title": "Tree",
-      "aliases": [
-        "tree view",
-        "file tree",
-        "folder tree",
-        "nested navigation"
-      ],
-      "guideSource": {
-        "pageId": "tree",
-        "heading": "Tree",
-        "headingLevel": 2,
-        "semantics": [
-          "tree"
-        ]
-      },
-      "jobs": [
-        "Nested lists of folders and links that open in place, for file browsers and deep navigation."
-      ],
-      "useWhen": [
-        "Browse a hierarchy several levels deep, such as files or nested sections, with branches that open in place."
-      ],
-      "avoidWhen": [
-        "One or two levels of navigation need a navigation rail or a list; peer sections need tabs."
-      ],
-      "alternatives": [
-        "lists",
-        "navigation-rail",
-        "accordion",
-        "org-chart"
-      ],
-      "adaptive": [],
-      "runtime": "native",
-      "guide": "../components/tree.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#tree",
-          "reviewedOn": "2026-10-06",
-          "documentedSupport": "Nested lists of native disclosures and links with guide lines, turning chevrons in LTR and RTL, leading icons and an aria-current row.",
-          "webAdaptation": "Native <details> branches and links; every row is a Tab stop and no tree role is promised.",
-          "limitations": [
-            "Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-06",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Expose each branch's expanded state, mark the current item, keep every row reachable by keyboard and avoid a tree role without its arrow-key contract."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "Three settings pages under one heading are a list or a navigation rail. A tree would add chevrons and indentation for a hierarchy one level deep.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-06",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_tree.scss",
-            "sha256": "88d3f20a7980d21c4529fe7e9450bf90b418e3c55762ae8b3d4f079fd0d3022a"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified.",
-            "nextStep": "Navigate a deep tree with a keyboard and a screen reader in each engine; measure how many Tab stops a long tree costs and whether arrow-key navigation is needed."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/tree-browser.test.js",
-            "name": "chromium: tree indents its levels, turns its chevrons and marks the current row",
-            "scope": "Level indent, leaf and branch text alignment, open and closed chevrons in LTR and RTL, opening a branch, the current row fill, guide lines and no tree role. No spoken-output assertion."
-          }
-        ]
       }
     },
     {
@@ -2283,93 +1943,6 @@
       }
     },
     {
-      "slug": "aura",
-      "title": "Aura",
-      "aliases": [
-        "border light",
-        "glow border",
-        "animated border",
-        "highlight ring",
-        "spotlight"
-      ],
-      "guideSource": {
-        "pageId": "aura",
-        "heading": "Aura",
-        "headingLevel": 2,
-        "semantics": [
-          "aura"
-        ]
-      },
-      "jobs": [
-        "A light that runs around the border of the one button or card a screen most needs you to see."
-      ],
-      "useWhen": [
-        "Draw the eye to the single most important button, card or panel on a screen, such as a recommended plan."
-      ],
-      "avoidWhen": [
-        "Several highlighted items compete for attention; state, status or selection needs a badge, chip or the component's own selected style."
-      ],
-      "alternatives": [
-        "badges",
-        "cards",
-        "buttons"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/aura.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#aura",
-          "reviewedOn": "2026-10-08",
-          "documentedSupport": "A turning light on a ring around one wrapped element, with dual, rainbow and glow styles, token color, width, corner and speed, a reversed turn in RTL, a static ring under reduced motion and a Highlight ring in forced colors.",
-          "webAdaptation": "A wrapper whose pseudo-element draws a masked conic gradient; it adds nothing to the accessibility tree.",
-          "limitations": [
-            "The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-08",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep the light decorative and out of the accessibility tree, state the element's importance in text, and stop motion when reduced motion is requested."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A pricing page with one recommended plan gets one aura on that plan's card. Putting an aura on every plan, or on each new item in a list, removes the contrast the effect depends on; use a badge for those.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-08",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_aura.scss",
-            "sha256": "67a0781b94946d4e15b68718179f39c5af55cde89169fe45f5f6e4f402c216da"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified.",
-            "nextStep": "Check the Highlight ring in Windows forced colors and confirm with a screen reader that only the wrapped element is announced."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/aura-browser.test.js",
-            "name": "chromium: aura turns a ring around its element, stops under reduced motion and stays out of the accessibility tree",
-            "scope": "Ring padding and corners around a button and a card, a running registered angle, its reverse in RTL, the glow halo, the stop under reduced motion, a stepped turn and a 0deg resting ring in a shadow-only load, and no aura nodes in the accessibility tree. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
       "slug": "lists",
       "title": "Lists",
       "aliases": [
@@ -2473,91 +2046,6 @@
           }
         ],
         "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
-      }
-    },
-    {
-      "slug": "message",
-      "title": "Message",
-      "aliases": [
-        "chat bubble",
-        "message bubble",
-        "conversation"
-      ],
-      "guideSource": {
-        "pageId": "message",
-        "heading": "Message",
-        "headingLevel": 2,
-        "semantics": [
-          "message"
-        ]
-      },
-      "jobs": [
-        "One message in a conversation, with an optional avatar, header and footer."
-      ],
-      "useWhen": [
-        "Show a conversation as messages from people or an assistant, aligned by sender."
-      ],
-      "avoidWhen": [
-        "Short app feedback needs a snackbar; a list of conversations needs a list."
-      ],
-      "alternatives": [
-        "snackbar",
-        "lists",
-        "cards"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/message.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#message",
-          "reviewedOn": "2026-10-06",
-          "documentedSupport": "Start and end alignment, avatar, header, footer actions, message groups and outlined attachment bubbles.",
-          "webAdaptation": "Plain div parts on a CSS grid; the page owns role=\"log\" on a live conversation.",
-          "limitations": [
-            "Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-06",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Identify each sender, keep reading order equal to conversation order, name icon-only message actions and announce appended messages through a log region."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A \"Saved\" confirmation after an edit is app feedback, not a conversation. Use a snackbar for it, not a message bubble.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-06",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_message.scss",
-            "sha256": "b491e02e2ad4587859b83252fba303d6513d848d70d8a88ce47f58325d2ea21d"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified.",
-            "nextStep": "Append messages to a role=\"log\" conversation and inspect assistive-technology output; test enlarged text and RTL."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/message-browser.test.js",
-            "name": "chromium: message layout anchors the avatar, follows its side and joins grouped corners",
-            "scope": "Avatar level with the bubble bottom and above the footer, start/end edges in LTR and RTL, no gap without an avatar, grouped corner radii and no message landmarks. No spoken-output assertion."
-          }
-        ]
       }
     },
     {
@@ -3123,350 +2611,6 @@
             "file": "tests/data-table-browser.test.js",
             "name": "chromium: data table joins a bulk-action bar and expands detail rows",
             "scope": "Bar joined to the table's top edge, squared table corners, a hidden bar leaving the table alone, the selected tint, end-aligned buttons, detail rows hidden and shown by aria-expanded, the turned chevron and the detail row kept a table row. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "stat",
-      "title": "Stat",
-      "aliases": [
-        "stat tile",
-        "metric",
-        "key figure",
-        "scorecard"
-      ],
-      "guideSource": {
-        "pageId": "stat",
-        "heading": "Stat",
-        "headingLevel": 2,
-        "semantics": [
-          "stat"
-        ]
-      },
-      "jobs": [
-        "Key figures in tiles, each with a label, a value and an optional change."
-      ],
-      "useWhen": [
-        "Summarize a few key figures, each with a label and an optional change, at the top of a dashboard."
-      ],
-      "avoidWhen": [
-        "Many rows of comparable records need a data table; a trend over time needs a chart."
-      ],
-      "alternatives": [
-        "data-table",
-        "cards",
-        "kpi"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/stat.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#stat",
-          "reviewedOn": "2026-10-06",
-          "documentedSupport": "Wrapping tiles in a description list with headline values, and a change line with up, down and negative states.",
-          "webAdaptation": "A <dl> pairs each value with its label; the arrow is decoration and the text carries the direction.",
-          "limitations": [
-            "Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-06",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Pair every value with its label, state the direction and comparison of a change in text and keep long values from overflowing their tile."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "Monthly revenue for every region and product is a data table. Stat tiles would turn a comparison into a wall of numbers without columns.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-06",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_stat.scss",
-            "sha256": "d16e8c5dab7af93c9b9601548dc32953cc5e095a249e7c7c4e5859e3ebbc4f71"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.",
-            "nextStep": "Read a stats row with a screen reader in each engine and confirm each label is announced with its value; test enlarged text at narrow widths."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/stat-browser.test.js",
-            "name": "chromium: stats tile their figures, wrap when narrow and mark the change",
-            "scope": "One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "description-list",
-      "title": "Description list",
-      "aliases": [
-        "key-value list",
-        "details list",
-        "definition list",
-        "property list"
-      ],
-      "guideSource": {
-        "pageId": "description_list",
-        "heading": "Description list",
-        "headingLevel": 2,
-        "semantics": [
-          "description-list"
-        ]
-      },
-      "jobs": [
-        "A record's details as label and value pairs, in two columns that stack on compact screens."
-      ],
-      "useWhen": [
-        "Show the fields of one record, such as an order's status, address and total, as labelled values people read rather than edit."
-      ],
-      "avoidWhen": [
-        "Many records compared side by side need a data table; a few headline numbers need stat tiles; editable values need form fields."
-      ],
-      "alternatives": [
-        "stat",
-        "data-table",
-        "lists"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/description-list.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#description-list",
-          "reviewedOn": "2026-10-15",
-          "documentedSupport": "Label and value columns with a divider per pair, a compact stacked layout, div-wrapped groups and several values per label.",
-          "webAdaptation": "A native dl, dt and dd; the browser exposes the label-value pairing.",
-          "limitations": [
-            "Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-15",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep the native dl so each value stays paired with its label, keep the reading order label before value and let long values wrap."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "An order page shows Status, Ship to and Total for one order as a description list. A table of fifty orders with those columns is a data table.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-15",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_description-list.scss",
-            "sha256": "d989d090fccadc4ef1ab8ec1ef84237ad9ce552508135c6a5ad9b3acae99d77f"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified.",
-            "nextStep": "Read a description list with a screen reader in each engine and confirm each value is announced with its label; test enlarged text."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/description-list-browser.test.js",
-            "name": "chromium: description list pairs labels and values in two columns and stacks them when compact",
-            "scope": "Label and value columns, shared rows, div-wrapped groups, stacked extra values, one divider per pair, the compact stacked layout and unchanged reading order. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "kpi",
-      "title": "KPI",
-      "aliases": [
-        "kpi card",
-        "key performance indicator",
-        "metric card",
-        "sparkline card"
-      ],
-      "guideSource": {
-        "pageId": "kpi",
-        "heading": "KPI",
-        "headingLevel": 2,
-        "semantics": [
-          "kpi"
-        ]
-      },
-      "jobs": [
-        "One key figure in a card, with a trend chip, a sparkline and details."
-      ],
-      "useWhen": [
-        "Feature a headline figure on a dashboard with its change, a short trend and a line of context or an action."
-      ],
-      "avoidWhen": [
-        "Several figures with no chart or actions read better as a stats row; a trend the reader has to inspect needs a full chart."
-      ],
-      "alternatives": [
-        "stat",
-        "line-chart",
-        "cards"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/kpi.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#kpi",
-          "reviewedOn": "2026-10-08",
-          "documentedSupport": "A card with a labelled value in a description list, a trend chip with up, down and negative states, a tonal icon, a corner action, a sparkline, a progress bar and a footer.",
-          "webAdaptation": "A <dl> pairs the value with its label inside a card <article>; the arrow is decoration, the text carries the direction and the sparkline's table is its text alternative.",
-          "limitations": [
-            "Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-08",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Pair the value with its label, state the direction and unit of a change in text, caption the sparkline and name the action after the figure."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "Revenue, orders and churn across the top of a sales dashboard, each with its last 10 days, are KPIs. Twelve figures with no trend are a stats row.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-08",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_kpi.scss",
-            "sha256": "0597d0fc81f4f1a874729e5ca7ca4e7b7cb0fbcd0de92894741e3d2ce91f4d31"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.",
-            "nextStep": "Read a KPI row with a screen reader in each engine and confirm the label, value, trend and sparkline caption are announced in order; test enlarged text at narrow widths."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/kpi-browser.test.js",
-            "name": "chromium: kpi lays out its label, value, trend, actions, chart and footer",
-            "scope": "Trend beside the value, actions in the label row's end corner, chart under the value, an edge-to-edge footer closing the card, the headline value size, up and down arrows, the negative chip and chart colors and term-definition pairs in the accessibility tree. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "countdown",
-      "title": "Countdown",
-      "aliases": [
-        "counter",
-        "rolling number",
-        "odometer",
-        "timer"
-      ],
-      "guideSource": {
-        "pageId": "countdown",
-        "heading": "Countdown",
-        "headingLevel": 2,
-        "semantics": [
-          "countdown"
-        ]
-      },
-      "jobs": [
-        "A number from 0 to 999 whose digits roll to each new value."
-      ],
-      "useWhen": [
-        "Show a small whole number that changes in place, such as seconds left, a clock or a live count, and draw the eye to each change."
-      ],
-      "avoidWhen": [
-        "A labelled key figure needs a stat tile; progress toward a goal needs a progress indicator; numbers above 999 or with decimals need plain text."
-      ],
-      "alternatives": [
-        "stat",
-        "progress",
-        "badges"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/countdown.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#countdown",
-          "reviewedOn": "2026-10-08",
-          "documentedSupport": "Digits from 0 to 999 that roll up or down when --md-comp-countdown-value changes, with zero padding to two or three digits and a reduced-motion fallback.",
-          "webAdaptation": "The element's text is the accessible value; the digit strips are generated content with empty alternative text. A page script sets the property and the text together.",
-          "limitations": [
-            "Width, digit positions, the baseline, the roll transition, reduced motion and the accessibility tree text are checked in a browser; spoken output inside role=\"timer\" and aria-live regions remains unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-08",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep the number in the element's text for assistive technology, avoid announcing every tick and stop the motion when the user asks for reduced motion."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "Monthly revenue of $48,200 is a stat tile. A countdown only shows whole numbers up to 999 and has no label.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-08",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_countdown.scss",
-            "sha256": "2918d1710b0858696b359789273316fe9fd9b3ed9023b606c6f4b2a90b878357"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Width, digit positions, the baseline, the roll transition, reduced motion and the accessibility tree text are checked in a browser; spoken output inside role=\"timer\" and aria-live regions remains unverified.",
-            "nextStep": "Run a ticking timer and a polite live count with a screen reader in each engine and confirm the timer stays quiet and the live count announces each value once."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/countdown-browser.test.js",
-            "name": "chromium: countdown shows 0 to 999 as rolling digits and keeps the text for assistive technology",
-            "scope": "Box width per digit count and padding, strip positions for in-range and clamped values, baseline alignment, the translate transition on change, reduced motion and the accessibility tree text. No spoken-output assertion."
           }
         ]
       }
@@ -4794,187 +3938,6 @@
       }
     },
     {
-      "slug": "timeline",
-      "title": "Timeline",
-      "aliases": [
-        "activity feed",
-        "history",
-        "event log",
-        "changelog"
-      ],
-      "guideSource": {
-        "pageId": "timeline",
-        "heading": "Timeline",
-        "headingLevel": 2,
-        "semantics": [
-          "timeline"
-        ]
-      },
-      "jobs": [
-        "Events in order, each with a time, a title and details, joined by a line."
-      ],
-      "useWhen": [
-        "Show what happened and when, in order, such as order tracking or an activity feed."
-      ],
-      "avoidWhen": [
-        "Steps the user still has to complete need a stepper; a live conversation needs messages."
-      ],
-      "alternatives": [
-        "stepper",
-        "lists",
-        "message"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/timeline.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#timeline",
-          "reviewedOn": "2026-10-06",
-          "documentedSupport": "Ordered events with times, headings and text, dots joined by a line and a leading icon variant.",
-          "webAdaptation": "An <ol> of events with <time datetime>; the dots and line are decoration.",
-          "limitations": [
-            "Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-06",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep events in an ordered list in the order shown, give each a machine-readable time and hide decorative markers and icons."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "Cart, Shipping and Payment in a checkout are steps the user still has to finish, so they belong in a stepper. A timeline would present them as things that already happened.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-06",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_timeline.scss",
-            "sha256": "4016dd3c8821db410a6af8d0ba7b6bb7e6c9423ba960e10dcc83913ff5b870b8"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified.",
-            "nextStep": "Read a timeline with a screen reader in each engine and confirm the order and times are announced; test enlarged text."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/timeline-browser.test.js",
-            "name": "chromium: timeline marks each event, joins it to the next and swaps the dot for an icon",
-            "scope": "Marker column, dot size, connecting line and its absence on the last event, the icon circle and its column in LTR and RTL. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "calendar",
-      "title": "Calendar",
-      "aliases": [
-        "month view",
-        "week view",
-        "day view",
-        "year view",
-        "event calendar",
-        "schedule"
-      ],
-      "guideSource": {
-        "pageId": "calendar",
-        "heading": "Calendar",
-        "headingLevel": 2,
-        "semantics": [
-          "calendar"
-        ]
-      },
-      "jobs": [
-        "A month, week or day of events, or a year of months, on tables the page renders."
-      ],
-      "useWhen": [
-        "Show a month of days with events people scan by date, such as bookings or a team schedule.",
-        "Show a week or a day as an hourly grid where each event covers its start and length."
-      ],
-      "avoidWhen": [
-        "Picking one date for a field needs the date picker; an ordered list of dated events needs a timeline."
-      ],
-      "alternatives": [
-        "date-picker",
-        "timeline",
-        "data-table"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/calendar.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#calendar",
-          "reviewedOn": "2026-10-22",
-          "documentedSupport": "A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize; week and day hourly grids with events placed by start and duration; a year of small months in as many columns as fit.",
-          "webAdaptation": "A native table with a caption; the page renders the dates, navigation and events.",
-          "limitations": [
-            "Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified.",
-            "Events that overlap in time overlap on screen in the week and day views; the page splits them."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-15",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Name the month in a caption, keep weekday column headers, mark today in text as well as color, and keep each event a reachable link or text."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A team schedule for October is a calendar. Choosing a delivery date in a form is the date picker.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-22",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_calendar.scss",
-            "sha256": "a3d1451810eb14b22e79b33cd337807b04a3f74513082a4e9b6517ab6beb5c78"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified.",
-            "nextStep": "Read a month with a screen reader in each engine and confirm the day and weekday are announced with each event."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/calendar-browser.test.js",
-            "name": "chromium: calendar lays out a month grid with today, outside days and event chips",
-            "scope": "Seven equal columns, day height, the today mark, muted outside days, event chips that stay inside their day and ellipsize, event links, column headers and the month at phone width. No spoken-output assertion."
-          },
-          {
-            "file": "tests/calendar-browser.test.js",
-            "name": "chromium: calendar week and day views place events on an hourly grid, and the year view tiles months",
-            "scope": "Hour row height, event top and height from start and duration, events inside their day column, event links, today in the header, hour row headers, a day view event across its column, months side by side and stacked at phone width. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
       "slug": "dialogs",
       "title": "Dialogs",
       "aliases": [
@@ -5580,94 +4543,6 @@
       }
     },
     {
-      "slug": "org-chart",
-      "title": "Organization chart",
-      "aliases": [
-        "org chart",
-        "organisation chart",
-        "organization tree",
-        "reporting line",
-        "staff hierarchy",
-        "team tree"
-      ],
-      "guideSource": {
-        "pageId": "org-chart",
-        "heading": "Organization chart",
-        "headingLevel": 2,
-        "semantics": [
-          "org-chart"
-        ]
-      },
-      "jobs": [
-        "A reporting line drawn top down, with each person as a card under their manager."
-      ],
-      "useWhen": [
-        "Show who reports to whom for a team or company of a few dozen people, with a face and a name on each card."
-      ],
-      "avoidWhen": [
-        "Hundreds of people or a search for one person need a searchable list or table; a deep hierarchy of pages or files needs a tree."
-      ],
-      "alternatives": [
-        "tree",
-        "lists",
-        "data-table"
-      ],
-      "adaptive": [],
-      "runtime": "native",
-      "guide": "../components/org-chart.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#organization-chart",
-          "reviewedOn": "2026-10-16",
-          "documentedSupport": "Nested lists of native disclosures drawn as cards under their manager, with connector lines, a role band, an avatar and a name, profile links on cards without reports, mirrored order in RTL and sideways scrolling when wide.",
-          "webAdaptation": "Native <details> managers and nested lists; every manager is a Tab stop and no tree role is promised.",
-          "limitations": [
-            "Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-16",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Carry the hierarchy in nested lists, expose each manager's expanded state, keep every manager reachable by keyboard, keep the drawn lines silent and avoid a tree role without its arrow-key contract."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "Twelve people in four teams under a CIO are an org chart. Three hundred employees someone needs to search are a data table with a manager column.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-16",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_org-chart.scss",
-            "sha256": "7b342738b7029990224426661ab35b6b95215eb66ee29052439f9a4ea8d3704b"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified.",
-            "nextStep": "Read a chart with a screen reader in each engine and confirm each list's level and size and each manager's expanded state are announced; check forced colors and 200% text."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/org-chart-browser.test.js",
-            "name": "chromium: org chart centres each manager over its reports, collapses a team and scrolls when wide",
-            "scope": "Reports side by side below their manager in order, the manager over its reports, the bar stopping at the end reports, the drop from the manager, mirrored order and bar in RTL, a narrow chart scrolling with every card's start reachable, Enter folding a team, the caret under reduced motion, the CanvasText caret in forced colors and nested lists in the accessibility tree. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
       "slug": "tooltips",
       "title": "Tooltips",
       "aliases": [
@@ -5756,92 +4631,6 @@
           }
         ],
         "inventorySha256": "e5c204f237fac5230a627d290306cb010616d7413f369b5e10ff18708179a0bd"
-      }
-    },
-    {
-      "slug": "popover",
-      "title": "Popover",
-      "aliases": [
-        "toggletip",
-        "popup",
-        "info popover",
-        "flyout"
-      ],
-      "guideSource": {
-        "pageId": "popover",
-        "heading": "Popover",
-        "headingLevel": 2,
-        "semantics": [
-          "popover"
-        ]
-      },
-      "jobs": [
-        "A panel that opens from a button and stays until dismissed, on the native popover attribute."
-      ],
-      "useWhen": [
-        "Show a short note or a few actions on press, next to the button, until the user dismisses it."
-      ],
-      "avoidWhen": [
-        "A hint on hover or focus needs a tooltip; a choice of commands needs a menu; a task to finish needs a dialog."
-      ],
-      "alternatives": [
-        "tooltips",
-        "menu",
-        "dialogs"
-      ],
-      "adaptive": [],
-      "runtime": "native",
-      "guide": "../components/popover.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#popover",
-          "reviewedOn": "2026-10-06",
-          "documentedSupport": "Native popover panels anchored below, above or beside their button with automatic flipping, rich-tooltip styling, an actions row and frosted glass.",
-          "webAdaptation": "The browser owns opening, light dismiss, Escape, focus return and the button's expanded state; CSS anchor positioning places the panel.",
-          "limitations": [
-            "Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-06",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Open on press rather than hover, report the expanded state on the button, return focus on dismissal, keep the panel next in reading order and keep it within the viewport."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A label for an icon button that shows on hover is a tooltip. A popover would make the user press the button just to learn what it does.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-06",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_popover.scss",
-            "sha256": "ea20e95c04b1ef46cfdd365edfae0441792f4e2c96412cfba853cf9114404616"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified.",
-            "nextStep": "Open a toggletip with a screen reader in each engine and confirm the expanded state and the panel content are reachable; check an engine without anchor positioning."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/popover-browser.test.js",
-            "name": "chromium: popover anchors to its button, flips at the edge and stays open while used",
-            "scope": "Default, top and end placement against the button in LTR and RTL, both-axis flip at the viewport corner, Escape with focus return, outside click, staying open for an inner button, one auto popover at a time and the Chromium expanded state. No spoken-output assertion."
-          }
-        ]
       }
     },
     {
@@ -6415,178 +5204,6 @@
       }
     },
     {
-      "slug": "skeleton",
-      "title": "Skeleton",
-      "aliases": [
-        "skeleton screen",
-        "placeholder",
-        "shimmer",
-        "ghost content",
-        "content loader"
-      ],
-      "guideSource": {
-        "pageId": "skeleton",
-        "heading": "Skeleton",
-        "headingLevel": 2,
-        "semantics": [
-          "skeleton"
-        ]
-      },
-      "jobs": [
-        "Placeholder shapes that hold the layout while content loads."
-      ],
-      "useWhen": [
-        "Hold the layout of content whose shape is known while it loads."
-      ],
-      "avoidWhen": [
-        "A short wait with no known layout needs a loading indicator; measurable progress needs a progress indicator."
-      ],
-      "alternatives": [
-        "loading-indicator",
-        "progress"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/skeleton.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#skeleton",
-          "reviewedOn": "2026-10-06",
-          "documentedSupport": "Box, text line and circle shapes with a shimmer that reverses in RTL, stops under reduced motion and keeps an outline in forced colors.",
-          "webAdaptation": "Empty decorative blocks; the page marks the loading region aria-busy and reports the wait through a status.",
-          "limitations": [
-            "The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-06",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep placeholders out of the accessibility tree, report the wait through a status, clear aria-busy when content arrives and stop motion when reduced motion is requested."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A one-second spinner while a form saves is a loading indicator. Skeletons there would draw content shapes for something that is not content.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-06",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_skeleton.scss",
-            "sha256": "f5b2a97773d171ad5d535f638324ed329aa93c1c957b601c59471838cfbd12d6"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified.",
-            "nextStep": "Load content into an aria-busy region with a screen reader and confirm the status is announced once and the skeletons are not; test forced colors."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/skeleton-browser.test.js",
-            "name": "chromium: skeleton shimmers, stops under reduced motion and stays out of the accessibility tree",
-            "scope": "Running shimmer animation, its removal under reduced motion, reversed direction in RTL, text and circle geometry and no skeleton nodes in the accessibility tree. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "empty-state",
-      "title": "Empty state",
-      "aliases": [
-        "blank slate",
-        "zero state",
-        "no results",
-        "no data"
-      ],
-      "guideSource": {
-        "pageId": "empty_state",
-        "heading": "Empty state",
-        "headingLevel": 2,
-        "semantics": [
-          "empty-state"
-        ]
-      },
-      "jobs": [
-        "What a view shows when it has nothing to list: an icon, a heading, text and actions."
-      ],
-      "useWhen": [
-        "Explain why a list, search or view has nothing to show and offer the next step."
-      ],
-      "avoidWhen": [
-        "An error after an action needs inline feedback or a snackbar; a loading view needs a skeleton or loading indicator."
-      ],
-      "alternatives": [
-        "snackbar",
-        "skeleton",
-        "cards"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/empty-state.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#empty-state",
-          "reviewedOn": "2026-10-06",
-          "documentedSupport": "Centered icon in a tonal circle or an illustration, a heading, supporting text and a wrapping row of actions.",
-          "webAdaptation": "A plain div around authored heading, text and buttons; the page picks the heading level.",
-          "limitations": [
-            "Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-06",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "State what is empty and what to do next in text, keep the heading in the page outline, hide decorative icons and images and announce results that change after a search."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A failed save after pressing Save is feedback for a snackbar or the form. An empty state would replace the user's content with a placeholder.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-06",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_empty-state.scss",
-            "sha256": "5740d50963b3e2cb7a62330f0260d4b1a0c89ff2bc051c9bb83f82e23dbdcabe"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified.",
-            "nextStep": "Empty a filtered list with a screen reader and confirm the change is announced; test enlarged text and narrow widths."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/empty-state-browser.test.js",
-            "name": "chromium: empty state centers its content and rings the leading icon",
-            "scope": "Centered column, icon circle size and fill, text width cap, centered wrapping actions and an empty alt image left out of the accessibility tree. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
       "slug": "alert",
       "title": "Alert",
       "aliases": [
@@ -6874,93 +5491,6 @@
             "file": "tests/image-compare-browser.test.js",
             "name": "chromium: image compare reveals the second image up to the range's value",
             "scope": "The initial value applied on load, each image on its side of the divider, arrow keys moving the divider, the handle focus ring, RTL, named native sliders and Slider leaving the range alone. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "marquee",
-      "title": "Marquee",
-      "aliases": [
-        "ticker",
-        "logo cloud",
-        "logo wall",
-        "infinite scroll strip",
-        "scrolling banner"
-      ],
-      "guideSource": {
-        "pageId": "marquee",
-        "heading": "Marquee",
-        "headingLevel": 2,
-        "semantics": [
-          "marquee"
-        ]
-      },
-      "jobs": [
-        "A row of logos, images or text that scrolls without end."
-      ],
-      "useWhen": [
-        "Show a long, decorative set of logos, photos or short slogans in a small space, such as customer logos on a landing page."
-      ],
-      "avoidWhen": [
-        "People need to read, compare or act on the items; a list, grid or carousel lets them do it at their own pace. Urgent messages need an alert or snackbar."
-      ],
-      "alternatives": [
-        "carousel",
-        "lists",
-        "chips"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/marquee.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#marquee",
-          "reviewedOn": "2026-10-08",
-          "documentedSupport": "Two identical groups that loop horizontally or vertically, with reverse, edge fades, a paused class, hover and focus pausing, token duration and gap, a reversed direction in RTL and a hand-scrolled strip under reduced motion.",
-          "webAdaptation": "A visual copy of the item list marked aria-hidden, with its links taken out of the tab order, so assistive technology and the keyboard meet each item once.",
-          "limitations": [
-            "The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-08",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Hide the copy from assistive technology, keep each link reachable once, pause on hover and focus, offer a pause control for long-running motion and stop it when reduced motion is requested."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "Twelve customer logos under a landing page hero are a marquee. Four featured products people should open are a carousel or a card grid.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-08",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_marquee.scss",
-            "sha256": "66bd01216b22c54391b09257dd0e893b590451b602421e4ab935485c4d597f11"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified.",
-            "nextStep": "Listen to a marquee with a screen reader in each engine and confirm each item is read once; watch a long strip for a visible jump at the loop point."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/marquee-browser.test.js",
-            "name": "chromium: marquee loops its two groups, pauses, follows direction and stops under reduced motion",
-            "scope": "A short group filling the strip, the copy one gap after it, the half-cycle position horizontally, in RTL and vertically, reverse, pausing on hover, focus and .paused, one link per item in the accessibility tree and the reduced-motion stop with the copy hidden. No spoken-output assertion."
           }
         ]
       }
@@ -8911,177 +7441,6 @@
       }
     },
     {
-      "slug": "rating",
-      "title": "Rating",
-      "aliases": [
-        "stars",
-        "star rating",
-        "review score"
-      ],
-      "guideSource": {
-        "pageId": "rating",
-        "heading": "Rating",
-        "headingLevel": 2,
-        "semantics": [
-          "forms/rating"
-        ]
-      },
-      "jobs": [
-        "Stars for choosing or showing a score, on native radio buttons."
-      ],
-      "useWhen": [
-        "Ask for or show a score on a short fixed scale, such as one to five stars."
-      ],
-      "avoidWhen": [
-        "A continuous value needs a slider; a yes or no answer needs a switch or checkbox."
-      ],
-      "alternatives": [
-        "radio-buttons",
-        "slider"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/rating.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#rating",
-          "reviewedOn": "2026-10-06",
-          "documentedSupport": "A fieldset of radios drawn as stars with fill, hover preview and focus ring, and a read-only display that fills to a fractional value in LTR and RTL.",
-          "webAdaptation": "Native radios keep keyboard, form and naming behavior; the display is a named role=\"img\".",
-          "limitations": [
-            "Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-06",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep a native radio group with a legend and a name for every star, show focus, fill by more than color where possible and name a read-only display with its value."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "Choosing a volume from 0 to 100 is a slider. Stars suit a short fixed scale where each step has a meaning.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-06",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/forms/_rating.scss",
-            "sha256": "f0e053d5504a2b507cd10f080d78975eca50e97d0d5846cfd3cac56776ade994"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified.",
-            "nextStep": "Rate with a keyboard and a screen reader in each engine, including Safari, and confirm the focus ring follows the arrows and each star is announced."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/rating-browser.test.js",
-            "name": "chromium: rating fills stars up to the choice, previews on hover and keeps native radios",
-            "scope": "Visible 24px masked radios, fill up to the checked star, Tab entry and arrow keys, focus ring on entry, hover preview, form value, display width and fill direction in LTR and RTL, and the group, radio and image names. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "color-swatches",
-      "title": "Color swatches",
-      "aliases": [
-        "color picker",
-        "colour picker",
-        "swatch picker",
-        "palette picker",
-        "color chooser"
-      ],
-      "guideSource": {
-        "pageId": "color-swatches",
-        "heading": "Color swatches",
-        "headingLevel": 2,
-        "semantics": [
-          "forms/color-swatches"
-        ]
-      },
-      "jobs": [
-        "Pick one color from a preset palette, on native radio buttons."
-      ],
-      "useWhen": [
-        "Offer a short fixed set of colors, such as a label, theme or calendar color, with an optional custom value."
-      ],
-      "avoidWhen": [
-        "Any color at all needs the native color input on its own; choosing between named options that are not colors needs radio buttons or chips."
-      ],
-      "alternatives": [
-        "radio-buttons",
-        "chips",
-        "text-fields"
-      ],
-      "adaptive": [],
-      "runtime": "css-only",
-      "guide": "../components/color-swatches.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#color-swatches",
-          "reviewedOn": "2026-10-18",
-          "documentedSupport": "A fieldset of native radios drawn as round chips of their colors, a ring around the checked one, the shared focus ring, a 48px target and an optional native color input for a custom value.",
-          "webAdaptation": "Native radios keep one Tab stop, arrow keys and form submission; each swatch is named by visually hidden text in its label.",
-          "limitations": [
-            "Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-18",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep a native radio group with a legend and a name for every swatch, mark the choice by shape as well as color, show focus and keep the swatch colors under forced colors."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "Eight label colors for a calendar are color swatches. Any brand color a designer types in is the native color input.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-18",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/forms/_color-swatches.scss",
-            "sha256": "264193228b3b777055639586059f7e5dff2600212f989151c5007d1364dd21e2"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified.",
-            "nextStep": "Choose a swatch with a keyboard and a screen reader in Firefox and Safari, and confirm each color name and the checked state are announced; check 200% text."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/color-swatches-browser.test.js",
-            "name": "chromium: color swatches draw each radio as its color and keep native radio behavior",
-            "scope": "Swatch color, 40px round shape and checked ring, the named group, arrow keys moving the choice, the form value, the focus ring after arrow keys and the swatch color under forced colors. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
       "slug": "color-picker",
       "title": "Color picker",
       "aliases": [
@@ -10054,6 +8413,1647 @@
             "file": "tests/questionnaire-browser.test.js",
             "name": "chromium: questionnaire validates requestSubmit and ignores disabled checkboxes",
             "scope": "A checked disabled checkbox not answering a data-required group, focus on the first enabled checkbox, requestSubmit() blocked by an unanswered group and by a hidden required field with each question opened and its error shown, a valid requestSubmit() sending FormData, and destroy clearing the custom validity. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "footer",
+      "title": "Footer",
+      "aliases": [],
+      "guideSource": {
+        "pageId": "footer",
+        "heading": "Footer",
+        "headingLevel": 2,
+        "semantics": [
+          "page-footer"
+        ]
+      },
+      "jobs": [
+        "Site navigation and extra information at the end of a page."
+      ],
+      "useWhen": [
+        "Site links and legal information at page end."
+      ],
+      "avoidWhen": [
+        "Primary app destinations need persistent navigation."
+      ],
+      "alternatives": [
+        "navigation-bar"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/footer.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#footer",
+          "reviewedOn": "2026-09-13",
+          "documentedSupport": "Native footer with navigation columns and copyright content.",
+          "webAdaptation": "Web page landmark styled with theme roles.",
+          "limitations": [
+            "A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-13",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Use a document footer landmark where appropriate, name distinct navigation groups and preserve meaningful links, reading order and reflow."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Home/Search/Profile should not require scrolling to a footer. Use a navigation bar or rail for those destinations.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-13",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_page-footer.scss",
+            "sha256": "68f4f28773946707239b84419a512acc18b507763893bccaed26d1ae41543f8c"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified.",
+            "nextStep": "Place a document footer outside main and sectioning elements; verify named legal navigation at enlarged text."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
+            "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion."
+          }
+        ],
+        "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
+      }
+    },
+    {
+      "slug": "stepper",
+      "title": "Stepper",
+      "aliases": [
+        "steps",
+        "wizard",
+        "progress steps",
+        "checkout steps"
+      ],
+      "guideSource": {
+        "pageId": "stepper",
+        "heading": "Stepper",
+        "headingLevel": 2,
+        "semantics": [
+          "stepper"
+        ]
+      },
+      "jobs": [
+        "Progress through a fixed sequence of steps, such as a checkout, with each step's state."
+      ],
+      "useWhen": [
+        "Show progress through a fixed order of steps the user completes one after another."
+      ],
+      "avoidWhen": [
+        "Views people switch between freely need tabs; one task with a percentage needs a progress indicator."
+      ],
+      "alternatives": [
+        "tabs",
+        "progress",
+        "breadcrumbs",
+        "timeline",
+        "questionnaire"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/stepper.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#stepper",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Horizontal and vertical ordered lists with current, complete and invalid steps, supporting text, links back to finished steps and a content panel in vertical steps.",
+          "webAdaptation": "An <ol> with aria-current=\"step\"; CSS alt text speaks the complete and invalid states from translatable tokens.",
+          "limitations": [
+            "Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the steps in an ordered list, mark exactly one current step, convey complete and error states in text as well as color, and keep labels translatable."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Account, Notifications and Privacy settings that people open in any order are tabs. A stepper would number them as if they had to be done in sequence.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_stepper.scss",
+            "sha256": "0efd332c2e84cd20bdf98ab9b1645aecb174cc6042f55abeb7b78383db32be12"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified.",
+            "nextStep": "Move through a checkout with a screen reader in each engine and confirm the step count, the current step and the completed state are announced once."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/stepper-browser.test.js",
+            "name": "chromium: stepper lays out its steps, marks their state and speaks it",
+            "scope": "Row and stack layout in LTR and RTL, supporting text and content placement, current, complete and invalid indicator fills and glyphs, no trailing connector, spoken state text and its token override. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "mega-menu",
+      "title": "Mega menu",
+      "aliases": [
+        "mega dropdown",
+        "site navigation menu",
+        "flyout navigation"
+      ],
+      "guideSource": {
+        "pageId": "mega_menu",
+        "heading": "Mega menu",
+        "headingLevel": 2,
+        "semantics": [
+          "mega-menu"
+        ]
+      },
+      "jobs": [
+        "Site navigation whose top items open wide panels of grouped links, on native popovers."
+      ],
+      "useWhen": [
+        "Give a site with many sections top-level navigation whose items open panels of grouped links."
+      ],
+      "avoidWhen": [
+        "Commands in an application belong in a menu or menubar; a short list of destinations needs a navbar or navigation rail."
+      ],
+      "alternatives": [
+        "menu",
+        "menubar",
+        "app-bar"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/mega-menu.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#mega-menu",
+          "reviewedOn": "2026-10-15",
+          "documentedSupport": "Links and disclosure buttons in a row, wide panels of grouped links below the bar, a turning chevron and current-page state.",
+          "webAdaptation": "Native popovers opened with popovertarget; the browser owns opening, light dismiss, Escape, focus order and the expanded state.",
+          "limitations": [
+            "Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-15",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the top items as links and disclosure buttons in a named nav, expose the expanded state, keep the panel next in the focus order, close on Escape and do not claim menu roles."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A docs site with Products, Solutions and Resources sections uses a mega menu. A text editor with File, Edit and View commands uses a menubar.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-15",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_mega-menu.scss",
+            "sha256": "b758dd7848889422d714b8b1a6f36cb51d99aa74bc9e312de73f08bfbd481f22"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified.",
+            "nextStep": "Open and close each panel with a screen reader in each engine and confirm the expanded state is announced."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/mega-menu-browser.test.js",
+            "name": "chromium: mega menu opens a wide panel of link groups below its button",
+            "scope": "Popover opening from its button, the panel below the bar spanning the window, side-by-side groups, the turning chevron, Tab into the panel, Escape, closed links out of reach and stacked groups on a phone. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "tree",
+      "title": "Tree",
+      "aliases": [
+        "tree view",
+        "file tree",
+        "folder tree",
+        "nested navigation"
+      ],
+      "guideSource": {
+        "pageId": "tree",
+        "heading": "Tree",
+        "headingLevel": 2,
+        "semantics": [
+          "tree"
+        ]
+      },
+      "jobs": [
+        "Nested lists of folders and links that open in place, for file browsers and deep navigation."
+      ],
+      "useWhen": [
+        "Browse a hierarchy several levels deep, such as files or nested sections, with branches that open in place."
+      ],
+      "avoidWhen": [
+        "One or two levels of navigation need a navigation rail or a list; peer sections need tabs."
+      ],
+      "alternatives": [
+        "lists",
+        "navigation-rail",
+        "accordion",
+        "org-chart"
+      ],
+      "adaptive": [],
+      "runtime": "native",
+      "guide": "../components/tree.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#tree",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Nested lists of native disclosures and links with guide lines, turning chevrons in LTR and RTL, leading icons and an aria-current row.",
+          "webAdaptation": "Native <details> branches and links; every row is a Tab stop and no tree role is promised.",
+          "limitations": [
+            "Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Expose each branch's expanded state, mark the current item, keep every row reachable by keyboard and avoid a tree role without its arrow-key contract."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Three settings pages under one heading are a list or a navigation rail. A tree would add chevrons and indentation for a hierarchy one level deep.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_tree.scss",
+            "sha256": "88d3f20a7980d21c4529fe7e9450bf90b418e3c55762ae8b3d4f079fd0d3022a"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified.",
+            "nextStep": "Navigate a deep tree with a keyboard and a screen reader in each engine; measure how many Tab stops a long tree costs and whether arrow-key navigation is needed."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/tree-browser.test.js",
+            "name": "chromium: tree indents its levels, turns its chevrons and marks the current row",
+            "scope": "Level indent, leaf and branch text alignment, open and closed chevrons in LTR and RTL, opening a branch, the current row fill, guide lines and no tree role. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "aura",
+      "title": "Aura",
+      "aliases": [
+        "border light",
+        "glow border",
+        "animated border",
+        "highlight ring",
+        "spotlight"
+      ],
+      "guideSource": {
+        "pageId": "aura",
+        "heading": "Aura",
+        "headingLevel": 2,
+        "semantics": [
+          "aura"
+        ]
+      },
+      "jobs": [
+        "A light that runs around the border of the one button or card a screen most needs you to see."
+      ],
+      "useWhen": [
+        "Draw the eye to the single most important button, card or panel on a screen, such as a recommended plan."
+      ],
+      "avoidWhen": [
+        "Several highlighted items compete for attention; state, status or selection needs a badge, chip or the component's own selected style."
+      ],
+      "alternatives": [
+        "badges",
+        "cards",
+        "buttons"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/aura.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#aura",
+          "reviewedOn": "2026-10-08",
+          "documentedSupport": "A turning light on a ring around one wrapped element, with dual, rainbow and glow styles, token color, width, corner and speed, a reversed turn in RTL, a static ring under reduced motion and a Highlight ring in forced colors.",
+          "webAdaptation": "A wrapper whose pseudo-element draws a masked conic gradient; it adds nothing to the accessibility tree.",
+          "limitations": [
+            "The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-08",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the light decorative and out of the accessibility tree, state the element's importance in text, and stop motion when reduced motion is requested."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A pricing page with one recommended plan gets one aura on that plan's card. Putting an aura on every plan, or on each new item in a list, removes the contrast the effect depends on; use a badge for those.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-08",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_aura.scss",
+            "sha256": "67a0781b94946d4e15b68718179f39c5af55cde89169fe45f5f6e4f402c216da"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified.",
+            "nextStep": "Check the Highlight ring in Windows forced colors and confirm with a screen reader that only the wrapped element is announced."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/aura-browser.test.js",
+            "name": "chromium: aura turns a ring around its element, stops under reduced motion and stays out of the accessibility tree",
+            "scope": "Ring padding and corners around a button and a card, a running registered angle, its reverse in RTL, the glow halo, the stop under reduced motion, a stepped turn and a 0deg resting ring in a shadow-only load, and no aura nodes in the accessibility tree. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "message",
+      "title": "Message",
+      "aliases": [
+        "chat bubble",
+        "message bubble",
+        "conversation"
+      ],
+      "guideSource": {
+        "pageId": "message",
+        "heading": "Message",
+        "headingLevel": 2,
+        "semantics": [
+          "message"
+        ]
+      },
+      "jobs": [
+        "One message in a conversation, with an optional avatar, header and footer."
+      ],
+      "useWhen": [
+        "Show a conversation as messages from people or an assistant, aligned by sender."
+      ],
+      "avoidWhen": [
+        "Short app feedback needs a snackbar; a list of conversations needs a list."
+      ],
+      "alternatives": [
+        "snackbar",
+        "lists",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/message.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#message",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Start and end alignment, avatar, header, footer actions, message groups and outlined attachment bubbles.",
+          "webAdaptation": "Plain div parts on a CSS grid; the page owns role=\"log\" on a live conversation.",
+          "limitations": [
+            "Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Identify each sender, keep reading order equal to conversation order, name icon-only message actions and announce appended messages through a log region."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A \"Saved\" confirmation after an edit is app feedback, not a conversation. Use a snackbar for it, not a message bubble.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_message.scss",
+            "sha256": "b491e02e2ad4587859b83252fba303d6513d848d70d8a88ce47f58325d2ea21d"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified.",
+            "nextStep": "Append messages to a role=\"log\" conversation and inspect assistive-technology output; test enlarged text and RTL."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/message-browser.test.js",
+            "name": "chromium: message layout anchors the avatar, follows its side and joins grouped corners",
+            "scope": "Avatar level with the bubble bottom and above the footer, start/end edges in LTR and RTL, no gap without an avatar, grouped corner radii and no message landmarks. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "stat",
+      "title": "Stat",
+      "aliases": [
+        "stat tile",
+        "metric",
+        "key figure",
+        "scorecard"
+      ],
+      "guideSource": {
+        "pageId": "stat",
+        "heading": "Stat",
+        "headingLevel": 2,
+        "semantics": [
+          "stat"
+        ]
+      },
+      "jobs": [
+        "Key figures in tiles, each with a label, a value and an optional change."
+      ],
+      "useWhen": [
+        "Summarize a few key figures, each with a label and an optional change, at the top of a dashboard."
+      ],
+      "avoidWhen": [
+        "Many rows of comparable records need a data table; a trend over time needs a chart."
+      ],
+      "alternatives": [
+        "data-table",
+        "cards",
+        "kpi"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/stat.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#stat",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Wrapping tiles in a description list with headline values, and a change line with up, down and negative states.",
+          "webAdaptation": "A <dl> pairs each value with its label; the arrow is decoration and the text carries the direction.",
+          "limitations": [
+            "Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Pair every value with its label, state the direction and comparison of a change in text and keep long values from overflowing their tile."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Monthly revenue for every region and product is a data table. Stat tiles would turn a comparison into a wall of numbers without columns.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_stat.scss",
+            "sha256": "d16e8c5dab7af93c9b9601548dc32953cc5e095a249e7c7c4e5859e3ebbc4f71"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.",
+            "nextStep": "Read a stats row with a screen reader in each engine and confirm each label is announced with its value; test enlarged text at narrow widths."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/stat-browser.test.js",
+            "name": "chromium: stats tile their figures, wrap when narrow and mark the change",
+            "scope": "One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "description-list",
+      "title": "Description list",
+      "aliases": [
+        "key-value list",
+        "details list",
+        "definition list",
+        "property list"
+      ],
+      "guideSource": {
+        "pageId": "description_list",
+        "heading": "Description list",
+        "headingLevel": 2,
+        "semantics": [
+          "description-list"
+        ]
+      },
+      "jobs": [
+        "A record's details as label and value pairs, in two columns that stack on compact screens."
+      ],
+      "useWhen": [
+        "Show the fields of one record, such as an order's status, address and total, as labelled values people read rather than edit."
+      ],
+      "avoidWhen": [
+        "Many records compared side by side need a data table; a few headline numbers need stat tiles; editable values need form fields."
+      ],
+      "alternatives": [
+        "stat",
+        "data-table",
+        "lists"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/description-list.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#description-list",
+          "reviewedOn": "2026-10-15",
+          "documentedSupport": "Label and value columns with a divider per pair, a compact stacked layout, div-wrapped groups and several values per label.",
+          "webAdaptation": "A native dl, dt and dd; the browser exposes the label-value pairing.",
+          "limitations": [
+            "Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-15",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the native dl so each value stays paired with its label, keep the reading order label before value and let long values wrap."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "An order page shows Status, Ship to and Total for one order as a description list. A table of fifty orders with those columns is a data table.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-15",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_description-list.scss",
+            "sha256": "d989d090fccadc4ef1ab8ec1ef84237ad9ce552508135c6a5ad9b3acae99d77f"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified.",
+            "nextStep": "Read a description list with a screen reader in each engine and confirm each value is announced with its label; test enlarged text."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/description-list-browser.test.js",
+            "name": "chromium: description list pairs labels and values in two columns and stacks them when compact",
+            "scope": "Label and value columns, shared rows, div-wrapped groups, stacked extra values, one divider per pair, the compact stacked layout and unchanged reading order. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "kpi",
+      "title": "KPI",
+      "aliases": [
+        "kpi card",
+        "key performance indicator",
+        "metric card",
+        "sparkline card"
+      ],
+      "guideSource": {
+        "pageId": "kpi",
+        "heading": "KPI",
+        "headingLevel": 2,
+        "semantics": [
+          "kpi"
+        ]
+      },
+      "jobs": [
+        "One key figure in a card, with a trend chip, a sparkline and details."
+      ],
+      "useWhen": [
+        "Feature a headline figure on a dashboard with its change, a short trend and a line of context or an action."
+      ],
+      "avoidWhen": [
+        "Several figures with no chart or actions read better as a stats row; a trend the reader has to inspect needs a full chart."
+      ],
+      "alternatives": [
+        "stat",
+        "line-chart",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/kpi.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#kpi",
+          "reviewedOn": "2026-10-08",
+          "documentedSupport": "A card with a labelled value in a description list, a trend chip with up, down and negative states, a tonal icon, a corner action, a sparkline, a progress bar and a footer.",
+          "webAdaptation": "A <dl> pairs the value with its label inside a card <article>; the arrow is decoration, the text carries the direction and the sparkline's table is its text alternative.",
+          "limitations": [
+            "Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-08",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Pair the value with its label, state the direction and unit of a change in text, caption the sparkline and name the action after the figure."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Revenue, orders and churn across the top of a sales dashboard, each with its last 10 days, are KPIs. Twelve figures with no trend are a stats row.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-08",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_kpi.scss",
+            "sha256": "0597d0fc81f4f1a874729e5ca7ca4e7b7cb0fbcd0de92894741e3d2ce91f4d31"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.",
+            "nextStep": "Read a KPI row with a screen reader in each engine and confirm the label, value, trend and sparkline caption are announced in order; test enlarged text at narrow widths."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/kpi-browser.test.js",
+            "name": "chromium: kpi lays out its label, value, trend, actions, chart and footer",
+            "scope": "Trend beside the value, actions in the label row's end corner, chart under the value, an edge-to-edge footer closing the card, the headline value size, up and down arrows, the negative chip and chart colors and term-definition pairs in the accessibility tree. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "countdown",
+      "title": "Countdown",
+      "aliases": [
+        "counter",
+        "rolling number",
+        "odometer",
+        "timer"
+      ],
+      "guideSource": {
+        "pageId": "countdown",
+        "heading": "Countdown",
+        "headingLevel": 2,
+        "semantics": [
+          "countdown"
+        ]
+      },
+      "jobs": [
+        "A number from 0 to 999 whose digits roll to each new value."
+      ],
+      "useWhen": [
+        "Show a small whole number that changes in place, such as seconds left, a clock or a live count, and draw the eye to each change."
+      ],
+      "avoidWhen": [
+        "A labelled key figure needs a stat tile; progress toward a goal needs a progress indicator; numbers above 999 or with decimals need plain text."
+      ],
+      "alternatives": [
+        "stat",
+        "progress",
+        "badges"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/countdown.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#countdown",
+          "reviewedOn": "2026-10-08",
+          "documentedSupport": "Digits from 0 to 999 that roll up or down when --md-comp-countdown-value changes, with zero padding to two or three digits and a reduced-motion fallback.",
+          "webAdaptation": "The element's text is the accessible value; the digit strips are generated content with empty alternative text. A page script sets the property and the text together.",
+          "limitations": [
+            "Width, digit positions, the baseline, the roll transition, reduced motion and the accessibility tree text are checked in a browser; spoken output inside role=\"timer\" and aria-live regions remains unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-08",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the number in the element's text for assistive technology, avoid announcing every tick and stop the motion when the user asks for reduced motion."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Monthly revenue of $48,200 is a stat tile. A countdown only shows whole numbers up to 999 and has no label.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-08",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_countdown.scss",
+            "sha256": "2918d1710b0858696b359789273316fe9fd9b3ed9023b606c6f4b2a90b878357"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Width, digit positions, the baseline, the roll transition, reduced motion and the accessibility tree text are checked in a browser; spoken output inside role=\"timer\" and aria-live regions remains unverified.",
+            "nextStep": "Run a ticking timer and a polite live count with a screen reader in each engine and confirm the timer stays quiet and the live count announces each value once."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/countdown-browser.test.js",
+            "name": "chromium: countdown shows 0 to 999 as rolling digits and keeps the text for assistive technology",
+            "scope": "Box width per digit count and padding, strip positions for in-range and clamped values, baseline alignment, the translate transition on change, reduced motion and the accessibility tree text. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "timeline",
+      "title": "Timeline",
+      "aliases": [
+        "activity feed",
+        "history",
+        "event log",
+        "changelog"
+      ],
+      "guideSource": {
+        "pageId": "timeline",
+        "heading": "Timeline",
+        "headingLevel": 2,
+        "semantics": [
+          "timeline"
+        ]
+      },
+      "jobs": [
+        "Events in order, each with a time, a title and details, joined by a line."
+      ],
+      "useWhen": [
+        "Show what happened and when, in order, such as order tracking or an activity feed."
+      ],
+      "avoidWhen": [
+        "Steps the user still has to complete need a stepper; a live conversation needs messages."
+      ],
+      "alternatives": [
+        "stepper",
+        "lists",
+        "message"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/timeline.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#timeline",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Ordered events with times, headings and text, dots joined by a line and a leading icon variant.",
+          "webAdaptation": "An <ol> of events with <time datetime>; the dots and line are decoration.",
+          "limitations": [
+            "Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep events in an ordered list in the order shown, give each a machine-readable time and hide decorative markers and icons."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Cart, Shipping and Payment in a checkout are steps the user still has to finish, so they belong in a stepper. A timeline would present them as things that already happened.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_timeline.scss",
+            "sha256": "4016dd3c8821db410a6af8d0ba7b6bb7e6c9423ba960e10dcc83913ff5b870b8"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified.",
+            "nextStep": "Read a timeline with a screen reader in each engine and confirm the order and times are announced; test enlarged text."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/timeline-browser.test.js",
+            "name": "chromium: timeline marks each event, joins it to the next and swaps the dot for an icon",
+            "scope": "Marker column, dot size, connecting line and its absence on the last event, the icon circle and its column in LTR and RTL. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "calendar",
+      "title": "Calendar",
+      "aliases": [
+        "month view",
+        "week view",
+        "day view",
+        "year view",
+        "event calendar",
+        "schedule"
+      ],
+      "guideSource": {
+        "pageId": "calendar",
+        "heading": "Calendar",
+        "headingLevel": 2,
+        "semantics": [
+          "calendar"
+        ]
+      },
+      "jobs": [
+        "A month, week or day of events, or a year of months, on tables the page renders."
+      ],
+      "useWhen": [
+        "Show a month of days with events people scan by date, such as bookings or a team schedule.",
+        "Show a week or a day as an hourly grid where each event covers its start and length."
+      ],
+      "avoidWhen": [
+        "Picking one date for a field needs the date picker; an ordered list of dated events needs a timeline."
+      ],
+      "alternatives": [
+        "date-picker",
+        "timeline",
+        "data-table"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/calendar.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#calendar",
+          "reviewedOn": "2026-10-22",
+          "documentedSupport": "A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize; week and day hourly grids with events placed by start and duration; a year of small months in as many columns as fit.",
+          "webAdaptation": "A native table with a caption; the page renders the dates, navigation and events.",
+          "limitations": [
+            "Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified.",
+            "Events that overlap in time overlap on screen in the week and day views; the page splits them."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-15",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Name the month in a caption, keep weekday column headers, mark today in text as well as color, and keep each event a reachable link or text."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A team schedule for October is a calendar. Choosing a delivery date in a form is the date picker.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-22",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_calendar.scss",
+            "sha256": "a3d1451810eb14b22e79b33cd337807b04a3f74513082a4e9b6517ab6beb5c78"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified.",
+            "nextStep": "Read a month with a screen reader in each engine and confirm the day and weekday are announced with each event."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/calendar-browser.test.js",
+            "name": "chromium: calendar lays out a month grid with today, outside days and event chips",
+            "scope": "Seven equal columns, day height, the today mark, muted outside days, event chips that stay inside their day and ellipsize, event links, column headers and the month at phone width. No spoken-output assertion."
+          },
+          {
+            "file": "tests/calendar-browser.test.js",
+            "name": "chromium: calendar week and day views place events on an hourly grid, and the year view tiles months",
+            "scope": "Hour row height, event top and height from start and duration, events inside their day column, event links, today in the header, hour row headers, a day view event across its column, months side by side and stacked at phone width. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "org-chart",
+      "title": "Organization chart",
+      "aliases": [
+        "org chart",
+        "organisation chart",
+        "organization tree",
+        "reporting line",
+        "staff hierarchy",
+        "team tree"
+      ],
+      "guideSource": {
+        "pageId": "org-chart",
+        "heading": "Organization chart",
+        "headingLevel": 2,
+        "semantics": [
+          "org-chart"
+        ]
+      },
+      "jobs": [
+        "A reporting line drawn top down, with each person as a card under their manager."
+      ],
+      "useWhen": [
+        "Show who reports to whom for a team or company of a few dozen people, with a face and a name on each card."
+      ],
+      "avoidWhen": [
+        "Hundreds of people or a search for one person need a searchable list or table; a deep hierarchy of pages or files needs a tree."
+      ],
+      "alternatives": [
+        "tree",
+        "lists",
+        "data-table"
+      ],
+      "adaptive": [],
+      "runtime": "native",
+      "guide": "../components/org-chart.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#organization-chart",
+          "reviewedOn": "2026-10-16",
+          "documentedSupport": "Nested lists of native disclosures drawn as cards under their manager, with connector lines, a role band, an avatar and a name, profile links on cards without reports, mirrored order in RTL and sideways scrolling when wide.",
+          "webAdaptation": "Native <details> managers and nested lists; every manager is a Tab stop and no tree role is promised.",
+          "limitations": [
+            "Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-16",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Carry the hierarchy in nested lists, expose each manager's expanded state, keep every manager reachable by keyboard, keep the drawn lines silent and avoid a tree role without its arrow-key contract."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Twelve people in four teams under a CIO are an org chart. Three hundred employees someone needs to search are a data table with a manager column.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-16",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_org-chart.scss",
+            "sha256": "7b342738b7029990224426661ab35b6b95215eb66ee29052439f9a4ea8d3704b"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified.",
+            "nextStep": "Read a chart with a screen reader in each engine and confirm each list's level and size and each manager's expanded state are announced; check forced colors and 200% text."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/org-chart-browser.test.js",
+            "name": "chromium: org chart centres each manager over its reports, collapses a team and scrolls when wide",
+            "scope": "Reports side by side below their manager in order, the manager over its reports, the bar stopping at the end reports, the drop from the manager, mirrored order and bar in RTL, a narrow chart scrolling with every card's start reachable, Enter folding a team, the caret under reduced motion, the CanvasText caret in forced colors and nested lists in the accessibility tree. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "popover",
+      "title": "Popover",
+      "aliases": [
+        "toggletip",
+        "popup",
+        "info popover",
+        "flyout"
+      ],
+      "guideSource": {
+        "pageId": "popover",
+        "heading": "Popover",
+        "headingLevel": 2,
+        "semantics": [
+          "popover"
+        ]
+      },
+      "jobs": [
+        "A panel that opens from a button and stays until dismissed, on the native popover attribute."
+      ],
+      "useWhen": [
+        "Show a short note or a few actions on press, next to the button, until the user dismisses it."
+      ],
+      "avoidWhen": [
+        "A hint on hover or focus needs a tooltip; a choice of commands needs a menu; a task to finish needs a dialog."
+      ],
+      "alternatives": [
+        "tooltips",
+        "menu",
+        "dialogs"
+      ],
+      "adaptive": [],
+      "runtime": "native",
+      "guide": "../components/popover.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#popover",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Native popover panels anchored below, above or beside their button with automatic flipping, rich-tooltip styling, an actions row and frosted glass.",
+          "webAdaptation": "The browser owns opening, light dismiss, Escape, focus return and the button's expanded state; CSS anchor positioning places the panel.",
+          "limitations": [
+            "Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Open on press rather than hover, report the expanded state on the button, return focus on dismissal, keep the panel next in reading order and keep it within the viewport."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A label for an icon button that shows on hover is a tooltip. A popover would make the user press the button just to learn what it does.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_popover.scss",
+            "sha256": "ea20e95c04b1ef46cfdd365edfae0441792f4e2c96412cfba853cf9114404616"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified.",
+            "nextStep": "Open a toggletip with a screen reader in each engine and confirm the expanded state and the panel content are reachable; check an engine without anchor positioning."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/popover-browser.test.js",
+            "name": "chromium: popover anchors to its button, flips at the edge and stays open while used",
+            "scope": "Default, top and end placement against the button in LTR and RTL, both-axis flip at the viewport corner, Escape with focus return, outside click, staying open for an inner button, one auto popover at a time and the Chromium expanded state. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "skeleton",
+      "title": "Skeleton",
+      "aliases": [
+        "skeleton screen",
+        "placeholder",
+        "shimmer",
+        "ghost content",
+        "content loader"
+      ],
+      "guideSource": {
+        "pageId": "skeleton",
+        "heading": "Skeleton",
+        "headingLevel": 2,
+        "semantics": [
+          "skeleton"
+        ]
+      },
+      "jobs": [
+        "Placeholder shapes that hold the layout while content loads."
+      ],
+      "useWhen": [
+        "Hold the layout of content whose shape is known while it loads."
+      ],
+      "avoidWhen": [
+        "A short wait with no known layout needs a loading indicator; measurable progress needs a progress indicator."
+      ],
+      "alternatives": [
+        "loading-indicator",
+        "progress"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/skeleton.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#skeleton",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Box, text line and circle shapes with a shimmer that reverses in RTL, stops under reduced motion and keeps an outline in forced colors.",
+          "webAdaptation": "Empty decorative blocks; the page marks the loading region aria-busy and reports the wait through a status.",
+          "limitations": [
+            "The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep placeholders out of the accessibility tree, report the wait through a status, clear aria-busy when content arrives and stop motion when reduced motion is requested."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A one-second spinner while a form saves is a loading indicator. Skeletons there would draw content shapes for something that is not content.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_skeleton.scss",
+            "sha256": "f5b2a97773d171ad5d535f638324ed329aa93c1c957b601c59471838cfbd12d6"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified.",
+            "nextStep": "Load content into an aria-busy region with a screen reader and confirm the status is announced once and the skeletons are not; test forced colors."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/skeleton-browser.test.js",
+            "name": "chromium: skeleton shimmers, stops under reduced motion and stays out of the accessibility tree",
+            "scope": "Running shimmer animation, its removal under reduced motion, reversed direction in RTL, text and circle geometry and no skeleton nodes in the accessibility tree. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "empty-state",
+      "title": "Empty state",
+      "aliases": [
+        "blank slate",
+        "zero state",
+        "no results",
+        "no data"
+      ],
+      "guideSource": {
+        "pageId": "empty_state",
+        "heading": "Empty state",
+        "headingLevel": 2,
+        "semantics": [
+          "empty-state"
+        ]
+      },
+      "jobs": [
+        "What a view shows when it has nothing to list: an icon, a heading, text and actions."
+      ],
+      "useWhen": [
+        "Explain why a list, search or view has nothing to show and offer the next step."
+      ],
+      "avoidWhen": [
+        "An error after an action needs inline feedback or a snackbar; a loading view needs a skeleton or loading indicator."
+      ],
+      "alternatives": [
+        "snackbar",
+        "skeleton",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/empty-state.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#empty-state",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "Centered icon in a tonal circle or an illustration, a heading, supporting text and a wrapping row of actions.",
+          "webAdaptation": "A plain div around authored heading, text and buttons; the page picks the heading level.",
+          "limitations": [
+            "Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "State what is empty and what to do next in text, keep the heading in the page outline, hide decorative icons and images and announce results that change after a search."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A failed save after pressing Save is feedback for a snackbar or the form. An empty state would replace the user's content with a placeholder.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_empty-state.scss",
+            "sha256": "5740d50963b3e2cb7a62330f0260d4b1a0c89ff2bc051c9bb83f82e23dbdcabe"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified.",
+            "nextStep": "Empty a filtered list with a screen reader and confirm the change is announced; test enlarged text and narrow widths."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/empty-state-browser.test.js",
+            "name": "chromium: empty state centers its content and rings the leading icon",
+            "scope": "Centered column, icon circle size and fill, text width cap, centered wrapping actions and an empty alt image left out of the accessibility tree. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "marquee",
+      "title": "Marquee",
+      "aliases": [
+        "ticker",
+        "logo cloud",
+        "logo wall",
+        "infinite scroll strip",
+        "scrolling banner"
+      ],
+      "guideSource": {
+        "pageId": "marquee",
+        "heading": "Marquee",
+        "headingLevel": 2,
+        "semantics": [
+          "marquee"
+        ]
+      },
+      "jobs": [
+        "A row of logos, images or text that scrolls without end."
+      ],
+      "useWhen": [
+        "Show a long, decorative set of logos, photos or short slogans in a small space, such as customer logos on a landing page."
+      ],
+      "avoidWhen": [
+        "People need to read, compare or act on the items; a list, grid or carousel lets them do it at their own pace. Urgent messages need an alert or snackbar."
+      ],
+      "alternatives": [
+        "carousel",
+        "lists",
+        "chips"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/marquee.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#marquee",
+          "reviewedOn": "2026-10-08",
+          "documentedSupport": "Two identical groups that loop horizontally or vertically, with reverse, edge fades, a paused class, hover and focus pausing, token duration and gap, a reversed direction in RTL and a hand-scrolled strip under reduced motion.",
+          "webAdaptation": "A visual copy of the item list marked aria-hidden, with its links taken out of the tab order, so assistive technology and the keyboard meet each item once.",
+          "limitations": [
+            "The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-08",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Hide the copy from assistive technology, keep each link reachable once, pause on hover and focus, offer a pause control for long-running motion and stop it when reduced motion is requested."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Twelve customer logos under a landing page hero are a marquee. Four featured products people should open are a carousel or a card grid.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-08",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_marquee.scss",
+            "sha256": "66bd01216b22c54391b09257dd0e893b590451b602421e4ab935485c4d597f11"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified.",
+            "nextStep": "Listen to a marquee with a screen reader in each engine and confirm each item is read once; watch a long strip for a visible jump at the loop point."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/marquee-browser.test.js",
+            "name": "chromium: marquee loops its two groups, pauses, follows direction and stops under reduced motion",
+            "scope": "A short group filling the strip, the copy one gap after it, the half-cycle position horizontally, in RTL and vertically, reverse, pausing on hover, focus and .paused, one link per item in the accessibility tree and the reduced-motion stop with the copy hidden. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "rating",
+      "title": "Rating",
+      "aliases": [
+        "stars",
+        "star rating",
+        "review score"
+      ],
+      "guideSource": {
+        "pageId": "rating",
+        "heading": "Rating",
+        "headingLevel": 2,
+        "semantics": [
+          "rating"
+        ]
+      },
+      "jobs": [
+        "Stars for choosing or showing a score, on native radio buttons."
+      ],
+      "useWhen": [
+        "Ask for or show a score on a short fixed scale, such as one to five stars."
+      ],
+      "avoidWhen": [
+        "A continuous value needs a slider; a yes or no answer needs a switch or checkbox."
+      ],
+      "alternatives": [
+        "radio-buttons",
+        "slider"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/rating.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#rating",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "A fieldset of radios drawn as stars with fill, hover preview and focus ring, and a read-only display that fills to a fractional value in LTR and RTL.",
+          "webAdaptation": "Native radios keep keyboard, form and naming behavior; the display is a named role=\"img\".",
+          "limitations": [
+            "Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep a native radio group with a legend and a name for every star, show focus, fill by more than color where possible and name a read-only display with its value."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Choosing a volume from 0 to 100 is a slider. Stars suit a short fixed scale where each step has a meaning.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_rating.scss",
+            "sha256": "f0e053d5504a2b507cd10f080d78975eca50e97d0d5846cfd3cac56776ade994"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified.",
+            "nextStep": "Rate with a keyboard and a screen reader in each engine, including Safari, and confirm the focus ring follows the arrows and each star is announced."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/rating-browser.test.js",
+            "name": "chromium: rating fills stars up to the choice, previews on hover and keeps native radios",
+            "scope": "Visible 24px masked radios, fill up to the checked star, Tab entry and arrow keys, focus ring on entry, hover preview, form value, display width and fill direction in LTR and RTL, and the group, radio and image names. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "color-swatches",
+      "title": "Color swatches",
+      "aliases": [
+        "color picker",
+        "colour picker",
+        "swatch picker",
+        "palette picker",
+        "color chooser"
+      ],
+      "guideSource": {
+        "pageId": "color-swatches",
+        "heading": "Color swatches",
+        "headingLevel": 2,
+        "semantics": [
+          "color-swatches"
+        ]
+      },
+      "jobs": [
+        "Pick one color from a preset palette, on native radio buttons."
+      ],
+      "useWhen": [
+        "Offer a short fixed set of colors, such as a label, theme or calendar color, with an optional custom value."
+      ],
+      "avoidWhen": [
+        "Any color at all needs the native color input on its own; choosing between named options that are not colors needs radio buttons or chips."
+      ],
+      "alternatives": [
+        "radio-buttons",
+        "chips",
+        "text-fields"
+      ],
+      "adaptive": [],
+      "runtime": "css-only",
+      "guide": "../components/color-swatches.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#color-swatches",
+          "reviewedOn": "2026-10-18",
+          "documentedSupport": "A fieldset of native radios drawn as round chips of their colors, a ring around the checked one, the shared focus ring, a 48px target and an optional native color input for a custom value.",
+          "webAdaptation": "Native radios keep one Tab stop, arrow keys and form submission; each swatch is named by visually hidden text in its label.",
+          "limitations": [
+            "Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-18",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep a native radio group with a legend and a name for every swatch, mark the choice by shape as well as color, show focus and keep the swatch colors under forced colors."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Eight label colors for a calendar are color swatches. Any brand color a designer types in is the native color input.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-18",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/forms/_color-swatches.scss",
+            "sha256": "264193228b3b777055639586059f7e5dff2600212f989151c5007d1364dd21e2"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified.",
+            "nextStep": "Choose a swatch with a keyboard and a screen reader in Firefox and Safari, and confirm each color name and the checked state are announced; check 200% text."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/color-swatches-browser.test.js",
+            "name": "chromium: color swatches draw each radio as its color and keep native radio behavior",
+            "scope": "Swatch color, 40px round shape and checked ring, the named group, arrow keys moving the choice, the form value, the focus ring after arrow keys and the swatch color under forced colors. No spoken-output assertion."
           }
         ]
       }

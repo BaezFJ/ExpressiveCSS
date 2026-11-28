@@ -617,5 +617,9 @@ test('complete minified artifacts stay within the reviewed gzip budgets', () => 
   // Custom scrollbars phase 104: 94,892 gzip bytes.
   // Custom scrollbars phase 105: 94,922 gzip bytes.
   // Custom scrollbars phase 106: 94,925 gzip bytes.
-  assert.ok(sizes(css).gzip <= 94925, `CSS gzip: ${sizes(css).gzip}`);
+  // Reviewed moving the CSS-only components to @expressivecss/extras: 86,848 gzip bytes (-8,077).
+  assert.ok(sizes(css).gzip <= 86848, `CSS gzip: ${sizes(css).gzip}`);
+  const extrasCss = readFileSync(`${root}/extras/dist/css/extras.min.css`, 'utf8').replace(/\/\*# sourceMappingURL=.*?\*\//, '').trimEnd();
+  // Reviewed the CSS-only components moved from core, with the footer grid at the base rule's weight: 9,385 gzip bytes.
+  assert.ok(sizes(extrasCss).gzip <= 9385, `Extras CSS gzip: ${sizes(extrasCss).gzip}`);
 });

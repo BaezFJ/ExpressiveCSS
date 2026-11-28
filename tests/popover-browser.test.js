@@ -1,9 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import { engines } from './browser.js';
+import { pageCss } from './css.js';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+// Core then extras, as a page that uses extras loads them.
+const css = pageCss();
 
 const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><style>${css} body { margin: 0 }</style></head><body>
 <main>
@@ -96,7 +97,8 @@ for (const [name, engine, test] of engines) {
 // Every engine under test supports anchor positioning, so the fallback's
 // rules are lifted out of their @supports block and applied with
 // position-area turned off, as an engine without the feature would.
-const fallback = css.match(/@supports not \(anchor-name: --a\) \{([^]*?\})\s*\}/)?.[1];
+const fallback = [...css.matchAll(/@supports not \(anchor-name: --a\) \{([^]*?\})\s*\}/g)]
+  .map((match) => match[1]).find((block) => /(?:^|[\s,])\.popover(?![\w-])/.test(block));
 
 for (const [name, engine, test] of engines) {
   test(`${name}: without anchor positioning a popover is centered in the viewport, not left in its corner`, { timeout: 30000 }, async (t) => {

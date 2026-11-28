@@ -124,17 +124,13 @@ Paths are relative to `src/sass`, without the underscore or extension. The catal
 | `components/navigation-rail` | [Navigation rail](https://www.expressivecss.com/navigation-rail.html.md) |
 | `components/panes` | [Panes](https://www.expressivecss.com/panes.html.md) |
 | `components/scaffold` | [Scaffold](https://www.expressivecss.com/scaffold.html.md) |
-| `components/page-footer` | [Footer](https://www.expressivecss.com/footer.html.md) |
 | `components/tabs` | [Tabs](https://www.expressivecss.com/tabs.html.md) |
 | `components/breadcrumb` | [Breadcrumbs](https://www.expressivecss.com/breadcrumbs.html.md) |
 | `components/pagination` | [Pagination](https://www.expressivecss.com/pagination.html.md) |
-| `components/stepper` | [Stepper](https://www.expressivecss.com/stepper.html.md) |
 | `components/menu` | [Menu](https://www.expressivecss.com/menu.html.md) |
-| `components/mega-menu` | [Mega menu](https://www.expressivecss.com/mega-menu.html.md) |
 | `components/menubar` | [Menubar](https://www.expressivecss.com/menubar.html.md) |
 | `components/scrollspy` | [Scrollspy](https://www.expressivecss.com/scrollspy.html.md) |
 | `components/table_of_contents` | [Scrollspy](https://www.expressivecss.com/scrollspy.html.md) |
-| `components/tree` | [Tree](https://www.expressivecss.com/tree.html.md) |
 | `components/buttons` | [Buttons](https://www.expressivecss.com/buttons.html.md) |
 | `components/icon-buttons` | [Icon buttons](https://www.expressivecss.com/icon-buttons.html.md) |
 | `components/button-groups` | [Button groups](https://www.expressivecss.com/button-groups.html.md) |
@@ -143,20 +139,14 @@ Paths are relative to `src/sass`, without the underscore or extension. The catal
 | `components/back-to-top` | [Back to top](https://www.expressivecss.com/back-to-top.html.md) |
 | `components/cards` | [Cards](https://www.expressivecss.com/cards.html.md) |
 | `components/expanding-card` | [Cards](https://www.expressivecss.com/cards.html.md) |
-| `components/aura` | [Aura](https://www.expressivecss.com/aura.html.md) |
 | `components/list` | [Lists](https://www.expressivecss.com/lists.html.md) |
 | `utilities/defer-render` | [Lists](https://www.expressivecss.com/lists.html.md) |
-| `components/message` | [Message](https://www.expressivecss.com/message.html.md) |
 | `components/message-scroller` | [Message scroller](https://www.expressivecss.com/message-scroller.html.md) |
 | `components/pull-to-refresh` | [Pull-to-refresh](https://www.expressivecss.com/pull-to-refresh.html.md) |
 | `components/swipe-actions` | [Swipe actions](https://www.expressivecss.com/swipe-actions.html.md) |
 | `components/accordion` | [Accordion](https://www.expressivecss.com/accordion.html.md) |
 | `components/show-more` | [Show more](https://www.expressivecss.com/show-more.html.md) |
 | `components/data-table` | [Data table](https://www.expressivecss.com/data-table.html.md) |
-| `components/stat` | [Stat](https://www.expressivecss.com/stat.html.md) |
-| `components/description-list` | [Description list](https://www.expressivecss.com/description-list.html.md) |
-| `components/kpi` | [KPI](https://www.expressivecss.com/kpi.html.md) |
-| `components/countdown` | [Countdown](https://www.expressivecss.com/countdown.html.md) |
 | `components/line-chart` | [Line chart](https://www.expressivecss.com/line-chart.html.md) |
 | `components/column-chart` | [Column chart](https://www.expressivecss.com/column-chart.html.md) |
 | `components/bar-chart` | [Bar chart](https://www.expressivecss.com/bar-chart.html.md) |
@@ -169,8 +159,6 @@ Paths are relative to `src/sass`, without the underscore or extension. The catal
 | `components/funnel-chart` | [Funnel chart](https://www.expressivecss.com/funnel-chart.html.md) |
 | `components/sankey-chart` | [Sankey chart](https://www.expressivecss.com/sankey-chart.html.md) |
 | `components/treemap-chart` | [Treemap chart](https://www.expressivecss.com/treemap-chart.html.md) |
-| `components/timeline` | [Timeline](https://www.expressivecss.com/timeline.html.md) |
-| `components/calendar` | [Calendar](https://www.expressivecss.com/calendar.html.md) |
 | `components/dialog` | [Dialogs](https://www.expressivecss.com/dialogs.html.md) |
 | `components/scrim` | [Dialogs](https://www.expressivecss.com/dialogs.html.md) |
 | `components/bottom-sheet` | [Bottom sheet](https://www.expressivecss.com/bottom-sheet.html.md) |
@@ -178,20 +166,15 @@ Paths are relative to `src/sass`, without the underscore or extension. The catal
 | `components/drag-handle` | [Drag handle](https://www.expressivecss.com/drag-handle.html.md) |
 | `components/badges` | [Badges](https://www.expressivecss.com/badges.html.md) |
 | `components/avatar` | [Avatar](https://www.expressivecss.com/avatar.html.md) |
-| `components/org-chart` | [Organization chart](https://www.expressivecss.com/org-chart.html.md) |
 | `components/tooltip` | [Tooltips](https://www.expressivecss.com/tooltips.html.md) |
-| `components/popover` | [Popover](https://www.expressivecss.com/popover.html.md) |
 | `components/tour` | [Tour](https://www.expressivecss.com/tour.html.md) |
 | `components/snackbar` | [Snackbar](https://www.expressivecss.com/snackbar.html.md) |
 | `components/progress` | [Preloader](https://www.expressivecss.com/preloader.html.md) |
 | `components/loading-indicator` | [Loading indicator](https://www.expressivecss.com/loading-indicator.html.md) |
 | `components/loading-overlay` | [Loading overlay](https://www.expressivecss.com/loading-overlay.html.md) |
-| `components/skeleton` | [Skeleton](https://www.expressivecss.com/skeleton.html.md) |
-| `components/empty-state` | [Empty state](https://www.expressivecss.com/empty-state.html.md) |
 | `components/alert` | [Alert](https://www.expressivecss.com/alert.html.md) |
 | `components/carousel` | [Carousel](https://www.expressivecss.com/carousel.html.md) |
 | `components/image-compare` | [Image compare](https://www.expressivecss.com/image-compare.html.md) |
-| `components/marquee` | [Marquee](https://www.expressivecss.com/marquee.html.md) |
 | `components/confetti` | [Confetti](https://www.expressivecss.com/confetti.html.md) |
 | `components/particles` | [Particles](https://www.expressivecss.com/particles.html.md) |
 | `components/lightbox` | [Lightbox](https://www.expressivecss.com/media.html.md) |
@@ -210,8 +193,6 @@ Paths are relative to `src/sass`, without the underscore or extension. The catal
 | `components/forms/checkboxes` | [Checkboxes](https://www.expressivecss.com/checkboxes.html.md) |
 | `components/transfer-list` | [Transfer list](https://www.expressivecss.com/transfer-list.html.md) |
 | `components/forms/radio-buttons` | [Radio](https://www.expressivecss.com/radio-buttons.html.md) |
-| `components/forms/rating` | [Rating](https://www.expressivecss.com/rating.html.md) |
-| `components/forms/color-swatches` | [Color swatches](https://www.expressivecss.com/color-swatches.html.md) |
 | `components/forms/color-picker` | [Color picker](https://www.expressivecss.com/color-picker.html.md) |
 | `components/forms/switches` | [Switches](https://www.expressivecss.com/switches.html.md) |
 | `components/forms/slider` | [Slider](https://www.expressivecss.com/slider.html.md) |
@@ -222,3 +203,22 @@ Paths are relative to `src/sass`, without the underscore or extension. The catal
 | `components/timepicker` | [Time picker](https://www.expressivecss.com/timepicker.html.md) |
 | `components/keypad` | [Keypad](https://www.expressivecss.com/keypad.html.md) |
 | `components/questionnaire` | [Questionnaire](https://www.expressivecss.com/questionnaire.html.md) |
+| `components/page-footer` | [Footer](https://www.expressivecss.com/footer.html.md) |
+| `components/stepper` | [Stepper](https://www.expressivecss.com/stepper.html.md) |
+| `components/mega-menu` | [Mega menu](https://www.expressivecss.com/mega-menu.html.md) |
+| `components/tree` | [Tree](https://www.expressivecss.com/tree.html.md) |
+| `components/aura` | [Aura](https://www.expressivecss.com/aura.html.md) |
+| `components/message` | [Message](https://www.expressivecss.com/message.html.md) |
+| `components/stat` | [Stat](https://www.expressivecss.com/stat.html.md) |
+| `components/description-list` | [Description list](https://www.expressivecss.com/description-list.html.md) |
+| `components/kpi` | [KPI](https://www.expressivecss.com/kpi.html.md) |
+| `components/countdown` | [Countdown](https://www.expressivecss.com/countdown.html.md) |
+| `components/timeline` | [Timeline](https://www.expressivecss.com/timeline.html.md) |
+| `components/calendar` | [Calendar](https://www.expressivecss.com/calendar.html.md) |
+| `components/org-chart` | [Organization chart](https://www.expressivecss.com/org-chart.html.md) |
+| `components/popover` | [Popover](https://www.expressivecss.com/popover.html.md) |
+| `components/skeleton` | [Skeleton](https://www.expressivecss.com/skeleton.html.md) |
+| `components/empty-state` | [Empty state](https://www.expressivecss.com/empty-state.html.md) |
+| `components/marquee` | [Marquee](https://www.expressivecss.com/marquee.html.md) |
+| `components/rating` | [Rating](https://www.expressivecss.com/rating.html.md) |
+| `components/color-swatches` | [Color swatches](https://www.expressivecss.com/color-swatches.html.md) |

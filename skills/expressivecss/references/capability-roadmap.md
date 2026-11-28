@@ -19,16 +19,12 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Navigation rail](#navigation-rail) | unassessed | needs-review | needs-rerun | 0 |
 | [Panes](#panes) | unassessed | needs-review | needs-rerun | 1 |
 | [Scaffold](#scaffold) | implemented | source-reviewed | incomplete | 0 |
-| [Footer](#footer) | unassessed | needs-review | needs-rerun | 0 |
 | [Tabs](#tabs) | unassessed | needs-review | needs-rerun | 1 |
 | [Breadcrumbs](#breadcrumbs) | unassessed | needs-review | needs-rerun | 0 |
 | [Pagination](#pagination) | unassessed | needs-review | needs-rerun | 1 |
-| [Stepper](#stepper) | unassessed | needs-review | needs-rerun | 0 |
 | [Menu](#menu) | unassessed | needs-review | needs-rerun | 0 |
-| [Mega menu](#mega-menu) | unassessed | needs-review | incomplete | 0 |
 | [Menubar](#menubar) | unassessed | needs-review | incomplete | 0 |
 | [Scrollspy](#scrollspy) | unassessed | needs-review | needs-rerun | 0 |
-| [Tree](#tree) | implemented | source-reviewed | needs-rerun | 0 |
 | [Buttons](#buttons) | unassessed | needs-review | needs-rerun | 0 |
 | [Icon buttons](#icon-buttons) | unassessed | needs-review | needs-rerun | 0 |
 | [Button groups](#button-groups) | unassessed | needs-review | needs-rerun | 0 |
@@ -36,19 +32,13 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Floating action button](#fab) | unassessed | needs-review | needs-rerun | 0 |
 | [Back to top](#back-to-top) | implemented | source-reviewed | incomplete | 0 |
 | [Cards](#cards) | unassessed | needs-review | needs-rerun | 0 |
-| [Aura](#aura) | unassessed | needs-review | needs-rerun | 0 |
 | [Lists](#lists) | unassessed | needs-review | needs-rerun | 1 |
-| [Message](#message) | implemented | source-reviewed | needs-rerun | 0 |
 | [Message scroller](#message-scroller) | implemented | source-reviewed | needs-rerun | 0 |
 | [Pull-to-refresh](#pull-to-refresh) | implemented | source-reviewed | incomplete | 0 |
 | [Swipe actions](#swipe-actions) | implemented | source-reviewed | incomplete | 0 |
 | [Accordion](#accordion) | implemented | source-reviewed | needs-rerun | 0 |
 | [Show more](#show-more) | unassessed | needs-review | incomplete | 0 |
 | [Data table](#data-table) | unassessed | needs-review | needs-rerun | 0 |
-| [Stat](#stat) | unassessed | needs-review | needs-rerun | 0 |
-| [Description list](#description-list) | implemented | source-reviewed | incomplete | 0 |
-| [KPI](#kpi) | unassessed | needs-review | needs-rerun | 0 |
-| [Countdown](#countdown) | implemented | source-reviewed | needs-rerun | 0 |
 | [Line chart](#line-chart) | unassessed | needs-review | needs-rerun | 0 |
 | [Column chart](#column-chart) | unassessed | needs-review | needs-rerun | 0 |
 | [Bar chart](#bar-chart) | unassessed | needs-review | needs-rerun | 0 |
@@ -61,29 +51,22 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Funnel chart](#funnel-chart) | unassessed | needs-review | incomplete | 0 |
 | [Sankey chart](#sankey-chart) | unassessed | needs-review | incomplete | 0 |
 | [Treemap chart](#treemap-chart) | unassessed | needs-review | incomplete | 0 |
-| [Timeline](#timeline) | implemented | source-reviewed | needs-rerun | 0 |
-| [Calendar](#calendar) | implemented | source-reviewed | incomplete | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | needs-rerun | 1 |
 | [Side sheet](#side-sheet) | unassessed | needs-review | needs-rerun | 0 |
 | [Drag handle](#drag-handle) | unassessed | needs-review | no-mapped-checks | 1 |
 | [Badges](#badges) | unassessed | needs-review | needs-rerun | 0 |
 | [Avatar](#avatar) | unassessed | needs-review | needs-rerun | 0 |
-| [Organization chart](#org-chart) | unassessed | needs-review | incomplete | 0 |
 | [Tooltips](#tooltips) | unassessed | needs-review | needs-rerun | 0 |
-| [Popover](#popover) | implemented | source-reviewed | needs-rerun | 0 |
 | [Hover card](#hover-card) | implemented | source-reviewed | incomplete | 0 |
 | [Tour](#tour) | unassessed | needs-review | incomplete | 0 |
 | [Snackbar](#snackbar) | unassessed | needs-review | needs-rerun | 0 |
 | [Progress indicators](#progress) | unassessed | needs-review | needs-rerun | 0 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | needs-rerun | 1 |
 | [Loading overlay](#loading-overlay) | implemented | source-reviewed | incomplete | 0 |
-| [Skeleton](#skeleton) | unassessed | needs-review | needs-rerun | 0 |
-| [Empty state](#empty-state) | implemented | source-reviewed | needs-rerun | 0 |
 | [Alert](#alert) | implemented | source-reviewed | incomplete | 0 |
 | [Carousel](#carousel) | unassessed | needs-review | needs-rerun | 0 |
 | [Image compare](#image-compare) | implemented | source-reviewed | incomplete | 0 |
-| [Marquee](#marquee) | implemented | source-reviewed | needs-rerun | 0 |
 | [Confetti](#confetti) | unassessed | needs-review | needs-rerun | 0 |
 | [Particles](#particles) | unassessed | needs-review | needs-rerun | 0 |
 | [Lightbox](#lightbox) | unassessed | needs-review | needs-rerun | 0 |
@@ -104,8 +87,6 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Checkboxes](#checkboxes) | unassessed | needs-review | needs-rerun | 0 |
 | [Transfer list](#transfer-list) | unassessed | needs-review | incomplete | 0 |
 | [Radio buttons](#radio-buttons) | unassessed | needs-review | needs-rerun | 0 |
-| [Rating](#rating) | implemented | source-reviewed | needs-rerun | 0 |
-| [Color swatches](#color-swatches) | implemented | source-reviewed | incomplete | 0 |
 | [Color picker](#color-picker) | unassessed | needs-review | incomplete | 0 |
 | [Switches](#switches) | unassessed | needs-review | needs-rerun | 1 |
 | [Slider](#slider) | unassessed | needs-review | needs-rerun | 0 |
@@ -115,6 +96,25 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Time picker](#time-picker) | unassessed | needs-review | needs-rerun | 1 |
 | [Keypad and Keyboard](#keypad) | unassessed | needs-review | incomplete | 0 |
 | [Questionnaire](#questionnaire) | unassessed | needs-review | needs-rerun | 0 |
+| [Footer](#footer) | unassessed | needs-review | needs-rerun | 0 |
+| [Stepper](#stepper) | unassessed | needs-review | needs-rerun | 0 |
+| [Mega menu](#mega-menu) | unassessed | needs-review | incomplete | 0 |
+| [Tree](#tree) | unassessed | needs-review | needs-rerun | 0 |
+| [Aura](#aura) | unassessed | needs-review | needs-rerun | 0 |
+| [Message](#message) | unassessed | needs-review | needs-rerun | 0 |
+| [Stat](#stat) | unassessed | needs-review | needs-rerun | 0 |
+| [Description list](#description-list) | unassessed | needs-review | incomplete | 0 |
+| [KPI](#kpi) | unassessed | needs-review | needs-rerun | 0 |
+| [Countdown](#countdown) | unassessed | needs-review | needs-rerun | 0 |
+| [Timeline](#timeline) | unassessed | needs-review | needs-rerun | 0 |
+| [Calendar](#calendar) | unassessed | needs-review | incomplete | 0 |
+| [Organization chart](#org-chart) | unassessed | needs-review | incomplete | 0 |
+| [Popover](#popover) | unassessed | needs-review | needs-rerun | 0 |
+| [Skeleton](#skeleton) | unassessed | needs-review | needs-rerun | 0 |
+| [Empty state](#empty-state) | unassessed | needs-review | needs-rerun | 0 |
+| [Marquee](#marquee) | unassessed | needs-review | needs-rerun | 0 |
+| [Rating](#rating) | unassessed | needs-review | needs-rerun | 0 |
+| [Color swatches](#color-swatches) | unassessed | needs-review | incomplete | 0 |
 | [Typography](#typography) | unassessed | needs-review | needs-rerun | 1 |
 | [Shape](#shape) | unassessed | needs-review | needs-rerun | 1 |
 | [Motion](#motion) | unassessed | needs-review | needs-rerun | 1 |
@@ -230,24 +230,6 @@ Web adaptation: CSS grid areas on a div inside body; the children keep their own
 - not-recorded: [tests/scaffold-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/scaffold-browser.test.js): `chromium: the scaffold adds no landmark and keeps banner, navigation and main in order`. Landmark order from the accessibility tree. No spoken-output assertion.
 - not-recorded: [tests/scaffold-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/scaffold-browser.test.js): `chromium: under forced colors the floating pane keeps a visible edge`. A 1px solid pane border under forced colors at 1024px.
 
-<a id="footer"></a>
-
-## Footer
-
-**unassessed within the stated scope.** Native footer with navigation columns and copyright content.
-
-Source review: needs-review, 2026-09-13. [src/sass/components/_page-footer.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_page-footer.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
-
-Web adaptation: Web page landmark styled with theme roles. Documented support reviewed 2026-09-13 against `llm.md#footer`.
-
-- Known boundary: A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified.
-
-- verification: A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified. Next: Place a document footer outside main and sectioning elements; verify named legal navigation at enlarged text.
-
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
-
 <a id="tabs"></a>
 
 ## Tabs
@@ -309,24 +291,6 @@ Web adaptation: CSS-only navigation; the application supplies destinations. Docu
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
 
-<a id="stepper"></a>
-
-## Stepper
-
-**unassessed within the stated scope.** Horizontal and vertical ordered lists with current, complete and invalid steps, supporting text, links back to finished steps and a content panel in vertical steps.
-
-Source review: needs-review, 2026-10-06. [src/sass/components/_stepper.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_stepper.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: An <ol> with aria-current="step"; CSS alt text speaks the complete and invalid states from translatable tokens. Documented support reviewed 2026-10-06 against `llm.md#stepper`.
-
-- Known boundary: Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified.
-
-- verification: Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified. Next: Move through a checkout with a screen reader in each engine and confirm the step count, the current step and the completed state are announced once.
-
-- stale: [tests/stepper-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/stepper-browser.test.js): `chromium: stepper lays out its steps, marks their state and speaks it`. Row and stack layout in LTR and RTL, supporting text and content placement, current, complete and invalid indicator fills and glyphs, no trailing connector, spoken state text and its token override. No spoken-output assertion.
-
 <a id="menu"></a>
 
 ## Menu
@@ -351,24 +315,6 @@ Web adaptation: Native menu/li structure; Menu owns opening and keyboard behavio
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/menu-field-browser.test.js): `Menu excludes closing content and preserves callback focus (chromium)`. Tab exclusion during nonzero closing transitions, callback-directed focus, reopening, autoFocus false, and authored inert restoration. Ordinary and reduced motion; equivalent Firefox and WebKit cases run in the same file.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/menu-field-browser.test.js): `Menu scopes nested keys and mirrors flyouts in RTL (chromium)`. Nested entry/return keys, innermost Escape, scoped typeahead, disabled activation, representative 44px targets, single activation, and both viewport edges in LTR/RTL. Equivalent Firefox and WebKit cases run in the same file.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/menu-field-browser.test.js): `Menu consumers keep values and focus through closing (chromium)`. Enhanced select submits the selected value and changes once; autocomplete selection retains input focus; Tab skips closing lists. Equivalent Firefox and WebKit cases run in the same file.
-
-<a id="mega-menu"></a>
-
-## Mega menu
-
-**unassessed within the stated scope.** Links and disclosure buttons in a row, wide panels of grouped links below the bar, a turning chevron and current-page state.
-
-Source review: needs-review, 2026-10-15. [src/sass/components/_mega-menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_mega-menu.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: Native popovers opened with popovertarget; the browser owns opening, light dismiss, Escape, focus order and the expanded state. Documented support reviewed 2026-10-15 against `llm.md#mega-menu`.
-
-- Known boundary: Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified.
-
-- verification: Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified. Next: Open and close each panel with a screen reader in each engine and confirm the expanded state is announced.
-
-- not-recorded: [tests/mega-menu-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/mega-menu-browser.test.js): `chromium: mega menu opens a wide panel of link groups below its button`. Popover opening from its button, the panel below the bar spanning the window, side-by-side groups, the turning chevron, Tab into the panel, Escape, closed links out of reach and stacked groups on a phone. No spoken-output assertion.
 
 <a id="menubar"></a>
 
@@ -409,24 +355,6 @@ Web adaptation: Web document navigation helper. Documented support reviewed 2026
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: groups`. Independent callback groups retain separate current links and fallback state during scrolling and destruction.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: teardown`. Repeated destruction and remount restore authored offset value and priority and update surviving current links.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: anchors`. Native keyboard fragment navigation and actual scrolling in LTR/RTL with ordinary and reduced motion.
-
-<a id="tree"></a>
-
-## Tree
-
-**implemented within the stated scope.** Nested lists of native disclosures and links with guide lines, turning chevrons in LTR and RTL, leading icons and an aria-current row.
-
-Source review: source-reviewed, 2026-10-06. [src/sass/components/_tree.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_tree.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: Native <details> branches and links; every row is a Tab stop and no tree role is promised. Documented support reviewed 2026-10-06 against `llm.md#tree`.
-
-- Known boundary: Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified.
-
-- verification: Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified. Next: Navigate a deep tree with a keyboard and a screen reader in each engine; measure how many Tab stops a long tree costs and whether arrow-key navigation is needed.
-
-- stale: [tests/tree-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/tree-browser.test.js): `chromium: tree indents its levels, turns its chevrons and marks the current row`. Level indent, leaf and branch text alignment, open and closed chevrons in LTR and RTL, opening a branch, the current row fill, guide lines and no tree role. No spoken-output assertion.
 
 <a id="buttons"></a>
 
@@ -581,24 +509,6 @@ Web adaptation: Native article anatomy; primary-action links preserve navigation
 - stale: [tests/cards-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/cards-browser.test.js): `directly actionable horizontal cards use intrinsic or fixed heights at the breakpoint`. Specific card state, disclosure fallback, or horizontal layout contract.
 - stale: [tests/expanding-card-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expanding-card-browser.test.js): `expanding-card completion follows CSS and survives interruption (chromium)`. Chromium: zero and 1.2s container timing, reopening, cancellation, native close, removal, destruction and focus return. Equivalent Firefox and WebKit cases run separately in the browser suite.
 
-<a id="aura"></a>
-
-## Aura
-
-**unassessed within the stated scope.** A turning light on a ring around one wrapped element, with dual, rainbow and glow styles, token color, width, corner and speed, a reversed turn in RTL, a static ring under reduced motion and a Highlight ring in forced colors.
-
-Source review: needs-review, 2026-10-08. [src/sass/components/_aura.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_aura.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A wrapper whose pseudo-element draws a masked conic gradient; it adds nothing to the accessibility tree. Documented support reviewed 2026-10-08 against `llm.md#aura`.
-
-- Known boundary: The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified.
-
-- verification: The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified. Next: Check the Highlight ring in Windows forced colors and confirm with a screen reader that only the wrapped element is announced.
-
-- stale: [tests/aura-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/aura-browser.test.js): `chromium: aura turns a ring around its element, stops under reduced motion and stays out of the accessibility tree`. Ring padding and corners around a button and a card, a running registered angle, its reverse in RTL, the glow halo, the stop under reduced motion, a stepped turn and a 0deg resting ring in a shadow-only load, and no aura nodes in the accessibility tree. No spoken-output assertion.
-
 <a id="lists"></a>
 
 ## Lists
@@ -620,24 +530,6 @@ Web adaptation: Native list semantics; visual selection alone does not justify a
 - stale: [tests/expressivecss-examples-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-examples-browser.test.js): `complete list-detail example preserves both treatments and its task path`. Example-only compact/detail switching, focus return, read state, breakpoint resizing and themed treatments.
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
 - not-recorded: [tests/arrow-keys-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/arrow-keys-browser.test.js): `chromium: arrow keys move focus between tabs and between list rows`. Up and Down move focus between single-control rows, skip a disabled row and stop at the ends; Home and End reach the ends; rows with several controls keep native keys. Runs in all three engines.
-
-<a id="message"></a>
-
-## Message
-
-**implemented within the stated scope.** Start and end alignment, avatar, header, footer actions, message groups and outlined attachment bubbles.
-
-Source review: source-reviewed, 2026-10-06. [src/sass/components/_message.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_message.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: Plain div parts on a CSS grid; the page owns role="log" on a live conversation. Documented support reviewed 2026-10-06 against `llm.md#message`.
-
-- Known boundary: Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified.
-
-- verification: Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified. Next: Append messages to a role="log" conversation and inspect assistive-technology output; test enlarged text and RTL.
-
-- stale: [tests/message-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/message-browser.test.js): `chromium: message layout anchors the avatar, follows its side and joins grouped corners`. Avatar level with the bubble bottom and above the footer, start/end edges in LTR and RTL, no gap without an avatar, grouped corner radii and no message landmarks. No spoken-output assertion.
 
 <a id="message-scroller"></a>
 
@@ -753,78 +645,6 @@ Web adaptation: A plain div wraps a native table. Shared DataTables handlers own
 
 - stale: [tests/data-table-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/data-table-browser.test.js): `chromium: data table keeps table semantics, sticks its header and draws sort and selection`. Table, column header and row counts through the wrapper, sticky header offset after scrolling, end-aligned numeric cells in LTR and RTL, sort arrow opacity and rotation, selected row fill and the named scroll region. No spoken-output assertion.
 - not-recorded: [tests/data-table-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/data-table-browser.test.js): `chromium: data table joins a bulk-action bar and expands detail rows`. Bar joined to the table's top edge, squared table corners, a hidden bar leaving the table alone, the selected tint, end-aligned buttons, detail rows hidden and shown by aria-expanded, the turned chevron and the detail row kept a table row. No spoken-output assertion.
-
-<a id="stat"></a>
-
-## Stat
-
-**unassessed within the stated scope.** Wrapping tiles in a description list with headline values, and a change line with up, down and negative states.
-
-Source review: needs-review, 2026-10-06. [src/sass/components/_stat.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_stat.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A <dl> pairs each value with its label; the arrow is decoration and the text carries the direction. Documented support reviewed 2026-10-06 against `llm.md#stat`.
-
-- Known boundary: Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.
-
-- verification: Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified. Next: Read a stats row with a screen reader in each engine and confirm each label is announced with its value; test enlarged text at narrow widths.
-
-- stale: [tests/stat-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/stat-browser.test.js): `chromium: stats tile their figures, wrap when narrow and mark the change`. One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion.
-
-<a id="description-list"></a>
-
-## Description list
-
-**implemented within the stated scope.** Label and value columns with a divider per pair, a compact stacked layout, div-wrapped groups and several values per label.
-
-Source review: source-reviewed, 2026-10-15. [src/sass/components/_description-list.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_description-list.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A native dl, dt and dd; the browser exposes the label-value pairing. Documented support reviewed 2026-10-15 against `llm.md#description-list`.
-
-- Known boundary: Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified.
-
-- verification: Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified. Next: Read a description list with a screen reader in each engine and confirm each value is announced with its label; test enlarged text.
-
-- not-recorded: [tests/description-list-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/description-list-browser.test.js): `chromium: description list pairs labels and values in two columns and stacks them when compact`. Label and value columns, shared rows, div-wrapped groups, stacked extra values, one divider per pair, the compact stacked layout and unchanged reading order. No spoken-output assertion.
-
-<a id="kpi"></a>
-
-## KPI
-
-**unassessed within the stated scope.** A card with a labelled value in a description list, a trend chip with up, down and negative states, a tonal icon, a corner action, a sparkline, a progress bar and a footer.
-
-Source review: needs-review, 2026-10-08. [src/sass/components/_kpi.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_kpi.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A <dl> pairs the value with its label inside a card <article>; the arrow is decoration, the text carries the direction and the sparkline's table is its text alternative. Documented support reviewed 2026-10-08 against `llm.md#kpi`.
-
-- Known boundary: Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.
-
-- verification: Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified. Next: Read a KPI row with a screen reader in each engine and confirm the label, value, trend and sparkline caption are announced in order; test enlarged text at narrow widths.
-
-- stale: [tests/kpi-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/kpi-browser.test.js): `chromium: kpi lays out its label, value, trend, actions, chart and footer`. Trend beside the value, actions in the label row's end corner, chart under the value, an edge-to-edge footer closing the card, the headline value size, up and down arrows, the negative chip and chart colors and term-definition pairs in the accessibility tree. No spoken-output assertion.
-
-<a id="countdown"></a>
-
-## Countdown
-
-**implemented within the stated scope.** Digits from 0 to 999 that roll up or down when --md-comp-countdown-value changes, with zero padding to two or three digits and a reduced-motion fallback.
-
-Source review: source-reviewed, 2026-10-08. [src/sass/components/_countdown.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_countdown.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: The element's text is the accessible value; the digit strips are generated content with empty alternative text. A page script sets the property and the text together. Documented support reviewed 2026-10-08 against `llm.md#countdown`.
-
-- Known boundary: Width, digit positions, the baseline, the roll transition, reduced motion and the accessibility tree text are checked in a browser; spoken output inside role="timer" and aria-live regions remains unverified.
-
-- verification: Width, digit positions, the baseline, the roll transition, reduced motion and the accessibility tree text are checked in a browser; spoken output inside role="timer" and aria-live regions remains unverified. Next: Run a ticking timer and a polite live count with a screen reader in each engine and confirm the timer stays quiet and the live count announces each value once.
-
-- stale: [tests/countdown-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/countdown-browser.test.js): `chromium: countdown shows 0 to 999 as rolling digits and keeps the text for assistive technology`. Box width per digit count and padding, strip positions for in-range and clamped values, baseline alignment, the translate transition on change, reduced motion and the accessibility tree text. No spoken-output assertion.
 
 <a id="line-chart"></a>
 
@@ -1066,44 +886,6 @@ Web adaptation: The <table> stays in the page as the text alternative and the no
 - not-recorded: [tests/treemap-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/treemap-chart-browser.test.js): `chromium: treemap chart draws each row as a rectangle whose area follows its value`. Hidden table, the named plot and its role description, separate instances from line charts, each rectangle's area in proportion to its value, the areas covering the plot without overlap, and the squarified layout in left-to-right and right-to-left pages. No spoken-output assertion.
 - not-recorded: [tests/treemap-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/treemap-chart-browser.test.js): `chromium: treemap chart steps through its rectangles by key in table order, in either direction`. Keyboard focus skips a row with no rectangle; arrows, Home, End and Escape step through rows in table order without swapping in a right-to-left page; the outlined rectangle and the live tooltip text with each row's share. No spoken-output assertion.
 
-<a id="timeline"></a>
-
-## Timeline
-
-**implemented within the stated scope.** Ordered events with times, headings and text, dots joined by a line and a leading icon variant.
-
-Source review: source-reviewed, 2026-10-06. [src/sass/components/_timeline.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_timeline.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: An <ol> of events with <time datetime>; the dots and line are decoration. Documented support reviewed 2026-10-06 against `llm.md#timeline`.
-
-- Known boundary: Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified.
-
-- verification: Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified. Next: Read a timeline with a screen reader in each engine and confirm the order and times are announced; test enlarged text.
-
-- stale: [tests/timeline-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/timeline-browser.test.js): `chromium: timeline marks each event, joins it to the next and swaps the dot for an icon`. Marker column, dot size, connecting line and its absence on the last event, the icon circle and its column in LTR and RTL. No spoken-output assertion.
-
-<a id="calendar"></a>
-
-## Calendar
-
-**implemented within the stated scope.** A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize; week and day hourly grids with events placed by start and duration; a year of small months in as many columns as fit.
-
-Source review: source-reviewed, 2026-10-22. [src/sass/components/_calendar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_calendar.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A native table with a caption; the page renders the dates, navigation and events. Documented support reviewed 2026-10-22 against `llm.md#calendar`.
-
-- Known boundary: Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified.
-- Known boundary: Events that overlap in time overlap on screen in the week and day views; the page splits them.
-
-- verification: Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified. Next: Read a month with a screen reader in each engine and confirm the day and weekday are announced with each event.
-
-- not-recorded: [tests/calendar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/calendar-browser.test.js): `chromium: calendar lays out a month grid with today, outside days and event chips`. Seven equal columns, day height, the today mark, muted outside days, event chips that stay inside their day and ellipsize, event links, column headers and the month at phone width. No spoken-output assertion.
-- not-recorded: [tests/calendar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/calendar-browser.test.js): `chromium: calendar week and day views place events on an hourly grid, and the year view tiles months`. Hour row height, event top and height from start and duration, events inside their day column, event links, today in the header, hour row headers, a day view event across its column, months side by side and stacked at phone width. No spoken-output assertion.
-
 <a id="dialogs"></a>
 
 ## Dialogs
@@ -1227,24 +1009,6 @@ Web adaptation: An <img> or a <span> with role="img" and a name; initials scale 
 
 - stale: [tests/avatar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/avatar-browser.test.js): `chromium: avatar sizes its circle, names its initials and overlaps a group`. Default, small and large sizes, circle radius, image and initials names in the accessibility tree, and the group overlap in LTR and RTL. No spoken-output assertion.
 
-<a id="org-chart"></a>
-
-## Organization chart
-
-**unassessed within the stated scope.** Nested lists of native disclosures drawn as cards under their manager, with connector lines, a role band, an avatar and a name, profile links on cards without reports, mirrored order in RTL and sideways scrolling when wide.
-
-Source review: needs-review, 2026-10-16. [src/sass/components/_org-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_org-chart.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-16); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: Native <details> managers and nested lists; every manager is a Tab stop and no tree role is promised. Documented support reviewed 2026-10-16 against `llm.md#organization-chart`.
-
-- Known boundary: Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified.
-
-- verification: Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm each list's level and size and each manager's expanded state are announced; check forced colors and 200% text.
-
-- not-recorded: [tests/org-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/org-chart-browser.test.js): `chromium: org chart centres each manager over its reports, collapses a team and scrolls when wide`. Reports side by side below their manager in order, the manager over its reports, the bar stopping at the end reports, the drop from the manager, mirrored order and bar in RTL, a narrow chart scrolling with every card's start reachable, Enter folding a team, the caret under reduced motion, the CanvasText caret in forced colors and nested lists in the accessibility tree. No spoken-output assertion.
-
 <a id="tooltips"></a>
 
 ## Tooltips
@@ -1267,24 +1031,6 @@ No gap identified within the stated scope; broader upstream parity remains unass
 - stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-lifecycle-browser.test.js): `resource observations detect omitted teardown after a partial replacement`. Negative control proves resources remain without destroy; no visual parity assertion.
 - stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-lifecycle-browser.test.js): `Tooltip destroy cancels pending delay and animation callbacks`. Runtime timer cancellation for enter, exit and animation scheduling.
 - stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-lifecycle-browser.test.js): `Tooltip positioning preserves margins and viewport edges after scrolling`. Coordinate clamping at each viewport edge with custom margin/movement and document scrolling; no visual parity assertion.
-
-<a id="popover"></a>
-
-## Popover
-
-**implemented within the stated scope.** Native popover panels anchored below, above or beside their button with automatic flipping, rich-tooltip styling, an actions row and frosted glass.
-
-Source review: source-reviewed, 2026-10-06. [src/sass/components/_popover.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_popover.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: The browser owns opening, light dismiss, Escape, focus return and the button's expanded state; CSS anchor positioning places the panel. Documented support reviewed 2026-10-06 against `llm.md#popover`.
-
-- Known boundary: Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified.
-
-- verification: Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified. Next: Open a toggletip with a screen reader in each engine and confirm the expanded state and the panel content are reachable; check an engine without anchor positioning.
-
-- stale: [tests/popover-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/popover-browser.test.js): `chromium: popover anchors to its button, flips at the edge and stays open while used`. Default, top and end placement against the button in LTR and RTL, both-axis flip at the viewport corner, Escape with focus return, outside click, staying open for an inner button, one auto popover at a time and the Chromium expanded state. No spoken-output assertion.
 
 <a id="hover-card"></a>
 
@@ -1405,42 +1151,6 @@ Web adaptation: The native inert attribute blocks pointer and keyboard input ins
 - not-recorded: [tests/loading-overlay-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/loading-overlay-browser.test.js): `chromium: a busy region takes no click or Tab, and clearing it gives both back`. A real mouse click and Tab while aria-busy is "true", and again after it is set to "false" and after it is removed.
 - not-recorded: [tests/loading-overlay-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/loading-overlay-browser.test.js): `chromium: focus goes back to where it was when the region clears`. Focus dropped by inert and returned on clear, a focus move made while busy kept, and a removed control not refocused. No spoken-output assertion.
 
-<a id="skeleton"></a>
-
-## Skeleton
-
-**unassessed within the stated scope.** Box, text line and circle shapes with a shimmer that reverses in RTL, stops under reduced motion and keeps an outline in forced colors.
-
-Source review: needs-review, 2026-10-06. [src/sass/components/_skeleton.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_skeleton.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: Empty decorative blocks; the page marks the loading region aria-busy and reports the wait through a status. Documented support reviewed 2026-10-06 against `llm.md#skeleton`.
-
-- Known boundary: The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified.
-
-- verification: The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified. Next: Load content into an aria-busy region with a screen reader and confirm the status is announced once and the skeletons are not; test forced colors.
-
-- stale: [tests/skeleton-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/skeleton-browser.test.js): `chromium: skeleton shimmers, stops under reduced motion and stays out of the accessibility tree`. Running shimmer animation, its removal under reduced motion, reversed direction in RTL, text and circle geometry and no skeleton nodes in the accessibility tree. No spoken-output assertion.
-
-<a id="empty-state"></a>
-
-## Empty state
-
-**implemented within the stated scope.** Centered icon in a tonal circle or an illustration, a heading, supporting text and a wrapping row of actions.
-
-Source review: source-reviewed, 2026-10-06. [src/sass/components/_empty-state.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_empty-state.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A plain div around authored heading, text and buttons; the page picks the heading level. Documented support reviewed 2026-10-06 against `llm.md#empty-state`.
-
-- Known boundary: Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified.
-
-- verification: Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified. Next: Empty a filtered list with a screen reader and confirm the change is announced; test enlarged text and narrow widths.
-
-- stale: [tests/empty-state-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/empty-state-browser.test.js): `chromium: empty state centers its content and rings the leading icon`. Centered column, icon circle size and fill, text width cap, centered wrapping actions and an empty alt image left out of the accessibility tree. No spoken-output assertion.
-
 <a id="alert"></a>
 
 ## Alert
@@ -1500,24 +1210,6 @@ Web adaptation: A native range input covers the images invisibly; the ImageCompa
 - verification: The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified. Next: Move the divider with a screen reader in each engine and confirm the value is announced.
 
 - not-recorded: [tests/image-compare-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/image-compare-browser.test.js): `chromium: image compare reveals the second image up to the range's value`. The initial value applied on load, each image on its side of the divider, arrow keys moving the divider, the handle focus ring, RTL, named native sliders and Slider leaving the range alone. No spoken-output assertion.
-
-<a id="marquee"></a>
-
-## Marquee
-
-**implemented within the stated scope.** Two identical groups that loop horizontally or vertically, with reverse, edge fades, a paused class, hover and focus pausing, token duration and gap, a reversed direction in RTL and a hand-scrolled strip under reduced motion.
-
-Source review: source-reviewed, 2026-10-08. [src/sass/components/_marquee.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_marquee.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A visual copy of the item list marked aria-hidden, with its links taken out of the tab order, so assistive technology and the keyboard meet each item once. Documented support reviewed 2026-10-08 against `llm.md#marquee`.
-
-- Known boundary: The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified.
-
-- verification: The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified. Next: Listen to a marquee with a screen reader in each engine and confirm each item is read once; watch a long strip for a visible jump at the loop point.
-
-- stale: [tests/marquee-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/marquee-browser.test.js): `chromium: marquee loops its two groups, pauses, follows direction and stops under reduced motion`. A short group filling the strip, the copy one gap after it, the half-cycle position horizontally, in RTL and vertically, reverse, pausing on hover, focus and .paused, one link per item in the accessibility tree and the reduced-motion stop with the copy hidden. No spoken-output assertion.
 
 <a id="confetti"></a>
 
@@ -1922,42 +1614,6 @@ Web adaptation: Shared name provides exclusivity; fieldset/legend names the grou
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining native controls preserve names, keyboard state and form values`. Named native controls, form values and native keys; one compact text-spacing/RTL fixture and light/dark label contrast only.
 
-<a id="rating"></a>
-
-## Rating
-
-**implemented within the stated scope.** A fieldset of radios drawn as stars with fill, hover preview and focus ring, and a read-only display that fills to a fractional value in LTR and RTL.
-
-Source review: source-reviewed, 2026-10-06. [src/sass/components/forms/_rating.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_rating.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: Native radios keep keyboard, form and naming behavior; the display is a named role="img". Documented support reviewed 2026-10-06 against `llm.md#rating`.
-
-- Known boundary: Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified.
-
-- verification: Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified. Next: Rate with a keyboard and a screen reader in each engine, including Safari, and confirm the focus ring follows the arrows and each star is announced.
-
-- stale: [tests/rating-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/rating-browser.test.js): `chromium: rating fills stars up to the choice, previews on hover and keeps native radios`. Visible 24px masked radios, fill up to the checked star, Tab entry and arrow keys, focus ring on entry, hover preview, form value, display width and fill direction in LTR and RTL, and the group, radio and image names. No spoken-output assertion.
-
-<a id="color-swatches"></a>
-
-## Color swatches
-
-**implemented within the stated scope.** A fieldset of native radios drawn as round chips of their colors, a ring around the checked one, the shared focus ring, a 48px target and an optional native color input for a custom value.
-
-Source review: source-reviewed, 2026-10-18. [src/sass/components/forms/_color-swatches.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_color-swatches.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-18); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: Native radios keep one Tab stop, arrow keys and form submission; each swatch is named by visually hidden text in its label. Documented support reviewed 2026-10-18 against `llm.md#color-swatches`.
-
-- Known boundary: Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified.
-
-- verification: Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified. Next: Choose a swatch with a keyboard and a screen reader in Firefox and Safari, and confirm each color name and the checked state are announced; check 200% text.
-
-- not-recorded: [tests/color-swatches-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/color-swatches-browser.test.js): `chromium: color swatches draw each radio as its color and keep native radio behavior`. Swatch color, 40px round shape and checked ring, the named group, arrow keys moving the choice, the form value, the focus ring after arrow keys and the swatch color under forced colors. No spoken-output assertion.
-
 <a id="color-picker"></a>
 
 ## Color picker
@@ -2150,6 +1806,350 @@ Web adaptation: Each question is a native fieldset named by its legend; the brow
 
 - stale: [tests/questionnaire-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/questionnaire-browser.test.js): `chromium: questionnaire shows one question, validates, skips, branches and submits`. One question shown, the buttons that apply, the progress text and named progressbar, aria-describedby with the description and error, required radio and data-required checkbox errors with focus and aria-invalid, errors clearing on answer, a generated requiredMessage error, a question enabled mid-way, Enter moving on instead of submitting, Back focus, Skip clearing an answer and firing change, submit opening the first unanswered question, FormData without a disabled question and destroy restoring the plain form. No spoken-output assertion.
 - stale: [tests/questionnaire-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/questionnaire-browser.test.js): `chromium: questionnaire validates requestSubmit and ignores disabled checkboxes`. A checked disabled checkbox not answering a data-required group, focus on the first enabled checkbox, requestSubmit() blocked by an unanswered group and by a hidden required field with each question opened and its error shown, a valid requestSubmit() sending FormData, and destroy clearing the custom validity. No spoken-output assertion.
+
+<a id="footer"></a>
+
+## Footer
+
+**unassessed within the stated scope.** Native footer with navigation columns and copyright content.
+
+Source review: needs-review, 2026-09-13. [src/sass/components/_page-footer.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_page-footer.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
+
+Web adaptation: Web page landmark styled with theme roles. Documented support reviewed 2026-09-13 against `llm.md#footer`.
+
+- Known boundary: A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified.
+
+- verification: A document-level contentinfo landmark is checked; section-scoped footers and responsive legal links remain unverified. Next: Place a document footer outside main and sectioning elements; verify named legal navigation at enlarged text.
+
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
+
+<a id="stepper"></a>
+
+## Stepper
+
+**unassessed within the stated scope.** Horizontal and vertical ordered lists with current, complete and invalid steps, supporting text, links back to finished steps and a content panel in vertical steps.
+
+Source review: needs-review, 2026-10-06. [src/sass/components/_stepper.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_stepper.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: An <ol> with aria-current="step"; CSS alt text speaks the complete and invalid states from translatable tokens. Documented support reviewed 2026-10-06 against `llm.md#stepper`.
+
+- Known boundary: Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified.
+
+- verification: Layout in LTR and RTL, indicator fills and glyphs, and the spoken state text are checked in a browser; screen reader output and enlarged text remain unverified. Next: Move through a checkout with a screen reader in each engine and confirm the step count, the current step and the completed state are announced once.
+
+- stale: [tests/stepper-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/stepper-browser.test.js): `chromium: stepper lays out its steps, marks their state and speaks it`. Row and stack layout in LTR and RTL, supporting text and content placement, current, complete and invalid indicator fills and glyphs, no trailing connector, spoken state text and its token override. No spoken-output assertion.
+
+<a id="mega-menu"></a>
+
+## Mega menu
+
+**unassessed within the stated scope.** Links and disclosure buttons in a row, wide panels of grouped links below the bar, a turning chevron and current-page state.
+
+Source review: needs-review, 2026-10-15. [src/sass/components/_mega-menu.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_mega-menu.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: Native popovers opened with popovertarget; the browser owns opening, light dismiss, Escape, focus order and the expanded state. Documented support reviewed 2026-10-15 against `llm.md#mega-menu`.
+
+- Known boundary: Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified.
+
+- verification: Panel placement, the expanded state, Escape, focus order into the panel, the turning chevron and stacking on a phone are checked in a browser; screen reader output remains unverified. Next: Open and close each panel with a screen reader in each engine and confirm the expanded state is announced.
+
+- not-recorded: [tests/mega-menu-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/mega-menu-browser.test.js): `chromium: mega menu opens a wide panel of link groups below its button`. Popover opening from its button, the panel below the bar spanning the window, side-by-side groups, the turning chevron, Tab into the panel, Escape, closed links out of reach and stacked groups on a phone. No spoken-output assertion.
+
+<a id="tree"></a>
+
+## Tree
+
+**unassessed within the stated scope.** Nested lists of native disclosures and links with guide lines, turning chevrons in LTR and RTL, leading icons and an aria-current row.
+
+Source review: needs-review, 2026-10-06. [src/sass/components/_tree.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_tree.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: Native <details> branches and links; every row is a Tab stop and no tree role is promised. Documented support reviewed 2026-10-06 against `llm.md#tree`.
+
+- Known boundary: Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified.
+
+- verification: Indentation, chevrons in LTR and RTL, opening a branch and the current row are checked in a browser; long trees for keyboard users, enlarged text and spoken output remain unverified. Next: Navigate a deep tree with a keyboard and a screen reader in each engine; measure how many Tab stops a long tree costs and whether arrow-key navigation is needed.
+
+- stale: [tests/tree-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/tree-browser.test.js): `chromium: tree indents its levels, turns its chevrons and marks the current row`. Level indent, leaf and branch text alignment, open and closed chevrons in LTR and RTL, opening a branch, the current row fill, guide lines and no tree role. No spoken-output assertion.
+
+<a id="aura"></a>
+
+## Aura
+
+**unassessed within the stated scope.** A turning light on a ring around one wrapped element, with dual, rainbow and glow styles, token color, width, corner and speed, a reversed turn in RTL, a static ring under reduced motion and a Highlight ring in forced colors.
+
+Source review: needs-review, 2026-10-08. [src/sass/components/_aura.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_aura.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A wrapper whose pseudo-element draws a masked conic gradient; it adds nothing to the accessibility tree. Documented support reviewed 2026-10-08 against `llm.md#aura`.
+
+- Known boundary: The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified.
+
+- verification: The ring geometry, the turning angle, its reverse in RTL, its stop under reduced motion and the absence of the ring from the accessibility tree are checked in a browser; forced colors and spoken output remain unverified. Next: Check the Highlight ring in Windows forced colors and confirm with a screen reader that only the wrapped element is announced.
+
+- stale: [tests/aura-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/aura-browser.test.js): `chromium: aura turns a ring around its element, stops under reduced motion and stays out of the accessibility tree`. Ring padding and corners around a button and a card, a running registered angle, its reverse in RTL, the glow halo, the stop under reduced motion, a stepped turn and a 0deg resting ring in a shadow-only load, and no aura nodes in the accessibility tree. No spoken-output assertion.
+
+<a id="message"></a>
+
+## Message
+
+**unassessed within the stated scope.** Start and end alignment, avatar, header, footer actions, message groups and outlined attachment bubbles.
+
+Source review: needs-review, 2026-10-06. [src/sass/components/_message.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_message.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: Plain div parts on a CSS grid; the page owns role="log" on a live conversation. Documented support reviewed 2026-10-06 against `llm.md#message`.
+
+- Known boundary: Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified.
+
+- verification: Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified. Next: Append messages to a role="log" conversation and inspect assistive-technology output; test enlarged text and RTL.
+
+- stale: [tests/message-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/message-browser.test.js): `chromium: message layout anchors the avatar, follows its side and joins grouped corners`. Avatar level with the bubble bottom and above the footer, start/end edges in LTR and RTL, no gap without an avatar, grouped corner radii and no message landmarks. No spoken-output assertion.
+
+<a id="stat"></a>
+
+## Stat
+
+**unassessed within the stated scope.** Wrapping tiles in a description list with headline values, and a change line with up, down and negative states.
+
+Source review: needs-review, 2026-10-06. [src/sass/components/_stat.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_stat.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A <dl> pairs each value with its label; the arrow is decoration and the text carries the direction. Documented support reviewed 2026-10-06 against `llm.md#stat`.
+
+- Known boundary: Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.
+
+- verification: Tiling, wrapping, the value type role, arrow direction, the negative color and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified. Next: Read a stats row with a screen reader in each engine and confirm each label is announced with its value; test enlarged text at narrow widths.
+
+- stale: [tests/stat-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/stat-browser.test.js): `chromium: stats tile their figures, wrap when narrow and mark the change`. One row when wide and stacked when narrow, the headline value size, up and down arrows, the negative color and term-definition pairs in the accessibility tree. No spoken-output assertion.
+
+<a id="description-list"></a>
+
+## Description list
+
+**unassessed within the stated scope.** Label and value columns with a divider per pair, a compact stacked layout, div-wrapped groups and several values per label.
+
+Source review: needs-review, 2026-10-15. [src/sass/components/_description-list.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_description-list.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A native dl, dt and dd; the browser exposes the label-value pairing. Documented support reviewed 2026-10-15 against `llm.md#description-list`.
+
+- Known boundary: Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified.
+
+- verification: Two columns, the compact stack, one divider per pair, div-wrapped groups and several values per label are checked in a browser; enlarged text and spoken output remain unverified. Next: Read a description list with a screen reader in each engine and confirm each value is announced with its label; test enlarged text.
+
+- not-recorded: [tests/description-list-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/description-list-browser.test.js): `chromium: description list pairs labels and values in two columns and stacks them when compact`. Label and value columns, shared rows, div-wrapped groups, stacked extra values, one divider per pair, the compact stacked layout and unchanged reading order. No spoken-output assertion.
+
+<a id="kpi"></a>
+
+## KPI
+
+**unassessed within the stated scope.** A card with a labelled value in a description list, a trend chip with up, down and negative states, a tonal icon, a corner action, a sparkline, a progress bar and a footer.
+
+Source review: needs-review, 2026-10-08. [src/sass/components/_kpi.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_kpi.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A <dl> pairs the value with its label inside a card <article>; the arrow is decoration, the text carries the direction and the sparkline's table is its text alternative. Documented support reviewed 2026-10-08 against `llm.md#kpi`.
+
+- Known boundary: Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified.
+
+- verification: Part placement, the value type role, arrow direction, the negative chip and chart colors and term-definition pairing are checked in a browser; enlarged text and spoken output remain unverified. Next: Read a KPI row with a screen reader in each engine and confirm the label, value, trend and sparkline caption are announced in order; test enlarged text at narrow widths.
+
+- stale: [tests/kpi-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/kpi-browser.test.js): `chromium: kpi lays out its label, value, trend, actions, chart and footer`. Trend beside the value, actions in the label row's end corner, chart under the value, an edge-to-edge footer closing the card, the headline value size, up and down arrows, the negative chip and chart colors and term-definition pairs in the accessibility tree. No spoken-output assertion.
+
+<a id="countdown"></a>
+
+## Countdown
+
+**unassessed within the stated scope.** Digits from 0 to 999 that roll up or down when --md-comp-countdown-value changes, with zero padding to two or three digits and a reduced-motion fallback.
+
+Source review: needs-review, 2026-10-08. [src/sass/components/_countdown.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_countdown.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: The element's text is the accessible value; the digit strips are generated content with empty alternative text. A page script sets the property and the text together. Documented support reviewed 2026-10-08 against `llm.md#countdown`.
+
+- Known boundary: Width, digit positions, the baseline, the roll transition, reduced motion and the accessibility tree text are checked in a browser; spoken output inside role="timer" and aria-live regions remains unverified.
+
+- verification: Width, digit positions, the baseline, the roll transition, reduced motion and the accessibility tree text are checked in a browser; spoken output inside role="timer" and aria-live regions remains unverified. Next: Run a ticking timer and a polite live count with a screen reader in each engine and confirm the timer stays quiet and the live count announces each value once.
+
+- stale: [tests/countdown-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/countdown-browser.test.js): `chromium: countdown shows 0 to 999 as rolling digits and keeps the text for assistive technology`. Box width per digit count and padding, strip positions for in-range and clamped values, baseline alignment, the translate transition on change, reduced motion and the accessibility tree text. No spoken-output assertion.
+
+<a id="timeline"></a>
+
+## Timeline
+
+**unassessed within the stated scope.** Ordered events with times, headings and text, dots joined by a line and a leading icon variant.
+
+Source review: needs-review, 2026-10-06. [src/sass/components/_timeline.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_timeline.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: An <ol> of events with <time datetime>; the dots and line are decoration. Documented support reviewed 2026-10-06 against `llm.md#timeline`.
+
+- Known boundary: Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified.
+
+- verification: Marker and line geometry in LTR and RTL and the icon variant are checked in a browser; long feeds, enlarged text and spoken output remain unverified. Next: Read a timeline with a screen reader in each engine and confirm the order and times are announced; test enlarged text.
+
+- stale: [tests/timeline-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/timeline-browser.test.js): `chromium: timeline marks each event, joins it to the next and swaps the dot for an icon`. Marker column, dot size, connecting line and its absence on the last event, the icon circle and its column in LTR and RTL. No spoken-output assertion.
+
+<a id="calendar"></a>
+
+## Calendar
+
+**unassessed within the stated scope.** A seven-column month grid with weekday headers, today, days outside the month and event chips that ellipsize; week and day hourly grids with events placed by start and duration; a year of small months in as many columns as fit.
+
+Source review: needs-review, 2026-10-22. [src/sass/components/_calendar.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_calendar.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A native table with a caption; the page renders the dates, navigation and events. Documented support reviewed 2026-10-22 against `llm.md#calendar`.
+
+- Known boundary: Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified.
+- Known boundary: Events that overlap in time overlap on screen in the week and day views; the page splits them.
+
+- verification: Equal columns, today, outside days, ellipsized event chips, column headers, hourly event placement, the year tiling and the phone width are checked in a browser; screen reader output remains unverified. Next: Read a month with a screen reader in each engine and confirm the day and weekday are announced with each event.
+
+- not-recorded: [tests/calendar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/calendar-browser.test.js): `chromium: calendar lays out a month grid with today, outside days and event chips`. Seven equal columns, day height, the today mark, muted outside days, event chips that stay inside their day and ellipsize, event links, column headers and the month at phone width. No spoken-output assertion.
+- not-recorded: [tests/calendar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/calendar-browser.test.js): `chromium: calendar week and day views place events on an hourly grid, and the year view tiles months`. Hour row height, event top and height from start and duration, events inside their day column, event links, today in the header, hour row headers, a day view event across its column, months side by side and stacked at phone width. No spoken-output assertion.
+
+<a id="org-chart"></a>
+
+## Organization chart
+
+**unassessed within the stated scope.** Nested lists of native disclosures drawn as cards under their manager, with connector lines, a role band, an avatar and a name, profile links on cards without reports, mirrored order in RTL and sideways scrolling when wide.
+
+Source review: needs-review, 2026-10-16. [src/sass/components/_org-chart.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_org-chart.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-16); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: Native <details> managers and nested lists; every manager is a Tab stop and no tree role is promised. Documented support reviewed 2026-10-16 against `llm.md#organization-chart`.
+
+- Known boundary: Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified.
+
+- verification: Cards side by side under their manager in LTR and RTL, the connector bar and drops, a wide chart scrolling with its start reachable, Enter folding a team away, the caret under reduced motion, the caret in forced colors in Chromium and the nested lists in the accessibility tree are checked in a browser; spoken output, the rest of forced colors and enlarged text remain unverified. Next: Read a chart with a screen reader in each engine and confirm each list's level and size and each manager's expanded state are announced; check forced colors and 200% text.
+
+- not-recorded: [tests/org-chart-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/org-chart-browser.test.js): `chromium: org chart centres each manager over its reports, collapses a team and scrolls when wide`. Reports side by side below their manager in order, the manager over its reports, the bar stopping at the end reports, the drop from the manager, mirrored order and bar in RTL, a narrow chart scrolling with every card's start reachable, Enter folding a team, the caret under reduced motion, the CanvasText caret in forced colors and nested lists in the accessibility tree. No spoken-output assertion.
+
+<a id="popover"></a>
+
+## Popover
+
+**unassessed within the stated scope.** Native popover panels anchored below, above or beside their button with automatic flipping, rich-tooltip styling, an actions row and frosted glass.
+
+Source review: needs-review, 2026-10-06. [src/sass/components/_popover.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_popover.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: The browser owns opening, light dismiss, Escape, focus return and the button's expanded state; CSS anchor positioning places the panel. Documented support reviewed 2026-10-06 against `llm.md#popover`.
+
+- Known boundary: Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified.
+
+- verification: Anchoring and flipping in LTR and RTL, light dismiss, Escape and focus return are checked in a browser, and the expanded state in Chromium; spoken output and engines without anchor positioning remain unverified. Next: Open a toggletip with a screen reader in each engine and confirm the expanded state and the panel content are reachable; check an engine without anchor positioning.
+
+- stale: [tests/popover-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/popover-browser.test.js): `chromium: popover anchors to its button, flips at the edge and stays open while used`. Default, top and end placement against the button in LTR and RTL, both-axis flip at the viewport corner, Escape with focus return, outside click, staying open for an inner button, one auto popover at a time and the Chromium expanded state. No spoken-output assertion.
+
+<a id="skeleton"></a>
+
+## Skeleton
+
+**unassessed within the stated scope.** Box, text line and circle shapes with a shimmer that reverses in RTL, stops under reduced motion and keeps an outline in forced colors.
+
+Source review: needs-review, 2026-10-06. [src/sass/components/_skeleton.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_skeleton.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: Empty decorative blocks; the page marks the loading region aria-busy and reports the wait through a status. Documented support reviewed 2026-10-06 against `llm.md#skeleton`.
+
+- Known boundary: The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified.
+
+- verification: The shimmer, its reduced-motion stop and the absence of skeletons from the accessibility tree are checked in a browser; status announcements and spoken output remain unverified. Next: Load content into an aria-busy region with a screen reader and confirm the status is announced once and the skeletons are not; test forced colors.
+
+- stale: [tests/skeleton-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/skeleton-browser.test.js): `chromium: skeleton shimmers, stops under reduced motion and stays out of the accessibility tree`. Running shimmer animation, its removal under reduced motion, reversed direction in RTL, text and circle geometry and no skeleton nodes in the accessibility tree. No spoken-output assertion.
+
+<a id="empty-state"></a>
+
+## Empty state
+
+**unassessed within the stated scope.** Centered icon in a tonal circle or an illustration, a heading, supporting text and a wrapping row of actions.
+
+Source review: needs-review, 2026-10-06. [src/sass/components/_empty-state.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_empty-state.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A plain div around authored heading, text and buttons; the page picks the heading level. Documented support reviewed 2026-10-06 against `llm.md#empty-state`.
+
+- Known boundary: Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified.
+
+- verification: Centering, the icon circle and the actions row are checked in a browser; announcements when a search empties a list and spoken output remain unverified. Next: Empty a filtered list with a screen reader and confirm the change is announced; test enlarged text and narrow widths.
+
+- stale: [tests/empty-state-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/empty-state-browser.test.js): `chromium: empty state centers its content and rings the leading icon`. Centered column, icon circle size and fill, text width cap, centered wrapping actions and an empty alt image left out of the accessibility tree. No spoken-output assertion.
+
+<a id="marquee"></a>
+
+## Marquee
+
+**unassessed within the stated scope.** Two identical groups that loop horizontally or vertically, with reverse, edge fades, a paused class, hover and focus pausing, token duration and gap, a reversed direction in RTL and a hand-scrolled strip under reduced motion.
+
+Source review: needs-review, 2026-10-08. [src/sass/components/_marquee.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_marquee.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A visual copy of the item list marked aria-hidden, with its links taken out of the tab order, so assistive technology and the keyboard meet each item once. Documented support reviewed 2026-10-08 against `llm.md#marquee`.
+
+- Known boundary: The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified.
+
+- verification: The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified. Next: Listen to a marquee with a screen reader in each engine and confirm each item is read once; watch a long strip for a visible jump at the loop point.
+
+- stale: [tests/marquee-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/marquee-browser.test.js): `chromium: marquee loops its two groups, pauses, follows direction and stops under reduced motion`. A short group filling the strip, the copy one gap after it, the half-cycle position horizontally, in RTL and vertically, reverse, pausing on hover, focus and .paused, one link per item in the accessibility tree and the reduced-motion stop with the copy hidden. No spoken-output assertion.
+
+<a id="rating"></a>
+
+## Rating
+
+**unassessed within the stated scope.** A fieldset of radios drawn as stars with fill, hover preview and focus ring, and a read-only display that fills to a fractional value in LTR and RTL.
+
+Source review: needs-review, 2026-10-06. [src/sass/components/forms/_rating.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_rating.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: Native radios keep keyboard, form and naming behavior; the display is a named role="img". Documented support reviewed 2026-10-06 against `llm.md#rating`.
+
+- Known boundary: Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified.
+
+- verification: Star fill, hover preview, native arrow keys, form value, the display fill direction and names are checked in a browser; the focus ring after arrow keys is not drawn in Playwright WebKit, and spoken output remains unverified. Next: Rate with a keyboard and a screen reader in each engine, including Safari, and confirm the focus ring follows the arrows and each star is announced.
+
+- stale: [tests/rating-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/rating-browser.test.js): `chromium: rating fills stars up to the choice, previews on hover and keeps native radios`. Visible 24px masked radios, fill up to the checked star, Tab entry and arrow keys, focus ring on entry, hover preview, form value, display width and fill direction in LTR and RTL, and the group, radio and image names. No spoken-output assertion.
+
+<a id="color-swatches"></a>
+
+## Color swatches
+
+**unassessed within the stated scope.** A fieldset of native radios drawn as round chips of their colors, a ring around the checked one, the shared focus ring, a 48px target and an optional native color input for a custom value.
+
+Source review: needs-review, 2026-10-18. [src/sass/components/forms/_color-swatches.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/forms/_color-swatches.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-18); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: Native radios keep one Tab stop, arrow keys and form submission; each swatch is named by visually hidden text in its label. Documented support reviewed 2026-10-18 against `llm.md#color-swatches`.
+
+- Known boundary: Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified.
+
+- verification: Swatch color, size and shape, the checked ring, the group name, arrow keys, the form value, the focus ring after arrow keys and the swatch color under forced colors are checked in Chromium; other engines, spoken output and enlarged text remain unverified. Next: Choose a swatch with a keyboard and a screen reader in Firefox and Safari, and confirm each color name and the checked state are announced; check 200% text.
+
+- not-recorded: [tests/color-swatches-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/color-swatches-browser.test.js): `chromium: color swatches draw each radio as its color and keep native radio behavior`. Swatch color, 40px round shape and checked ring, the named group, arrow keys moving the choice, the form value, the focus ring after arrow keys and the swatch color under forced colors. No spoken-output assertion.
 
 <a id="typography"></a>
 

@@ -2,8 +2,10 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { engines } from './browser.js';
+import { pageCss } from './css.js';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+// Core then extras, as a page that uses extras loads them.
+const css = pageCss();
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 const week = (days) => `<tr>${days.map(([d, extra = '', events = '']) => `<td${extra}><time datetime="2026-10-${String(d).padStart(2, '0')}">${d}</time>${events}</td>`).join('')}</tr>`;
 const markup = `<!doctype html><html lang="en" theme="light"><head><style>${css}</style></head><body>

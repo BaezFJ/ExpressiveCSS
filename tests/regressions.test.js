@@ -2409,7 +2409,7 @@ describe('Footer', () => {
     // rules already reach through it - but the copyright-bar selector only
     // matched a direct `footer > small`, so a footer written the documented
     // way got an unstyled legal row. The docs' own chrome had it for months.
-    const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+    const css = readFileSync(new URL('../extras/dist/css/extras.css', import.meta.url), 'utf8');
     const bar = [...css.matchAll(/([^{}]*)\{([^}]*)\}/g)].find(
       (m) => /min-height:\s*var\(--md-comp-footer-legal-height\)/.test(m[2])
     );

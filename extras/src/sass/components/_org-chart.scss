@@ -1,4 +1,4 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
 
 // Organization chart. A reporting line drawn top down: a <ul class="org-chart">
 // of nested lists, one <li> per person. A person with reports holds a

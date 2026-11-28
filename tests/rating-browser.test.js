@@ -1,9 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import { engines } from './browser.js';
+import { pageCss } from './css.js';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+// Core then extras, as a page that uses extras loads them.
+const css = pageCss();
 const stars = [1, 2, 3, 4, 5].map((n) => `<label id="l${n}"><span class="visually-hidden">${n} stars</span><input id="s${n}" type="radio" name="score" value="${n}"${n === 3 ? ' checked' : ''}></label>`).join('');
 
 const markup = (dir) => `<!doctype html><html lang="en" dir="${dir}"><head><style>${css}</style></head><body>

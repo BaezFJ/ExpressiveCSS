@@ -12,10 +12,15 @@
 
 import { readFileSync } from 'node:fs';
 
-/** The compiled sheet, comments stripped. */
+/** Core's compiled sheet, then the @expressivecss/extras sheet a page loads after it. */
+export function pageCss() {
+  return ['dist/css/expressive.css', 'extras/dist/css/extras.css']
+    .map((file) => readFileSync(new URL(`../${file}`, import.meta.url), 'utf8')).join('\n');
+}
+
+/** The compiled sheets, core then extras, comments stripped. */
 export function sheet() {
-  const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
-  return css.replace(/\/\*[\s\S]*?\*\//g, '');
+  return pageCss().replace(/\/\*[\s\S]*?\*\//g, '');
 }
 
 /**

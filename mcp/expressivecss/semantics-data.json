@@ -818,7 +818,7 @@
           }
         ]
       },
-      "forms/rating": {
+      "rating": {
         "status": "enforced",
         "note": "Added with the rating component. The input is a fieldset of native radios drawn as stars; the display is a named image.",
         "rules": [
@@ -844,7 +844,7 @@
           }
         ]
       },
-      "forms/color-swatches": {
+      "color-swatches": {
         "status": "enforced",
         "note": "Added with the color swatches component. A fieldset of native radios in labels with visually hidden names, drawn as round chips of their colors, with an optional native color input for a custom value.",
         "rules": [

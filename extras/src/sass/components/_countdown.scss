@@ -1,4 +1,4 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
 
 // Countdown. A number from 0 to 999 whose digits roll to the new value when
 // it changes: <span class="countdown" style="--md-comp-countdown-value: 42">42</span>.

@@ -7,6 +7,7 @@ import { readFileSync, readdirSync } from "node:fs";
 import { JSDOM } from "jsdom";
 
 import { ExpressiveExtras } from "./setup.js";
+import { parseRules } from "./css.js";
 
 const read = (path) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 const { version } = JSON.parse(read("extras/package.json"));
@@ -49,4 +50,28 @@ test("the stylesheets do not re-emit core tokens, fonts or base styles", () => {
     const css = read(`extras/dist/css/${file}`);
     assert.doesNotMatch(css, /--md-sys-[\w-]+\s*:|@font-face|\bhtml\s*\{/, file);
   }
+});
+
+// The CSS-only components that moved out of core: no rule in core's sheet
+// starts at their root any more, and the extras sheet has those rules. A core
+// rule may still name one in passing, as the busy button's exclusion names
+// .mega-menu.
+const MOVED_ROOTS = [
+  "aura", "message-bubble", "stats", "description-list", "kpi", "countdown", "timeline", "calendar-year",
+  "org-chart", "popover", "skeleton", "empty-state", "marquee", "rating", "color-swatches", "stepper",
+  "mega-menu", "tree",
+];
+const PAGE_FOOTER = "footer:not(.status-bar, :has(> .navigation-bar:only-child))";
+
+test("moved CSS-only components are styled by extras.css, not expressive.css", () => {
+  const roots = (file) => parseRules(read(file).replace(/\/\*[\s\S]*?\*\//g, "")).flatMap((rule) => rule.selectors);
+  const core = roots("dist/css/expressive.css");
+  const extras = roots("extras/dist/css/extras.css");
+  for (const name of MOVED_ROOTS) {
+    const root = new RegExp(`^[a-z]*\\.${name}(?![\\w-])`);
+    assert.ok(!core.some((selector) => root.test(selector)), `expressive.css still styles .${name}`);
+    assert.ok(extras.some((selector) => root.test(selector)), `extras.css does not style .${name}`);
+  }
+  assert.ok(!core.some((selector) => selector.startsWith(PAGE_FOOTER)), "expressive.css still styles the page footer");
+  assert.ok(extras.some((selector) => selector.startsWith(PAGE_FOOTER)), "extras.css does not style the page footer");
 });

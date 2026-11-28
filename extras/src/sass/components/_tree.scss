@@ -1,4 +1,4 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
 
 // Tree. A <ul class="tree"> of nested lists, for file browsers and deep
 // navigation. A branch is an <li> holding a <details>: its <summary> is the

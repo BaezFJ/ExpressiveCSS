@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import { leaseBrowser, engines } from './browser.js';
+import { pageCss } from './css.js';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+// Core then extras, as a page that uses extras loads them.
+const css = pageCss();
 const icon = (id, name = 'info', extra = '') => `<span id="${id}" class="material-symbols${extra}" aria-hidden="true">${name}</span>`;
 
 const markup = `

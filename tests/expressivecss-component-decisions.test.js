@@ -17,7 +17,7 @@ const reviewMatrix = await readFile(reviewMatrixUrl, 'utf8');
 const generator = await readFile(new URL('../scripts/gen-expressivecss-skill.mjs', import.meta.url), 'utf8');
 const { NAV } = await import('../docs/src/data/nav.ts');
 const cataloguePageIds = NAV
-  .filter((group) => ['Structure', 'Components', 'Forms'].includes(group.label))
+  .filter((group) => ['Structure', 'Components', 'Forms', 'Additional components'].includes(group.label))
   .flatMap((group) => group.pages.map((page) => page.id));
 const guideNames = (await readdir(new URL('../skills/expressivecss/components/', import.meta.url)))
   .filter((name) => name.endsWith('.md'))

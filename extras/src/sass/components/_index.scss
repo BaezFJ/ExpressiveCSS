@@ -1,2 +1,21 @@
 // One line per extras component, in cascade order, as in core's
 // components/_index.scss: `@forward "name";`. Components move here from core.
+@forward "page-footer";
+@forward "rating";
+@forward "color-swatches";
+@forward "message";
+@forward "description-list";
+@forward "calendar";
+@forward "mega-menu";
+@forward "skeleton";
+@forward "empty-state";
+@forward "countdown";
+@forward "popover";
+@forward "stepper";
+@forward "timeline";
+@forward "tree";
+@forward "stat";
+@forward "aura";
+@forward "kpi";
+@forward "marquee";
+@forward "org-chart";

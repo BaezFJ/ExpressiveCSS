@@ -183,7 +183,7 @@ $_layout: (
 
 :where(
   article, dialog, menu[id], fieldset, .chip, .alert,
-  .snackbar, .tooltip, .popover, .field.outlined > :is(input, textarea)
+  .snackbar, .tooltip, .field.outlined > :is(input, textarea)
 ) {
   corner-shape: var(--md-sys-shape-corner-family);
 }

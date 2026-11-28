@@ -15,8 +15,9 @@ interface Props {
 
 const { current } = Astro.props;
 const currentGroup = groupOf(current);
-const id = (label: string) => `docs-group-${label.toLowerCase()}`;
-const panelId = (label: string) => `docs-rail-panel-${label.toLowerCase()}`;
+const slug = (label: string) => label.toLowerCase().replaceAll(" ", "-");
+const id = (label: string) => `docs-group-${slug(label)}`;
+const panelId = (label: string) => `docs-rail-panel-${slug(label)}`;
 const link = (page: DocsPage) => ({
   href: route(page.id),
   "aria-current": current === page.id ? "page" : undefined,

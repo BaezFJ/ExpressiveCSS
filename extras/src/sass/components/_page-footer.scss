@@ -1,4 +1,4 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
 
 // Site footer.
 //
@@ -63,8 +63,11 @@ $_footer: "footer:not(.status-bar, :has(> .navigation-bar:only-child))";
 
 // Columns: direct <nav> children. A wrapping .container is the grid
 // when the author uses one. Legacy .row still spans the full measure.
+// :where() keeps the footer's own rule at the base rule's weight, so core's
+// pane and questionnaire footers, which match that weight plus a class, keep
+// their flex row although this sheet loads after core.
 #{$_footer} > .container,
-#{$_footer}:not(:has(> .container)) {
+#{$_footer}:where(:not(:has(> .container))) {
   display: grid;
   gap: var(--md-comp-footer-gap);
   grid-template-columns: 1fr;

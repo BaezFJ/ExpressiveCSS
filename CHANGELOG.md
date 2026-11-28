@@ -45,6 +45,15 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   grid rule, list-detail behavior when a foldable opens or closes, and the
   ExpressiveCSS templates as the web code starting points.
 
+### Removed
+
+- The CSS-only components outside the Material 3 set moved to
+  `@expressivecss/extras`: aura, message, stat, description list, KPI,
+  countdown, timeline, calendar, organization chart, popover, skeleton, empty
+  state, marquee, rating, color swatches, stepper, mega menu, tree and the
+  page footer. Their markup is unchanged; load `extras.css` after
+  `expressive.css` to keep them.
+
 ## [0.20.0] - 2026-11-18
 
 This release adds `ScrollArea` for an optional themed scrollbar and the

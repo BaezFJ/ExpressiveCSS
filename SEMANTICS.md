@@ -343,6 +343,18 @@ Swept 0.8.0. The four Material 3 chip types plus a non-interactive display chip,
 - **chip-icon-hidden** - A ligature icon is read aloud verbatim. Decorative icons inside a labelled control must be aria-hidden.
 - **filter-chip-label-for** - A filter chip is <input type="checkbox"> + <label class="chip">; the label must point at its input.
 
+### color-swatches
+
+Added with the color swatches component. A fieldset of native radios in labels with visually hidden names, drawn as round chips of their colors, with an optional native color input for a custom value.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `color-swatches-is-a-fieldset` | forbid | `.color-swatches:not(fieldset)` | must not match |
+| `color-swatch-is-named` | require-accessible-name | `.color-swatches > [type="radio"]` | must end up with an accessible name |
+
+- **color-swatches-is-a-fieldset** - A .color-swatches is a <fieldset> with a <legend>, so the radios read as one named group.
+- **color-swatch-is-named** - A swatch shows no text, so name each radio with visually hidden text in its label, such as "Purple".
+
 ### column-chart
 
 Added with the column chart component. The <table> is the chart's text alternative and its no-JavaScript fallback; the drawn columns, labels and legend are aria-hidden.
@@ -557,18 +569,6 @@ Added with the color picker component. A named group around a native color input
 - **color-picker-wraps-a-color-input** - A .color-picker holds an <input type="color"> as a direct child. It is the form value, the preview and the picker without JavaScript.
 - **color-picker-is-a-named-group** - Give the .color-picker role="group" and a name, such as aria-label="Accent", so its sliders and hex field read as one control.
 
-### forms/color-swatches
-
-Added with the color swatches component. A fieldset of native radios in labels with visually hidden names, drawn as round chips of their colors, with an optional native color input for a custom value.
-
-| Rule | Kind | Selector | Requirement |
-| --- | --- | --- | --- |
-| `color-swatches-is-a-fieldset` | forbid | `.color-swatches:not(fieldset)` | must not match |
-| `color-swatch-is-named` | require-accessible-name | `.color-swatches > [type="radio"]` | must end up with an accessible name |
-
-- **color-swatches-is-a-fieldset** - A .color-swatches is a <fieldset> with a <legend>, so the radios read as one named group.
-- **color-swatch-is-named** - A swatch shows no text, so name each radio with visually hidden text in its label, such as "Purple".
-
 ### forms/drop-zone
 
 Added with the drop zone component. A <label> wraps the native file input, which covers it, so the label text names the input and the browser handles clicks, keys and dropped files.
@@ -648,20 +648,6 @@ Swept 0.8.0. A radio is one of a set, and the set needs a name.
 
 - **radio-in-fieldset** - A radio only means something as one of a group, and the group needs a <fieldset> with a <legend> to name the question being answered.
 - **radio-labelled** - A radio must be inside its <label> or carry an id a label points at.
-
-### forms/rating
-
-Added with the rating component. The input is a fieldset of native radios drawn as stars; the display is a named image.
-
-| Rule | Kind | Selector | Requirement |
-| --- | --- | --- | --- |
-| `rating-is-a-fieldset-or-an-image` | forbid | `.rating:not(fieldset):not([role="img"])` | must not match |
-| `rating-display-is-named` | require-accessible-name | `.rating[role="img"]` | must end up with an accessible name |
-| `rating-label-text-precedes-the-radio` | forbid | `fieldset.rating [type="radio"] + span` | must not match |
-
-- **rating-is-a-fieldset-or-an-image** - A .rating is either a <fieldset> of radios, for input, or an element with role="img" and a name, for display. Anything else draws stars that say nothing.
-- **rating-display-is-named** - Name a rating display with the value, such as aria-label="Rated 4.5 out of 5".
-- **rating-label-text-precedes-the-radio** - Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 0.16.0 no longer draws.
 
 ### forms/select
 
@@ -1160,6 +1146,20 @@ Added with the radial chart component. The <table> is the chart's text alternati
 
 - **radial-chart-is-a-figure-with-a-table** - Write .radial-chart as a <figure> holding a <table> of the data. The drawn chart is hidden from assistive technology, so the table is all a screen reader reads, and it is what shows without JavaScript.
 - **radial-chart-has-a-caption** - Name a .radial-chart with a <figcaption>. It names the focusable plot as well as the figure; hide it with .visually-hidden when nearby text already names the chart.
+
+### rating
+
+Added with the rating component. The input is a fieldset of native radios drawn as stars; the display is a named image.
+
+| Rule | Kind | Selector | Requirement |
+| --- | --- | --- | --- |
+| `rating-is-a-fieldset-or-an-image` | forbid | `.rating:not(fieldset):not([role="img"])` | must not match |
+| `rating-display-is-named` | require-accessible-name | `.rating[role="img"]` | must end up with an accessible name |
+| `rating-label-text-precedes-the-radio` | forbid | `fieldset.rating [type="radio"] + span` | must not match |
+
+- **rating-is-a-fieldset-or-an-image** - A .rating is either a <fieldset> of radios, for input, or an element with role="img" and a name, for display. Anything else draws stars that say nothing.
+- **rating-display-is-named** - Name a rating display with the value, such as aria-label="Rated 4.5 out of 5".
+- **rating-label-text-precedes-the-radio** - Put a star's visually hidden text before its radio. A span after the radio is the pre-1.0 input + span pattern, which 0.16.0 no longer draws.
 
 ### rich-text-editor
 

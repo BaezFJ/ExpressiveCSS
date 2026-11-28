@@ -145,6 +145,22 @@ npm install @expressivecss/expressive
 yarn add @expressivecss/expressive
 `} />
 
+                    <h5 id="extras">Additional components</h5>
+                    <p>
+                        Components beyond the Material Design 3 set, listed under Additional components, ship
+                        in a second package, <code>@expressivecss/extras</code>. Install it beside the core
+                        package and load its CSS and JavaScript after core's.
+                    </p>
+                    <Code code={`
+npm install @expressivecss/expressive @expressivecss/extras
+`} />
+                    <Code code={`
+<link rel="stylesheet" href="css/expressive.min.css">
+<link rel="stylesheet" href="css/extras.min.css">
+<script src="js/expressive.min.js"></script>
+<script src="js/extras.min.js"></script>
+`} />
+
                     <p>
                         Using a coding agent? <a href={route("ai")}>AI agents</a> covers the agent skills,
                         the MCP server, and the plain-text docs.

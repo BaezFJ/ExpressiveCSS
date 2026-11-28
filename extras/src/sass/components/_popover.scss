@@ -1,4 +1,4 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
 
 // Popover. A .popover is a native [popover] panel opened by the button that
 // names it with popovertarget (or commandfor). The browser owns opening,
@@ -40,6 +40,8 @@
   overflow: visible;
   border: 0;
   border-radius: var(--md-comp-popover-shape);
+  // Follows the corners="cut" switch, as core's container surfaces do.
+  corner-shape: var(--md-sys-shape-corner-family);
   background-color: var(--md-comp-popover-container-color);
   color: var(--md-sys-color-on-surface-variant);
   @include z-depth("2");

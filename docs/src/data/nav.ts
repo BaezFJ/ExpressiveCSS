@@ -284,14 +284,6 @@ const GROUPS: DocsGroup[] = [
           "Place an app's bar, navigation rail, pane and trailing toolbar.",
       },
       {
-        id: "footer",
-        styles: ["components/page-footer"],
-        label: "Footer",
-        route: "/footer.html",
-        description:
-          "Site navigation and extra information at the end of a page.",
-      },
-      {
         id: "tabs",
         styles: ["components/tabs"],
         exports: ["Tabs"],
@@ -317,14 +309,6 @@ const GROUPS: DocsGroup[] = [
           "A list of pages. The HTML is the component.",
       },
       {
-        id: "stepper",
-        styles: ["components/stepper"],
-        label: "Stepper",
-        route: "/stepper.html",
-        description:
-          "Progress through a fixed sequence of steps, such as a checkout, with each step's state.",
-      },
-      {
         id: "menu",
         styles: ["components/menu"],
         exports: ["Menu"],
@@ -333,14 +317,6 @@ const GROUPS: DocsGroup[] = [
         description:
           "Material Design 3 menus, from the HTML.",
         aliases: ["/dropdown.html"],
-      },
-      {
-        id: "mega_menu",
-        styles: ["components/mega-menu"],
-        label: "Mega menu",
-        route: "/mega-menu.html",
-        description:
-          "Site navigation whose top items open wide panels of grouped links, on native popovers.",
       },
       {
         id: "menubar",
@@ -359,14 +335,6 @@ const GROUPS: DocsGroup[] = [
         route: "/scrollspy.html",
         description:
           "Highlight the table of contents as the page scrolls.",
-      },
-      {
-        id: "tree",
-        styles: ["components/tree"],
-        label: "Tree",
-        route: "/tree.html",
-        description:
-          "Nested lists of folders and links that open in place, for file browsers and deep navigation.",
       },
     ],
   },
@@ -440,14 +408,6 @@ const GROUPS: DocsGroup[] = [
           "Material Design 3 cards, from the HTML.",
       },
       {
-        id: "aura",
-        styles: ["components/aura"],
-        label: "Aura",
-        route: "/aura.html",
-        description:
-          "A light that runs around the border of the one button or card a screen most needs you to see.",
-      },
-      {
         id: "lists",
         styles: ["components/list", "utilities/defer-render"],
         exports: ["Sortable", "Lists"],
@@ -456,14 +416,6 @@ const GROUPS: DocsGroup[] = [
         description:
           "Continuous vertical indexes of text and images.",
         aliases: ["/collections.html"],
-      },
-      {
-        id: "message",
-        styles: ["components/message"],
-        label: "Message",
-        route: "/message.html",
-        description:
-          "One message in a conversation, with an optional avatar, header and footer.",
       },
       {
         id: "message_scroller",
@@ -518,38 +470,6 @@ const GROUPS: DocsGroup[] = [
         route: "/data-table.html",
         description:
           "Rows of records in a scrolling table with a sticky header, sort state and row selection.",
-      },
-      {
-        id: "stat",
-        styles: ["components/stat"],
-        label: "Stat",
-        route: "/stat.html",
-        description:
-          "Key figures in tiles, each with a label, a value and an optional change.",
-      },
-      {
-        id: "description_list",
-        styles: ["components/description-list"],
-        label: "Description list",
-        route: "/description-list.html",
-        description:
-          "A record's details as label and value pairs, in two columns that stack on compact screens.",
-      },
-      {
-        id: "kpi",
-        styles: ["components/kpi"],
-        label: "KPI",
-        route: "/kpi.html",
-        description:
-          "One key figure in a card, with a trend chip, a sparkline and details.",
-      },
-      {
-        id: "countdown",
-        styles: ["components/countdown"],
-        label: "Countdown",
-        route: "/countdown.html",
-        description:
-          "A number from 0 to 999 whose digits roll to each new value.",
       },
       {
         id: "line-chart",
@@ -660,22 +580,6 @@ const GROUPS: DocsGroup[] = [
           "Parts of a whole drawn as rectangles whose areas follow their values.",
       },
       {
-        id: "timeline",
-        styles: ["components/timeline"],
-        label: "Timeline",
-        route: "/timeline.html",
-        description:
-          "Events in order, each with a time, a title and details, joined by a line.",
-      },
-      {
-        id: "calendar",
-        styles: ["components/calendar"],
-        label: "Calendar",
-        route: "/calendar.html",
-        description:
-          "A month of days with their events, on a table the page renders.",
-      },
-      {
         id: "dialogs",
         styles: ["components/dialog", "components/scrim"],
         exports: ["Dialogs"],
@@ -730,14 +634,6 @@ const GROUPS: DocsGroup[] = [
           "A person or account as a circular image, initials or icon, alone or in an overlapping group.",
       },
       {
-        id: "org-chart",
-        styles: ["components/org-chart"],
-        label: "Organization chart",
-        route: "/org-chart.html",
-        description:
-          "A reporting line drawn top down, with each person as a card under their manager.",
-      },
-      {
         id: "tooltips",
         styles: ["components/tooltip"],
         exports: ["Tooltip"],
@@ -745,14 +641,6 @@ const GROUPS: DocsGroup[] = [
         route: "/tooltips.html",
         description:
           "Material Design 3 tooltips, from the HTML.",
-      },
-      {
-        id: "popover",
-        styles: ["components/popover"],
-        label: "Popover",
-        route: "/popover.html",
-        description:
-          "A panel that opens from a button and stays until dismissed, on the native popover attribute.",
       },
       {
         id: "hover_card",
@@ -807,22 +695,6 @@ const GROUPS: DocsGroup[] = [
           "Covers part of a page while it loads, so nothing inside takes input until the page clears it.",
       },
       {
-        id: "skeleton",
-        styles: ["components/skeleton"],
-        label: "Skeleton",
-        route: "/skeleton.html",
-        description:
-          "Placeholder shapes that hold the layout while content loads.",
-      },
-      {
-        id: "empty_state",
-        styles: ["components/empty-state"],
-        label: "Empty state",
-        route: "/empty-state.html",
-        description:
-          "What a view shows when it has nothing to list: an icon, a heading, text and actions.",
-      },
-      {
         id: "alert",
         styles: ["components/alert"],
         label: "Alert",
@@ -848,14 +720,6 @@ const GROUPS: DocsGroup[] = [
         route: "/image-compare.html",
         description:
           "Two images of the same scene with a divider that reveals one over the other.",
-      },
-      {
-        id: "marquee",
-        styles: ["components/marquee"],
-        label: "Marquee",
-        route: "/marquee.html",
-        description:
-          "A row of logos, images or text that scrolls without end.",
       },
       {
         id: "confetti",
@@ -1039,22 +903,6 @@ const GROUPS: DocsGroup[] = [
           "Material Design 3 radios, from the HTML.",
       },
       {
-        id: "rating",
-        styles: ["components/forms/rating"],
-        label: "Rating",
-        route: "/rating.html",
-        description:
-          "Stars for choosing or showing a score, on native radio buttons.",
-      },
-      {
-        id: "color-swatches",
-        styles: ["components/forms/color-swatches"],
-        label: "Color swatches",
-        route: "/color-swatches.html",
-        description:
-          "Pick one color from a preset palette, on native radio buttons.",
-      },
-      {
         id: "color-picker",
         styles: ["components/forms/color-picker"],
         exports: ["ColorPicker"],
@@ -1146,7 +994,166 @@ const GROUPS: DocsGroup[] = [
     label: "Additional components",
     icon: "extension",
     package: "extras",
-    pages: [],
+    pages: [
+      {
+        id: "footer",
+        styles: ["components/page-footer"],
+        section: "Structure",
+        label: "Footer",
+        route: "/footer.html",
+        description:
+          "Site navigation and extra information at the end of a page.",
+      },
+      {
+        id: "stepper",
+        styles: ["components/stepper"],
+        label: "Stepper",
+        route: "/stepper.html",
+        description:
+          "Progress through a fixed sequence of steps, such as a checkout, with each step's state.",
+      },
+      {
+        id: "mega_menu",
+        styles: ["components/mega-menu"],
+        label: "Mega menu",
+        route: "/mega-menu.html",
+        description:
+          "Site navigation whose top items open wide panels of grouped links, on native popovers.",
+      },
+      {
+        id: "tree",
+        styles: ["components/tree"],
+        label: "Tree",
+        route: "/tree.html",
+        description:
+          "Nested lists of folders and links that open in place, for file browsers and deep navigation.",
+      },
+      {
+        id: "aura",
+        styles: ["components/aura"],
+        section: "Containment",
+        label: "Aura",
+        route: "/aura.html",
+        description:
+          "A light that runs around the border of the one button or card a screen most needs you to see.",
+      },
+      {
+        id: "message",
+        styles: ["components/message"],
+        label: "Message",
+        route: "/message.html",
+        description:
+          "One message in a conversation, with an optional avatar, header and footer.",
+      },
+      {
+        id: "stat",
+        styles: ["components/stat"],
+        section: "Data and charts",
+        label: "Stat",
+        route: "/stat.html",
+        description:
+          "Key figures in tiles, each with a label, a value and an optional change.",
+      },
+      {
+        id: "description_list",
+        styles: ["components/description-list"],
+        label: "Description list",
+        route: "/description-list.html",
+        description:
+          "A record's details as label and value pairs, in two columns that stack on compact screens.",
+      },
+      {
+        id: "kpi",
+        styles: ["components/kpi"],
+        label: "KPI",
+        route: "/kpi.html",
+        description:
+          "One key figure in a card, with a trend chip, a sparkline and details.",
+      },
+      {
+        id: "countdown",
+        styles: ["components/countdown"],
+        label: "Countdown",
+        route: "/countdown.html",
+        description:
+          "A number from 0 to 999 whose digits roll to each new value.",
+      },
+      {
+        id: "timeline",
+        styles: ["components/timeline"],
+        label: "Timeline",
+        route: "/timeline.html",
+        description:
+          "Events in order, each with a time, a title and details, joined by a line.",
+      },
+      {
+        id: "calendar",
+        styles: ["components/calendar"],
+        label: "Calendar",
+        route: "/calendar.html",
+        description:
+          "A month of days with their events, on a table the page renders.",
+      },
+      {
+        id: "org-chart",
+        styles: ["components/org-chart"],
+        section: "Communication",
+        label: "Organization chart",
+        route: "/org-chart.html",
+        description:
+          "A reporting line drawn top down, with each person as a card under their manager.",
+      },
+      {
+        id: "popover",
+        styles: ["components/popover"],
+        label: "Popover",
+        route: "/popover.html",
+        description:
+          "A panel that opens from a button and stays until dismissed, on the native popover attribute.",
+      },
+      {
+        id: "skeleton",
+        styles: ["components/skeleton"],
+        label: "Skeleton",
+        route: "/skeleton.html",
+        description:
+          "Placeholder shapes that hold the layout while content loads.",
+      },
+      {
+        id: "empty_state",
+        styles: ["components/empty-state"],
+        label: "Empty state",
+        route: "/empty-state.html",
+        description:
+          "What a view shows when it has nothing to list: an icon, a heading, text and actions.",
+      },
+      {
+        id: "marquee",
+        styles: ["components/marquee"],
+        section: "Media and motion",
+        label: "Marquee",
+        route: "/marquee.html",
+        description:
+          "A row of logos, images or text that scrolls without end.",
+      },
+      {
+        id: "rating",
+        styles: ["components/rating"],
+        section: "Forms",
+        label: "Rating",
+        route: "/rating.html",
+        description:
+          "Stars for choosing or showing a score, on native radio buttons.",
+      },
+      {
+        id: "color-swatches",
+        styles: ["components/color-swatches"],
+        label: "Color swatches",
+        route: "/color-swatches.html",
+        description:
+          "Pick one color from a preset palette, on native radio buttons.",
+      },
+    ],
   },
 ];
 

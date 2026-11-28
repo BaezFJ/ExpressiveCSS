@@ -1,4 +1,4 @@
-@use "../abstracts" as *;
+@use "abstracts" as *;
 
 // Message. One message in a conversation: an optional avatar, header and
 // footer around a single surface. The surface is every other child, normally

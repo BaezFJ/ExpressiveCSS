@@ -4,7 +4,7 @@ import Section from "../components/Section.astro";
 import Code from "../components/Code.astro";
 import { defineSections } from "../lib/sections";
 import { route } from "../lib/catalogue";
-import { PAGES } from "../data/nav";
+import { PAGES, isExtrasPage } from "../data/nav";
 
 const S = defineSections([
   { id: "setup", label: "Setup and configuration" },
@@ -13,7 +13,8 @@ const S = defineSections([
   { id: "components", label: "Component mixins" },
   { id: "partials", label: "Partial directory" },
 ]);
-const partials = PAGES.flatMap(page => (page.styles ?? []).map(path => ({ path, page })))
+// Core partials only: the extras stylesheet loads whole.
+const partials = PAGES.filter(page => !isExtrasPage(page.id)).flatMap(page => (page.styles ?? []).map(path => ({ path, page })))
   .sort((a, b) => a.path.localeCompare(b.path));
 ---
 <DocsLayout page="sass" sections={S}>
@@ -149,6 +150,8 @@ const partials = PAGES.flatMap(page => (page.styles ?? []).map(path => ({ path, 
     <p>This alphabetical directory is a lookup table, not load order. Preserve the component index's
       order, with icons first, and include supporting partials. The <a href={route("index") + "#smaller-builds"}>recipes</a>
       show working combinations. Base and token partials always load with either public stylesheet entry.</p>
+    <p>The Additional components are not listed: their partials ship in <code>@expressivecss/extras</code>,
+      whose <code>extras.scss</code> loads them all after core.</p>
     <div class="docs-table-scroll">
     <table class="striped">
       <thead><tr><th>Partial</th><th>Usage guide</th></tr></thead>
