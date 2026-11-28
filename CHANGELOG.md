@@ -19,6 +19,11 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   keeps all content in panes, and adapts panes and components to people,
   devices and window changes.
 
+- The skill's scaffold reference follows Material's current scaffold pages. It
+  adds snap widths and the persistent and temporary resizing rules, how docked
+  and floating panes adapt across breakpoints, and focus rules for co-planar,
+  floating and docked panes.
+
 ## [0.20.0] - 2026-11-18
 
 This release adds `ScrollArea` for an optional themed scrollbar and the

@@ -63,7 +63,7 @@ As a window resizes or a person navigates, panes change size, enter and leave th
 | Strategy | What happens | Where it is covered |
 | --- | --- | --- |
 | Show and hide | Related panes appear together when there is room and one at a time when there is not | [Scaffold](../../expressivecss-design/references/scaffold.md#adapt-without-losing-context); [list-detail](./canonical-layouts.md) |
-| Levitate | A pane moves above the content to focus one task | [Canonical layouts](./canonical-layouts.md) |
+| Levitate | A pane moves above the content to focus one task | [Scaffold](../../expressivecss-design/references/scaffold.md#adapt-without-losing-context) |
 | Reflow | Supporting content moves below or beside the primary content | Scaffold; the [breakpoints reference](./breakpoints.md) "What should be repositioned?" |
 
 | Presentation | Meaning | ExpressiveCSS example |
