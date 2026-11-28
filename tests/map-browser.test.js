@@ -11,6 +11,8 @@ const root = new URL('..', import.meta.url);
 const files = {
   '/expressive.css': ['dist/css/expressive.css', 'text/css'],
   '/expressive.js': ['dist/js/expressive.js', 'text/javascript'],
+  '/extras.css': ['extras/dist/css/extras.css', 'text/css'],
+  '/extras.js': ['extras/dist/js/extras.js', 'text/javascript'],
   '/maplibre-gl.css': ['node_modules/maplibre-gl/dist/maplibre-gl.css', 'text/css'],
   '/maplibre-gl.mjs': ['node_modules/maplibre-gl/dist/maplibre-gl.mjs', 'text/javascript'],
   '/maplibre-gl-worker.mjs': ['node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs', 'text/javascript'],
@@ -20,8 +22,8 @@ const files = {
 const style = (color) => ({ version: 8, sources: {}, layers: [{ id: 'background', type: 'background', paint: { 'background-color': color } }] });
 
 const page = `<!doctype html><html lang="en" theme="light"><head>
-<link rel="stylesheet" href="/maplibre-gl.css"><link rel="stylesheet" href="/expressive.css">
-<script src="/expressive.js"></script></head><body>
+<link rel="stylesheet" href="/maplibre-gl.css"><link rel="stylesheet" href="/expressive.css"><link rel="stylesheet" href="/extras.css">
+<script src="/expressive.js"></script><script src="/extras.js"></script></head><body>
 <div class="map" role="region" aria-label="Stores" style="width: 600px">
   <button type="button" class="map-marker" data-lng-lat="-87.62,41.88" aria-label="Loop" aria-controls="loop-popup"><span class="map-marker-label">Loop</span></button>
   <div class="map-popup" id="loop-popup"><h3>Loop</h3><p><a href="#hours">Hours</a></p></div>
@@ -41,7 +43,7 @@ const page = `<!doctype html><html lang="en" theme="light"><head>
 import * as maplibregl from '/maplibre-gl.mjs';
 window.maplibregl = maplibregl;
 const map = document.querySelector('.map');
-window.instance = Expressive.MapView.init(map, {
+window.instance = ExpressiveExtras.MapView.init(map, {
   maplibregl,
   style: { light: ${JSON.stringify(style('#ffffff'))}, dark: ${JSON.stringify(style('#000000'))} },
   center: [-87.65, 41.88],
@@ -187,7 +189,7 @@ for (const [name, engine, test] of engines) {
         resolve();
       })).catch(() => {}));
       await page.waitForTimeout(50);
-      assert.equal(await page.evaluate(() => Expressive.MapView.getInstance(document.querySelector('.map'))), undefined);
+      assert.equal(await page.evaluate(() => ExpressiveExtras.MapView.getInstance(document.querySelector('.map'))), undefined);
       assert.deepEqual(
         await page.locator('.map').evaluate((el) => [...el.children].map((child) => child.className)),
         ['map-marker', 'map-popup', 'map-marker', 'map-popup', 'map-controls'],
@@ -274,12 +276,12 @@ for (const [name, engine, test] of engines) {
         const host = document.createElement('div');
         document.body.append(host);
         host.attachShadow({ mode: 'open' }).innerHTML = `
-          <link rel="stylesheet" href="/maplibre-gl.css"><link rel="stylesheet" href="/expressive.css">
+          <link rel="stylesheet" href="/maplibre-gl.css"><link rel="stylesheet" href="/expressive.css"><link rel="stylesheet" href="/extras.css">
           <div class="map" role="region" aria-label="Shadow" style="width: 400px">
             <button type="button" class="map-marker" data-lng-lat="-87.62,41.88" aria-label="Shadow marker" aria-controls="shadow-popup"></button>
             <div class="map-popup" id="shadow-popup">Inside</div>
           </div>`;
-        window.shadowMap = Expressive.MapView.init(host.shadowRoot.querySelector('.map'), {
+        window.shadowMap = ExpressiveExtras.MapView.init(host.shadowRoot.querySelector('.map'), {
           maplibregl: window.maplibregl,
           style: { version: 8, sources: {}, layers: [] },
           center: [-87.62, 41.88],

@@ -114,7 +114,7 @@ try {
   </Section>
   <Section {...S.methods}>
 <Code code={`
-const overlay = Expressive.LoadingOverlay.getInstance(document.querySelector('.loading-overlay'));
+const overlay = ExpressiveExtras.LoadingOverlay.getInstance(document.querySelector('.loading-overlay'));
 overlay.destroy(); // stops following aria-busy, removes the status region, gives inert back;
                    // the scrim still follows the attribute
 `} />

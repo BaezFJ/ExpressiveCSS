@@ -341,35 +341,22 @@ function unmount() {
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
-| `Confetti` | `.confetti` |
-| `Particles` | `canvas.particles` |
 | `Keypad` | `.keypad, .keyboard` |
 | `ColorPicker` | `.color-picker` |
-| `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
 | `Datepicker` | `.date-picker` |
 | `Menu` | `.menu-trigger` |
-| `MessageScroller` | `.message-scroller` |
-| `PullToRefresh` | `.pull-to-refresh` |
-| `LoadingOverlay` | `.loading-overlay` |
-| `SwipeActions` | `.list.swipeable` |
 | `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
-| `ShowMore` | `.show-more` |
 | `CurrencyInput` | `input[data-currency]` of type text |
-| `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollArea` | `.scroll-area.custom` |
-| `ScrollSpy` | `.scrollspy` |
-| `BackToTop` | `.back-to-top` |
 | `FormSelect` | `select` without `data-tree` |
 | `TreeSelect` | `select[data-tree]` |
 | `Cascader` | `.cascader` |
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
-| `HoverCard` | `.hover-card-trigger` |
 | `FloatingActionButton` | `.fab-menu` |
-| `Menubar` | `.menubar` |
 | `ColumnChart` | `.column-chart`, from `@expressivecss/extras` |
 | `BarChart` | `.bar-chart`, from `@expressivecss/extras` |
 | `PieChart` | `.pie-chart`, from `@expressivecss/extras` |
@@ -382,8 +369,21 @@ function unmount() {
 | `SankeyChart` | `.sankey-chart`, from `@expressivecss/extras` |
 | `TreemapChart` | `.treemap-chart`, from `@expressivecss/extras` |
 | `LineChart` | `.line-chart`, from `@expressivecss/extras` |
+| `Confetti` | `.confetti`, from `@expressivecss/extras` |
+| `Particles` | `canvas.particles`, from `@expressivecss/extras` |
+| `CommandPalette` | `dialog.command-palette`, from `@expressivecss/extras` |
+| `MessageScroller` | `.message-scroller`, from `@expressivecss/extras` |
+| `PullToRefresh` | `.pull-to-refresh`, from `@expressivecss/extras` |
+| `LoadingOverlay` | `.loading-overlay`, from `@expressivecss/extras` |
+| `SwipeActions` | `.list.swipeable`, from `@expressivecss/extras` |
+| `ShowMore` | `.show-more`, from `@expressivecss/extras` |
+| `Lightbox` | `.lightboxed`, from `@expressivecss/extras` |
+| `ScrollSpy` | `.scrollspy`, from `@expressivecss/extras` |
+| `BackToTop` | `.back-to-top`, from `@expressivecss/extras` |
+| `HoverCard` | `.hover-card-trigger`, from `@expressivecss/extras` |
+| `Menubar` | `.menubar`, from `@expressivecss/extras` |
 
-`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also initializes Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, ImageCompare, Tour, Sortable, Lists, DataTables and TransferList. The modular entry requires explicit setup for these behaviors.
+`Snackbar`, `CharacterCounter`, and `Slider` are intentionally not in the registry. Construct or initialize them through their documented APIs. Importing the bundle also initializes Forms, Chips, Slider, Cards, ExpandingCard, Dialogs, BottomSheets, SideSheets, Copy, Theme, PaneResize, Sortable, Lists, DataTables and TransferList, and importing `@expressivecss/extras` initializes ImageCompare and Tour. The modular entries require explicit setup for these behaviors.
 
 ## Component lifecycle
 
@@ -3202,7 +3202,7 @@ instead of laying them over the media; markup can do the same by carrying
 
 Two images of the same scene with a divider that reveals one over the other.
 
-A `.image-compare` holds two `<img>` and a native `<input type="range">`. The range is the control, so keys, drags and taps work as on any slider and its value is announced; it covers the images invisibly. The `ImageCompare` behavior writes the value to `--md-comp-image-compare-position`, which clips the second image and places the divider and handle. RTL starts the first image on the right. Slider leaves this range alone. Give each image alt text that says which it is, and name the range. A form reset moves the divider back with the range. `Expressive.ImageCompare.sync(range)` places a compare added after load; the root bundle starts the behavior on load, and the modular entry with `ImageCompare.Init()`.
+A `.image-compare` holds two `<img>` and a native `<input type="range">`. The range is the control, so keys, drags and taps work as on any slider and its value is announced; it covers the images invisibly. The `ImageCompare` behavior writes the value to `--md-comp-image-compare-position`, which clips the second image and places the divider and handle. RTL starts the first image on the right. Slider leaves this range alone. Give each image alt text that says which it is, and name the range. A form reset moves the divider back with the range. `ExpressiveExtras.ImageCompare.sync(range)` places a compare added after load; the `@expressivecss/extras` bundle starts the behavior on load, and its modular entry with `ImageCompare.Init()`.
 
 ```html
 <div class="image-compare">
@@ -3256,7 +3256,7 @@ A `.marquee` holds two identical `<ul class="marquee-content">` groups. The seco
 
 Bursts of theme-colored confetti for a moment worth celebrating, such as a finished order or a completed goal.
 
-Give a button the `confetti` class and each click bursts from its center over the whole page. A `<canvas class="confetti" aria-hidden="true">` covers its nearest positioned ancestor and bursts inside it once when initialized, unless `manualStart` is set, and again on each `fire()`. `Expressive.Confetti.fire(options)` bursts over the page with no markup. `AutoInit()` starts every `.confetti`.
+Give a button the `confetti` class and each click bursts from its center over the whole page. A `<canvas class="confetti" aria-hidden="true">` covers its nearest positioned ancestor and bursts inside it once when initialized, unless `manualStart` is set, and again on each `fire()`. `ExpressiveExtras.Confetti.fire(options)` bursts over the page with no markup. `AutoInit()` starts every `.confetti`.
 
 ```html
 <button type="button" class="filled confetti">Celebrate</button>
@@ -3266,7 +3266,7 @@ Give a button the `confetti` class and each click bursts from its center over th
 </div>
 
 <script>
-Expressive.Confetti.fire({ particleCount: 100, spread: 70, origin: { x: 0.5, y: 0.6 } });
+ExpressiveExtras.Confetti.fire({ particleCount: 100, spread: 70, origin: { x: 0.5, y: 0.6 } });
 </script>
 ```
 
@@ -3322,7 +3322,7 @@ A `<canvas class="particles" aria-hidden="true">` covers its nearest positioned 
 </div>
 
 <script>
-Expressive.Particles.init(document.querySelector('canvas.particles'), { quantity: 150, vy: -0.3, staticity: 20 });
+ExpressiveExtras.Particles.init(document.querySelector('canvas.particles'), { quantity: 150, vy: -0.3, staticity: 20 });
 </script>
 ```
 
@@ -6798,35 +6798,22 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `ExpandingCard` | `article.expanding-card:has(> dialog.expanding-card-dialog)` |
 | `Carousel` | `.carousel` |
 | `Chips` | `.chips` |
-| `Confetti` | `.confetti` |
-| `Particles` | `canvas.particles` |
 | `Keypad` | `.keypad, .keyboard` |
 | `ColorPicker` | `.color-picker` |
-| `CommandPalette` | `dialog.command-palette` |
 | `Questionnaire` | `form.questionnaire` |
 | `Datepicker` | `.date-picker` |
 | `Menu` | `.menu-trigger` |
-| `MessageScroller` | `.message-scroller` |
-| `PullToRefresh` | `.pull-to-refresh` |
-| `LoadingOverlay` | `.loading-overlay` |
-| `SwipeActions` | `.list.swipeable` |
 | `InputMask` | `input[data-mask]` of type text, tel, search, url or password |
-| `ShowMore` | `.show-more` |
 | `CurrencyInput` | `input[data-currency]` of type text |
-| `Lightbox` | `.lightboxed` |
 | `NavigationRail` | `.navigation-rail` |
 | `ScrollArea` | `.scroll-area.custom` |
-| `ScrollSpy` | `.scrollspy` |
-| `BackToTop` | `.back-to-top` |
 | `FormSelect` | `select` without `data-tree` |
 | `TreeSelect` | `select[data-tree]` |
 | `Cascader` | `.cascader` |
 | `Tabs` | `.tabs` |
 | `Timepicker` | `.time-picker` |
 | `Tooltip` | `.tooltipped` |
-| `HoverCard` | `.hover-card-trigger` |
 | `FloatingActionButton` | `.fab-menu` |
-| `Menubar` | `.menubar` |
 | `ColumnChart` | `.column-chart`, from `@expressivecss/extras` |
 | `BarChart` | `.bar-chart`, from `@expressivecss/extras` |
 | `PieChart` | `.pie-chart`, from `@expressivecss/extras` |
@@ -6839,6 +6826,19 @@ These are the components `AutoInit()` starts, and the selector each one claims. 
 | `SankeyChart` | `.sankey-chart`, from `@expressivecss/extras` |
 | `TreemapChart` | `.treemap-chart`, from `@expressivecss/extras` |
 | `LineChart` | `.line-chart`, from `@expressivecss/extras` |
+| `Confetti` | `.confetti`, from `@expressivecss/extras` |
+| `Particles` | `canvas.particles`, from `@expressivecss/extras` |
+| `CommandPalette` | `dialog.command-palette`, from `@expressivecss/extras` |
+| `MessageScroller` | `.message-scroller`, from `@expressivecss/extras` |
+| `PullToRefresh` | `.pull-to-refresh`, from `@expressivecss/extras` |
+| `LoadingOverlay` | `.loading-overlay`, from `@expressivecss/extras` |
+| `SwipeActions` | `.list.swipeable`, from `@expressivecss/extras` |
+| `ShowMore` | `.show-more`, from `@expressivecss/extras` |
+| `Lightbox` | `.lightboxed`, from `@expressivecss/extras` |
+| `ScrollSpy` | `.scrollspy`, from `@expressivecss/extras` |
+| `BackToTop` | `.back-to-top`, from `@expressivecss/extras` |
+| `HoverCard` | `.hover-card-trigger`, from `@expressivecss/extras` |
+| `Menubar` | `.menubar`, from `@expressivecss/extras` |
 
 Snackbar, CharacterCounter, and Slider stay out of this table. Slider still starts itself when the bundle loads. Forms, Chips, Cards, ExpandingCard, Dialogs, BottomSheets, and SideSheets also run an import-time `Init()`. Chips, Cards, and ExpandingCard appear in the table as well so a later `AutoInit()` can pick up elements added after load.
 
@@ -7123,7 +7123,7 @@ removes managed tab stops and roles added by initialization. Open an individual 
 
 A card that walks people through an interface one step at a time, beside each element it explains.
 
-A `.tour` is a `popover="manual"` element with `role="dialog"`, holding one `<section>` per step. Each section's `data-tour-target` names the id of the element it explains. Add a `.tour-progress` line, a `.tour-actions` row with `[data-tour-back]`, `[data-tour-next]` and `[data-tour-done]` buttons, and a `[data-tour-close]` button; a `[data-tour-start="tour-id"]` button starts it. The `Tour` behavior shows one step at a time below its target (above when there is no room), rings the target with `.tour-target` and scrolls it into view, and skips steps whose target is missing or hidden. Back hides on the first step, Next on the last, and Done shows only on the last. The card is named by the step heading and takes focus. Escape, Done or close end the tour and return focus; the card's `toggle` event reports it. `Expressive.Tour.start(el, index)`, `go(el, index)` and `end(el, completed)` work from script, and the tour fires `expressive:open`, `expressive:change` (`{ step, index }`) and `expressive:close` (`{ completed }`), and `Expressive.Tour.i18n.progress` holds "Step {current} of {total}". The root bundle starts the behavior on load; with the modular entry, call `Tour.Init()`.
+A `.tour` is a `popover="manual"` element with `role="dialog"`, holding one `<section>` per step. Each section's `data-tour-target` names the id of the element it explains. Add a `.tour-progress` line, a `.tour-actions` row with `[data-tour-back]`, `[data-tour-next]` and `[data-tour-done]` buttons, and a `[data-tour-close]` button; a `[data-tour-start="tour-id"]` button starts it. The `Tour` behavior shows one step at a time below its target (above when there is no room), rings the target with `.tour-target` and scrolls it into view, and skips steps whose target is missing or hidden. Back hides on the first step, Next on the last, and Done shows only on the last. The card is named by the step heading and takes focus. Escape, Done or close end the tour and return focus; the card's `toggle` event reports it. `ExpressiveExtras.Tour.start(el, index)`, `go(el, index)` and `end(el, completed)` work from script, and the tour fires `expressive:open`, `expressive:change` (`{ step, index }`) and `expressive:close` (`{ completed }`), and `ExpressiveExtras.Tour.i18n.progress` holds "Step {current} of {total}". The `@expressivecss/extras` bundle starts the behavior on load; with its modular entry, call `Tour.Init()`.
 
 ```html
 <button type="button" data-tour-start="welcome">Take the tour</button>
@@ -7166,7 +7166,7 @@ Lightbox is Expressive’s material-style enlarge-on-click image. Click an image
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.lightboxed');
-  const instances = Expressive.Lightbox.init(elems, {
+  const instances = ExpressiveExtras.Lightbox.init(elems, {
     // specify options here
   });
 });
@@ -7188,7 +7188,7 @@ document.addEventListener('DOMContentLoaded', function() {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = Expressive.Lightbox.getInstance(elem);
+const instance = ExpressiveExtras.Lightbox.getInstance(elem);
 ```
 
 ##### .open();
@@ -7449,12 +7449,12 @@ Each link is at least 48dp tall, the Material touch target. For a denser list, s
 
 ### Initialization
 
-The IIFE bundle exposes `Expressive.ScrollSpy`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.scrollspy`.
+The extras IIFE bundle exposes `ExpressiveExtras.ScrollSpy`. Call `init` yourself when you need options other than the defaults, or let `Expressive.AutoInit()` start every `.scrollspy`.
 
 ```js
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.scrollspy');
-  const instances = Expressive.ScrollSpy.init(elems, {
+  const instances = ExpressiveExtras.ScrollSpy.init(elems, {
     // specify options here
   });
 });
@@ -7500,7 +7500,7 @@ function(id) {
 > All methods are called on the plugin instance. You can get the instance like this:
 
 ```js
-const instance = Expressive.ScrollSpy.getInstance(elem);
+const instance = ExpressiveExtras.ScrollSpy.getInstance(elem);
 ```
 
 #### .destroy();

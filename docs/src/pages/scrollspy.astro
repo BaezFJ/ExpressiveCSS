@@ -65,14 +65,14 @@ const S = defineSections([
   </Section>
   <Section {...S.initialization}>
         <p>
-          The IIFE bundle exposes <code>Expressive.ScrollSpy</code>.
+          The extras IIFE bundle exposes <code>ExpressiveExtras.ScrollSpy</code>.
           Call <code>init</code> yourself when you need options other than the defaults,
           or let <code>Expressive.AutoInit()</code> start every <code>.scrollspy</code>.
         </p>
 <Code code={`
 document.addEventListener('DOMContentLoaded', function() {
   const elems = document.querySelectorAll('.scrollspy');
-  const instances = Expressive.ScrollSpy.init(elems, {
+  const instances = ExpressiveExtras.ScrollSpy.init(elems, {
     // specify options here
   });
 });

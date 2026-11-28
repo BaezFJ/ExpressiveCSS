@@ -9,7 +9,7 @@ Component ID: `confetti`
 
 Contract: ExpressiveCSS 0.20.0
 
-Contract SHA-256: `935f920792b4dd3947133e4e1a4b5e2ce7c809c6343efb9020d0863b85b97125`
+Contract SHA-256: `dfb461fb921c4edf4d7713e16dad7f4afc50d0317f65d8903edc6e69f06bf950`
 
 #### Selection and adaptation
 
@@ -33,7 +33,7 @@ Full parity remains unassessed. Review provenance and specification links: [capa
 
 Bursts of theme-colored confetti for a moment worth celebrating, such as a finished order or a completed goal.
 
-Give a button the `confetti` class and each click bursts from its center over the whole page. A `<canvas class="confetti" aria-hidden="true">` covers its nearest positioned ancestor and bursts inside it once when initialized, unless `manualStart` is set, and again on each `fire()`. `Expressive.Confetti.fire(options)` bursts over the page with no markup. `AutoInit()` starts every `.confetti`.
+Give a button the `confetti` class and each click bursts from its center over the whole page. A `<canvas class="confetti" aria-hidden="true">` covers its nearest positioned ancestor and bursts inside it once when initialized, unless `manualStart` is set, and again on each `fire()`. `ExpressiveExtras.Confetti.fire(options)` bursts over the page with no markup. `AutoInit()` starts every `.confetti`.
 
 #### Syntax
 
@@ -45,7 +45,7 @@ Give a button the `confetti` class and each click bursts from its center over th
 </div>
 
 <script>
-Expressive.Confetti.fire({ particleCount: 100, spread: 70, origin: { x: 0.5, y: 0.6 } });
+ExpressiveExtras.Confetti.fire({ particleCount: 100, spread: 70, origin: { x: 0.5, y: 0.6 } });
 </script>
 ```
 

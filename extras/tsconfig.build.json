@@ -5,7 +5,10 @@
     "outDir": "dist/types",
     // Core's emitted declarations, so tsc emits only extras. The specifier stays
     // as written in the output, for consumers to resolve through the peer dependency.
-    "paths": { "@expressivecss/expressive/core": ["../dist/types/core.d.ts"] }
+    "paths": {
+      "@expressivecss/expressive/core": ["../dist/types/core.d.ts"],
+      "@expressivecss/expressive/modular": ["../dist/types/modular.d.ts"]
+    }
   },
   "include": ["src/ts"]
 }

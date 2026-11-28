@@ -53,14 +53,8 @@ export const AUTO_INIT_COMPONENTS = {
   ScrollArea: { component: Components.ScrollArea, selector: ".scroll-area.custom" },
   Carousel: { component: Components.Carousel, selector: ".carousel" },
   Chips: { component: Components.Chips, selector: ".chips" },
-  Confetti: { component: Components.Confetti, selector: ".confetti" },
-  Particles: { component: Components.Particles, selector: "canvas.particles" },
   Keypad: { component: Components.Keypad, selector: ".keypad, .keyboard" },
   ColorPicker: { component: Components.ColorPicker, selector: ".color-picker" },
-  CommandPalette: {
-    component: Components.CommandPalette,
-    selector: "dialog.command-palette",
-  },
   Questionnaire: {
     component: Components.Questionnaire,
     selector: "form.questionnaire",
@@ -70,24 +64,13 @@ export const AUTO_INIT_COMPONENTS = {
     selector: ".date-picker",
   },
   Menu: { component: Components.Menu, selector: ".menu-trigger" },
-  MessageScroller: {
-    component: Components.MessageScroller,
-    selector: ".message-scroller",
-  },
-  PullToRefresh: { component: Components.PullToRefresh, selector: ".pull-to-refresh" },
-  LoadingOverlay: { component: Components.LoadingOverlay, selector: ".loading-overlay" },
-  SwipeActions: { component: Components.SwipeActions, selector: ".list.swipeable" },
   // Only the input types with a caret: setSelectionRange() throws on the rest.
   InputMask: {
     component: Components.InputMask,
     selector: 'input[data-mask]:is(:not([type]), [type="text" i], [type="tel" i], [type="search" i], [type="url" i], [type="password" i])',
   },
-  ShowMore: { component: Components.ShowMore, selector: ".show-more" },
   // Only a text input can hold the formatted amount.
   CurrencyInput: { component: Components.CurrencyInput, selector: 'input[data-currency]:is(:not([type]), [type="text" i])' },
-  Lightbox: { component: Components.Lightbox, selector: ".lightboxed" },
-  ScrollSpy: { component: Components.ScrollSpy, selector: ".scrollspy" },
-  BackToTop: { component: Components.BackToTop, selector: ".back-to-top" },
   // A data-tree select is a tree select, not a flat one.
   FormSelect: { component: Components.FormSelect, selector: "select:not([data-tree])" },
   TreeSelect: { component: Components.TreeSelect, selector: "select[data-tree]" },
@@ -102,13 +85,10 @@ export const AUTO_INIT_COMPONENTS = {
     selector: ".time-picker",
   },
   Tooltip: { component: Components.Tooltip, selector: ".tooltipped" },
-  HoverCard: { component: Components.HoverCard, selector: ".hover-card-trigger" },
   FloatingActionButton: {
     component: Components.FloatingActionButton,
     selector: ".fab-menu",
   },
-  // After Menu, so the bar's own menu options replace AutoInit's defaults.
-  Menubar: { component: Components.Menubar, selector: ".menubar" },
 } satisfies Record<string, AutoInitEntry>;
 
 type Registry = typeof AUTO_INIT_COMPONENTS;

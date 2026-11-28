@@ -2,10 +2,12 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { leaseBrowser, engines } from './browser.js';
+import { pageCss } from './css.js';
 
 // BackToTop in a real engine: the link shows past the threshold, returns to
 // the top with focus on its target, and is out of reach while hidden.
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+// Core then extras, as a page that uses extras loads them: some pages here have no script to load extras.
+const css = pageCss();
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
 
 const filler = Array.from({ length: 80 }, (_, i) => `<p>Paragraph ${i}</p>`).join('');

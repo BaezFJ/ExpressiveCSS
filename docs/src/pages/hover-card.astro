@@ -94,7 +94,7 @@ const S = defineSections([
 <div id="ada-card" class="popover" popover="hint">…</div>
 `} />
 <Code code={`
-const card = Expressive.HoverCard.getInstance(document.querySelector('.hover-card-trigger'));
+const card = ExpressiveExtras.HoverCard.getInstance(document.querySelector('.hover-card-trigger'));
 card.open();    // shows the card now, without enterDelay
 card.close();   // hides it now, without exitDelay
 card.destroy(); // hides a card it showed and removes the listeners

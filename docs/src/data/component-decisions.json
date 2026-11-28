@@ -975,202 +975,6 @@
       }
     },
     {
-      "slug": "menubar",
-      "title": "Menubar",
-      "aliases": [
-        "application menu",
-        "file edit view",
-        "menu bar"
-      ],
-      "guideSource": {
-        "pageId": "menubar",
-        "heading": "Menubar",
-        "headingLevel": 2,
-        "semantics": [
-          "menubar"
-        ]
-      },
-      "jobs": [
-        "An application's row of menus, such as File, Edit and View, with the menubar keyboard contract."
-      ],
-      "useWhen": [
-        "Give an application, such as an editor, a persistent row of command menus people move through with the arrow keys."
-      ],
-      "avoidWhen": [
-        "Site navigation needs a navbar or mega menu of links; a single overflow of actions needs one menu."
-      ],
-      "alternatives": [
-        "menu",
-        "toolbars",
-        "mega-menu"
-      ],
-      "adaptive": [],
-      "runtime": "auto-init",
-      "guide": "../components/menubar.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#menubar",
-          "reviewedOn": "2026-10-15",
-          "documentedSupport": "A menubar of menu triggers with one tab stop, Left, Right, Home and End along the bar, Down to open, and Left and Right between open menus.",
-          "webAdaptation": "Each item opens an ordinary Menu; the Menubar component adds the menubar and menuitem roles and the roving tab stop at runtime.",
-          "limitations": [
-            "Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-15",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Name the menubar, give it one tab stop, move between items with Left and Right, open a menu with Down, Enter or Space, move between open menus with Left and Right, and close with Escape back to the bar."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "File, Edit and View in a document editor are a menubar. One \"More\" button with five actions is a single menu.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-15",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/ts/components/menubar.ts",
-            "sha256": "73c7307ad8cf681f85fd4834d90a862e3a941513861529ec25a0663cf81c6e64"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified.",
-            "nextStep": "Operate the menubar with a screen reader in each engine and confirm menu and item announcements; check typeahead across the bar."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/menubar-browser.test.js",
-            "name": "chromium: a menubar has one tab stop and moves between its menus with the arrow keys",
-            "scope": "Menubar and menuitem roles, one tab stop that follows focus, Left, Right, Home and End with wrapping, Down opening on the first item, Right and Left between open menus, flyout rows keeping Right, Escape back to the bar and RTL. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "scrollspy",
-      "title": "Scrollspy",
-      "aliases": [
-        "active table of contents"
-      ],
-      "guideSource": {
-        "pageId": "scrollspy",
-        "heading": "Scrollspy",
-        "headingLevel": 2,
-        "semantics": [
-          "scrollspy"
-        ]
-      },
-      "jobs": [
-        "Highlight the table of contents as the page scrolls."
-      ],
-      "useWhen": [
-        "Track visible sections in a table of contents."
-      ],
-      "avoidWhen": [
-        "Separate views need navigation or tabs."
-      ],
-      "alternatives": [
-        "tabs",
-        "navigation-bar"
-      ],
-      "adaptive": [],
-      "runtime": "auto-init",
-      "guide": "../components/scrollspy.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "implementation": {
-          "source": "llm.md#scrollspy",
-          "reviewedOn": "2026-09-17",
-          "documentedSupport": "Section tracking with per-section offsets and independent tables of contents grouped by getActiveElement callback identity.",
-          "webAdaptation": "Web document navigation helper.",
-          "limitations": [
-            "Independent TOCs must reuse one getActiveElement function per group. Screen-reader announcements, native zoom and physical-device checks remain pending."
-          ]
-        },
-        "relationship": "none",
-        "href": null,
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-09-13",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Use named in-page navigation, real fragment links, stable heading IDs and current-section state. Account for sticky offsets and reduced-motion preferences."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A settings screen with mutually exclusive panels needs tabs. Scrollspy only tracks sections already present in the scrolling document.",
-      "capabilityReview": {
-        "reviewedOn": "2026-09-17",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_scrollspy.scss",
-            "sha256": "98b9bd486ee144f96b047ad98708c85fd7c8f06ed19d06d24199553a52ab5324"
-          },
-          {
-            "path": "src/sass/components/_table_of_contents.scss",
-            "sha256": "ebf956a3836c8a68d55a44f83f5abf8ecaa603e3f7435421f07e5819cd5b90c7"
-          },
-          {
-            "path": "src/ts/components/scrollspy.ts",
-            "sha256": "dd7d9babc18578824804f6c8c6b622c307712a7a93e6a40f4cbd6727f4814fd2"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Offsets, independent TOCs, per-instance active classes, fallback, teardown and native anchors have rendered coverage. Spoken current-link state, native zoom, actual contrast themes and physical devices remain unverified.",
-            "nextStep": "Complete the ScrollSpy fixtures in the accessibility manual-review checklist with actual browsers, assistive technology and devices."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
-            "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion."
-          },
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: ScrollSpy isolation: offsets",
-            "scope": "Per-section observer offsets and removal of the previous section's active class."
-          },
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: ScrollSpy isolation: groups",
-            "scope": "Independent callback groups retain separate current links and fallback state during scrolling and destruction."
-          },
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: ScrollSpy isolation: teardown",
-            "scope": "Repeated destruction and remount restore authored offset value and priority and update surviving current links."
-          },
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: ScrollSpy isolation: anchors",
-            "scope": "Native keyboard fragment navigation and actual scrolling in LTR/RTL with ordinary and reduced motion."
-          }
-        ],
-        "inventorySha256": "c04a890acc518f0e6c2c339b320e0eb1e90e734d0d897c367bd6c15d655858fa"
-      }
-    },
-    {
       "slug": "buttons",
       "title": "Buttons",
       "aliases": [
@@ -1729,100 +1533,6 @@
       "selectionExample": "Speed dials have been removed. Replace legacy fab or fixed-action-btn wrappers with fab-menu and labelled actions; use a toolbar for persistent commands."
     },
     {
-      "slug": "back-to-top",
-      "title": "Back to top",
-      "aliases": [
-        "back to top",
-        "scroll to top",
-        "return to top",
-        "go to top"
-      ],
-      "guideSource": {
-        "pageId": "back-to-top",
-        "heading": "Back to top",
-        "headingLevel": 2,
-        "semantics": [
-          "back-to-top"
-        ]
-      },
-      "jobs": [
-        "A link that appears once a long page has scrolled down, and returns to the top with focus on the main content."
-      ],
-      "useWhen": [
-        "Give readers of a long article, docs page or feed a way back to the top and its navigation without scrolling the whole way."
-      ],
-      "avoidWhen": [
-        "Pages shorter than a few screens, or content that scrolls inside a pane or dialog rather than the window."
-      ],
-      "alternatives": [
-        "fab",
-        "scrollspy"
-      ],
-      "adaptive": [],
-      "runtime": "auto-init",
-      "guide": "../components/back-to-top.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#back-to-top",
-          "reviewedOn": "2026-10-25",
-          "documentedSupport": "An in-page link styled with the FAB classes, hidden and inert until the window scrolls past a threshold option (one viewport height by default), a focused link kept until focus leaves, a smooth scroll to the top that is instant under reduced motion, focus moved to the href target with a temporary tabindex, the body as the fallback target, modified and already prevented clicks left to the browser, a threshold that is not a CSS length replaced by the default with a warning, markup options, offset and stacking tokens, and a link that still jumps to its target without the script.",
-          "webAdaptation": "An IntersectionObserver on an empty element at the threshold instead of a scroll listener. The hidden state is the inert attribute plus visibility: hidden, with a fade in and an immediate hide, so a script that starts after the first paint does not show the link fading out, and a page without the script never hides the link.",
-          "limitations": [
-            "The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-25",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep the control out of reach while it is hidden, move focus to the top of the content along with the scroll, honor reduced motion, and keep the link working without the script."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A long changelog page takes a back-to-top link at the bottom corner; a short settings page needs none.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-25",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_back-to-top.scss",
-            "sha256": "b665bda0c34dab312b363689d108ea8517d39ba89630d29330c0288d294919e0"
-          },
-          {
-            "path": "src/ts/components/backToTop.ts",
-            "sha256": "23ea9b49c6250aefa363eb85feb7703cab225aedc143e2d93445e595f609328f"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched.",
-            "nextStep": "Activate the link with VoiceOver and NVDA and confirm focus lands on the main content; check it in forced colors."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/back-to-top-browser.test.js",
-            "name": "chromium: the link returns to the top and focuses its target, by click and by Enter",
-            "scope": "Scroll past the threshold, activate by click and by Enter, and find the page at the top, focus on the target, the next Tab on the first control and no tabindex left behind."
-          },
-          {
-            "file": "tests/back-to-top-browser.test.js",
-            "name": "chromium: the link is out of reach above the threshold",
-            "scope": "Above the threshold, before and after scrolling past it, the link is hidden, skipped by Tab, missed by hit testing and absent from the ARIA snapshot. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
       "slug": "cards",
       "title": "Cards",
       "aliases": [
@@ -2049,294 +1759,6 @@
       }
     },
     {
-      "slug": "message-scroller",
-      "title": "Message scroller",
-      "aliases": [
-        "chat scroller",
-        "conversation scroller",
-        "chat transcript",
-        "stick to bottom",
-        "scroll to latest"
-      ],
-      "guideSource": {
-        "pageId": "message_scroller",
-        "heading": "Message scroller",
-        "headingLevel": 2,
-        "semantics": [
-          "message-scroller"
-        ]
-      },
-      "jobs": [
-        "A chat scroll container that anchors turns, follows streamed replies and keeps its place as history loads."
-      ],
-      "useWhen": [
-        "Scroll a conversation that receives messages or streamed replies, or open a saved transcript at its last turn."
-      ],
-      "avoidWhen": [
-        "A short static exchange needs no scroller; a feed of unrelated items needs a list or the scroll-area utility."
-      ],
-      "alternatives": [
-        "message",
-        "lists"
-      ],
-      "adaptive": [],
-      "runtime": "auto-init",
-      "guide": "../components/message-scroller.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#message-scroller",
-          "reviewedOn": "2026-10-08",
-          "documentedSupport": "Following streamed output, release on scrolling up, a scroll-to-latest button, turn anchors with a peek of the previous message, prepend preservation, opening at the end, start or last turn, and jumping to a message by id.",
-          "webAdaptation": "A native scroll container; the component sets scroll position, a spacer and the button's inert state. The page owns role=\"log\" and aria-busy.",
-          "limitations": [
-            "Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role=\"log\" viewport, touch and scrollbar dragging, and spoken output remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-08",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep the reader's place unless they are at the live edge, let them stop following at any time, name the focusable viewport and announce appended messages through a log region."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A support chat that streams replies needs a message scroller so the reply stays in view; a fixed list of three FAQ answers does not.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-08",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_message-scroller.scss",
-            "sha256": "5b0f79f866d59b6d54966cde45e95fbc3370cec79685ed43fe527cb7ea9a71bb"
-          },
-          {
-            "path": "src/ts/components/messageScroller.ts",
-            "sha256": "857aeed955c93192e5cf0e003ca9f0c18900284083e97d4547da04fbc936866e"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role=\"log\" viewport, touch and scrollbar dragging, and spoken output remain unverified.",
-            "nextStep": "Stream replies into a role=\"log\" viewport with a screen reader in each engine, and check touch scrolling and scrollbar dragging on real devices."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/message-scroller-browser.test.js",
-            "name": "chromium: message scroller follows output, keeps its place on prepend and anchors new turns",
-            "scope": "Opening at the end, following streamed text, release on a wheel scroll up, the inert button and resuming from it, following kept through a click on a message, scrollToMessage with a peek and with a missing id, prepend preservation, an appended anchor at the peek with a spacer that clears as the reply grows, and destroy. No spoken-output assertion."
-          },
-          {
-            "file": "tests/message-scroller-browser.test.js",
-            "name": "chromium: message scroller opens saved transcripts at the requested position",
-            "scope": "last-anchor on a long last turn, last-anchor falling back to the end, and start."
-          },
-          {
-            "file": "tests/message-scroller-browser.test.js",
-            "name": "chromium: message scroller jumps to a message inside a shadow root",
-            "scope": "scrollToMessage called right after init finds a message in a shadow root and scrolls it one peek below the top; pressing the button from the keyboard there moves focus to the viewport as the button goes inert."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "pull-to-refresh",
-      "title": "Pull-to-refresh",
-      "aliases": [
-        "pull to refresh",
-        "swipe to refresh",
-        "pull down to refresh",
-        "refresh gesture"
-      ],
-      "guideSource": {
-        "pageId": "pull-to-refresh",
-        "heading": "Pull-to-refresh",
-        "headingLevel": 2,
-        "semantics": [
-          "pull-to-refresh"
-        ]
-      },
-      "jobs": [
-        "Refreshes a list or page when a person pulls down at its top, or presses its refresh button."
-      ],
-      "useWhen": [
-        "Let people fetch the latest items of a feed, inbox or list on a touch screen, with a button that does the same for everyone else."
-      ],
-      "avoidWhen": [
-        "Content that updates itself, or a page where a pull would compete with another vertical drag; use a refresh button alone."
-      ],
-      "alternatives": [
-        "message-scroller",
-        "lists"
-      ],
-      "adaptive": [],
-      "runtime": "auto-init",
-      "guide": "../components/pull-to-refresh.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#pull-to-refresh",
-          "reviewedOn": "2026-10-24",
-          "documentedSupport": "A touch pull from a scroll position of 0 past a threshold, a refresh button and refresh() method that start the same refresh, an expressive:refresh event and onRefresh callback whose detail takes waitUntil(), complete(), aria-busy while refreshing, a status region that announces the start and the finish with i18n strings, contained overscroll on the container and the page, and containers that scroll themselves or pull the page.",
-          "webAdaptation": "Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The author's loading indicator carries the role and name; the script sets a class, two custom properties and aria-busy, and adds a visually hidden role=\"status\" region because the indicator is hidden once the refresh ends.",
-          "limitations": [
-            "The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified. There is no pull from the bottom and no nesting."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-24",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Offer a control that refreshes without the gesture, keep the native browser pull from running as well, report the busy state, and do not take scrolling away from a drag that is not a pull."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "An inbox that fetches new mail on demand takes pull-to-refresh with a Refresh button; a live chat that receives messages on its own needs a message scroller instead.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-24",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_pull-to-refresh.scss",
-            "sha256": "207ebc43febabb0c565bd6100c9f360bee1a4d26b4e7be5be82b8e266208c875"
-          },
-          {
-            "path": "src/ts/components/pullToRefresh.ts",
-            "sha256": "861006bffd5074cca9a5f34f0b75ac01d2490b77e35d6a63c12718846807ebba"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified.",
-            "nextStep": "Pull on Chrome and Firefox for Android and Safari on iOS and confirm the browser's own refresh does not run; read a refresh with a screen reader."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/pull-to-refresh-browser.test.js",
-            "name": "chromium: a pull past the threshold refreshes once and the indicator stays until the page reports the finish",
-            "scope": "Real touch input. Contained overscroll, one event per pull past the threshold, the indicator and aria-busy kept until a waitUntil() promise settles or complete() runs. No spoken-output assertion."
-          },
-          {
-            "file": "tests/pull-to-refresh-browser.test.js",
-            "name": "chromium: the refresh button, by click, Enter or Space, and refresh() each start a refresh",
-            "scope": "The refresh button by click, Enter and Space, and refresh(), each firing one event and showing the indicator."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "swipe-actions",
-      "title": "Swipe actions",
-      "aliases": [
-        "swipe to reveal",
-        "swipeable list",
-        "swipe row actions",
-        "list item swipe"
-      ],
-      "guideSource": {
-        "pageId": "swipe-actions",
-        "heading": "Swipe actions",
-        "headingLevel": 2,
-        "semantics": [
-          "swipe-actions"
-        ]
-      },
-      "jobs": [
-        "Reveals a list row's actions when a person swipes it sideways, or presses its actions button."
-      ],
-      "useWhen": [
-        "Give each row of an inbox, task or file list a few quick actions, such as archive or delete, without a toolbar on every row."
-      ],
-      "avoidWhen": [
-        "Rows whose actions people need all the time, or a single primary action; show the buttons in the row or use a menu."
-      ],
-      "alternatives": [
-        "lists",
-        "menu"
-      ],
-      "adaptive": [],
-      "runtime": "auto-init",
-      "guide": "../components/swipe-actions.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#swipe-actions",
-          "reviewedOn": "2026-10-24",
-          "documentedSupport": "A touch swipe toward a row's inline start that reveals its .swipe-actions group, opening past half the group's width or on a flick and closing short of it, a [data-swipe-toggle] button with aria-expanded, focus on an action opening its row, Escape, an outside tap or an action closing it, one open row per list, an expressive:swipetoggle event and onToggle callback with { row, open }, open(row) and close(), right-to-left pages and reduced motion.",
-          "webAdaptation": "Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The row slides by a translate on one custom property, and the actions wait past its inline end in a list clipped on the inline axis, so focus on a closed row's action scrolls nothing. The author names the toggle and the actions; the script keeps aria-expanded.",
-          "limitations": [
-            "Swipe reveal, the slide limit, short, vertical, mouse, two-finger and cancelled drags, the toggle, focus on an action, Escape, an outside tap, closing after an action, one open row, the event and onToggle, right-to-left pages, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, flick velocity, pen input, spoken output and forced colors remain unverified. Actions only on the inline-end side, and no full swipe that runs an action."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-24",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Offer a single-pointer and keyboard path to every action a swipe reveals (WCAG 2.5.1), keep the actions named and reachable while the row is closed, run nothing on the gesture alone, and do not take scrolling away from a drag that is not a swipe."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "An inbox where each message can be archived or deleted takes swipe actions with an actions button per row; a row with one obvious action shows that button in the row instead.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-24",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_swipe-actions.scss",
-            "sha256": "2e096de408f17827ff3276bcef2ba88df1bc52109454b0efb357f4bd7a39d49b"
-          },
-          {
-            "path": "src/ts/components/swipeActions.ts",
-            "sha256": "1747614c08cfb007a7c82c04eb7f5b1ec0bf06947f64cc588a1899b044584858"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Swipe reveal, the slide limit, short, vertical, mouse, two-finger and cancelled drags, the toggle, focus on an action, Escape, an outside tap, closing after an action, one open row, the event and onToggle, right-to-left pages, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, flick velocity, pen input, spoken output and forced colors remain unverified.",
-            "nextStep": "Swipe on Chrome for Android and Safari on iOS and confirm the browser's back gesture and vertical scrolling still work; read a row's actions with a screen reader."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/swipe-actions-browser.test.js",
-            "name": "chromium: a swipe reveals a row's actions, and a keyboard user reaches the same actions",
-            "scope": "Real touch input. A swipe reveals the actions without running one, and Tab, Enter and the toggle reach and run an action from the keyboard."
-          },
-          {
-            "file": "tests/swipe-actions-browser.test.js",
-            "name": "chromium: the toggle opens and closes a row, and a tap outside, Escape or an action closes it",
-            "scope": "The toggle and aria-expanded, focus on an action opening its row, an outside tap, Escape with focus returned to the toggle, closing after an action, and an action that removes its row."
-          }
-        ]
-      }
-    },
-    {
       "slug": "accordion",
       "title": "Accordion",
       "aliases": [
@@ -2419,106 +1841,6 @@
             "file": "tests/accordion-browser.test.js",
             "name": "chromium: accordion joins its tiles, turns the chevron and keeps one item open per name",
             "scope": "Outer, inner and open corner radii, chevron rotation, hidden native marker, exclusive name groups, Enter on a focused summary and the expanded state Chromium reports for each summary. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "show-more",
-      "title": "Show more",
-      "aliases": [
-        "read more",
-        "expand text",
-        "truncated text",
-        "text collapse"
-      ],
-      "guideSource": {
-        "pageId": "show_more",
-        "heading": "Show more",
-        "headingLevel": 2,
-        "semantics": [
-          "show-more"
-        ]
-      },
-      "jobs": [
-        "Clamped text with a button that shows the rest, and hides itself when the text already fits."
-      ],
-      "useWhen": [
-        "A description, review or message that usually runs past a few lines, in a card or list where the full text would push the rest of the layout down."
-      ],
-      "avoidWhen": [
-        "Sections with headings or controls a person needs to find; use an accordion, whose panels the browser's find-in-page can open.",
-        "Text that is short or always matters in full; show all of it."
-      ],
-      "alternatives": [
-        "accordion",
-        "cards"
-      ],
-      "adaptive": [],
-      "runtime": "auto-init",
-      "guide": "../components/show-more.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#show-more",
-          "reviewedOn": "2026-10-25",
-          "documentedSupport": "A .show-more holding text with a line-clamp-1, -2 or -3 class and a <button type=\"button\">; the button sets aria-expanded and aria-controls, shows the full text, reads \"Show less\" while it is open (i18n.showLess or data-show-less), and hides while the clamped text fits, checking again on resize, after web fonts load and on blur.",
-          "webAdaptation": "The component unclamps with inline -webkit-line-clamp and line-clamp, because the utilities layer and prefixed clamp classes beat any component rule. A ResizeObserver on the text and document.fonts.ready run the fit check, scrollHeight against clientHeight with 1px for Firefox's rounding.",
-          "limitations": [
-            "Toggling, the fit check across widths, fractional line heights and window-size prefixes, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output is unverified. Find-in-page does not open clamped text, a font that starts loading after document.fonts.ready has settled is not caught until the next resize, and an icon-only button keeps its aria-label while open."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-25",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep the control a native button named by visible text, report its expanded state, point it at the text it controls, and hide it from sight and the tab order when there is nothing more to show."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A product card clamps its description to three lines with a Show more text button; a terms-of-service page with headed sections uses an accordion instead.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-25",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/ts/components/showMore.ts",
-            "sha256": "d6a961f6810f004ac7d5cdf1575717a2cdbd20cb4ca6d4e08e2ba413f00713d3"
-          },
-          {
-            "path": "src/sass/components/_show-more.scss",
-            "sha256": "430401c741e9628d553e836fb98078fd39a1f64e42f2fa49264a34427638e650"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Toggling, the fit check, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output with VoiceOver and NVDA is unverified.",
-            "nextStep": "Activate the button with VoiceOver and NVDA and check that the expanded state and label are announced."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/show-more-browser.test.js",
-            "name": "chromium: the button shows the full text and collapses it again",
-            "scope": "A click and Enter that unclamp and clamp the text, with aria-expanded and aria-controls."
-          },
-          {
-            "file": "tests/show-more-browser.test.js",
-            "name": "chromium: the button hides while the clamped text fits",
-            "scope": "Text that fits, a fractional line height, a container widened and narrowed, a window-size prefix, Tab order, and a focused button kept through a resize and until blur."
-          },
-          {
-            "file": "tests/show-more-browser.test.js",
-            "name": "chromium: a web font that swaps in hides the button once its text fits",
-            "scope": "A held-back web font that makes cut text fit, and an instance destroyed before the font loads."
           }
         ]
       }
@@ -3312,182 +2634,6 @@
       }
     },
     {
-      "slug": "hover-card",
-      "title": "Hover card",
-      "aliases": [
-        "hovercard",
-        "link preview",
-        "preview card",
-        "profile card"
-      ],
-      "guideSource": {
-        "pageId": "hover_card",
-        "heading": "Hover card",
-        "headingLevel": 2,
-        "semantics": [
-          "hover-card"
-        ]
-      },
-      "jobs": [
-        "Shows a card of preview content after a delay when a link is hovered or gets keyboard focus."
-      ],
-      "useWhen": [
-        "Preview where a link goes, such as a person, repository or article, for people who hover or tab to it, when the linked page holds the same content."
-      ],
-      "avoidWhen": [
-        "A short label for a control needs a tooltip; content touch users must reach, or anything to act on, belongs in the page, a popover opened by a button or a dialog."
-      ],
-      "alternatives": [
-        "tooltips",
-        "popover"
-      ],
-      "adaptive": [],
-      "runtime": "auto-init",
-      "guide": "../components/hover-card.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#hover-card",
-          "reviewedOn": "2026-10-25",
-          "documentedSupport": "A link with hover-card-trigger whose aria-details names a .popover with popover=\"hint\"; the card shows against the link after enterDelay of hover or keyboard focus, stays while the pointer or focus is on the link or card, hides after exitDelay or at once on Escape with focus back on the link, and a tap or click follows the link.",
-          "webAdaptation": "Script timers decide when the card shows, and showPopover({ source }) makes the link its anchor and invoker, so the browser places it, puts it next in the Tab order and light-dismisses it. Interest invokers (interestfor) exist only in Chromium, so they are not used.",
-          "limitations": [
-            "Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified. Touch shows no card, and the card's content is static markup."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-25",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Show the card on hover and keyboard focus after a delay, keep it open while the pointer or focus is on the link or the card, hide it on Escape with focus back on the link, leave the link's click alone and relate the card to the link with aria-details."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "An author name in an article previews the author's profile in a hover card; an icon button's label is a tooltip, and a note people open on press is a popover.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-25",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/ts/components/hoverCard.ts",
-            "sha256": "e2542c0b7e8c4490d55e114e057bfd333f05d59eb5c7f9f3a01eaab1fe2db006"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified.",
-            "nextStep": "Tab to a hover card link with VoiceOver and NVDA and confirm the details relationship is announced and the card is reachable."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/hover-card-browser.test.js",
-            "name": "chromium: hovering the link shows the card after the delay, and it stays while the pointer is on the card",
-            "scope": "Nothing before enterDelay, the card against the link's bottom edge plus the popover gap, staying open with the pointer on the card past exitDelay, and hiding once the pointer has left both."
-          },
-          {
-            "file": "tests/hover-card-browser.test.js",
-            "name": "chromium: keyboard focus shows the card, Tab moves into it, and Escape hides it with focus back on the link",
-            "scope": "Tab to the link shows the card after enterDelay with focus kept on the link, Tab into the card keeps it open, and Escape hides it with focus back on the link."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "tour",
-      "title": "Tour",
-      "aliases": [
-        "product tour",
-        "onboarding",
-        "coach mark",
-        "walkthrough"
-      ],
-      "guideSource": {
-        "pageId": "tour",
-        "heading": "Tour",
-        "headingLevel": 2,
-        "semantics": [
-          "tour"
-        ]
-      },
-      "jobs": [
-        "A card that walks people through an interface one step at a time, beside each element it explains."
-      ],
-      "useWhen": [
-        "Introduce new or changed parts of an interface in a short sequence the user starts and can leave at any time."
-      ],
-      "avoidWhen": [
-        "One hint beside one control needs a popover or tooltip; content people must read needs to stay on the page."
-      ],
-      "alternatives": [
-        "popover",
-        "tooltips",
-        "dialogs"
-      ],
-      "adaptive": [],
-      "runtime": "shared-runtime",
-      "guide": "../components/tour.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#tour",
-          "reviewedOn": "2026-10-15",
-          "documentedSupport": "One step at a time beside its target, a highlight ring, Back, Next and Done, progress text, skipped missing targets, Escape and focus return.",
-          "webAdaptation": "A manual native popover placed with CSS anchor positioning; the Tour behavior moves the anchor and focus.",
-          "limitations": [
-            "Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-15",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Let the user start, skip and end the tour, name the card by the step heading, move focus to it and back afterwards, and skip steps whose target is not shown."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "Three new features after an update are a tour. One unexplained icon is a tooltip.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-15",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/ts/behaviors/tour.ts",
-            "sha256": "f7aa25d13a8b392871cbe6d601366418fb6b975b6b540a77f220fc143ec79278"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified.",
-            "nextStep": "Take a tour with a screen reader in each engine and confirm each step is announced when it opens."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/tour-browser.test.js",
-            "name": "chromium: a tour steps through its targets beside each one and returns focus",
-            "scope": "Opening from a start button, the card named by the step heading, progress text, skipped missing targets, button visibility per step, placement below each target, releasing the previous target, Escape, focus return and cleanup after hidePopover. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
       "slug": "snackbar",
       "title": "Snackbar",
       "aliases": [
@@ -3786,102 +2932,6 @@
       }
     },
     {
-      "slug": "loading-overlay",
-      "title": "Loading overlay",
-      "aliases": [
-        "busy overlay",
-        "loading mask",
-        "block ui",
-        "busy region",
-        "spin overlay"
-      ],
-      "guideSource": {
-        "pageId": "loading_overlay",
-        "heading": "Loading overlay",
-        "headingLevel": 2,
-        "semantics": [
-          "loading-overlay"
-        ]
-      },
-      "jobs": [
-        "Covers part of a page while it loads, so nothing inside takes input until the page clears it."
-      ],
-      "useWhen": [
-        "Hold a form, card or panel still while it saves or reloads, so nobody edits or presses what is about to change."
-      ],
-      "avoidWhen": [
-        "Content that stays usable while it updates, or a wait for the whole page; show a loading indicator or skeleton without blocking input."
-      ],
-      "alternatives": [
-        "loading-indicator",
-        "skeleton",
-        "progress"
-      ],
-      "adaptive": [],
-      "runtime": "auto-init",
-      "guide": "../components/loading-overlay.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#loading-overlay",
-          "reviewedOn": "2026-10-25",
-          "documentedSupport": "A region the page marks aria-busy=\"true\" shows a surface scrim and its loading indicator and is made inert until the attribute goes, with focus taken from the control inside it, keeps an inert state the author set, announces the start and the finish in a status region after it with i18n strings, returns focus to the control that had it, and stops following the attribute on destroy().",
-          "webAdaptation": "The native inert attribute blocks pointer and keyboard input instead of script handlers. The page owns aria-busy, and the script follows it with a MutationObserver. Inert content leaves the accessibility tree, so the script adds a visually hidden role=\"status\" region outside the region.",
-          "limitations": [
-            "Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified. The scrim does not follow the content of a region that scrolls itself; the docs say to wrap the scroller."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-25",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Block input to the busy region only, report the busy state and its end to assistive technology, keep focus from being lost for good, and keep the content visibly unavailable in forced colors."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A settings form that saves to a server takes a loading overlay while the request runs; a dashboard tile that refreshes in place while staying readable needs a loading indicator alone.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-25",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_loading-overlay.scss",
-            "sha256": "8590fc46360c644750b16d3fad2ba98d12c2b2240666138c0b3895e18acc25ac"
-          },
-          {
-            "path": "src/ts/components/loadingOverlay.ts",
-            "sha256": "5544177df22e5fcc5aa30f2764414498b48620387f8df7cbc2de8170ed94240d"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified.",
-            "nextStep": "Mark a region busy and clear it with VoiceOver and NVDA running, and view it under a Windows high-contrast theme."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/loading-overlay-browser.test.js",
-            "name": "chromium: a busy region takes no click or Tab, and clearing it gives both back",
-            "scope": "A real mouse click and Tab while aria-busy is \"true\", and again after it is set to \"false\" and after it is removed."
-          },
-          {
-            "file": "tests/loading-overlay-browser.test.js",
-            "name": "chromium: focus goes back to where it was when the region clears",
-            "scope": "Focus dropped by inert and returned on clear, a focus move made while busy kept, and a removed control not refocused. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
       "slug": "alert",
       "title": "Alert",
       "aliases": [
@@ -4085,502 +3135,6 @@
           }
         ],
         "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
-      }
-    },
-    {
-      "slug": "image-compare",
-      "title": "Image compare",
-      "aliases": [
-        "before and after",
-        "image slider",
-        "comparison slider",
-        "diff"
-      ],
-      "guideSource": {
-        "pageId": "image_compare",
-        "heading": "Image compare",
-        "headingLevel": 2,
-        "semantics": [
-          "image-compare"
-        ]
-      },
-      "jobs": [
-        "Two images of the same scene with a divider that reveals one over the other."
-      ],
-      "useWhen": [
-        "Let people compare two images of the same scene, such as before and after an edit."
-      ],
-      "avoidWhen": [
-        "Several unrelated images need a carousel; one image with detail needs a lightbox."
-      ],
-      "alternatives": [
-        "carousel",
-        "lightbox",
-        "slider"
-      ],
-      "adaptive": [],
-      "runtime": "shared-runtime",
-      "guide": "../components/image-compare.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#image-compare",
-          "reviewedOn": "2026-10-15",
-          "documentedSupport": "Two stacked images, a divider and handle driven by a native range input, keyboard and pointer control, RTL and a focus ring.",
-          "webAdaptation": "A native range input covers the images invisibly; the ImageCompare behavior writes its value to the divider position.",
-          "limitations": [
-            "The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-15",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Give both images alt text that says which is which, name the range, and keep it operable by keyboard and pointer."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A photo before and after retouching is an image compare. Five product photos are a carousel.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-15",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_image-compare.scss",
-            "sha256": "1dea70f8b47092f064348912efedfa0b29a52be680a7d402e4d84f883d669f8e"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified.",
-            "nextStep": "Move the divider with a screen reader in each engine and confirm the value is announced."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/image-compare-browser.test.js",
-            "name": "chromium: image compare reveals the second image up to the range's value",
-            "scope": "The initial value applied on load, each image on its side of the divider, arrow keys moving the divider, the handle focus ring, RTL, named native sliders and Slider leaving the range alone. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "confetti",
-      "title": "Confetti",
-      "aliases": [
-        "celebration",
-        "confetti cannon",
-        "fireworks",
-        "party popper",
-        "success animation"
-      ],
-      "guideSource": {
-        "pageId": "confetti",
-        "heading": "Confetti",
-        "headingLevel": 2,
-        "semantics": [
-          "confetti"
-        ]
-      },
-      "jobs": [
-        "Bursts of theme-colored confetti for a moment worth celebrating."
-      ],
-      "useWhen": [
-        "Mark a rare moment of success the person worked toward, such as a finished purchase, a completed goal or a first published post."
-      ],
-      "avoidWhen": [
-        "Routine saves, frequent actions and errors; repeated bursts lose their meaning and distract. Confetti never replaces a text confirmation such as a snackbar."
-      ],
-      "alternatives": [
-        "snackbar",
-        "empty-state",
-        "aura"
-      ],
-      "adaptive": [],
-      "runtime": "auto-init",
-      "guide": "../components/confetti.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#confetti",
-          "reviewedOn": "2026-10-09",
-          "documentedSupport": "Bursts from a button's center over the page, inside an authored canvas, or from script, with count, angle, spread, speed, decay, gravity, drift, lifetime, origin, colors, square, circle and star shapes, and size options, theme colors by default and a promise that resolves when the burst ends.",
-          "webAdaptation": "A canvas drawn with requestAnimationFrame. The page canvas is an aria-hidden manual popover with pointer events off, so it draws above modal dialogs without blocking clicks. Reduced motion draws nothing.",
-          "limitations": [
-            "The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-09",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep the effect decorative and out of the accessibility tree, never block input, state the outcome in text and draw nothing when reduced motion is requested."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A checkout's \"Order placed\" screen can burst confetti once beside its confirmation text. Saving a draft shows a snackbar and no confetti.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-09",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_confetti.scss",
-            "sha256": "b75386e0536ca6b7a83bd890f819a61e258ed022cd162cc2550c470a0e631e68"
-          },
-          {
-            "path": "src/ts/components/confetti.ts",
-            "sha256": "3eeacd4eabd4ffe48586e85b874a394f2bc96fe35133678e1a06f14ac751ebf2"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified.",
-            "nextStep": "Watch a burst on a low-end phone and in forced colors, and confirm a screen reader announces nothing for it."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/confetti-browser.test.js",
-            "name": "chromium: confetti bursts from its trigger in theme colors, on its own canvas, above a modal dialog and not under reduced motion",
-            "scope": "A canvas bursting at its center on init, manualStart waiting for fire(), a button bursting from its center in the theme primary color, the page canvas covering the viewport in the top layer with aria-hidden and no pointer events, fire() resolving after it is removed, a burst over an open modal dialog, destroy and the reduced-motion skip. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "particles",
-      "title": "Particles",
-      "aliases": [
-        "particle background",
-        "floating dots",
-        "starfield",
-        "interactive background"
-      ],
-      "guideSource": {
-        "pageId": "particles",
-        "heading": "Particles",
-        "headingLevel": 2,
-        "semantics": [
-          "particles"
-        ]
-      },
-      "jobs": [
-        "Drifting dots behind a section that lean toward the pointer."
-      ],
-      "useWhen": [
-        "Give a hero, landing section or sign-in panel a sense of depth and movement behind short, high-contrast content."
-      ],
-      "avoidWhen": [
-        "Behind dense text, forms or data, and on pages that already animate; the motion competes with reading. Never carry meaning in the dots."
-      ],
-      "alternatives": [
-        "aura",
-        "confetti",
-        "marquee"
-      ],
-      "adaptive": [],
-      "runtime": "auto-init",
-      "guide": "../components/particles.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#particles",
-          "reviewedOn": "2026-10-09",
-          "documentedSupport": "A canvas that covers its positioned ancestor with drifting dots that fade near the edges and lean toward the pointer, with quantity, staticity, ease, size, color and drift options and the theme on-surface color by default.",
-          "webAdaptation": "A canvas drawn with requestAnimationFrame, aria-hidden with pointer events off. The dot color comes from the canvas's CSS color, read each frame so theme changes apply. Reduced motion draws the dots once without motion.",
-          "limitations": [
-            "The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-09",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep the effect decorative and out of the accessibility tree, never block input, keep text over it readable and stop motion when reduced motion is requested."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A product landing page can put particles behind its headline and sign-up button. Its pricing table and checkout form sit on a plain surface.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-09",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_particles.scss",
-            "sha256": "fd6cdb85de88b412355c522aeceaadfac33baa1a005a0b74e978fdea9560ba6a"
-          },
-          {
-            "path": "src/ts/components/particles.ts",
-            "sha256": "7a22a1f580deb76e59bdeef75e8cfe432ee00743106a3348f5ad3c7f05e1f43b"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified.",
-            "nextStep": "Watch a full-width hero of particles on a low-end phone and in forced colors, and check text contrast over the densest area."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/particles-browser.test.js",
-            "name": "chromium: particles fill their box in the theme color, follow the pointer, drift, refit on resize and stay still under reduced motion",
-            "scope": "The canvas covering its positioned ancestor, a dot fading in where it was placed in the theme on-surface color, following the pointer inside the canvas and holding when it leaves, destroy clearing the canvas, vx drift, the color option, the pixel buffer after a resize and still dots under reduced motion. No spoken-output assertion."
-          }
-        ]
-      }
-    },
-    {
-      "slug": "lightbox",
-      "title": "Lightbox",
-      "aliases": [
-        "media",
-        "image viewer"
-      ],
-      "guideSource": {
-        "pageId": "media",
-        "heading": "Lightbox",
-        "headingLevel": 3,
-        "semantics": [
-          "lightbox"
-        ]
-      },
-      "jobs": [
-        "Lightbox for enlarge-on-click images."
-      ],
-      "useWhen": [
-        "Enlarge an image on activation."
-      ],
-      "avoidWhen": [
-        "Tasks need dialogs; browsing collections needs carousel."
-      ],
-      "alternatives": [
-        "carousel",
-        "dialogs"
-      ],
-      "adaptive": [],
-      "runtime": "auto-init",
-      "guide": "../components/lightbox.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "implementation": {
-          "source": "llm.md#lightbox",
-          "reviewedOn": "2026-09-13",
-          "documentedSupport": "Enlarge-on-activation image and dismissal.",
-          "webAdaptation": "ExpressiveCSS media behavior, not an upstream component contract.",
-          "limitations": [
-            "Enlargement and teardown are checked; modal containment, reduced motion and destruction during closing remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "href": null,
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-09-13",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Provide a named keyboard-operable enlargement trigger, Escape and an accessible close route, logical focus and reduced motion. Image enlargement is not automatically a modal gallery."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A payment confirmation needs a dialog, even if its design contains an image. Lightbox is for inspecting enlarged media.",
-      "capabilityReview": {
-        "reviewedOn": "2026-09-18",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_lightbox.scss",
-            "sha256": "df62c6c3d359089fcb5f7fe2500464afb8f6cb7c57fbc3f7a04a0cf9fc452599"
-          },
-          {
-            "path": "src/ts/components/lightbox.ts",
-            "sha256": "1e334f6efb12867bc2d75793f042d3b0df0488bcc8cab97236992387c696746e"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Native zoom, screen-reader announcements, actual Windows contrast themes and physical-device interaction remain unverified.",
-            "nextStep": "Complete the Lightbox manual-review fixture. Treat this as image enlargement, not a verified modal gallery."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: remaining lightbox supports Space and preserves its image on teardown",
-            "scope": "Space opens image enlargement; Escape closes; destroy preserves original image/style."
-          },
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: remaining lightbox teardown cancels pending work and preserves native button focus",
-            "scope": "Native button Space opens without duplicate image Tab stop; destroy cancels opening callbacks and retains image. Subsequent Tab order only."
-          },
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: Lightbox transition reliability: interrupt",
-            "scope": "Repeated requests and immediate closing cancel stale completion callbacks and restore image styles and overflow."
-          },
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: Lightbox transition reliability: reopen",
-            "scope": "Reopening during closing preserves the current overlay, caption, dimensions and callback sequence."
-          },
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: Lightbox transition reliability: motion",
-            "scope": "Mounted reduced-motion changes finish opening and closing without waiting for configured durations."
-          },
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: Lightbox transition reliability: focus",
-            "scope": "Destroying an opening image preserves its focus and cancels completion."
-          },
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: Lightbox transition reliability: isolation",
-            "scope": "Overlapping instances retain their own captions and share ancestor overflow until the final close."
-          },
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: Lightbox transition reliability: triggers",
-            "scope": "Image and native button pointer/Enter/Space activation, Escape, overlay, scroll and resize dismissal, LTR/RTL and both motion preferences."
-          },
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: Lightbox transition reliability: callbacks",
-            "scope": "Start callbacks may close, reopen or destroy without stale work or overriding application focus."
-          },
-          {
-            "file": "tests/expressivecss-web-accessibility-browser.test.js",
-            "name": "chromium: Lightbox transition reliability: destroy",
-            "scope": "Opening/closing teardown restores attributes, styles and overflow, preserves unrelated focus, and supports remounting. All transition reliability cases also run in Firefox and WebKit."
-          }
-        ],
-        "inventorySha256": "87ab81a691efccf5070f8f7b0a44cea24f1857907369fa34066a5ae63bcd9589"
-      }
-    },
-    {
-      "slug": "map",
-      "title": "Map",
-      "aliases": [
-        "maps",
-        "location map",
-        "store locator",
-        "geographic map",
-        "maplibre"
-      ],
-      "guideSource": {
-        "pageId": "map",
-        "heading": "Map",
-        "headingLevel": 2,
-        "semantics": [
-          "map"
-        ]
-      },
-      "jobs": [
-        "An interactive map with markers, popups, routes, arcs, clusters and controls, built on MapLibre."
-      ],
-      "useWhen": [
-        "Show where things are when position matters to the task, such as stores near the reader, a delivery route or live vehicles."
-      ],
-      "avoidWhen": [
-        "A single address or a list the reader scans by name; write the address in text and link to a map app. Never make the map the only way to reach the information it shows."
-      ],
-      "alternatives": [
-        "lists",
-        "data-table",
-        "cards"
-      ],
-      "adaptive": [],
-      "runtime": "manual",
-      "guide": "../components/map.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#map",
-          "reviewedOn": "2026-10-09",
-          "documentedSupport": "MapLibre map with themed OpenFreeMap styles, markers with labels, tooltips, popups and dragging, routes, arcs, clusters, and zoom, compass, locate and full screen controls.",
-          "webAdaptation": "The page passes in the maplibre-gl module. Markers, popups and controls are authored HTML moved into MapLibre; routes, arcs and clusters are GeoJSON layers whose colors are read from theme tokens and redrawn when the theme changes.",
-          "limitations": [
-            "Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-09",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Name the map region, make interactive markers named buttons, return focus when a popup closes, keep tile attribution visible and give the same information in text."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "A store locator shows each store as a marker button that opens its hours, beside a list of the same stores with addresses. A contact page with one address writes it out and links to a map app.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-09",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_map.scss",
-            "sha256": "3bc9d7ba4dcf2c8d632701d4a6d127dd0e83662b994591260a58581bc2f3d5de"
-          },
-          {
-            "path": "src/ts/components/mapView.ts",
-            "sha256": "eb0804b2b9368c8af1c9e6d6827c8bde42ceb4e01bdd9b3666d13a867bc67b03"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified.",
-            "nextStep": "Use the map with a screen reader and on a touch device, try locate and full screen with real permissions, drag a marker with the keyboard, and check forced colors."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/map-browser.test.js",
-            "name": "chromium: map places markers and popups, runs controls, themes overlays and restores its markup",
-            "scope": "Markers placed with the default dot, the popup without a marker open at init, a marker button opening its popup with aria-expanded, Escape and a map click closing it with focus back on the marker, zoom out disabled at the minimum zoom, zoom in, the compass bearing and reset, route, arcs and clusters in the theme primary color, no count layer without glyphs, all redrawn in the dark primary after a theme change, removeOverlay, destroy restoring the markup and controls, and a location arriving after destroy being ignored. No spoken-output assertion."
-          },
-          {
-            "file": "tests/map-browser.test.js",
-            "name": "chromium: a map in a shadow root opens its marker popup",
-            "scope": "A marker button inside a shadow root finding its popup by id, then opening it with aria-expanded. No spoken-output assertion."
-          }
-        ]
       }
     },
     {
@@ -4828,98 +3382,6 @@
           }
         ],
         "inventorySha256": "b703cd69bfa91189880d70fcd2dbf16da579a423409a5b18ede813cc9369b0f1"
-      }
-    },
-    {
-      "slug": "command-palette",
-      "title": "Command palette",
-      "aliases": [
-        "command menu",
-        "cmd+k",
-        "ctrl+k",
-        "quick open",
-        "launcher",
-        "spotlight"
-      ],
-      "guideSource": {
-        "pageId": "command_palette",
-        "heading": "Command palette",
-        "headingLevel": 2,
-        "semantics": [
-          "command-palette"
-        ]
-      },
-      "jobs": [
-        "A searchable list of commands in a dialog, opened from anywhere with a shortcut."
-      ],
-      "useWhen": [
-        "Let people find and run any of many commands or destinations by typing, from anywhere in the app."
-      ],
-      "avoidWhen": [
-        "Searching content needs search; a few actions for one item need a menu."
-      ],
-      "alternatives": [
-        "search",
-        "menu",
-        "dialogs"
-      ],
-      "adaptive": [],
-      "runtime": "auto-init",
-      "guide": "../components/command-palette.md",
-      "materialGuidance": {
-        "status": "framework-extra",
-        "href": null,
-        "implementation": {
-          "source": "llm.md#command-palette",
-          "reviewedOn": "2026-10-06",
-          "documentedSupport": "A modal dialog with a filtering combobox and listbox, group headings, keywords, an empty message, a Ctrl or Command shortcut and native commandfor opening.",
-          "webAdaptation": "A native modal <dialog>; commands are links and buttons, and the component adds the combobox and listbox roles and the active option.",
-          "limitations": [
-            "The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified."
-          ]
-        },
-        "relationship": "none",
-        "upstreamReview": {
-          "source": "https://m3.material.io/components",
-          "reviewedOn": "2026-10-06",
-          "scope": "web-extension-inventory-reviewed",
-          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
-          "sections": [
-            "No standalone Material component"
-          ],
-          "sources": [],
-          "requirements": "Keep focus in the input while the active option moves, report it with aria-activedescendant, announce when nothing matches, return focus on close and let users turn the shortcut off."
-        },
-        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
-      },
-      "selectionExample": "Finding an order by customer name is search over content. A command palette is for running actions and opening places in the app.",
-      "capabilityReview": {
-        "reviewedOn": "2026-10-06",
-        "support": "implemented",
-        "sources": [
-          {
-            "path": "src/sass/components/_command-palette.scss",
-            "sha256": "6dddb9ebc73009d7b45e09430c3abb40e0775d05c2fc5c2c89ee6f34e90e5d37"
-          },
-          {
-            "path": "src/ts/components/commandPalette.ts",
-            "sha256": "8e3d5b555365df4ba28b4d915f6f717ac20be9d6d76390dd0a024b0816630725"
-          }
-        ],
-        "gaps": [
-          {
-            "kind": "verification",
-            "description": "The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified.",
-            "nextStep": "Run commands with a screen reader in each engine and confirm the active option and the empty message are announced; check that Ctrl+K does not clash with the screen reader or browser."
-          }
-        ],
-        "browserChecks": [
-          {
-            "file": "tests/command-palette-browser.test.js",
-            "name": "chromium: command palette opens on its shortcut, filters, moves with the arrows and runs a command",
-            "scope": "Combobox and listbox roles, Ctrl+K toggle, input focus, top placement, wrapping arrows, accent-insensitive and keyword filtering, hidden empty groups, the empty message, Enter and click running a command, closing with focus return, the commandfor opener, a fresh search on reopening, Escape, destroy and the keycap style. No spoken-output assertion."
-          }
-        ]
       }
     },
     {
@@ -7436,6 +5898,296 @@
       }
     },
     {
+      "slug": "menubar",
+      "title": "Menubar",
+      "aliases": [
+        "application menu",
+        "file edit view",
+        "menu bar"
+      ],
+      "guideSource": {
+        "pageId": "menubar",
+        "heading": "Menubar",
+        "headingLevel": 2,
+        "semantics": [
+          "menubar"
+        ]
+      },
+      "jobs": [
+        "An application's row of menus, such as File, Edit and View, with the menubar keyboard contract."
+      ],
+      "useWhen": [
+        "Give an application, such as an editor, a persistent row of command menus people move through with the arrow keys."
+      ],
+      "avoidWhen": [
+        "Site navigation needs a navbar or mega menu of links; a single overflow of actions needs one menu."
+      ],
+      "alternatives": [
+        "menu",
+        "toolbars",
+        "mega-menu"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/menubar.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#menubar",
+          "reviewedOn": "2026-10-15",
+          "documentedSupport": "A menubar of menu triggers with one tab stop, Left, Right, Home and End along the bar, Down to open, and Left and Right between open menus.",
+          "webAdaptation": "Each item opens an ordinary Menu; the Menubar component adds the menubar and menuitem roles and the roving tab stop at runtime.",
+          "limitations": [
+            "Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-15",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Name the menubar, give it one tab stop, move between items with Left and Right, open a menu with Down, Enter or Space, move between open menus with Left and Right, and close with Escape back to the bar."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "File, Edit and View in a document editor are a menubar. One \"More\" button with five actions is a single menu.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-15",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/ts/components/menubar.ts",
+            "sha256": "73c7307ad8cf681f85fd4834d90a862e3a941513861529ec25a0663cf81c6e64"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified.",
+            "nextStep": "Operate the menubar with a screen reader in each engine and confirm menu and item announcements; check typeahead across the bar."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/menubar-browser.test.js",
+            "name": "chromium: a menubar has one tab stop and moves between its menus with the arrow keys",
+            "scope": "Menubar and menuitem roles, one tab stop that follows focus, Left, Right, Home and End with wrapping, Down opening on the first item, Right and Left between open menus, flyout rows keeping Right, Escape back to the bar and RTL. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "scrollspy",
+      "title": "Scrollspy",
+      "aliases": [
+        "active table of contents"
+      ],
+      "guideSource": {
+        "pageId": "scrollspy",
+        "heading": "Scrollspy",
+        "headingLevel": 2,
+        "semantics": [
+          "scrollspy"
+        ]
+      },
+      "jobs": [
+        "Highlight the table of contents as the page scrolls."
+      ],
+      "useWhen": [
+        "Track visible sections in a table of contents."
+      ],
+      "avoidWhen": [
+        "Separate views need navigation or tabs."
+      ],
+      "alternatives": [
+        "tabs",
+        "navigation-bar"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/scrollspy.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "implementation": {
+          "source": "llm.md#scrollspy",
+          "reviewedOn": "2026-09-17",
+          "documentedSupport": "Section tracking with per-section offsets and independent tables of contents grouped by getActiveElement callback identity.",
+          "webAdaptation": "Web document navigation helper.",
+          "limitations": [
+            "Independent TOCs must reuse one getActiveElement function per group. Screen-reader announcements, native zoom and physical-device checks remain pending."
+          ]
+        },
+        "relationship": "none",
+        "href": null,
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-13",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Use named in-page navigation, real fragment links, stable heading IDs and current-section state. Account for sticky offsets and reduced-motion preferences."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A settings screen with mutually exclusive panels needs tabs. Scrollspy only tracks sections already present in the scrolling document.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-17",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_scrollspy.scss",
+            "sha256": "98b9bd486ee144f96b047ad98708c85fd7c8f06ed19d06d24199553a52ab5324"
+          },
+          {
+            "path": "src/sass/components/_table_of_contents.scss",
+            "sha256": "ebf956a3836c8a68d55a44f83f5abf8ecaa603e3f7435421f07e5819cd5b90c7"
+          },
+          {
+            "path": "src/ts/components/scrollspy.ts",
+            "sha256": "dd7d9babc18578824804f6c8c6b622c307712a7a93e6a40f4cbd6727f4814fd2"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Offsets, independent TOCs, per-instance active classes, fallback, teardown and native anchors have rendered coverage. Spoken current-link state, native zoom, actual contrast themes and physical devices remain unverified.",
+            "nextStep": "Complete the ScrollSpy fixtures in the accessibility manual-review checklist with actual browsers, assistive technology and devices."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: remaining web navigation, badges and list controls expose their meaning",
+            "scope": "Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: ScrollSpy isolation: offsets",
+            "scope": "Per-section observer offsets and removal of the previous section's active class."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: ScrollSpy isolation: groups",
+            "scope": "Independent callback groups retain separate current links and fallback state during scrolling and destruction."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: ScrollSpy isolation: teardown",
+            "scope": "Repeated destruction and remount restore authored offset value and priority and update surviving current links."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: ScrollSpy isolation: anchors",
+            "scope": "Native keyboard fragment navigation and actual scrolling in LTR/RTL with ordinary and reduced motion."
+          }
+        ],
+        "inventorySha256": "c04a890acc518f0e6c2c339b320e0eb1e90e734d0d897c367bd6c15d655858fa"
+      }
+    },
+    {
+      "slug": "back-to-top",
+      "title": "Back to top",
+      "aliases": [
+        "back to top",
+        "scroll to top",
+        "return to top",
+        "go to top"
+      ],
+      "guideSource": {
+        "pageId": "back-to-top",
+        "heading": "Back to top",
+        "headingLevel": 2,
+        "semantics": [
+          "back-to-top"
+        ]
+      },
+      "jobs": [
+        "A link that appears once a long page has scrolled down, and returns to the top with focus on the main content."
+      ],
+      "useWhen": [
+        "Give readers of a long article, docs page or feed a way back to the top and its navigation without scrolling the whole way."
+      ],
+      "avoidWhen": [
+        "Pages shorter than a few screens, or content that scrolls inside a pane or dialog rather than the window."
+      ],
+      "alternatives": [
+        "fab",
+        "scrollspy"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/back-to-top.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#back-to-top",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "An in-page link styled with the FAB classes, hidden and inert until the window scrolls past a threshold option (one viewport height by default), a focused link kept until focus leaves, a smooth scroll to the top that is instant under reduced motion, focus moved to the href target with a temporary tabindex, the body as the fallback target, modified and already prevented clicks left to the browser, a threshold that is not a CSS length replaced by the default with a warning, markup options, offset and stacking tokens, and a link that still jumps to its target without the script.",
+          "webAdaptation": "An IntersectionObserver on an empty element at the threshold instead of a scroll listener. The hidden state is the inert attribute plus visibility: hidden, with a fade in and an immediate hide, so a script that starts after the first paint does not show the link fading out, and a page without the script never hides the link.",
+          "limitations": [
+            "The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the control out of reach while it is hidden, move focus to the top of the content along with the scroll, honor reduced motion, and keep the link working without the script."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A long changelog page takes a back-to-top link at the bottom corner; a short settings page needs none.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_back-to-top.scss",
+            "sha256": "b665bda0c34dab312b363689d108ea8517d39ba89630d29330c0288d294919e0"
+          },
+          {
+            "path": "src/ts/components/backToTop.ts",
+            "sha256": "23ea9b49c6250aefa363eb85feb7703cab225aedc143e2d93445e595f609328f"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched.",
+            "nextStep": "Activate the link with VoiceOver and NVDA and confirm focus lands on the main content; check it in forced colors."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/back-to-top-browser.test.js",
+            "name": "chromium: the link returns to the top and focuses its target, by click and by Enter",
+            "scope": "Scroll past the threshold, activate by click and by Enter, and find the page at the top, focus on the target, the next Tab on the first control and no tabindex left behind."
+          },
+          {
+            "file": "tests/back-to-top-browser.test.js",
+            "name": "chromium: the link is out of reach above the threshold",
+            "scope": "Above the threshold, before and after scrolling past it, the link is hidden, skipped by Tab, missed by hit testing and absent from the ARIA snapshot. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "aura",
       "title": "Aura",
       "aliases": [
@@ -7603,6 +6355,394 @@
             "file": "tests/message-browser.test.js",
             "name": "chromium: message layout anchors the avatar, follows its side and joins grouped corners",
             "scope": "Avatar level with the bubble bottom and above the footer, start/end edges in LTR and RTL, no gap without an avatar, grouped corner radii and no message landmarks. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "message-scroller",
+      "title": "Message scroller",
+      "aliases": [
+        "chat scroller",
+        "conversation scroller",
+        "chat transcript",
+        "stick to bottom",
+        "scroll to latest"
+      ],
+      "guideSource": {
+        "pageId": "message_scroller",
+        "heading": "Message scroller",
+        "headingLevel": 2,
+        "semantics": [
+          "message-scroller"
+        ]
+      },
+      "jobs": [
+        "A chat scroll container that anchors turns, follows streamed replies and keeps its place as history loads."
+      ],
+      "useWhen": [
+        "Scroll a conversation that receives messages or streamed replies, or open a saved transcript at its last turn."
+      ],
+      "avoidWhen": [
+        "A short static exchange needs no scroller; a feed of unrelated items needs a list or the scroll-area utility."
+      ],
+      "alternatives": [
+        "message",
+        "lists"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/message-scroller.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#message-scroller",
+          "reviewedOn": "2026-10-08",
+          "documentedSupport": "Following streamed output, release on scrolling up, a scroll-to-latest button, turn anchors with a peek of the previous message, prepend preservation, opening at the end, start or last turn, and jumping to a message by id.",
+          "webAdaptation": "A native scroll container; the component sets scroll position, a spacer and the button's inert state. The page owns role=\"log\" and aria-busy.",
+          "limitations": [
+            "Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role=\"log\" viewport, touch and scrollbar dragging, and spoken output remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-08",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the reader's place unless they are at the live edge, let them stop following at any time, name the focusable viewport and announce appended messages through a log region."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A support chat that streams replies needs a message scroller so the reply stays in view; a fixed list of three FAQ answers does not.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-08",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_message-scroller.scss",
+            "sha256": "5b0f79f866d59b6d54966cde45e95fbc3370cec79685ed43fe527cb7ea9a71bb"
+          },
+          {
+            "path": "src/ts/components/messageScroller.ts",
+            "sha256": "857aeed955c93192e5cf0e003ca9f0c18900284083e97d4547da04fbc936866e"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role=\"log\" viewport, touch and scrollbar dragging, and spoken output remain unverified.",
+            "nextStep": "Stream replies into a role=\"log\" viewport with a screen reader in each engine, and check touch scrolling and scrollbar dragging on real devices."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/message-scroller-browser.test.js",
+            "name": "chromium: message scroller follows output, keeps its place on prepend and anchors new turns",
+            "scope": "Opening at the end, following streamed text, release on a wheel scroll up, the inert button and resuming from it, following kept through a click on a message, scrollToMessage with a peek and with a missing id, prepend preservation, an appended anchor at the peek with a spacer that clears as the reply grows, and destroy. No spoken-output assertion."
+          },
+          {
+            "file": "tests/message-scroller-browser.test.js",
+            "name": "chromium: message scroller opens saved transcripts at the requested position",
+            "scope": "last-anchor on a long last turn, last-anchor falling back to the end, and start."
+          },
+          {
+            "file": "tests/message-scroller-browser.test.js",
+            "name": "chromium: message scroller jumps to a message inside a shadow root",
+            "scope": "scrollToMessage called right after init finds a message in a shadow root and scrolls it one peek below the top; pressing the button from the keyboard there moves focus to the viewport as the button goes inert."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "pull-to-refresh",
+      "title": "Pull-to-refresh",
+      "aliases": [
+        "pull to refresh",
+        "swipe to refresh",
+        "pull down to refresh",
+        "refresh gesture"
+      ],
+      "guideSource": {
+        "pageId": "pull-to-refresh",
+        "heading": "Pull-to-refresh",
+        "headingLevel": 2,
+        "semantics": [
+          "pull-to-refresh"
+        ]
+      },
+      "jobs": [
+        "Refreshes a list or page when a person pulls down at its top, or presses its refresh button."
+      ],
+      "useWhen": [
+        "Let people fetch the latest items of a feed, inbox or list on a touch screen, with a button that does the same for everyone else."
+      ],
+      "avoidWhen": [
+        "Content that updates itself, or a page where a pull would compete with another vertical drag; use a refresh button alone."
+      ],
+      "alternatives": [
+        "message-scroller",
+        "lists"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/pull-to-refresh.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#pull-to-refresh",
+          "reviewedOn": "2026-10-24",
+          "documentedSupport": "A touch pull from a scroll position of 0 past a threshold, a refresh button and refresh() method that start the same refresh, an expressive:refresh event and onRefresh callback whose detail takes waitUntil(), complete(), aria-busy while refreshing, a status region that announces the start and the finish with i18n strings, contained overscroll on the container and the page, and containers that scroll themselves or pull the page.",
+          "webAdaptation": "Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The author's loading indicator carries the role and name; the script sets a class, two custom properties and aria-busy, and adds a visually hidden role=\"status\" region because the indicator is hidden once the refresh ends.",
+          "limitations": [
+            "The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified. There is no pull from the bottom and no nesting."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-24",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Offer a control that refreshes without the gesture, keep the native browser pull from running as well, report the busy state, and do not take scrolling away from a drag that is not a pull."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "An inbox that fetches new mail on demand takes pull-to-refresh with a Refresh button; a live chat that receives messages on its own needs a message scroller instead.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-24",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_pull-to-refresh.scss",
+            "sha256": "207ebc43febabb0c565bd6100c9f360bee1a4d26b4e7be5be82b8e266208c875"
+          },
+          {
+            "path": "src/ts/components/pullToRefresh.ts",
+            "sha256": "861006bffd5074cca9a5f34f0b75ac01d2490b77e35d6a63c12718846807ebba"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified.",
+            "nextStep": "Pull on Chrome and Firefox for Android and Safari on iOS and confirm the browser's own refresh does not run; read a refresh with a screen reader."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/pull-to-refresh-browser.test.js",
+            "name": "chromium: a pull past the threshold refreshes once and the indicator stays until the page reports the finish",
+            "scope": "Real touch input. Contained overscroll, one event per pull past the threshold, the indicator and aria-busy kept until a waitUntil() promise settles or complete() runs. No spoken-output assertion."
+          },
+          {
+            "file": "tests/pull-to-refresh-browser.test.js",
+            "name": "chromium: the refresh button, by click, Enter or Space, and refresh() each start a refresh",
+            "scope": "The refresh button by click, Enter and Space, and refresh(), each firing one event and showing the indicator."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "swipe-actions",
+      "title": "Swipe actions",
+      "aliases": [
+        "swipe to reveal",
+        "swipeable list",
+        "swipe row actions",
+        "list item swipe"
+      ],
+      "guideSource": {
+        "pageId": "swipe-actions",
+        "heading": "Swipe actions",
+        "headingLevel": 2,
+        "semantics": [
+          "swipe-actions"
+        ]
+      },
+      "jobs": [
+        "Reveals a list row's actions when a person swipes it sideways, or presses its actions button."
+      ],
+      "useWhen": [
+        "Give each row of an inbox, task or file list a few quick actions, such as archive or delete, without a toolbar on every row."
+      ],
+      "avoidWhen": [
+        "Rows whose actions people need all the time, or a single primary action; show the buttons in the row or use a menu."
+      ],
+      "alternatives": [
+        "lists",
+        "menu"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/swipe-actions.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#swipe-actions",
+          "reviewedOn": "2026-10-24",
+          "documentedSupport": "A touch swipe toward a row's inline start that reveals its .swipe-actions group, opening past half the group's width or on a flick and closing short of it, a [data-swipe-toggle] button with aria-expanded, focus on an action opening its row, Escape, an outside tap or an action closing it, one open row per list, an expressive:swipetoggle event and onToggle callback with { row, open }, open(row) and close(), right-to-left pages and reduced motion.",
+          "webAdaptation": "Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The row slides by a translate on one custom property, and the actions wait past its inline end in a list clipped on the inline axis, so focus on a closed row's action scrolls nothing. The author names the toggle and the actions; the script keeps aria-expanded.",
+          "limitations": [
+            "Swipe reveal, the slide limit, short, vertical, mouse, two-finger and cancelled drags, the toggle, focus on an action, Escape, an outside tap, closing after an action, one open row, the event and onToggle, right-to-left pages, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, flick velocity, pen input, spoken output and forced colors remain unverified. Actions only on the inline-end side, and no full swipe that runs an action."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-24",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Offer a single-pointer and keyboard path to every action a swipe reveals (WCAG 2.5.1), keep the actions named and reachable while the row is closed, run nothing on the gesture alone, and do not take scrolling away from a drag that is not a swipe."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "An inbox where each message can be archived or deleted takes swipe actions with an actions button per row; a row with one obvious action shows that button in the row instead.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-24",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_swipe-actions.scss",
+            "sha256": "2e096de408f17827ff3276bcef2ba88df1bc52109454b0efb357f4bd7a39d49b"
+          },
+          {
+            "path": "src/ts/components/swipeActions.ts",
+            "sha256": "1747614c08cfb007a7c82c04eb7f5b1ec0bf06947f64cc588a1899b044584858"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Swipe reveal, the slide limit, short, vertical, mouse, two-finger and cancelled drags, the toggle, focus on an action, Escape, an outside tap, closing after an action, one open row, the event and onToggle, right-to-left pages, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, flick velocity, pen input, spoken output and forced colors remain unverified.",
+            "nextStep": "Swipe on Chrome for Android and Safari on iOS and confirm the browser's back gesture and vertical scrolling still work; read a row's actions with a screen reader."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/swipe-actions-browser.test.js",
+            "name": "chromium: a swipe reveals a row's actions, and a keyboard user reaches the same actions",
+            "scope": "Real touch input. A swipe reveals the actions without running one, and Tab, Enter and the toggle reach and run an action from the keyboard."
+          },
+          {
+            "file": "tests/swipe-actions-browser.test.js",
+            "name": "chromium: the toggle opens and closes a row, and a tap outside, Escape or an action closes it",
+            "scope": "The toggle and aria-expanded, focus on an action opening its row, an outside tap, Escape with focus returned to the toggle, closing after an action, and an action that removes its row."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "show-more",
+      "title": "Show more",
+      "aliases": [
+        "read more",
+        "expand text",
+        "truncated text",
+        "text collapse"
+      ],
+      "guideSource": {
+        "pageId": "show_more",
+        "heading": "Show more",
+        "headingLevel": 2,
+        "semantics": [
+          "show-more"
+        ]
+      },
+      "jobs": [
+        "Clamped text with a button that shows the rest, and hides itself when the text already fits."
+      ],
+      "useWhen": [
+        "A description, review or message that usually runs past a few lines, in a card or list where the full text would push the rest of the layout down."
+      ],
+      "avoidWhen": [
+        "Sections with headings or controls a person needs to find; use an accordion, whose panels the browser's find-in-page can open.",
+        "Text that is short or always matters in full; show all of it."
+      ],
+      "alternatives": [
+        "accordion",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/show-more.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#show-more",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "A .show-more holding text with a line-clamp-1, -2 or -3 class and a <button type=\"button\">; the button sets aria-expanded and aria-controls, shows the full text, reads \"Show less\" while it is open (i18n.showLess or data-show-less), and hides while the clamped text fits, checking again on resize, after web fonts load and on blur.",
+          "webAdaptation": "The component unclamps with inline -webkit-line-clamp and line-clamp, because the utilities layer and prefixed clamp classes beat any component rule. A ResizeObserver on the text and document.fonts.ready run the fit check, scrollHeight against clientHeight with 1px for Firefox's rounding.",
+          "limitations": [
+            "Toggling, the fit check across widths, fractional line heights and window-size prefixes, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output is unverified. Find-in-page does not open clamped text, a font that starts loading after document.fonts.ready has settled is not caught until the next resize, and an icon-only button keeps its aria-label while open."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the control a native button named by visible text, report its expanded state, point it at the text it controls, and hide it from sight and the tab order when there is nothing more to show."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A product card clamps its description to three lines with a Show more text button; a terms-of-service page with headed sections uses an accordion instead.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/ts/components/showMore.ts",
+            "sha256": "d6a961f6810f004ac7d5cdf1575717a2cdbd20cb4ca6d4e08e2ba413f00713d3"
+          },
+          {
+            "path": "src/sass/components/_show-more.scss",
+            "sha256": "430401c741e9628d553e836fb98078fd39a1f64e42f2fa49264a34427638e650"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Toggling, the fit check, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output with VoiceOver and NVDA is unverified.",
+            "nextStep": "Activate the button with VoiceOver and NVDA and check that the expanded state and label are announced."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/show-more-browser.test.js",
+            "name": "chromium: the button shows the full text and collapses it again",
+            "scope": "A click and Enter that unclamp and clamp the text, with aria-expanded and aria-controls."
+          },
+          {
+            "file": "tests/show-more-browser.test.js",
+            "name": "chromium: the button hides while the clamped text fits",
+            "scope": "Text that fits, a fractional line height, a container widened and narrowed, a window-size prefix, Tab order, and a focused button kept through a resize and until blur."
+          },
+          {
+            "file": "tests/show-more-browser.test.js",
+            "name": "chromium: a web font that swaps in hides the button once its text fits",
+            "scope": "A held-back web font that makes cut text fit, and an instance destroyed before the font loads."
           }
         ]
       }
@@ -9801,6 +8941,278 @@
       }
     },
     {
+      "slug": "hover-card",
+      "title": "Hover card",
+      "aliases": [
+        "hovercard",
+        "link preview",
+        "preview card",
+        "profile card"
+      ],
+      "guideSource": {
+        "pageId": "hover_card",
+        "heading": "Hover card",
+        "headingLevel": 2,
+        "semantics": [
+          "hover-card"
+        ]
+      },
+      "jobs": [
+        "Shows a card of preview content after a delay when a link is hovered or gets keyboard focus."
+      ],
+      "useWhen": [
+        "Preview where a link goes, such as a person, repository or article, for people who hover or tab to it, when the linked page holds the same content."
+      ],
+      "avoidWhen": [
+        "A short label for a control needs a tooltip; content touch users must reach, or anything to act on, belongs in the page, a popover opened by a button or a dialog."
+      ],
+      "alternatives": [
+        "tooltips",
+        "popover"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/hover-card.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#hover-card",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "A link with hover-card-trigger whose aria-details names a .popover with popover=\"hint\"; the card shows against the link after enterDelay of hover or keyboard focus, stays while the pointer or focus is on the link or card, hides after exitDelay or at once on Escape with focus back on the link, and a tap or click follows the link.",
+          "webAdaptation": "Script timers decide when the card shows, and showPopover({ source }) makes the link its anchor and invoker, so the browser places it, puts it next in the Tab order and light-dismisses it. Interest invokers (interestfor) exist only in Chromium, so they are not used.",
+          "limitations": [
+            "Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified. Touch shows no card, and the card's content is static markup."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Show the card on hover and keyboard focus after a delay, keep it open while the pointer or focus is on the link or the card, hide it on Escape with focus back on the link, leave the link's click alone and relate the card to the link with aria-details."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "An author name in an article previews the author's profile in a hover card; an icon button's label is a tooltip, and a note people open on press is a popover.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/ts/components/hoverCard.ts",
+            "sha256": "e2542c0b7e8c4490d55e114e057bfd333f05d59eb5c7f9f3a01eaab1fe2db006"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified.",
+            "nextStep": "Tab to a hover card link with VoiceOver and NVDA and confirm the details relationship is announced and the card is reachable."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/hover-card-browser.test.js",
+            "name": "chromium: hovering the link shows the card after the delay, and it stays while the pointer is on the card",
+            "scope": "Nothing before enterDelay, the card against the link's bottom edge plus the popover gap, staying open with the pointer on the card past exitDelay, and hiding once the pointer has left both."
+          },
+          {
+            "file": "tests/hover-card-browser.test.js",
+            "name": "chromium: keyboard focus shows the card, Tab moves into it, and Escape hides it with focus back on the link",
+            "scope": "Tab to the link shows the card after enterDelay with focus kept on the link, Tab into the card keeps it open, and Escape hides it with focus back on the link."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "tour",
+      "title": "Tour",
+      "aliases": [
+        "product tour",
+        "onboarding",
+        "coach mark",
+        "walkthrough"
+      ],
+      "guideSource": {
+        "pageId": "tour",
+        "heading": "Tour",
+        "headingLevel": 2,
+        "semantics": [
+          "tour"
+        ]
+      },
+      "jobs": [
+        "A card that walks people through an interface one step at a time, beside each element it explains."
+      ],
+      "useWhen": [
+        "Introduce new or changed parts of an interface in a short sequence the user starts and can leave at any time."
+      ],
+      "avoidWhen": [
+        "One hint beside one control needs a popover or tooltip; content people must read needs to stay on the page."
+      ],
+      "alternatives": [
+        "popover",
+        "tooltips",
+        "dialogs"
+      ],
+      "adaptive": [],
+      "runtime": "shared-runtime",
+      "guide": "../components/tour.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#tour",
+          "reviewedOn": "2026-10-15",
+          "documentedSupport": "One step at a time beside its target, a highlight ring, Back, Next and Done, progress text, skipped missing targets, Escape and focus return.",
+          "webAdaptation": "A manual native popover placed with CSS anchor positioning; the Tour behavior moves the anchor and focus.",
+          "limitations": [
+            "Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-15",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Let the user start, skip and end the tour, name the card by the step heading, move focus to it and back afterwards, and skip steps whose target is not shown."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Three new features after an update are a tour. One unexplained icon is a tooltip.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-15",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/ts/behaviors/tour.ts",
+            "sha256": "f7aa25d13a8b392871cbe6d601366418fb6b975b6b540a77f220fc143ec79278"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified.",
+            "nextStep": "Take a tour with a screen reader in each engine and confirm each step is announced when it opens."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/tour-browser.test.js",
+            "name": "chromium: a tour steps through its targets beside each one and returns focus",
+            "scope": "Opening from a start button, the card named by the step heading, progress text, skipped missing targets, button visibility per step, placement below each target, releasing the previous target, Escape, focus return and cleanup after hidePopover. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "loading-overlay",
+      "title": "Loading overlay",
+      "aliases": [
+        "busy overlay",
+        "loading mask",
+        "block ui",
+        "busy region",
+        "spin overlay"
+      ],
+      "guideSource": {
+        "pageId": "loading_overlay",
+        "heading": "Loading overlay",
+        "headingLevel": 2,
+        "semantics": [
+          "loading-overlay"
+        ]
+      },
+      "jobs": [
+        "Covers part of a page while it loads, so nothing inside takes input until the page clears it."
+      ],
+      "useWhen": [
+        "Hold a form, card or panel still while it saves or reloads, so nobody edits or presses what is about to change."
+      ],
+      "avoidWhen": [
+        "Content that stays usable while it updates, or a wait for the whole page; show a loading indicator or skeleton without blocking input."
+      ],
+      "alternatives": [
+        "loading-indicator",
+        "skeleton",
+        "progress"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/loading-overlay.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#loading-overlay",
+          "reviewedOn": "2026-10-25",
+          "documentedSupport": "A region the page marks aria-busy=\"true\" shows a surface scrim and its loading indicator and is made inert until the attribute goes, with focus taken from the control inside it, keeps an inert state the author set, announces the start and the finish in a status region after it with i18n strings, returns focus to the control that had it, and stops following the attribute on destroy().",
+          "webAdaptation": "The native inert attribute blocks pointer and keyboard input instead of script handlers. The page owns aria-busy, and the script follows it with a MutationObserver. Inert content leaves the accessibility tree, so the script adds a visually hidden role=\"status\" region outside the region.",
+          "limitations": [
+            "Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified. The scrim does not follow the content of a region that scrolls itself; the docs say to wrap the scroller."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-25",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Block input to the busy region only, report the busy state and its end to assistive technology, keep focus from being lost for good, and keep the content visibly unavailable in forced colors."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A settings form that saves to a server takes a loading overlay while the request runs; a dashboard tile that refreshes in place while staying readable needs a loading indicator alone.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-25",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_loading-overlay.scss",
+            "sha256": "8590fc46360c644750b16d3fad2ba98d12c2b2240666138c0b3895e18acc25ac"
+          },
+          {
+            "path": "src/ts/components/loadingOverlay.ts",
+            "sha256": "5544177df22e5fcc5aa30f2764414498b48620387f8df7cbc2de8170ed94240d"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified.",
+            "nextStep": "Mark a region busy and clear it with VoiceOver and NVDA running, and view it under a Windows high-contrast theme."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/loading-overlay-browser.test.js",
+            "name": "chromium: a busy region takes no click or Tab, and clearing it gives both back",
+            "scope": "A real mouse click and Tab while aria-busy is \"true\", and again after it is set to \"false\" and after it is removed."
+          },
+          {
+            "file": "tests/loading-overlay-browser.test.js",
+            "name": "chromium: focus goes back to where it was when the region clears",
+            "scope": "Focus dropped by inert and returned on clear, a focus move made while busy kept, and a removed control not refocused. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
       "slug": "marquee",
       "title": "Marquee",
       "aliases": [
@@ -9883,6 +9295,594 @@
             "file": "tests/marquee-browser.test.js",
             "name": "chromium: marquee loops its two groups, pauses, follows direction and stops under reduced motion",
             "scope": "A short group filling the strip, the copy one gap after it, the half-cycle position horizontally, in RTL and vertically, reverse, pausing on hover, focus and .paused, one link per item in the accessibility tree and the reduced-motion stop with the copy hidden. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "image-compare",
+      "title": "Image compare",
+      "aliases": [
+        "before and after",
+        "image slider",
+        "comparison slider",
+        "diff"
+      ],
+      "guideSource": {
+        "pageId": "image_compare",
+        "heading": "Image compare",
+        "headingLevel": 2,
+        "semantics": [
+          "image-compare"
+        ]
+      },
+      "jobs": [
+        "Two images of the same scene with a divider that reveals one over the other."
+      ],
+      "useWhen": [
+        "Let people compare two images of the same scene, such as before and after an edit."
+      ],
+      "avoidWhen": [
+        "Several unrelated images need a carousel; one image with detail needs a lightbox."
+      ],
+      "alternatives": [
+        "carousel",
+        "lightbox",
+        "slider"
+      ],
+      "adaptive": [],
+      "runtime": "shared-runtime",
+      "guide": "../components/image-compare.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#image-compare",
+          "reviewedOn": "2026-10-15",
+          "documentedSupport": "Two stacked images, a divider and handle driven by a native range input, keyboard and pointer control, RTL and a focus ring.",
+          "webAdaptation": "A native range input covers the images invisibly; the ImageCompare behavior writes its value to the divider position.",
+          "limitations": [
+            "The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-15",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Give both images alt text that says which is which, name the range, and keep it operable by keyboard and pointer."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A photo before and after retouching is an image compare. Five product photos are a carousel.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-15",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_image-compare.scss",
+            "sha256": "1dea70f8b47092f064348912efedfa0b29a52be680a7d402e4d84f883d669f8e"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified.",
+            "nextStep": "Move the divider with a screen reader in each engine and confirm the value is announced."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/image-compare-browser.test.js",
+            "name": "chromium: image compare reveals the second image up to the range's value",
+            "scope": "The initial value applied on load, each image on its side of the divider, arrow keys moving the divider, the handle focus ring, RTL, named native sliders and Slider leaving the range alone. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "confetti",
+      "title": "Confetti",
+      "aliases": [
+        "celebration",
+        "confetti cannon",
+        "fireworks",
+        "party popper",
+        "success animation"
+      ],
+      "guideSource": {
+        "pageId": "confetti",
+        "heading": "Confetti",
+        "headingLevel": 2,
+        "semantics": [
+          "confetti"
+        ]
+      },
+      "jobs": [
+        "Bursts of theme-colored confetti for a moment worth celebrating."
+      ],
+      "useWhen": [
+        "Mark a rare moment of success the person worked toward, such as a finished purchase, a completed goal or a first published post."
+      ],
+      "avoidWhen": [
+        "Routine saves, frequent actions and errors; repeated bursts lose their meaning and distract. Confetti never replaces a text confirmation such as a snackbar."
+      ],
+      "alternatives": [
+        "snackbar",
+        "empty-state",
+        "aura"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/confetti.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#confetti",
+          "reviewedOn": "2026-10-09",
+          "documentedSupport": "Bursts from a button's center over the page, inside an authored canvas, or from script, with count, angle, spread, speed, decay, gravity, drift, lifetime, origin, colors, square, circle and star shapes, and size options, theme colors by default and a promise that resolves when the burst ends.",
+          "webAdaptation": "A canvas drawn with requestAnimationFrame. The page canvas is an aria-hidden manual popover with pointer events off, so it draws above modal dialogs without blocking clicks. Reduced motion draws nothing.",
+          "limitations": [
+            "The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-09",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the effect decorative and out of the accessibility tree, never block input, state the outcome in text and draw nothing when reduced motion is requested."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A checkout's \"Order placed\" screen can burst confetti once beside its confirmation text. Saving a draft shows a snackbar and no confetti.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-09",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_confetti.scss",
+            "sha256": "b75386e0536ca6b7a83bd890f819a61e258ed022cd162cc2550c470a0e631e68"
+          },
+          {
+            "path": "src/ts/components/confetti.ts",
+            "sha256": "3eeacd4eabd4ffe48586e85b874a394f2bc96fe35133678e1a06f14ac751ebf2"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified.",
+            "nextStep": "Watch a burst on a low-end phone and in forced colors, and confirm a screen reader announces nothing for it."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/confetti-browser.test.js",
+            "name": "chromium: confetti bursts from its trigger in theme colors, on its own canvas, above a modal dialog and not under reduced motion",
+            "scope": "A canvas bursting at its center on init, manualStart waiting for fire(), a button bursting from its center in the theme primary color, the page canvas covering the viewport in the top layer with aria-hidden and no pointer events, fire() resolving after it is removed, a burst over an open modal dialog, destroy and the reduced-motion skip. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "particles",
+      "title": "Particles",
+      "aliases": [
+        "particle background",
+        "floating dots",
+        "starfield",
+        "interactive background"
+      ],
+      "guideSource": {
+        "pageId": "particles",
+        "heading": "Particles",
+        "headingLevel": 2,
+        "semantics": [
+          "particles"
+        ]
+      },
+      "jobs": [
+        "Drifting dots behind a section that lean toward the pointer."
+      ],
+      "useWhen": [
+        "Give a hero, landing section or sign-in panel a sense of depth and movement behind short, high-contrast content."
+      ],
+      "avoidWhen": [
+        "Behind dense text, forms or data, and on pages that already animate; the motion competes with reading. Never carry meaning in the dots."
+      ],
+      "alternatives": [
+        "aura",
+        "confetti",
+        "marquee"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/particles.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#particles",
+          "reviewedOn": "2026-10-09",
+          "documentedSupport": "A canvas that covers its positioned ancestor with drifting dots that fade near the edges and lean toward the pointer, with quantity, staticity, ease, size, color and drift options and the theme on-surface color by default.",
+          "webAdaptation": "A canvas drawn with requestAnimationFrame, aria-hidden with pointer events off. The dot color comes from the canvas's CSS color, read each frame so theme changes apply. Reduced motion draws the dots once without motion.",
+          "limitations": [
+            "The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-09",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep the effect decorative and out of the accessibility tree, never block input, keep text over it readable and stop motion when reduced motion is requested."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A product landing page can put particles behind its headline and sign-up button. Its pricing table and checkout form sit on a plain surface.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-09",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_particles.scss",
+            "sha256": "fd6cdb85de88b412355c522aeceaadfac33baa1a005a0b74e978fdea9560ba6a"
+          },
+          {
+            "path": "src/ts/components/particles.ts",
+            "sha256": "7a22a1f580deb76e59bdeef75e8cfe432ee00743106a3348f5ad3c7f05e1f43b"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified.",
+            "nextStep": "Watch a full-width hero of particles on a low-end phone and in forced colors, and check text contrast over the densest area."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/particles-browser.test.js",
+            "name": "chromium: particles fill their box in the theme color, follow the pointer, drift, refit on resize and stay still under reduced motion",
+            "scope": "The canvas covering its positioned ancestor, a dot fading in where it was placed in the theme on-surface color, following the pointer inside the canvas and holding when it leaves, destroy clearing the canvas, vx drift, the color option, the pixel buffer after a resize and still dots under reduced motion. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "lightbox",
+      "title": "Lightbox",
+      "aliases": [
+        "media",
+        "image viewer"
+      ],
+      "guideSource": {
+        "pageId": "media",
+        "heading": "Lightbox",
+        "headingLevel": 3,
+        "semantics": [
+          "lightbox"
+        ]
+      },
+      "jobs": [
+        "Lightbox for enlarge-on-click images."
+      ],
+      "useWhen": [
+        "Enlarge an image on activation."
+      ],
+      "avoidWhen": [
+        "Tasks need dialogs; browsing collections needs carousel."
+      ],
+      "alternatives": [
+        "carousel",
+        "dialogs"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/lightbox.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "implementation": {
+          "source": "llm.md#lightbox",
+          "reviewedOn": "2026-09-13",
+          "documentedSupport": "Enlarge-on-activation image and dismissal.",
+          "webAdaptation": "ExpressiveCSS media behavior, not an upstream component contract.",
+          "limitations": [
+            "Enlargement and teardown are checked; modal containment, reduced motion and destruction during closing remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "href": null,
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-09-13",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Provide a named keyboard-operable enlargement trigger, Escape and an accessible close route, logical focus and reduced motion. Image enlargement is not automatically a modal gallery."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A payment confirmation needs a dialog, even if its design contains an image. Lightbox is for inspecting enlarged media.",
+      "capabilityReview": {
+        "reviewedOn": "2026-09-18",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_lightbox.scss",
+            "sha256": "df62c6c3d359089fcb5f7fe2500464afb8f6cb7c57fbc3f7a04a0cf9fc452599"
+          },
+          {
+            "path": "src/ts/components/lightbox.ts",
+            "sha256": "1e334f6efb12867bc2d75793f042d3b0df0488bcc8cab97236992387c696746e"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Native zoom, screen-reader announcements, actual Windows contrast themes and physical-device interaction remain unverified.",
+            "nextStep": "Complete the Lightbox manual-review fixture. Treat this as image enlargement, not a verified modal gallery."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: remaining lightbox supports Space and preserves its image on teardown",
+            "scope": "Space opens image enlargement; Escape closes; destroy preserves original image/style."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: remaining lightbox teardown cancels pending work and preserves native button focus",
+            "scope": "Native button Space opens without duplicate image Tab stop; destroy cancels opening callbacks and retains image. Subsequent Tab order only."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: Lightbox transition reliability: interrupt",
+            "scope": "Repeated requests and immediate closing cancel stale completion callbacks and restore image styles and overflow."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: Lightbox transition reliability: reopen",
+            "scope": "Reopening during closing preserves the current overlay, caption, dimensions and callback sequence."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: Lightbox transition reliability: motion",
+            "scope": "Mounted reduced-motion changes finish opening and closing without waiting for configured durations."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: Lightbox transition reliability: focus",
+            "scope": "Destroying an opening image preserves its focus and cancels completion."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: Lightbox transition reliability: isolation",
+            "scope": "Overlapping instances retain their own captions and share ancestor overflow until the final close."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: Lightbox transition reliability: triggers",
+            "scope": "Image and native button pointer/Enter/Space activation, Escape, overlay, scroll and resize dismissal, LTR/RTL and both motion preferences."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: Lightbox transition reliability: callbacks",
+            "scope": "Start callbacks may close, reopen or destroy without stale work or overriding application focus."
+          },
+          {
+            "file": "tests/expressivecss-web-accessibility-browser.test.js",
+            "name": "chromium: Lightbox transition reliability: destroy",
+            "scope": "Opening/closing teardown restores attributes, styles and overflow, preserves unrelated focus, and supports remounting. All transition reliability cases also run in Firefox and WebKit."
+          }
+        ],
+        "inventorySha256": "87ab81a691efccf5070f8f7b0a44cea24f1857907369fa34066a5ae63bcd9589"
+      }
+    },
+    {
+      "slug": "map",
+      "title": "Map",
+      "aliases": [
+        "maps",
+        "location map",
+        "store locator",
+        "geographic map",
+        "maplibre"
+      ],
+      "guideSource": {
+        "pageId": "map",
+        "heading": "Map",
+        "headingLevel": 2,
+        "semantics": [
+          "map"
+        ]
+      },
+      "jobs": [
+        "An interactive map with markers, popups, routes, arcs, clusters and controls, built on MapLibre."
+      ],
+      "useWhen": [
+        "Show where things are when position matters to the task, such as stores near the reader, a delivery route or live vehicles."
+      ],
+      "avoidWhen": [
+        "A single address or a list the reader scans by name; write the address in text and link to a map app. Never make the map the only way to reach the information it shows."
+      ],
+      "alternatives": [
+        "lists",
+        "data-table",
+        "cards"
+      ],
+      "adaptive": [],
+      "runtime": "manual",
+      "guide": "../components/map.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#map",
+          "reviewedOn": "2026-10-09",
+          "documentedSupport": "MapLibre map with themed OpenFreeMap styles, markers with labels, tooltips, popups and dragging, routes, arcs, clusters, and zoom, compass, locate and full screen controls.",
+          "webAdaptation": "The page passes in the maplibre-gl module. Markers, popups and controls are authored HTML moved into MapLibre; routes, arcs and clusters are GeoJSON layers whose colors are read from theme tokens and redrawn when the theme changes.",
+          "limitations": [
+            "Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-09",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Name the map region, make interactive markers named buttons, return focus when a popup closes, keep tile attribution visible and give the same information in text."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "A store locator shows each store as a marker button that opens its hours, beside a list of the same stores with addresses. A contact page with one address writes it out and links to a map app.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-09",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_map.scss",
+            "sha256": "3bc9d7ba4dcf2c8d632701d4a6d127dd0e83662b994591260a58581bc2f3d5de"
+          },
+          {
+            "path": "src/ts/components/mapView.ts",
+            "sha256": "eb0804b2b9368c8af1c9e6d6827c8bde42ceb4e01bdd9b3666d13a867bc67b03"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified.",
+            "nextStep": "Use the map with a screen reader and on a touch device, try locate and full screen with real permissions, drag a marker with the keyboard, and check forced colors."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/map-browser.test.js",
+            "name": "chromium: map places markers and popups, runs controls, themes overlays and restores its markup",
+            "scope": "Markers placed with the default dot, the popup without a marker open at init, a marker button opening its popup with aria-expanded, Escape and a map click closing it with focus back on the marker, zoom out disabled at the minimum zoom, zoom in, the compass bearing and reset, route, arcs and clusters in the theme primary color, no count layer without glyphs, all redrawn in the dark primary after a theme change, removeOverlay, destroy restoring the markup and controls, and a location arriving after destroy being ignored. No spoken-output assertion."
+          },
+          {
+            "file": "tests/map-browser.test.js",
+            "name": "chromium: a map in a shadow root opens its marker popup",
+            "scope": "A marker button inside a shadow root finding its popup by id, then opening it with aria-expanded. No spoken-output assertion."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "command-palette",
+      "title": "Command palette",
+      "aliases": [
+        "command menu",
+        "cmd+k",
+        "ctrl+k",
+        "quick open",
+        "launcher",
+        "spotlight"
+      ],
+      "guideSource": {
+        "pageId": "command_palette",
+        "heading": "Command palette",
+        "headingLevel": 2,
+        "semantics": [
+          "command-palette"
+        ]
+      },
+      "jobs": [
+        "A searchable list of commands in a dialog, opened from anywhere with a shortcut."
+      ],
+      "useWhen": [
+        "Let people find and run any of many commands or destinations by typing, from anywhere in the app."
+      ],
+      "avoidWhen": [
+        "Searching content needs search; a few actions for one item need a menu."
+      ],
+      "alternatives": [
+        "search",
+        "menu",
+        "dialogs"
+      ],
+      "adaptive": [],
+      "runtime": "auto-init",
+      "guide": "../components/command-palette.md",
+      "materialGuidance": {
+        "status": "framework-extra",
+        "href": null,
+        "implementation": {
+          "source": "llm.md#command-palette",
+          "reviewedOn": "2026-10-06",
+          "documentedSupport": "A modal dialog with a filtering combobox and listbox, group headings, keywords, an empty message, a Ctrl or Command shortcut and native commandfor opening.",
+          "webAdaptation": "A native modal <dialog>; commands are links and buttons, and the component adds the combobox and listbox roles and the active option.",
+          "limitations": [
+            "The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified."
+          ]
+        },
+        "relationship": "none",
+        "upstreamReview": {
+          "source": "https://m3.material.io/components",
+          "reviewedOn": "2026-10-06",
+          "scope": "web-extension-inventory-reviewed",
+          "note": "Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.",
+          "sections": [
+            "No standalone Material component"
+          ],
+          "sources": [],
+          "requirements": "Keep focus in the input while the active option moves, report it with aria-activedescendant, announce when nothing matches, return focus on close and let users turn the shortcut off."
+        },
+        "reason": "Web extension; no dedicated entry was observed in the reviewed current M3 component inventory."
+      },
+      "selectionExample": "Finding an order by customer name is search over content. A command palette is for running actions and opening places in the app.",
+      "capabilityReview": {
+        "reviewedOn": "2026-10-06",
+        "support": "implemented",
+        "sources": [
+          {
+            "path": "src/sass/components/_command-palette.scss",
+            "sha256": "6dddb9ebc73009d7b45e09430c3abb40e0775d05c2fc5c2c89ee6f34e90e5d37"
+          },
+          {
+            "path": "src/ts/components/commandPalette.ts",
+            "sha256": "8e3d5b555365df4ba28b4d915f6f717ac20be9d6d76390dd0a024b0816630725"
+          }
+        ],
+        "gaps": [
+          {
+            "kind": "verification",
+            "description": "The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified.",
+            "nextStep": "Run commands with a screen reader in each engine and confirm the active option and the empty message are announced; check that Ctrl+K does not clash with the screen reader or browser."
+          }
+        ],
+        "browserChecks": [
+          {
+            "file": "tests/command-palette-browser.test.js",
+            "name": "chromium: command palette opens on its shortcut, filters, moves with the arrows and runs a command",
+            "scope": "Combobox and listbox roles, Ctrl+K toggle, input focus, top placement, wrapping arrows, accent-insensitive and keyword filtering, hidden empty groups, the empty message, Enter and click running a command, closing with focus return, the commandfor opener, a fresh search on reopening, Escape, destroy and the keycap style. No spoken-output assertion."
           }
         ]
       }

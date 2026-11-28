@@ -1,9 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
 import { leaseBrowser, engines } from './browser.js';
+import { pageCss } from './css.js';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+// Core then extras, as a page that uses extras loads them: some pages here have no script to load extras.
+const css = pageCss();
 
 const filler = '<p style="height:1500px">Filler</p>';
 const page = (header, extra = '') => `<!doctype html><html lang="en"><head><style>${css}</style></head><body>

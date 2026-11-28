@@ -5,7 +5,7 @@
 import * as maplibregl from 'maplibre-gl';
 import { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
-import { MapView } from '../../../src/ts/components/mapView';
+import { MapView } from '../../../extras/src/ts/components/mapView';
 import { RichTextEditor } from '../../../src/ts/components/richTextEditor';
 
 const maps = [

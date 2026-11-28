@@ -99,7 +99,7 @@
     "docs:build:astro": "astro build --root docs",
     "docs:preview": "astro preview --root docs",
     "docs:verify": "node scripts/verify-site.mjs",
-    "typecheck": "tsc -p tsconfig.json --noEmit && npm run typecheck:strict",
+    "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p extras/tsconfig.json --noEmit && npm run typecheck:strict",
     "test": "run-s build:js build:css build:used:index test:run",
     "test:run": "node --test",
     "test:browser": "run-s build:js build:css test:browser:run",

@@ -43,7 +43,7 @@ async function open(browser) {
   await page.setContent(html);
   await page.evaluate(() => {
     Expressive.AutoInit();
-    Expressive.LoadingOverlay.init(window.shadowed);
+    ExpressiveExtras.LoadingOverlay.init(window.shadowed);
   });
   return page;
 }
@@ -146,7 +146,7 @@ for (const [engine, browserType, browserTest] of engines) {
         late.className = 'loading-overlay';
         late.setAttribute('aria-busy', 'true');
         document.body.append(late);
-        Expressive.LoadingOverlay.init(late);
+        ExpressiveExtras.LoadingOverlay.init(late);
         const atInsert = late.nextElementSibling.textContent;
         await new Promise(requestAnimationFrame);
         await new Promise(requestAnimationFrame);
@@ -278,7 +278,7 @@ for (const [engine, browserType, browserTest] of engines) {
       const page = await open(browser);
       const after = (id) => page.evaluate(async (id) => {
         const el = document.getElementById(id);
-        Expressive.LoadingOverlay.getInstance(el).destroy();
+        ExpressiveExtras.LoadingOverlay.getInstance(el).destroy();
         const result = { inert: el.inert, status: el.nextElementSibling?.classList.contains('loading-overlay-status') ?? false };
         el.setAttribute('aria-busy', 'true');
         await new Promise(requestAnimationFrame);

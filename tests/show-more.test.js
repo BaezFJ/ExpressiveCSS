@@ -5,14 +5,14 @@
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Expressive, resetBody } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody } from './setup.js';
 
 beforeEach(resetBody);
 
 /** Starts a show-more with `button` as its control and returns the instance. */
 function start(button = '<button type="button">Show more</button>', options = {}, text = '<p class="line-clamp-2">Long text</p>') {
   document.body.innerHTML = `<div class="show-more">${text}${button}</div>`;
-  return Expressive.ShowMore.init(document.querySelector('.show-more'), options);
+  return ExpressiveExtras.ShowMore.init(document.querySelector('.show-more'), options);
 }
 
 const label = () => document.querySelector('button').textContent.trim();
@@ -102,6 +102,6 @@ test('a show-more without clamped text stays inert: open(), destroy() and a seco
   instance.open();
   assert.equal(instance.isOpen, false);
   instance.destroy();
-  Expressive.ShowMore.init(document.querySelector('.show-more')).destroy();
+  ExpressiveExtras.ShowMore.init(document.querySelector('.show-more')).destroy();
   assert.equal(document.querySelector('button').getAttribute('aria-expanded'), null);
 });

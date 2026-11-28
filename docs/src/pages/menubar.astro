@@ -27,7 +27,7 @@ const S = defineSections([
           <a href={route("menu")}>menu</a> written after the bar. The
           <code>Menubar</code> component adds the menubar and menuitem roles
           and the keyboard support below. <code>AutoInit()</code> starts it,
-          or you can call <code>Expressive.Menubar.init(el)</code> yourself.
+          or you can call <code>ExpressiveExtras.Menubar.init(el)</code> yourself.
           For site navigation, use a
           <a href={route("mega_menu")}>mega menu</a> of links instead.
         </p>
@@ -100,12 +100,12 @@ const S = defineSections([
     </OptionsTable>
     <p>See <a href={route("menu")}>Menu options</a> for placement and callbacks.
       Child triggers take options from their Menubar, so their <code>data-menu-options</code> attributes do not apply.</p>
-    <Code code={`const bar = Expressive.Menubar.init(document.querySelector('.menubar'), {
+    <Code code={`const bar = ExpressiveExtras.Menubar.init(document.querySelector('.menubar'), {
   menuOptions: { constrainWidth: false, coverTrigger: false, closeOnClick: false }
 });`} />
   </Section>
   <Section {...S.methods}>
-    <p><code>Expressive.Menubar.getInstance(el)</code> retrieves the instance.
+    <p><code>ExpressiveExtras.Menubar.getInstance(el)</code> retrieves the instance.
       Call <code>bar.destroy()</code> when removing the bar. It destroys child Menus,
       removes managed tab stops and removes roles that initialization added.</p>
     <p>Open or close an individual menu through

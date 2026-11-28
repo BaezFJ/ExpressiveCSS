@@ -1,13 +1,13 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { Expressive, resetBody, window } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, window } from './setup.js';
 
 const mutations = () => new Promise(resolve => setImmediate(resolve));
 
 function fixture() {
   resetBody();
   document.body.innerHTML = '<dialog class="command-palette"><input><ul><li id="authored"><button>Original</button></li></ul></dialog>';
-  return Expressive.CommandPalette.init(document.querySelector('dialog'));
+  return ExpressiveExtras.CommandPalette.init(document.querySelector('dialog'));
 }
 
 test('replacing commands releases generated-ID references and keeps selection usable', async () => {
@@ -73,7 +73,7 @@ test('moving a command into a new palette keeps its active descendant valid', as
     dialog.innerHTML = '<input><ul></ul>';
     document.body.append(dialog);
     dialog.querySelector('ul').append(row);
-    second = Expressive.CommandPalette.init(dialog);
+    second = ExpressiveExtras.CommandPalette.init(dialog);
     await mutations();
     assert.ok(row.id);
     assert.equal(second.input.getAttribute('aria-activedescendant'), row.id);

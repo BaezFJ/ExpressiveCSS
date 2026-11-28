@@ -26,7 +26,7 @@ async function setUp(browserType) {
   const browser = await leaseBrowser(browserType);
   const page = await browser.newPage({ viewport: { width: 800, height: 600 }, reducedMotion: 'reduce' });
   await page.setContent(markup);
-  await page.evaluate(() => Expressive.HoverCard.init(document.getElementById('link'), { enterDelay: 500, exitDelay: 300 }));
+  await page.evaluate(() => ExpressiveExtras.HoverCard.init(document.getElementById('link'), { enterDelay: 500, exitDelay: 300 }));
   const open = () => page.evaluate(() => document.getElementById('card').matches(':popover-open'));
   return { browser, page, open };
 }
@@ -136,7 +136,7 @@ for (const [name, browserType, browserTest] of engines) {
         <div id="card" class="popover" popover="hint"><p>Ada Lovelace</p></div>
         <script>${js}</script>`);
       await page.evaluate(() => {
-        for (const id of ['first', 'second']) Expressive.HoverCard.init(document.getElementById(id), { enterDelay: 100, exitDelay: 400 });
+        for (const id of ['first', 'second']) ExpressiveExtras.HoverCard.init(document.getElementById(id), { enterDelay: 100, exitDelay: 400 });
       });
       const below = (id) => page.evaluate((id) => {
         const card = document.getElementById('card');
@@ -167,9 +167,9 @@ for (const [name, browserType, browserTest] of engines) {
         <script>${js}</script>`);
       await page.evaluate(() => {
         document.body.prepend(document.getElementById('start'));
-        for (const id of ['first', 'second']) Expressive.HoverCard.init(document.getElementById(id), { enterDelay: 100, exitDelay: 400 });
+        for (const id of ['first', 'second']) ExpressiveExtras.HoverCard.init(document.getElementById(id), { enterDelay: 100, exitDelay: 400 });
       });
-      const owner = () => page.evaluate(() => ['first', 'second'].filter((id) => Expressive.HoverCard.getInstance(document.getElementById(id))._shown));
+      const owner = () => page.evaluate(() => ['first', 'second'].filter((id) => ExpressiveExtras.HoverCard.getInstance(document.getElementById(id))._shown));
 
       await page.mouse.move(...await center(page, '#first'));
       await page.waitForFunction(() => document.getElementById('card').matches(':popover-open'), null, { timeout: 2000 });

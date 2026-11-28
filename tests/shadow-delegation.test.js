@@ -8,7 +8,7 @@
 
 import { test, describe } from 'node:test';
 import assert from 'node:assert/strict';
-import { Expressive, resetBody, window } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, window } from './setup.js';
 
 const modes = [null, 'open'];
 const label = (mode) => (mode ? 'open shadow' : 'light') + ' DOM';
@@ -182,7 +182,7 @@ describe('Document delegation reaches into shadow roots', () => {
       window.IntersectionObserver = globalThis.IntersectionObserver = FakeIO;
       let spy;
       try {
-        spy = Expressive.ScrollSpy.init(root.querySelector('section'));
+        spy = ExpressiveExtras.ScrollSpy.init(root.querySelector('section'));
         assert.equal(root.querySelector('a').getAttribute('aria-current'), 'true');
       } finally {
         spy?.destroy();

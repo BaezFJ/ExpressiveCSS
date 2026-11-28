@@ -16,8 +16,9 @@ the reverse. Cross-component imports (`./menu` from `select.ts`) are fine.
 
 An extension package adds its components to AutoInit with
 `AutoInit.register(name, { component, selector })`. `@expressivecss/extras`
-imports only `@expressivecss/expressive/core`, so `core.ts` exports exactly what
-its modules use.
+imports helpers only from `@expressivecss/expressive/core`, so `core.ts` exports
+exactly what its modules use. A public component it builds on, such as `Menu`
+for `Menubar`, comes from `@expressivecss/expressive/modular`.
 
 ## Adding a component
 

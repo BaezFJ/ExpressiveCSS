@@ -136,7 +136,7 @@ document.addEventListener('expressive:refresh', (event) => {
   </Section>
   <Section {...S.methods}>
 <Code code={`
-const refresher = Expressive.PullToRefresh.getInstance(document.querySelector('.pull-to-refresh'));
+const refresher = ExpressiveExtras.PullToRefresh.getInstance(document.querySelector('.pull-to-refresh'));
 refresher.refresh();  // starts a refresh; does nothing while one runs
 refresher.complete(); // ends it: the indicator goes back up, aria-busy is removed
 refresher.destroy();  // removes listeners and the status region, ends a refresh without an event

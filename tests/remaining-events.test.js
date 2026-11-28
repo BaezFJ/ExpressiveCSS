@@ -4,7 +4,7 @@
 import { test, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Expressive, resetBody, window } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, window } from './setup.js';
 
 const sleep = (ms = 10) => new Promise((resolve) => setTimeout(resolve, ms));
 const click = (el) => el.dispatchEvent(new window.MouseEvent('click', { bubbles: true, composed: true, cancelable: true }));
@@ -94,12 +94,12 @@ test('a scrollspy fires change from the section with the link it marked', () => 
   document.body.innerHTML = '<a href="#one">One</a><section id="one" class="scrollspy">1</section>';
   const section = document.getElementById('one');
   const { seen, stop } = record(document, 'change');
-  const instance = Expressive.ScrollSpy.init(section);
+  const instance = ExpressiveExtras.ScrollSpy.init(section);
   try {
     instance._ratio = 1;
-    Expressive.ScrollSpy._syncActive(instance.options.getActiveElement);
+    ExpressiveExtras.ScrollSpy._syncActive(instance.options.getActiveElement);
     assert.deepEqual(seen, [['change', { link: document.querySelector('a') }]]);
-    Expressive.ScrollSpy._syncActive(instance.options.getActiveElement);
+    ExpressiveExtras.ScrollSpy._syncActive(instance.options.getActiveElement);
     assert.equal(seen.length, 1, 'an unchanged section reports nothing');
   } finally {
     stop();
@@ -130,7 +130,7 @@ for (const [ending, completed] of [['data-tour-done', true], ['data-tour-close',
       assert.deepEqual(seen[3][1], { completed });
     } finally {
       stop();
-      Expressive.Tour.end(tour);
+      ExpressiveExtras.Tour.end(tour);
       restore();
     }
   });
@@ -141,13 +141,13 @@ test('a tour restarted by its open listener reports its first step once', () => 
   document.body.innerHTML = TOUR;
   const tour = document.getElementById('t');
   const { seen, stop } = record(tour, 'change');
-  tour.addEventListener('expressive:open', () => Expressive.Tour.start(tour), { once: true });
+  tour.addEventListener('expressive:open', () => ExpressiveExtras.Tour.start(tour), { once: true });
   try {
-    Expressive.Tour.start(tour);
+    ExpressiveExtras.Tour.start(tour);
     assert.deepEqual(seen.map(([, d]) => d.index), [0]);
   } finally {
     stop();
-    Expressive.Tour.end(tour);
+    ExpressiveExtras.Tour.end(tour);
     restore();
   }
 });

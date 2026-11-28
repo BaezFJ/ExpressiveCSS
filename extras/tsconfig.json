@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    // Extras imports core only through its package subpaths; check them against
+    // this checkout's source. tsconfig.build.json maps them to the emitted types.
+    // Kept out of the root tsconfig.json: esbuild applies `paths` there, and the
+    // repository's own builds of `@expressivecss/expressive/modular` must
+    // resolve to dist, as a consumer's do.
+    "paths": {
+      "@expressivecss/expressive/core": ["../src/ts/core.ts"],
+      "@expressivecss/expressive/modular": ["../src/ts/modular.ts"]
+    }
+  },
+  "include": ["src/ts"]
+}

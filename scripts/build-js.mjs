@@ -5,13 +5,15 @@ const watch = process.argv.includes('--watch');
 const common = { entryPoints: ['src/ts/index.ts'], bundle: true, target: 'es2020', sourcemap: true };
 // src/ts/iife.ts adds `core` to the global, for script-tag extensions.
 const iife = { ...common, entryPoints: ['src/ts/iife.ts'], format: 'iife', globalName: 'Expressive' };
-// The extras IIFE reads core from the global the core script defined, rather than bundling a copy.
+// The extras IIFE reads core from the global the core script defined, rather than
+// bundling a copy: `/core` is `Expressive.core`, and `/modular` (the public
+// components) is `Expressive` itself.
 const coreGlobal = {
   name: 'expressive-core-global',
   setup(builder) {
-    builder.onResolve({ filter: /^@expressivecss\/expressive\/core$/ }, ({ path }) => ({ path, namespace: 'expressive-core-global' }));
-    builder.onLoad({ filter: /.*/, namespace: 'expressive-core-global' }, () => ({
-      contents: `if (!globalThis.Expressive?.core) throw new Error('Load expressive.js before extras.js.');\nmodule.exports = globalThis.Expressive.core;`,
+    builder.onResolve({ filter: /^@expressivecss\/expressive\/(core|modular)$/ }, ({ path }) => ({ path, namespace: 'expressive-core-global' }));
+    builder.onLoad({ filter: /.*/, namespace: 'expressive-core-global' }, ({ path }) => ({
+      contents: `if (!globalThis.Expressive?.core) throw new Error('Load expressive.js before extras.js.');\nmodule.exports = globalThis.Expressive${path.endsWith('/core') ? '.core' : ''};`,
     }));
   },
 };

@@ -109,7 +109,7 @@ const S = defineSections([
   </Section>
   <Section {...S.methods}>
 <Code code={`
-const palette = Expressive.CommandPalette.getInstance(document.getElementById('commands'));
+const palette = ExpressiveExtras.CommandPalette.getInstance(document.getElementById('commands'));
 palette.open();     // modal, with the input focused
 palette.close();
 palette.destroy();  // removes the shortcut, listeners, roles and ids it added

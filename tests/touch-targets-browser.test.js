@@ -4,11 +4,13 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync } from 'node:fs';
 import { chromium } from 'playwright';
 import { leaseBrowser } from './browser.js';
+import { pageCss } from './css.js';
 
-const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
+// Core then extras, as a page that uses extras loads them: some pages here have no script to load extras.
+const css = pageCss();
 const browserTest = existsSync(chromium.executablePath()) ? test : test.skip;
 
 browserTest('a dot map marker takes taps 20px from its centre', async () => {

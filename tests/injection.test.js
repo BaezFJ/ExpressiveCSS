@@ -8,7 +8,7 @@
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 
-import { Expressive, resetBody, fire } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, fire } from './setup.js';
 
 const PAYLOAD = '"><img src=x onerror=alert(1)>';
 
@@ -114,8 +114,8 @@ describe('ids are looked up, not interpolated into selectors', () => {
       <div id='sec"tion' class="scrollspy">one</div>
       <a href='#sec"tion'>to one</a>`;
     const el = document.querySelector('.scrollspy');
-    const instance = Expressive.ScrollSpy.init(el);
-    const link = Expressive.ScrollSpy._linkFor(el.id, instance.options);
+    const instance = ExpressiveExtras.ScrollSpy.init(el);
+    const link = ExpressiveExtras.ScrollSpy._linkFor(el.id, instance.options);
     assert.equal(link, document.querySelector('a'));
     instance.destroy();
   });

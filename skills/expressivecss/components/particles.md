@@ -9,7 +9,7 @@ Component ID: `particles`
 
 Contract: ExpressiveCSS 0.20.0
 
-Contract SHA-256: `935f920792b4dd3947133e4e1a4b5e2ce7c809c6343efb9020d0863b85b97125`
+Contract SHA-256: `dfb461fb921c4edf4d7713e16dad7f4afc50d0317f65d8903edc6e69f06bf950`
 
 #### Selection and adaptation
 
@@ -44,7 +44,7 @@ A `<canvas class="particles" aria-hidden="true">` covers its nearest positioned 
 </div>
 
 <script>
-Expressive.Particles.init(document.querySelector('canvas.particles'), { quantity: 150, vy: -0.3, staticity: 20 });
+ExpressiveExtras.Particles.init(document.querySelector('canvas.particles'), { quantity: 150, vy: -0.3, staticity: 20 });
 </script>
 ```
 

@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { engines } from './browser.js';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -26,7 +26,7 @@ const markup = `<!doctype html><html lang="en"><head><style>${css}</style></head
 
 for (const [name, engine, test] of engines) {
   test(`${name}: a tour steps through its targets beside each one and returns focus`, { timeout: 30000 }, async (t) => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 900, height: 600 } });
       await page.setContent(markup);

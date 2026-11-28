@@ -17,8 +17,8 @@ const shared = { bundle: true, splitting: true, format: 'esm', target: 'es2020',
   outExtension: { '.js': '.mjs' }, chunkNames: 'chunks/[name]-[hash]', sourcemap: true };
 export const esmOptions = { ...shared, outdir: 'dist/js',
   entryPoints: entries('src/ts', { expressive: 'src/ts/index.ts', modular: 'src/ts/modular.ts', core: 'src/ts/core.ts' }) };
-// Extras imports core through the package subpath and never bundles it.
-export const extrasEsmOptions = { ...shared, outdir: 'extras/dist/js', external: ['@expressivecss/expressive/core'],
+// Extras imports core through the package subpaths and never bundles it.
+export const extrasEsmOptions = { ...shared, outdir: 'extras/dist/js', external: ['@expressivecss/expressive/core', '@expressivecss/expressive/modular'],
   entryPoints: entries('extras/src/ts', { extras: 'extras/src/ts/index.ts', modular: 'extras/src/ts/modular.ts' }) };
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   await Promise.all([build(esmOptions), build(extrasEsmOptions)]);

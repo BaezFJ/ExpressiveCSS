@@ -1,5 +1,11 @@
 {
   "extends": "../../../tsconfig.json",
-  "compilerOptions": { "strict": true, "noEmit": true },
+  "compilerOptions": {
+    "strict": true,
+    "noEmit": true,
+    // MapView is in extras: read core's built types, as a consumer does, so
+    // strict mode checks the probe and not core's sources.
+    "paths": { "@expressivecss/expressive/core": ["../../../dist/types/core.d.ts"] }
+  },
   "include": ["probe.ts"]
 }

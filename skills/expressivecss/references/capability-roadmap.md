@@ -23,21 +23,14 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Breadcrumbs](#breadcrumbs) | unassessed | needs-review | needs-rerun | 0 |
 | [Pagination](#pagination) | unassessed | needs-review | needs-rerun | 1 |
 | [Menu](#menu) | unassessed | needs-review | needs-rerun | 0 |
-| [Menubar](#menubar) | unassessed | needs-review | incomplete | 0 |
-| [Scrollspy](#scrollspy) | unassessed | needs-review | needs-rerun | 0 |
 | [Buttons](#buttons) | unassessed | needs-review | needs-rerun | 0 |
 | [Icon buttons](#icon-buttons) | unassessed | needs-review | needs-rerun | 0 |
 | [Button groups](#button-groups) | unassessed | needs-review | needs-rerun | 0 |
 | [Split button](#split-button) | unassessed | needs-review | needs-rerun | 0 |
 | [Floating action button](#fab) | unassessed | needs-review | needs-rerun | 0 |
-| [Back to top](#back-to-top) | implemented | source-reviewed | incomplete | 0 |
 | [Cards](#cards) | unassessed | needs-review | needs-rerun | 0 |
 | [Lists](#lists) | unassessed | needs-review | needs-rerun | 1 |
-| [Message scroller](#message-scroller) | implemented | source-reviewed | needs-rerun | 0 |
-| [Pull-to-refresh](#pull-to-refresh) | implemented | source-reviewed | incomplete | 0 |
-| [Swipe actions](#swipe-actions) | implemented | source-reviewed | incomplete | 0 |
 | [Accordion](#accordion) | implemented | source-reviewed | needs-rerun | 0 |
-| [Show more](#show-more) | unassessed | needs-review | incomplete | 0 |
 | [Data table](#data-table) | unassessed | needs-review | needs-rerun | 0 |
 | [Dialogs](#dialogs) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Bottom sheet](#bottom-sheet) | unassessed | needs-review | needs-rerun | 1 |
@@ -46,23 +39,14 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Badges](#badges) | unassessed | needs-review | needs-rerun | 0 |
 | [Avatar](#avatar) | unassessed | needs-review | needs-rerun | 0 |
 | [Tooltips](#tooltips) | unassessed | needs-review | needs-rerun | 0 |
-| [Hover card](#hover-card) | implemented | source-reviewed | incomplete | 0 |
-| [Tour](#tour) | unassessed | needs-review | incomplete | 0 |
 | [Snackbar](#snackbar) | unassessed | needs-review | needs-rerun | 0 |
 | [Progress indicators](#progress) | unassessed | needs-review | needs-rerun | 0 |
 | [Loading indicator](#loading-indicator) | unassessed | needs-review | needs-rerun | 1 |
-| [Loading overlay](#loading-overlay) | implemented | source-reviewed | incomplete | 0 |
 | [Alert](#alert) | implemented | source-reviewed | incomplete | 0 |
 | [Carousel](#carousel) | unassessed | needs-review | needs-rerun | 0 |
-| [Image compare](#image-compare) | implemented | source-reviewed | incomplete | 0 |
-| [Confetti](#confetti) | unassessed | needs-review | needs-rerun | 0 |
-| [Particles](#particles) | unassessed | needs-review | needs-rerun | 0 |
-| [Lightbox](#lightbox) | unassessed | needs-review | needs-rerun | 0 |
-| [Map](#map) | unassessed | needs-review | needs-rerun | 0 |
 | [Toolbars](#toolbars) | unassessed | needs-review | no-mapped-checks | 0 |
 | [Status bar](#status-bar) | implemented | source-reviewed | incomplete | 0 |
 | [Search](#search) | unassessed | needs-review | needs-rerun | 1 |
-| [Command palette](#command-palette) | unassessed | needs-review | needs-rerun | 0 |
 | [Fieldsets](#fieldsets) | unassessed | needs-review | needs-rerun | 0 |
 | [Text fields](#text-fields) | unassessed | needs-review | needs-rerun | 0 |
 | [Input mask](#input-mask) | unassessed | needs-review | incomplete | 0 |
@@ -88,8 +72,15 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Stepper](#stepper) | unassessed | needs-review | needs-rerun | 0 |
 | [Mega menu](#mega-menu) | unassessed | needs-review | incomplete | 0 |
 | [Tree](#tree) | unassessed | needs-review | needs-rerun | 0 |
+| [Menubar](#menubar) | unassessed | needs-review | incomplete | 0 |
+| [Scrollspy](#scrollspy) | unassessed | needs-review | needs-rerun | 0 |
+| [Back to top](#back-to-top) | unassessed | needs-review | incomplete | 0 |
 | [Aura](#aura) | unassessed | needs-review | needs-rerun | 0 |
 | [Message](#message) | unassessed | needs-review | needs-rerun | 0 |
+| [Message scroller](#message-scroller) | unassessed | needs-review | needs-rerun | 0 |
+| [Pull-to-refresh](#pull-to-refresh) | unassessed | needs-review | incomplete | 0 |
+| [Swipe actions](#swipe-actions) | unassessed | needs-review | incomplete | 0 |
+| [Show more](#show-more) | unassessed | needs-review | incomplete | 0 |
 | [Stat](#stat) | unassessed | needs-review | needs-rerun | 0 |
 | [Description list](#description-list) | unassessed | needs-review | incomplete | 0 |
 | [KPI](#kpi) | unassessed | needs-review | needs-rerun | 0 |
@@ -112,7 +103,16 @@ Last operator collection: 2026-10-10, Chromium 153.0.8010.12, passed; inputs cha
 | [Popover](#popover) | unassessed | needs-review | needs-rerun | 0 |
 | [Skeleton](#skeleton) | unassessed | needs-review | needs-rerun | 0 |
 | [Empty state](#empty-state) | unassessed | needs-review | needs-rerun | 0 |
+| [Hover card](#hover-card) | unassessed | needs-review | incomplete | 0 |
+| [Tour](#tour) | unassessed | needs-review | incomplete | 0 |
+| [Loading overlay](#loading-overlay) | unassessed | needs-review | incomplete | 0 |
 | [Marquee](#marquee) | unassessed | needs-review | needs-rerun | 0 |
+| [Image compare](#image-compare) | unassessed | needs-review | incomplete | 0 |
+| [Confetti](#confetti) | unassessed | needs-review | needs-rerun | 0 |
+| [Particles](#particles) | unassessed | needs-review | needs-rerun | 0 |
+| [Lightbox](#lightbox) | unassessed | needs-review | needs-rerun | 0 |
+| [Map](#map) | unassessed | needs-review | needs-rerun | 0 |
+| [Command palette](#command-palette) | unassessed | needs-review | needs-rerun | 0 |
 | [Rating](#rating) | unassessed | needs-review | needs-rerun | 0 |
 | [Color swatches](#color-swatches) | unassessed | needs-review | incomplete | 0 |
 | [Typography](#typography) | unassessed | needs-review | needs-rerun | 1 |
@@ -316,46 +316,6 @@ Web adaptation: Native menu/li structure; Menu owns opening and keyboard behavio
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/menu-field-browser.test.js): `Menu scopes nested keys and mirrors flyouts in RTL (chromium)`. Nested entry/return keys, innermost Escape, scoped typeahead, disabled activation, representative 44px targets, single activation, and both viewport edges in LTR/RTL. Equivalent Firefox and WebKit cases run in the same file.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/menu-field-browser.test.js): `Menu consumers keep values and focus through closing (chromium)`. Enhanced select submits the selected value and changes once; autocomplete selection retains input focus; Tab skips closing lists. Equivalent Firefox and WebKit cases run in the same file.
 
-<a id="menubar"></a>
-
-## Menubar
-
-**unassessed within the stated scope.** A menubar of menu triggers with one tab stop, Left, Right, Home and End along the bar, Down to open, and Left and Right between open menus.
-
-Source review: needs-review, 2026-10-15. [src/ts/components/menubar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/menubar.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: Each item opens an ordinary Menu; the Menubar component adds the menubar and menuitem roles and the roving tab stop at runtime. Documented support reviewed 2026-10-15 against `llm.md#menubar`.
-
-- Known boundary: Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified.
-
-- verification: Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified. Next: Operate the menubar with a screen reader in each engine and confirm menu and item announcements; check typeahead across the bar.
-
-- not-recorded: [tests/menubar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/menubar-browser.test.js): `chromium: a menubar has one tab stop and moves between its menus with the arrow keys`. Menubar and menuitem roles, one tab stop that follows focus, Left, Right, Home and End with wrapping, Down opening on the first item, Right and Left between open menus, flyout rows keeping Right, Escape back to the bar and RTL. No spoken-output assertion.
-
-<a id="scrollspy"></a>
-
-## Scrollspy
-
-**unassessed within the stated scope.** Section tracking with per-section offsets and independent tables of contents grouped by getActiveElement callback identity.
-
-Source review: needs-review, 2026-09-17. [src/sass/components/_scrollspy.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_scrollspy.scss), [src/sass/components/_table_of_contents.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_table_of_contents.scss), [src/ts/components/scrollspy.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/scrollspy.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
-
-Web adaptation: Web document navigation helper. Documented support reviewed 2026-09-17 against `llm.md#scrollspy`.
-
-- Known boundary: Independent TOCs must reuse one getActiveElement function per group. Screen-reader announcements, native zoom and physical-device checks remain pending.
-
-- verification: Offsets, independent TOCs, per-instance active classes, fallback, teardown and native anchors have rendered coverage. Spoken current-link state, native zoom, actual contrast themes and physical devices remain unverified. Next: Complete the ScrollSpy fixtures in the accessibility manual-review checklist with actual browsers, assistive technology and devices.
-
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: offsets`. Per-section observer offsets and removal of the previous section's active class.
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: groups`. Independent callback groups retain separate current links and fallback state during scrolling and destruction.
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: teardown`. Repeated destruction and remount restore authored offset value and priority and update surviving current links.
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: anchors`. Native keyboard fragment navigation and actual scrolling in LTR/RTL with ordinary and reduced motion.
-
 <a id="buttons"></a>
 
 ## Buttons
@@ -467,25 +427,6 @@ Web adaptation: Floating action behavior uses the documented FAB runtime. Docume
 - stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-lifecycle-browser.test.js): `FAB menu preserves keyboard, dismissal and responsive behavior`. Click state, hover inactivity, Tab, Escape, action activation, outside focus, reinitialization, reduced motion and narrow layout.
 - stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-lifecycle-browser.test.js): `current FAB sizes preserve geometry and explicit extended variants`. Chromium: button and link FAB geometry, explicit extended sizes and label roles in light/dark themes; baseline extended styling is absent.
 
-<a id="back-to-top"></a>
-
-## Back to top
-
-**implemented within the stated scope.** An in-page link styled with the FAB classes, hidden and inert until the window scrolls past a threshold option (one viewport height by default), a focused link kept until focus leaves, a smooth scroll to the top that is instant under reduced motion, focus moved to the href target with a temporary tabindex, the body as the fallback target, modified and already prevented clicks left to the browser, a threshold that is not a CSS length replaced by the default with a warning, markup options, offset and stacking tokens, and a link that still jumps to its target without the script.
-
-Source review: source-reviewed, 2026-10-25. [src/sass/components/_back-to-top.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_back-to-top.scss), [src/ts/components/backToTop.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/backToTop.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: An IntersectionObserver on an empty element at the threshold instead of a scroll listener. The hidden state is the inert attribute plus visibility: hidden, with a fade in and an immediate hide, so a script that starts after the first paint does not show the link fading out, and a page without the script never hides the link. Documented support reviewed 2026-10-25 against `llm.md#back-to-top`.
-
-- Known boundary: The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched.
-
-- verification: The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched. Next: Activate the link with VoiceOver and NVDA and confirm focus lands on the main content; check it in forced colors.
-
-- not-recorded: [tests/back-to-top-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/back-to-top-browser.test.js): `chromium: the link returns to the top and focuses its target, by click and by Enter`. Scroll past the threshold, activate by click and by Enter, and find the page at the top, focus on the target, the next Tab on the first control and no tabindex left behind.
-- not-recorded: [tests/back-to-top-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/back-to-top-browser.test.js): `chromium: the link is out of reach above the threshold`. Above the threshold, before and after scrolling past it, the link is hidden, skipped by Tab, missed by hit testing and absent from the ARIA snapshot. No spoken-output assertion.
-
 <a id="cards"></a>
 
 ## Cards
@@ -531,64 +472,6 @@ Web adaptation: Native list semantics; visual selection alone does not justify a
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
 - not-recorded: [tests/arrow-keys-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/arrow-keys-browser.test.js): `chromium: arrow keys move focus between tabs and between list rows`. Up and Down move focus between single-control rows, skip a disabled row and stop at the ends; Home and End reach the ends; rows with several controls keep native keys. Runs in all three engines.
 
-<a id="message-scroller"></a>
-
-## Message scroller
-
-**implemented within the stated scope.** Following streamed output, release on scrolling up, a scroll-to-latest button, turn anchors with a peek of the previous message, prepend preservation, opening at the end, start or last turn, and jumping to a message by id.
-
-Source review: source-reviewed, 2026-10-08. [src/sass/components/_message-scroller.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_message-scroller.scss), [src/ts/components/messageScroller.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/messageScroller.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A native scroll container; the component sets scroll position, a spacer and the button's inert state. The page owns role="log" and aria-busy. Documented support reviewed 2026-10-08 against `llm.md#message-scroller`.
-
-- Known boundary: Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role="log" viewport, touch and scrollbar dragging, and spoken output remain unverified.
-
-- verification: Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role="log" viewport, touch and scrollbar dragging, and spoken output remain unverified. Next: Stream replies into a role="log" viewport with a screen reader in each engine, and check touch scrolling and scrollbar dragging on real devices.
-
-- stale: [tests/message-scroller-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/message-scroller-browser.test.js): `chromium: message scroller follows output, keeps its place on prepend and anchors new turns`. Opening at the end, following streamed text, release on a wheel scroll up, the inert button and resuming from it, following kept through a click on a message, scrollToMessage with a peek and with a missing id, prepend preservation, an appended anchor at the peek with a spacer that clears as the reply grows, and destroy. No spoken-output assertion.
-- stale: [tests/message-scroller-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/message-scroller-browser.test.js): `chromium: message scroller opens saved transcripts at the requested position`. last-anchor on a long last turn, last-anchor falling back to the end, and start.
-- stale: [tests/message-scroller-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/message-scroller-browser.test.js): `chromium: message scroller jumps to a message inside a shadow root`. scrollToMessage called right after init finds a message in a shadow root and scrolls it one peek below the top; pressing the button from the keyboard there moves focus to the viewport as the button goes inert.
-
-<a id="pull-to-refresh"></a>
-
-## Pull-to-refresh
-
-**implemented within the stated scope.** A touch pull from a scroll position of 0 past a threshold, a refresh button and refresh() method that start the same refresh, an expressive:refresh event and onRefresh callback whose detail takes waitUntil(), complete(), aria-busy while refreshing, a status region that announces the start and the finish with i18n strings, contained overscroll on the container and the page, and containers that scroll themselves or pull the page.
-
-Source review: source-reviewed, 2026-10-24. [src/sass/components/_pull-to-refresh.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_pull-to-refresh.scss), [src/ts/components/pullToRefresh.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/pullToRefresh.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-24); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The author's loading indicator carries the role and name; the script sets a class, two custom properties and aria-busy, and adds a visually hidden role="status" region because the indicator is hidden once the refresh ends. Documented support reviewed 2026-10-24 against `llm.md#pull-to-refresh`.
-
-- Known boundary: The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified. There is no pull from the bottom and no nesting.
-
-- verification: The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified. Next: Pull on Chrome and Firefox for Android and Safari on iOS and confirm the browser's own refresh does not run; read a refresh with a screen reader.
-
-- not-recorded: [tests/pull-to-refresh-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/pull-to-refresh-browser.test.js): `chromium: a pull past the threshold refreshes once and the indicator stays until the page reports the finish`. Real touch input. Contained overscroll, one event per pull past the threshold, the indicator and aria-busy kept until a waitUntil() promise settles or complete() runs. No spoken-output assertion.
-- not-recorded: [tests/pull-to-refresh-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/pull-to-refresh-browser.test.js): `chromium: the refresh button, by click, Enter or Space, and refresh() each start a refresh`. The refresh button by click, Enter and Space, and refresh(), each firing one event and showing the indicator.
-
-<a id="swipe-actions"></a>
-
-## Swipe actions
-
-**implemented within the stated scope.** A touch swipe toward a row's inline start that reveals its .swipe-actions group, opening past half the group's width or on a flick and closing short of it, a [data-swipe-toggle] button with aria-expanded, focus on an action opening its row, Escape, an outside tap or an action closing it, one open row per list, an expressive:swipetoggle event and onToggle callback with { row, open }, open(row) and close(), right-to-left pages and reduced motion.
-
-Source review: source-reviewed, 2026-10-24. [src/sass/components/_swipe-actions.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_swipe-actions.scss), [src/ts/components/swipeActions.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/swipeActions.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-24); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The row slides by a translate on one custom property, and the actions wait past its inline end in a list clipped on the inline axis, so focus on a closed row's action scrolls nothing. The author names the toggle and the actions; the script keeps aria-expanded. Documented support reviewed 2026-10-24 against `llm.md#swipe-actions`.
-
-- Known boundary: Swipe reveal, the slide limit, short, vertical, mouse, two-finger and cancelled drags, the toggle, focus on an action, Escape, an outside tap, closing after an action, one open row, the event and onToggle, right-to-left pages, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, flick velocity, pen input, spoken output and forced colors remain unverified. Actions only on the inline-end side, and no full swipe that runs an action.
-
-- verification: Swipe reveal, the slide limit, short, vertical, mouse, two-finger and cancelled drags, the toggle, focus on an action, Escape, an outside tap, closing after an action, one open row, the event and onToggle, right-to-left pages, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, flick velocity, pen input, spoken output and forced colors remain unverified. Next: Swipe on Chrome for Android and Safari on iOS and confirm the browser's back gesture and vertical scrolling still work; read a row's actions with a screen reader.
-
-- not-recorded: [tests/swipe-actions-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/swipe-actions-browser.test.js): `chromium: a swipe reveals a row's actions, and a keyboard user reaches the same actions`. Real touch input. A swipe reveals the actions without running one, and Tab, Enter and the toggle reach and run an action from the keyboard.
-- not-recorded: [tests/swipe-actions-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/swipe-actions-browser.test.js): `chromium: the toggle opens and closes a row, and a tap outside, Escape or an action closes it`. The toggle and aria-expanded, focus on an action opening its row, an outside tap, Escape with focus returned to the toggle, closing after an action, and an action that removes its row.
-
 <a id="accordion"></a>
 
 ## Accordion
@@ -606,26 +489,6 @@ Web adaptation: Native <details> and <summary>; the browser owns the toggle, its
 - verification: Tile corners, the chevron turn, exclusive groups and the expanded state Chromium reports are checked in a browser; the open animation, enlarged text and spoken output remain unverified. Next: Toggle items with a screen reader in each engine and confirm the expanded state is announced; test enlarged text and reduced motion.
 
 - stale: [tests/accordion-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/accordion-browser.test.js): `chromium: accordion joins its tiles, turns the chevron and keeps one item open per name`. Outer, inner and open corner radii, chevron rotation, hidden native marker, exclusive name groups, Enter on a focused summary and the expanded state Chromium reports for each summary. No spoken-output assertion.
-
-<a id="show-more"></a>
-
-## Show more
-
-**unassessed within the stated scope.** A .show-more holding text with a line-clamp-1, -2 or -3 class and a <button type="button">; the button sets aria-expanded and aria-controls, shows the full text, reads "Show less" while it is open (i18n.showLess or data-show-less), and hides while the clamped text fits, checking again on resize, after web fonts load and on blur.
-
-Source review: needs-review, 2026-10-25. [src/ts/components/showMore.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/showMore.ts), [src/sass/components/_show-more.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_show-more.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: The component unclamps with inline -webkit-line-clamp and line-clamp, because the utilities layer and prefixed clamp classes beat any component rule. A ResizeObserver on the text and document.fonts.ready run the fit check, scrollHeight against clientHeight with 1px for Firefox's rounding. Documented support reviewed 2026-10-25 against `llm.md#show-more`.
-
-- Known boundary: Toggling, the fit check across widths, fractional line heights and window-size prefixes, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output is unverified. Find-in-page does not open clamped text, a font that starts loading after document.fonts.ready has settled is not caught until the next resize, and an icon-only button keeps its aria-label while open.
-
-- verification: Toggling, the fit check, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output with VoiceOver and NVDA is unverified. Next: Activate the button with VoiceOver and NVDA and check that the expanded state and label are announced.
-
-- not-recorded: [tests/show-more-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/show-more-browser.test.js): `chromium: the button shows the full text and collapses it again`. A click and Enter that unclamp and clamp the text, with aria-expanded and aria-controls.
-- not-recorded: [tests/show-more-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/show-more-browser.test.js): `chromium: the button hides while the clamped text fits`. Text that fits, a fractional line height, a container widened and narrowed, a window-size prefix, Tab order, and a focused button kept through a resize and until blur.
-- not-recorded: [tests/show-more-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/show-more-browser.test.js): `chromium: a web font that swaps in hides the button once its text fits`. A held-back web font that makes cut text fit, and an instance destroyed before the font loads.
 
 <a id="data-table"></a>
 
@@ -792,43 +655,6 @@ No gap identified within the stated scope; broader upstream parity remains unass
 - stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-lifecycle-browser.test.js): `Tooltip destroy cancels pending delay and animation callbacks`. Runtime timer cancellation for enter, exit and animation scheduling.
 - stale: [tests/expressivecss-lifecycle-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-lifecycle-browser.test.js): `Tooltip positioning preserves margins and viewport edges after scrolling`. Coordinate clamping at each viewport edge with custom margin/movement and document scrolling; no visual parity assertion.
 
-<a id="hover-card"></a>
-
-## Hover card
-
-**implemented within the stated scope.** A link with hover-card-trigger whose aria-details names a .popover with popover="hint"; the card shows against the link after enterDelay of hover or keyboard focus, stays while the pointer or focus is on the link or card, hides after exitDelay or at once on Escape with focus back on the link, and a tap or click follows the link.
-
-Source review: source-reviewed, 2026-10-25. [src/ts/components/hoverCard.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/hoverCard.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: Script timers decide when the card shows, and showPopover({ source }) makes the link its anchor and invoker, so the browser places it, puts it next in the Tab order and light-dismisses it. Interest invokers (interestfor) exist only in Chromium, so they are not used. Documented support reviewed 2026-10-25 against `llm.md#hover-card`.
-
-- Known boundary: Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified. Touch shows no card, and the card's content is static markup.
-
-- verification: Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified. Next: Tab to a hover card link with VoiceOver and NVDA and confirm the details relationship is announced and the card is reachable.
-
-- not-recorded: [tests/hover-card-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/hover-card-browser.test.js): `chromium: hovering the link shows the card after the delay, and it stays while the pointer is on the card`. Nothing before enterDelay, the card against the link's bottom edge plus the popover gap, staying open with the pointer on the card past exitDelay, and hiding once the pointer has left both.
-- not-recorded: [tests/hover-card-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/hover-card-browser.test.js): `chromium: keyboard focus shows the card, Tab moves into it, and Escape hides it with focus back on the link`. Tab to the link shows the card after enterDelay with focus kept on the link, Tab into the card keeps it open, and Escape hides it with focus back on the link.
-
-<a id="tour"></a>
-
-## Tour
-
-**unassessed within the stated scope.** One step at a time beside its target, a highlight ring, Back, Next and Done, progress text, skipped missing targets, Escape and focus return.
-
-Source review: needs-review, 2026-10-15. [src/ts/behaviors/tour.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/tour.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A manual native popover placed with CSS anchor positioning; the Tour behavior moves the anchor and focus. Documented support reviewed 2026-10-15 against `llm.md#tour`.
-
-- Known boundary: Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified.
-
-- verification: Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified. Next: Take a tour with a screen reader in each engine and confirm each step is announced when it opens.
-
-- not-recorded: [tests/tour-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/tour-browser.test.js): `chromium: a tour steps through its targets beside each one and returns focus`. Opening from a start button, the card named by the step heading, progress text, skipped missing targets, button visibility per step, placement below each target, releasing the previous target, Escape, focus return and cleanup after hidePopover. No spoken-output assertion.
-
 <a id="snackbar"></a>
 
 ## Snackbar
@@ -892,25 +718,6 @@ Web adaptation: CSS-only; the author supplies an accessible waiting message. Doc
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining progress and loading variants stop spatial motion`. Named progress state, reduced-motion animation removal and visible custom static fill; no spoken-delivery assertion.
 
-<a id="loading-overlay"></a>
-
-## Loading overlay
-
-**implemented within the stated scope.** A region the page marks aria-busy="true" shows a surface scrim and its loading indicator and is made inert until the attribute goes, with focus taken from the control inside it, keeps an inert state the author set, announces the start and the finish in a status region after it with i18n strings, returns focus to the control that had it, and stops following the attribute on destroy().
-
-Source review: source-reviewed, 2026-10-25. [src/sass/components/_loading-overlay.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_loading-overlay.scss), [src/ts/components/loadingOverlay.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/loadingOverlay.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: The native inert attribute blocks pointer and keyboard input instead of script handlers. The page owns aria-busy, and the script follows it with a MutationObserver. Inert content leaves the accessibility tree, so the script adds a visually hidden role="status" region outside the region. Documented support reviewed 2026-10-25 against `llm.md#loading-overlay`.
-
-- Known boundary: Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified. The scrim does not follow the content of a region that scrolls itself; the docs say to wrap the scroller.
-
-- verification: Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified. Next: Mark a region busy and clear it with VoiceOver and NVDA running, and view it under a Windows high-contrast theme.
-
-- not-recorded: [tests/loading-overlay-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/loading-overlay-browser.test.js): `chromium: a busy region takes no click or Tab, and clearing it gives both back`. A real mouse click and Tab while aria-busy is "true", and again after it is set to "false" and after it is removed.
-- not-recorded: [tests/loading-overlay-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/loading-overlay-browser.test.js): `chromium: focus goes back to where it was when the region clears`. Focus dropped by inert and returned on clear, a focus move made while busy kept, and a removed control not refocused. No spoken-output assertion.
-
 <a id="alert"></a>
 
 ## Alert
@@ -952,106 +759,6 @@ Web adaptation: Runtime owns sizing and navigation; reduced motion removes paral
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/menu-field-browser.test.js): `Carousel mounted motion changes preserve explicit pause (chromium)`. Visible application-owned pause/resume button and mounted reduced-motion changes without cancelling explicit pause; enabling reduced motion interrupts smooth scrolling and immediately realigns the active item.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/menu-field-browser.test.js): `Carousel focus and visibility suspension survive teardown (chromium)`. Hover and internal focus suspension, simulated document.hidden events, timer teardown and single advancement after remount. Actual background-device behavior pending.
 - stale: [tests/menu-field-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/menu-field-browser.test.js): `Carousel destroys pending scroll completion work (chromium)`. Rapid navigation and queued resize followed by destruction leave no auto-advance, resize or scroll-completion timers.
-
-<a id="image-compare"></a>
-
-## Image compare
-
-**implemented within the stated scope.** Two stacked images, a divider and handle driven by a native range input, keyboard and pointer control, RTL and a focus ring.
-
-Source review: source-reviewed, 2026-10-15. [src/sass/components/_image-compare.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_image-compare.scss).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A native range input covers the images invisibly; the ImageCompare behavior writes its value to the divider position. Documented support reviewed 2026-10-15 against `llm.md#image-compare`.
-
-- Known boundary: The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified.
-
-- verification: The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified. Next: Move the divider with a screen reader in each engine and confirm the value is announced.
-
-- not-recorded: [tests/image-compare-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/image-compare-browser.test.js): `chromium: image compare reveals the second image up to the range's value`. The initial value applied on load, each image on its side of the divider, arrow keys moving the divider, the handle focus ring, RTL, named native sliders and Slider leaving the range alone. No spoken-output assertion.
-
-<a id="confetti"></a>
-
-## Confetti
-
-**unassessed within the stated scope.** Bursts from a button's center over the page, inside an authored canvas, or from script, with count, angle, spread, speed, decay, gravity, drift, lifetime, origin, colors, square, circle and star shapes, and size options, theme colors by default and a promise that resolves when the burst ends.
-
-Source review: needs-review, 2026-10-09. [src/sass/components/_confetti.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_confetti.scss), [src/ts/components/confetti.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/confetti.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A canvas drawn with requestAnimationFrame. The page canvas is an aria-hidden manual popover with pointer events off, so it draws above modal dialogs without blocking clicks. Reduced motion draws nothing. Documented support reviewed 2026-10-09 against `llm.md#confetti`.
-
-- Known boundary: The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified.
-
-- verification: The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified. Next: Watch a burst on a low-end phone and in forced colors, and confirm a screen reader announces nothing for it.
-
-- stale: [tests/confetti-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/confetti-browser.test.js): `chromium: confetti bursts from its trigger in theme colors, on its own canvas, above a modal dialog and not under reduced motion`. A canvas bursting at its center on init, manualStart waiting for fire(), a button bursting from its center in the theme primary color, the page canvas covering the viewport in the top layer with aria-hidden and no pointer events, fire() resolving after it is removed, a burst over an open modal dialog, destroy and the reduced-motion skip. No spoken-output assertion.
-
-<a id="particles"></a>
-
-## Particles
-
-**unassessed within the stated scope.** A canvas that covers its positioned ancestor with drifting dots that fade near the edges and lean toward the pointer, with quantity, staticity, ease, size, color and drift options and the theme on-surface color by default.
-
-Source review: needs-review, 2026-10-09. [src/sass/components/_particles.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_particles.scss), [src/ts/components/particles.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/particles.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A canvas drawn with requestAnimationFrame, aria-hidden with pointer events off. The dot color comes from the canvas's CSS color, read each frame so theme changes apply. Reduced motion draws the dots once without motion. Documented support reviewed 2026-10-09 against `llm.md#particles`.
-
-- Known boundary: The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified.
-
-- verification: The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified. Next: Watch a full-width hero of particles on a low-end phone and in forced colors, and check text contrast over the densest area.
-
-- stale: [tests/particles-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/particles-browser.test.js): `chromium: particles fill their box in the theme color, follow the pointer, drift, refit on resize and stay still under reduced motion`. The canvas covering its positioned ancestor, a dot fading in where it was placed in the theme on-surface color, following the pointer inside the canvas and holding when it leaves, destroy clearing the canvas, vx drift, the color option, the pixel buffer after a resize and still dots under reduced motion. No spoken-output assertion.
-
-<a id="lightbox"></a>
-
-## Lightbox
-
-**unassessed within the stated scope.** Enlarge-on-activation image and dismissal.
-
-Source review: needs-review, 2026-09-18. [src/sass/components/_lightbox.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_lightbox.scss), [src/ts/components/lightbox.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lightbox.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
-
-Web adaptation: ExpressiveCSS media behavior, not an upstream component contract. Documented support reviewed 2026-09-13 against `llm.md#lightbox`.
-
-- Known boundary: Enlargement and teardown are checked; modal containment, reduced motion and destruction during closing remain unverified.
-
-- verification: Native zoom, screen-reader announcements, actual Windows contrast themes and physical-device interaction remain unverified. Next: Complete the Lightbox manual-review fixture. Treat this as image enlargement, not a verified modal gallery.
-
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining lightbox supports Space and preserves its image on teardown`. Space opens image enlargement; Escape closes; destroy preserves original image/style.
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining lightbox teardown cancels pending work and preserves native button focus`. Native button Space opens without duplicate image Tab stop; destroy cancels opening callbacks and retains image. Subsequent Tab order only.
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: interrupt`. Repeated requests and immediate closing cancel stale completion callbacks and restore image styles and overflow.
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: reopen`. Reopening during closing preserves the current overlay, caption, dimensions and callback sequence.
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: motion`. Mounted reduced-motion changes finish opening and closing without waiting for configured durations.
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: focus`. Destroying an opening image preserves its focus and cancels completion.
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: isolation`. Overlapping instances retain their own captions and share ancestor overflow until the final close.
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: triggers`. Image and native button pointer/Enter/Space activation, Escape, overlay, scroll and resize dismissal, LTR/RTL and both motion preferences.
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: callbacks`. Start callbacks may close, reopen or destroy without stale work or overriding application focus.
-- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: destroy`. Opening/closing teardown restores attributes, styles and overflow, preserves unrelated focus, and supports remounting. All transition reliability cases also run in Firefox and WebKit.
-
-<a id="map"></a>
-
-## Map
-
-**unassessed within the stated scope.** MapLibre map with themed OpenFreeMap styles, markers with labels, tooltips, popups and dragging, routes, arcs, clusters, and zoom, compass, locate and full screen controls.
-
-Source review: needs-review, 2026-10-09. [src/sass/components/_map.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_map.scss), [src/ts/components/mapView.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/mapView.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: The page passes in the maplibre-gl module. Markers, popups and controls are authored HTML moved into MapLibre; routes, arcs and clusters are GeoJSON layers whose colors are read from theme tokens and redrawn when the theme changes. Documented support reviewed 2026-10-09 against `llm.md#map`.
-
-- Known boundary: Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified.
-
-- verification: Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified. Next: Use the map with a screen reader and on a touch device, try locate and full screen with real permissions, drag a marker with the keyboard, and check forced colors.
-
-- stale: [tests/map-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/map-browser.test.js): `chromium: map places markers and popups, runs controls, themes overlays and restores its markup`. Markers placed with the default dot, the popup without a marker open at init, a marker button opening its popup with aria-expanded, Escape and a map click closing it with focus back on the marker, zoom out disabled at the minimum zoom, zoom in, the compass bearing and reset, route, arcs and clusters in the theme primary color, no count layer without glyphs, all redrawn in the dark primary after a theme change, removeOverlay, destroy restoring the markup and controls, and a location arriving after destroy being ignored. No spoken-output assertion.
-- stale: [tests/map-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/map-browser.test.js): `chromium: a map in a shadow root opens its marker popup`. A marker button inside a shadow root finding its popup by id, then opening it with aria-expanded. No spoken-output assertion.
 
 <a id="toolbars"></a>
 
@@ -1109,24 +816,6 @@ Web adaptation: Application toggles hidden for docked views or opens a native di
 - integration: CSS does not supply search results announcements or modal focus ownership. Next: Verify submitted-query retention, full-screen return focus and spoken results in the application.
 
 - stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining suggestions and section links preserve selection and dismissal`. Native section links, retained search query and single-select suggestions, Arrow/Enter/Escape/Tab; no spoken-result assertion.
-
-<a id="command-palette"></a>
-
-## Command palette
-
-**unassessed within the stated scope.** A modal dialog with a filtering combobox and listbox, group headings, keywords, an empty message, a Ctrl or Command shortcut and native commandfor opening.
-
-Source review: needs-review, 2026-10-06. [src/sass/components/_command-palette.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_command-palette.scss), [src/ts/components/commandPalette.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/commandPalette.ts).
-
-Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
-
-Web adaptation: A native modal <dialog>; commands are links and buttons, and the component adds the combobox and listbox roles and the active option. Documented support reviewed 2026-10-06 against `llm.md#command-palette`.
-
-- Known boundary: The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified.
-
-- verification: The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified. Next: Run commands with a screen reader in each engine and confirm the active option and the empty message are announced; check that Ctrl+K does not clash with the screen reader or browser.
-
-- stale: [tests/command-palette-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/command-palette-browser.test.js): `chromium: command palette opens on its shortcut, filters, moves with the arrows and runs a command`. Combobox and listbox roles, Ctrl+K toggle, input focus, top placement, wrapping arrows, accent-insensitive and keyword filtering, hidden empty groups, the empty message, Enter and click running a command, closing with focus return, the commandfor opener, a fresh search on reopening, Escape, destroy and the keycap style. No spoken-output assertion.
 
 <a id="fieldsets"></a>
 
@@ -1639,6 +1328,65 @@ Web adaptation: Native <details> branches and links; every row is a Tab stop and
 
 - stale: [tests/tree-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/tree-browser.test.js): `chromium: tree indents its levels, turns its chevrons and marks the current row`. Level indent, leaf and branch text alignment, open and closed chevrons in LTR and RTL, opening a branch, the current row fill, guide lines and no tree role. No spoken-output assertion.
 
+<a id="menubar"></a>
+
+## Menubar
+
+**unassessed within the stated scope.** A menubar of menu triggers with one tab stop, Left, Right, Home and End along the bar, Down to open, and Left and Right between open menus.
+
+Source review: needs-review, 2026-10-15. [src/ts/components/menubar.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/menubar.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: Each item opens an ordinary Menu; the Menubar component adds the menubar and menuitem roles and the roving tab stop at runtime. Documented support reviewed 2026-10-15 against `llm.md#menubar`.
+
+- Known boundary: Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified.
+
+- verification: Roles, the roving tab stop, arrow, Home and End movement, opening, moving between open menus, flyout rows, Escape and RTL are checked in a browser; screen reader output remains unverified. Next: Operate the menubar with a screen reader in each engine and confirm menu and item announcements; check typeahead across the bar.
+
+- not-recorded: [tests/menubar-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/menubar-browser.test.js): `chromium: a menubar has one tab stop and moves between its menus with the arrow keys`. Menubar and menuitem roles, one tab stop that follows focus, Left, Right, Home and End with wrapping, Down opening on the first item, Right and Left between open menus, flyout rows keeping Right, Escape back to the bar and RTL. No spoken-output assertion.
+
+<a id="scrollspy"></a>
+
+## Scrollspy
+
+**unassessed within the stated scope.** Section tracking with per-section offsets and independent tables of contents grouped by getActiveElement callback identity.
+
+Source review: needs-review, 2026-09-17. [src/sass/components/_scrollspy.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_scrollspy.scss), [src/sass/components/_table_of_contents.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_table_of_contents.scss), [src/ts/components/scrollspy.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/scrollspy.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. Full visual parity and spoken output unverified.
+
+Web adaptation: Web document navigation helper. Documented support reviewed 2026-09-17 against `llm.md#scrollspy`.
+
+- Known boundary: Independent TOCs must reuse one getActiveElement function per group. Screen-reader announcements, native zoom and physical-device checks remain pending.
+
+- verification: Offsets, independent TOCs, per-instance active classes, fallback, teardown and native anchors have rendered coverage. Spoken current-link state, native zoom, actual contrast themes and physical devices remain unverified. Next: Complete the ScrollSpy fixtures in the accessibility manual-review checklist with actual browsers, assistive technology and devices.
+
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining web navigation, badges and list controls expose their meaning`. Named navigation, document footer, unavailable pagination non-link, named badge count, list checkbox and scoped TOC aria-current. No spoken-output assertion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: offsets`. Per-section observer offsets and removal of the previous section's active class.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: groups`. Independent callback groups retain separate current links and fallback state during scrolling and destruction.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: teardown`. Repeated destruction and remount restore authored offset value and priority and update surviving current links.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: ScrollSpy isolation: anchors`. Native keyboard fragment navigation and actual scrolling in LTR/RTL with ordinary and reduced motion.
+
+<a id="back-to-top"></a>
+
+## Back to top
+
+**unassessed within the stated scope.** An in-page link styled with the FAB classes, hidden and inert until the window scrolls past a threshold option (one viewport height by default), a focused link kept until focus leaves, a smooth scroll to the top that is instant under reduced motion, focus moved to the href target with a temporary tabindex, the body as the fallback target, modified and already prevented clicks left to the browser, a threshold that is not a CSS length replaced by the default with a warning, markup options, offset and stacking tokens, and a link that still jumps to its target without the script.
+
+Source review: needs-review, 2026-10-25. [src/sass/components/_back-to-top.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_back-to-top.scss), [src/ts/components/backToTop.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/backToTop.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: An IntersectionObserver on an empty element at the threshold instead of a scroll listener. The hidden state is the inert attribute plus visibility: hidden, with a fade in and an immediate hide, so a script that starts after the first paint does not show the link fading out, and a page without the script never hides the link. Documented support reviewed 2026-10-25 against `llm.md#back-to-top`.
+
+- Known boundary: The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched.
+
+- verification: The threshold, the return to the top with focus on the target by click and Enter, the hidden state's Tab order, hit testing and ARIA snapshot, a focused link kept through Home, a script that starts after the first paint, reduced motion, markup options, placement in both directions and the link without the script are checked in Chromium, Firefox and WebKit; spoken output, forced colors and real phones remain unverified. Only the window's scroll is watched. Next: Activate the link with VoiceOver and NVDA and confirm focus lands on the main content; check it in forced colors.
+
+- not-recorded: [tests/back-to-top-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/back-to-top-browser.test.js): `chromium: the link returns to the top and focuses its target, by click and by Enter`. Scroll past the threshold, activate by click and by Enter, and find the page at the top, focus on the target, the next Tab on the first control and no tabindex left behind.
+- not-recorded: [tests/back-to-top-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/back-to-top-browser.test.js): `chromium: the link is out of reach above the threshold`. Above the threshold, before and after scrolling past it, the link is hidden, skipped by Tab, missed by hit testing and absent from the ARIA snapshot. No spoken-output assertion.
+
 <a id="aura"></a>
 
 ## Aura
@@ -1674,6 +1422,84 @@ Web adaptation: Plain div parts on a CSS grid; the page owns role="log" on a liv
 - verification: Avatar anchoring, start and end sides in LTR and RTL, and grouped corners are checked in a browser; announcements for appended messages and spoken output remain unverified. Next: Append messages to a role="log" conversation and inspect assistive-technology output; test enlarged text and RTL.
 
 - stale: [tests/message-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/message-browser.test.js): `chromium: message layout anchors the avatar, follows its side and joins grouped corners`. Avatar level with the bubble bottom and above the footer, start/end edges in LTR and RTL, no gap without an avatar, grouped corner radii and no message landmarks. No spoken-output assertion.
+
+<a id="message-scroller"></a>
+
+## Message scroller
+
+**unassessed within the stated scope.** Following streamed output, release on scrolling up, a scroll-to-latest button, turn anchors with a peek of the previous message, prepend preservation, opening at the end, start or last turn, and jumping to a message by id.
+
+Source review: needs-review, 2026-10-08. [src/sass/components/_message-scroller.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_message-scroller.scss), [src/ts/components/messageScroller.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/messageScroller.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-08); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A native scroll container; the component sets scroll position, a spacer and the button's inert state. The page owns role="log" and aria-busy. Documented support reviewed 2026-10-08 against `llm.md#message-scroller`.
+
+- Known boundary: Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role="log" viewport, touch and scrollbar dragging, and spoken output remain unverified.
+
+- verification: Following, release on scrolling up, the inert button, prepend preservation, turn anchoring with the spacer, saved-transcript positions and jump to a message are checked in a browser; announcements in a role="log" viewport, touch and scrollbar dragging, and spoken output remain unverified. Next: Stream replies into a role="log" viewport with a screen reader in each engine, and check touch scrolling and scrollbar dragging on real devices.
+
+- stale: [tests/message-scroller-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/message-scroller-browser.test.js): `chromium: message scroller follows output, keeps its place on prepend and anchors new turns`. Opening at the end, following streamed text, release on a wheel scroll up, the inert button and resuming from it, following kept through a click on a message, scrollToMessage with a peek and with a missing id, prepend preservation, an appended anchor at the peek with a spacer that clears as the reply grows, and destroy. No spoken-output assertion.
+- stale: [tests/message-scroller-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/message-scroller-browser.test.js): `chromium: message scroller opens saved transcripts at the requested position`. last-anchor on a long last turn, last-anchor falling back to the end, and start.
+- stale: [tests/message-scroller-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/message-scroller-browser.test.js): `chromium: message scroller jumps to a message inside a shadow root`. scrollToMessage called right after init finds a message in a shadow root and scrolls it one peek below the top; pressing the button from the keyboard there moves focus to the viewport as the button goes inert.
+
+<a id="pull-to-refresh"></a>
+
+## Pull-to-refresh
+
+**unassessed within the stated scope.** A touch pull from a scroll position of 0 past a threshold, a refresh button and refresh() method that start the same refresh, an expressive:refresh event and onRefresh callback whose detail takes waitUntil(), complete(), aria-busy while refreshing, a status region that announces the start and the finish with i18n strings, contained overscroll on the container and the page, and containers that scroll themselves or pull the page.
+
+Source review: needs-review, 2026-10-24. [src/sass/components/_pull-to-refresh.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_pull-to-refresh.scss), [src/ts/components/pullToRefresh.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/pullToRefresh.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-24); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The author's loading indicator carries the role and name; the script sets a class, two custom properties and aria-busy, and adds a visually hidden role="status" region because the indicator is hidden once the refresh ends. Documented support reviewed 2026-10-24 against `llm.md#pull-to-refresh`.
+
+- Known boundary: The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified. There is no pull from the bottom and no nesting.
+
+- verification: The pull threshold, waitUntil() and complete(), drags that do nothing, inner and surrounding scrollers, a second finger, the busy state, the refresh button, page scrolling, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, pen input, spoken output from the status region and forced colors remain unverified. Next: Pull on Chrome and Firefox for Android and Safari on iOS and confirm the browser's own refresh does not run; read a refresh with a screen reader.
+
+- not-recorded: [tests/pull-to-refresh-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/pull-to-refresh-browser.test.js): `chromium: a pull past the threshold refreshes once and the indicator stays until the page reports the finish`. Real touch input. Contained overscroll, one event per pull past the threshold, the indicator and aria-busy kept until a waitUntil() promise settles or complete() runs. No spoken-output assertion.
+- not-recorded: [tests/pull-to-refresh-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/pull-to-refresh-browser.test.js): `chromium: the refresh button, by click, Enter or Space, and refresh() each start a refresh`. The refresh button by click, Enter and Space, and refresh(), each firing one event and showing the indicator.
+
+<a id="swipe-actions"></a>
+
+## Swipe actions
+
+**unassessed within the stated scope.** A touch swipe toward a row's inline start that reveals its .swipe-actions group, opening past half the group's width or on a flick and closing short of it, a [data-swipe-toggle] button with aria-expanded, focus on an action opening its row, Escape, an outside tap or an action closing it, one open row per list, an expressive:swipetoggle event and onToggle callback with { row, open }, open(row) and close(), right-to-left pages and reduced motion.
+
+Source review: needs-review, 2026-10-24. [src/sass/components/_swipe-actions.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_swipe-actions.scss), [src/ts/components/swipeActions.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/swipeActions.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-24); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: Touch events with a non-passive touchmove, because a pointer drag the browser takes for a pan ends in pointercancel. The row slides by a translate on one custom property, and the actions wait past its inline end in a list clipped on the inline axis, so focus on a closed row's action scrolls nothing. The author names the toggle and the actions; the script keeps aria-expanded. Documented support reviewed 2026-10-24 against `llm.md#swipe-actions`.
+
+- Known boundary: Swipe reveal, the slide limit, short, vertical, mouse, two-finger and cancelled drags, the toggle, focus on an action, Escape, an outside tap, closing after an action, one open row, the event and onToggle, right-to-left pages, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, flick velocity, pen input, spoken output and forced colors remain unverified. Actions only on the inline-end side, and no full swipe that runs an action.
+
+- verification: Swipe reveal, the slide limit, short, vertical, mouse, two-finger and cancelled drags, the toggle, focus on an action, Escape, an outside tap, closing after an action, one open row, the event and onToggle, right-to-left pages, reduced motion and destroy() are checked in a browser, with real touch in Chromium and dispatched touch events in Firefox and WebKit; real phones, flick velocity, pen input, spoken output and forced colors remain unverified. Next: Swipe on Chrome for Android and Safari on iOS and confirm the browser's back gesture and vertical scrolling still work; read a row's actions with a screen reader.
+
+- not-recorded: [tests/swipe-actions-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/swipe-actions-browser.test.js): `chromium: a swipe reveals a row's actions, and a keyboard user reaches the same actions`. Real touch input. A swipe reveals the actions without running one, and Tab, Enter and the toggle reach and run an action from the keyboard.
+- not-recorded: [tests/swipe-actions-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/swipe-actions-browser.test.js): `chromium: the toggle opens and closes a row, and a tap outside, Escape or an action closes it`. The toggle and aria-expanded, focus on an action opening its row, an outside tap, Escape with focus returned to the toggle, closing after an action, and an action that removes its row.
+
+<a id="show-more"></a>
+
+## Show more
+
+**unassessed within the stated scope.** A .show-more holding text with a line-clamp-1, -2 or -3 class and a <button type="button">; the button sets aria-expanded and aria-controls, shows the full text, reads "Show less" while it is open (i18n.showLess or data-show-less), and hides while the clamped text fits, checking again on resize, after web fonts load and on blur.
+
+Source review: needs-review, 2026-10-25. [src/ts/components/showMore.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/showMore.ts), [src/sass/components/_show-more.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_show-more.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: The component unclamps with inline -webkit-line-clamp and line-clamp, because the utilities layer and prefixed clamp classes beat any component rule. A ResizeObserver on the text and document.fonts.ready run the fit check, scrollHeight against clientHeight with 1px for Firefox's rounding. Documented support reviewed 2026-10-25 against `llm.md#show-more`.
+
+- Known boundary: Toggling, the fit check across widths, fractional line heights and window-size prefixes, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output is unverified. Find-in-page does not open clamped text, a font that starts loading after document.fonts.ready has settled is not caught until the next resize, and an icon-only button keeps its aria-label while open.
+
+- verification: Toggling, the fit check, the focused-button cases, a web-font swap, labels, events and destroy() are checked in a browser or jsdom; spoken output with VoiceOver and NVDA is unverified. Next: Activate the button with VoiceOver and NVDA and check that the expanded state and label are announced.
+
+- not-recorded: [tests/show-more-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/show-more-browser.test.js): `chromium: the button shows the full text and collapses it again`. A click and Enter that unclamp and clamp the text, with aria-expanded and aria-controls.
+- not-recorded: [tests/show-more-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/show-more-browser.test.js): `chromium: the button hides while the clamped text fits`. Text that fits, a fractional line height, a container widened and narrowed, a window-size prefix, Tab order, and a focused button kept through a resize and until blur.
+- not-recorded: [tests/show-more-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/show-more-browser.test.js): `chromium: a web font that swaps in hides the button once its text fits`. A held-back web font that makes cut text fit, and an instance destroyed before the font loads.
 
 <a id="stat"></a>
 
@@ -2097,6 +1923,62 @@ Web adaptation: A plain div around authored heading, text and buttons; the page 
 
 - stale: [tests/empty-state-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/empty-state-browser.test.js): `chromium: empty state centers its content and rings the leading icon`. Centered column, icon circle size and fill, text width cap, centered wrapping actions and an empty alt image left out of the accessibility tree. No spoken-output assertion.
 
+<a id="hover-card"></a>
+
+## Hover card
+
+**unassessed within the stated scope.** A link with hover-card-trigger whose aria-details names a .popover with popover="hint"; the card shows against the link after enterDelay of hover or keyboard focus, stays while the pointer or focus is on the link or card, hides after exitDelay or at once on Escape with focus back on the link, and a tap or click follows the link.
+
+Source review: needs-review, 2026-10-25. [src/ts/components/hoverCard.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/hoverCard.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: Script timers decide when the card shows, and showPopover({ source }) makes the link its anchor and invoker, so the browser places it, puts it next in the Tab order and light-dismisses it. Interest invokers (interestfor) exist only in Chromium, so they are not used. Documented support reviewed 2026-10-25 against `llm.md#hover-card`.
+
+- Known boundary: Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified. Touch shows no card, and the card's content is static markup.
+
+- verification: Hover delay, a pointer that passes over, staying open on the card, hiding after exitDelay, keyboard focus, Tab into the card, Escape with focus back on the link, focus leaving the card and a click that focuses the link are checked in Chromium, Firefox and WebKit; spoken output and aria-details support in screen readers remain unverified. Next: Tab to a hover card link with VoiceOver and NVDA and confirm the details relationship is announced and the card is reachable.
+
+- not-recorded: [tests/hover-card-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/hover-card-browser.test.js): `chromium: hovering the link shows the card after the delay, and it stays while the pointer is on the card`. Nothing before enterDelay, the card against the link's bottom edge plus the popover gap, staying open with the pointer on the card past exitDelay, and hiding once the pointer has left both.
+- not-recorded: [tests/hover-card-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/hover-card-browser.test.js): `chromium: keyboard focus shows the card, Tab moves into it, and Escape hides it with focus back on the link`. Tab to the link shows the card after enterDelay with focus kept on the link, Tab into the card keeps it open, and Escape hides it with focus back on the link.
+
+<a id="tour"></a>
+
+## Tour
+
+**unassessed within the stated scope.** One step at a time beside its target, a highlight ring, Back, Next and Done, progress text, skipped missing targets, Escape and focus return.
+
+Source review: needs-review, 2026-10-15. [src/ts/behaviors/tour.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/behaviors/tour.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A manual native popover placed with CSS anchor positioning; the Tour behavior moves the anchor and focus. Documented support reviewed 2026-10-15 against `llm.md#tour`.
+
+- Known boundary: Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified.
+
+- verification: Placement beside each target, the card name, progress, button visibility, skipped targets, Escape, focus return and cleanup after a scripted close are checked in a browser; screen reader output remains unverified. Next: Take a tour with a screen reader in each engine and confirm each step is announced when it opens.
+
+- not-recorded: [tests/tour-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/tour-browser.test.js): `chromium: a tour steps through its targets beside each one and returns focus`. Opening from a start button, the card named by the step heading, progress text, skipped missing targets, button visibility per step, placement below each target, releasing the previous target, Escape, focus return and cleanup after hidePopover. No spoken-output assertion.
+
+<a id="loading-overlay"></a>
+
+## Loading overlay
+
+**unassessed within the stated scope.** A region the page marks aria-busy="true" shows a surface scrim and its loading indicator and is made inert until the attribute goes, with focus taken from the control inside it, keeps an inert state the author set, announces the start and the finish in a status region after it with i18n strings, returns focus to the control that had it, and stops following the attribute on destroy().
+
+Source review: needs-review, 2026-10-25. [src/sass/components/_loading-overlay.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_loading-overlay.scss), [src/ts/components/loadingOverlay.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/loadingOverlay.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-25); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: The native inert attribute blocks pointer and keyboard input instead of script handlers. The page owns aria-busy, and the script follows it with a MutationObserver. Inert content leaves the accessibility tree, so the script adds a visually hidden role="status" region outside the region. Documented support reviewed 2026-10-25 against `llm.md#loading-overlay`.
+
+- Known boundary: Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified. The scrim does not follow the content of a region that scrolls itself; the docs say to wrap the scroller.
+
+- verification: Input blocking, the author's inert state, the status region, focus return, the scrim and indicator geometry and destroy() are checked in Chromium, Firefox and WebKit; spoken output from the status region and real forced-colors themes remain unverified. Next: Mark a region busy and clear it with VoiceOver and NVDA running, and view it under a Windows high-contrast theme.
+
+- not-recorded: [tests/loading-overlay-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/loading-overlay-browser.test.js): `chromium: a busy region takes no click or Tab, and clearing it gives both back`. A real mouse click and Tab while aria-busy is "true", and again after it is set to "false" and after it is removed.
+- not-recorded: [tests/loading-overlay-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/loading-overlay-browser.test.js): `chromium: focus goes back to where it was when the region clears`. Focus dropped by inert and returned on clear, a focus move made while busy kept, and a removed control not refocused. No spoken-output assertion.
+
 <a id="marquee"></a>
 
 ## Marquee
@@ -2114,6 +1996,124 @@ Web adaptation: A visual copy of the item list marked aria-hidden, with its link
 - verification: The group placement, the half-cycle position, the right-to-left and vertical directions, reverse, pausing on hover, focus and .paused, the hidden copy in the accessibility tree and the reduced-motion stop are checked in a browser; spoken output and long-running smoothness remain unverified. Next: Listen to a marquee with a screen reader in each engine and confirm each item is read once; watch a long strip for a visible jump at the loop point.
 
 - stale: [tests/marquee-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/marquee-browser.test.js): `chromium: marquee loops its two groups, pauses, follows direction and stops under reduced motion`. A short group filling the strip, the copy one gap after it, the half-cycle position horizontally, in RTL and vertically, reverse, pausing on hover, focus and .paused, one link per item in the accessibility tree and the reduced-motion stop with the copy hidden. No spoken-output assertion.
+
+<a id="image-compare"></a>
+
+## Image compare
+
+**unassessed within the stated scope.** Two stacked images, a divider and handle driven by a native range input, keyboard and pointer control, RTL and a focus ring.
+
+Source review: needs-review, 2026-10-15. [src/sass/components/_image-compare.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_image-compare.scss).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-15); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A native range input covers the images invisibly; the ImageCompare behavior writes its value to the divider position. Documented support reviewed 2026-10-15 against `llm.md#image-compare`.
+
+- Known boundary: The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified.
+
+- verification: The initial position, the reveal by arrow keys, the focus ring, RTL, the named slider and Slider staying off are checked in a browser; screen reader output remains unverified. Next: Move the divider with a screen reader in each engine and confirm the value is announced.
+
+- not-recorded: [tests/image-compare-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/image-compare-browser.test.js): `chromium: image compare reveals the second image up to the range's value`. The initial value applied on load, each image on its side of the divider, arrow keys moving the divider, the handle focus ring, RTL, named native sliders and Slider leaving the range alone. No spoken-output assertion.
+
+<a id="confetti"></a>
+
+## Confetti
+
+**unassessed within the stated scope.** Bursts from a button's center over the page, inside an authored canvas, or from script, with count, angle, spread, speed, decay, gravity, drift, lifetime, origin, colors, square, circle and star shapes, and size options, theme colors by default and a promise that resolves when the burst ends.
+
+Source review: needs-review, 2026-10-09. [src/sass/components/_confetti.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_confetti.scss), [src/ts/components/confetti.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/confetti.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A canvas drawn with requestAnimationFrame. The page canvas is an aria-hidden manual popover with pointer events off, so it draws above modal dialogs without blocking clicks. Reduced motion draws nothing. Documented support reviewed 2026-10-09 against `llm.md#confetti`.
+
+- Known boundary: The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified.
+
+- verification: The burst origin on a button and on a canvas, theme colors, manualStart, the page canvas in the top layer above a modal dialog with pointer events off and aria-hidden, its removal when the burst ends, destroy and the reduced-motion skip are checked in a browser; frame rate on low-end devices and forced colors remain unverified. Next: Watch a burst on a low-end phone and in forced colors, and confirm a screen reader announces nothing for it.
+
+- stale: [tests/confetti-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/confetti-browser.test.js): `chromium: confetti bursts from its trigger in theme colors, on its own canvas, above a modal dialog and not under reduced motion`. A canvas bursting at its center on init, manualStart waiting for fire(), a button bursting from its center in the theme primary color, the page canvas covering the viewport in the top layer with aria-hidden and no pointer events, fire() resolving after it is removed, a burst over an open modal dialog, destroy and the reduced-motion skip. No spoken-output assertion.
+
+<a id="particles"></a>
+
+## Particles
+
+**unassessed within the stated scope.** A canvas that covers its positioned ancestor with drifting dots that fade near the edges and lean toward the pointer, with quantity, staticity, ease, size, color and drift options and the theme on-surface color by default.
+
+Source review: needs-review, 2026-10-09. [src/sass/components/_particles.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_particles.scss), [src/ts/components/particles.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/particles.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A canvas drawn with requestAnimationFrame, aria-hidden with pointer events off. The dot color comes from the canvas's CSS color, read each frame so theme changes apply. Reduced motion draws the dots once without motion. Documented support reviewed 2026-10-09 against `llm.md#particles`.
+
+- Known boundary: The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified.
+
+- verification: The canvas covering its box, the on-surface default and the color option, following the pointer only while it is over the canvas, drift, refitting on resize, destroy and the still drawing under reduced motion are checked in a browser; frame rate on low-end devices, forced colors and contrast of text over the dots remain unverified. Next: Watch a full-width hero of particles on a low-end phone and in forced colors, and check text contrast over the densest area.
+
+- stale: [tests/particles-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/particles-browser.test.js): `chromium: particles fill their box in the theme color, follow the pointer, drift, refit on resize and stay still under reduced motion`. The canvas covering its positioned ancestor, a dot fading in where it was placed in the theme on-surface color, following the pointer inside the canvas and holding when it leaves, destroy clearing the canvas, vx drift, the color option, the pixel buffer after a resize and still dots under reduced motion. No spoken-output assertion.
+
+<a id="lightbox"></a>
+
+## Lightbox
+
+**unassessed within the stated scope.** Enlarge-on-activation image and dismissal.
+
+Source review: needs-review, 2026-09-18. [src/sass/components/_lightbox.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_lightbox.scss), [src/ts/components/lightbox.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/lightbox.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-09-13); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference feedback-material-review. Full visual parity and spoken output unverified.
+
+Web adaptation: ExpressiveCSS media behavior, not an upstream component contract. Documented support reviewed 2026-09-13 against `llm.md#lightbox`.
+
+- Known boundary: Enlargement and teardown are checked; modal containment, reduced motion and destruction during closing remain unverified.
+
+- verification: Native zoom, screen-reader announcements, actual Windows contrast themes and physical-device interaction remain unverified. Next: Complete the Lightbox manual-review fixture. Treat this as image enlargement, not a verified modal gallery.
+
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining lightbox supports Space and preserves its image on teardown`. Space opens image enlargement; Escape closes; destroy preserves original image/style.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: remaining lightbox teardown cancels pending work and preserves native button focus`. Native button Space opens without duplicate image Tab stop; destroy cancels opening callbacks and retains image. Subsequent Tab order only.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: interrupt`. Repeated requests and immediate closing cancel stale completion callbacks and restore image styles and overflow.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: reopen`. Reopening during closing preserves the current overlay, caption, dimensions and callback sequence.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: motion`. Mounted reduced-motion changes finish opening and closing without waiting for configured durations.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: focus`. Destroying an opening image preserves its focus and cancels completion.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: isolation`. Overlapping instances retain their own captions and share ancestor overflow until the final close.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: triggers`. Image and native button pointer/Enter/Space activation, Escape, overlay, scroll and resize dismissal, LTR/RTL and both motion preferences.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: callbacks`. Start callbacks may close, reopen or destroy without stale work or overriding application focus.
+- stale: [tests/expressivecss-web-accessibility-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/expressivecss-web-accessibility-browser.test.js): `chromium: Lightbox transition reliability: destroy`. Opening/closing teardown restores attributes, styles and overflow, preserves unrelated focus, and supports remounting. All transition reliability cases also run in Firefox and WebKit.
+
+<a id="map"></a>
+
+## Map
+
+**unassessed within the stated scope.** MapLibre map with themed OpenFreeMap styles, markers with labels, tooltips, popups and dragging, routes, arcs, clusters, and zoom, compass, locate and full screen controls.
+
+Source review: needs-review, 2026-10-09. [src/sass/components/_map.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_map.scss), [src/ts/components/mapView.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/mapView.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-09); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: The page passes in the maplibre-gl module. Markers, popups and controls are authored HTML moved into MapLibre; routes, arcs and clusters are GeoJSON layers whose colors are read from theme tokens and redrawn when the theme changes. Documented support reviewed 2026-10-09 against `llm.md#map`.
+
+- Known boundary: Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified.
+
+- verification: Marker placement, the popup opened from its marker with aria-expanded, Escape and map-click closing with focus back on the marker, zoom limits, the compass bearing, theme-colored routes, arcs and clusters redrawn after a theme swap, removeOverlay and destroy are checked in a browser; the locate and full screen controls, marker dragging, spoken output, touch gestures and forced colors remain unverified. Next: Use the map with a screen reader and on a touch device, try locate and full screen with real permissions, drag a marker with the keyboard, and check forced colors.
+
+- stale: [tests/map-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/map-browser.test.js): `chromium: map places markers and popups, runs controls, themes overlays and restores its markup`. Markers placed with the default dot, the popup without a marker open at init, a marker button opening its popup with aria-expanded, Escape and a map click closing it with focus back on the marker, zoom out disabled at the minimum zoom, zoom in, the compass bearing and reset, route, arcs and clusters in the theme primary color, no count layer without glyphs, all redrawn in the dark primary after a theme change, removeOverlay, destroy restoring the markup and controls, and a location arriving after destroy being ignored. No spoken-output assertion.
+- stale: [tests/map-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/map-browser.test.js): `chromium: a map in a shadow root opens its marker popup`. A marker button inside a shadow root finding its popup by id, then opening it with aria-expanded. No spoken-output assertion.
+
+<a id="command-palette"></a>
+
+## Command palette
+
+**unassessed within the stated scope.** A modal dialog with a filtering combobox and listbox, group headings, keywords, an empty message, a Ctrl or Command shortcut and native commandfor opening.
+
+Source review: needs-review, 2026-10-06. [src/sass/components/_command-palette.scss](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/sass/components/_command-palette.scss), [src/ts/components/commandPalette.ts](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/src/ts/components/commandPalette.ts).
+
+Google relationship: none. Upstream review: web-extension-inventory-reviewed (2026-10-06); [reviewed source](https://m3.material.io/components). Requirements and boundaries: design reference web-extensions-review. The inventory page renders client-side, so this review relies on the 2026-09-13 inventory review. Full visual parity and spoken output unverified.
+
+Web adaptation: A native modal <dialog>; commands are links and buttons, and the component adds the combobox and listbox roles and the active option. Documented support reviewed 2026-10-06 against `llm.md#command-palette`.
+
+- Known boundary: The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified.
+
+- verification: The shortcut, filtering, arrow and Enter handling, closing, focus return, the native opener and destroy are checked in a browser; screen reader announcements and shortcut conflicts with assistive technology remain unverified. Next: Run commands with a screen reader in each engine and confirm the active option and the empty message are announced; check that Ctrl+K does not clash with the screen reader or browser.
+
+- stale: [tests/command-palette-browser.test.js](https://github.com/BaezFJ/ExpressiveCSS/blob/fdb42ddae5f823b62e117d9a6523634373d40f24/tests/command-palette-browser.test.js): `chromium: command palette opens on its shortcut, filters, moves with the arrows and runs a command`. Combobox and listbox roles, Ctrl+K toggle, input focus, top placement, wrapping arrows, accent-insensitive and keyword filtering, hidden empty groups, the empty message, Enter and click running a command, closing with focus return, the commandfor opener, a fresh search on reopening, Escape, destroy and the keycap style. No spoken-output assertion.
 
 <a id="rating"></a>
 

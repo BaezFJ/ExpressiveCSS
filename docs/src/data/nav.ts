@@ -318,24 +318,6 @@ const GROUPS: DocsGroup[] = [
           "Material Design 3 menus, from the HTML.",
         aliases: ["/dropdown.html"],
       },
-      {
-        id: "menubar",
-        styles: ["components/menubar"],
-        exports: ["Menubar"],
-        label: "Menubar",
-        route: "/menubar.html",
-        description:
-          "An application's row of menus, such as File, Edit and View, with the menubar keyboard contract.",
-      },
-      {
-        id: "scrollspy",
-        styles: ["components/scrollspy", "components/table_of_contents"],
-        exports: ["ScrollSpy"],
-        label: "Scrollspy",
-        route: "/scrollspy.html",
-        description:
-          "Highlight the table of contents as the page scrolls.",
-      },
     ],
   },
   {
@@ -389,15 +371,6 @@ const GROUPS: DocsGroup[] = [
           "A circular action that can open a menu of related shortcuts.",
       },
       {
-        id: "back-to-top",
-        styles: ["components/back-to-top"],
-        exports: ["BackToTop"],
-        label: "Back to top",
-        route: "/back-to-top.html",
-        description:
-          "A link that appears once a long page has scrolled down, and returns to the top with focus on the main content.",
-      },
-      {
         id: "cards",
         styles: ["components/cards", "components/expanding-card"],
         exports: ["Cards", "ExpandingCard"],
@@ -418,48 +391,12 @@ const GROUPS: DocsGroup[] = [
         aliases: ["/collections.html"],
       },
       {
-        id: "message_scroller",
-        styles: ["components/message-scroller"],
-        exports: ["MessageScroller"],
-        label: "Message scroller",
-        route: "/message-scroller.html",
-        description:
-          "A chat scroll container that anchors turns, follows streamed replies and keeps its place as history loads.",
-      },
-      {
-        id: "pull-to-refresh",
-        styles: ["components/pull-to-refresh"],
-        exports: ["PullToRefresh"],
-        label: "Pull-to-refresh",
-        route: "/pull-to-refresh.html",
-        description:
-          "Refreshes a list or page when a person pulls down at its top, or presses its refresh button.",
-      },
-      {
-        id: "swipe-actions",
-        styles: ["components/swipe-actions"],
-        exports: ["SwipeActions"],
-        label: "Swipe actions",
-        route: "/swipe-actions.html",
-        description:
-          "Reveals a list row's actions when a person swipes it sideways, or presses its actions button.",
-      },
-      {
         id: "accordion",
         styles: ["components/accordion"],
         label: "Accordion",
         route: "/accordion.html",
         description:
           "Stacked disclosures that open one section of content at a time, on native details.",
-      },
-      {
-        id: "show_more",
-        styles: ["components/show-more"],
-        exports: ["ShowMore"],
-        label: "Show more",
-        route: "/show-more.html",
-        description:
-          "Clamped text with a button that shows the rest, and hides itself when the text already fits.",
       },
       {
         id: "data_table",
@@ -535,23 +472,6 @@ const GROUPS: DocsGroup[] = [
           "Material Design 3 tooltips, from the HTML.",
       },
       {
-        id: "hover_card",
-        exports: ["HoverCard"],
-        label: "Hover card",
-        route: "/hover-card.html",
-        description:
-          "Shows a card of preview content after a delay when a link is hovered or gets keyboard focus.",
-      },
-      {
-        id: "tour",
-        styles: ["components/tour"],
-        exports: ["Tour"],
-        label: "Tour",
-        route: "/tour.html",
-        description:
-          "A card that walks people through an interface one step at a time, beside each element it explains.",
-      },
-      {
         id: "snackbar",
         styles: ["components/snackbar"],
         exports: ["Snackbar"],
@@ -578,15 +498,6 @@ const GROUPS: DocsGroup[] = [
           "A shape that morphs while it spins, for waits under five seconds.",
       },
       {
-        id: "loading_overlay",
-        styles: ["components/loading-overlay"],
-        exports: ["LoadingOverlay"],
-        label: "Loading overlay",
-        route: "/loading-overlay.html",
-        description:
-          "Covers part of a page while it loads, so nothing inside takes input until the page clears it.",
-      },
-      {
         id: "alert",
         styles: ["components/alert"],
         label: "Alert",
@@ -603,52 +514,6 @@ const GROUPS: DocsGroup[] = [
         route: "/carousel.html",
         description:
           "Material 3 adaptive carousels for visual collections.",
-      },
-      {
-        id: "image_compare",
-        styles: ["components/image-compare"],
-        exports: ["ImageCompare"],
-        label: "Image compare",
-        route: "/image-compare.html",
-        description:
-          "Two images of the same scene with a divider that reveals one over the other.",
-      },
-      {
-        id: "confetti",
-        styles: ["components/confetti"],
-        exports: ["Confetti"],
-        label: "Confetti",
-        route: "/confetti.html",
-        description:
-          "Bursts of theme-colored confetti for a moment worth celebrating.",
-      },
-      {
-        id: "particles",
-        styles: ["components/particles"],
-        exports: ["Particles"],
-        label: "Particles",
-        route: "/particles.html",
-        description:
-          "Drifting dots behind a section that lean toward the pointer.",
-      },
-      {
-        id: "media",
-        styles: ["components/lightbox"],
-        exports: ["Lightbox"],
-        label: "Lightbox",
-        title: "Media",
-        route: "/media.html",
-        description:
-          "Enlarge an image in a lightbox when it is clicked.",
-      },
-      {
-        id: "map",
-        styles: ["components/map"],
-        exports: ["MapView"],
-        label: "Map",
-        route: "/map.html",
-        description:
-          "An interactive map with markers, popups, routes, arcs, clusters and controls, built on MapLibre.",
       },
       {
         id: "toolbars",
@@ -675,15 +540,6 @@ const GROUPS: DocsGroup[] = [
         route: "/search.html",
         description:
           "A search bar, and the view it expands into.",
-      },
-      {
-        id: "command_palette",
-        styles: ["components/command-palette"],
-        exports: ["CommandPalette"],
-        label: "Command palette",
-        route: "/command-palette.html",
-        description:
-          "A searchable list of commands in a dialog, opened from anywhere with a shortcut.",
       },
     ],
   },
@@ -921,6 +777,34 @@ const GROUPS: DocsGroup[] = [
           "Nested lists of folders and links that open in place, for file browsers and deep navigation.",
       },
       {
+        id: "menubar",
+        styles: ["components/menubar"],
+        exports: ["Menubar"],
+        label: "Menubar",
+        route: "/menubar.html",
+        description:
+          "An application's row of menus, such as File, Edit and View, with the menubar keyboard contract.",
+      },
+      {
+        id: "scrollspy",
+        styles: ["components/scrollspy", "components/table_of_contents"],
+        exports: ["ScrollSpy"],
+        label: "Scrollspy",
+        route: "/scrollspy.html",
+        description:
+          "Highlight the table of contents as the page scrolls.",
+      },
+      {
+        id: "back-to-top",
+        styles: ["components/back-to-top"],
+        exports: ["BackToTop"],
+        section: "Actions",
+        label: "Back to top",
+        route: "/back-to-top.html",
+        description:
+          "A link that appears once a long page has scrolled down, and returns to the top with focus on the main content.",
+      },
+      {
         id: "aura",
         styles: ["components/aura"],
         section: "Containment",
@@ -936,6 +820,42 @@ const GROUPS: DocsGroup[] = [
         route: "/message.html",
         description:
           "One message in a conversation, with an optional avatar, header and footer.",
+      },
+      {
+        id: "message_scroller",
+        styles: ["components/message-scroller"],
+        exports: ["MessageScroller"],
+        label: "Message scroller",
+        route: "/message-scroller.html",
+        description:
+          "A chat scroll container that anchors turns, follows streamed replies and keeps its place as history loads.",
+      },
+      {
+        id: "pull-to-refresh",
+        styles: ["components/pull-to-refresh"],
+        exports: ["PullToRefresh"],
+        label: "Pull-to-refresh",
+        route: "/pull-to-refresh.html",
+        description:
+          "Refreshes a list or page when a person pulls down at its top, or presses its refresh button.",
+      },
+      {
+        id: "swipe-actions",
+        styles: ["components/swipe-actions"],
+        exports: ["SwipeActions"],
+        label: "Swipe actions",
+        route: "/swipe-actions.html",
+        description:
+          "Reveals a list row's actions when a person swipes it sideways, or presses its actions button.",
+      },
+      {
+        id: "show_more",
+        styles: ["components/show-more"],
+        exports: ["ShowMore"],
+        label: "Show more",
+        route: "/show-more.html",
+        description:
+          "Clamped text with a button that shows the rest, and hides itself when the text already fits.",
       },
       {
         id: "stat",
@@ -1128,6 +1048,32 @@ const GROUPS: DocsGroup[] = [
           "What a view shows when it has nothing to list: an icon, a heading, text and actions.",
       },
       {
+        id: "hover_card",
+        exports: ["HoverCard"],
+        label: "Hover card",
+        route: "/hover-card.html",
+        description:
+          "Shows a card of preview content after a delay when a link is hovered or gets keyboard focus.",
+      },
+      {
+        id: "tour",
+        styles: ["components/tour"],
+        exports: ["Tour"],
+        label: "Tour",
+        route: "/tour.html",
+        description:
+          "A card that walks people through an interface one step at a time, beside each element it explains.",
+      },
+      {
+        id: "loading_overlay",
+        styles: ["components/loading-overlay"],
+        exports: ["LoadingOverlay"],
+        label: "Loading overlay",
+        route: "/loading-overlay.html",
+        description:
+          "Covers part of a page while it loads, so nothing inside takes input until the page clears it.",
+      },
+      {
         id: "marquee",
         styles: ["components/marquee"],
         section: "Media and motion",
@@ -1135,6 +1081,62 @@ const GROUPS: DocsGroup[] = [
         route: "/marquee.html",
         description:
           "A row of logos, images or text that scrolls without end.",
+      },
+      {
+        id: "image_compare",
+        styles: ["components/image-compare"],
+        exports: ["ImageCompare"],
+        label: "Image compare",
+        route: "/image-compare.html",
+        description:
+          "Two images of the same scene with a divider that reveals one over the other.",
+      },
+      {
+        id: "confetti",
+        styles: ["components/confetti"],
+        exports: ["Confetti"],
+        label: "Confetti",
+        route: "/confetti.html",
+        description:
+          "Bursts of theme-colored confetti for a moment worth celebrating.",
+      },
+      {
+        id: "particles",
+        styles: ["components/particles"],
+        exports: ["Particles"],
+        label: "Particles",
+        route: "/particles.html",
+        description:
+          "Drifting dots behind a section that lean toward the pointer.",
+      },
+      {
+        id: "media",
+        styles: ["components/lightbox"],
+        exports: ["Lightbox"],
+        label: "Lightbox",
+        title: "Media",
+        route: "/media.html",
+        description:
+          "Enlarge an image in a lightbox when it is clicked.",
+      },
+      {
+        id: "map",
+        styles: ["components/map"],
+        exports: ["MapView"],
+        label: "Map",
+        route: "/map.html",
+        description:
+          "An interactive map with markers, popups, routes, arcs, clusters and controls, built on MapLibre.",
+      },
+      {
+        id: "command_palette",
+        styles: ["components/command-palette"],
+        exports: ["CommandPalette"],
+        section: "Search and commands",
+        label: "Command palette",
+        route: "/command-palette.html",
+        description:
+          "A searchable list of commands in a dialog, opened from anywhere with a shortcut.",
       },
       {
         id: "rating",

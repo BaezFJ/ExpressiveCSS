@@ -125,7 +125,7 @@ const controls = `
 <Code code={`
 import 'maplibre-gl/dist/maplibre-gl.css';
 import * as maplibregl from 'maplibre-gl';
-import { MapView } from '@expressivecss/expressive';
+import { MapView } from '@expressivecss/extras';
 
 const map = MapView.init(document.querySelector('.map'), {
   maplibregl,
@@ -312,7 +312,7 @@ instance.map.on('click', 'stores-points', (event) => {
   </Section>
   <Section {...S.methods}>
 <Code code={`
-const instance = Expressive.MapView.getInstance(document.querySelector('.map'));
+const instance = ExpressiveExtras.MapView.getInstance(document.querySelector('.map'));
 instance.map; // the MapLibre map, for anything else
 instance.markers; // the MapLibre markers, in markup order
 instance.addRoute(id, coordinates, options);
@@ -341,7 +341,7 @@ instance.destroy(); // removes the map and puts the markup back
 // ExpressiveCSS does not bundle MapLibre; the docs load a pinned copy.
 import * as maplibregl from 'https://unpkg.com/maplibre-gl@6.13.0/dist/maplibre-gl.mjs';
 
-const instance = Expressive.MapView.init(document.getElementById('demo-map'), {
+const instance = ExpressiveExtras.MapView.init(document.getElementById('demo-map'), {
   maplibregl,
   center: [-87.66, 41.895],
   zoom: 11.5

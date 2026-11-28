@@ -5,7 +5,7 @@
 
 import { test, describe, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
-import { Expressive, resetBody, window } from './setup.js';
+import { Expressive, ExpressiveExtras, resetBody, window } from './setup.js';
 
 const sleep = (ms = 10) => new Promise((resolve) => setTimeout(resolve, ms));
 const click = (el) => el.dispatchEvent(new window.MouseEvent('click', { bubbles: true, composed: true, cancelable: true }));
@@ -110,7 +110,7 @@ describe('Dismissal and lifecycle', () => {
     const restoreCanvas = shimCanvas();
     let maps = [];
     try {
-      maps = Expressive.MapView.init(document.querySelectorAll('.map'), { maplibregl });
+      maps = ExpressiveExtras.MapView.init(document.querySelectorAll('.map'), { maplibregl });
       assert.equal(maps.length, 2, 'every map initializes');
       assert.equal(counts.created, 2);
       assert.deepEqual(maps.map((map) => map.markers.length), [0, 1], 'only the valid marker is placed');
@@ -128,7 +128,7 @@ describe('Dismissal and lifecycle', () => {
     const restoreCanvas = shimCanvas();
     let map;
     try {
-      map = Expressive.MapView.init(document.querySelector('.map'), { maplibregl: fakeMapLibre() });
+      map = ExpressiveExtras.MapView.init(document.querySelector('.map'), { maplibregl: fakeMapLibre() });
       let resolveZoom;
       map.map.getSource = () => ({ getClusterExpansionZoom: () => new Promise((resolve) => { resolveZoom = resolve; }) });
       map.map.easeTo = () => {};
@@ -149,7 +149,7 @@ describe('Dismissal and lifecycle', () => {
     const restoreCanvas = shimCanvas();
     let map;
     try {
-      map = Expressive.MapView.init(document.querySelector('.map'), { maplibregl: fakeMapLibre() });
+      map = ExpressiveExtras.MapView.init(document.querySelector('.map'), { maplibregl: fakeMapLibre() });
       map.map.getSource = () => ({ getClusterExpansionZoom: () => Promise.reject(new Error('No cluster with the specified id.')) });
       let eased = false;
       map.map.easeTo = () => { eased = true; };
@@ -169,7 +169,7 @@ describe('Dismissal and lifecycle', () => {
     const restoreCanvas = shimCanvas();
     let map;
     try {
-      map = Expressive.MapView.init(document.querySelector('.map'), { maplibregl: fakeMapLibre() });
+      map = ExpressiveExtras.MapView.init(document.querySelector('.map'), { maplibregl: fakeMapLibre() });
       const skipped = document.querySelector('.map-marker');
       skipped.click();
       assert.equal(skipped.hasAttribute('aria-pressed'), false);
@@ -190,7 +190,7 @@ describe('Dismissal and lifecycle', () => {
     process.on('unhandledRejection', record);
     let map;
     try {
-      map = Expressive.MapView.init(el, { maplibregl: fakeMapLibre() });
+      map = ExpressiveExtras.MapView.init(el, { maplibregl: fakeMapLibre() });
       el.requestFullscreen = () => Promise.reject(new Error('Permissions check failed'));
       click(el.querySelector('[data-action="fullscreen"]'));
       await sleep();
@@ -219,10 +219,10 @@ describe('Dismissal and lifecycle', () => {
       assert.deepEqual(highlighted(), ['b']);
       click(document.querySelector('[data-tour-start]'));
       assert.deepEqual(highlighted(), ['a'], 'only the restarted step is highlighted');
-      Expressive.Tour.end(tour);
+      ExpressiveExtras.Tour.end(tour);
       assert.deepEqual(highlighted(), [], 'ending releases every target');
     } finally {
-      Expressive.Tour.end(tour);
+      ExpressiveExtras.Tour.end(tour);
       restore();
     }
   });
@@ -250,7 +250,7 @@ describe('Dismissal and lifecycle', () => {
       assert.equal(tour.hasAttribute('data-open'), false, 'with nothing left behind it, Back ends the tour');
       assert.deepEqual(highlighted(), []);
     } finally {
-      Expressive.Tour.end(tour);
+      ExpressiveExtras.Tour.end(tour);
       restore();
     }
   });

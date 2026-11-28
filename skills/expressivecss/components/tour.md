@@ -9,7 +9,7 @@ Component ID: `tour`
 
 Contract: ExpressiveCSS 0.20.0
 
-Contract SHA-256: `935f920792b4dd3947133e4e1a4b5e2ce7c809c6343efb9020d0863b85b97125`
+Contract SHA-256: `dfb461fb921c4edf4d7713e16dad7f4afc50d0317f65d8903edc6e69f06bf950`
 
 #### Selection and adaptation
 
@@ -31,7 +31,7 @@ Full parity remains unassessed. Review provenance and specification links: [capa
 
 #### Contract
 
-A `.tour` is a `popover="manual"` element with `role="dialog"`, holding one `<section>` per step. Each section's `data-tour-target` names the id of the element it explains. Add a `.tour-progress` line, a `.tour-actions` row with `[data-tour-back]`, `[data-tour-next]` and `[data-tour-done]` buttons, and a `[data-tour-close]` button; a `[data-tour-start="tour-id"]` button starts it. The `Tour` behavior shows one step at a time below its target (above when there is no room), rings the target with `.tour-target` and scrolls it into view, and skips steps whose target is missing or hidden. Back hides on the first step, Next on the last, and Done shows only on the last. The card is named by the step heading and takes focus. Escape, Done or close end the tour and return focus; the card's `toggle` event reports it. `Expressive.Tour.start(el, index)`, `go(el, index)` and `end(el, completed)` work from script, and the tour fires `expressive:open`, `expressive:change` (`{ step, index }`) and `expressive:close` (`{ completed }`), and `Expressive.Tour.i18n.progress` holds "Step {current} of {total}". The root bundle starts the behavior on load; with the modular entry, call `Tour.Init()`.
+A `.tour` is a `popover="manual"` element with `role="dialog"`, holding one `<section>` per step. Each section's `data-tour-target` names the id of the element it explains. Add a `.tour-progress` line, a `.tour-actions` row with `[data-tour-back]`, `[data-tour-next]` and `[data-tour-done]` buttons, and a `[data-tour-close]` button; a `[data-tour-start="tour-id"]` button starts it. The `Tour` behavior shows one step at a time below its target (above when there is no room), rings the target with `.tour-target` and scrolls it into view, and skips steps whose target is missing or hidden. Back hides on the first step, Next on the last, and Done shows only on the last. The card is named by the step heading and takes focus. Escape, Done or close end the tour and return focus; the card's `toggle` event reports it. `ExpressiveExtras.Tour.start(el, index)`, `go(el, index)` and `end(el, completed)` work from script, and the tour fires `expressive:open`, `expressive:change` (`{ step, index }`) and `expressive:close` (`{ completed }`), and `ExpressiveExtras.Tour.i18n.progress` holds "Step {current} of {total}". The `@expressivecss/extras` bundle starts the behavior on load; with its modular entry, call `Tour.Init()`.
 
 #### Syntax
 

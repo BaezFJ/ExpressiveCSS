@@ -25,7 +25,7 @@ for (const [engine, browserType, browserTest] of engines) {
         </div><button id="after">After</button><script>${js}</script></body></html>`);
       await page.evaluate(() => {
         document.getElementById('sheet').show();
-        window.box = Expressive.Lightbox.init(document.getElementById('photo'), { inDuration: 200, outDuration: 200 });
+        window.box = ExpressiveExtras.Lightbox.init(document.getElementById('photo'), { inDuration: 200, outDuration: 200 });
       });
       const thumb = await page.evaluate(() => document.getElementById('photo').getBoundingClientRect().toJSON());
       await page.waitForTimeout(500);
@@ -82,7 +82,7 @@ for (const [engine, browserType, browserTest] of engines) {
       await page.setContent(`<!doctype html><html lang="en"><head><style>${css}</style></head><body style="margin: 0; height: 3000px">
         <div style="padding: 200px 0 0 300px"><img id="photo" class="lightboxed" src="${image}" width="120" height="80" alt="Teal"></div>
         <script>${js}</script></body></html>`);
-      await page.evaluate(() => { window.box = Expressive.Lightbox.init(document.getElementById('photo'), { inDuration: 0, outDuration: 300 }); box.open(); });
+      await page.evaluate(() => { window.box = ExpressiveExtras.Lightbox.init(document.getElementById('photo'), { inDuration: 0, outDuration: 300 }); box.open(); });
       // doneAnimating follows a timer, which a loaded run can fire before the CSS transition ends.
       await page.waitForFunction(() => box.doneAnimating && !document.getElementById('photo').getAnimations().length);
       await page.evaluate(() => window.scrollTo(0, 150));
@@ -107,7 +107,7 @@ for (const [engine, browserType, browserTest] of engines) {
         <script>${js}</script></body></html>`);
       await page.evaluate(() => {
         document.getElementById('dialog').showModal();
-        window.box = Expressive.Lightbox.init(document.getElementById('photo'), { inDuration: 0, outDuration: 0 });
+        window.box = ExpressiveExtras.Lightbox.init(document.getElementById('photo'), { inDuration: 0, outDuration: 0 });
         box.open();
       });
       await page.waitForFunction(() => box.doneAnimating);

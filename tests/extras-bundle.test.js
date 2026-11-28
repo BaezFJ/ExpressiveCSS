@@ -62,6 +62,8 @@ const MOVED_ROOTS = [
   "aura", "message-bubble", "stats", "description-list", "kpi", "countdown", "timeline", "calendar-year",
   "org-chart", "popover", "skeleton", "empty-state", "marquee", "rating", "color-swatches", "stepper",
   "mega-menu", "tree", ...CHARTS.map((name) => `${name}-chart`),
+  "back-to-top", "message-scroller", "pull-to-refresh", "list.swipeable", "show-more", "loading-overlay", "confetti",
+  "particles", "lightboxed", "map", "command-palette", "menubar", "scrollspy", "table-of-contents", "tour", "image-compare",
 ];
 const PAGE_FOOTER = "footer:not(.status-bar, :has(> .navigation-bar:only-child))";
 
@@ -89,6 +91,43 @@ test("the charts are exported by extras, not by core", async () => {
   }
   assert.doesNotMatch(read("dist/css/expressive.css"), /\.(?:line|column|bar|pie|heatmap|radar|radial|mixed|scatter|funnel|sankey|treemap)-chart(?![\w-])/,
     "expressive.css names a chart class");
+});
+
+// The interactive components and behaviors that moved in the same release.
+const MOVED_INTERACTIVE = [
+  "BackToTop", "MessageScroller", "PullToRefresh", "SwipeActions", "ShowMore", "HoverCard", "LoadingOverlay", "Confetti",
+  "Particles", "Lightbox", "MapView", "CommandPalette", "Menubar", "ScrollSpy", "Tour", "ImageCompare",
+];
+
+test("the moved interactive components and behaviors are exported by extras, not by core", async () => {
+  const coreModular = await import("../dist/js/modular.mjs");
+  const coreApi = await import("../dist/js/core.mjs");
+  const extrasModular = await import("../extras/dist/js/modular.mjs");
+  for (const name of MOVED_INTERACTIVE) {
+    assert.ok(!(name in Expressive) && !(name in coreModular) && !(name in coreApi), `core still exports ${name}`);
+    assert.equal(typeof ExpressiveExtras[name], "function", `extras does not export ${name}`);
+    assert.equal(extrasModular[name], ExpressiveExtras[name]);
+  }
+  // Sortable stays in core: the core Lists page documents it.
+  assert.equal(typeof Expressive.Sortable, "function");
+});
+
+test("extras imports public core components from the modular entry, sharing their instances", () => {
+  assert.match(esm, /from\s*["']@expressivecss\/expressive\/modular["']/);
+  assert.doesNotMatch(esm, /class Menu\b/, "extras bundles a copy of Menu");
+  try {
+    document.body.innerHTML = `<nav class="menubar"><button class="menu-trigger" data-target="file-menu">File</button></nav>
+      <ul id="file-menu" class="menu"><li><button>New</button></li></ul>`;
+    const bar = ExpressiveExtras.Menubar.init(document.querySelector(".menubar"));
+    try {
+      assert.ok(Expressive.Menu.getInstance(document.querySelector(".menu-trigger")) instanceof Expressive.Menu,
+        "the Menubar's menu is not core's Menu");
+    } finally {
+      bar.destroy();
+    }
+  } finally {
+    resetBody();
+  }
 });
 
 test("AutoInit started through core starts the extras charts", () => {

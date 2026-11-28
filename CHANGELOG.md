@@ -62,6 +62,16 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   them once extras has loaded. The `chart()`, `chart-axis()` and
   `chart-column-motion()` Sass mixins moved with them, to the extras
   `abstracts/charts` module.
+- Interactive components and behaviors outside the Material 3 set moved to
+  `@expressivecss/extras`: `BackToTop`, `MessageScroller`, `PullToRefresh`,
+  `SwipeActions`, `ShowMore`, `HoverCard`, `LoadingOverlay`, `Confetti`,
+  `Particles`, `Lightbox`, `MapView`, `CommandPalette`, `Menubar`,
+  `ScrollSpy` with the table of contents, and the `Tour` and `ImageCompare`
+  behaviors. Their markup is unchanged. Load `extras.css` and `extras.js`
+  after core's files; the classes are on `ExpressiveExtras` or imported from
+  `@expressivecss/extras`, core's `AutoInit()` still starts them, and
+  importing extras starts `Tour` and `ImageCompare`. `Sortable` stays in core
+  with lists.
 
 ## [0.20.0] - 2026-11-18
 

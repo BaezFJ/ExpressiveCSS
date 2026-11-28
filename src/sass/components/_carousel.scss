@@ -534,9 +534,3 @@
     width: 100%;
   }
 }
-
-// Lightbox: do not open a boxed image while the track is moving.
-.carousel.scrolling .carousel-item .lightboxed,
-.carousel-item:not(.active) .lightboxed {
-  pointer-events: none;
-}

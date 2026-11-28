@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { engines } from './browser.js';
+import { leaseBrowser, engines } from './browser.js';
 
 const css = readFileSync(new URL('../dist/css/expressive.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../dist/js/expressive.js', import.meta.url), 'utf8');
@@ -24,7 +24,7 @@ const still = { startVelocity: 0, gravity: 0, drift: 0, spread: 0 };
 
 for (const [name, engine, test] of engines) {
   test(`${name}: confetti bursts from its trigger in theme colors, on its own canvas, above a modal dialog and not under reduced motion`, { timeout: 30000 }, async (t) => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage({ viewport: { width: 800, height: 700 } });
       // Keep browser round trips from fading a burst before its pixels are inspected.
@@ -35,8 +35,8 @@ for (const [name, engine, test] of engines) {
       await page.addScriptTag({ content: js });
       await page.evaluate((still) => {
         window.Expressive.AutoInit(document.body, { Confetti: { ...still, particleCount: 1, shapes: ['square'], ticks: 60 } });
-        window.Expressive.Confetti.getInstance(document.getElementById('manual')).destroy();
-        window.Expressive.Confetti.init(document.getElementById('manual'), { manualStart: true });
+        window.ExpressiveExtras.Confetti.getInstance(document.getElementById('manual')).destroy();
+        window.ExpressiveExtras.Confetti.init(document.getElementById('manual'), { manualStart: true });
       }, still);
 
       // The painted pixels of a canvas, in CSS pixels, with the first opaque
@@ -80,7 +80,7 @@ for (const [name, engine, test] of engines) {
       const center = { x: auto.rect.width / 2, y: auto.rect.height / 2 };
       assert.ok(Math.abs((auto.box.left + auto.box.right) / 2 - center.x) < 20 && Math.abs((auto.box.top + auto.box.bottom) / 2 - center.y) < 20, 'the canvas burst starts at its center');
       assert.equal((await painted('#manual')).box, null, 'manualStart waits for fire()');
-      await page.evaluate((still) => { window.Expressive.Confetti.getInstance(document.getElementById('manual')).fire(still); }, still);
+      await page.evaluate((still) => { window.ExpressiveExtras.Confetti.getInstance(document.getElementById('manual')).fire(still); }, still);
       assert.ok((await painted('#manual')).box, 'fire() bursts on a manual canvas');
 
       await page.locator('#trigger').click();
@@ -112,7 +112,7 @@ for (const [name, engine, test] of engines) {
       await page.locator('canvas.confetti-overlay').waitFor({ state: 'detached' });
       await page.evaluate(() => {
         // An option set to undefined keeps its default instead of throwing.
-        window.burstResult = window.Expressive.Confetti.fire({ ticks: 10, origin: undefined, colors: undefined }).then(() => document.querySelector('canvas.confetti-overlay'));
+        window.burstResult = window.ExpressiveExtras.Confetti.fire({ ticks: 10, origin: undefined, colors: undefined }).then(() => document.querySelector('canvas.confetti-overlay'));
       });
       await page.clock.runFor(200);
       assert.equal(await page.evaluate(() => window.burstResult), null, 'fire() resolves once the overlay is gone');
@@ -125,14 +125,14 @@ for (const [name, engine, test] of engines) {
       await page.clock.runFor(1200);
       await page.locator('canvas.confetti-overlay').waitFor({ state: 'detached' });
 
-      await page.evaluate(() => window.Expressive.Confetti.getInstance(document.getElementById('trigger')).destroy());
+      await page.evaluate(() => window.ExpressiveExtras.Confetti.getInstance(document.getElementById('trigger')).destroy());
       await page.locator('#trigger').click();
       assert.equal(await page.locator('canvas.confetti-overlay').count(), 0, 'destroy() removes the click handler');
 
       await page.emulateMedia({ reducedMotion: 'reduce' });
       await page.locator('#in-dialog').evaluate((b) => b.click());
       assert.equal(await page.locator('canvas.confetti-overlay').count(), 0, 'reduced motion draws nothing');
-      await page.evaluate(() => window.Expressive.Confetti.fire());
+      await page.evaluate(() => window.ExpressiveExtras.Confetti.fire());
     } finally {
       await browser.close();
     }
@@ -141,20 +141,20 @@ for (const [name, engine, test] of engines) {
 
 for (const [name, engine, test] of engines) {
   test(`${name}: a finished burst on a removed overlay leaves the current overlay in use`, { timeout: 30000 }, async () => {
-    const browser = await engine.launch({ headless: true });
+    const browser = await leaseBrowser(engine);
     try {
       const page = await browser.newPage();
       await page.emulateMedia({ reducedMotion: 'no-preference' });
       await page.setContent(markup.replace('</body>', () => `<script>${js}</script></body>`));
       await page.evaluate(() => {
-        Expressive.Confetti.fire({ ticks: 5 });
+        ExpressiveExtras.Confetti.fire({ ticks: 5 });
         document.querySelector('canvas.confetti-overlay').remove();
-        Expressive.Confetti.fire({ ticks: 6000 });
+        ExpressiveExtras.Confetti.fire({ ticks: 6000 });
       });
       // Long enough for the short burst on the removed canvas to end.
       await page.waitForTimeout(400);
       // In braces: fire() returns a promise that waits for the whole burst.
-      await page.evaluate(() => { Expressive.Confetti.fire({ ticks: 6000 }); });
+      await page.evaluate(() => { ExpressiveExtras.Confetti.fire({ ticks: 6000 }); });
       assert.equal(await page.locator('canvas.confetti-overlay').count(), 1, 'one overlay serves every burst');
     } finally {
       await browser.close();
