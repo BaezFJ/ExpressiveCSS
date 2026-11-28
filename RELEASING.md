@@ -1,8 +1,9 @@
 # Releasing ExpressiveCSS
 
-BaezFJ approves releases. Framework and MCP versions are independent. Before 1.0,
-breaking changes require a minor release and migration notes; compatible fixes
-and documentation-only changes use patch releases.
+BaezFJ approves releases. Framework, extras (`@expressivecss/extras`) and MCP
+versions are independent. Before 1.0, breaking changes require a minor release
+and migration notes; compatible fixes and documentation-only changes use patch
+releases.
 
 ## Prepare a release PR
 
@@ -15,14 +16,16 @@ and documentation-only changes use patch releases.
    prose on the latest stable version.
 3. Update the selected changelog. Framework entries need the existing version
    comparison links. MCP entries name the framework version bundled in its guidance.
+   Extras entries name the framework version they require.
 4. Run `npm run build:semantics`, `npm run build:skill`, `npm run verify`, browser
    tests, MCP tests, and `npm run verify:packages`. Commit regenerated files.
 5. Merge the release PR only after its required checks pass.
 
-Framework tags are `vX.Y.Z`; MCP tags are `mcp-vX.Y.Z`. Prerelease suffixes such
-as `-rc.1` are allowed. Create an annotated tag on the merged commit and publish
-a GitHub Release for it. Mark prereleases as prereleases. Tags cannot be moved
-or deleted; fix mistakes with a new version.
+Framework tags are `vX.Y.Z`; extras tags are `extras-vX.Y.Z`; MCP tags are
+`mcp-vX.Y.Z`. Prerelease suffixes such as `-rc.1` are allowed. Create an
+annotated tag on the merged commit and publish a GitHub Release for it. Mark
+prereleases as prereleases. Tags cannot be moved or deleted; fix mistakes with a
+new version.
 
 ## Validation and approval
 
@@ -46,9 +49,12 @@ trusted publisher for repository `BaezFJ/ExpressiveCSS`, workflow `release.yml`,
 and environment `npm-publish`. Preserve this identity when changing workflows.
 There is no long-lived npm publishing token. Check provenance after publication.
 
-If the MCP package does not yet exist on npm, bootstrap it through npm's supported
-maintainer flow before configuring its trusted publisher. Do not add a permanent
-token to CI as a workaround. This setup is separate from creating a release.
+The `npm-publish` environment's tag rule must admit `extras-v*` tags before the
+first extras release.
+
+If the MCP or extras package does not yet exist on npm, bootstrap it through
+npm's supported maintainer flow before configuring its trusted publisher. Do not
+add a permanent token to CI as a workaround. This setup is separate from creating a release.
 
 ## Coordinated packages and documentation
 
@@ -56,10 +62,19 @@ Publish MCP when its server or bundled guidance changes. If a framework release
 requires new guidance, publish the framework first, then MCP. Record its bundled
 framework version in the MCP changelog; the package versions need not match.
 
+Extras builds from the repository root: `npm ci && npm run build` writes
+`extras/dist`, and its `prepack` refuses to pack without it. The release
+workflow builds it, checks it with `node scripts/verify-packages.mjs` and packs
+it from `extras/`. Its `@expressivecss/expressive` peer range must include the
+framework version in the same commit, or the strict peer install in
+`verify-packages` fails. When a release touches both, publish in this order:
+framework, then extras, then MCP. Record the required framework version in
+`extras/CHANGELOG.md`.
+
 The public docs describe the latest successfully published stable framework
 release. The deployment builds that exact tag and verifies npm's `latest` before
-deploying. Prereleases and MCP releases do not deploy the main site. Unreleased
-docs are available through local development and CI artifacts. Documentation-only
+deploying. Prereleases, extras and MCP releases do not deploy the main site.
+Unreleased docs are available through local development and CI artifacts. Documentation-only
 changes reach the public site in a framework patch release.
 
 If publication fails, the stable site stays unchanged. Use GitHub's "Re-run failed jobs" to retry a failed docs deployment without

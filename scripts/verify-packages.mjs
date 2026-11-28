@@ -36,8 +36,7 @@ try {
     tarballs[name] = pack(cwd, target);
     // No symlink back to the checkout, and no consumer lifecycle scripts.
     run('npm', ['init', '-y'], target);
-    // shortcut: --legacy-peer-deps because the peer range names the unreleased 0.21.0; drop it after the release bump.
-    const peer = name === 'extras' ? ['--legacy-peer-deps', tarballs.framework] : [];
+    const peer = name === 'extras' ? ['--strict-peer-deps', tarballs.framework] : [];
     run('npm', ['install', '--ignore-scripts', '--no-audit', '--no-fund', tarballs[name], ...peer], target);
     const manifest = JSON.parse(readFileSync(join(cwd, 'package.json'), 'utf8'));
     const installed = join(target, 'node_modules', manifest.name);
@@ -50,7 +49,8 @@ try {
       }
       run('node', [join(installed, 'smoke.mjs')], target);
     } else if (name === 'extras') {
-      assert.equal(manifest.peerDependencies?.['@expressivecss/expressive'], `^${manifest.version}`);
+      // Versioned on its own: the strict peer install above fails unless this range includes the checkout's core.
+      assert.ok(manifest.peerDependencies?.['@expressivecss/expressive'], 'Extras must declare its core peer');
       for (const file of ['dist/types/index.d.ts', 'dist/types/modular.d.ts', 'dist/js/extras.mjs', 'dist/js/modular.mjs',
         'dist/js/extras.js', 'dist/js/extras.min.js', 'dist/css/extras.css', 'dist/css/extras.min.css',
         'src/sass/extras.scss', 'README.md', 'CHANGELOG.md']) {

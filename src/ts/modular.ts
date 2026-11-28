@@ -14,7 +14,7 @@ export { DataTables } from './behaviors/dataTables';
 export { AutoInit } from './components/registry';
 export type { AutoInitOptions } from './components/registry';
 
-export const version = '0.20.0';
+export const version = '0.21.0';
 
 export type * from './components/autocomplete';
 export type * from './components/appBar';

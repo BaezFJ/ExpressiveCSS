@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+## 0.7.0 - 2026-11-27
+
+- Bundled guidance matches ExpressiveCSS 0.21.0, which moves every component
+  outside the Material 3 set to `@expressivecss/extras` 0.21.0.
 - Guides for `@expressivecss/extras` components carry `package` and
   `install` fields in `component-guides.json`, in `component_syntax_expert`
   and `creative_director` results, and in component guide resources. The

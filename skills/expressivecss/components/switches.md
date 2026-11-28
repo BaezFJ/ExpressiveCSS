@@ -5,11 +5,11 @@ Material Design 3 switches, from the HTML.
 
 Component ID: `switches`
 
-[Component documentation](https://www.expressivecss.com/switches.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/switches.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.20.0)
+[Component documentation](https://www.expressivecss.com/switches.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/switches.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.21.0)
 
-Contract: ExpressiveCSS 0.20.0
+Contract: ExpressiveCSS 0.21.0
 
-Contract SHA-256: `69be6025eb228ade4def3c6b890ea385e940ed8020276d49e4512c66fafd80b6`
+Contract SHA-256: `f0a3e9f234ed8aeb3eb0739b1fb248d3b88fda7159d80d5f2ee848a8f78c811f`
 
 #### Selection and adaptation
 

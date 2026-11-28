@@ -7,11 +7,11 @@ Component ID: `heatmap-chart`
 
 Package: `@expressivecss/extras`, not core. Install it next to `@expressivecss/expressive` and load its CSS and JS after core; see [install and load order](../SKILL.md#install-and-load-order).
 
-[Component documentation](https://www.expressivecss.com/heatmap-chart.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/heatmap-chart.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.20.0)
+[Component documentation](https://www.expressivecss.com/heatmap-chart.html.md) · [Repository source](https://github.com/BaezFJ/ExpressiveCSS/blob/master/docs/src/pages/heatmap-chart.astro) · [Matching tag](https://github.com/BaezFJ/ExpressiveCSS/tree/v0.21.0)
 
-Contract: ExpressiveCSS 0.20.0
+Contract: ExpressiveCSS 0.21.0
 
-Contract SHA-256: `69be6025eb228ade4def3c6b890ea385e940ed8020276d49e4512c66fafd80b6`
+Contract SHA-256: `f0a3e9f234ed8aeb3eb0739b1fb248d3b88fda7159d80d5f2ee848a8f78c811f`
 
 #### Selection and adaptation
 

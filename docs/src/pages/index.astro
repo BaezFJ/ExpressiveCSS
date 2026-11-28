@@ -85,7 +85,7 @@ const S = defineSections([
                     <p class="flow-text">
                         Expressive comes in two forms. Pick the one that fits your
                         preference and experience.
-                        The project is at version <code>0.20.0</code> and still growing, so the usual path is to build
+                        The project is at version <code>0.21.0</code> and still growing, so the usual path is to build
                         from the repository.
                     </p>
                     <div class="row">
@@ -160,6 +160,13 @@ npm install @expressivecss/expressive @expressivecss/extras
 <script src="js/expressive.min.js"></script>
 <script src="js/extras.min.js"></script>
 `} />
+                    <p>
+                        Upgrading from 0.20? Those components left the core package in 0.21.0 with their markup
+                        unchanged. Add the extras files as above, then reach those classes through the
+                        <code>ExpressiveExtras</code> global instead of <code>Expressive</code>, or import them from
+                        <code>@expressivecss/extras</code>. The
+                        <a href="/CHANGELOG.md">changelog</a> lists every moved name.
+                    </p>
 
                     <p>
                         Using a coding agent? <a href={route("ai")}>AI agents</a> covers the agent skills,

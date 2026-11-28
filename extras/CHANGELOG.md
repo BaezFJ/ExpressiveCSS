@@ -2,24 +2,34 @@
 
 ## Unreleased
 
-## 0.21.0
+## 0.21.0 - 2026-11-27
 
-- Initial package. It requires `@expressivecss/expressive` 0.21.
-- The CSS-only components that moved from core: aura, message, stat,
-  description list, KPI, countdown, timeline, calendar, organization chart,
-  popover, skeleton, empty state, marquee, rating, color swatches, stepper,
-  mega menu, tree and the page footer.
-- The twelve charts that moved from core, with the `chart()`, `chart-axis()`
-  and `chart-column-motion()` Sass mixins in `abstracts/charts`.
-- The interactive components that moved from core: back to top, message
-  scroller, pull-to-refresh, swipe actions, show more, hover card, loading
-  overlay, confetti, particles, lightbox, map, command palette, menubar and
-  scrollspy with the table of contents, plus the `Tour` and `ImageCompare`
-  behaviors. Extras imports core's `Menu` from
-  `@expressivecss/expressive/modular`, which it leaves external.
-- The form extras that moved from core: input mask, currency input, rich
-  text editor, tree select, cascader, color picker, keypad, questionnaire and
-  the `TransferList` behavior, plus the drop zone with a new `DropZone`
-  behavior that holds the file rules, file list and drag marking core's
-  `Forms` used to. `TreeSelect` extends core's `FormSelect`, and `DropZone`
-  hands other inputs to core's `Forms`, both read from the modular entry.
+Initial release. It requires `@expressivecss/expressive` 0.21.0 or a later
+0.21 release (peer range `^0.21.0`). These components moved here from core
+0.20.0 with their markup, options and events unchanged; core's 0.21.0
+changelog has the migration steps.
+
+- Charts: `LineChart`, `ColumnChart`, `BarChart`, `PieChart`, `HeatmapChart`,
+  `RadarChart`, `RadialChart`, `MixedChart`, `ScatterChart`, `FunnelChart`,
+  `SankeyChart` and `TreemapChart`, with the `chart()`, `chart-axis()` and
+  `chart-column-motion()` Sass mixins in `src/sass/abstracts/_charts.scss`.
+- Interactive components: `BackToTop`, `MessageScroller`, `PullToRefresh`,
+  `SwipeActions`, `ShowMore`, `HoverCard`, `LoadingOverlay`, `Confetti`,
+  `Particles`, `Lightbox`, `MapView`, `CommandPalette`, `Menubar` and
+  `ScrollSpy` with the table of contents.
+- Form components: `InputMask`, `CurrencyInput`, `RichTextEditor`,
+  `TreeSelect`, `Cascader`, `ColorPicker`, `Keypad` and `Questionnaire`.
+- Behaviors: `ImageCompare`, `Tour`, `TransferList` and the new `DropZone`,
+  which holds the drop zone's file rules, file list and drag marking that
+  core's `Forms` used to.
+- CSS-only components: aura, message, stat, description list, KPI,
+  countdown, timeline, calendar, organization chart, popover, skeleton, empty
+  state, marquee, rating, color swatches, stepper, mega menu, tree, the page
+  footer and the drop zone.
+- Builds: `dist/js/extras.mjs` (registers the components with core's
+  `AutoInit` and starts the behaviors), `dist/js/modular.mjs` (no side
+  effects), `dist/js/extras.js` and `extras.min.js` (IIFE global
+  `ExpressiveExtras`), `dist/css/extras.css` and `extras.min.css`, types, and
+  the Sass source. Extras imports core through
+  `@expressivecss/expressive/core` and `@expressivecss/expressive/modular`, so
+  it shares core's classes and `AutoInit` table. There is no CommonJS build.

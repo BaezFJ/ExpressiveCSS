@@ -5,6 +5,109 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.21.0] - 2026-11-27
+
+This release splits the framework in two. `@expressivecss/expressive` keeps the
+Material Design 3 components, plus data table, breadcrumbs, pagination, avatar,
+alert, accordion, status bar, panes, scaffold and scroll area. Every other
+component moved to a new package, `@expressivecss/extras` 0.21.0. There are no
+compatibility aliases: a page that uses a moved component needs the extras
+package, as the Migration section below describes. Markup, classes, options and
+events of the moved components are unchanged.
+
+### Migration
+
+What to do:
+
+- Install the extras package beside core. Its peer range is
+  `@expressivecss/expressive` `^0.21.0`.
+
+  ```sh
+  npm install @expressivecss/expressive@0.21.0 @expressivecss/extras@0.21.0
+  ```
+
+- Load extras' CSS and JavaScript after core's: `expressive.css`, then
+  `extras.css`; `expressive.js`, then `extras.js`. `Expressive.AutoInit()`
+  starts the extras components once `extras.js` has loaded, including in
+  `{ watch: true }` mode. `extras.js` throws if core has not loaded.
+- Script tags: the moved classes are on the `ExpressiveExtras` global. Replace
+  `Expressive.X` with `ExpressiveExtras.X` for every name listed below.
+- ES modules: import the moved names, and their option and event types, from
+  `@expressivecss/extras`, not `@expressivecss/expressive`. Importing
+  `@expressivecss/extras` registers its components with core's `AutoInit` and
+  starts the extras behaviors. `@expressivecss/extras/modular` exports the same
+  names with no side effects. Extras has no CommonJS build.
+- `Forms` no longer handles drop zones. Call
+  `DropZone.validateField(input)` instead of `Forms.validateField(input)` for a
+  `.drop-zone` file input with `data-validate-types`, `data-max-size` or
+  `data-max-files`; `DropZone.listFiles(zone, input)` instead of
+  `Forms.listDropZoneFiles(zone, input)`; and `DropZone.markDrag(event)`
+  instead of `Forms.markDropZone(event)`. `DropZone.validateField` passes any
+  other input on to `Forms.validateField`.
+- A bare `<footer>` is no longer styled by core. The page footer styles, which
+  apply to any `<footer>` except a status bar or a lone navigation bar's
+  wrapper, ship in `extras.css`.
+- Sass: remove the moved partial names from core's `$components` list (for
+  example `page-footer`, `forms/rating` or `line-chart`); the build fails on a
+  name core no longer has. Compile `extras.scss` with core's `src/sass` on the
+  load path to get them:
+  `sass --load-path=node_modules/@expressivecss/expressive/src/sass node_modules/@expressivecss/extras/src/sass/extras.scss extras.css`.
+  Extras loads all of its partials; it has no `$components` option yet.
+- The `chart()`, `chart-axis()` and `chart-column-motion()` Sass mixins left
+  core's abstracts for extras' `src/sass/abstracts/_charts.scss`. That module
+  loads core's abstracts as `"abstracts"`, so `@use` it with core's `src/sass`
+  on the load path.
+- Agent skills: install `skills/expressivecss-extras` beside
+  `skills/expressivecss` to keep guides for the moved components.
+
+What moved:
+
+- **Components (JavaScript):** `LineChart`, `ColumnChart`, `BarChart`,
+  `PieChart`, `HeatmapChart`, `RadarChart`, `RadialChart`, `MixedChart`,
+  `ScatterChart`, `FunnelChart`, `SankeyChart`, `TreemapChart`, `BackToTop`,
+  `MessageScroller`, `PullToRefresh`, `SwipeActions`, `ShowMore`, `HoverCard`,
+  `LoadingOverlay`, `Confetti`, `Particles`, `Lightbox`, `MapView`,
+  `CommandPalette`, `Menubar`, `ScrollSpy`, `InputMask`, `CurrencyInput`,
+  `RichTextEditor`, `TreeSelect`, `Cascader`, `ColorPicker`, `Keypad` and
+  `Questionnaire`, with their exported types.
+- **Behaviors:** `ImageCompare`, `Tour` and `TransferList`, plus the new
+  `DropZone`. Importing `@expressivecss/extras` (or loading `extras.js`)
+  starts them; with `@expressivecss/extras/modular`, call each `Init()`.
+  `Sortable` stays in core with lists.
+- **CSS-only components:** aura (`.aura`), message (`.message`), stat
+  (`.stats`), description list (`.description-list`), KPI (`.kpi`), countdown
+  (`.countdown`), timeline (`.timeline`), calendar (`.calendar`), organization
+  chart (`.org-chart`), popover (`.popover`), skeleton (`.skeleton`), empty
+  state (`.empty-state`), marquee (`.marquee`), rating (`.rating`), color
+  swatches (`.color-swatches`), stepper (`.stepper`), mega menu
+  (`.mega-menu`), tree (`.tree`), the page footer (`<footer>`) and the drop
+  zone (`.drop-zone`).
+- **Classes and selectors of the moved scripted components:** the twelve
+  `.*-chart` classes, `.back-to-top`, `.message-scroller`, `.pull-to-refresh`,
+  `.list.swipeable`, `.show-more`, `.hover-card-trigger`, `.loading-overlay`,
+  `.confetti`, `canvas.particles`, `.lightboxed`, `.map`,
+  `dialog.command-palette`, `.menubar`, `.scrollspy`, `.table-of-contents`,
+  `.image-compare`, `.tour`, `.transfer-list`, `input[data-mask]`,
+  `input[data-currency]`, `.rich-text-editor`, `select[data-tree]`,
+  `.cascader`, `.color-picker`, `.keypad` and `.keyboard`, and
+  `form.questionnaire`.
+- **Sass partials** (core's `components/` names, now in extras):
+  `aura`, `back-to-top`, `bar-chart`, `calendar`, `cascader`, `column-chart`,
+  `command-palette`, `confetti`, `countdown`, `description-list`,
+  `empty-state`, `funnel-chart`, `heatmap-chart`, `image-compare`, `keypad`,
+  `kpi`, `lightbox`, `line-chart`, `loading-overlay`, `map`, `marquee`,
+  `mega-menu`, `menubar`, `message`, `message-scroller`, `mixed-chart`,
+  `org-chart`, `page-footer`, `particles`, `pie-chart`, `popover`,
+  `pull-to-refresh`, `questionnaire`, `radar-chart`, `radial-chart`,
+  `rich-text-editor`, `sankey-chart`, `scatter-chart`, `scrollspy`,
+  `show-more`, `skeleton`, `stat`, `stepper`, `swipe-actions`,
+  `table_of_contents`, `timeline`, `tour`, `transfer-list`, `tree`,
+  `treemap-chart`, `forms/color-picker` and `forms/drop-zone`. `forms/rating`
+  and `forms/color-swatches` are `rating` and `color-swatches` in extras, and
+  the tree select styles left core's `forms/select` for extras' `tree-select`.
+- **Sass mixins:** `chart()`, `chart-axis()` and `chart-column-motion()`, now
+  in extras' `abstracts/charts`.
+
 ### Added
 
 - `@expressivecss/expressive/core` exports `Component`, `Utils`, `AutoInit`
@@ -13,6 +116,10 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - `AutoInit.register(name, { component, selector })` adds a component to
   AutoInit. AutoInit and watch mode start and destroy it like a built-in.
+
+- `@expressivecss/extras` 0.21.0, the new package for the components listed
+  under Migration. Its `DropZone` behavior holds the drop zone's file rules,
+  file list and drag marking, which used to live in `Forms`.
 
 - A new `expressivecss-extras` agent skill covers `@expressivecss/extras`: its
   install and load order, generated guides for every extras component, and
@@ -52,44 +159,22 @@ the format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   grid rule, list-detail behavior when a foldable opens or closes, and the
   ExpressiveCSS templates as the web code starting points.
 
+### Changed
+
+- A card's direct `<figure>` is media unless it holds a direct `<table>`, as
+  every extras chart does. Core used to exclude the chart classes by name.
+- The `expressivecss` skill is version 0.17.0: it covers core components only,
+  and its layout references follow Material's current layout pages. The new
+  `expressivecss-extras` skill starts at 0.1.0. `expressivecss-review`,
+  `expressivecss-design-md` and `expressivecss-migration` stay at 0.2.0, 0.1.0
+  and 0.1.1.
+
 ### Removed
 
-- The CSS-only components outside the Material 3 set moved to
-  `@expressivecss/extras`: aura, message, stat, description list, KPI,
-  countdown, timeline, calendar, organization chart, popover, skeleton, empty
-  state, marquee, rating, color swatches, stepper, mega menu, tree and the
-  page footer. Their markup is unchanged; load `extras.css` after
-  `expressive.css` to keep them.
-- The twelve charts moved to `@expressivecss/extras`: `LineChart`,
-  `ColumnChart`, `BarChart`, `PieChart`, `HeatmapChart`, `RadarChart`,
-  `RadialChart`, `MixedChart`, `ScatterChart`, `FunnelChart`, `SankeyChart`
-  and `TreemapChart`. Their markup is unchanged. Load `extras.css` and
-  `extras.js` after core's files; the classes are on `ExpressiveExtras` or
-  imported from `@expressivecss/extras`, and core's `AutoInit()` still starts
-  them once extras has loaded. The `chart()`, `chart-axis()` and
-  `chart-column-motion()` Sass mixins moved with them, to the extras
-  `abstracts/charts` module.
-- Interactive components and behaviors outside the Material 3 set moved to
-  `@expressivecss/extras`: `BackToTop`, `MessageScroller`, `PullToRefresh`,
-  `SwipeActions`, `ShowMore`, `HoverCard`, `LoadingOverlay`, `Confetti`,
-  `Particles`, `Lightbox`, `MapView`, `CommandPalette`, `Menubar`,
-  `ScrollSpy` with the table of contents, and the `Tour` and `ImageCompare`
-  behaviors. Their markup is unchanged. Load `extras.css` and `extras.js`
-  after core's files; the classes are on `ExpressiveExtras` or imported from
-  `@expressivecss/extras`, core's `AutoInit()` still starts them, and
-  importing extras starts `Tour` and `ImageCompare`. `Sortable` stays in core
-  with lists.
-- The form extras moved to `@expressivecss/extras`: `InputMask`,
-  `CurrencyInput`, `RichTextEditor`, `TreeSelect`, `Cascader`, `ColorPicker`,
-  `Keypad`, `Questionnaire` and the `TransferList` behavior, with the drop
-  zone's styles. Their markup is unchanged. Core's `AutoInit()` still starts
-  `data-mask`, `data-currency` and `select[data-tree]` fields once extras has
-  loaded, and importing extras starts `TransferList`. The drop zone's file
-  rules, file list and drag marking moved out of `Forms` into the new extras
-  `DropZone` behavior: call `ExpressiveExtras.DropZone.validateField(input)`
-  instead of `Forms.validateField` for a drop-zone file input, and
-  `DropZone.listFiles(zone, input)` instead of `Forms.listDropZoneFiles`.
-  `Forms.markDropZone` is now `DropZone.markDrag`.
+- Every component, behavior, class, Sass partial and mixin listed under
+  Migration left this package for `@expressivecss/extras`.
+- `Forms.listDropZoneFiles()` and `Forms.markDropZone()`, and drop-zone
+  handling in `Forms.validateField()`. Use the extras `DropZone` behavior.
 
 ## [0.20.0] - 2026-11-18
 
@@ -4543,7 +4628,8 @@ are no compatibility aliases.
 - `.tabs` nested in a header or app bar as a secondary row. `.tabs` is a
   standalone component; the `.tabs.transparent` app bar variant is gone with it.
 
-[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.20.0...HEAD
+[Unreleased]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.21.0...HEAD
+[0.21.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.20.0...v0.21.0
 [0.20.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.19.0...v0.20.0
 [0.19.0]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.18.1...v0.19.0
 [0.18.1]: https://github.com/BaezFJ/ExpressiveCSS/compare/v0.18.0...v0.18.1
